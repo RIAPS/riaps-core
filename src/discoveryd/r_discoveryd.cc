@@ -113,6 +113,7 @@ int main()
         // Wait for at most UDP_READ_TIMEOUT millisecond for UDP package
         zsock_set_rcvtimeo (listener, UDP_READ_TIMEOUT);
 
+
         if (!has_joined && ipcache.size()>1){
             zmsg_t* join_msg = zmsg_new();
             zmsg_addstr(join_msg, "JOIN");

@@ -22,7 +22,7 @@ extern bool
 get_servicebyname(std::string service_id, std::vector<service_details>& services);
 
 extern bool
-deregister_service();
+deregister_service(std::string service_name);
 
 extern void
 ping_service(std::string service_name);

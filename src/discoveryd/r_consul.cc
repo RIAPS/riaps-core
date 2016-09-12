@@ -32,6 +32,14 @@ void registerService(service_details& params) {
 	std::cout << "DO PUT RESULT: " << result << std::endl;
 }
 
+void deregisterService(std::string service_name){
+    std::string consul_api_host = "localhost";
+    std::string consul_api_getparam = "/v1/agent/service/deregister/" + service_name;
+
+    std::string response;
+    int result = do_get(consul_api_host, 8500, consul_api_getparam, response);
+}
+
 bool disc_getservices(std::vector<std::string>& service_list) {
 	std::string consul_api_host = "localhost";
 	std::string consul_api_getparam = "/v1/catalog/services";

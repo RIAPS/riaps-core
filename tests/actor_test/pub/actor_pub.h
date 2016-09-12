@@ -46,7 +46,7 @@ public:
 
         publisher_conf pport;
         pport.servicename = "Publisher1";
-        pport.network_iface   = "eth1";
+        pport.network_iface   = "eth0";
         pport.port            = 0;            // Auto binding
 
         cconf.component_name = "ComponentPub";

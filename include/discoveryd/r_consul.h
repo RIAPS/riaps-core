@@ -10,6 +10,7 @@
 
 void joinToCluster(std::string destination_ip);
 void registerService(service_details& params);
+void deregisterService(std::string service_name);
 bool disc_getservices(std::vector<std::string>& service_list);
 bool disc_getservicedetails(std::string, std::vector<service_details>&);
 bool disc_deregisterservice(std::string);

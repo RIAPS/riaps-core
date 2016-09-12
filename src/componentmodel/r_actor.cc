@@ -14,7 +14,6 @@ riaps::Actor::~Actor() {}
     //Actor::Actor() {}
 
     //Actor::Actor(std::string configfile){
-    //    std::cout << "Anyad";
     //}
 
     //Actor::~Actor(){}

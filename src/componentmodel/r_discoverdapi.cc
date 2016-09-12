@@ -11,7 +11,7 @@ bool register_service(std::string              service_id   ,
    // Create ZMQ message for RIAPS discovery service 
    // Create frames:
    zmsg_t* msg = zmsg_new();
-   zmsg_addstr(msg, "$REGISTER$");
+   zmsg_addstr(msg, CMD_DISC_REGISTER_SERVICE);
    zmsg_addstr(msg, service_id.c_str());
    zmsg_addstr(msg, service_name.c_str());
    zmsg_addstr(msg, ip_address.c_str());
@@ -40,6 +40,34 @@ bool register_service(std::string              service_id   ,
 
    // release ZMQ socket
    zsock_destroy(&client);
+}
+
+bool deregister_service(std::string service_name) {
+    zmsg_t* msg = zmsg_new();
+
+    std::cout << "Deregistering service " << service_name;
+
+    zmsg_addstr(msg, CMD_DISC_DEREGISTER_SERVICE);
+    zmsg_addstr(msg, service_name.c_str());
+
+    zsock_t * client = zsock_new_req ("ipc://riapsdiscoveryservice");
+    assert(client);
+
+    // TODO check return value
+    zmsg_send(&msg, client);
+
+    char* msg_response = zstr_recv(client);
+
+    if (!msg_response){
+        std::cout << "No msg => interrupted" << std::endl;
+        return false;
+    }
+    else{
+        free(msg_response);
+    }
+
+    zsock_destroy(&client);
+    return true;
 }
 
 bool
@@ -90,7 +118,7 @@ bool
 get_servicebyname(std::string service_name, std::vector<service_details>& services){
 
     zmsg_t* msg = zmsg_new();
-    zmsg_addstr(msg, "$GETSERVICEBYNAME$");
+    zmsg_addstr(msg, CMD_DISC_GETSERVICE_BY_NAME);
     zmsg_addstr(msg, service_name.c_str());
     zsock_t * client = zsock_new_req ("ipc://riapsdiscoveryservice");
     assert(client);
@@ -243,7 +271,9 @@ register_component(std::string actorname, std::string componentname) {
     // Message format:
     // 1) actorname
     // 2) componentname
-    
+
+    std::cout << "Registering " + actorname + " " + componentname << std::endl;
+
     zmsg_t* msg = zmsg_new();
     zmsg_addstr(msg, CMD_DISC_REGISTER_COMPONENT);
     zmsg_addstr(msg, actorname.c_str());

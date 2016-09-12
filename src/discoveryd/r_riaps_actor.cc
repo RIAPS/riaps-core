@@ -7,6 +7,8 @@
 void
 riaps_actor (zsock_t *pipe, void *args)
 {
+    std::srand(std::time(0));
+
     // Response socket for incoming messages from RIAPS Components
     zsock_t * riaps_socket = zsock_new_rep ("ipc://riapsdiscoveryservice");
     
@@ -24,11 +26,18 @@ riaps_actor (zsock_t *pipe, void *args)
     std::map<std::string, int64_t> service_checkins;
 
     char* hostname = zsys_hostname();
-    std::string hostname_str = std::string(hostname);
-    disc_registernode(hostname);
-    free(hostname);
+    int rand_hostid = std::rand();
+    std::string hostname_str = "Host" + std::to_string(rand_hostid);
+    if (!hostname) {
 
+        std::cout << "Hostname is not configured, using " << hostname_str << std::endl;
 
+        disc_registernode(hostname_str);
+    } else{
+        hostname_str = std::string(hostname);
+        disc_registernode(hostname_str);
+
+    }
 
     while (!terminated){
         void *which = zpoller_wait(poller, REGULAR_MAINTAIN_PERIOD);
@@ -83,7 +92,7 @@ riaps_actor (zsock_t *pipe, void *args)
             
             if (command){
                 if (streq(command, CMD_DISC_REGISTER_SERVICE)) {
-                    std::cout << "REGISTER Service" << std::endl;
+                    //std::cout << "REGISTER Service" << std::endl;
                     std::vector<std::string> message_parameters;
                     service_details service;
                     extract_params(msg, message_parameters);
@@ -100,6 +109,17 @@ riaps_actor (zsock_t *pipe, void *args)
                     //    std::cout << "Registered, "  << std::endl;
                     //    zstr_send(riaps_socket, "Regisztralva");
                     //}
+                }
+                else if (streq(command, CMD_DISC_DEREGISTER_SERVICE)){
+                    char* service_name = zmsg_popstr(msg);
+                    if (service_name){
+                        deregisterService(std::string(service_name));
+                        zstr_send(riaps_socket, "DEREGISTERED");
+                        free(service_name);
+                    }
+                    else {
+                        std::cout << "no service name";
+                    }
                 }
                 else if (streq(command, CMD_DISC_GET_SERVICES)) {
                     std::vector<std::string> service_list;
@@ -162,11 +182,11 @@ riaps_actor (zsock_t *pipe, void *args)
                 else if (streq(command, CMD_DISC_REGISTER_ACTOR)){
                     char* actorname = zmsg_popstr(msg);
                     if (actorname){
-                        char* nodename = zsys_hostname();
+                        //char* nodename = zsys_hostname();
 
-                        disc_registeractor(nodename, actorname);
+                        disc_registeractor(hostname_str, actorname);
 
-                        free(nodename);
+                        //free(nodename);
                         free(actorname);
 
                         zstr_send(riaps_socket, "OK");
@@ -192,7 +212,7 @@ riaps_actor (zsock_t *pipe, void *args)
                     char* service_name = zmsg_popstr(msg);
                     if (service_name){
 
-                        std::cout << "   " << service_name << std::endl;
+                        //std::cout << "   " << service_name << std::endl;
                         int64_t time = zclock_mono();
                         service_checkins[service_name] = time;
 
@@ -235,6 +255,8 @@ riaps_actor (zsock_t *pipe, void *args)
             //std::cout << std::endl;
         }
     }
+
+    free(hostname);
 
     zpoller_destroy(&poller);
     zsock_destroy(&riaps_socket);

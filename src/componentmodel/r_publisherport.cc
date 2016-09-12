@@ -11,11 +11,15 @@ namespace riaps{
         port = zsock_bind(publisher_socket, "tcp://*:!");
         endpoint = std::string(zsock_endpoint(publisher_socket));
 
+        std::cout << "Publisher is created on port: " << port << std::endl;
+
         std::string ifaddress = GetInterfaceAddress(config.network_iface);
 
         // TODO: error handling
         // NOTE: Should be separated form construct
         if (ifaddress!="") {
+
+            std::cout << "Registering publisher" << std::endl;
 
             // TODO: Add tags
             register_service(config.servicename, config.servicename, ifaddress, std::to_string(port), {});
@@ -35,8 +39,7 @@ namespace riaps{
     }
 
     PublisherPort::~PublisherPort() {
-
-        //TODO: Add deregister service
+        deregister_service(configuration.servicename);
         zsock_destroy(&publisher_socket);
     }
 }
