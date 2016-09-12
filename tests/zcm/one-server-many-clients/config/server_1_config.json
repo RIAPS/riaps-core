@@ -1,0 +1,18 @@
+{
+    "Component Instances": [
+	{
+	    "Name" : "server_instance",	  
+	    "Definition" : "server_1.so",
+
+	    "Servers" : [
+		{
+		    "Name" : "server_port",
+		    "Priority" : 60,
+		    "Function" : "server_function",
+ 		    "Endpoints" : ["tcp://*:5510"],
+		    "Timeout" : 2.5
+		}
+	    ] 
+	}
+    ]
+}

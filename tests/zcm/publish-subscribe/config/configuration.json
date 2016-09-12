@@ -1,0 +1,46 @@
+{
+    "Component Instances": [
+	{
+	    "Name" : "publisher_component",
+	    "Definition" : "publisher_component.so",
+
+
+	    "Timers" : [
+		{
+		    "Name" : "timer_pub_1",
+		    "Priority" : 50,
+		    "Period" : 0.500,
+		    "Function" : "timer_1_function",
+		    "Endpoints" : ["tcp://*:5555"]
+		}
+	    ], 	    
+	    
+	    "Publishers" : [
+		{
+		    "Name" : "timer_pub_1",
+		    "Endpoints" : [{
+				"address" : "tcp://192.168.1.102",
+				"port"    : "5555"
+			}]
+		}
+	    ] 
+	    
+	},
+
+	{
+	    "Name" : "subscriber_component",	  
+	    "Definition" : "subscriber_component.so",
+
+	    "Subscribers" : [
+		{
+		    "Name" : "subscriber_port",
+		    "Priority" : 60,
+		    "Filter" : "",
+		    "Function" : "subscriber_function",
+		    "Endpoints" : ["tcp://127.0.0.1:5555", "tcp://127.0.0.1:5556"],
+			"PublisherName" : "timer_pub_1"
+		}
+	    ] 
+	}
+    ]
+}

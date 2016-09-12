@@ -1,0 +1,26 @@
+{
+    "Component Instances": [
+	{
+	    "Name" : "client_3_instance",	  
+	    "Definition" : "client_3.so",
+
+	    "Timers" : [
+		{
+		    "Name" : "timer_2",
+		    "Period" : 7.5,
+		    "Priority" : 50,
+		    "Function" : "call_the_server"
+		}
+	    ],	 	    
+
+	    "Clients" : [
+		{
+		    "Name" : "client_port",
+		    "Timeout" : 2.5,
+		    "Endpoints" : ["tcp://127.0.0.1:5512"]
+		}
+	    ] 
+	    
+	}
+    ]
+}

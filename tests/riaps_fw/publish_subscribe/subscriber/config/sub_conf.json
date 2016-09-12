@@ -1,0 +1,19 @@
+{
+    "Component Instances": [
+	{
+	    "Name" : "subscriber_component",	  
+	    "Definition" : "subscriber_component.so",
+
+	    "Subscribers" : [
+		{
+		    "Name" : "subscriber_port",
+		    "Priority" : 60,
+		    "Filter" : "",
+		    "Function" : "subscriber_function",
+		    //"Endpoints" : ["tcp://127.0.0.1:5555", "tcp://127.0.0.1:5556"],
+			"PublisherNames" : ["timer_pub_1"]
+		}
+	    ] 
+	}
+    ]
+}

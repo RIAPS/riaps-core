@@ -1,0 +1,9 @@
+{
+    "Actors": [
+	{
+	    "Name" : "periodic_timers_actor",
+	    "Configuration" : "configuration.json"
+	}
+    ]
+    
+}
