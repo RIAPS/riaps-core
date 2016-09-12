@@ -7,12 +7,17 @@
 namespace riaps{
 
     void component_actor(zsock_t* pipe, void* args){
-        //component_mock* comp = (component_mock*)args;
+        ComponentBase* comp = (ComponentBase*)args;
 
-        zsock_signal (pipe, 0);
+
 
         zpoller_t* poller = zpoller_new(pipe, NULL);
+
+
+
         assert(poller);
+
+        zsock_signal (pipe, 0);
 
         bool terminated = false;
         while (!terminated) {

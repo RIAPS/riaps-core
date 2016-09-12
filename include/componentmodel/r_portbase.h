@@ -10,6 +10,8 @@
 
 #include <iostream>
 
+#define SERVICE_POLLING_INTERVAL 2000
+
 namespace riaps {
     class PortBase {
 

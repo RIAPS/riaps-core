@@ -17,7 +17,8 @@ namespace riaps {
 
         ~SubscriberPort();
 
-
+    private:
+        zsock_t* zsock_subscriber;
 
     };
 

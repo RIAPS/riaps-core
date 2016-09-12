@@ -2,13 +2,10 @@
 // Created by parallels on 9/6/16.
 //
 
-#include "actor_mock.h"
-#include <czmq.h>
-
-#include <iostream>
+#include "actor_sub.h"
 
 int main(){
-    actor_mock a;
+    actor_sub a;
     a.init();
     a.start();
 

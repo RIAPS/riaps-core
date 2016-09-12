@@ -7,8 +7,8 @@ set (CMAKE_CXX_FLAGS "-std=c++11")
 include_directories(include)
 
 #Set the platform
-include(CMakeLists_arm.txt)
-#include(CMakeLists_amd64.txt)
+#include(CMakeLists_arm.txt)
+include(CMakeLists_amd64.txt)
 
 
 add_subdirectory(src/componentmodel)

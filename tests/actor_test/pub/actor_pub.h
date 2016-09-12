@@ -2,23 +2,22 @@
 // Created by parallels on 9/6/16.
 //
 
-#ifndef RIAPS_FW_ACTOR_MOCK_H
-#define RIAPS_FW_ACTOR_MOCK_H
+#ifndef RIAPS_FW_ACTOR_PUB_H
+#define RIAPS_FW_ACTOR_PUB_H
 
 #include <czmq.h>
 
 #include "componentmodel/r_actor.h"
 #include "componentmodel/r_componentbase.h"
-
-#include "component_mock.h"
+#include "component_pub.h"
 
 using riaps::ComponentBase;
 
-class actor_mock : public riaps::Actor {
+class actor_pub : public riaps::Actor {
 
 public:
 
-    actor_mock(){
+    actor_pub(){
         actor_zsock = zsock_new_rep("tcp://*:!");
         assert(actor_zsock);
         poller = zpoller_new(actor_zsock);
@@ -33,7 +32,7 @@ public:
         //std::cout << "Endpoint: " << endpoint << std::endl;
         //std::cout << actor_port <<std::endl;
 
-        register_actor("Actor1");
+        register_actor("ActorPub");
     }
 
     void initComponents(){
@@ -50,29 +49,24 @@ public:
         pport.network_iface   = "eth1";
         pport.port            = 0;            // Auto binding
 
-        subscriber_conf sport;
-        sport.servicename        = "Subscriber1";
-        sport.remoteservice_name = pport.servicename;
-
-        cconf.component_name = "ComponentA";
+        cconf.component_name = "ComponentPub";
         cconf.publishers_config.push_back(pport);
-        cconf.subscribers_config.push_back(sport);
 
-        component_mock c(cconf);
+        component_pub c(cconf);
 
         while (!zsys_interrupted) {
             void* which = zpoller_wait(poller, 2000);
-            std::cout << "Poll poll more... Current publishers:" << std::endl;
+            //std::cout << "Poll poll more... Current publishers:" << std::endl;
 
-            for (auto publisher : c.GetPublisherPorts()){
-                std::cout << "  - " << publisher->GetEndpoint() <<std::endl;
-            }
+            //for (auto publisher : c.GetPublisherPorts()){
+            //    std::cout << "  - " << publisher->GetEndpoint() <<std::endl;
+            //}
 
         }
     }
 
-    ~actor_mock(){
-        deregister_actor("Actor1");
+    ~actor_pub(){
+        deregister_actor("ActorPub");
         zpoller_destroy(&poller);
         zsock_destroy(&actor_zsock);
     }
@@ -86,4 +80,4 @@ protected:
 };
 
 
-#endif //RIAPS_FW_ACTOR_MOCK_H
+#endif //RIAPS_FW_ACTOR_PUB_H
