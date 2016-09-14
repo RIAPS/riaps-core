@@ -15,13 +15,12 @@
 
 #include <czmq.h>
 
-//typedef std::function<void(zmsg_t*, zsock_t*)> handler_function;
-
 static std::map<std::string, std::function<void(zmsg_t*, zsock_t*)>> handler_mapping;
 
 void init_command_mappings();
 
 bool handle_command(std::string command, zmsg_t* msg, zsock_t* inbox_socket);
 void handle_register_service(zmsg_t* msg, zsock_t* inbox_socket);
+void handle_deregister_service(zmsg_t* msg, zsock_t* zsocket);
 
 #endif //RIAPS_FW_R_RIAPS_CMD_HANDLER_H

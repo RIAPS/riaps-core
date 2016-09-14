@@ -5,7 +5,8 @@
 #include <discoveryd/r_riaps_cmd_handler.h>
 
 void init_command_mappings() {
-    handler_mapping[CMD_DISC_REGISTER_SERVICE] = &handle_register_service;
+    handler_mapping[CMD_DISC_REGISTER_SERVICE]   = &handle_register_service;
+    handler_mapping[CMD_DISC_DEREGISTER_SERVICE] = &handle_deregister_service;
 }
 
 bool handle_command(std::string command, zmsg_t* msg, zsock_t* inbox_socket) {
@@ -15,6 +16,7 @@ bool handle_command(std::string command, zmsg_t* msg, zsock_t* inbox_socket) {
     }
 
     handler_mapping[command](msg, inbox_socket);
+    return true;
 }
 
 void handle_register_service(zmsg_t* msg, zsock_t* inbox_socket) {
@@ -26,4 +28,16 @@ void handle_register_service(zmsg_t* msg, zsock_t* inbox_socket) {
 
     registerService(service);
     zstr_send(inbox_socket, "REGISTERED");
+}
+
+void handle_deregister_service(zmsg_t* msg, zsock_t* zsocket) {
+    char* service_name = zmsg_popstr(msg);
+    if (service_name){
+        deregisterService(std::string(service_name));
+        zstr_send(zsocket, "DEREGISTERED");
+        free(service_name);
+    }
+    else {
+        std::cout << "no service name";
+    }
 }
