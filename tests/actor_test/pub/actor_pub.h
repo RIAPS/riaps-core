@@ -18,26 +18,12 @@ class actor_pub : public riaps::Actor {
 public:
 
     actor_pub(){
-        actor_zsock = zsock_new_rep("tcp://*:!");
-        assert(actor_zsock);
-        poller = zpoller_new(actor_zsock);
-        assert(poller);
-    }
-
-    void init(){
-        //Bind to random port from C000 to FFFF
-        //actor_port = zsock_bind(actor_zsock, "tcp://*:!");
-        //const char* endpoint = zsock_endpoint(actor_zsock);
-        //actor_endpoint = std::string(endpoint);
-        //std::cout << "Endpoint: " << endpoint << std::endl;
-        //std::cout << actor_port <<std::endl;
-
-        register_actor("ActorPub");
-    }
-
-    void initComponents(){
 
     }
+
+
+
+
 
     void start(){
 
@@ -56,27 +42,11 @@ public:
 
         while (!zsys_interrupted) {
             void* which = zpoller_wait(poller, 2000);
-            //std::cout << "Poll poll more... Current publishers:" << std::endl;
-
-            //for (auto publisher : c.GetPublisherPorts()){
-            //    std::cout << "  - " << publisher->GetEndpoint() <<std::endl;
-            //}
 
         }
     }
 
-    ~actor_pub(){
-        deregister_actor("ActorPub");
-        zpoller_destroy(&poller);
-        zsock_destroy(&actor_zsock);
-    }
 
-protected:
-    zpoller_t*                 poller;
-    zsock_t*                   actor_zsock;
-    int                        actor_port;
-    std::string                actor_endpoint;
-    std::vector<ComponentBase> components;
 };
 
 

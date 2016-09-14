@@ -9,11 +9,7 @@ namespace riaps{
     void component_actor(zsock_t* pipe, void* args){
         ComponentBase* comp = (ComponentBase*)args;
 
-
-
         zpoller_t* poller = zpoller_new(pipe, NULL);
-
-
 
         assert(poller);
 

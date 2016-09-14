@@ -6,7 +6,6 @@
 
 int main(){
     actor_sub a;
-    a.init();
     a.start();
 
     return 0;

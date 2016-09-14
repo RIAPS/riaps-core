@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 
+#include "componentmodel/r_discoverdapi.h"
 #include "r_consul.h"
 #include "utils/r_message.h"
 #include "componentmodel/r_riaps_actor_commands.h"

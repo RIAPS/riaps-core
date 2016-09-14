@@ -179,16 +179,7 @@ int main()
             if (is_maintained){
                 print_cacheips(ipcache);
             }
-            //std::cout << "no package, just listener timeout" << std::endl;
         }
-
-        //char message [1024];
-        //if (!fgets (message, 1024, stdin))
-        //    break;
-        //message [strlen (message) - 1] = 0;
-        
-        //zstr_sendx (base, "PUBLISH", message, "service1", NULL);
-        //break;
     }
 
     //std::cout << "while end, wait" << std::endl;

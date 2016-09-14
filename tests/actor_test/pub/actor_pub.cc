@@ -6,7 +6,6 @@
 
 int main(){
     actor_pub a;
-    a.init();
     a.start();
 
     return 0;
