@@ -1,6 +1,7 @@
 #include "discoveryd/r_riaps_actor.h"
 #include "utils/r_message.h"
 #include "utils/r_utils.h"
+#include "discoveryd/r_riaps_cmd_handler.h"
 
 #define REGULAR_MAINTAIN_PERIOD 3000 //msec
 
@@ -9,11 +10,11 @@ riaps_actor (zsock_t *pipe, void *args)
 {
     std::srand(std::time(0));
 
+    init_command_mappings();
+
     // Response socket for incoming messages from RIAPS Components
     zsock_t * riaps_socket = zsock_new_rep ("ipc://riapsdiscoveryservice");
-    
     assert(riaps_socket);
-    //std::cout << ret;
 
     zpoller_t* poller = zpoller_new(pipe, riaps_socket, NULL);
     assert(poller);
@@ -92,23 +93,7 @@ riaps_actor (zsock_t *pipe, void *args)
             
             if (command){
                 if (streq(command, CMD_DISC_REGISTER_SERVICE)) {
-                    //std::cout << "REGISTER Service" << std::endl;
-                    std::vector<std::string> message_parameters;
-                    service_details service;
-                    extract_params(msg, message_parameters);
-                    params_to_service_details(message_parameters, service);
-
-                    registerService(service);
-                    zstr_send(riaps_socket, "REGISTERED");
-                    // Register service in consul
-                    // TODO: send back something
-                    //service_params serv_params;
-                    //if (process_register_params(params, serv_params)){
-                    //    std::cout << "Registering" << std::endl;
-                    //    registerService(serv_params);
-                    //    std::cout << "Registered, "  << std::endl;
-                    //    zstr_send(riaps_socket, "Regisztralva");
-                    //}
+                    handle_command(command, msg, riaps_socket);
                 }
                 else if (streq(command, CMD_DISC_DEREGISTER_SERVICE)){
                     char* service_name = zmsg_popstr(msg);
@@ -261,3 +246,4 @@ riaps_actor (zsock_t *pipe, void *args)
     zpoller_destroy(&poller);
     zsock_destroy(&riaps_socket);
 }
+
