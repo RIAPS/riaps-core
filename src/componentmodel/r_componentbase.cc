@@ -9,11 +9,19 @@ namespace riaps{
     void component_actor(zsock_t* pipe, void* args){
         ComponentBase* comp = (ComponentBase*)args;
 
+
+
         zpoller_t* poller = zpoller_new(pipe, NULL);
 
         assert(poller);
 
         zsock_signal (pipe, 0);
+
+        // Start adding the ports in the background
+        std::queue<zsock_t*> initialized_ports;
+
+
+
 
         bool terminated = false;
         while (!terminated) {
