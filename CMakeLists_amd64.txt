@@ -5,12 +5,12 @@ enable_testing()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-include_directories(~/Work/dependencies/libzmq/amd64/include)
-include_directories(~/Work/dependencies/libczmq/amd64/include)
-include_directories(~/Work/dependencies/libneon/amd64/include)
+include_directories(/opt/riaps/libzmq/amd64/include)
+include_directories(/opt/riaps/libczmq/amd64/include)
+include_directories(/opt/riaps/libneon/amd64/include)
 
 
-link_directories(~/Work/dependencies/libzmq/amd64/lib)
-link_directories(~/Work/dependencies/libczmq/amd64/lib)
-link_directories(~/Work/dependencies/libneon/amd64/lib)
+link_directories(/opt/riaps/libzmq/amd64/lib)
+link_directories(/opt/riaps/libczmq/amd64/lib)
+link_directories(/opt/riaps/libneon/amd64/lib)
 
