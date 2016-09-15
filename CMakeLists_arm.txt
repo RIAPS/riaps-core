@@ -10,11 +10,20 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 include(CTest)
 enable_testing()
 
-include_directories(~/Work/dependencies/libzmq/armhf/include)
-include_directories(~/Work/dependencies/libczmq/armhf/include)
-include_directories(~/Work/dependencies/libneon/armhf/include)
+set (LIBCZMQPATH_INCLUDE ${DEPENDENCIES}libczmq/armhf/include)
+set (LIBCZMQPATH_LIB ${DEPENDENCIES}libczmq/armhf/lib)
 
-link_directories(~/Work/dependencies/libzmq/armhf/lib)
-link_directories(~/Work/dependencies/libczmq/armhf/lib)
-link_directories(~/Work/dependencies/libneon/armhf/lib)
+set (LIBZMQPATH_INCLUDE ${DEPENDENCIES}libzmq/armhf/include)
+set (LIBZMQPATH_LIB ${DEPENDENCIES}libzmq/armhf/lib)
+
+set (LIBNEONPATH_INCLUDE ${DEPENDENCIES}libneon/armhf/include)
+set (LIBNEONPATH_LIB ${DEPENDENCIES}libneon/armhf/lib)
+
+include_directories(${LIBZMQPATH_INCLUDE})
+include_directories(${LIBCZMQPATH_INCLUDE})
+include_directories(${LIBNEONPATH_INCLUDE})
+
+link_directories(${LIBCZMQPATH_LIB})
+link_directories(${LIBZMQPATH_LIB})
+link_directories(${LIBNEONPATH_LIB})
 

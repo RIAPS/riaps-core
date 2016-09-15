@@ -3,6 +3,8 @@ project(riaps_fw VERSION 0.0.0)
 
 set (CMAKE_CXX_FLAGS "-std=c++11")
 
+set(DEPENDENCIES /opt/riaps/)
+
 #add includes
 include_directories(include)
 
@@ -17,25 +19,3 @@ add_subdirectory(src/discoveryd)
 
 # Tests
 add_subdirectory(tests/actor_test)
-
-
-
-
-#include_directories(include/zcm)
-#include_directories(include/zmq)
-
-
-
-#set(SOURCE_FILES discoveryd/r_discoveryd.cc
-#                 ./src/r_utils.cc
-#                 ./src/r_consul.cc
-#                 ./src/r_http_api.cc
-#                 ./src/r_consul_actor.cc
-#        discoveryd/r_riaps_actor.cc)
-
-
-
-
-
-#add_subdirectory(./src/zcm)
-#add_subdirectory(./tests/riaps_fw/publish_subscribe)

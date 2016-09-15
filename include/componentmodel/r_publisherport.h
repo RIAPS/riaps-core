@@ -5,7 +5,7 @@
 #ifndef RIAPS_R_PUBLISHERPORT_H
 #define RIAPS_R_PUBLISHERPORT_H
 
-#include <czmq.h>
+#include "czmq.h"
 #include "r_portbase.h"
 
 namespace riaps {
