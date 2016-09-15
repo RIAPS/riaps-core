@@ -7,9 +7,9 @@
 namespace riaps{
     PublisherPort::PublisherPort(publisher_conf& config) {
         configuration = config;
-        publisher_socket = zsock_new(ZMQ_PUB);
-        port = zsock_bind(publisher_socket, "tcp://*:!");
-        endpoint = std::string(zsock_endpoint(publisher_socket));
+        port_socket = zsock_new(ZMQ_PUB);
+        port = zsock_bind(port_socket, "tcp://*:!");
+        endpoint = std::string(zsock_endpoint(port_socket));
 
         std::cout << "Publisher is created on port: " << port << std::endl;
 
@@ -32,14 +32,17 @@ namespace riaps{
     }
 
     std::string PublisherPort::GetEndpoint() {
-        if (publisher_socket) {
-            return std::string(zsock_endpoint(publisher_socket));
+        if (port_socket) {
+            return std::string(zsock_endpoint(port_socket));
         }
         return "";
     }
 
+    void PublisherPort::PublishMessage(zmsg_t **msg) {
+        zmsg_send(msg, port_socket);
+    }
+
     PublisherPort::~PublisherPort() {
         deregister_service(configuration.servicename);
-        zsock_destroy(&publisher_socket);
     }
 }

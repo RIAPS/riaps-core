@@ -17,13 +17,13 @@ namespace riaps {
 
         publisher_conf GetConfig();
 
-        void PublishMessage(zmsg_t* msg);
+        void PublishMessage(zmsg_t** msg);
 
-        ~PublisherPort();
+        virtual ~PublisherPort();
 
     protected:
         publisher_conf configuration;
-        zsock_t*       publisher_socket;
+
         int            port;
         std::string    endpoint;
     };

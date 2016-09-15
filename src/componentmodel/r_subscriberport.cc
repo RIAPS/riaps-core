@@ -27,9 +27,9 @@ namespace riaps{
         }
 
         std::string targetaddress = "tcp://" + target_service.ip_address + ":" + target_service.port;
-        zsock_subscriber = zsock_new_sub(targetaddress.c_str(), "");
+        port_socket = zsock_new_sub(targetaddress.c_str(), "");
 
-        if (zsock_subscriber!=NULL) {
+        if (port_socket!=NULL) {
             std::cout << "Subscriber connected" << std::endl;
         }
         else {
@@ -39,7 +39,7 @@ namespace riaps{
     }
 
     SubscriberPort::~SubscriberPort() {
-        zsock_destroy(&zsock_subscriber);
+
     }
 
 }

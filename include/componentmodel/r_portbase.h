@@ -8,6 +8,7 @@
 #include "r_configuration.h"
 #include "r_discoverdapi.h"
 
+#include <czmq.h>
 #include <iostream>
 
 #define SERVICE_POLLING_INTERVAL 2000
@@ -19,8 +20,12 @@ namespace riaps {
         PortBase();
 
         std::string GetInterfaceAddress(std::string ifacename);
+        const zsock_t* GetSocket();
 
-        ~PortBase();
+        virtual ~PortBase();
+
+    protected:
+        zsock_t*       port_socket;
 
     };
 }

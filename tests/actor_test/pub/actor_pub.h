@@ -21,13 +21,7 @@ public:
 
     }
 
-
-
-
-
     void start(){
-
-
         component_conf cconf;
 
         publisher_conf pport;
@@ -40,9 +34,32 @@ public:
 
         component_pub c(cconf);
 
+        int i =0;
+
         while (!zsys_interrupted) {
             void* which = zpoller_wait(poller, 2000);
 
+            if (which == actor_zsock) {
+                std::cout << "Something arrived on pipe";
+
+                zmsg_t *msg = zmsg_recv(which);
+                if (!msg) {
+                    std::cout << "No msg => interrupted" << std::endl;
+                    break;
+                }
+
+                char *command = zmsg_popstr(msg);
+                std::cout << "Erkezett: " << command <<std::endl;
+                free(command);
+            }
+            else {
+                std::cout << "Send message: " << i <<std::endl;
+
+                zmsg_t* msg = zmsg_new();
+                zmsg_addstr(msg, std::to_string(i++).c_str());
+
+                c.GetPublisherPorts()[0]->PublishMessage(&msg);
+            }
         }
     }
 

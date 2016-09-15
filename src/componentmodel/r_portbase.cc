@@ -8,6 +8,10 @@ namespace riaps {
     PortBase::PortBase() {
     }
 
+    const zsock_t * PortBase::GetSocket() {
+        return port_socket;
+    }
+
     std::string PortBase::GetInterfaceAddress(std::string ifacename){
         ziflist_t *iflist = ziflist_new ();
         assert (iflist);
@@ -31,6 +35,6 @@ namespace riaps {
     }
 
     PortBase::~PortBase() {
-
+        zsock_destroy(&port_socket);
     }
 }

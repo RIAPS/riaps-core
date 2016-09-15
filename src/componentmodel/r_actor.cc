@@ -10,7 +10,7 @@ namespace riaps {
     riaps::Actor::Actor() {
         actor_zsock = zsock_new_rep("tcp://*:!");
         assert(actor_zsock);
-        poller = zpoller_new(actor_zsock);
+        poller = zpoller_new(actor_zsock, NULL);
         assert(poller);
 
         register_actor("ActorSub");

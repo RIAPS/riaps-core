@@ -13,14 +13,14 @@ namespace riaps{
 
         zpoller_t* poller = zpoller_new(pipe, NULL);
 
+        for (auto subscriberport : comp->GetSubscriberPorts()) {
+            const zsock_t* socket = subscriberport->GetSocket();
+            zpoller_add(poller, (zsock_t*)socket);
+        }
+
         assert(poller);
 
         zsock_signal (pipe, 0);
-
-        // Start adding the ports in the background
-        std::queue<zsock_t*> initialized_ports;
-
-
 
 
         bool terminated = false;
@@ -43,8 +43,18 @@ namespace riaps{
 
                 free(command);
                 zmsg_destroy(&msg);
-            } else {
+            } else if(which){
+                std::cout << "Message arrived on the subscriber side" << std::endl;
+                zmsg_t *msg = zmsg_recv(which);
 
+                char* msgstr = zmsg_popstr(msg);
+
+                std::cout << "Arrived message: " << msgstr;
+
+                free(msgstr);
+            }
+            else{
+                // just poll timeout
             }
         }
 
