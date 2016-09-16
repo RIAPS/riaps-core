@@ -44,14 +44,19 @@ namespace riaps{
                 free(command);
                 zmsg_destroy(&msg);
             } else if(which){
-                std::cout << "Message arrived on the subscriber side" << std::endl;
+
+                // Message test with more than one field
                 zmsg_t *msg = zmsg_recv(which);
 
-                char* msgstr = zmsg_popstr(msg);
+                if (msg) {
+                    char* messagetype = zmsg_popstr(msg);
 
-                std::cout << "Arrived message: " << msgstr;
+                    comp->OnMessageArrived(std::string(messagetype), msg);
 
-                free(msgstr);
+                    free(messagetype);
+                }
+
+
             }
             else{
                 // just poll timeout

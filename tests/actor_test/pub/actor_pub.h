@@ -10,6 +10,7 @@
 #include "componentmodel/r_actor.h"
 #include "componentmodel/r_componentbase.h"
 #include "component_pub.h"
+#include "../messagetypes/messages.h"
 
 using riaps::ComponentBase;
 
@@ -40,7 +41,7 @@ public:
             void* which = zpoller_wait(poller, 2000);
 
             if (which == actor_zsock) {
-                std::cout << "Something arrived on pipe";
+                /*std::cout << "Something arrived on pipe";
 
                 zmsg_t *msg = zmsg_recv(which);
                 if (!msg) {
@@ -50,13 +51,18 @@ public:
 
                 char *command = zmsg_popstr(msg);
                 std::cout << "Erkezett: " << command <<std::endl;
-                free(command);
+                free(command);*/
             }
             else {
-                std::cout << "Send message: " << i <<std::endl;
+                //std::cout << "Send message: " << i <<std::endl;
 
-                zmsg_t* msg = zmsg_new();
-                zmsg_addstr(msg, std::to_string(i++).c_str());
+                //zmsg_t* msg = zmsg_new();
+                //zmsg_addstr(msg, std::to_string(i++).c_str());
+                std::vector<std::string> params;
+
+                params.push_back("kukucs");
+
+                zmsg_t* msg = create_message(MSG_ACT_PING, params);
 
                 c.GetPublisherPorts()[0]->PublishMessage(&msg);
             }

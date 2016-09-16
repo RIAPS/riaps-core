@@ -36,7 +36,9 @@ namespace riaps {
         virtual std::vector<PublisherPort*>  GetPublisherPorts();
         virtual std::vector<SubscriberPort*> GetSubscriberPorts();
 
-        ~ComponentBase();
+        virtual void OnMessageArrived(std::string messagetype, zmsg_t* msg_body)=0;
+
+        virtual ~ComponentBase();
 
     protected:
         component_conf configuration;

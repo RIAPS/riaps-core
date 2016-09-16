@@ -19,6 +19,10 @@ public:
 
     };
 
+    virtual void OnMessageArrived(std::string messagetype, zmsg_t* msg_body){
+
+    }
+
     void init(){
 
     };

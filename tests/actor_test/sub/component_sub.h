@@ -19,6 +19,23 @@ public:
 
     };
 
+    virtual void OnMessageArrived(std::string messagetype, zmsg_t* msg_body) {
+        std::cout << messagetype << " arrived " << std::endl;
+
+        bool has_more_msg = true;
+
+        while (has_more_msg) {
+            char* msgpart = zmsg_popstr(msg_body);
+            if (msgpart){
+                std::cout << " part: " << msgpart <<std::endl;
+                free(msgpart);
+            }
+            else{
+                has_more_msg = false;
+            }
+        }
+    }
+
     void init(){
 
     };

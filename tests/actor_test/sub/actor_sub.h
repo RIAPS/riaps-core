@@ -21,7 +21,6 @@ public:
 
     }
 
-
     void start(){
         component_conf cconf;
 
