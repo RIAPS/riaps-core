@@ -18,4 +18,4 @@ add_subdirectory(src/discoveryd)
 
 
 # Tests
-add_subdirectory(tests/actor_test)
+add_subdirectory(tests/test_pubsub)

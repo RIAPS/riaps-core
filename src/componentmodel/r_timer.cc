@@ -28,14 +28,19 @@ namespace riaps {
             _thd.join();
     }
 
-    void CallBackTimer::start(int interval, std::function<void(void)> func) {
+    void CallBackTimer::start(int interval) {
         if (_execute.load(std::memory_order_acquire)) {
             stop();
         };
         _execute.store(true, std::memory_order_release);
-        _thd = std::thread([this, interval, func]() {
+        _thd = std::thread([this, interval]() {
             while (_execute.load(std::memory_order_acquire)) {
-                func();
+
+                // Send FIRE message
+                zmsg_t* msg = zmsg_new();
+                zmsg_addstr(msg, _timerid.c_str());
+                zmsg_send(&msg, this->_zsock_timer);
+
                 std::this_thread::sleep_for(
                         std::chrono::milliseconds(interval));
             }

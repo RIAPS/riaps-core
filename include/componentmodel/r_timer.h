@@ -24,7 +24,8 @@ namespace riaps {
 
         void stop();
 
-        void start(int interval, std::function<void(void)> func);
+        //void start(int interval, std::function<void(void)> func);
+        void start(int interval);
 
         bool is_running() const noexcept ;
 
