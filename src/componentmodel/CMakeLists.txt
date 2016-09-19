@@ -5,7 +5,8 @@ set(FRAMEWORK_LIB_FILES r_discoverdapi.cc
                         r_subscriberport.cc
                         r_publisherport.cc
                         r_actor.cc
-                        r_portbase.cc)
+                        r_portbase.cc
+                        r_timer.cc)
 
 add_library(riaps SHARED ${FRAMEWORK_LIB_FILES})
 target_link_libraries(riaps czmq)
