@@ -9,6 +9,7 @@
 #include "r_subscriberport.h"
 #include "r_discoverdapi.h"
 #include "r_configuration.h"
+#include "r_timer.h"
 
 #include <iostream>
 #include <vector>
@@ -28,15 +29,19 @@ namespace riaps {
     public:
         ComponentBase(component_conf& config);
 
-
         // TODO: query endpoint of the component
         void AddPublisherPort(publisher_conf&);
         void AddSubscriberPort(subscriber_conf&);
+        void AddTimer(periodic_timer_conf&);
 
         virtual std::vector<PublisherPort*>  GetPublisherPorts();
         virtual std::vector<SubscriberPort*> GetSubscriberPorts();
+        //virtual std::vector<CallBackTimer*>  GetTimers();
+
+        virtual const zsock_t* GetTimerPort();
 
         virtual void OnMessageArrived(std::string messagetype, zmsg_t* msg_body)=0;
+        virtual void OnTimerFired(std::string timerid)=0;
 
         virtual ~ComponentBase();
 
@@ -45,10 +50,13 @@ namespace riaps {
 
         std::vector<std::unique_ptr<PublisherPort>>  publisherports;
         std::vector<std::unique_ptr<SubscriberPort>> subscriberports;
+        std::vector<std::unique_ptr<CallBackTimer>>  periodic_timers;
 
         zactor_t*  zactor_component;
         zsock_t*   zsock_component;
+        zsock_t*   _zsock_timer;
         zpoller_t* zpoller;
+
     };
 }
 

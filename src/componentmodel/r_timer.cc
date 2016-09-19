@@ -6,13 +6,20 @@
 
 namespace riaps {
 
-    CallBackTimer::CallBackTimer()
-            : _execute(false) {}
+    CallBackTimer::CallBackTimer(std::string timerid)
+            : _execute(false) {
+        _timerid = timerid;
+        _zsock_timer = zsock_new_push(CHAN_TIMER_INPROC);
+    }
 
     CallBackTimer::~CallBackTimer() {
         if (_execute.load(std::memory_order_acquire)) {
             stop();
         };
+    }
+
+    const zsock_t* CallBackTimer::GetSocket() {
+        return _zsock_timer;
     }
 
     void CallBackTimer::stop() {

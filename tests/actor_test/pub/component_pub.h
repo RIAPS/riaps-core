@@ -23,6 +23,10 @@ public:
 
     }
 
+    virtual void OnTimerFired(std::string timerid) {
+
+    }
+
     void init(){
 
     };

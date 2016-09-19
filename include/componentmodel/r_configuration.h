@@ -28,7 +28,8 @@ typedef struct _remoteport_conf subscriber_conf;
 typedef struct _remoteport_conf request_conf;
 
 struct _periodic_timer_conf{
-    int interval; // in millisec
+    std::string timerid;  // Must be unique (component scope)
+    int         interval; // in millisec
 };
 
 typedef struct _periodic_timer_conf periodic_timer_conf;
