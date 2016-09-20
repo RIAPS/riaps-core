@@ -18,7 +18,7 @@ class actor_pub : public riaps::Actor {
 
 public:
 
-    actor_pub(){
+    actor_pub(std::string actorid) : Actor(actorid){
 
     }
 
@@ -38,9 +38,9 @@ public:
         int i =0;
 
         while (!zsys_interrupted) {
-            void* which = zpoller_wait(poller, 2000);
+            void* which = zpoller_wait(_poller, 2000);
 
-            if (which == actor_zsock) {
+            if (which == _actor_zsock) {
                 /*std::cout << "Something arrived on pipe";
 
                 zmsg_t *msg = zmsg_recv(which);

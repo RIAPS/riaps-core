@@ -7,13 +7,13 @@
 
 
 namespace riaps {
-    riaps::Actor::Actor() {
-        actor_zsock = zsock_new_rep("tcp://*:!");
-        assert(actor_zsock);
-        poller = zpoller_new(actor_zsock, NULL);
-        assert(poller);
+    riaps::Actor::Actor(std::string actorid):_actor_id(actorid) {
+        _actor_zsock = zsock_new_rep("tcp://*:!");
+        assert(_actor_zsock);
+        _poller = zpoller_new(_actor_zsock, NULL);
+        assert(_poller);
 
-        register_actor("ActorSub");
+        register_actor(_actor_id);
     }
 
     void riaps::Actor::start(){
@@ -23,9 +23,9 @@ namespace riaps {
     }
 
     riaps::Actor::~Actor() {
-        deregister_actor("ActorSub");
-        zpoller_destroy(&poller);
-        zsock_destroy(&actor_zsock);
+        deregister_actor(_actor_id);
+        zpoller_destroy(&_poller);
+        zsock_destroy(&_actor_zsock);
     }
 }
 

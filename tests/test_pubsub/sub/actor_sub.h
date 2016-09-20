@@ -17,7 +17,7 @@ class actor_sub : public riaps::Actor {
 
 public:
 
-    actor_sub(){
+    actor_sub(std::string actorid) : Actor(actorid){
 
     }
 
@@ -34,7 +34,7 @@ public:
         component_sub c(cconf);
 
         while (!zsys_interrupted) {
-            void* which = zpoller_wait(poller, 2000);
+            void* which = zpoller_wait(_poller, 2000);
             //std::cout << "Poll poll more... Current publishers:" << std::endl;
 
             //for (auto publisher : c.GetPublisherPorts()){

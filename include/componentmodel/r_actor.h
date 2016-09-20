@@ -15,17 +15,18 @@
 namespace riaps {
     class Actor {
     public:
-        Actor();
+        Actor(std::string actorid);
         void start();
 
         ~Actor();
 
     protected:
-        zpoller_t*                 poller;
-        zsock_t*                   actor_zsock;
-        int                        actor_port;
-        std::string                actor_endpoint;
-        std::vector<ComponentBase> components;
+        zpoller_t*                 _poller;
+        zsock_t*                   _actor_zsock;
+        int                        _actor_port;
+        std::string                _actor_endpoint;
+        std::string                _actor_id;
+        std::vector<ComponentBase> _components;
     };
 }
 

@@ -5,7 +5,7 @@
 #include "actor_pub.h"
 
 int main(){
-    actor_pub a;
+    actor_pub a("ActorPub");
     a.start();
 
     return 0;

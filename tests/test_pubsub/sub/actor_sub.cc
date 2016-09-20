@@ -5,7 +5,7 @@
 #include "actor_sub.h"
 
 int main(){
-    actor_sub a;
+    actor_sub a("ActorSub");
     a.start();
 
     return 0;
