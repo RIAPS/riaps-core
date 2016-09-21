@@ -2,6 +2,7 @@
 #include "utils/r_message.h"
 #include "utils/r_utils.h"
 #include "discoveryd/r_riaps_cmd_handler.h"
+#include "discoveryd/r_service_poller.h"
 #include <unistd.h>
 
 #define REGULAR_MAINTAIN_PERIOD 3000 //msec
@@ -17,8 +18,12 @@ riaps_actor (zsock_t *pipe, void *args)
     zsock_t * riaps_socket = zsock_new_rep ("ipc://riapsdiscoveryservice");
     assert(riaps_socket);
 
-    zpoller_t* poller = zpoller_new(pipe, riaps_socket, NULL);
+    zactor_t* act_service_poller = zactor_new(service_poller_actor, NULL);
+    assert(act_service_poller);
+
+    zpoller_t* poller = zpoller_new(pipe, riaps_socket, act_service_poller, NULL);
     assert(poller);
+
 
     bool terminated = false;
     zsock_signal (pipe, 0);
@@ -139,6 +144,24 @@ riaps_actor (zsock_t *pipe, void *args)
                         }
 
                         zmsg_send(&response_msg, riaps_socket);
+                    }
+                    else{
+                        // TODO send back empty message
+                    }
+                }
+                else if (streq(command, CMD_DISC_GETSERVICE_BY_NAME_ASYNC)){
+                    char* servicename_param = zmsg_popstr(msg);
+                    if (servicename_param) {
+                        char* returnaddress_param = zmsg_popstr(msg);
+                        if (returnaddress_param){
+
+                            // Pass the message to the ASYNC handler
+                            zsock_send(act_service_poller, "ss", servicename_param, returnaddress_param);
+
+                            free(returnaddress_param);
+                        }
+                        free(servicename_param);
+                        zstr_send(riaps_socket, "OK");
                     }
                     else{
                         // TODO send back empty message
