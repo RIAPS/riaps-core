@@ -4,17 +4,16 @@
 
 #include "componentmodel/r_componentbase.h"
 
-#define PULLCHAN "inproc:///"
-
 namespace riaps{
 
     void component_actor(zsock_t* pipe, void* args){
         ComponentBase* comp = (ComponentBase*)args;
 
-        zsock_t* timerport = (zsock_t*)comp->GetTimerPort();
-        zsock_t* asyncport = (zsock_t*)comp->GetAsyncPort();
+        //zsock_t* timerport = (zsock_t*)comp->GetTimerPort();
+        //zsock_t* asyncport = zsock_new_pull("ipc://lofasz");
+        //assert(asyncport);
 
-        zpoller_t* poller = zpoller_new(pipe, timerport, NULL);
+        zpoller_t* poller = zpoller_new(pipe, NULL);
 
         // TODO: Uncommented for debug, PUT IT BACK!
         //for (auto subscriberport : comp->GetSubscriberPorts()) {
@@ -22,10 +21,9 @@ namespace riaps{
         //    zpoller_add(poller, (zsock_t*)socket);
         //}
 
-                assert(poller);
+        assert(poller);
 
         zsock_signal (pipe, 0);
-
 
         bool terminated = false;
         while (!terminated) {
@@ -47,7 +45,8 @@ namespace riaps{
 
                 free(command);
                 zmsg_destroy(&msg);
-            } else if (which == timerport) {
+            }
+            /*else if (which == timerport) {
                 std::cout << "Timer?" << std::endl;
                 zmsg_t *msg = zmsg_recv(which);
                 if (!msg) {
@@ -63,17 +62,16 @@ namespace riaps{
 
                 }
 
-            }
+            }*/
             // Message from async query
-            else if (which == asyncport){
-                std::cout<< "YEAH ASYNC ARRIVED" << std::endl;
-
-                zmsg_t *msg = zmsg_recv(which);
-                zmsg_destroy(&msg);
-            }
-                // TODO: from one of the subscribers?
+            //else if (which == asyncport){
+            //    std::cout<< "YEAH ASYNC ARRIVED" << std::endl;
+//
+             //   zmsg_t *msg = zmsg_recv(which);
+             //   zmsg_destroy(&msg);
+            //}
+            // TODO: from one of the subscribers?
             else if(which){
-
                 // Message test with more than one field
                 zmsg_t *msg = zmsg_recv(which);
 
@@ -84,14 +82,13 @@ namespace riaps{
 
                     free(messagetype);
                 }
-
-
             }
             else{
                 // just poll timeout
             }
         }
 
+        //zsock_destroy(&asyncport);
         zpoller_destroy(&poller);
     };
 
@@ -99,13 +96,12 @@ namespace riaps{
         zsock_component = zsock_new_rep("tcp://*:!");
         assert(zsock_component);
 
-        _zsock_timer = zsock_new_pull(CHAN_TIMER_INPROC);
-        assert(_zsock_timer);
+        //_zsock_timer = zsock_new_pull(CHAN_TIMER_INPROC);
+        //assert(_zsock_timer);
 
-        _zsock_async_result = zsock_new_pull("ipc://lofasz");
-        assert(_zsock_async_result);
 
-        zpoller = zpoller_new(zsock_component, _zsock_timer, NULL);
+
+        zpoller = zpoller_new(zsock_component, NULL);
         assert(zpoller);
 
         configuration = config;
@@ -123,13 +119,9 @@ namespace riaps{
         zactor_component = zactor_new(component_actor, this);
     }
 
-    const zsock_t* ComponentBase::GetTimerPort() {
-        return _zsock_timer;
-    }
-
-    const zsock_t* ComponentBase::GetAsyncPort() {
-        return _zsock_async_result;
-    }
+    //const zsock_t* ComponentBase::GetTimerPort() {
+    //    return _zsock_timer;
+    //}
 
     void ComponentBase::AddPublisherPort(publisher_conf& config) {
         std::unique_ptr<PublisherPort> newport(new PublisherPort(config));
@@ -164,7 +156,7 @@ namespace riaps{
 
     ComponentBase::~ComponentBase() {
         zsock_destroy(&zsock_component);
-        zsock_destroy(&_zsock_timer);
+        //zsock_destroy(&_zsock_timer);
         zactor_destroy(&zactor_component);
     }
 

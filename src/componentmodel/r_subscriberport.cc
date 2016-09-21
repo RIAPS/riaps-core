@@ -40,11 +40,11 @@ namespace riaps{
 
     SubscriberPort::SubscriberPort(subscriber_conf &config) {
         // Just send the async request
-        get_servicebyname_async(config.remoteservice_name);
+        //get_servicebyname_async(config.remoteservice_name, "ipc://lofasz");
     }
 
-    SubscriberPort::~SubscriberPort() {
-
-    }
+    //SubscriberPort::~SubscriberPort() {
+//
+    //}
 
 }

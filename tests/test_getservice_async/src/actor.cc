@@ -15,7 +15,7 @@ void actor::start() {
 
     publisher_conf pport;
     pport.servicename = "Publisher1";
-    pport.network_iface = "eth0";
+    pport.network_iface = "eth1";
     pport.port = 0;            // Auto binding
 
     cconf.component_name = "ComponentPub";
@@ -23,6 +23,7 @@ void actor::start() {
 
     subscriber_conf sconf1;
     sconf1.remoteservice_name = "Publisher1";
+    sconf1.servicename = "Subscriber1";
     cconf.subscribers_config.push_back(sconf1);
 
     component_pub c(cconf);

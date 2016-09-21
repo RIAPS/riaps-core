@@ -29,7 +29,7 @@ namespace riaps {
         // Proxy for actor's components (INPROC)
         //zsock_t*                   _actor_comp_pull;
         //zsock_t*                   _actor_comp_push;
-        zactor_t*                  _actor_comp_proxy;
+        //zactor_t*                  _actor_comp_proxy;
 
         int                        _actor_port;
         std::string                _actor_endpoint;

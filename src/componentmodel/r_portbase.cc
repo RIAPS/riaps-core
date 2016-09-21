@@ -35,6 +35,10 @@ namespace riaps {
     }
 
     PortBase::~PortBase() {
-        zsock_destroy(&port_socket);
+        std::cout << "Destroy called " << std::endl;
+        if (port_socket) {
+            std::cout << "Destroy portbase socket : " << port_socket <<std::endl;
+            zsock_destroy(&port_socket);
+        }
     }
 }

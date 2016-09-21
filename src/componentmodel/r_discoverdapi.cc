@@ -197,11 +197,12 @@ get_servicebyname(std::string service_name, std::vector<service_details>& servic
 }
 
 bool
-get_servicebyname_async(std::string service_name){
+get_servicebyname_async(std::string service_name, std::string replyaddress){
 
     zmsg_t* msg = zmsg_new();
     zmsg_addstr(msg, CMD_DISC_GETSERVICE_BY_NAME_ASYNC);
     zmsg_addstr(msg, service_name.c_str());
+    zmsg_addstr(msg, replyaddress.c_str());
     zsock_t * client = zsock_new_req ("ipc://riapsdiscoveryservice");
     assert(client);
 

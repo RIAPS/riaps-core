@@ -161,11 +161,12 @@ riaps_actor (zsock_t *pipe, void *args)
                             free(returnaddress_param);
                         }
                         free(servicename_param);
-                        zstr_send(riaps_socket, "OK");
+
                     }
                     else{
                         // TODO send back empty message
                     }
+                    zstr_send(riaps_socket, "OK");
                 }
                 else if(streq(command, CMD_DISC_REGISTER_NODE)){
                     // Register a node in the KV storage
