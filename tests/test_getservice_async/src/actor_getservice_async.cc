@@ -2,10 +2,10 @@
 // Created by parallels on 9/21/16.
 //
 
-#include "actor_pub.h"
+#include "actor.h"
 
 int main(){
-    actor_pub a("ActorPub");
+    actor a("ActorTestGetServiceAsync");
     a.start();
 
     return 0;

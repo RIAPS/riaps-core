@@ -18,7 +18,7 @@ namespace riaps {
         Actor(std::string actorid);
         void start();
 
-        ~Actor();
+        virtual ~Actor();
 
     protected:
         zpoller_t*                 _poller;
