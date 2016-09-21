@@ -39,6 +39,7 @@ namespace riaps {
         //virtual std::vector<CallBackTimer*>  GetTimers();
 
         virtual const zsock_t* GetTimerPort();
+        virtual const zsock_t* GetAsyncPort();
 
         virtual void OnMessageArrived(std::string messagetype, zmsg_t* msg_body)=0;
         virtual void OnTimerFired(std::string timerid)=0;
@@ -48,12 +49,13 @@ namespace riaps {
     protected:
         component_conf configuration;
 
-        std::vector<std::unique_ptr<PublisherPort>>  publisherports;
-        std::vector<std::unique_ptr<SubscriberPort>> subscriberports;
-        std::vector<std::unique_ptr<CallBackTimer>>  periodic_timers;
+        std::vector<std::unique_ptr<PublisherPort>>  _publisherports;
+        std::vector<std::unique_ptr<SubscriberPort>> _subscriberports;
+        std::vector<std::unique_ptr<CallBackTimer>>  _periodic_timers;
 
         zactor_t*  zactor_component;
         zsock_t*   zsock_component;
+        zsock_t*   _zsock_async_result;
         zsock_t*   _zsock_timer;
         zpoller_t* zpoller;
 

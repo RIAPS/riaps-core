@@ -1,0 +1,2 @@
+add_executable(actor_getservice_async actor_getservice_async.cc)
+target_link_libraries(actor_getservice_async czmq riaps)

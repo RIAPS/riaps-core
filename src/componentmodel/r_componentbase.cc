@@ -4,12 +4,15 @@
 
 #include "componentmodel/r_componentbase.h"
 
+#define PULLCHAN "inproc:///"
+
 namespace riaps{
 
     void component_actor(zsock_t* pipe, void* args){
         ComponentBase* comp = (ComponentBase*)args;
 
         zsock_t* timerport = (zsock_t*)comp->GetTimerPort();
+        zsock_t* asyncport = (zsock_t*)comp->GetAsyncPort();
 
         zpoller_t* poller = zpoller_new(pipe, timerport, NULL);
 
@@ -61,6 +64,13 @@ namespace riaps{
                 }
 
             }
+            // Message from async query
+            else if (which == asyncport){
+                std::cout<< "YEAH ASYNC ARRIVED" << std::endl;
+
+                zmsg_t *msg = zmsg_recv(which);
+                zmsg_destroy(&msg);
+            }
                 // TODO: from one of the subscribers?
             else if(which){
 
@@ -92,6 +102,9 @@ namespace riaps{
         _zsock_timer = zsock_new_pull(CHAN_TIMER_INPROC);
         assert(_zsock_timer);
 
+        _zsock_async_result = zsock_new_pull("ipc://lofasz");
+        assert(_zsock_async_result);
+
         zpoller = zpoller_new(zsock_component, _zsock_timer, NULL);
         assert(zpoller);
 
@@ -114,20 +127,24 @@ namespace riaps{
         return _zsock_timer;
     }
 
+    const zsock_t* ComponentBase::GetAsyncPort() {
+        return _zsock_async_result;
+    }
+
     void ComponentBase::AddPublisherPort(publisher_conf& config) {
         std::unique_ptr<PublisherPort> newport(new PublisherPort(config));
-        publisherports.push_back(std::move(newport));
+        _publisherports.push_back(std::move(newport));
     }
 
     void ComponentBase::AddSubscriberPort(subscriber_conf& config) {
-        subscriberports.push_back(std::unique_ptr<SubscriberPort>(new SubscriberPort(config)));
+        _subscriberports.push_back(std::unique_ptr<SubscriberPort>(new SubscriberPort(config)));
     }
 
     std::vector<PublisherPort*> ComponentBase::GetPublisherPorts() {
 
         std::vector<PublisherPort*> results;
 
-        for (auto it=publisherports.begin(); it!=publisherports.end(); it++){
+        for (auto it=_publisherports.begin(); it!=_publisherports.end(); it++){
             results.push_back(it->get());
         }
 
@@ -138,7 +155,7 @@ namespace riaps{
 
         std::vector<SubscriberPort*> results;
 
-        for (auto it=subscriberports.begin(); it!=subscriberports.end(); it++){
+        for (auto it=_subscriberports.begin(); it!=_subscriberports.end(); it++){
             results.push_back(it->get());
         }
 

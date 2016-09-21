@@ -19,3 +19,4 @@ add_subdirectory(src/discoveryd)
 
 # Tests
 add_subdirectory(tests/test_pubsub)
+add_subdirectory(tests/test_getservice_async)

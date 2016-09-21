@@ -22,6 +22,9 @@ extern bool
 get_servicebyname(std::string service_id, std::vector<service_details>& services);
 
 extern bool
+get_servicebyname_async(std::string service_name);
+
+extern bool
 deregister_service(std::string service_name);
 
 extern void

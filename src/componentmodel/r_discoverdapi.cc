@@ -196,6 +196,34 @@ get_servicebyname(std::string service_name, std::vector<service_details>& servic
     
 }
 
+bool
+get_servicebyname_async(std::string service_name){
+
+    zmsg_t* msg = zmsg_new();
+    zmsg_addstr(msg, CMD_DISC_GETSERVICE_BY_NAME_ASYNC);
+    zmsg_addstr(msg, service_name.c_str());
+    zsock_t * client = zsock_new_req ("ipc://riapsdiscoveryservice");
+    assert(client);
+
+    // TODO check return value
+    zmsg_send(&msg, client);
+
+    zmsg_t* msg_response = zmsg_recv(client);
+
+    if (!msg_response){
+        std::cout << "No msg => interrupted" << std::endl;
+        return false;
+    }
+
+
+    zmsg_destroy(&msg_response);
+
+    zsock_destroy(&client);
+
+    return false;
+
+}
+
 void
 ping_service(std::string service_name){
     zmsg_t* msg = zmsg_new();
