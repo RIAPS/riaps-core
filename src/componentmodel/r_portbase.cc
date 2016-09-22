@@ -6,6 +6,7 @@
 
 namespace riaps {
     PortBase::PortBase() {
+        port_socket = NULL;
     }
 
     const zsock_t * PortBase::GetSocket() {

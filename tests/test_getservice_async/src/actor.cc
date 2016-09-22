@@ -30,7 +30,15 @@ void actor::start() {
 
     int i = 0;
 
+    //int counter =0;
+
     while (!zsys_interrupted) {
+        //if (counter++==5){
+        //    int pid = getpid();
+        //    kill(pid, SIGINT);
+        //}
+
+
         void *which = zpoller_wait(_poller, 2000);
 
         if (which == _actor_zsock) {

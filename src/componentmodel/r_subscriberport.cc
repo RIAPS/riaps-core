@@ -43,8 +43,8 @@ namespace riaps{
         //get_servicebyname_async(config.remoteservice_name, "ipc://lofasz");
     }
 
-    //SubscriberPort::~SubscriberPort() {
-//
-    //}
+    SubscriberPort::~SubscriberPort() {
+
+    }
 
 }

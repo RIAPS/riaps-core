@@ -13,13 +13,6 @@ namespace riaps {
         _poller = zpoller_new(_actor_zsock, NULL);
         assert(_poller);
 
-        //_actor_comp_proxy = zactor_new (zproxy, NULL);
-        //assert(_actor_comp_proxy);
-        //zstr_sendx (_actor_comp_proxy, "FRONTEND", "PULL", "inproc://frontend", NULL);
-        //zsock_wait (_actor_comp_proxy);
-        //zstr_sendx (_actor_comp_proxy, "BACKEND", "PUSH", "inproc://backend", NULL);
-        //zsock_wait (_actor_comp_proxy);
-
         register_actor(_actor_id);
     }
 
@@ -31,7 +24,6 @@ namespace riaps {
         deregister_actor(_actor_id);
         zsock_destroy(&_actor_zsock);
         zpoller_destroy(&_poller);
-        //zactor_destroy(&_actor_comp_proxy);
     }
 }
 

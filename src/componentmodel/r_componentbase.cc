@@ -9,9 +9,10 @@ namespace riaps{
     void component_actor(zsock_t* pipe, void* args){
         ComponentBase* comp = (ComponentBase*)args;
 
+
         //zsock_t* timerport = (zsock_t*)comp->GetTimerPort();
-        //zsock_t* asyncport = zsock_new_pull("ipc://lofasz");
-        //assert(asyncport);
+        zsock_t* asyncport = zsock_new_pull("ipc://async");
+        assert(asyncport);
 
         zpoller_t* poller = zpoller_new(pipe, NULL);
 
@@ -88,7 +89,7 @@ namespace riaps{
             }
         }
 
-        //zsock_destroy(&asyncport);
+        zsock_destroy(&asyncport);
         zpoller_destroy(&poller);
     };
 

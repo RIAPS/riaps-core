@@ -15,7 +15,7 @@ namespace riaps {
 
 
 
-        //virtual ~SubscriberPort();
+        virtual ~SubscriberPort();
     };
 
 }
