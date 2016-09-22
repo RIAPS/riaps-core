@@ -29,7 +29,6 @@ namespace riaps {
     public:
         ComponentBase(component_conf& config);
 
-        // TODO: query endpoint of the component
         void AddPublisherPort(publisher_conf&);
         void AddSubscriberPort(std::unique_ptr<SubscriberPort>&);
         void AddTimer(periodic_timer_conf&);
