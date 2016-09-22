@@ -20,6 +20,7 @@ execute_query(std::vector<service_query_params>& params) {
         // Prepare the answer
         // Create a message frame for each service
         if (!service_list.empty()) {
+            std::cout << "Service list has " << service_list.size() << " elements." <<  std::endl;
             zmsg_t *response_msg = zmsg_new();
 
             for (auto it = service_list.begin(); it != service_list.end(); it++) {
@@ -28,14 +29,17 @@ execute_query(std::vector<service_query_params>& params) {
                 zmsg_addmsg(response_msg, &submessage);
             }
 
+            std::cout << "Send response to: " << it->replyaddress << std::endl;
             zsock_t* replysocket = zsock_new_push(it->replyaddress.c_str());
 
             // TODO: if send was succesfull
             removables.push_back(it);
             zmsg_send(&response_msg, replysocket);
 
-
             zsock_destroy(&replysocket);
+        }
+        else {
+            std::cout << "Service list is empty" << std::endl;
         }
     }
 

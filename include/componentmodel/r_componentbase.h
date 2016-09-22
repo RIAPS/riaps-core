@@ -31,7 +31,7 @@ namespace riaps {
 
         // TODO: query endpoint of the component
         void AddPublisherPort(publisher_conf&);
-        void AddSubscriberPort(subscriber_conf&);
+        void AddSubscriberPort(std::unique_ptr<SubscriberPort>&);
         void AddTimer(periodic_timer_conf&);
 
         virtual std::vector<PublisherPort*>  GetPublisherPorts();
@@ -39,6 +39,9 @@ namespace riaps {
         //virtual std::vector<CallBackTimer*>  GetTimers();
 
         //virtual const zsock_t* GetTimerPort();
+
+        std::string&    GetAsyncEndpointName();
+        component_conf& GetConfig();
 
         virtual void OnMessageArrived(std::string messagetype, zmsg_t* msg_body)=0;
         virtual void OnTimerFired(std::string timerid)=0;
@@ -48,13 +51,14 @@ namespace riaps {
     protected:
         component_conf configuration;
 
+        std::string    async_address;
+
         std::vector<std::unique_ptr<PublisherPort>>  _publisherports;
         std::vector<std::unique_ptr<SubscriberPort>> _subscriberports;
         std::vector<std::unique_ptr<CallBackTimer>>  _periodic_timers;
 
         zactor_t*  zactor_component;
         zsock_t*   zsock_component;
-        //zsock_t*   _zsock_timer;
         zpoller_t* zpoller;
 
     };

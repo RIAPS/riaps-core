@@ -6,16 +6,22 @@
 #define RIAPS_R_SUBSCRIBERPORT_H
 
 #include "r_portbase.h"
+#include <memory>
 
 namespace riaps {
 
     class SubscriberPort : public PortBase{
     public:
-        SubscriberPort(subscriber_conf& config);
 
+        static std::unique_ptr<SubscriberPort> InitFromServiceDetails(service_details& target_service);
 
+        static void GetRemoteServiceAsync(subscriber_conf& config, std::string asyncendpoint);
+        static service_details GetRemoteService(subscriber_conf& config);
 
         virtual ~SubscriberPort();
+    protected:
+        SubscriberPort();
+
     };
 
 }
