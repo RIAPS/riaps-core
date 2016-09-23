@@ -9,14 +9,18 @@ namespace riaps{
     void component_actor(zsock_t* pipe, void* args){
         ComponentBase* comp = (ComponentBase*)args;
 
-
-        //zsock_t* timerport = (zsock_t*)comp->GetTimerPort();
+        //zsock_t* timerport = (zsock_t*)comp->GetTimerPort()
+        std::cout << "Create async endpoint @" << comp->GetAsyncEndpointName() << std::endl;
         zsock_t* asyncport = zsock_new_pull(comp->GetAsyncEndpointName().c_str());
         assert(asyncport);
 
-        zpoller_t* poller = zpoller_new(pipe, asyncport, NULL);
+        zpoller_t* poller = zpoller_new(pipe, NULL);
+        assert(poller);
 
+        zsock_signal (pipe, 0);
 
+        int rc = zpoller_add(poller, asyncport);
+        assert(rc==0);
 
         // Init subscribers
 
@@ -25,10 +29,6 @@ namespace riaps{
         //    const zsock_t* socket = subscriberport->GetSocket();
         //    zpoller_add(poller, (zsock_t*)socket);
         //}
-
-        assert(poller);
-
-        zsock_signal (pipe, 0);
 
         bool terminated = false;
         bool firstrun = true;

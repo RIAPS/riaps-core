@@ -16,6 +16,7 @@
 struct _service_query_params {
     std::string servicename;
     std::string replyaddress;
+    int64_t     timestamp;
 };
 
 typedef struct _service_query_params service_query_params;

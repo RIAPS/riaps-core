@@ -7,6 +7,7 @@
 
 #define RETRY_PERIOD 4000 // millisec
 
+// TODO: Maintain records with "old" timestamps (and define what "old" really means)
 void
 execute_query(std::vector<service_query_params>& params) {
     std::vector<std::vector<service_query_params>::iterator> removables;
@@ -31,10 +32,14 @@ execute_query(std::vector<service_query_params>& params) {
 
             std::cout << "Send response to: " << it->replyaddress << std::endl;
             zsock_t* replysocket = zsock_new_push(it->replyaddress.c_str());
+            assert(replysocket);
 
-            // TODO: if send was succesfull
-            removables.push_back(it);
-            zmsg_send(&response_msg, replysocket);
+            int rc = zmsg_send(&response_msg, replysocket);
+
+            // If the message sent
+            if (rc!=0){
+                removables.push_back(it);
+            }
 
             zsock_destroy(&replysocket);
         }
@@ -80,8 +85,10 @@ service_poller_actor (zsock_t *pipe, void *args) {
             std::cout << "Add service to queue: " << servicename << " " << replyaddress << std::endl;
 
             service_query_params params;
+
             params.replyaddress = std::string(replyaddress);
             params.servicename  = std::string(servicename);
+            params.timestamp    = zclock_mono();
 
             servicequeryparams.push_back(params);
         }
