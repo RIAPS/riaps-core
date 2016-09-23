@@ -9,7 +9,7 @@
 
 // TODO: Maintain records with "old" timestamps (and define what "old" really means)
 void
-execute_query(std::vector<service_query_params>& params) {
+execute_query(std::vector<service_query_params>& params, zsock_t* asyncresponsesocket) {
     std::vector<std::vector<service_query_params>::iterator> removables;
 
     for(auto it=params.begin(); it!=params.end(); it++)
@@ -24,25 +24,31 @@ execute_query(std::vector<service_query_params>& params) {
             std::cout << "Service list has " << service_list.size() << " elements." <<  std::endl;
             zmsg_t *response_msg = zmsg_new();
 
+            // Add filter
+            zframe_t* filterframe = zframe_new(it->replyaddress.c_str(), it->replyaddress.length());
+            int rc = zmsg_prepend(response_msg, &filterframe);
+
+            assert(rc==0);
+
             for (auto it = service_list.begin(); it != service_list.end(); it++) {
                 zmsg_t *submessage = zmsg_new();
                 service_details_to_zmsg(*it, submessage);
                 zmsg_addmsg(response_msg, &submessage);
             }
 
-            std::cout << "Send response to: " << it->replyaddress << std::endl;
-            zsock_t* replysocket = zsock_new_req(it->replyaddress.c_str());
-            assert(replysocket);
+            std::cout << "Send response, with filter: " << it->replyaddress << std::endl;
+            //zsock_t* replysocket = zsock_new_req(it->replyaddress.c_str());
+            //assert(replysocket);
 
-            int rc = zmsg_send(&response_msg, replysocket);
+            rc = zmsg_send(&response_msg, asyncresponsesocket);
 
             // If the message sent
             if (rc==0){
                 //zmsg_recv(replysocket);
                 removables.push_back(it);
             }
-            zclock_sleep(200);
-            zsock_destroy(&replysocket);
+            //zclock_sleep(200);
+            //zsock_destroy(&replysocket);
         }
         else {
             std::cout << "Service list is empty" << std::endl;
@@ -57,17 +63,18 @@ execute_query(std::vector<service_query_params>& params) {
 void
 service_poller_actor (zsock_t *pipe, void *args) {
 
-    //zsock_t *poller_socket = zsock_new_rep("inproc://servicepoller");
-    //assert(poller_socket);
-
     zpoller_t *poller = zpoller_new(pipe, NULL);
     assert(poller);
+
+    zsock_t* asyncresponse = zsock_new_pub("ipc://asyncresponsepublisher");
+    assert(asyncresponse);
 
     bool terminated = false;
     zsock_signal(pipe, 0);
 
     std::vector<service_query_params> servicequeryparams;
 
+    // TODO: Handle $TERM to avoid dangling sockets
     while (!terminated) {
         void *which = zpoller_wait(poller, RETRY_PERIOD);
 
@@ -94,9 +101,9 @@ service_poller_actor (zsock_t *pipe, void *args) {
             servicequeryparams.push_back(params);
         }
 
-        execute_query(servicequeryparams);
+        execute_query(servicequeryparams, asyncresponse);
     }
 
-    //zsock_destroy(&poller_socket);
+    zsock_destroy(&asyncresponse);
     zpoller_destroy(&poller);
 }

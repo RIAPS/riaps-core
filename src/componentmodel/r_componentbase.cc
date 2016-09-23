@@ -4,15 +4,18 @@
 
 #include "componentmodel/r_componentbase.h"
 
+
+// TODO: Move this somewhere else
+#define ASYNC_CHANNEL "ipc://asyncresponsepublisher"
+
 namespace riaps{
 
     void component_actor(zsock_t* pipe, void* args){
         ComponentBase* comp = (ComponentBase*)args;
 
         //zsock_t* timerport = (zsock_t*)comp->GetTimerPort()
-        std::cout << "Create async endpoint @" << comp->GetAsyncEndpointName() << std::endl;
-        const char* c = comp->GetAsyncEndpointName().c_str();
-        zsock_t* asyncport = zsock_new_rep(comp->GetAsyncEndpointName().c_str());
+        //std::cout << "Create async endpoint @" << comp->GetAsyncEndpointName() << std::endl;
+        zsock_t* asyncport = zsock_new_sub(ASYNC_CHANNEL, comp->GetAsyncEndpointName().c_str());
         assert(asyncport);
 
         zpoller_t* poller = zpoller_new(pipe, NULL);
@@ -147,7 +150,7 @@ namespace riaps{
         //assert(zsock_component);
 
         //async_address = "tcp://192.168.1.103:14352";
-        async_address = "ipc://asyncresult";
+        //async_address = "";
         //_zsock_timer = zsock_new_pull(CHAN_TIMER_INPROC);
         //assert(_zsock_timer);
 
@@ -197,8 +200,8 @@ namespace riaps{
         return results;
     }
 
-    std::string& ComponentBase::GetAsyncEndpointName(){
-        return async_address;
+    std::string ComponentBase::GetAsyncEndpointName(){
+        return std::string(zuuid_str(component_uuid));
     }
 
     std::vector<SubscriberPort*> ComponentBase::GetSubscriberPorts() {
