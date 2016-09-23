@@ -29,6 +29,7 @@ namespace riaps{
     }
 
     void SubscriberPort::GetRemoteServiceAsync(subscriber_conf &config, std::string asyncendpoint) {
+        std::cout << "Async request sent" << std::endl;
         get_servicebyname_async(config.remoteservice_name, asyncendpoint);
     }
 

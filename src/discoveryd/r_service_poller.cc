@@ -31,16 +31,17 @@ execute_query(std::vector<service_query_params>& params) {
             }
 
             std::cout << "Send response to: " << it->replyaddress << std::endl;
-            zsock_t* replysocket = zsock_new_push(it->replyaddress.c_str());
+            zsock_t* replysocket = zsock_new_req(it->replyaddress.c_str());
             assert(replysocket);
 
             int rc = zmsg_send(&response_msg, replysocket);
 
             // If the message sent
-            if (rc!=0){
+            if (rc==0){
+                //zmsg_recv(replysocket);
                 removables.push_back(it);
             }
-
+            zclock_sleep(200);
             zsock_destroy(&replysocket);
         }
         else {

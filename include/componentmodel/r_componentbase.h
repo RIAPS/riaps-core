@@ -51,14 +51,15 @@ namespace riaps {
         component_conf configuration;
 
         std::string    async_address;
+        zuuid_t*       component_uuid;
 
         std::vector<std::unique_ptr<PublisherPort>>  _publisherports;
         std::vector<std::unique_ptr<SubscriberPort>> _subscriberports;
         std::vector<std::unique_ptr<CallBackTimer>>  _periodic_timers;
 
-        zactor_t*  zactor_component;
-        zsock_t*   zsock_component;
-        zpoller_t* zpoller;
+        zactor_t*   zactor_component;
+        //zsock_t*    zsock_component;
+        //zpoller_t*  zpoller;
 
     };
 }

@@ -11,7 +11,8 @@ namespace riaps{
 
         //zsock_t* timerport = (zsock_t*)comp->GetTimerPort()
         std::cout << "Create async endpoint @" << comp->GetAsyncEndpointName() << std::endl;
-        zsock_t* asyncport = zsock_new_pull(comp->GetAsyncEndpointName().c_str());
+        const char* c = comp->GetAsyncEndpointName().c_str();
+        zsock_t* asyncport = zsock_new_rep(comp->GetAsyncEndpointName().c_str());
         assert(asyncport);
 
         zpoller_t* poller = zpoller_new(pipe, NULL);
@@ -139,15 +140,19 @@ namespace riaps{
     ComponentBase::ComponentBase(component_conf& config) {
         configuration = config;
 
-        zsock_component = zsock_new_rep("tcp://*:!");
-        assert(zsock_component);
+        //async uuid to the component instance
+        component_uuid = zuuid_new();
 
-        async_address = "tcp://192.168.1.103:14356";
+        //zsock_component = zsock_new_rep("tcp://*:!");
+        //assert(zsock_component);
+
+        //async_address = "tcp://192.168.1.103:14352";
+        async_address = "ipc://asyncresult";
         //_zsock_timer = zsock_new_pull(CHAN_TIMER_INPROC);
         //assert(_zsock_timer);
 
-        zpoller = zpoller_new(zsock_component, NULL);
-        assert(zpoller);
+        //zpoller = zpoller_new(zsock_component, NULL);
+        //assert(zpoller);
 
         zactor_component = zactor_new(component_actor, this);
 
@@ -208,7 +213,8 @@ namespace riaps{
     }
 
     ComponentBase::~ComponentBase() {
-        zsock_destroy(&zsock_component);
+        zuuid_destroy(&component_uuid);
+        //zsock_destroy(&zsock_component);
         //zsock_destroy(&_zsock_timer);
         zactor_destroy(&zactor_component);
     }
