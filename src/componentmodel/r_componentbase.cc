@@ -36,9 +36,13 @@ namespace riaps{
 
         bool terminated = false;
         bool firstrun = true;
+
+        std::cout << "Component poller starts" << std::endl;
+
         while (!terminated) {
             void *which = zpoller_wait(poller, 1000);
-            std::cout << "Component poller running" << std::endl;
+
+            std::cout << "." << std::flush;
 
             if (firstrun) {
                 firstrun = false;

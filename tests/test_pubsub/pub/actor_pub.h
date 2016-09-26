@@ -27,7 +27,7 @@ public:
 
         publisher_conf pport;
         pport.servicename = "Publisher1";
-        pport.network_iface   = "eth1";
+        pport.network_iface   = "s1";
         pport.port            = 0;            // Auto binding
 
         cconf.component_name = "ComponentPub";
@@ -60,7 +60,8 @@ public:
                 //zmsg_addstr(msg, std::to_string(i++).c_str());
                 std::vector<std::string> params;
 
-                params.push_back("kukucs");
+                std::string istrmsg = "[" + std::to_string(i++) + "]. Message";
+                params.push_back(istrmsg);
 
                 zmsg_t* msg = create_message(MSG_ACT_PING, params);
 
