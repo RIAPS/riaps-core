@@ -39,7 +39,7 @@ namespace riaps {
 
         //virtual const zsock_t* GetTimerPort();
 
-        std::string     GetAsyncEndpointName();
+        std::string     GetCompUuid();
         component_conf& GetConfig();
 
         virtual void OnMessageArrived(std::string messagetype, zmsg_t* msg_body)=0;

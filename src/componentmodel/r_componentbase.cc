@@ -15,7 +15,7 @@ namespace riaps{
 
         //zsock_t* timerport = (zsock_t*)comp->GetTimerPort()
         //std::cout << "Create async endpoint @" << comp->GetAsyncEndpointName() << std::endl;
-        zsock_t* asyncport = zsock_new_sub(ASYNC_CHANNEL, comp->GetAsyncEndpointName().c_str());
+        zsock_t* asyncport = zsock_new_sub(ASYNC_CHANNEL, comp->GetCompUuid().c_str());
         assert(asyncport);
 
         zpoller_t* poller = zpoller_new(pipe, NULL);
@@ -49,7 +49,7 @@ namespace riaps{
 
                 // Get subscriber details from discovery service
                 for (auto subscriber : comp->GetConfig().subscribers_config) {
-                    SubscriberPort::GetRemoteServiceAsync(subscriber, comp->GetAsyncEndpointName());
+                    SubscriberPort::GetRemoteServiceAsync(subscriber, comp->GetCompUuid());
                 }
             }
 
@@ -98,6 +98,18 @@ namespace riaps{
                     continue;
                 }
 
+                // The header must contain the UUID
+                char* msg_header = zmsg_popstr(msg_response);
+
+                // Todo, wrong message => log it
+                if (strcmp(msg_header, comp->GetCompUuid().c_str())){
+                    zmsg_destroy(&msg_response);
+                    free(msg_header);
+                    continue;
+                }
+
+                free(msg_header);
+
                 std::vector<zmsg_t*> responseframes;
                 extract_zmsg(msg_response, responseframes);
 
@@ -115,10 +127,14 @@ namespace riaps{
                 if (!services.empty()) {
                     service_details target_service = services.front();
                     auto subscriberport = SubscriberPort::InitFromServiceDetails(target_service);
+                    auto zmqport = subscriberport->GetSocket();
                     comp->AddSubscriberPort(subscriberport);
+
+                    rc = zpoller_add(poller, (zsock_t*)zmqport);
+                    assert(rc==0);
                 }
             }
-            // TODO: from one of the subscribers?
+            // TODO: from one of the publishers?
             else if(which){
                 // Message test with more than one field
                 zmsg_t *msg = zmsg_recv(which);
@@ -200,7 +216,7 @@ namespace riaps{
         return results;
     }
 
-    std::string ComponentBase::GetAsyncEndpointName(){
+    std::string ComponentBase::GetCompUuid(){
         return std::string(zuuid_str(component_uuid));
     }
 

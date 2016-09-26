@@ -39,7 +39,8 @@ namespace riaps{
     }
 
     void PublisherPort::PublishMessage(zmsg_t **msg) {
-        zmsg_send(msg, port_socket);
+        int rc = zmsg_send(msg, port_socket);
+        assert(rc==0);
     }
 
     PublisherPort::~PublisherPort() {

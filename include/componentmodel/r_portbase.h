@@ -19,8 +19,8 @@ namespace riaps {
     public:
         PortBase();
 
-        std::string GetInterfaceAddress(std::string ifacename);
-        const zsock_t* GetSocket();
+        virtual std::string GetInterfaceAddress(std::string ifacename);
+        virtual const zsock_t* GetSocket();
 
         virtual ~PortBase();
 
