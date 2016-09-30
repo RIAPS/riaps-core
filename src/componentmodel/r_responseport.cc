@@ -11,7 +11,7 @@ namespace riaps{
         std::unique_ptr<ResponsePort> result(new ResponsePort());
 
         result->configuration = config;
-        result->port_socket = zsock_new(ZMQ_PUB);
+        result->port_socket = zsock_new(ZMQ_REP);
 
         if (config.port == 0) {
             result->port = zsock_bind(result->port_socket, "tcp://*:!");

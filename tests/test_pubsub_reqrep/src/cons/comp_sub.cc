@@ -11,9 +11,9 @@ void component_sub::OnMessageArrived(std::string messagetype, zmsg_t *msg_body, 
         char* latitude = zmsg_popstr(msg_body);
         char* longitude = zmsg_popstr(msg_body);
 
-        //std::cout << "Latitude: " << latitude << std::endl;
-        //std::cout << "Longitude: " << longitude << std::endl;
-        //std::cout << std::endl;
+        std::cout << "Latitude: " << latitude << std::endl;
+        std::cout << "Longitude: " << longitude << std::endl;
+        std::cout << std::endl;
 
         std::vector<std::string> params;
         params.push_back(std::string(latitude));

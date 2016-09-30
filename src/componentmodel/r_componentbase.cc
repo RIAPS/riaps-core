@@ -289,7 +289,7 @@ namespace riaps{
     }
 
     std::string ComponentBase::GetTimerChannel() {
-        std::string prefix= "timer_";
+        std::string prefix= "inproc://timer";
         return prefix + GetCompUuid();
     }
 
