@@ -11,6 +11,7 @@ void component_sub::OnMessageArrived(std::string messagetype, zmsg_t *msg_body, 
         char* latitude = zmsg_popstr(msg_body);
         char* longitude = zmsg_popstr(msg_body);
 
+        std::cout << "Arrived from GPS component: " << std::endl;
         std::cout << "Latitude: " << latitude << std::endl;
         std::cout << "Longitude: " << longitude << std::endl;
         std::cout << std::endl;
@@ -22,13 +23,20 @@ void component_sub::OnMessageArrived(std::string messagetype, zmsg_t *msg_body, 
         auto reqmsg = create_message(MSG_GPS_REQ, params);
 
         auto response = this->GetRequestPorts()[0]->SendMessage(&reqmsg);
+        char* response_content = zmsg_popstr(response);
 
 
+        if (response_content) {
+            std::cout << "Response arrived from server: " << response_content;
+            free(response_content);
+        }
 
+        zmsg_destroy(&response);
+        //zmsg_destroy(&msg_body);
         free(latitude);
         free(longitude);
 
-        //zmsg_destroy(msg_body);
+
     }
 }
 
