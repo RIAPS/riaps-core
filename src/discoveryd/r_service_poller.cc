@@ -80,25 +80,37 @@ service_poller_actor (zsock_t *pipe, void *args) {
 
         // Handling messages from the caller (e.g.: $TERM$)
         if (which == pipe) {
-            //zmsg_t *msg = zmsg_recv(which);
-            //if (!msg) {
-            //    std::cout << "No msg => interrupted" << std::endl;
-            //    break;
-            //}
+            zmsg_t *msg = zmsg_recv(which);
+            if (!msg) {
+                std::cout << "No msg => interrupted" << std::endl;
+                break;
+            }
 
-            char* servicename;
-            char* replyaddress;
-            zsock_recv(pipe, "ss", &servicename, &replyaddress);
+            char* command = zmsg_popstr(msg);
+            if (streq(command, "$TERM")){
+                std::cout << "$TERM arrived" << std::endl;
+                terminated = true;
+            } else {
+                char* servicename = command;
+                char* replyaddress;
+                //zsock_recv(pipe, "ss", &servicename, &replyaddress);
 
-            std::cout << "Add service to queue: " << servicename << " " << replyaddress << std::endl;
+                replyaddress = zmsg_popstr(msg);
+                std::cout << "Add service to queue: " << servicename << " " << replyaddress << std::endl;
 
-            service_query_params params;
+                service_query_params params;
 
-            params.replyaddress = std::string(replyaddress);
-            params.servicename  = std::string(servicename);
-            params.timestamp    = zclock_mono();
+                params.replyaddress = std::string(replyaddress);
+                params.servicename  = std::string(servicename);
+                params.timestamp    = zclock_mono();
 
-            servicequeryparams.push_back(params);
+                servicequeryparams.push_back(params);
+
+                free(replyaddress);
+            }
+
+            free(command);
+            zmsg_destroy(&msg);
         }
 
         execute_query(servicequeryparams, asyncresponse);

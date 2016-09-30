@@ -252,6 +252,7 @@ riaps_actor (zsock_t *pipe, void *args)
 
 
     zpoller_destroy(&poller);
+    zactor_destroy(&act_service_poller);
     zsock_destroy(&riaps_socket);
 }
 
