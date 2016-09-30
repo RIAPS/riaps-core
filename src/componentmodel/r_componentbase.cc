@@ -157,6 +157,8 @@ namespace riaps{
                     comp->OnMessageArrived(std::string(messagetype), msg);
 
                     free(messagetype);
+
+                    zmsg_destroy(&msg);
                 }
             }
             else{
