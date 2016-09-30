@@ -20,7 +20,7 @@ public:
 
     component_gps(component_conf& config);
 
-    virtual void OnMessageArrived(std::string messagetype, zmsg_t* msg_body);
+    virtual void OnMessageArrived(std::string messagetype, zmsg_t* msg_body, zsock_t* socket);
 
     virtual void OnTimerFired(std::string timerid);
 

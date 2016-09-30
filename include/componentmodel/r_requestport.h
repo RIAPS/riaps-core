@@ -11,14 +11,22 @@ namespace riaps {
     class RequestPort : public PortBase{
     public:
 
-        static std::unique_ptr<RequestPort> InitFromServiceDetails(service_details& target_service);
+        RequestPort(request_conf& config);
 
-        static void GetRemoteServiceAsync(request_conf& config, std::string asyncendpoint);
-        static service_details GetRemoteService(request_conf& config);
+        //static std::unique_ptr<RequestPort> InitFromConfig(request_conf& target_service);
+
+
+
+        zmsg_t* SendMessage(zmsg_t** msg);
+
+        //static std::unique_ptr<RequestPort> InitFromServiceDetails(service_details& target_service);
+
+        //static void GetRemoteServiceAsync(request_conf& config, std::string asyncendpoint);
 
         virtual ~RequestPort();
     protected:
-        RequestPort();
+        service_details GetRemoteService(request_conf& config);
+        request_conf _config;
 
     };
 }

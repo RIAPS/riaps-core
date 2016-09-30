@@ -5,40 +5,49 @@
 #include "componentmodel/r_responseport.h"
 
 namespace riaps{
-    ResponsePort::ResponsePort(response_conf &config) {
-        configuration = config;
-        port_socket = zsock_new(ZMQ_REP);
 
-        std::string endpointstr = "tcp://*:";
+
+    std::unique_ptr<ResponsePort> ResponsePort::InitFromConfig(response_conf& config) {
+        std::unique_ptr<ResponsePort> result(new ResponsePort());
+
+        result->configuration = config;
+        result->port_socket = zsock_new(ZMQ_PUB);
 
         if (config.port == 0) {
-            endpointstr += "!";
-            port = zsock_bind(port_socket, endpointstr.c_str());
+            result->port = zsock_bind(result->port_socket, "tcp://*:!");
         } else {
-            endpointstr += std::to_string(config.port);
-            port = zsock_bind(port_socket, endpointstr.c_str());
+            char tmp[256];
+            sprintf(tmp, "tcp://*:%d", config.port);
+            result->port = zsock_bind(result->port_socket, tmp);
         }
 
-        endpoint = std::string(zsock_endpoint(port_socket));
+        result->endpoint = std::string(zsock_endpoint(result->port_socket));
 
-        std::cout << "Server (ZMQ_REP) is created on port: " << port << std::endl;
+        std::cout << "ResponsePort is created on port: " << result->port << std::endl;
 
-        std::string ifaddress = GetInterfaceAddress(config.network_iface);
+        std::string ifaddress = result->GetInterfaceAddress(config.network_iface);
 
         // TODO: error handling
         // NOTE: Should be separated form construct
         if (ifaddress!="") {
 
-            std::cout << "Registering ZMQ_REP" << std::endl;
+            std::cout << "Registering response port" << std::endl;
 
             // TODO: Add tags
-            register_service(config.servicename, config.servicename, ifaddress, std::to_string(port), {});
-        }
-        else{
-            std::cout << "iface doesn't exist: " << config.network_iface << std::endl;
+            register_service(config.servicename, config.servicename, ifaddress, std::to_string(result->port), {});
         }
 
+        return std::move(result);
     }
+
+
+    ResponsePort::ResponsePort(){
+
+    }
+
+    //ResponsePort::ResponsePort(response_conf &config) {
+//
+    //}
 
     response_conf ResponsePort::GetConfig() {
         return configuration;

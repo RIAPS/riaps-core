@@ -32,7 +32,7 @@ void component_gps::OnTimerFired(std::string timerid) {
     }
 }
 
-void component_gps::OnMessageArrived(std::string messagetype, zmsg_t *msg_body) {
+void component_gps::OnMessageArrived(std::string messagetype, zmsg_t *msg_body, zsock_t* socket) {
 
 }
 

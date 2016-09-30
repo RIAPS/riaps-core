@@ -7,6 +7,7 @@
 
 #define MSG_ACT_PING "$PING$"
 #define MSG_GPS      "$GPS$"
+#define MSG_GPS_REQ  "$GPS_REQ$"
 
 #include <czmq.h>
 

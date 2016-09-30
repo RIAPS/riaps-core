@@ -10,17 +10,21 @@
 namespace riaps {
     class ResponsePort : public PortBase {
     public:
-        ResponsePort(response_conf& config);
+
+        static std::unique_ptr<ResponsePort> InitFromConfig(response_conf& response_service);
 
         std::string GetEndpoint();
 
-        publisher_conf GetConfig();
+        response_conf GetConfig();
 
         void SendMessage(zmsg_t** msg);
 
         virtual ~ResponsePort();
 
     protected:
+        ResponsePort();
+        //ResponsePort(response_conf& config);
+
         response_conf configuration;
 
         int            port;

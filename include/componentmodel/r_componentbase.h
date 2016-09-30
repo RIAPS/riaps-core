@@ -11,6 +11,7 @@
 #include "r_configuration.h"
 #include "r_timer.h"
 #include "r_responseport.h"
+#include "r_requestport.h"
 
 #include <iostream>
 #include <vector>
@@ -32,12 +33,16 @@ namespace riaps {
 
         void AddPublisherPort(publisher_conf&);
         void AddSubscriberPort(std::unique_ptr<SubscriberPort>&);
-        void AddResponsePort(response_conf&);
+        void AddResponsePort(std::unique_ptr<ResponsePort>&);
+        void AddRequestPort(std::unique_ptr<RequestPort>&);
         void AddTimer(periodic_timer_conf&);
 
-        virtual std::vector<PublisherPort*>  GetPublisherPorts();
-        virtual std::vector<SubscriberPort*> GetSubscriberPorts();
-        virtual std::vector<CallBackTimer*>  GetPeriodicTimers();
+        std::vector<PublisherPort*>  GetPublisherPorts();
+        std::vector<SubscriberPort*> GetSubscriberPorts();
+        std::vector<CallBackTimer*>  GetPeriodicTimers();
+        std::vector<ResponsePort*>   GetResponsePorts();
+        std::vector<RequestPort*>    GetRequestPorts();
+
         //virtual std::vector<CallBackTimer*>  GetTimers();
 
         //virtual const zsock_t* GetTimerPort();
@@ -45,7 +50,7 @@ namespace riaps {
         std::string     GetCompUuid();
         component_conf& GetConfig();
 
-        virtual void OnMessageArrived(std::string messagetype, zmsg_t* msg_body)=0;
+        virtual void OnMessageArrived(std::string messagetype, zmsg_t* msg_body, zsock_t* socket)=0;
         virtual void OnTimerFired(std::string timerid)=0;
 
         virtual ~ComponentBase();
@@ -60,6 +65,7 @@ namespace riaps {
         std::vector<std::unique_ptr<SubscriberPort>> _subscriberports;
         std::vector<std::unique_ptr<CallBackTimer>>  _periodic_timers;
         std::vector<std::unique_ptr<ResponsePort>>   _responseports;
+        std::vector<std::unique_ptr<RequestPort>>    _requestports;
 
         zactor_t*   _zactor_component;
 

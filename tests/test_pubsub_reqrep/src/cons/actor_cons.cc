@@ -16,10 +16,25 @@ void actor::start() {
     sconf.servicename = "GpsSubscriber";       // Optional parameter
     cconf.subscribers_config.push_back(sconf);
 
+    request_conf rconf;
+    rconf.remoteservice_name = "GpsSinkerService";
+    cconf.requests_config.push_back(rconf);
+
     // Todo add request port
 
-    component_sub c(cconf);
+    component_sub forwarder (cconf);
 
+
+    response_conf resp_conf;
+    resp_conf.network_iface ="enp0s5";
+    resp_conf.port = 0; // auto bind
+    resp_conf.servicename = "GpsSinkerService";
+
+    component_conf sinkerconf;
+    sinkerconf.responses_config.push_back(resp_conf);
+
+
+    component_rep sinker(sinkerconf);
 
     while (!zsys_interrupted) {
         void *which = zpoller_wait(_poller, 2000);

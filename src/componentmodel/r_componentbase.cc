@@ -49,13 +49,27 @@ namespace riaps{
 
             if (firstrun) {
                 firstrun = false;
-                // Add publishers
+                // Add and start publishers
                 for (auto publisher : comp->GetConfig().publishers_config) {
                     comp->AddPublisherPort(publisher);
                 }
 
+                // Add and start timers
                 for (auto timer : comp->GetConfig().periodic_timer_config) {
                     comp->AddTimer(timer);
+                }
+
+                // Add and start response ports
+                for (auto response : comp->GetConfig().responses_config) {
+                    auto responseport = ResponsePort::InitFromConfig(response);
+                    zpoller_add(poller, (zsock_t*)responseport->GetSocket());
+                    comp->AddResponsePort(responseport);
+                }
+
+                // Add RequestPorts
+                for (auto requestconfig : comp->GetConfig().requests_config) {
+                    auto requestport = std::unique_ptr<RequestPort>(new RequestPort(requestconfig));
+                    comp->AddRequestPort(requestport);
                 }
 
                 // Get subscriber details from discovery service
@@ -154,7 +168,7 @@ namespace riaps{
                 if (msg) {
                     char* messagetype = zmsg_popstr(msg);
 
-                    comp->OnMessageArrived(std::string(messagetype), msg);
+                    comp->OnMessageArrived(std::string(messagetype), msg, (zsock_t*)which);
 
                     free(messagetype);
 
@@ -221,9 +235,14 @@ namespace riaps{
         _subscriberports.push_back(std::move(subscriberport));
     }
 
-    void ComponentBase::AddResponsePort(response_conf& config) {
-        std::unique_ptr<ResponsePort> newport(new ResponsePort(config));
-        _responseports.push_back(std::move(newport));
+    void ComponentBase::AddResponsePort(std::unique_ptr<ResponsePort>& responsePort) {
+        //std::unique_ptr<ResponsePort> newport(new ResponsePort(config));
+        _responseports.push_back(std::move(responsePort));
+    }
+
+    void ComponentBase::AddRequestPort(std::unique_ptr<RequestPort>& requestPort) {
+        //std::unique_ptr<ResponsePort> newport(new ResponsePort(config));
+        _requestports.push_back(std::move(requestPort));
     }
 
     void ComponentBase::AddTimer(periodic_timer_conf& config) {
@@ -241,6 +260,17 @@ namespace riaps{
         std::vector<PublisherPort*> results;
 
         for (auto it=_publisherports.begin(); it!=_publisherports.end(); it++){
+            results.push_back(it->get());
+        }
+
+        return results;
+    }
+
+    std::vector<RequestPort*> ComponentBase::GetRequestPorts() {
+
+        std::vector<RequestPort*> results;
+
+        for (auto it=_requestports.begin(); it!=_requestports.end(); it++){
             results.push_back(it->get());
         }
 

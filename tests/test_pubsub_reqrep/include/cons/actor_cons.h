@@ -6,6 +6,7 @@
 #define RIAPS_FW_ACTOR_CONS_H
 
 #include "comp_sub.h"
+#include "comp_rep.h"
 
 #include "componentmodel/r_actor.h"
 #include "componentmodel/r_componentbase.h"
