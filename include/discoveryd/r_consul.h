@@ -1,6 +1,7 @@
 #ifndef R_CONSUL
 #define R_CONSUL
 
+#define CONSUL_PORT 8500
 
 #include <string>
 #include "r_http_api.h"

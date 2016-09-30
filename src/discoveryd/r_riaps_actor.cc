@@ -62,19 +62,19 @@ riaps_actor (zsock_t *pipe, void *args)
 
                 terminated = true;
             }
-            else if(streq(command, CMD_DISC_REGISTER_NODE)){
+            //else if(streq(command, CMD_DISC_REGISTER_NODE)){
                 // Register a node in the KV storage
-                char* nodename = zmsg_popstr(msg);
-                if (nodename) {
-                    std::string nodekey = "nodes/" + std::string(nodename);
+            //    char* nodename = zmsg_popstr(msg);
+            //    if (nodename) {
+            //        std::string nodekey = "nodes/" + std::string(nodename);
 
                     //TODO: put ip address as value
-                    disc_registerkey(nodekey, "" );
+            //        disc_registerkey(nodekey, "" );
 
-                    free(nodename);
+             //       free(nodename);
 
-                }
-            }
+             //   }
+            //}
 
             free(command);
             zmsg_destroy(&msg);

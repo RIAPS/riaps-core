@@ -13,7 +13,8 @@ namespace riaps{
     void component_actor(zsock_t* pipe, void* args){
         ComponentBase* comp = (ComponentBase*)args;
 
-        zsock_t* timerport = zsock_new_pull(CHAN_TIMER_INPROC);
+        zsock_t* timerport = zsock_new_pull(comp->GetTimerChannel().c_str());
+        assert(timerport);
         //std::cout << "Create async endpoint @" << comp->GetAsyncEndpointName() << std::endl;
         zsock_t* asyncport = zsock_new_sub(ASYNC_CHANNEL, comp->GetCompUuid().c_str());
         assert(asyncport);
@@ -246,7 +247,7 @@ namespace riaps{
     }
 
     void ComponentBase::AddTimer(periodic_timer_conf& config) {
-        std::unique_ptr<CallBackTimer> newtimer(new CallBackTimer(config.timerid));
+        std::unique_ptr<CallBackTimer> newtimer(new CallBackTimer(config.timerid, GetTimerChannel()));
         newtimer->start(config.interval);
         _periodic_timers.push_back(std::move(newtimer));
     }
@@ -285,6 +286,11 @@ namespace riaps{
         }
 
         return results;
+    }
+
+    std::string ComponentBase::GetTimerChannel() {
+        std::string prefix= "timer_";
+        return prefix + GetCompUuid();
     }
 
     std::string ComponentBase::GetCompUuid(){

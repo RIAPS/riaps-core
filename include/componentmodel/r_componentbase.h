@@ -47,6 +47,7 @@ namespace riaps {
 
         //virtual const zsock_t* GetTimerPort();
 
+        std::string     GetTimerChannel();
         std::string     GetCompUuid();
         component_conf& GetConfig();
 

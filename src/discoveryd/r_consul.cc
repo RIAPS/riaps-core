@@ -1,15 +1,12 @@
 
 #include "discoveryd/r_consul.h"
 
-
-
-
 void joinToCluster(std::string destination_address){
 	std::string consul_api_host = "localhost";
 	std::string consul_api_getparam = "/v1/agent/join/" + destination_address;
 
 	std::string response;
-	int result = do_get(consul_api_host, 8500, consul_api_getparam, response);
+	int result = do_get(consul_api_host, CONSUL_PORT, consul_api_getparam, response);
 }
 
 void registerService(service_details& params) {
@@ -27,7 +24,7 @@ void registerService(service_details& params) {
 
     auto str_param = put_body.dump(1);
 
-	int result = do_put(consul_api_host, 8500, consul_api_getparam, str_param);
+	int result = do_put(consul_api_host, CONSUL_PORT, consul_api_getparam, str_param);
 
 	std::cout << "DO PUT RESULT: " << result << std::endl;
 }
@@ -37,7 +34,7 @@ void deregisterService(std::string service_name){
     std::string consul_api_getparam = "/v1/agent/service/deregister/" + service_name;
 
     std::string response;
-    int result = do_get(consul_api_host, 8500, consul_api_getparam, response);
+    int result = do_get(consul_api_host, CONSUL_PORT, consul_api_getparam, response);
 }
 
 bool disc_getservices(std::vector<std::string>& service_list) {
@@ -45,7 +42,7 @@ bool disc_getservices(std::vector<std::string>& service_list) {
 	std::string consul_api_getparam = "/v1/catalog/services";
 
 	std::string response;
-	int result = do_get(consul_api_host, 8500, consul_api_getparam, response);
+	int result = do_get(consul_api_host, CONSUL_PORT, consul_api_getparam, response);
 
 	nlohmann::json json_response = nlohmann::json::parse(response.c_str());
 
@@ -60,7 +57,7 @@ bool disc_getservicedetails(std::string servicename, std::vector<service_details
     std::string consul_api_getparam = "/v1/catalog/service/" + servicename;
 
     std::string response;
-    int result = do_get(consul_api_host, 8500, consul_api_getparam, response);
+    int result = do_get(consul_api_host, CONSUL_PORT, consul_api_getparam, response);
 
     nlohmann::json json_response = nlohmann::json::parse(response.c_str());
 
@@ -89,7 +86,7 @@ bool disc_deregisterservice(std::string servicename) {
     std::string consul_api_getparam = "/v1/agent/service/deregister/" + servicename;
 
     std::string response;
-    int result = do_get(consul_api_host, 8500, consul_api_getparam, response);
+    int result = do_get(consul_api_host, CONSUL_PORT, consul_api_getparam, response);
 
     return true;
 }
@@ -98,7 +95,7 @@ bool disc_registerkey(std::string key, std::string value){
     std::string consul_api_host = "localhost";
     std::string consul_api_getparam = "/v1/kv/" + key;
 
-    int result = do_put(consul_api_host, 8500, consul_api_getparam, value);
+    int result = do_put(consul_api_host, CONSUL_PORT, consul_api_getparam, value);
 
     std::cout << "DO PUT RESULT: " << result << std::endl;
 }
@@ -148,7 +145,7 @@ bool disc_deregisterkey(std::string key, bool recurse=true){
     }
 
     std::string response;
-    int result = do_delete(consul_api_host, 8500, consul_api_deleteparam, response);
+    int result = do_delete(consul_api_host, CONSUL_PORT, consul_api_deleteparam, response);
 
     std::cout << key << std::endl;
     std::cout << response << "," << result << std::endl;

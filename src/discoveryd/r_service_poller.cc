@@ -14,6 +14,7 @@ execute_query(std::vector<service_query_params>& params, zsock_t* asyncresponses
 
     for(auto it=params.begin(); it!=params.end(); it++)
     {
+        // TODO: with dictionary
         std::vector<service_details> service_list;
 
         disc_getservicedetails(it->servicename, service_list);
