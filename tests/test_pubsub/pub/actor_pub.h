@@ -10,7 +10,7 @@
 #include "componentmodel/r_actor.h"
 #include "componentmodel/r_componentbase.h"
 #include "component_pub.h"
-#include "../messagetypes/messages.h"
+
 
 using riaps::ComponentBase;
 
@@ -27,11 +27,16 @@ public:
 
         publisher_conf pport;
         pport.servicename = "Publisher1";
-        pport.network_iface   = "s1";
+        pport.network_iface   = "enp0s5";
         pport.port            = 0;            // Auto binding
+
+        periodic_timer_conf tport;
+        tport.timerid = "Timer1";
+        tport.interval = 3000;
 
         cconf.component_name = "ComponentPub";
         cconf.publishers_config.push_back(pport);
+        cconf.periodic_timer_config.push_back(tport);
 
         component_pub c(cconf);
 
@@ -58,14 +63,7 @@ public:
 
                 //zmsg_t* msg = zmsg_new();
                 //zmsg_addstr(msg, std::to_string(i++).c_str());
-                std::vector<std::string> params;
 
-                std::string istrmsg = "[" + std::to_string(i++) + "]. Message";
-                params.push_back(istrmsg);
-
-                zmsg_t* msg = create_message(MSG_ACT_PING, params);
-
-                c.GetPublisherPorts()[0]->PublishMessage(&msg);
             }
         }
     }

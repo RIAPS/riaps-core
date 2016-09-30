@@ -16,6 +16,8 @@ namespace riaps {
         if (_execute.load(std::memory_order_acquire)) {
             stop();
         };
+
+        zsock_destroy(&_zsock_timer);
     }
 
     const zsock_t* CallBackTimer::GetSocket() {

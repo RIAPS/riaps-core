@@ -5,20 +5,28 @@ enable_testing()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-set (LIBCZMQPATH_INCLUDE ${DEPENDENCIES}libczmq/amd64/include)
-set (LIBCZMQPATH_LIB ${DEPENDENCIES}libczmq/amd64/lib)
+set (LIBALLPATH_INCLUDE ${DEPENDENCIES}amd64/include)
+set (LIBALLPATH_LIB ${DEPENDENCIES}amd64/lib)
 
-set (LIBZMQPATH_INCLUDE ${DEPENDENCIES}libzmq/amd64/include)
-set (LIBZMQPATH_LIB ${DEPENDENCIES}libzmq/amd64/lib)
 
-set (LIBNEONPATH_INCLUDE ${DEPENDENCIES}libneon/amd64/include)
-set (LIBNEONPATH_LIB ${DEPENDENCIES}libneon/amd64/lib)
+#set (LIBCZMQPATH_INCLUDE ${DEPENDENCIES}libczmq/amd64/include)
+#set (LIBCZMQPATH_LIB ${DEPENDENCIES}libczmq/amd64/lib)
 
-include_directories(${LIBZMQPATH_INCLUDE})
-include_directories(${LIBCZMQPATH_INCLUDE})
-include_directories(${LIBNEONPATH_INCLUDE})
+#set (LIBZMQPATH_INCLUDE ${DEPENDENCIES}libzmq/amd64/include)
+#set (LIBZMQPATH_LIB ${DEPENDENCIES}libzmq/amd64/lib)
 
-link_directories(${LIBCZMQPATH_LIB})
-link_directories(${LIBZMQPATH_LIB})
-link_directories(${LIBNEONPATH_LIB})
+#set (LIBNEONPATH_INCLUDE ${DEPENDENCIES}libneon/amd64/include)
+#set (LIBNEONPATH_LIB ${DEPENDENCIES}libneon/amd64/lib)
+
+include_directories(${LIBALLPATH_INCLUDE})
+
+#include_directories(${LIBZMQPATH_INCLUDE})
+#include_directories(${LIBCZMQPATH_INCLUDE})
+#include_directories(${LIBNEONPATH_INCLUDE})
+
+#link_directories(${LIBCZMQPATH_LIB})
+#link_directories(${LIBZMQPATH_LIB})
+#link_directories(${LIBNEONPATH_LIB})
+
+link_directories(${LIBALLPATH_LIB})
 

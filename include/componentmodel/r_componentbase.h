@@ -10,6 +10,7 @@
 #include "r_discoverdapi.h"
 #include "r_configuration.h"
 #include "r_timer.h"
+#include "r_responseport.h"
 
 #include <iostream>
 #include <vector>
@@ -31,10 +32,12 @@ namespace riaps {
 
         void AddPublisherPort(publisher_conf&);
         void AddSubscriberPort(std::unique_ptr<SubscriberPort>&);
+        void AddResponsePort(response_conf&);
         void AddTimer(periodic_timer_conf&);
 
         virtual std::vector<PublisherPort*>  GetPublisherPorts();
         virtual std::vector<SubscriberPort*> GetSubscriberPorts();
+        virtual std::vector<CallBackTimer*>  GetPeriodicTimers();
         //virtual std::vector<CallBackTimer*>  GetTimers();
 
         //virtual const zsock_t* GetTimerPort();
@@ -51,13 +54,15 @@ namespace riaps {
         component_conf configuration;
 
         //std::string    async_address;
-        zuuid_t*       component_uuid;
+        zuuid_t*       _component_uuid;
 
         std::vector<std::unique_ptr<PublisherPort>>  _publisherports;
         std::vector<std::unique_ptr<SubscriberPort>> _subscriberports;
         std::vector<std::unique_ptr<CallBackTimer>>  _periodic_timers;
+        std::vector<std::unique_ptr<ResponsePort>>   _responseports;
 
-        zactor_t*   zactor_component;
+        zactor_t*   _zactor_component;
+
         //zsock_t*    zsock_component;
         //zpoller_t*  zpoller;
 

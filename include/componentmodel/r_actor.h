@@ -16,7 +16,7 @@ namespace riaps {
     class Actor {
     public:
         Actor(std::string actorid);
-        void start();
+        virtual void start();
 
         virtual ~Actor();
 

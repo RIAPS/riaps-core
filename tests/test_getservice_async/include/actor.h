@@ -15,7 +15,7 @@ class actor : public riaps::Actor {
 public:
 
     actor(std::string actorid);
-    void start();
+    virtual void start();
 };
 
 #endif //RIAPS_FW_ACTOR_H

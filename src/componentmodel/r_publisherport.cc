@@ -8,7 +8,16 @@ namespace riaps{
     PublisherPort::PublisherPort(publisher_conf& config) {
         configuration = config;
         port_socket = zsock_new(ZMQ_PUB);
-        port = zsock_bind(port_socket, "tcp://*:!");
+
+
+        if (config.port == 0) {
+            port = zsock_bind(port_socket, "tcp://*:!");
+        } else {
+            char tmp[256];
+            sprintf(tmp, "tcp://*:%d", config.port);
+            port = zsock_bind(port_socket, tmp);
+        }
+
         endpoint = std::string(zsock_endpoint(port_socket));
 
         std::cout << "Publisher is created on port: " << port << std::endl;
