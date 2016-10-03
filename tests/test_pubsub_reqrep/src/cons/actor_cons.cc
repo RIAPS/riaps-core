@@ -26,7 +26,9 @@ void actor::start() {
 
 
     response_conf resp_conf;
-    resp_conf.network_iface ="enp0s5";
+    // For Istvan's setup
+    // resp_conf.network_iface ="enp0s5";
+    resp_conf.network_iface ="eth0";
     resp_conf.port = 0; // auto bind
     resp_conf.servicename = "GpsSinkerService";
 

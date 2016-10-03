@@ -15,7 +15,9 @@ void actor::start() {
     // Publisher port
     publisher_conf pport;
     pport.servicename = "GpsPublisher";
-    pport.network_iface = "enp0s5";     // Ethernet iface to be used
+    // For Istvan's setup
+    // pport.network_iface = "enp0s5";     // Ethernet iface to be used
+    pport.network_iface = "eth0";     // Ethernet iface to be used
     pport.port = 0;                     // Auto binding
 
     // Periodic timer
