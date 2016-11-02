@@ -18,10 +18,10 @@ riaps_actor (zsock_t *pipe, void *args)
     zsock_t * riaps_socket = zsock_new_rep ("ipc://riapsdiscoveryservice");
     assert(riaps_socket);
 
-    zactor_t* act_service_poller = zactor_new(service_poller_actor, NULL);
-    assert(act_service_poller);
+    zactor_t* async_service_poller = zactor_new(service_poller_actor, NULL);
+    assert(async_service_poller);
 
-    zpoller_t* poller = zpoller_new(pipe, riaps_socket, act_service_poller, NULL);
+    zpoller_t* poller = zpoller_new(pipe, riaps_socket, async_service_poller, NULL);
     assert(poller);
 
 
@@ -97,90 +97,31 @@ riaps_actor (zsock_t *pipe, void *args)
 
                 // TODO: only handle_command should be called, without ifs
                 if (streq(command, CMD_DISC_REGISTER_SERVICE)) {
-                    bool handle_result = handle_command(command, msg, riaps_socket);
+                    bool handle_result = handle_command(command, msg, riaps_socket, async_service_poller);
                     assert(handle_result);
                 }
                 else if (streq(command, CMD_DISC_DEREGISTER_SERVICE)){
-                    bool handle_result = handle_command(command, msg, riaps_socket);
+                    bool handle_result = handle_command(command, msg, riaps_socket, async_service_poller);
                     assert(handle_result);
                 }
                 else if (streq(command, CMD_DISC_GET_SERVICES)) {
-                    std::vector<std::string> service_list;
-
-                    // Collect all the registered services
-                    disc_getservices(service_list);
-
-                    // Prepare the answer (in ZMQ message)
-                    zmsg_t* msg = zmsg_new();
-                    zmsg_addstr(msg, MSG_SERVICE_LIST_HEADER);
-
-                    // Add each servicename as an individual frame
-                    for(auto it = service_list.begin(); it!=service_list.end(); it++) {
-                        zmsg_addstr(msg, it->c_str());
-                    }
-
-                    // Send it!
-                    zmsg_send(&msg, riaps_socket);
+                    bool handle_result = handle_command(command, msg, riaps_socket, async_service_poller);
+                    assert(handle_result);
                 }
                 else if (streq(command, CMD_DISC_GETSERVICE_BY_NAME)) {
-                    std::vector<service_details> service_list;
-                    char* servicename_param = zmsg_popstr(msg);
-
-                    if (servicename_param) {
-                        std::string servicename(servicename_param);
-                        disc_getservicedetails(servicename, service_list);
-                        free(servicename_param);
-
-                        // Prepare the answer
-                        // Create a message frame for each service
-
-                        // TODO: check is there a response in the list to send...
-                        zmsg_t *response_msg = zmsg_new();
-
-                        for (auto it = service_list.begin(); it != service_list.end(); it++) {
-                            zmsg_t *submessage = zmsg_new();
-                            service_details_to_zmsg(*it, submessage);
-                            zmsg_addmsg(response_msg, &submessage);
-                        }
-
-                        zmsg_send(&response_msg, riaps_socket);
-                    }
-                    else{
-                        // TODO send back empty message
-                    }
+                    bool handle_result = handle_command(command, msg, riaps_socket, async_service_poller);
+                    assert(handle_result);
                 }
                 else if (streq(command, CMD_DISC_GETSERVICE_BY_NAME_ASYNC)){
-                    char* servicename_param = zmsg_popstr(msg);
-                    if (servicename_param) {
-                        char* returnaddress_param = zmsg_popstr(msg);
-                        if (returnaddress_param){
-
-                            // Pass the message to the ASYNC handler
-                            zsock_send(act_service_poller, "ss", servicename_param, returnaddress_param);
-
-                            free(returnaddress_param);
-                        }
-                        free(servicename_param);
-
-                    }
-                    else{
-                        // TODO send back empty message
-                    }
-                    zstr_send(riaps_socket, "OK");
+                    bool handle_result = handle_command(command, msg, riaps_socket, async_service_poller);
+                    assert(handle_result);
                 }
                 else if(streq(command, CMD_DISC_REGISTER_NODE)){
-                    // Register a node in the KV storage
-                    char* nodename = zmsg_popstr(msg);
-                    if (nodename) {
-                        std::string nodekey = "/nodes/" + std::string(nodename);
-
-                        //TODO: put ip address as value
-                        disc_registerkey(nodekey, "" );
-
-                        free(nodename);
-                        zstr_send(riaps_socket, "OK");
-                    }
+                    bool handle_result = handle_command(command, msg, riaps_socket, async_service_poller);
+                    assert(handle_result);
                 }
+
+
                 else if (streq(command, CMD_DISC_REGISTER_ACTOR)){
                     char* actorname = zmsg_popstr(msg);
                     if (actorname){
@@ -252,7 +193,7 @@ riaps_actor (zsock_t *pipe, void *args)
 
 
     zpoller_destroy(&poller);
-    zactor_destroy(&act_service_poller);
+    zactor_destroy(&async_service_poller);
     zsock_destroy(&riaps_socket);
 }
 
