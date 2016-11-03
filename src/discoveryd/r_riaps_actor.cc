@@ -90,7 +90,6 @@ riaps_actor (zsock_t *pipe, void *args)
                 break;
             }
 
-            bool has_more_msg = true;
             char* command = zmsg_popstr(msg);
             
             if (command){

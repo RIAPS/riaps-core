@@ -2,11 +2,11 @@
 // Created by istvan on 9/30/16.
 //
 
-#include "cons/actor_cons.h"
+#include "componentmodel/r_actor.h"
 
 int main(){
-    actor a("ActorConsumer");
-    a.start();
+    riaps::Actor a("ConsumerActor");
+    a.start("cons_config.json");
 
     return 0;
 }

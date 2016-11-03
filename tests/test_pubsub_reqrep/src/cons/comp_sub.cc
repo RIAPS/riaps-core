@@ -45,3 +45,11 @@ void component_sub::OnTimerFired(std::string timerid) {
 }
 
 component_sub::~component_sub() {}
+
+riaps::ComponentBase* create_component(component_conf& config){
+    return new component_sub(config);
+}
+
+void destroy_component(riaps::ComponentBase* comp){
+    delete comp;
+}

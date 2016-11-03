@@ -1,0 +1,23 @@
+{
+  "actor":{
+    "name":"ActorGps"
+  },
+  "components":[
+    {
+      "name":"comp_prod",
+      "publishers":[
+        {
+          "name":"GpsPublisher",
+          "network_iface":"enp0s5",
+          "port":0
+        }
+      ],
+      "timers":[
+        {
+          "timerid":"GpsTimer",
+          "interval":3000
+        }
+      ]
+    }
+  ]
+}

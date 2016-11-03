@@ -24,3 +24,11 @@ void component_rep::OnTimerFired(std::string timerid) {}
 
 
 component_rep::~component_rep() {}
+
+riaps::ComponentBase* create_component(component_conf& config){
+    return new component_rep(config);
+}
+
+void destroy_component(riaps::ComponentBase* comp){
+    delete comp;
+}

@@ -1,0 +1,31 @@
+{
+  "actor":{
+    "name":"ActorConsumer"
+  },
+  "components":[
+    {
+      "name":"comp_sub",
+      "subscribers":[
+        {
+          "name":"GpsSubscriber",
+          "remoteservice_name":"GpsPublisher"
+        }
+      ],
+      "clients":[
+        {
+          "remoteservice_name":"GpsSinkerService"
+        }
+      ]
+    },
+    {
+      "name":"comp_rep",
+      "servers":[
+        {
+          "name":"GpsSinkerService",
+          "port":0,
+          "network_iface":"enp0s5"
+        }
+      ]
+    }
+  ]
+}

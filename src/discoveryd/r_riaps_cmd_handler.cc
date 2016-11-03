@@ -3,6 +3,7 @@
 //
 
 #include <discoveryd/r_riaps_cmd_handler.h>
+#include "messaging/msg_registerservice_generated.h"
 
 void init_command_mappings() {
     handler_mapping[CMD_DISC_REGISTER_SERVICE]         = &handle_register_service;

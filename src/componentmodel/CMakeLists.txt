@@ -11,4 +11,4 @@ set(FRAMEWORK_LIB_FILES r_discoverdapi.cc
                         r_requestport.cc)
 
 add_library(riaps SHARED ${FRAMEWORK_LIB_FILES})
-target_link_libraries(riaps czmq)
+target_link_libraries(riaps czmq dl)

@@ -4,6 +4,14 @@
 
 #include "prod/comp_gps.h"
 
+riaps::ComponentBase* create_component(component_conf& config){
+    return new component_gps(config);
+}
+
+void destroy_component(riaps::ComponentBase* comp){
+    delete comp;
+}
+
 component_gps::component_gps(component_conf& config) : ComponentBase(config) {
     double lower_bound = 0;
     double upper_bound = 10000;

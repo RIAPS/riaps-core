@@ -8,15 +8,20 @@
 #include <czmq.h>
 #include <iostream>
 #include <string>
+#include <dlfcn.h>
+
 
 #include <componentmodel/r_discoverdapi.h>
 #include <componentmodel/r_componentbase.h>
+
+#include <fstream>
+#include <json.h>
 
 namespace riaps {
     class Actor {
     public:
         Actor(std::string actorid);
-        virtual void start();
+        virtual void start(std::string configfile="config.json");
 
         virtual ~Actor();
 

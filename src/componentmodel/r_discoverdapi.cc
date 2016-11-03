@@ -1,5 +1,6 @@
 #include "componentmodel/r_discoverdapi.h"
 
+#define DISCOVERY_SERVICE_IPC "ipc://riapsdiscoveryservice"
 
 bool register_service(std::string              service_id   ,
                       std::string              service_name ,
@@ -26,7 +27,7 @@ bool register_service(std::string              service_id   ,
    }
 
    // Create the socket and send the register command
-   zsock_t * client = zsock_new_req ("ipc://riapsdiscoveryservice");
+   zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC);
    assert(client);
 
    // TODO check return value
@@ -50,7 +51,7 @@ bool deregister_service(std::string service_name) {
     zmsg_addstr(msg, CMD_DISC_DEREGISTER_SERVICE);
     zmsg_addstr(msg, service_name.c_str());
 
-    zsock_t * client = zsock_new_req ("ipc://riapsdiscoveryservice");
+    zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC);
     assert(client);
 
     // TODO check return value
@@ -74,7 +75,7 @@ bool
 get_servicenames(std::vector<std::string>& service_list) {
    zmsg_t* msg = zmsg_new();
    zmsg_addstr(msg, "$GETSERVICES$");
-   zsock_t * client = zsock_new_req ("ipc://riapsdiscoveryservice");
+   zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC);
    assert(client);
 
    // TODO check return value
@@ -120,7 +121,7 @@ get_servicebyname(std::string service_name, std::vector<service_details>& servic
     zmsg_t* msg = zmsg_new();
     zmsg_addstr(msg, CMD_DISC_GETSERVICE_BY_NAME);
     zmsg_addstr(msg, service_name.c_str());
-    zsock_t * client = zsock_new_req ("ipc://riapsdiscoveryservice");
+    zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC);
     assert(client);
 
     // TODO check return value
@@ -203,7 +204,7 @@ get_servicebyname_async(std::string service_name, std::string replyaddress){
     zmsg_addstr(msg, CMD_DISC_GETSERVICE_BY_NAME_ASYNC);
     zmsg_addstr(msg, service_name.c_str());
     zmsg_addstr(msg, replyaddress.c_str());
-    zsock_t * client = zsock_new_req ("ipc://riapsdiscoveryservice");
+    zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC);
     assert(client);
 
     // TODO check return value
@@ -230,7 +231,7 @@ ping_service(std::string service_name){
     zmsg_t* msg = zmsg_new();
     zmsg_addstr(msg, CMD_DISC_PING);
     zmsg_addstr(msg, service_name.c_str());
-    zsock_t * client = zsock_new_req ("ipc://riapsdiscoveryservice");
+    zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC);
     assert(client);
 
     // TODO check return value
@@ -252,7 +253,7 @@ register_actor(std::string actorname){
     zmsg_t* msg = zmsg_new();
     zmsg_addstr(msg, CMD_DISC_REGISTER_ACTOR);
     zmsg_addstr(msg, actorname.c_str());
-    zsock_t * client = zsock_new_req ("ipc://riapsdiscoveryservice");
+    zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC);
     assert(client);
 
     // TODO check return value
@@ -276,7 +277,7 @@ deregister_actor(std::string actorname){
     zmsg_t* msg = zmsg_new();
     zmsg_addstr(msg, CMD_DISC_DEREGISTER_ACTOR);
     zmsg_addstr(msg, actorname.c_str());
-    zsock_t * client = zsock_new_req ("ipc://riapsdiscoveryservice");
+    zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC);
     assert(client);
 
     // TODO check return value
@@ -307,7 +308,7 @@ register_component(std::string actorname, std::string componentname) {
     zmsg_addstr(msg, CMD_DISC_REGISTER_COMPONENT);
     zmsg_addstr(msg, actorname.c_str());
     zmsg_addstr(msg, componentname.c_str());
-    zsock_t * client = zsock_new_req ("ipc://riapsdiscoveryservice");
+    zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC);
     assert(client);
 
     // TODO check return value
@@ -332,7 +333,7 @@ deregister_component(std::string actorname, std::string componentname) {
     zmsg_addstr(msg, CMD_DISC_DEREGISTER_COMPONENT);
     zmsg_addstr(msg, actorname.c_str());
     zmsg_addstr(msg, componentname.c_str());
-    zsock_t * client = zsock_new_req ("ipc://riapsdiscoveryservice");
+    zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC);
     assert(client);
 
     // TODO check return value

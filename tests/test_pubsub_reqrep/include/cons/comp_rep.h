@@ -30,5 +30,8 @@ public:
 
 };
 
+extern "C" riaps::ComponentBase* create_component(component_conf&);
+extern "C" void destroy_component(riaps::ComponentBase*);
+
 
 #endif //RIAPS_FW_COMP_REQ_H
