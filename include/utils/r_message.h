@@ -12,6 +12,16 @@ struct _service_details {
     std::string              ip_address   ;
     std::string              port         ;
     std::vector<std::string> tags         ;
+
+    bool operator==( _service_details const& rhs ){
+        if (service_name == rhs.service_name &&
+            ip_address   == rhs.ip_address   &&
+            port         == rhs.port         &&
+            service_id   == rhs.service_id){
+            return true;
+        }
+        return false;
+    }
 };
 
 typedef struct _service_details service_details;

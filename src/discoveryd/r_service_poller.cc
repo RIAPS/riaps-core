@@ -4,6 +4,8 @@
 
 #include "discoveryd/r_service_poller.h"
 #include <vector>
+#include <map>
+#include <algorithm>
 
 #define RETRY_PERIOD 4000 // millisec
 
@@ -59,6 +61,33 @@ execute_query(std::vector<service_query_params>& params, zsock_t* asyncresponses
     for (auto removable : removables){
         params.erase(removable);
     }
+}
+
+void poll_discoveryservcice (std::map<std::string, std::vector<std::string>>& servicesToBePolled,
+                             std::map<std::string, std::vector<service_details>>& sentResults){
+
+    // Get service details
+    for (auto it=servicesToBePolled.begin(); it!=servicesToBePolled.end(); it++){
+        auto key = it->first;
+        auto service_list = it->second;
+
+        for (auto serviceit=service_list.begin(); serviceit!=service_list.end(); serviceit++){
+            bool deatilsSent = true;
+            std::vector<service_details> service_list;
+            disc_getservicedetails(*serviceit, service_list);
+
+            // Reply already sent to this address
+            if(sentResults.find(key) != sentResults.end()){
+                for (auto queryResult : service_list){
+                    // if the service is present in the sentResults
+                    if (std::find(sentResults[key].begin(), sentResults[key].end(), queryResult)!=sentResults[key].end()){
+
+                    }
+                }
+            }
+        }
+    }
+
 }
 
 void

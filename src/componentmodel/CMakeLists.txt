@@ -12,3 +12,6 @@ set(FRAMEWORK_LIB_FILES r_discoverdapi.cc
 
 add_library(riaps SHARED ${FRAMEWORK_LIB_FILES})
 target_link_libraries(riaps czmq dl)
+
+add_executable(start_actor r_actor_main.cc)
+target_link_libraries(start_actor czmq riaps)

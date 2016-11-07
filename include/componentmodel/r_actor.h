@@ -20,9 +20,15 @@
 namespace riaps {
     class Actor {
     public:
-        Actor(std::string actorid);
-        virtual void start(std::string configfile="config.json");
+        Actor(std::string applicationname,
+              std::string actorname,
+              nlohmann::json& json_actorconfig,
+              nlohmann::json& json_componentsconfig,
+              nlohmann::json& json_messagesconfig)
+        ;
 
+        virtual void start(std::string configfile="config.json");
+        std::string GetActorId();
         virtual ~Actor();
 
     protected:
@@ -33,7 +39,7 @@ namespace riaps {
 
         int                        _actor_port;
         std::string                _actor_endpoint;
-        std::string                _actor_id;
+        zuuid_t*                   _actor_id;
         std::vector<ComponentBase> _components;
     };
 }

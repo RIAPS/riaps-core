@@ -7,13 +7,20 @@
 
 
 namespace riaps {
-    riaps::Actor::Actor(std::string actorid):_actor_id(actorid) {
+    riaps::Actor::Actor()//:_actor_id(actorid)
+    {
+        _actor_id = zuuid_new();
         _actor_zsock = zsock_new_rep("tcp://*:!");
         assert(_actor_zsock);
         _poller = zpoller_new(_actor_zsock, NULL);
         assert(_poller);
 
-        register_actor(_actor_id);
+        register_actor(GetActorId());
+    }
+
+    std::string riaps::Actor::GetActorId() {
+        return std::string(zuuid_str(_actor_id));
+
     }
 
     void riaps::Actor::start(std::string configfile){
@@ -28,11 +35,13 @@ namespace riaps {
             auto actor_config      = config_json["actor"];
             auto components_config = config_json["components"];
 
-            component_conf cconf;
+
 
             // Get the component configs
             for (auto itcomp = components_config.begin(); itcomp != components_config.end(); ++itcomp) {
                 nlohmann::json current_component = (*itcomp);
+
+                component_conf cconf;
 
                 auto publishers  = current_component["publishers"];
                 auto subscribers = current_component["subscribers"];
@@ -116,7 +125,8 @@ namespace riaps {
     }
 
     riaps::Actor::~Actor() {
-        deregister_actor(_actor_id);
+        deregister_actor(GetActorId());
+        zuuid_destroy(&_actor_id);
         zsock_destroy(&_actor_zsock);
         zpoller_destroy(&_poller);
     }

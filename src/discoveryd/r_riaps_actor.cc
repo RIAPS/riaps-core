@@ -16,6 +16,7 @@ riaps_actor (zsock_t *pipe, void *args)
 
     // Response socket for incoming messages from RIAPS Components
     zsock_t * riaps_socket = zsock_new_rep ("ipc://riapsdiscoveryservice");
+    //zsock_t * riaps_socket = zsock_new_router ("ipc://riapsdiscoveryservice");
     assert(riaps_socket);
 
     zactor_t* async_service_poller = zactor_new(service_poller_actor, NULL);
@@ -94,7 +95,19 @@ riaps_actor (zsock_t *pipe, void *args)
             
             if (command){
 
-                // TODO: only handle_command should be called, without ifs
+                if (streq(command, CMD_DISC_GETSERVICE_BY_NAME_POLL_ASYNC)) {
+                    //zframe_t* flat_msgbody = zmsg_pop(msg);
+                    //byte* framedata = zframe_data(flat_msgbody);
+                    //auto m = Getmsg_getservice_poll_request(framedata);
+
+                    //auto s = m->service_name()->str();
+                    //auto r = m->reply_id()->str();
+
+
+                    //int i =5;
+                }
+
+                    // TODO: only handle_command should be called, without ifs
                 if (streq(command, CMD_DISC_REGISTER_SERVICE)) {
                     bool handle_result = handle_command(command, msg, riaps_socket, async_service_poller);
                     assert(handle_result);
@@ -172,7 +185,7 @@ riaps_actor (zsock_t *pipe, void *args)
             }
         }
         else {
-            std::cout << "Regular maintain, cannot stop: " << terminated <<std::endl;
+            //std::cout << "Regular maintain, cannot stop: " << terminated <<std::endl;
 
             //zmsg_t* msg = zmsg_recv(which);
             //if (msg){

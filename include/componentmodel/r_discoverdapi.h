@@ -25,6 +25,9 @@ extern bool
 get_servicebyname_async(std::string service_name, std::string replyaddress);
 
 extern bool
+get_servicebyname_poll_async(std::string service_name, std::string replyaddress);
+
+extern bool
 deregister_service(std::string service_name);
 
 extern void

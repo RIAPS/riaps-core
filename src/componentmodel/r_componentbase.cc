@@ -194,8 +194,14 @@ namespace riaps{
     ComponentBase::ComponentBase(component_conf& config) {
         configuration = config;
 
+
+
+
         //async uuid to the component instance
         _component_uuid = zuuid_new();
+
+        get_servicebyname_poll_async("aaa", GetCompUuid());
+
 
         //zsock_component = zsock_new_rep("tcp://*:!");
         //assert(zsock_component);
@@ -311,6 +317,10 @@ namespace riaps{
     ComponentBase::~ComponentBase() {
 
 
+        zmsg_t* termmsg = zmsg_new();
+
+        zmsg_addstr(termmsg,"$TERM");
+        zactor_send(_zactor_component, &termmsg);
 
         zuuid_destroy(&_component_uuid);
         //zsock_destroy(&zsock_component);

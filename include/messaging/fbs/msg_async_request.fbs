@@ -1,0 +1,6 @@
+table msg_getservice_poll_request {
+  service_name : string;
+  reply_id     : string;
+}
+
+root_type msg_getservice_poll_request;

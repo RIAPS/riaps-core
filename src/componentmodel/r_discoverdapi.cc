@@ -226,6 +226,42 @@ get_servicebyname_async(std::string service_name, std::string replyaddress){
 
 }
 
+bool get_servicebyname_poll_async(std::string service_name, std::string replyaddress){
+    //flatbuffers::FlatBufferBuilder builder;
+    //auto _service_name = builder.CreateString(service_name);
+    //auto _reply_address = builder.CreateString(replyaddress);
+
+    //auto flat_msg = Createmsg_getservice_poll_request(builder, _service_name, _reply_address);
+
+    //builder.Finish(flat_msg);
+
+    //zframe_t* flat_msgbody = zframe_new(builder.GetBufferPointer(), builder.GetSize());
+
+    //zmsg_t* msg = zmsg_new();
+    //zmsg_addstr(msg, CMD_DISC_GETSERVICE_BY_NAME_POLL_ASYNC);
+    //zmsg_append(msg, &flat_msgbody);
+
+    //zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC);
+    //assert(client);
+
+    // TODO check return value
+    //zmsg_send(&msg, client);
+
+    //zmsg_t* msg_response = zmsg_recv(client);
+
+    //if (!msg_response){
+    //    std::cout << "No msg => interrupted" << std::endl;
+    //    return false;
+    //}
+
+
+    //zmsg_destroy(&msg_response);
+
+    //zsock_destroy(&client);
+
+    return false;
+}
+
 void
 ping_service(std::string service_name){
     zmsg_t* msg = zmsg_new();
