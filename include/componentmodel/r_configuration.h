@@ -45,4 +45,35 @@ struct _component_conf {
 
 typedef struct _component_conf component_conf;
 
+
+//// New part
+
+struct _component_port_clt_j {};
+struct _component_port_pub_j {
+    std::string publisher_name;
+    std::string message_type;
+};
+struct _component_port_req_j {};
+struct _component_port_rep_j {};
+struct _component_port_srv_j {};
+struct _component_port_sub_j {};
+
+
+struct _component_ports_j {
+    std::vector<_component_port_clt_j> clts;
+    std::vector<_component_port_srv_j> srvs;
+    std::vector<_component_port_pub_j> pubs;
+    std::vector<_component_port_sub_j> subs;
+    std::vector<_component_port_req_j> reqs;
+    std::vector<_component_port_rep_j> repss;
+};
+
+struct _component_conf_j {
+    std::string        component_name;
+    std::string        component_type;
+    _component_ports_j component_ports;
+};
+
+typedef struct _component_conf_j component_conf_j;
+
 #endif //RIAPS_FW_R_CONFIGURATION_H

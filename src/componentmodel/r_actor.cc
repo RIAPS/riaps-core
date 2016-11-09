@@ -7,15 +7,96 @@
 
 
 namespace riaps {
-    riaps::Actor::Actor()//:_actor_id(actorid)
+
+    riaps::Actor::Actor(std::string     applicationname       ,
+                        std::string     actorname             ,
+                        nlohmann::json& json_actorconfig      ,
+                        nlohmann::json& json_componentsconfig ,
+                        nlohmann::json& json_messagesconfig)
     {
+        _actor_name       = actorname;
+        _application_name = applicationname;
+
+        auto json_instances = json_actorconfig["instances"];
+        auto json_internals = json_actorconfig["internals"];
+        auto json_locals    = json_actorconfig["locals"];
+        auto json_wires     = json_actorconfig["wires"];
+
+
+        // Get the actor's components, if there is no component => Stop, Error.
+        if(json_instances.size()==0) {
+            throw std::invalid_argument("No component instances defined for the actor. Check the configuration file!");
+        }
+
+
+        // Get the components
+        for (auto it_currentconfig =  json_instances.begin();
+                  it_currentconfig != json_instances.end();
+                  it_currentconfig++) {
+
+            auto componentName = it_currentconfig.key();
+            std::string componentType = (it_currentconfig.value())["type"];
+
+            // Check if the component in the map already (wrong configuration)
+            for (auto component_config : _component_configurations) {
+
+                if (componentName != component_config.component_name) continue;
+
+                // The same key already in the list. Stop, Error.
+                throw std::invalid_argument("Component name is not unique in the configuration file");
+            }
+
+            // Store the componentname - componenttype pair
+            _component_conf_j new_component_config;
+
+            new_component_config.component_name = componentName;
+            new_component_config.component_type = componentType;
+
+            // Get the details of the component
+            auto json_componentconfig = json_componentsconfig[componentType];
+
+            // Get the ports
+            auto json_portsconfig = json_componentconfig["ports"];
+
+            // Get the publishers
+            if (json_portsconfig.count("pubs")!=0){
+                auto json_pubports = json_portsconfig["pubs"];
+                for (auto it_pubport=json_pubports.begin();
+                          it_pubport!=json_pubports.end();
+                          it_pubport++){
+
+                    auto pubportname = it_pubport.key();
+                    auto pubporttype = it_pubport.value()["type"];
+
+                    _component_port_pub_j newpubconfig;
+                    newpubconfig.publisher_name = pubportname;
+                    newpubconfig.message_type = pubporttype;
+
+                    new_component_config.component_ports.pubs.push_back(newpubconfig);
+                }
+            }
+        }
+    }
+
+    void riaps::Actor::Init() {
+
+        // unique id / run
         _actor_id = zuuid_new();
+
+        // Open actor REP socket for further communications
         _actor_zsock = zsock_new_rep("tcp://*:!");
         assert(_actor_zsock);
         _poller = zpoller_new(_actor_zsock, NULL);
         assert(_poller);
 
-        register_actor(GetActorId());
+        // Register the actor in the discovery service
+        zsock_t* discovery_socket = register_actor(_application_name, _actor_name);
+
+        if (discovery_socket == NULL) {
+            throw std::runtime_error("Actor - Discovery socket cannot be NULL after register_actor");
+        }
+
+        // Load the component library
     }
 
     std::string riaps::Actor::GetActorId() {
@@ -23,8 +104,8 @@ namespace riaps {
 
     }
 
-    void riaps::Actor::start(std::string configfile){
-        std::ifstream ifs(configfile);
+    void riaps::Actor::start(){
+        /*std::ifstream ifs(configfile);
 
         std::vector<std::unique_ptr<riaps::ComponentBase>> components;
 
@@ -122,11 +203,13 @@ namespace riaps {
                 }
             }
         }
+         */
     }
 
     riaps::Actor::~Actor() {
-        deregister_actor(GetActorId());
+        //deregister_actor(GetActorId());
         zuuid_destroy(&_actor_id);
+        zsock_destroy(&_discovery_socket);
         zsock_destroy(&_actor_zsock);
         zpoller_destroy(&_poller);
     }

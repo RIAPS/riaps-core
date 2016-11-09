@@ -6,10 +6,14 @@
 #include <czmq.h>
 #include <iostream>
 
+#include <capnp/message.h>
+#include <capnp/serialize.h>
 
 #include "json.h"
 #include "utils/r_message.h"
 #include "r_riaps_actor_commands.h"
+#include "messaging/disco.capnp.h"
+
 
 
 
@@ -39,8 +43,8 @@ register_component(std::string actorname, std::string componentname);
 extern void
 deregister_component(std::string actorname, std::string componentname);
 
-extern void
-register_actor(std::string actorname);
+extern zsock_t*
+register_actor(std::string appname, std::string actorname);
 
 extern void
 deregister_actor(std::string actorname);

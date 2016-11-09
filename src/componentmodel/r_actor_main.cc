@@ -6,17 +6,18 @@
 
 int main(int argc, char* argv[]) {
 
+
+
     if (cmdOptionExists(argv, argv+argc, "-h") || argc < 3){
-        std::cout << "Usage: start_actor <model> <actor> [-s]" << std::endl;
+        std::cout << "Usage: start_actor <model> <actor> [-h]" << std::endl;
         std::cout << std::endl;
         std::cout << std::setw(15) << "model" << std::endl << "\t\tModel file argument (.json)" << std::endl;
         std::cout << std::setw(15) << "actor" << std::endl << "\t\tActor name argument" << std::endl;
-        std::cout << std::setw(15) << "-s, --suffix" << std::endl << "\t\tDiscovery endpoint suffix" << std::endl;
         return 0;
-    } else if (cmdOptionExists(argv, argv+argc, "-s") || cmdOptionExists(argv, argv+argc, "--suffix")){
-        //TODO: finish
     }
     else {
+        std::unique_ptr<riaps::Actor> actor;
+
         // First param: <model>
         std::string modelfile = std::string(argv[1]);
         std::ifstream ifs(modelfile);
@@ -47,6 +48,8 @@ int main(int argc, char* argv[]) {
         // Get the model parameters
         std::string applicationName;
 
+
+
         try {
             applicationName = config_json["name"];
 
@@ -61,9 +64,17 @@ int main(int argc, char* argv[]) {
             }
 
             auto json_currentactor = json_actors[actorname];
+
+            // Create and start the Actor
+
+            actor = std::unique_ptr<riaps::Actor>(new riaps::Actor(applicationName, actorname, json_currentactor, json_components, json_messages));
+            actor->Init();
         }
         catch(std::domain_error& e){
             std::cerr << "Configuration file error (probably missing property from the json file)" << std::endl;
+            std::cerr << e.what() << std::endl;
+        }
+        catch (std::invalid_argument& e){
             std::cerr << e.what() << std::endl;
         }
     }

@@ -27,7 +27,8 @@ namespace riaps {
               nlohmann::json& json_messagesconfig)
         ;
 
-        virtual void start(std::string configfile="config.json");
+        void Init();
+        virtual void start();
         std::string GetActorId();
         virtual ~Actor();
 
@@ -37,10 +38,23 @@ namespace riaps {
         // Channel for incomming controll messages (e.g.: restart component)
         zsock_t*                   _actor_zsock;
 
+        zsock_t*                   _discovery_socket;
+
         int                        _actor_port;
         std::string                _actor_endpoint;
         zuuid_t*                   _actor_id;
+        std::string                _actor_name;
+        std::string                _application_name;
         std::vector<ComponentBase> _components;
+
+        // Configurations
+        ////
+
+
+        std::vector<component_conf_j> _component_configurations;
+
+        //Components, componentkey - componenttype
+        //std::map<std::string, std::string> _componentname_type;
     };
 }
 

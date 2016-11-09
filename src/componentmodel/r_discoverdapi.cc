@@ -284,9 +284,63 @@ ping_service(std::string service_name){
     }
 }
 
-void
-register_actor(std::string actorname){
+
+zsock_t*
+register_actor(std::string appname, std::string actorname){
+
+    capnp::MallocMessageBuilder message;
+    DiscoReq::Builder dreqBuilder = message.initRoot<DiscoReq>();
+    ActorRegReq::Builder areqBuilder = dreqBuilder.initActorReg();
+
+    areqBuilder.setActorName(actorname);
+    areqBuilder.setAppName(appname);
+    areqBuilder.setVersion("0");
+
+    auto serializedMessage = capnp::messageToFlatArray(message);
+
     zmsg_t* msg = zmsg_new();
+    zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
+
+
+    zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC);
+    assert(client);
+
+    zmsg_send(&msg, client);
+    zmsg_t* msg_response = zmsg_recv(client);
+
+    zframe_t* capnp_msgbody = zmsg_pop(msg_response);
+    size_t    size = zframe_size(capnp_msgbody);
+    byte*     data = zframe_data(capnp_msgbody);
+
+    auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
+
+    capnp::FlatArrayMessageReader reader(capnp_data);
+    auto msg_discoreq= reader.getRoot<DiscoRep>();
+
+    zsock_t* discovery_port = NULL;
+
+    // Register actor
+    if (msg_discoreq.isActorReg()) {
+        auto msg_response = msg_discoreq.getActorReg();
+        auto status = msg_response.getStatus();
+        auto port = msg_response.getPort();
+
+        auto discovery_endpoint = "tcp://localhost:" + std::to_string(port);
+        discovery_port = zsock_new_pair(discovery_endpoint.c_str());
+        assert(discovery_port);
+    }
+
+    zsock_destroy(&client);
+
+    return discovery_port;
+
+    //if (!msg_response){
+    //    std::cout << "No msg => interrupted" << std::endl;
+    //    return false;
+    //}
+
+
+    /*zmsg_t* msg = zmsg_new();
     zmsg_addstr(msg, CMD_DISC_REGISTER_ACTOR);
     zmsg_addstr(msg, actorname.c_str());
     zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC);
@@ -305,7 +359,7 @@ register_actor(std::string actorname){
         free(msg_response);
     }
 
-    zsock_destroy(&client);
+    zsock_destroy(&client);*/
 }
 
 void

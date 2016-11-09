@@ -5,6 +5,8 @@
 #ifndef RIAPS_FW_R_ACTOR_MAIN_H
 #define RIAPS_FW_R_ACTOR_MAIN_H
 
+#include "componentmodel/r_actor.h"
+
 //nlohmann json
 #include "json.h"
 

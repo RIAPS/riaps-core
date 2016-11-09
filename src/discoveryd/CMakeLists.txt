@@ -7,4 +7,4 @@ set(RDISCOVERYD_SOURCE r_discoveryd.cc
                        r_service_poller.cc)
 
 add_executable(rdiscoveryd ${RDISCOVERYD_SOURCE})
-target_link_libraries(rdiscoveryd czmq neon riaps)
+target_link_libraries(rdiscoveryd czmq neon riaps capnp)
