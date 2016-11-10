@@ -288,6 +288,9 @@ ping_service(std::string service_name){
 zsock_t*
 register_actor(std::string appname, std::string actorname){
 
+    /////
+    /// Request
+    /////
     capnp::MallocMessageBuilder message;
     DiscoReq::Builder dreqBuilder = message.initRoot<DiscoReq>();
     ActorRegReq::Builder areqBuilder = dreqBuilder.initActorReg();
@@ -306,6 +309,10 @@ register_actor(std::string appname, std::string actorname){
     assert(client);
 
     zmsg_send(&msg, client);
+
+    /////
+    /// Response
+    /////
     zmsg_t* msg_response = zmsg_recv(client);
 
     zframe_t* capnp_msgbody = zmsg_pop(msg_response);
@@ -325,11 +332,20 @@ register_actor(std::string appname, std::string actorname){
         auto status = msg_response.getStatus();
         auto port = msg_response.getPort();
 
+
+        // TODO: Check status
+
         auto discovery_endpoint = "tcp://localhost:" + std::to_string(port);
         discovery_port = zsock_new_pair(discovery_endpoint.c_str());
         assert(discovery_port);
     }
 
+    /////
+    /// Clean up
+    /////
+
+    zframe_destroy(&capnp_msgbody);
+    zmsg_destroy(&msg_response);
     zsock_destroy(&client);
 
     return discovery_port;

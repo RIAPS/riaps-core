@@ -11,7 +11,7 @@
 namespace riaps {
     class PublisherPort : public PortBase {
     public:
-        PublisherPort(publisher_conf& config);
+        PublisherPort(_component_port_pub_j& config);
 
         std::string GetEndpoint();
 
@@ -22,10 +22,10 @@ namespace riaps {
         virtual ~PublisherPort();
 
     protected:
-        publisher_conf configuration;
+        _component_port_pub_j _configuration;
 
-        int            port;
-        std::string    endpoint;
+        int                   _port;
+        std::string           _endpoint;
     };
 }
 

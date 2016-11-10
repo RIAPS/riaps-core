@@ -29,7 +29,8 @@ namespace riaps {
 
     class ComponentBase {
     public:
-        ComponentBase(component_conf& config);
+        //ComponentBase(component_conf& config);
+        ComponentBase(component_conf_j& config);
 
         void AddPublisherPort(publisher_conf&);
         void AddSubscriberPort(std::unique_ptr<SubscriberPort>&);
@@ -47,9 +48,9 @@ namespace riaps {
 
         //virtual const zsock_t* GetTimerPort();
 
-        std::string     GetTimerChannel();
-        std::string     GetCompUuid();
-        component_conf& GetConfig();
+        std::string       GetTimerChannel();
+        std::string       GetCompUuid();
+        component_conf_j& GetConfig();
 
         virtual void OnMessageArrived(std::string messagetype, zmsg_t* msg_body, zsock_t* socket)=0;
         virtual void OnTimerFired(std::string timerid)=0;
@@ -57,16 +58,16 @@ namespace riaps {
         virtual ~ComponentBase();
 
     protected:
-        component_conf configuration;
+        component_conf_j _configuration;
 
         //std::string    async_address;
         zuuid_t*       _component_uuid;
 
         std::vector<std::unique_ptr<PublisherPort>>  _publisherports;
-        std::vector<std::unique_ptr<SubscriberPort>> _subscriberports;
-        std::vector<std::unique_ptr<CallBackTimer>>  _periodic_timers;
-        std::vector<std::unique_ptr<ResponsePort>>   _responseports;
-        std::vector<std::unique_ptr<RequestPort>>    _requestports;
+        //std::vector<std::unique_ptr<SubscriberPort>> _subscriberports;
+        //std::vector<std::unique_ptr<CallBackTimer>>  _periodic_timers;
+        //std::vector<std::unique_ptr<ResponsePort>>   _responseports;
+        //std::vector<std::unique_ptr<RequestPort>>    _requestports;
 
         zactor_t*   _zactor_component;
 

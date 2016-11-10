@@ -52,6 +52,7 @@ struct _component_port_clt_j {};
 struct _component_port_pub_j {
     std::string publisher_name;
     std::string message_type;
+    int port;
 };
 struct _component_port_req_j {};
 struct _component_port_rep_j {};

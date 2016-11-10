@@ -5,22 +5,22 @@
 #include <componentmodel/r_publisherport.h>
 
 namespace riaps{
-    PublisherPort::PublisherPort(publisher_conf& config) {
-        configuration = config;
+    PublisherPort::PublisherPort(_component_port_pub_j& config) {
+        _configuration = config;
         port_socket = zsock_new(ZMQ_PUB);
 
 
         if (config.port == 0) {
-            port = zsock_bind(port_socket, "tcp://*:!");
+            _port = zsock_bind(port_socket, "tcp://*:!");
         } else {
             char tmp[256];
             sprintf(tmp, "tcp://*:%d", config.port);
-            port = zsock_bind(port_socket, tmp);
+            _port = zsock_bind(port_socket, tmp);
         }
 
-        endpoint = std::string(zsock_endpoint(port_socket));
+        _endpoint = std::string(zsock_endpoint(port_socket));
 
-        std::cout << "Publisher is created on port: " << port << std::endl;
+        std::cout << "Publisher is created on port: " << _port << std::endl;
 
         std::string ifaddress = GetInterfaceAddress(config.network_iface);
 

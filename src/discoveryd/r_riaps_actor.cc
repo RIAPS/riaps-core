@@ -143,7 +143,7 @@ riaps_actor (zsock_t *pipe, void *args)
 
 
 
-                    // Unique id, TODO: Replace it with MacAddress
+                    // TODO: Add MacAddress
                     //auto uuid = zuuid_new();
                     //auto uuid_str = std::string(zuuid_str(uuid));
                     //zuuid_destroy(&uuid);

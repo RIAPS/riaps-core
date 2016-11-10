@@ -75,6 +75,8 @@ namespace riaps {
                     new_component_config.component_ports.pubs.push_back(newpubconfig);
                 }
             }
+
+            _component_configurations.push_back(new_component_config);
         }
     }
 
@@ -96,7 +98,28 @@ namespace riaps {
             throw std::runtime_error("Actor - Discovery socket cannot be NULL after register_actor");
         }
 
-        // Load the component library
+        // If no component in the actor => Stop, Error
+        if (_component_configurations.empty()){
+            throw std::invalid_argument("No components are defined in the configuration file.");
+        }
+
+        for (auto component_config : _component_configurations){
+            // Load the component library
+
+            std::string component_library_name = "./lib" + component_config.component_name + ".so";
+            void *handle = dlopen(component_library_name.c_str(), RTLD_NOW);
+            if (handle == NULL) {
+                throw std::runtime_error("Error when opening library: " + component_library_name + " (" + dlerror() + ")");
+            }
+            else {
+                _component_dll_handles.push_back(handle);
+                riaps::ComponentBase * (*create)(component_conf&);
+                create = (riaps::ComponentBase *(*)(component_conf&)) dlsym(handle, "create_component");
+                riaps::ComponentBase* component_instance = (riaps::ComponentBase *)create(cconf);
+                _components.push_back(component_instance);
+                //riaps::ComponentBase *component_instance = (riaps::ComponentBase *) create(cconf);
+            }
+        }
     }
 
     std::string riaps::Actor::GetActorId() {
@@ -212,6 +235,10 @@ namespace riaps {
         zsock_destroy(&_discovery_socket);
         zsock_destroy(&_actor_zsock);
         zpoller_destroy(&_poller);
+
+        for (auto handle : _component_dll_handles){
+            dlclose(handle);
+        }
     }
 }
 

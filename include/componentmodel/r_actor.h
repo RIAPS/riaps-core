@@ -40,12 +40,13 @@ namespace riaps {
 
         zsock_t*                   _discovery_socket;
 
-        int                        _actor_port;
-        std::string                _actor_endpoint;
-        zuuid_t*                   _actor_id;
-        std::string                _actor_name;
-        std::string                _application_name;
-        std::vector<ComponentBase> _components;
+        int                         _actor_port;
+        std::string                 _actor_endpoint;
+        zuuid_t*                    _actor_id;
+        std::string                 _actor_name;
+        std::string                 _application_name;
+        std::vector<ComponentBase*> _components;
+        std::vector<void*>          _component_dll_handles;
 
         // Configurations
         ////

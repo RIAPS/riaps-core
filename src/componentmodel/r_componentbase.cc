@@ -51,32 +51,32 @@ namespace riaps{
             if (firstrun) {
                 firstrun = false;
                 // Add and start publishers
-                for (auto publisher : comp->GetConfig().publishers_config) {
+                for (auto publisher : comp->GetConfig().component_ports.pubs) {
                     comp->AddPublisherPort(publisher);
                 }
 
                 // Add and start timers
-                for (auto timer : comp->GetConfig().periodic_timer_config) {
-                    comp->AddTimer(timer);
-                }
+                //for (auto timer : comp->GetConfig().periodic_timer_config) {
+                //    comp->AddTimer(timer);
+                //}
 
                 // Add and start response ports
-                for (auto response : comp->GetConfig().responses_config) {
-                    auto responseport = ResponsePort::InitFromConfig(response);
-                    zpoller_add(poller, (zsock_t*)responseport->GetSocket());
-                    comp->AddResponsePort(responseport);
-                }
+                //for (auto response : comp->GetConfig().responses_config) {
+                //    auto responseport = ResponsePort::InitFromConfig(response);
+                //    zpoller_add(poller, (zsock_t*)responseport->GetSocket());
+                //    comp->AddResponsePort(responseport);
+                //}
 
                 // Add RequestPorts
-                for (auto requestconfig : comp->GetConfig().requests_config) {
-                    auto requestport = std::unique_ptr<RequestPort>(new RequestPort(requestconfig));
-                    comp->AddRequestPort(requestport);
-                }
+                //for (auto requestconfig : comp->GetConfig().requests_config) {
+                //    auto requestport = std::unique_ptr<RequestPort>(new RequestPort(requestconfig));
+                //    comp->AddRequestPort(requestport);
+                //}
 
                 // Get subscriber details from discovery service
-                for (auto subscriber : comp->GetConfig().subscribers_config) {
-                    SubscriberPort::GetRemoteServiceAsync(subscriber, comp->GetCompUuid());
-                }
+                //for (auto subscriber : comp->GetConfig().subscribers_config) {
+                //    SubscriberPort::GetRemoteServiceAsync(subscriber, comp->GetCompUuid());
+                //}
             }
 
             if (which == pipe) {
@@ -191,8 +191,8 @@ namespace riaps{
         zpoller_destroy(&poller);
     };
 
-    ComponentBase::ComponentBase(component_conf& config) {
-        configuration = config;
+    ComponentBase::ComponentBase(component_conf_j& config) {
+        _configuration = config;
 
 
 
@@ -239,27 +239,25 @@ namespace riaps{
     }
 
     void ComponentBase::AddSubscriberPort(std::unique_ptr<SubscriberPort>& subscriberport) {
-        _subscriberports.push_back(std::move(subscriberport));
+        //_subscriberports.push_back(std::move(subscriberport));
     }
 
     void ComponentBase::AddResponsePort(std::unique_ptr<ResponsePort>& responsePort) {
-        //std::unique_ptr<ResponsePort> newport(new ResponsePort(config));
-        _responseports.push_back(std::move(responsePort));
+        //_responseports.push_back(std::move(responsePort));
     }
 
     void ComponentBase::AddRequestPort(std::unique_ptr<RequestPort>& requestPort) {
-        //std::unique_ptr<ResponsePort> newport(new ResponsePort(config));
-        _requestports.push_back(std::move(requestPort));
+        //_requestports.push_back(std::move(requestPort));
     }
 
     void ComponentBase::AddTimer(periodic_timer_conf& config) {
         std::unique_ptr<CallBackTimer> newtimer(new CallBackTimer(config.timerid, GetTimerChannel()));
         newtimer->start(config.interval);
-        _periodic_timers.push_back(std::move(newtimer));
+        //_periodic_timers.push_back(std::move(newtimer));
     }
 
-    component_conf& ComponentBase::GetConfig() {
-        return configuration;
+    component_conf_j& ComponentBase::GetConfig() {
+        return _configuration;
     }
 
     std::vector<PublisherPort*> ComponentBase::GetPublisherPorts() {
@@ -277,9 +275,9 @@ namespace riaps{
 
         std::vector<RequestPort*> results;
 
-        for (auto it=_requestports.begin(); it!=_requestports.end(); it++){
-            results.push_back(it->get());
-        }
+        //for (auto it=_requestports.begin(); it!=_requestports.end(); it++){
+        //    results.push_back(it->get());
+        //}
 
         return results;
     }
@@ -287,9 +285,9 @@ namespace riaps{
     std::vector<CallBackTimer*> ComponentBase::GetPeriodicTimers() {
         std::vector<CallBackTimer*> results;
 
-        for (auto it=_periodic_timers.begin(); it!=_periodic_timers.end(); it++){
-            results.push_back(it->get());
-        }
+        //for (auto it=_periodic_timers.begin(); it!=_periodic_timers.end(); it++){
+        //    results.push_back(it->get());
+        //}
 
         return results;
     }
@@ -307,9 +305,9 @@ namespace riaps{
 
         std::vector<SubscriberPort*> results;
 
-        for (auto it=_subscriberports.begin(); it!=_subscriberports.end(); it++){
-            results.push_back(it->get());
-        }
+        //for (auto it=_subscriberports.begin(); it!=_subscriberports.end(); it++){
+        //    results.push_back(it->get());
+        //}
 
         return results;
     }
