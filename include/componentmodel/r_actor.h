@@ -17,7 +17,11 @@
 #include <fstream>
 #include <json.h>
 
+
 namespace riaps {
+
+    class ComponentBase;
+
     class Actor {
     public:
         Actor(std::string applicationname,
@@ -30,6 +34,7 @@ namespace riaps {
         void Init();
         virtual void start();
         std::string GetActorId();
+        std::string GetApplicationName();
         virtual ~Actor();
 
     protected:

@@ -68,8 +68,7 @@
         "clts":{},
         "pubs":{
           "estimate":{
-            "type":"Estimate",
-            "network_iface":"network_iface"
+            "type":"Estimate"
           }
         },
         "reps":{},

@@ -134,3 +134,23 @@ void handle_registernode(zmsg_t* msg, zsock_t* replysocket, zactor_t* asyncactor
 void handle_registeractor(zmsg_t* msg, zsock_t* replysocket, zactor_t* asyncactor) {
 
 }
+
+std::pair<std::string, std::string>
+buildInsertKeyValuePair(std::string appName ,
+                        std::string msgType ,
+                        Kind        kind    ,
+                        Scope       scope   ,
+                        std::string host    ,
+                        uint16_t    port    ) {
+    std::string key;
+    key =   "/" + appName
+          + "/" + msgType
+          + "/" + kindMap[kind];
+
+    if (scope == Scope::LOCAL){
+        // FIXME
+        key += ":MACADRESS";
+    }
+
+    std::string value = host + ":" + std::to_string(port);
+}

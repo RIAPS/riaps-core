@@ -34,7 +34,7 @@ namespace riaps{
             std::cout << "Registering response port" << std::endl;
 
             // TODO: Add tags
-            register_service(config.servicename, config.servicename, ifaddress, std::to_string(result->port), {});
+            //register_service(config.servicename, config.servicename, ifaddress, std::to_string(result->port), {});
         }
 
         return std::move(result);

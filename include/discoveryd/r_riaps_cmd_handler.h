@@ -8,12 +8,15 @@
 #include "componentmodel/r_riaps_actor_commands.h"
 #include "utils/r_message.h"
 #include "discoveryd/r_consul.h"
+#include "messaging/disco.capnp.h"
 
 #include <map>
 #include <string>
 #include <functional>
 
 #include <czmq.h>
+
+static std::map<Kind, std::string> kindMap = {{Kind::PUB, "pub"}};
 
 static std::map<std::string, std::function<void(zmsg_t*, zsock_t*, zactor_t*)>> handler_mapping;
 
@@ -26,5 +29,13 @@ void handle_getservices(zmsg_t* msg, zsock_t* replysocket, zactor_t* asyncactor)
 void handle_getservicebyname(zmsg_t* msg, zsock_t* replysocket, zactor_t* asyncactor);
 void handle_getservicebyname_async(zmsg_t* msg, zsock_t* replysocket, zactor_t* asyncactor);
 void handle_registernode(zmsg_t* msg, zsock_t* replysocket, zactor_t* asyncactor);
+
+std::pair<std::string, std::string>
+buildInsertKeyValuePair(std::string appName ,
+                        std::string msgType ,
+                        Kind        kind    ,
+                        Scope       scope   ,
+                        std::string host    ,
+                        uint16_t    port    );
 
 #endif //RIAPS_FW_R_RIAPS_CMD_HANDLER_H

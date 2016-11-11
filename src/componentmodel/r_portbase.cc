@@ -29,8 +29,24 @@ namespace riaps {
             name = ziflist_next (iflist);
         }
 
-        ziflist_reload (iflist);
-        assert (items == ziflist_size (iflist)); ziflist_destroy (&iflist);
+        return result;
+    }
+
+    // Todo: Give back the External IP, not Local IP
+    std::string PortBase::GetInterfaceAddress(){
+        ziflist_t *iflist = ziflist_new ();
+        assert (iflist);
+        size_t items = ziflist_size (iflist);
+
+        const char *name = ziflist_first (iflist);
+        std::string result = "";
+
+        while (name && result == "") {
+            std::string namestr(name);
+            result = ziflist_address (iflist);
+            name = ziflist_next (iflist);
+            break;
+        }
 
         return result;
     }

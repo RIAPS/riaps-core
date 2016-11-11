@@ -191,7 +191,7 @@ namespace riaps{
         zpoller_destroy(&poller);
     };
 
-    ComponentBase::ComponentBase(component_conf_j& config) {
+    ComponentBase::ComponentBase(component_conf_j& config, Actor& actor) : _actor(&actor) {
         _configuration = config;
 
 
@@ -233,8 +233,8 @@ namespace riaps{
     //    return _zsock_timer;
     //}
 
-    void ComponentBase::AddPublisherPort(publisher_conf& config) {
-        std::unique_ptr<PublisherPort> newport(new PublisherPort(config));
+    void ComponentBase::AddPublisherPort(_component_port_pub_j& config) {
+        std::unique_ptr<PublisherPort> newport(new PublisherPort(config, _actor->GetApplicationName()));
         _publisherports.push_back(std::move(newport));
     }
 

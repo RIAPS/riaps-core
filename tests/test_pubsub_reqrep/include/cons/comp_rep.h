@@ -20,7 +20,7 @@ class component_rep : public riaps::ComponentBase {
 
 public:
 
-    component_rep(component_conf& config);
+    component_rep(_component_conf_j& config, riaps::Actor& actor);
 
     virtual void OnMessageArrived(std::string messagetype, zmsg_t* msg_body, zsock_t* socket);
 
@@ -30,7 +30,7 @@ public:
 
 };
 
-extern "C" riaps::ComponentBase* create_component(component_conf&);
+extern "C" riaps::ComponentBase* create_component(component_conf&, riaps::Actor& actor);
 extern "C" void destroy_component(riaps::ComponentBase*);
 
 

@@ -19,7 +19,13 @@ namespace riaps {
     public:
         PortBase();
 
+        /// \return The ip addres of the specified interface. (e.g.: "eth0")
         virtual std::string GetInterfaceAddress(std::string ifacename);
+        ///
+        /// \return The ip address of the first ethernet interface
+        virtual std::string GetInterfaceAddress();
+
+        /// \return The associated ZMQ socket.
         virtual const zsock_t* GetSocket();
 
         virtual ~PortBase();

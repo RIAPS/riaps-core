@@ -12,13 +12,17 @@
 #include "r_timer.h"
 #include "r_responseport.h"
 #include "r_requestport.h"
+#include "r_actor.h"
 
 #include <iostream>
 #include <vector>
 #include <memory>
 #include <queue>
 
+
 namespace riaps {
+
+    class Actor;
 
     /**
      * @brief
@@ -30,9 +34,9 @@ namespace riaps {
     class ComponentBase {
     public:
         //ComponentBase(component_conf& config);
-        ComponentBase(component_conf_j& config);
+        ComponentBase(component_conf_j& config, Actor& actor);
 
-        void AddPublisherPort(publisher_conf&);
+        void AddPublisherPort(_component_port_pub_j&);
         void AddSubscriberPort(std::unique_ptr<SubscriberPort>&);
         void AddResponsePort(std::unique_ptr<ResponsePort>&);
         void AddRequestPort(std::unique_ptr<RequestPort>&);
@@ -58,6 +62,7 @@ namespace riaps {
         virtual ~ComponentBase();
 
     protected:
+        Actor* const     _actor;
         component_conf_j _configuration;
 
         //std::string    async_address;

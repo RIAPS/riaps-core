@@ -5,12 +5,28 @@
 #include "discoveryd/r_service_poller.h"
 #include <unistd.h>
 #include <capnp/common.h>
+#include <opendht.h>
 
 #define REGULAR_MAINTAIN_PERIOD 3000 //msec
 
 void
 riaps_actor (zsock_t *pipe, void *args)
 {
+
+    /////
+    // Experiment, use OpenDHT
+    ////
+    dht::DhtRunner dht_node;
+
+    // Launch a dht node on a new thread, using a
+    // generated RSA key pair, and listen on port 4222.
+    dht_node.run(4222, dht::crypto::generateIdentity(), true);
+
+    // For dht async request - response
+    std::mutex                   dht_mutex;
+    std::condition_variable      dht_cv;
+    std::unique_lock<std::mutex> dht_lock(dht_mutex);
+
     std::srand(std::time(0));
 
     init_command_mappings();
@@ -105,7 +121,7 @@ riaps_actor (zsock_t *pipe, void *args)
             auto msg_discoreq= reader.getRoot<DiscoReq>();
 
             // Register actor
-            if (msg_discoreq.which() == DiscoReq::ACTOR_REG) {
+            if (msg_discoreq.isActorReg()) {
                 auto msg_actorreq = msg_discoreq.getActorReg();
                 auto actorname    = std::string(msg_actorreq.getActorName());
                 auto appname      = std::string(msg_actorreq.getAppName());
@@ -157,6 +173,54 @@ riaps_actor (zsock_t *pipe, void *args)
 
 
                 }
+            } else if (msg_discoreq.isServiceReg()){
+                auto msg_servicereg_req = msg_discoreq.getServiceReg();
+                auto msg_path           = msg_servicereg_req.getPath();
+                auto msg_sock           = msg_servicereg_req.getSocket();
+
+                auto kv_pair = buildInsertKeyValuePair(msg_path.getAppName(),
+                                                       msg_path.getMsgType(),
+                                                       msg_path.getKind(),
+                                                       msg_path.getScope(),
+                                                       msg_sock.getHost(),
+                                                       msg_sock.getPort());
+
+                // Insert KV-pair
+
+                /// Consul part (main line now)
+                disc_registerkey(kv_pair.first, kv_pair.second);
+
+                /////
+                // Experiment OpenDht
+                ////
+
+                // Convert the value to bytes
+                std::vector<uint8_t> opendht_data(kv_pair.second.begin(), kv_pair.second.end());
+                dht_node.put(kv_pair.first, dht::Value(opendht_data), [&](bool success){
+                    // Done Callback
+                    dht_cv.notify_one();
+                });
+
+                dht_cv.wait(dht_lock);
+
+                /////
+                //  End experiment
+                /////
+
+                //Send response
+                capnp::MallocMessageBuilder message;
+                auto msg_discorep       = message.initRoot<DiscoRep>();
+                auto msg_servicereg_rep = msg_discorep.initServiceReg();
+
+                msg_servicereg_rep.setStatus(Status::OK);
+
+                auto serializedMessage = capnp::messageToFlatArray(message);
+
+                zmsg_t* msg = zmsg_new();
+                zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
+
+                zmsg_send(&msg, riaps_socket);
+
             }
 
 

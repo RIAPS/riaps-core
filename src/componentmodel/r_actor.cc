@@ -113,13 +113,17 @@ namespace riaps {
             }
             else {
                 _component_dll_handles.push_back(handle);
-                riaps::ComponentBase * (*create)(component_conf&);
-                create = (riaps::ComponentBase *(*)(component_conf&)) dlsym(handle, "create_component");
-                riaps::ComponentBase* component_instance = (riaps::ComponentBase *)create(cconf);
+                riaps::ComponentBase * (*create)(component_conf_j&);
+                create = (riaps::ComponentBase *(*)(component_conf_j&)) dlsym(handle, "create_component");
+                riaps::ComponentBase* component_instance = (riaps::ComponentBase *)create(component_config);
                 _components.push_back(component_instance);
                 //riaps::ComponentBase *component_instance = (riaps::ComponentBase *) create(cconf);
             }
         }
+    }
+
+    std::string riaps::Actor::GetApplicationName() {
+        return _application_name;
     }
 
     std::string riaps::Actor::GetActorId() {

@@ -1,6 +1,8 @@
 #ifndef R_DISCOVERD_API
 #define R_DISCOVERD_API
 
+#define DISCOVERY_SERVICE_IPC "ipc:///tmp/riapsdiscoveryservice"
+
 #include <string>
 #include <vector>
 #include <czmq.h>
@@ -50,10 +52,12 @@ extern void
 deregister_actor(std::string actorname);
 
 extern bool
-register_service(std::string              service_id   ,
-                 std::string              service_name ,
+register_service(std::string              app_name     ,
+                 std::string              message_type ,
                  std::string              ip_address   ,
-                 std::string              port         ,
+                 uint16_t                 port         ,
+                 Kind                     kind         ,
+                 Scope                    scope        ,
                  std::vector<std::string> tags
 );
 

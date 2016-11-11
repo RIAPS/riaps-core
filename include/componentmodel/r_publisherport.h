@@ -11,11 +11,11 @@
 namespace riaps {
     class PublisherPort : public PortBase {
     public:
-        PublisherPort(_component_port_pub_j& config);
+        PublisherPort(_component_port_pub_j& config, std::string app_name);
 
         std::string GetEndpoint();
 
-        publisher_conf GetConfig();
+        _component_port_pub_j GetConfig();
 
         void PublishMessage(zmsg_t** msg);
 

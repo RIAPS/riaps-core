@@ -7,6 +7,7 @@
 
 #include "messages.h"
 #include "componentmodel/r_componentbase.h"
+#include "componentmodel/r_actor.h"
 
 #include <czmq.h>
 
@@ -18,7 +19,7 @@ class component_gps : public riaps::ComponentBase {
 
 public:
 
-    component_gps(component_conf& config);
+    component_gps(_component_conf_j& config, riaps::Actor& actor);
 
     virtual void OnMessageArrived(std::string messagetype, zmsg_t* msg_body, zsock_t* socket);
 
@@ -31,7 +32,7 @@ private:
     std::default_random_engine                              re;
 };
 
-extern "C" riaps::ComponentBase* create_component(component_conf&);
+extern "C" riaps::ComponentBase* create_component(component_conf&, riaps::Actor& actor);
 extern "C" void destroy_component(riaps::ComponentBase*);
 
 

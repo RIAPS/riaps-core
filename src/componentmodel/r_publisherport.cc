@@ -5,7 +5,9 @@
 #include <componentmodel/r_publisherport.h>
 
 namespace riaps{
-    PublisherPort::PublisherPort(_component_port_pub_j& config) {
+
+    // TODO: Pass scope
+    PublisherPort::PublisherPort(_component_port_pub_j& config, std::string app_name) {
         _configuration = config;
         port_socket = zsock_new(ZMQ_PUB);
 
@@ -22,22 +24,19 @@ namespace riaps{
 
         std::cout << "Publisher is created on port: " << _port << std::endl;
 
-        std::string ifaddress = GetInterfaceAddress(config.network_iface);
+        std::string ifaddress = GetInterfaceAddress();
 
-        // TODO: error handling
-        // NOTE: Should be separated form construct
         if (ifaddress!="") {
-
-            std::cout << "Registering publisher" << std::endl;
-
-            // TODO: Add tags
-            register_service(config.servicename, config.servicename, ifaddress, std::to_string(port), {});
+            register_service(app_name, config.message_type, ifaddress, config.port, Kind::PUB, Scope::GLOBAL, {});
+        }
+        else{
+            throw std::runtime_error("Publisher cannot be initiated. Cannot find  available network interface.");
         }
 
     }
 
-    publisher_conf PublisherPort::GetConfig() {
-        return configuration;
+    _component_port_pub_j PublisherPort::GetConfig() {
+        return _configuration;
     }
 
     std::string PublisherPort::GetEndpoint() {
@@ -53,6 +52,6 @@ namespace riaps{
     }
 
     PublisherPort::~PublisherPort() {
-        deregister_service(configuration.servicename);
+        deregister_service(_configuration.message_type);
     }
 }
