@@ -200,7 +200,7 @@ namespace riaps{
         //async uuid to the component instance
         _component_uuid = zuuid_new();
 
-        get_servicebyname_poll_async("aaa", GetCompUuid());
+        //get_servicebyname_poll_async("aaa", GetCompUuid());
 
 
         //zsock_component = zsock_new_rep("tcp://*:!");

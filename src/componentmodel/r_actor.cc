@@ -106,16 +106,25 @@ namespace riaps {
         for (auto component_config : _component_configurations){
             // Load the component library
 
-            std::string component_library_name = "./lib" + component_config.component_name + ".so";
+
+            std::locale loc;
+            std::string lowercaselibname;
+
+            for(auto ch : component_config.component_type)
+                lowercaselibname+=std::tolower(ch,loc);
+
+
+            std::string component_library_name = "lib" + lowercaselibname + ".so";
+
             void *handle = dlopen(component_library_name.c_str(), RTLD_NOW);
             if (handle == NULL) {
-                throw std::runtime_error("Error when opening library: " + component_library_name + " (" + dlerror() + ")");
+                throw std::runtime_error("Cannot open library: " + component_library_name + " (" + dlerror() + ")");
             }
             else {
                 _component_dll_handles.push_back(handle);
-                riaps::ComponentBase * (*create)(component_conf_j&);
-                create = (riaps::ComponentBase *(*)(component_conf_j&)) dlsym(handle, "create_component");
-                riaps::ComponentBase* component_instance = (riaps::ComponentBase *)create(component_config);
+                riaps::ComponentBase * (*create)(component_conf_j&, Actor&);
+                create = (riaps::ComponentBase *(*)(component_conf_j&, Actor&)) dlsym(handle, "create_component");
+                riaps::ComponentBase* component_instance = (riaps::ComponentBase *)create(component_config, *this);
                 _components.push_back(component_instance);
                 //riaps::ComponentBase *component_instance = (riaps::ComponentBase *) create(cconf);
             }

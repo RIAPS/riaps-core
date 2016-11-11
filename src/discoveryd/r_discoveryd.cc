@@ -28,6 +28,7 @@
 //#include "../include/r_consul.h"
 #include "discoveryd/r_consul_actor.h"
 #include "discoveryd/r_riaps_actor.h"
+#include "loggerd/r_loggerd.h"
 
 // Frequency of sending UDP packets.
 // Starting with higher rate and then switch to lower rate.
@@ -43,6 +44,11 @@
 
 int main()
 {
+
+
+
+    zsys_info ("Discovery started %s message", "info");
+
     // Consul actor
     zactor_t *c_actor = zactor_new (consul_actor, NULL);
 
@@ -55,6 +61,10 @@ int main()
 
     // listen for UDP packages
     zactor_t *listener  = zactor_new (zbeacon, NULL);
+
+    // Create logger subscribe
+    //void *logger = zsys_socket (ZMQ_SUB, NULL, 0);
+    //assert (logger);
 
     // Register node
     // TODO: put in method

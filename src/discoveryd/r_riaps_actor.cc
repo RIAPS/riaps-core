@@ -3,11 +3,13 @@
 #include "utils/r_utils.h"
 #include "discoveryd/r_riaps_cmd_handler.h"
 #include "discoveryd/r_service_poller.h"
+#include "loggerd/r_loggerd.h"
 #include <unistd.h>
 #include <capnp/common.h>
 #include <opendht.h>
 
 #define REGULAR_MAINTAIN_PERIOD 3000 //msec
+
 
 void
 riaps_actor (zsock_t *pipe, void *args)
@@ -32,7 +34,7 @@ riaps_actor (zsock_t *pipe, void *args)
     init_command_mappings();
 
     // Response socket for incoming messages from RIAPS Components
-    zsock_t * riaps_socket = zsock_new_rep ("ipc://riapsdiscoveryservice");
+    zsock_t * riaps_socket = zsock_new_rep (DISCOVERY_SERVICE_IPC);
     //zsock_t * riaps_socket = zsock_new_router ("ipc://riapsdiscoveryservice");
     assert(riaps_socket);
 
@@ -119,6 +121,8 @@ riaps_actor (zsock_t *pipe, void *args)
 
             capnp::FlatArrayMessageReader reader(capnp_data);
             auto msg_discoreq= reader.getRoot<DiscoReq>();
+
+            zsys_info("Message arrived: %s (%s)", "DiscoReq", msg_discoreq.which());
 
             // Register actor
             if (msg_discoreq.isActorReg()) {

@@ -15,9 +15,12 @@ include(CMakeLists_amd64.txt)
 
 add_subdirectory(src/componentmodel)
 add_subdirectory(src/discoveryd)
+add_subdirectory(src/loggerd)
 
 
 # Tests
 #add_subdirectory(tests/test_pubsub)
 #add_subdirectory(tests/test_getservice_async)
-add_subdirectory(tests/test_pubsub_reqrep)
+#add_subdirectory(tests/test_pubsub_reqrep)
+
+add_subdirectory(tests/test_distributed_estimator)

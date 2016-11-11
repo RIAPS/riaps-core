@@ -57,17 +57,11 @@ bool register_service(std::string              app_name     ,
     zsock_t* discovery_port = NULL;
 
     // Register actor
-    if (msg_discoreq.isActorReg()) {
-        auto msg_response = msg_discoreq.getActorReg();
+    if (msg_discoreq.isServiceReg()) {
+        auto msg_response = msg_discoreq.getServiceReg();
         auto status = msg_response.getStatus();
-        auto port = msg_response.getPort();
-
 
         // TODO: Check status
-
-        auto discovery_endpoint = "tcp://localhost:" + std::to_string(port);
-        discovery_port = zsock_new_pair(discovery_endpoint.c_str());
-        assert(discovery_port);
     }
 
     /////
