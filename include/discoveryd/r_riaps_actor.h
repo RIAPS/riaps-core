@@ -22,8 +22,7 @@ struct _actor_details {
     }
 
     zsock_t* socket;
-    int localport;
-    int globalport;
+    int port;
 
     ~_actor_details(){
         if (socket!=NULL) {

@@ -20,6 +20,7 @@ bool disc_deregisterservice(std::string);
 bool disc_containskey(std::string keyname);
 bool disc_registerkey(std::string key, std::string value);
 bool disc_deregisterkey(std::string key, bool recurse);
+std::string disc_getvalue_by_key(std::string key);
 
 bool disc_registernode(std::string nodename);
 bool disc_deregisternode(std::string nodename);

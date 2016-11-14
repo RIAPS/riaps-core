@@ -148,9 +148,48 @@ buildInsertKeyValuePair(std::string appName ,
           + "/" + kindMap[kind];
 
     if (scope == Scope::LOCAL){
-        // FIXME
-        key += ":MACADRESS";
+        // TODO: MacAddress instead of hostid
+        auto hostid = gethostid();
+        key += std::to_string(hostid);
     }
 
     std::string value = host + ":" + std::to_string(port);
+
+    return std::pair<std::string, std::string>(key, value);
+}
+
+std::pair<std::string, std::string>
+buildLookupKey(std::string appName,
+               std::string msgType,
+               Kind kind,
+               Scope scope,
+               std::string clientActorHost,
+               std::string clientActorName,
+               std::string clientInstanceName,
+               std::string clientPortName ) {
+
+
+    std::string key;
+    key =     "/" + appName
+            + "/" + msgType
+            + "/" + kindMap[kind];
+
+    // TODO: MacAddress instead of hostid
+    auto hostid = gethostid();
+
+    if (scope == Scope::LOCAL){
+        key += std::to_string(hostid);
+    }
+
+    std::string client =   '/' + appName
+                         + '/' + clientActorName
+                         + '/' + clientActorHost
+                         + '/' + clientInstanceName
+                         + '/' + clientPortName;
+
+    if (scope == Scope::LOCAL) {
+        client = client + ":" + std::to_string(hostid);
+    }
+
+    return {key, client};
 }

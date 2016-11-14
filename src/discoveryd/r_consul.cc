@@ -153,6 +153,24 @@ bool disc_deregisterkey(std::string key, bool recurse=true){
     return true;
 }
 
+std::string disc_getvalue_by_key(std::string key) {
+    std::string consul_api_host = "localhost";
+    std::string consul_api_getparam = "/v1/kv/" + key;
+
+    std::string value;
+    std::string response;
+
+    int result = do_get(consul_api_host, CONSUL_PORT, consul_api_getparam, response);
+
+    nlohmann::json json_response = nlohmann::json::parse(response.c_str());
+
+    if(!json_response.empty()){
+        value = json_response[0]["Value"];
+    }
+
+    return value;
+}
+
 
 std::string kv_hostnodekeypath(){
     char* hostname = zsys_hostname();

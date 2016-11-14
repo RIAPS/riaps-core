@@ -44,8 +44,7 @@ riaps_actor (zsock_t *pipe, void *args)
     zpoller_t* poller = zpoller_new(pipe, riaps_socket, async_service_poller, NULL);
     assert(poller);
 
-    // Pair sockets for Actor communication
-    std::map<std::string, actor_details> actor_pair_details;
+
 
 
     bool terminated = false;
@@ -54,6 +53,10 @@ riaps_actor (zsock_t *pipe, void *args)
     // Store the last checkins of the registered services
     // If there was no checkin in SERVICE_TIMEOUT ms then, remove the service from consul
     std::map<std::string, int64_t> service_checkins;
+
+    // Pair sockets for Actor communication
+    std::map<std::string, actor_details> clients;
+
 
     char hostname[256];
     int hostnameresult = gethostname(hostname, 256);
@@ -133,17 +136,16 @@ riaps_actor (zsock_t *pipe, void *args)
                 std::string clientKeyBase = "/" + appname + '/' + actorname + "/";
 
                 // If the actor already registered
-                if (actor_pair_details.find(clientKeyBase)!=actor_pair_details.end()) {
+                if (clients.find(clientKeyBase)!=clients.end()) {
                     // TODO: What to do then?
                 } else{
                     // Open a new PAIR socket for actor communication
                     zsock_t * actor_socket = zsock_new (ZMQ_PAIR);
                     auto port = zsock_bind(actor_socket, "tcp://*:!");
 
-                    actor_pair_details[clientKeyBase] = actor_details{};
-                    actor_pair_details[clientKeyBase].socket     = actor_socket;
-                    actor_pair_details[clientKeyBase].globalport = port;
-                    actor_pair_details[clientKeyBase].localport  = port;
+                    clients[clientKeyBase] = actor_details{};
+                    clients[clientKeyBase].socket     = actor_socket;
+                    clients[clientKeyBase].port = port;
 
                     // Create and send the Response
                     capnp::MallocMessageBuilder message;
@@ -166,10 +168,11 @@ riaps_actor (zsock_t *pipe, void *args)
                     //zuuid_destroy(&uuid);
 
                     auto clientKeyLocal = clientKeyBase + uuid_str;
-                    //self.clients[clientKeyLocal] = port
+                    clients[clientKeyLocal] = _actor_details{};
+                    clients[clientKeyLocal].port = port;
 
-                    //clientKeyGlobal = clientKeyBase + self.hostAddress
-                    //self.clients[clientKeyGlobal] = port
+                    auto clientKeyGlobal = clientKeyBase + uuid_str;
+                    clients[clientKeyGlobal].port = port;
                 }
             } else if (msg_discoreq.isServiceReg()){
                 auto msg_servicereg_req = msg_discoreq.getServiceReg();
@@ -225,7 +228,42 @@ riaps_actor (zsock_t *pipe, void *args)
                 auto client = msg_servicelookup.getClient();
                 auto path   = msg_servicelookup.getPath();
 
+                auto key = buildLookupKey(path.getAppName()        ,
+                                          path.getMsgType()        ,
+                                          path.getKind()           ,
+                                          path.getScope()          ,
+                                          client.getActorHost()    ,
+                                          client.getActorName()    ,
+                                          client.getInstanceName() ,
+                                          client.getPortName()     );
 
+                /// Consul part (main line now)
+                std::string consul_lookup_result = disc_getvalue_by_key(key.first);
+
+
+                /////
+                // Experiment OpenDht
+                ////
+
+                // Convert the value to bytes
+                //std::vector<uint8_t> opendht_data(kv_pair.second.begin(), kv_pair.second.end());
+
+                std::vector<std::string> dht_lookup_results;
+                dht_node.get(key.first, [&](const std::vector<std::shared_ptr<dht::Value>>& values){
+                    // Done Callback
+                    for (const auto& value :values ){
+                        std::string result = std::string(value->data.begin(), value->data.end());
+                        dht_lookup_results.push_back(result);
+                    }
+                    dht_cv.notify_one();
+                    return false;
+                });
+
+                dht_cv.wait(dht_lock);
+
+                /////
+                //  End experiment
+                /////
 
             }
 
@@ -349,10 +387,10 @@ riaps_actor (zsock_t *pipe, void *args)
         }
     }
 
-    for (auto actor_pair_detail : actor_pair_details){
-        if (actor_pair_detail.second.socket!=NULL) {
-            zsock_destroy(&actor_pair_detail.second.socket);
-            actor_pair_detail.second.socket=NULL;
+    for (auto client : clients){
+        if (client.second.socket!=NULL) {
+            zsock_destroy(&client.second.socket);
+            client.second.socket=NULL;
         }
     }
 

@@ -38,4 +38,14 @@ buildInsertKeyValuePair(std::string appName ,
                         std::string host    ,
                         uint16_t    port    );
 
+std::pair<std::string, std::string>
+buildLookupKey(std::string appName            ,
+               std::string msgType            ,
+               Kind        kind               ,
+               Scope       scope              ,
+               std::string clientActorHost    ,
+               std::string clientActorName    ,
+               std::string clientInstanceName ,
+               std::string clientPortName     );
+
 #endif //RIAPS_FW_R_RIAPS_CMD_HANDLER_H
