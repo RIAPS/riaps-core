@@ -122,7 +122,7 @@ riaps_actor (zsock_t *pipe, void *args)
             capnp::FlatArrayMessageReader reader(capnp_data);
             auto msg_discoreq= reader.getRoot<DiscoReq>();
 
-            zsys_info("Message arrived: %s (%s)", "DiscoReq", msg_discoreq.which());
+            //zsys_info("Message arrived: %s (%s)", "DiscoReq", msg_discoreq.which());
 
             // Register actor
             if (msg_discoreq.isActorReg()) {
@@ -145,7 +145,6 @@ riaps_actor (zsock_t *pipe, void *args)
                     actor_pair_details[clientKeyBase].globalport = port;
                     actor_pair_details[clientKeyBase].localport  = port;
 
-
                     // Create and send the Response
                     capnp::MallocMessageBuilder message;
                     auto drepmsg = message.initRoot<DiscoRep>();
@@ -161,21 +160,16 @@ riaps_actor (zsock_t *pipe, void *args)
 
                     zmsg_send(&msg, riaps_socket);
 
-
-
-                    // TODO: Add MacAddress
-                    //auto uuid = zuuid_new();
-                    //auto uuid_str = std::string(zuuid_str(uuid));
+                    // TODO: replace with MacAddress
+                    auto uuid = gethostid();
+                    auto uuid_str = std::to_string(uuid);
                     //zuuid_destroy(&uuid);
 
-                    //auto clientKeyLocal = clientKeyBase + uuid_str;
+                    auto clientKeyLocal = clientKeyBase + uuid_str;
                     //self.clients[clientKeyLocal] = port
 
                     //clientKeyGlobal = clientKeyBase + self.hostAddress
                     //self.clients[clientKeyGlobal] = port
-
-
-
                 }
             } else if (msg_discoreq.isServiceReg()){
                 auto msg_servicereg_req = msg_discoreq.getServiceReg();
@@ -224,6 +218,14 @@ riaps_actor (zsock_t *pipe, void *args)
                 zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
 
                 zmsg_send(&msg, riaps_socket);
+
+            } else if(msg_discoreq.isServiceLookup()){
+                auto msg_servicelookup = msg_discoreq.getServiceLookup();
+
+                auto client = msg_servicelookup.getClient();
+                auto path   = msg_servicelookup.getPath();
+
+
 
             }
 

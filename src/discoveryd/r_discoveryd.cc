@@ -44,11 +44,6 @@
 
 int main()
 {
-
-
-
-    zsys_info ("Discovery started %s message", "info");
-
     // Consul actor
     zactor_t *c_actor = zactor_new (consul_actor, NULL);
 

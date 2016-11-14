@@ -2,6 +2,8 @@ set(FRAMEWORK_LIB_FILES r_discoverdapi.cc
                         r_componentbase.cc
                         ../utils/r_utils.cc
                         ../utils/r_message.cc
+                        ../utils/r_capnp_helper.cc
+                        ../loggerd/r_logger_utilities.cc
                         r_subscriberport.cc
                         r_publisherport.cc
                         r_actor.cc

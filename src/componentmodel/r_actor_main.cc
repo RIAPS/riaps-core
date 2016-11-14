@@ -6,6 +6,9 @@
 
 int main(int argc, char* argv[]) {
 
+    // Logger experiment
+    //zsock_t* logger_socket = initLogger();
+    //sendLogMessage(logger_socket, "Actor started...");
 
 
     if (cmdOptionExists(argv, argv+argc, "-h") || argc < 3){
@@ -78,6 +81,8 @@ int main(int argc, char* argv[]) {
             std::cerr << e.what() << std::endl;
         }
     }
+
+    //zsock_destroy(&logger_socket);
 
     return 0;
 }
