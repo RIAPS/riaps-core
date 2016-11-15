@@ -8,8 +8,8 @@
 
 namespace riaps {
 
-    riaps::Actor::Actor(std::string     applicationname       ,
-                        std::string     actorname             ,
+    riaps::Actor::Actor(const std::string&     applicationname       ,
+                        const std::string&     actorname             ,
                         nlohmann::json& json_actorconfig      ,
                         nlohmann::json& json_componentsconfig ,
                         nlohmann::json& json_messagesconfig)
@@ -75,6 +75,22 @@ namespace riaps {
                     new_component_config.component_ports.pubs.push_back(newpubconfig);
                 }
             }
+            if (json_portsconfig.count("subs")!=0){
+                auto json_subports = json_portsconfig["subs"];
+                for (auto it_subport = json_subports.begin();
+                          it_subport != json_subports.end() ;
+                          it_subport++){
+
+                    auto subportname = it_subport.key();
+                    auto subporttype = it_subport.value()["type"];
+
+                    _component_port_sub_j newsubconfig;
+                    newsubconfig.subscriber_name = subportname;
+                    newsubconfig.message_type = subporttype;
+
+                    new_component_config.component_ports.subs.push_back(newsubconfig);
+                }
+            }
 
             _component_configurations.push_back(new_component_config);
         }
@@ -92,9 +108,9 @@ namespace riaps {
         assert(_poller);
 
         // Register the actor in the discovery service
-        zsock_t* discovery_socket = register_actor(_application_name, _actor_name);
+        _discovery_socket = register_actor(_application_name, _actor_name);
 
-        if (discovery_socket == NULL) {
+        if (_discovery_socket == NULL) {
             throw std::runtime_error("Actor - Discovery socket cannot be NULL after register_actor");
         }
 
@@ -105,7 +121,6 @@ namespace riaps {
 
         for (auto component_config : _component_configurations){
             // Load the component library
-
 
             std::locale loc;
             std::string lowercaselibname;
@@ -126,12 +141,12 @@ namespace riaps {
                 create = (riaps::ComponentBase *(*)(component_conf_j&, Actor&)) dlsym(handle, "create_component");
                 riaps::ComponentBase* component_instance = (riaps::ComponentBase *)create(component_config, *this);
                 _components.push_back(component_instance);
-                //riaps::ComponentBase *component_instance = (riaps::ComponentBase *) create(cconf);
+                //riaps::ComponentBase *component_instance = (  riaps::ComponentBase *) create(cconf);
             }
         }
     }
 
-    std::string riaps::Actor::GetApplicationName() {
+    const std::string& riaps::Actor::GetApplicationName() {
         return _application_name;
     }
 
@@ -141,6 +156,16 @@ namespace riaps {
     }
 
     void riaps::Actor::start(){
+        while (!zsys_interrupted) {
+            void *which = zpoller_wait(_poller, 2000);
+
+            std::cout << "." << std::flush;
+
+            if (which == _actor_zsock) {
+                // Maybe later, control messages to the actor
+            } else {
+            }
+        }
         /*std::ifstream ifs(configfile);
 
         std::vector<std::unique_ptr<riaps::ComponentBase>> components;

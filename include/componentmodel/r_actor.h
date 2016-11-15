@@ -24,8 +24,8 @@ namespace riaps {
 
     class Actor {
     public:
-        Actor(std::string applicationname,
-              std::string actorname,
+        Actor(const std::string& applicationname,
+              const std::string& actorname,
               nlohmann::json& json_actorconfig,
               nlohmann::json& json_componentsconfig,
               nlohmann::json& json_messagesconfig)
@@ -34,7 +34,7 @@ namespace riaps {
         void Init();
         virtual void start();
         std::string GetActorId();
-        std::string GetApplicationName();
+        const std::string& GetApplicationName();
         virtual ~Actor();
 
     protected:
