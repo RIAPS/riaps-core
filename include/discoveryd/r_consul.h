@@ -16,7 +16,6 @@ bool disc_getservices(std::vector<std::string>& service_list);
 bool disc_getservicedetails(std::string, std::vector<service_details>&);
 bool disc_deregisterservice(std::string);
 
-
 bool disc_containskey(std::string keyname);
 bool disc_registerkey(std::string key, std::string value);
 bool disc_deregisterkey(std::string key, bool recurse);

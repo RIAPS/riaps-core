@@ -24,6 +24,8 @@
 namespace riaps {
 
     class Actor;
+    class PublisherPort;
+    class SubscriberPort;
 
     /**
      * @brief
@@ -37,17 +39,21 @@ namespace riaps {
         //ComponentBase(component_conf& config);
         ComponentBase(component_conf_j& config, Actor& actor);
 
-        void AddPublisherPort(_component_port_pub_j&);
-        void AddSubscriberPort(std::unique_ptr<SubscriberPort>&);
-        void AddResponsePort(std::unique_ptr<ResponsePort>&);
-        void AddRequestPort(std::unique_ptr<RequestPort>&);
-        void AddTimer(periodic_timer_conf&);
+        void InitPublisherPort(_component_port_pub_j&);
+        void InitSubscriberPort(_component_port_sub_j&);
+        //void AddResponsePort(std::unique_ptr<ResponsePort>&);
+        //void AddRequestPort(std::unique_ptr<RequestPort>&);
+        //void AddTimer(periodic_timer_conf&);
 
         std::vector<PublisherPort*>  GetPublisherPorts();
         std::vector<SubscriberPort*> GetSubscriberPorts();
-        std::vector<CallBackTimer*>  GetPeriodicTimers();
-        std::vector<ResponsePort*>   GetResponsePorts();
-        std::vector<RequestPort*>    GetRequestPorts();
+
+        SubscriberPort& GetSubscriberByName(const std::string&);
+
+
+        //std::vector<CallBackTimer*>  GetPeriodicTimers();
+        //std::vector<ResponsePort*>   GetResponsePorts();
+        //std::vector<RequestPort*>    GetRequestPorts();
 
         //virtual std::vector<CallBackTimer*>  GetTimers();
 
@@ -55,7 +61,9 @@ namespace riaps {
 
         std::string       GetTimerChannel();
         std::string       GetCompUuid();
-        component_conf_j& GetConfig();
+        const component_conf_j& GetConfig() const;
+
+        const Actor* GetActor() const;
 
         virtual void OnMessageArrived(std::string messagetype, zmsg_t* msg_body, zsock_t* socket)=0;
         virtual void OnTimerFired(std::string timerid)=0;
@@ -63,14 +71,14 @@ namespace riaps {
         virtual ~ComponentBase();
 
     protected:
-        Actor* const     _actor;
+        const Actor*     _actor;
         component_conf_j _configuration;
 
         //std::string    async_address;
         zuuid_t*       _component_uuid;
 
         std::vector<std::unique_ptr<PublisherPort>>  _publisherports;
-        //std::vector<std::unique_ptr<SubscriberPort>> _subscriberports;
+        std::vector<std::unique_ptr<SubscriberPort>> _subscriberports;
         //std::vector<std::unique_ptr<CallBackTimer>>  _periodic_timers;
         //std::vector<std::unique_ptr<ResponsePort>>   _responseports;
         //std::vector<std::unique_ptr<RequestPort>>    _requestports;

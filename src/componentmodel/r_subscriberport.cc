@@ -6,11 +6,35 @@
 
 namespace riaps{
 
-    SubscriberPort::SubscriberPort() {
-
+    SubscriberPort::SubscriberPort(_component_port_sub_j& config, const ComponentBase* component) {
+        _config = config;
+        _parent_component = component;
+        _port_socket = zsock_new(ZMQ_SUB);
     }
 
-    std::unique_ptr<SubscriberPort> SubscriberPort::InitFromServiceDetails(service_details& target_service) {
+    void SubscriberPort::Init() {
+        auto results =
+                subscribe_to_service(_parent_component->GetActor()->GetApplicationName(),
+                             _parent_component->GetConfig().component_name,
+                             Kind::SUB,
+                             Scope::GLOBAL, //TODO: pass in argument
+                             _config.subscriber_name,
+                             _config.message_type);
+
+        for (auto result : results){
+            std::string endpoint = "tcp://" + result.host_name + ":" + std::to_string(result.port);
+            int rc = zsock_connect(_port_socket, endpoint.c_str());
+
+            if (rc!=0) {
+                std::cout << "Subscriber '" + _config.subscriber_name + "' couldn't connect to " + endpoint << std::endl;
+            }
+            else {
+                std::cout << "Subscriber connected to: " <<endpoint <<std::endl;
+            }
+        }
+    }
+
+    /*std::unique_ptr<SubscriberPort> SubscriberPort::InitFromServiceDetails(service_details& target_service) {
         std::unique_ptr<SubscriberPort> result(new SubscriberPort());
 
         std::string targetaddress = "tcp://" + target_service.ip_address + ":" + target_service.port;
@@ -52,7 +76,7 @@ namespace riaps{
         }
 
         return target_service;
-    }
+    }*/
 
     SubscriberPort::~SubscriberPort() {
 

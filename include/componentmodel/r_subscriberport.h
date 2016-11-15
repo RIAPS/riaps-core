@@ -5,22 +5,33 @@
 #ifndef RIAPS_R_SUBSCRIBERPORT_H
 #define RIAPS_R_SUBSCRIBERPORT_H
 
-#include "r_portbase.h"
 #include <memory>
+#include "r_componentbase.h"
+#include "r_configuration.h"
+#include "r_portbase.h"
 
 namespace riaps {
 
-    class SubscriberPort : public PortBase{
+    class ComponentBase;
+
+    class SubscriberPort :PortBase {
     public:
 
-        static std::unique_ptr<SubscriberPort> InitFromServiceDetails(service_details& target_service);
+        SubscriberPort(_component_port_sub_j& config, const ComponentBase* component);
 
-        static void GetRemoteServiceAsync(subscriber_conf& config, std::string asyncendpoint);
-        static service_details GetRemoteService(subscriber_conf& config);
+        virtual void Init();
 
-        virtual ~SubscriberPort();
+        //static std::unique_ptr<SubscriberPort> InitFromServiceDetails(service_details& target_service);
+
+        //static void GetRemoteServiceAsync(subscriber_conf& config, std::string asyncendpoint);
+        //static service_details GetRemoteService(subscriber_conf& config);
+
+        ~SubscriberPort();
     protected:
-        SubscriberPort();
+
+        _component_port_sub_j       _config;
+        const ComponentBase*        _parent_component;
+
 
     };
 

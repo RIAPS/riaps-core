@@ -26,7 +26,7 @@
 #define CMD_DISC_GET_SERVICES                    "$GETSERVICES"
 #define CMD_DISC_PING                            "$PING$"
 
-#define MSG_SERVICE_LIST_HEADER                  "$SERVICES$"
+//#define MSG_SERVICE_LIST_HEADER                  "$SERVICES$"
 
 //#define CMD_DISC_ALL (std::vector<std::string>({CMD_DISC_REGISTER_NODE}))
 

@@ -57,7 +57,10 @@ struct _component_port_pub_j {
 struct _component_port_req_j {};
 struct _component_port_rep_j {};
 struct _component_port_srv_j {};
-struct _component_port_sub_j {};
+struct _component_port_sub_j {
+    std::string subscriber_name;
+    std::string message_type;
+};
 
 
 struct _component_ports_j {

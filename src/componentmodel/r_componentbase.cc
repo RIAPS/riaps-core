@@ -13,22 +13,23 @@ namespace riaps{
     void component_actor(zsock_t* pipe, void* args){
         ComponentBase* comp = (ComponentBase*)args;
 
-        zsock_t* timerport = zsock_new_pull(comp->GetTimerChannel().c_str());
-        assert(timerport);
+        //zsock_t* timerport = zsock_new_pull(comp->GetTimerChannel().c_str());
+        //assert(timerport);
+
         //std::cout << "Create async endpoint @" << comp->GetAsyncEndpointName() << std::endl;
-        zsock_t* asyncport = zsock_new_sub(ASYNC_CHANNEL, comp->GetCompUuid().c_str());
-        assert(asyncport);
+        //zsock_t* asyncport = zsock_new_sub(ASYNC_CHANNEL, comp->GetCompUuid().c_str());
+        //assert(asyncport);
 
         zpoller_t* poller = zpoller_new(pipe, NULL);
         assert(poller);
 
         zsock_signal (pipe, 0);
 
-        int rc = zpoller_add(poller, asyncport);
-        assert(rc==0);
+        //int rc = zpoller_add(poller, asyncport);
+        //assert(rc==0);
 
-        rc = zpoller_add(poller, timerport);
-        assert(rc==0);
+        //int rc = zpoller_add(poller, timerport);
+        //assert(rc==0);
 
         // Init subscribers
 
@@ -46,13 +47,13 @@ namespace riaps{
         while (!terminated) {
             void *which = zpoller_wait(poller, 1000);
 
-            std::cout << "." << std::flush;
+            //std::cout << "." << std::flush;
 
             if (firstrun) {
                 firstrun = false;
                 // Add and start publishers
-                for (auto publisher : comp->GetConfig().component_ports.pubs) {
-                    comp->AddPublisherPort(publisher);
+                for (auto publisher_config : comp->GetConfig().component_ports.pubs) {
+                    comp->InitPublisherPort(publisher_config);
                 }
 
                 // Add and start timers
@@ -74,9 +75,10 @@ namespace riaps{
                 //}
 
                 // Get subscriber details from discovery service
-                //for (auto subscriber : comp->GetConfig().subscribers_config) {
-                //    SubscriberPort::GetRemoteServiceAsync(subscriber, comp->GetCompUuid());
-                //}
+                for (auto subscriber_config : comp->GetConfig().component_ports.subs) {
+                    comp->InitSubscriberPort(subscriber_config);
+                    //SubscriberPort::GetRemoteServiceAsync(subscriber, comp->GetCompUuid());
+                }
             }
 
             if (which == pipe) {
@@ -96,24 +98,24 @@ namespace riaps{
                 free(command);
                 zmsg_destroy(&msg);
             }
-            else if (which == timerport) {
-                zmsg_t *msg = zmsg_recv(which);
-                if (!msg) {
-                    std::cout << "No msg => interrupted" << std::endl;
-                    break;
-                }
+            //else if (which == timerport) {
+            //    zmsg_t *msg = zmsg_recv(which);
+            //    if (!msg) {
+            //        std::cout << "No msg => interrupted" << std::endl;
+            //        break;
+            //    }
 
-                char *param = zmsg_popstr(msg);
+            //    char *param = zmsg_popstr(msg);
 
-                if (param){
-                    comp->OnTimerFired(param);
-                    free (param);
-                }
-                zmsg_destroy(&msg);
+            //    if (param){
+            //        comp->OnTimerFired(param);
+            //        free (param);
+            //    }
+            //    zmsg_destroy(&msg);
 
-            }
+            //}
             // Message from async query
-            else if (which == asyncport){
+            /*else if (which == asyncport){
                 std::cout<< "ASYNC ARRIVED, Create subscriber and connect" << std::endl;
                 std::vector<service_details> services;
                 zmsg_t *msg_response = zmsg_recv(which);
@@ -149,6 +151,7 @@ namespace riaps{
 
                 zmsg_destroy(&msg_response);
 
+                /* Old async port creation
                 if (!services.empty()) {
                     service_details target_service = services.front();
                     auto subscriberport = SubscriberPort::InitFromServiceDetails(target_service);
@@ -158,7 +161,7 @@ namespace riaps{
                     rc = zpoller_add(poller, (zsock_t*)zmqport);
                     assert(rc==0);
                 }
-            }
+            }*/
             // TODO: from one of the publishers?
             else if(which){
                 // Message test with more than one field
@@ -182,12 +185,12 @@ namespace riaps{
         }
 
         // Stop timers
-        for (auto timer : comp->GetPeriodicTimers()){
-            timer->stop();
-        }
+        //for (auto timer : comp->GetPeriodicTimers()){
+         //   timer->stop();
+        //}
 
-        zsock_destroy(&timerport);
-        zsock_destroy(&asyncport);
+        //zsock_destroy(&timerport);
+        //zsock_destroy(&asyncport);
         zpoller_destroy(&poller);
     };
 
@@ -233,15 +236,20 @@ namespace riaps{
     //    return _zsock_timer;
     //}
 
-    void ComponentBase::AddPublisherPort(_component_port_pub_j& config) {
-        std::unique_ptr<PublisherPort> newport(new PublisherPort(config, _actor->GetApplicationName()));
+    void ComponentBase::InitPublisherPort(_component_port_pub_j& config) {
+        std::unique_ptr<PublisherPort> newport(new PublisherPort(config, this));
         _publisherports.push_back(std::move(newport));
     }
 
-    void ComponentBase::AddSubscriberPort(std::unique_ptr<SubscriberPort>& subscriberport) {
-        //_subscriberports.push_back(std::move(subscriberport));
+
+
+    void ComponentBase::InitSubscriberPort(_component_port_sub_j& config) {
+        std::unique_ptr<SubscriberPort> newport(new SubscriberPort(config, this));
+        newport->Init();
+        _subscriberports.push_back(std::move(newport));
     }
 
+    /*
     void ComponentBase::AddResponsePort(std::unique_ptr<ResponsePort>& responsePort) {
         //_responseports.push_back(std::move(responsePort));
     }
@@ -254,11 +262,16 @@ namespace riaps{
         std::unique_ptr<CallBackTimer> newtimer(new CallBackTimer(config.timerid, GetTimerChannel()));
         newtimer->start(config.interval);
         //_periodic_timers.push_back(std::move(newtimer));
-    }
+    }*/
 
-    component_conf_j& ComponentBase::GetConfig() {
+    const component_conf_j& ComponentBase::GetConfig() const {
         return _configuration;
     }
+
+    const Actor* ComponentBase::GetActor() const{
+        return _actor;
+    }
+
 
     std::vector<PublisherPort*> ComponentBase::GetPublisherPorts() {
 
@@ -270,7 +283,7 @@ namespace riaps{
 
         return results;
     }
-
+/*
     std::vector<RequestPort*> ComponentBase::GetRequestPorts() {
 
         std::vector<RequestPort*> results;
@@ -301,6 +314,8 @@ namespace riaps{
         return std::string(zuuid_str(_component_uuid));
     }
 
+
+
     std::vector<SubscriberPort*> ComponentBase::GetSubscriberPorts() {
 
         std::vector<SubscriberPort*> results;
@@ -310,7 +325,9 @@ namespace riaps{
         //}
 
         return results;
-    }
+    }*/
+
+
 
     ComponentBase::~ComponentBase() {
 
@@ -319,6 +336,8 @@ namespace riaps{
 
         zmsg_addstr(termmsg,"$TERM");
         zactor_send(_zactor_component, &termmsg);
+
+        zclock_sleep(1000);
 
         zuuid_destroy(&_component_uuid);
         //zsock_destroy(&zsock_component);

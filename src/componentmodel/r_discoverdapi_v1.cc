@@ -115,7 +115,159 @@ bool register_service(std::string              app_name     ,
    zsock_destroy(&client);*/
 }
 
+bool deregister_service(std::string service_name) {
+    zmsg_t* msg = zmsg_new();
 
+    std::cout << "Deregistering service " << service_name;
+
+    zmsg_addstr(msg, CMD_DISC_DEREGISTER_SERVICE);
+    zmsg_addstr(msg, service_name.c_str());
+
+    zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC);
+    assert(client);
+
+    // TODO check return value
+    zmsg_send(&msg, client);
+
+    char* msg_response = zstr_recv(client);
+
+    if (!msg_response){
+        std::cout << "No msg => interrupted" << std::endl;
+        return false;
+    }
+    else{
+        free(msg_response);
+    }
+
+    zsock_destroy(&client);
+    return true;
+}
+
+bool
+get_servicenames(std::vector<std::string>& service_list) {
+   zmsg_t* msg = zmsg_new();
+   zmsg_addstr(msg, "$GETSERVICES$");
+   zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC);
+   assert(client);
+
+   // TODO check return value
+   zmsg_send(&msg, client);
+
+   zmsg_t* msg_response = zmsg_recv(client);
+
+   if (!msg_response){
+       std::cout << "No msg => interrupted" << std::endl;
+       return false;
+   }
+
+   char* command = zmsg_popstr(msg_response);
+
+   if (streq(command, "$SERVICES$")) {
+       bool has_more_msg = true;
+       while (has_more_msg){
+            char* param = zmsg_popstr(msg_response);
+            if (param){
+                service_list.push_back(param);
+                free(param);
+            } else{
+                has_more_msg = false;
+            }
+        }
+   }
+
+
+
+   // Wait for the OK response
+   // TODO: Specify OK response, error handling
+   //auto result = zstr_recv(client);
+   //std::cout << result;
+
+   zsock_destroy(&client);
+
+   return false; 
+}
+
+bool
+get_servicebyname(std::string service_name, std::vector<service_details>& services){
+
+    zmsg_t* msg = zmsg_new();
+    zmsg_addstr(msg, CMD_DISC_GETSERVICE_BY_NAME);
+    zmsg_addstr(msg, service_name.c_str());
+    zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC);
+    assert(client);
+
+    // TODO check return value
+    zmsg_send(&msg, client);
+
+    zmsg_t* msg_response = zmsg_recv(client);
+
+    if (!msg_response){
+       std::cout << "No msg => interrupted" << std::endl;
+       return false;
+    }
+
+    std::vector<zmsg_t*> responseframes;
+    extract_zmsg(msg_response, responseframes);
+
+    for (auto it = responseframes.begin(); it!=responseframes.end(); it++) {
+        std::vector<std::string> params;
+        service_details current_service;
+
+        extract_params(*it, params);
+
+        params_to_service_details(params, current_service);
+
+        services.push_back(current_service);
+
+
+
+        zmsg_destroy(&(*it));
+    }
+
+    zmsg_destroy(&msg_response);
+
+
+
+
+   //bool has_more_msg = true;
+   //while (has_more_msg){
+//       zmsg_t* current_service = zmsg_popmsg(msg_response);
+//       if (current_service){
+//
+//
+//        free(current_service);
+//    } else{
+//        has_more_msg = false;
+//    }
+//    }
+   
+//   char* command = zmsg_popstr(msg_response);
+//
+//   if (streq(command, "$SERVICES$")) {
+//       bool has_more_msg = true;
+//       while (has_more_msg){
+//            char* param = zmsg_popstr(msg_response);
+//            if (param){
+//                service_list.push_back(param);
+//                free(param);
+//            } else{
+//                has_more_msg = false;
+//            }
+//        }
+//   }
+
+
+
+   // Wait for the OK response
+   // TODO: Specify OK response, error handling
+   //auto result = zstr_recv(client);
+   //std::cout << result;
+
+   zsock_destroy(&client);
+
+   return false; 
+    
+}
 
 std::vector<service_lookup_result>
 subscribe_to_service(std::string app_name  ,
@@ -179,6 +331,10 @@ subscribe_to_service(std::string app_name  ,
         auto status = msg_service_lookup.getStatus();
         auto sockets = msg_service_lookup.getSockets();
 
+
+
+
+        // TODO: Check status
         if (status == Status::OK) {
             for (Socket::Reader socket : msg_service_lookup.getSockets()) {
                 service_lookup_result result_item;
@@ -187,8 +343,6 @@ subscribe_to_service(std::string app_name  ,
                 result_item.port      = socket.getPort();
                 result_item.part_name = part_name;
                 result_item.port_name = port_name;
-
-                result.push_back(result_item);
             }
         }
     }
@@ -203,6 +357,93 @@ subscribe_to_service(std::string app_name  ,
 
     return result;
 
+}
+
+bool
+get_servicebyname_async(std::string service_name, std::string replyaddress){
+
+    zmsg_t* msg = zmsg_new();
+    zmsg_addstr(msg, CMD_DISC_GETSERVICE_BY_NAME_ASYNC);
+    zmsg_addstr(msg, service_name.c_str());
+    zmsg_addstr(msg, replyaddress.c_str());
+    zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC);
+    assert(client);
+
+    // TODO check return value
+    zmsg_send(&msg, client);
+
+    zmsg_t* msg_response = zmsg_recv(client);
+
+    if (!msg_response){
+        std::cout << "No msg => interrupted" << std::endl;
+        return false;
+    }
+
+
+    zmsg_destroy(&msg_response);
+
+    zsock_destroy(&client);
+
+    return false;
+
+}
+
+bool get_servicebyname_poll_async(std::string service_name, std::string replyaddress){
+    //flatbuffers::FlatBufferBuilder builder;
+    //auto _service_name = builder.CreateString(service_name);
+    //auto _reply_address = builder.CreateString(replyaddress);
+
+    //auto flat_msg = Createmsg_getservice_poll_request(builder, _service_name, _reply_address);
+
+    //builder.Finish(flat_msg);
+
+    //zframe_t* flat_msgbody = zframe_new(builder.GetBufferPointer(), builder.GetSize());
+
+    //zmsg_t* msg = zmsg_new();
+    //zmsg_addstr(msg, CMD_DISC_GETSERVICE_BY_NAME_POLL_ASYNC);
+    //zmsg_append(msg, &flat_msgbody);
+
+    //zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC);
+    //assert(client);
+
+    // TODO check return value
+    //zmsg_send(&msg, client);
+
+    //zmsg_t* msg_response = zmsg_recv(client);
+
+    //if (!msg_response){
+    //    std::cout << "No msg => interrupted" << std::endl;
+    //    return false;
+    //}
+
+
+    //zmsg_destroy(&msg_response);
+
+    //zsock_destroy(&client);
+
+    return false;
+}
+
+void
+ping_service(std::string service_name){
+    zmsg_t* msg = zmsg_new();
+    zmsg_addstr(msg, CMD_DISC_PING);
+    zmsg_addstr(msg, service_name.c_str());
+    zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC);
+    assert(client);
+
+    // TODO check return value
+    zmsg_send(&msg, client);
+
+    char* msg_response = zstr_recv(client);
+
+    if (!msg_response){
+        std::cout << "No msg => interrupted" << std::endl;
+        return;
+    }
+    else{
+        free(msg_response);
+    }
 }
 
 
@@ -297,4 +538,84 @@ register_actor(std::string appname, std::string actorname){
     }
 
     zsock_destroy(&client);*/
+}
+
+void
+deregister_actor(std::string actorname){
+    zmsg_t* msg = zmsg_new();
+    zmsg_addstr(msg, CMD_DISC_DEREGISTER_ACTOR);
+    zmsg_addstr(msg, actorname.c_str());
+    zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC);
+    assert(client);
+
+    // TODO check return value
+    zmsg_send(&msg, client);
+
+    char* msg_response = zstr_recv(client);
+
+    if (!msg_response){
+        std::cout << "No msg => interrupted" << std::endl;
+        return;
+    }
+    else{
+        free(msg_response);
+    }
+
+    zsock_destroy(&client);
+}
+
+void
+register_component(std::string actorname, std::string componentname) {
+    // Message format:
+    // 1) actorname
+    // 2) componentname
+
+    std::cout << "Registering " + actorname + " " + componentname << std::endl;
+
+    zmsg_t* msg = zmsg_new();
+    zmsg_addstr(msg, CMD_DISC_REGISTER_COMPONENT);
+    zmsg_addstr(msg, actorname.c_str());
+    zmsg_addstr(msg, componentname.c_str());
+    zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC);
+    assert(client);
+
+    // TODO check return value
+    zmsg_send(&msg, client);
+
+    char* msg_response = zstr_recv(client);
+
+    if (!msg_response){
+        std::cout << "No msg => interrupted" << std::endl;
+        return;
+    }
+    else{
+        free(msg_response);
+    }
+
+    zsock_destroy(&client);
+}
+
+void
+deregister_component(std::string actorname, std::string componentname) {
+    zmsg_t* msg = zmsg_new();
+    zmsg_addstr(msg, CMD_DISC_DEREGISTER_COMPONENT);
+    zmsg_addstr(msg, actorname.c_str());
+    zmsg_addstr(msg, componentname.c_str());
+    zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC);
+    assert(client);
+
+    // TODO check return value
+    zmsg_send(&msg, client);
+
+    char* msg_response = zstr_recv(client);
+
+    if (!msg_response){
+        std::cout << "No msg => interrupted" << std::endl;
+        return;
+    }
+    else{
+        free(msg_response);
+    }
+
+    zsock_destroy(&client);
 }

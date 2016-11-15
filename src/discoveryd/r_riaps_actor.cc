@@ -24,10 +24,28 @@ riaps_actor (zsock_t *pipe, void *args)
     // generated RSA key pair, and listen on port 4222.
     dht_node.run(4222, dht::crypto::generateIdentity(), true);
 
-    // For dht async request - response
-    std::mutex                   dht_mutex;
-    std::condition_variable      dht_cv;
-    std::unique_lock<std::mutex> dht_lock(dht_mutex);
+    auto mtx = std::make_shared<std::mutex>();
+    auto cv = std::make_shared<std::condition_variable>();
+    auto ready = std::make_shared<bool>(false);
+
+    auto wait = [=] {
+        *ready = true;
+        std::unique_lock<std::mutex> lk(*mtx);
+        cv->wait(lk);
+        *ready = false;
+    };
+    auto done_cb = [=](bool success) {
+        if (success) {
+            std::cout << "success!" << std::endl;
+        } else {
+            std::cout << "failed..." << std::endl;
+        }
+        std::unique_lock<std::mutex> lk(*mtx);
+        cv->wait(lk, [=]{ return *ready; });
+        cv->notify_one();
+    };
+
+
 
     std::srand(std::time(0));
 
@@ -191,18 +209,21 @@ riaps_actor (zsock_t *pipe, void *args)
                 /// Consul part (main line now)
                 disc_registerkey(kv_pair.first, kv_pair.second);
 
+                std::cout << "Register: " + kv_pair.first << std::endl;
+
                 /////
                 // Experiment OpenDht
                 ////
 
+
                 // Convert the value to bytes
                 std::vector<uint8_t> opendht_data(kv_pair.second.begin(), kv_pair.second.end());
-                dht_node.put(kv_pair.first, dht::Value(opendht_data), [&](bool success){
+                dht_node.put(kv_pair.first, dht::Value(opendht_data), [=](bool success){
                     // Done Callback
-                    dht_cv.notify_one();
+                    done_cb(success);
                 });
 
-                dht_cv.wait(dht_lock);
+                wait();
 
                 /////
                 //  End experiment
@@ -238,7 +259,7 @@ riaps_actor (zsock_t *pipe, void *args)
                                           client.getPortName()     );
 
                 /// Consul part (main line now)
-                std::string consul_lookup_result = disc_getvalue_by_key(key.first);
+                //std::string consul_lookup_result = disc_getvalue_by_key(key.first);
 
 
                 /////
@@ -248,6 +269,10 @@ riaps_actor (zsock_t *pipe, void *args)
                 // Convert the value to bytes
                 //std::vector<uint8_t> opendht_data(kv_pair.second.begin(), kv_pair.second.end());
 
+                // For dht async request - response
+
+                std::cout << "Get: " + key.first << std::endl;
+
                 std::vector<std::string> dht_lookup_results;
                 dht_node.get(key.first, [&](const std::vector<std::shared_ptr<dht::Value>>& values){
                     // Done Callback
@@ -255,15 +280,63 @@ riaps_actor (zsock_t *pipe, void *args)
                         std::string result = std::string(value->data.begin(), value->data.end());
                         dht_lookup_results.push_back(result);
                     }
-                    dht_cv.notify_one();
-                    return false;
+                    return true;
+                }, [=](bool success){
+                    // Done Callback
+                    std::cout << "Get callback done! " << success <<std::endl;
+                    done_cb(success);
                 });
 
-                dht_cv.wait(dht_lock);
+                wait();
+
+                std::cout << "Get results: ";
+
+                for (auto r : dht_lookup_results){
+                    std::cout << r << ", ";
+                }
+
+                std::endl(std::cout);
+
+                //zclock_sleep(5000);
 
                 /////
                 //  End experiment
                 /////
+
+                //Send response
+                capnp::MallocMessageBuilder message;
+                auto msg_discorep       = message.initRoot<DiscoRep>();
+                auto msg_service_lookup_rep = msg_discorep.initServiceLookup();
+
+                msg_service_lookup_rep.setStatus(Status::OK);
+
+                auto number_of_clients =dht_lookup_results.size();
+                auto sockets = msg_service_lookup_rep.initSockets(number_of_clients);
+
+                for (int i = 0; i<number_of_clients; i++){
+                    auto dht_result = dht_lookup_results[i];
+                    auto pos = dht_result.find_first_of(':');
+                    if (pos==std::string::npos) continue;
+
+                    auto host = std::string(dht_result.begin(), dht_result.begin()+pos);
+                    auto port = std::string(dht_result.begin()+pos+1, dht_result.end());
+
+                    sockets[i].setHost(host);
+                    sockets[i].setPort(std::stoi(port));
+
+                    std::cout << "Added: " << host << " " << std::stoi(port) << std::endl;
+                }
+
+               // msg_service_lookup_rep.setSockets()
+
+                //msg_servicereg_rep.setStatus(Status::OK);
+
+                auto serializedMessage = capnp::messageToFlatArray(message);
+
+                zmsg_t* msg = zmsg_new();
+                zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
+
+                zmsg_send(&msg, riaps_socket);
 
             }
 

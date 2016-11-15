@@ -146,7 +146,7 @@ namespace riaps {
         }
     }
 
-    const std::string& riaps::Actor::GetApplicationName() {
+    const std::string& riaps::Actor::GetApplicationName() const {
         return _application_name;
     }
 
@@ -269,6 +269,11 @@ namespace riaps {
 
     riaps::Actor::~Actor() {
         //deregister_actor(GetActorId());
+
+        for (auto component : _components){
+            delete component;
+        }
+
         zuuid_destroy(&_actor_id);
         zsock_destroy(&_discovery_socket);
         zsock_destroy(&_actor_zsock);

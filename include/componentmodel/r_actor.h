@@ -34,7 +34,7 @@ namespace riaps {
         void Init();
         virtual void start();
         std::string GetActorId();
-        const std::string& GetApplicationName();
+        const std::string& GetApplicationName() const;
         virtual ~Actor();
 
     protected:

@@ -5,10 +5,15 @@
 #ifndef RIAPS_FW_R_REQUESTPORT_H
 #define RIAPS_FW_R_REQUESTPORT_H
 
-#include "r_portbase.h"
+#include "r_componentbase.h"
+#include "r_configuration.h"
+
+#include "czmq.h"
+
+#include <string>
 
 namespace riaps {
-    class RequestPort : public PortBase{
+    class RequestPort {
     public:
 
         RequestPort(request_conf& config);

@@ -7,7 +7,7 @@
 void init_command_mappings() {
     handler_mapping[CMD_DISC_REGISTER_SERVICE]         = &handle_register_service;
     handler_mapping[CMD_DISC_DEREGISTER_SERVICE]       = &handle_deregister_service;
-    handler_mapping[CMD_DISC_GET_SERVICES]             = &handle_getservices;
+    //handler_mapping[CMD_DISC_GET_SERVICES]             = &handle_getservices;
     handler_mapping[CMD_DISC_GETSERVICE_BY_NAME]       = &handle_getservicebyname;
     handler_mapping[CMD_DISC_GETSERVICE_BY_NAME_ASYNC] = &handle_getservicebyname_async;
     handler_mapping[CMD_DISC_REGISTER_NODE]            = &handle_registernode;
@@ -49,6 +49,7 @@ void handle_deregister_service(zmsg_t* msg, zsock_t* replysocket, zactor_t* asyn
     }
 }
 
+/*
 void handle_getservices(zmsg_t* msg, zsock_t* replysocket, zactor_t* asyncactor){
     std::vector<std::string> service_list;
 
@@ -67,6 +68,7 @@ void handle_getservices(zmsg_t* msg, zsock_t* replysocket, zactor_t* asyncactor)
     // Send it!
     zmsg_send(&resultmsg, replysocket);
 }
+ */
 
 void handle_getservicebyname(zmsg_t* msg, zsock_t* replysocket, zactor_t* asyncactor){
     std::vector<service_details> service_list;
@@ -170,9 +172,16 @@ buildLookupKey(std::string appName,
 
 
     std::string key;
+
+    std::map<Kind, std::string> kindPairs = {
+                          {Kind::SUB, kindMap[Kind::PUB]},
+                          {Kind::CLT, kindMap[Kind::SRV]},
+                          {Kind::REQ, kindMap[Kind::REP]},
+                          {Kind::REP, kindMap[Kind::REQ]}};
+
     key =     "/" + appName
             + "/" + msgType
-            + "/" + kindMap[kind];
+            + "/" + kindPairs[kind];
 
     // TODO: MacAddress instead of hostid
     auto hostid = gethostid();

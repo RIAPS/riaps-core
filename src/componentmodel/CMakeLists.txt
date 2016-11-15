@@ -9,8 +9,9 @@ set(FRAMEWORK_LIB_FILES r_discoverdapi.cc
                         r_actor.cc
                         r_portbase.cc
                         r_timer.cc
-                        r_responseport.cc
-                        r_requestport.cc)
+                        #r_responseport.cc
+                        #r_requestport.cc
+        )
 
 add_library(riaps SHARED ${FRAMEWORK_LIB_FILES})
 target_link_libraries(riaps czmq dl capnp kj)

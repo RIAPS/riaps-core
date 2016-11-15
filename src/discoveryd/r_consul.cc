@@ -93,6 +93,13 @@ bool disc_deregisterservice(std::string servicename) {
 
 bool disc_registerkey(std::string key, std::string value){
     std::string consul_api_host = "localhost";
+
+    if (key.empty()) return false;
+
+    if (key[0] == '/'){
+        key = key.erase(0, 1);
+    }
+
     std::string consul_api_getparam = "/v1/kv/" + key;
 
     int result = do_put(consul_api_host, CONSUL_PORT, consul_api_getparam, value);
