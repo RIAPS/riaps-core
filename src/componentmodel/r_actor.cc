@@ -75,6 +75,8 @@ namespace riaps {
                     new_component_config.component_ports.pubs.push_back(newpubconfig);
                 }
             }
+
+            // Parse subscribers from the config
             if (json_portsconfig.count("subs")!=0){
                 auto json_subports = json_portsconfig["subs"];
                 for (auto it_subport = json_subports.begin();
@@ -89,6 +91,24 @@ namespace riaps {
                     newsubconfig.message_type = subporttype;
 
                     new_component_config.component_ports.subs.push_back(newsubconfig);
+                }
+            }
+
+            // Get the timers
+            if (json_portsconfig.count("tims")!=0){
+                auto json_tims = json_portsconfig["tims"];
+                for (auto it_tim = json_tims.begin();
+                          it_tim != json_tims.end() ;
+                          it_tim++){
+
+                    auto timname = it_tim.key();
+                    auto timperiod = it_tim.value()["period"];
+
+                    _component_port_tim_j newtimconfig;
+                    newtimconfig.timer_name = timname;
+                    newtimconfig.period     = timperiod;
+
+                    new_component_config.component_ports.tims.push_back(newtimconfig);
                 }
             }
 
