@@ -43,7 +43,7 @@ namespace riaps {
         void InitSubscriberPort(_component_port_sub_j&);
         //void AddResponsePort(std::unique_ptr<ResponsePort>&);
         //void AddRequestPort(std::unique_ptr<RequestPort>&);
-        //void AddTimer(periodic_timer_conf&);
+        void AddTimer(_component_port_tim_j&);
 
         std::vector<PublisherPort*>  GetPublisherPorts();
         std::vector<SubscriberPort*> GetSubscriberPorts();

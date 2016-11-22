@@ -13,8 +13,8 @@ namespace riaps{
     void component_actor(zsock_t* pipe, void* args){
         ComponentBase* comp = (ComponentBase*)args;
 
-        //zsock_t* timerport = zsock_new_pull(comp->GetTimerChannel().c_str());
-        //assert(timerport);
+        zsock_t* timerport = zsock_new_pull(comp->GetTimerChannel().c_str());
+        assert(timerport);
 
         //std::cout << "Create async endpoint @" << comp->GetAsyncEndpointName() << std::endl;
         //zsock_t* asyncport = zsock_new_sub(ASYNC_CHANNEL, comp->GetCompUuid().c_str());
@@ -28,8 +28,8 @@ namespace riaps{
         //int rc = zpoller_add(poller, asyncport);
         //assert(rc==0);
 
-        //int rc = zpoller_add(poller, timerport);
-        //assert(rc==0);
+        int rc = zpoller_add(poller, timerport);
+        assert(rc==0);
 
         // Init subscribers
 
@@ -57,9 +57,9 @@ namespace riaps{
                 }
 
                 // Add and start timers
-                //for (auto timer : comp->GetConfig().periodic_timer_config) {
-                //    comp->AddTimer(timer);
-                //}
+                for (auto timer : comp->GetConfig().component_ports.tims) {
+                    comp->AddTimer(timer);
+                }
 
                 // Add and start response ports
                 //for (auto response : comp->GetConfig().responses_config) {
@@ -95,25 +95,25 @@ namespace riaps{
                     terminated = true;
                 }
 
-                free(command);
+                delete command;
                 zmsg_destroy(&msg);
             }
-            //else if (which == timerport) {
-            //    zmsg_t *msg = zmsg_recv(which);
-            //    if (!msg) {
-            //        std::cout << "No msg => interrupted" << std::endl;
-            //        break;
-            //    }
+            else if (which == timerport) {
+                zmsg_t *msg = zmsg_recv(which);
+                if (!msg) {
+                    std::cout << "No msg => interrupted" << std::endl;
+                    break;
+                }
 
-            //    char *param = zmsg_popstr(msg);
+                char *param = zmsg_popstr(msg);
 
-            //    if (param){
-            //        comp->OnTimerFired(param);
-            //        free (param);
-            //    }
-            //    zmsg_destroy(&msg);
+                if (param){
+                    comp->OnTimerFired(param);
+                    delete param;
+                }
+                zmsg_destroy(&msg);
 
-            //}
+            }
             // Message from async query
             /*else if (which == asyncport){
                 std::cout<< "ASYNC ARRIVED, Create subscriber and connect" << std::endl;
@@ -258,11 +258,14 @@ namespace riaps{
         //_requestports.push_back(std::move(requestPort));
     }
 
-    void ComponentBase::AddTimer(periodic_timer_conf& config) {
-        std::unique_ptr<CallBackTimer> newtimer(new CallBackTimer(config.timerid, GetTimerChannel()));
-        newtimer->start(config.interval);
+    */
+
+
+    void ComponentBase::AddTimer(_component_port_tim_j& config) {
+        std::unique_ptr<CallBackTimer> newtimer(new CallBackTimer(config.timer_name, GetTimerChannel()));
+        newtimer->start(config.period);
         //_periodic_timers.push_back(std::move(newtimer));
-    }*/
+    }
 
     const component_conf_j& ComponentBase::GetConfig() const {
         return _configuration;
@@ -283,6 +286,21 @@ namespace riaps{
 
         return results;
     }
+
+    std::string ComponentBase::GetTimerChannel() {
+        std::string prefix= "inproc://timer";
+        return prefix + GetCompUuid();
+    }
+
+    std::string ComponentBase::GetCompUuid(){
+        const char* uuid_str = zuuid_str(_component_uuid);
+        std::string result (uuid_str);
+        //delete uuid_str;
+
+        return result;
+    }
+
+
 /*
     std::vector<RequestPort*> ComponentBase::GetRequestPorts() {
 
@@ -305,14 +323,9 @@ namespace riaps{
         return results;
     }
 
-    std::string ComponentBase::GetTimerChannel() {
-        std::string prefix= "inproc://timer";
-        return prefix + GetCompUuid();
-    }
 
-    std::string ComponentBase::GetCompUuid(){
-        return std::string(zuuid_str(_component_uuid));
-    }
+
+
 
 
 

@@ -9,7 +9,7 @@
 #include "json.h"
 #include "utils/r_message.h"
 
-void joinToCluster(std::string destination_ip);
+void consul_joinToCluster(std::string destination_ip);
 void registerService(service_details& params);
 void deregisterService(std::string service_name);
 bool disc_getservices(std::vector<std::string>& service_list);

@@ -61,6 +61,10 @@ struct _component_port_sub_j {
     std::string subscriber_name;
     std::string message_type;
 };
+struct _component_port_tim_j{
+    std::string timer_name;
+    ulong       period;
+};
 
 
 struct _component_ports_j {
@@ -69,7 +73,8 @@ struct _component_ports_j {
     std::vector<_component_port_pub_j> pubs;
     std::vector<_component_port_sub_j> subs;
     std::vector<_component_port_req_j> reqs;
-    std::vector<_component_port_rep_j> repss;
+    std::vector<_component_port_rep_j> reps;
+    std::vector<_component_port_tim_j> tims;
 };
 
 struct _component_conf_j {

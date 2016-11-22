@@ -29,7 +29,7 @@ void consul_actor (zsock_t *pipe, void *args)
                     char* param = zmsg_popstr(msg);
                     if (param){
                         std::cout << "Connect to: " << param;
-                        joinToCluster(std::string(param));
+                        consul_joinToCluster(std::string(param));
                         free(param);
                     } else{
                         has_more_msg = false;

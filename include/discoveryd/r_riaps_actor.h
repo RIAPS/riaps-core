@@ -1,20 +1,43 @@
 #ifndef R_RIAPS_ACTOR
 #define R_RIAPS_ACTOR
 
+
+#include "r_odht.h"
+#include "discoveryd/r_service_poller.h"
+#include "discoveryd/r_riaps_cmd_handler.h"
+#include "discoveryd/r_odht.h"
+#include "componentmodel/r_discoverdapi.h"
+
+#include <czmq.h>
+
+
+
+/*
+#include "componentmodel/r_discoverdapi.h"
+#include "componentmodel/r_riaps_actor_commands.h"
+#include "discoveryd/r_riaps_cmd_handler.h"
+#include "discoveryd/r_service_poller.h"
+#include "utils/r_message.h"
+#include "utils/r_utils.h"
+
 #include <capnp/message.h>
 #include <capnp/serialize.h>
 
-#include <czmq.h>
+
+
 #include <string>
 #include <iostream>
 #include <vector>
+*/
 
 
+//#include "utils/r_message.h"
 
-#include "componentmodel/r_discoverdapi.h"
-#include "r_consul.h"
-#include "utils/r_message.h"
-#include "componentmodel/r_riaps_actor_commands.h"
+
+//#include "loggerd/r_loggerd.h"
+//#include <unistd.h>
+//#include <capnp/common.h>
+
 
 struct _actor_details {
     _actor_details(){

@@ -13,7 +13,7 @@ void comp_sensor::OnMessageArrived(std::string messagetype, zmsg_t *msg_body, zs
 }
 
 void comp_sensor::OnTimerFired(std::string timerid) {
-
+    std::cout << "Timer fired: " + timerid <<std::endl;
 }
 
 comp_sensor::~comp_sensor() {

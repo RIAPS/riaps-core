@@ -1,7 +1,7 @@
 
 #include "discoveryd/r_consul.h"
 
-void joinToCluster(std::string destination_address){
+void consul_joinToCluster(std::string destination_address){
 	std::string consul_api_host = "localhost";
 	std::string consul_api_getparam = "/v1/agent/join/" + destination_address;
 

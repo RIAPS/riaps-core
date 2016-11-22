@@ -1,15 +1,6 @@
 #include "discoveryd/r_riaps_actor.h"
-#include "utils/r_message.h"
-#include "utils/r_utils.h"
-#include "discoveryd/r_riaps_cmd_handler.h"
-#include "discoveryd/r_service_poller.h"
-#include "loggerd/r_loggerd.h"
-#include <unistd.h>
-#include <capnp/common.h>
-#include <opendht.h>
 
 #define REGULAR_MAINTAIN_PERIOD 3000 //msec
-
 
 void
 riaps_actor (zsock_t *pipe, void *args)
@@ -22,7 +13,7 @@ riaps_actor (zsock_t *pipe, void *args)
 
     // Launch a dht node on a new thread, using a
     // generated RSA key pair, and listen on port 4222.
-    dht_node.run(4222, dht::crypto::generateIdentity(), true);
+    dht_node.run(RIAPS_DHT_NODE_PORT, dht::crypto::generateIdentity(), true);
 
     auto mtx = std::make_shared<std::mutex>();
     auto cv = std::make_shared<std::condition_variable>();
@@ -106,21 +97,26 @@ riaps_actor (zsock_t *pipe, void *args)
 
                 terminated = true;
             }
-            //else if(streq(command, CMD_DISC_REGISTER_NODE)){
-                // Register a node in the KV storage
-            //    char* nodename = zmsg_popstr(msg);
-            //    if (nodename) {
-            //        std::string nodekey = "nodes/" + std::string(nodename);
+            else if (streq(command, "JOIN")) {
+                std::cout << "JOIN arrived" << std::endl;
+                bool has_more_msg = true;
 
-                    //TODO: put ip address as value
-            //        disc_registerkey(nodekey, "" );
+                while (has_more_msg){
+                    char* newhost = zmsg_popstr(msg);
+                    if (newhost){
+                        std::cout << "Connect to: " << newhost;
+                        std::string str_newhost(newhost);
+                        dht_jointocluster(str_newhost, RIAPS_DHT_NODE_PORT, dht_node);
+                        zstr_free(&newhost);
+                    } else{
+                        has_more_msg = false;
+                    }
+                }
+            }
 
-             //       free(nodename);
-
-             //   }
-            //}
-
-            free(command);
+            if (command){
+                zstr_free(&command);
+            }
             zmsg_destroy(&msg);
         }
 
