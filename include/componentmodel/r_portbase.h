@@ -13,13 +13,16 @@
 #define SERVICE_POLLING_INTERVAL 2000
 
 namespace riaps {
+namespace ports {
+
+    enum PortTypes {Publisher, Subscriber, Request, Response};
 
     class PortBase {
 
     public:
         //PortBase(const ComponentBase* parentComponent);
 
-        //PortBase();
+        PortBase(PortTypes portType);
 
         /// \return The ip addres of the specified interface. (e.g.: "eth0")
         //virtual std::string GetInterfaceAddress(std::string ifacename);
@@ -28,18 +31,22 @@ namespace riaps {
         virtual std::string GetInterfaceAddress();
 
         /// \return The associated ZMQ socket.
-        virtual const zsock_t* GetSocket();
+        virtual const zsock_t* GetSocket() const;
 
         virtual void Send(zmsg_t* msg) const;
+
+        const PortTypes& GetPortType() const;
 
 
         ~PortBase();
 
     protected:
+        PortTypes             _port_type;
         zsock_t*              _port_socket;
         std::string           _port_name;
         //const ComponentBase* _parentComponent;
     };
+}
 }
 
 #endif //RIAPS_R_PORTBASE_H

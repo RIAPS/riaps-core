@@ -14,26 +14,29 @@ namespace riaps {
 
     class ComponentBase;
 
-    class SubscriberPort :PortBase {
-    public:
+    namespace ports {
+        class SubscriberPort : public PortBase {
+        public:
 
-        SubscriberPort(_component_port_sub_j& config, const ComponentBase* component);
+            SubscriberPort(_component_port_sub_j &config, const ComponentBase *component);
 
-        virtual void Init();
+            virtual void Init();
 
-        //static std::unique_ptr<SubscriberPort> InitFromServiceDetails(service_details& target_service);
+            //static std::unique_ptr<SubscriberPort> InitFromServiceDetails(service_details& target_service);
 
-        //static void GetRemoteServiceAsync(subscriber_conf& config, std::string asyncendpoint);
-        //static service_details GetRemoteService(subscriber_conf& config);
+            //static void GetRemoteServiceAsync(subscriber_conf& config, std::string asyncendpoint);
+            //static service_details GetRemoteService(subscriber_conf& config);
 
-        ~SubscriberPort();
-    protected:
+            ~SubscriberPort();
 
-        _component_port_sub_j       _config;
-        const ComponentBase*        _parent_component;
+        protected:
+
+            _component_port_sub_j _config;
+            const ComponentBase *_parent_component;
 
 
-    };
+        };
+    }
 
 }
 

@@ -5,6 +5,10 @@ set (CMAKE_CXX_FLAGS "-std=c++11")
 
 set(DEPENDENCIES /opt/riaps/)
 
+# Debug binaries are to be copied into "./bin" directory
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_HOME_DIRECTORY}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_HOME_DIRECTORY}/bin)
+
 #add includes
 include_directories(include)
 

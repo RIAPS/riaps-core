@@ -23,9 +23,14 @@
 
 namespace riaps {
 
+
+
     class Actor;
-    class PublisherPort;
-    class SubscriberPort;
+
+    namespace ports {
+        class PublisherPort;
+        class SubscriberPort;
+    }
 
     /**
      * @brief
@@ -39,16 +44,16 @@ namespace riaps {
         //ComponentBase(component_conf& config);
         ComponentBase(component_conf_j& config, Actor& actor);
 
-        void InitPublisherPort(_component_port_pub_j&);
-        void InitSubscriberPort(_component_port_sub_j&);
+        const ports::PublisherPort*  InitPublisherPort(_component_port_pub_j&);
+        const ports::SubscriberPort* InitSubscriberPort(_component_port_sub_j&);
         //void AddResponsePort(std::unique_ptr<ResponsePort>&);
         //void AddRequestPort(std::unique_ptr<RequestPort>&);
         void AddTimer(_component_port_tim_j&);
 
-        std::vector<PublisherPort*>  GetPublisherPorts();
-        std::vector<SubscriberPort*> GetSubscriberPorts();
+        std::vector<ports::PublisherPort*>  GetPublisherPorts();
+        std::vector<ports::SubscriberPort*> GetSubscriberPorts();
 
-        SubscriberPort& GetSubscriberByName(const std::string&);
+        ports::SubscriberPort& GetSubscriberByName(const std::string&);
 
         bool SendMessageOnPort(zmsg_t* msg, std::string portName) const;
 
@@ -73,7 +78,7 @@ namespace riaps {
         virtual ~ComponentBase();
 
     protected:
-        const PortBase* GetPort(std::string portName) const;
+        const ports::PortBase* GetPort(std::string portName) const;
 
         const Actor*     _actor;
         component_conf_j _configuration;
@@ -82,10 +87,10 @@ namespace riaps {
         zuuid_t*       _component_uuid;
 
         //std::map<std::string, std::unique_ptr<PublisherPort>>  _publisherports;
-        std::vector<std::unique_ptr<SubscriberPort>> _subscriberports;
+        std::vector<std::unique_ptr<ports::SubscriberPort>> _subscriberports;
         std::vector<std::unique_ptr<CallBackTimer>>  _periodic_timers;
 
-        std::map<std::string, std::unique_ptr<PortBase>> _ports;
+        std::map<std::string, std::unique_ptr<ports::PortBase>> _ports;
 
 
         //std::vector<std::unique_ptr<ResponsePort>>   _responseports;

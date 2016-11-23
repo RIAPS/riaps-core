@@ -45,21 +45,24 @@ namespace riaps{
         std::cout << "Component poller starts" << std::endl;
 
         while (!terminated) {
-            void *which = zpoller_wait(poller, 1000);
+            void *which = zpoller_wait(poller, 500);
 
             //std::cout << "." << std::flush;
 
             if (firstrun) {
                 firstrun = false;
-                // Add and start publishers
-                for (auto publisher_config : comp->GetConfig().component_ports.pubs) {
-                    comp->InitPublisherPort(publisher_config);
-                }
 
                 // Add and start timers
                 for (auto timer : comp->GetConfig().component_ports.tims) {
                     comp->AddTimer(timer);
                 }
+
+                // Add and start publishers
+                for (auto publisher_config : comp->GetConfig().component_ports.pubs) {
+                    comp->InitPublisherPort(publisher_config);
+                }
+
+                sleep(1);
 
                 // Add and start response ports
                 //for (auto response : comp->GetConfig().responses_config) {
@@ -76,7 +79,8 @@ namespace riaps{
 
                 // Get subscriber details from discovery service
                 for (auto subscriber_config : comp->GetConfig().component_ports.subs) {
-                    comp->InitSubscriberPort(subscriber_config);
+                    auto newPort = comp->InitSubscriberPort(subscriber_config);
+                    zpoller_add(poller, (void*)newPort->GetSocket());
                     //SubscriberPort::GetRemoteServiceAsync(subscriber, comp->GetCompUuid());
                 }
             }
@@ -236,18 +240,23 @@ namespace riaps{
     //    return _zsock_timer;
     //}
 
-    void ComponentBase::InitPublisherPort(_component_port_pub_j& config) {
-        std::unique_ptr<PortBase> newport(new PublisherPort(config, this));
+    const ports::PublisherPort* ComponentBase::InitPublisherPort(_component_port_pub_j& config) {
+        auto result = new ports::PublisherPort(config, this);
+        std::unique_ptr<ports::PortBase> newport(result);
+
         //_publisherports[config.publisher_name] = std::move(newport);
         _ports[config.publisher_name] = std::move(newport);
+        return result;
     }
 
 
 
-    void ComponentBase::InitSubscriberPort(_component_port_sub_j& config) {
-        std::unique_ptr<SubscriberPort> newport(new SubscriberPort(config, this));
+    const ports::SubscriberPort* ComponentBase::InitSubscriberPort(_component_port_sub_j& config) {
+        std::unique_ptr<ports::SubscriberPort> newport(new ports::SubscriberPort(config, this));
+        auto result = newport.get();
         newport->Init();
         _subscriberports.push_back(std::move(newport));
+        return result;
     }
 
     /*
@@ -285,7 +294,7 @@ namespace riaps{
         return true;
     }
 
-    const PortBase* ComponentBase::GetPort(std::string portName) const {
+    const ports::PortBase* ComponentBase::GetPort(std::string portName) const {
         auto port_it = _ports.find(portName);
         if (port_it!=_ports.end()){
             return port_it->second.get();
@@ -294,9 +303,9 @@ namespace riaps{
     }
 
 
-    std::vector<PublisherPort*> ComponentBase::GetPublisherPorts() {
+    std::vector<ports::PublisherPort*> ComponentBase::GetPublisherPorts() {
 
-        std::vector<PublisherPort*> results;
+        std::vector<ports::PublisherPort*> results;
 
         // Fixme
         throw std::runtime_error("Not implemented");

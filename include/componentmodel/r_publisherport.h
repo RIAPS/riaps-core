@@ -17,32 +17,34 @@ namespace riaps {
 
     class ComponentBase;
 
-    class PublisherPort : public PortBase {
-    public:
+    namespace ports {
 
-        PublisherPort(_component_port_pub_j& config, ComponentBase* parent_component);
+       class PublisherPort : public PortBase {
+       public:
 
-        std::string GetEndpoint();
+           PublisherPort(_component_port_pub_j &config, ComponentBase *parent_component);
 
-        _component_port_pub_j GetConfig();
+           std::string GetEndpoint();
 
-        virtual void Send(zmsg_t* msg) const;
+           _component_port_pub_j GetConfig();
 
-       // virtual void SendMessage();
+           virtual void Send(zmsg_t *msg) const;
 
-        ~PublisherPort();
+           // virtual void SendMessage();
+
+           ~PublisherPort();
 
 
+       protected:
+           _component_port_pub_j _configuration;
 
-    protected:
-        _component_port_pub_j _configuration;
-
-        int                   _port;
-        std::string           _host;
-        std::string           _endpoint;
-        zsock_t*              _discovery_port;
-        //zsock_t*              _port_socket;
-    };
+           int _port;
+           std::string _host;
+           std::string _endpoint;
+           zsock_t *_discovery_port;
+           //zsock_t*              _port_socket;
+       };
+   }
 }
 
 #endif //RIAPS_R_PUBLISHERPORT_H
