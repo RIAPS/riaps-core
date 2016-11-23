@@ -17,7 +17,7 @@ namespace riaps {
 
     class ComponentBase;
 
-    class PublisherPort : PortBase {
+    class PublisherPort : public PortBase {
     public:
 
         PublisherPort(_component_port_pub_j& config, ComponentBase* parent_component);
@@ -26,7 +26,7 @@ namespace riaps {
 
         _component_port_pub_j GetConfig();
 
-        void PublishMessage(zmsg_t** msg);
+        virtual void Send(zmsg_t* msg) const;
 
        // virtual void SendMessage();
 

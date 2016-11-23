@@ -12,7 +12,7 @@
  *
  *
  * Features:
- *   - Discover local nodes with CZMQ zbeacon
+ *   - Discover local nodes with CZMQ zbeaconld
  *
  * \author Istvan Madari
  * \return

@@ -50,6 +50,8 @@ namespace riaps {
 
         SubscriberPort& GetSubscriberByName(const std::string&);
 
+        bool SendMessageOnPort(zmsg_t* msg, std::string portName) const;
+
 
         //std::vector<CallBackTimer*>  GetPeriodicTimers();
         //std::vector<ResponsePort*>   GetResponsePorts();
@@ -71,15 +73,21 @@ namespace riaps {
         virtual ~ComponentBase();
 
     protected:
+        const PortBase* GetPort(std::string portName) const;
+
         const Actor*     _actor;
         component_conf_j _configuration;
 
         //std::string    async_address;
         zuuid_t*       _component_uuid;
 
-        std::vector<std::unique_ptr<PublisherPort>>  _publisherports;
+        //std::map<std::string, std::unique_ptr<PublisherPort>>  _publisherports;
         std::vector<std::unique_ptr<SubscriberPort>> _subscriberports;
-        //std::vector<std::unique_ptr<CallBackTimer>>  _periodic_timers;
+        std::vector<std::unique_ptr<CallBackTimer>>  _periodic_timers;
+
+        std::map<std::string, std::unique_ptr<PortBase>> _ports;
+
+
         //std::vector<std::unique_ptr<ResponsePort>>   _responseports;
         //std::vector<std::unique_ptr<RequestPort>>    _requestports;
 

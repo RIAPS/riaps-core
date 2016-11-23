@@ -6,6 +6,10 @@
 
 namespace riaps {
 
+    void PortBase::Send(zmsg_t *msg) const {
+        throw std::runtime_error("Send not implemented on this kind of port.");
+    }
+
     const zsock_t * PortBase::GetSocket() {
         return _port_socket;
     }

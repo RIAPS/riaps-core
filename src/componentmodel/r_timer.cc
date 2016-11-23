@@ -6,7 +6,7 @@
 
 namespace riaps {
 
-    CallBackTimer::CallBackTimer(std::string timerid, std::string timerresponsechannel)
+    CallBackTimer::CallBackTimer(std::string& timerid, std::string& timerresponsechannel)
             : _execute(false) {
         _timerid = timerid;
         _zsock_timer = zsock_new_push(timerresponsechannel.c_str());

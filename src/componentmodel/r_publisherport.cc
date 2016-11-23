@@ -16,8 +16,6 @@ namespace riaps{
             throw std::runtime_error("Publisher cannot be initiated. Cannot find  available network interface.");
         }
 
-
-
         std::string pub_endpoint = "tcp://" + _host + ":!";
         _port = zsock_bind(_port_socket, pub_endpoint.c_str());
 
@@ -65,8 +63,8 @@ namespace riaps{
         return "";
     }
 
-    void PublisherPort::PublishMessage(zmsg_t **msg) {
-        int rc = zmsg_send(msg, _port_socket);
+    void PublisherPort::Send(zmsg_t* msg) const {
+        int rc = zmsg_send(&msg, _port_socket);
         assert(rc==0);
     }
 

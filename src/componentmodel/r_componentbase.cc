@@ -237,8 +237,9 @@ namespace riaps{
     //}
 
     void ComponentBase::InitPublisherPort(_component_port_pub_j& config) {
-        std::unique_ptr<PublisherPort> newport(new PublisherPort(config, this));
-        _publisherports.push_back(std::move(newport));
+        std::unique_ptr<PortBase> newport(new PublisherPort(config, this));
+        //_publisherports[config.publisher_name] = std::move(newport);
+        _ports[config.publisher_name] = std::move(newport);
     }
 
 
@@ -262,9 +263,10 @@ namespace riaps{
 
 
     void ComponentBase::AddTimer(_component_port_tim_j& config) {
-        std::unique_ptr<CallBackTimer> newtimer(new CallBackTimer(config.timer_name, GetTimerChannel()));
+        std::string timerchannel = GetTimerChannel();
+        std::unique_ptr<CallBackTimer> newtimer(new CallBackTimer(config.timer_name, timerchannel));
         newtimer->start(config.period);
-        //_periodic_timers.push_back(std::move(newtimer));
+        _periodic_timers.push_back(std::move(newtimer));
     }
 
     const component_conf_j& ComponentBase::GetConfig() const {
@@ -275,14 +277,33 @@ namespace riaps{
         return _actor;
     }
 
+    bool ComponentBase::SendMessageOnPort(zmsg_t *msg, std::string portName) const {
+        auto port = GetPort(portName);
+        if (port == NULL) return false;
+
+        port->Send(msg);
+        return true;
+    }
+
+    const PortBase* ComponentBase::GetPort(std::string portName) const {
+        auto port_it = _ports.find(portName);
+        if (port_it!=_ports.end()){
+            return port_it->second.get();
+        }
+        return NULL;
+    }
+
 
     std::vector<PublisherPort*> ComponentBase::GetPublisherPorts() {
 
         std::vector<PublisherPort*> results;
 
-        for (auto it=_publisherports.begin(); it!=_publisherports.end(); it++){
-            results.push_back(it->get());
-        }
+        // Fixme
+        throw std::runtime_error("Not implemented");
+
+        //for (auto it=_publisherports.begin(); it!=_publisherports.end(); it++){
+        //    results.push_back(it->second.get());
+        //}
 
         return results;
     }

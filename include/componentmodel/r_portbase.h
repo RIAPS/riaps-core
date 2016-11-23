@@ -30,11 +30,14 @@ namespace riaps {
         /// \return The associated ZMQ socket.
         virtual const zsock_t* GetSocket();
 
+        virtual void Send(zmsg_t* msg) const;
+
 
         ~PortBase();
 
     protected:
-        zsock_t*              _port_socket;;
+        zsock_t*              _port_socket;
+        std::string           _port_name;
         //const ComponentBase* _parentComponent;
     };
 }
