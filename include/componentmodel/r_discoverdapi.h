@@ -1,7 +1,10 @@
 #ifndef R_DISCOVERD_API
 #define R_DISCOVERD_API
 
-#define DISCOVERY_SERVICE_IPC "ipc:///tmp/riapsdiscoveryservice"
+//#define DISCOVERY_SERVICE_IPC "ipc:///tmp/riapsdiscoveryservice"
+
+#define DISCOVERY_SERVICE_IPC "tcp://127.0.0.1:75846"
+
 
 #include <string>
 #include <vector>

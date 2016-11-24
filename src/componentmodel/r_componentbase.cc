@@ -175,11 +175,8 @@ namespace riaps{
 
                 if (msg) {
                     char* messagetype = zmsg_popstr(msg);
-
                     comp->OnMessageArrived(std::string(messagetype), msg, (zsock_t*)which);
-
-                    free(messagetype);
-
+                    zstr_free(&messagetype);
                     zmsg_destroy(&msg);
                 }
             }

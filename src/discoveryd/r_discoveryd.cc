@@ -210,10 +210,13 @@ int main()
     zactor_destroy(&r_actor);
     //zclock_sleep(5000);
 
+    
 
     zactor_destroy(&listener);
     zactor_destroy(&speaker);
     //zactor_destroy(&c_actor);
 
+    sleep(3);
+    
     return 0;
 }

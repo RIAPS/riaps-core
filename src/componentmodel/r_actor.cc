@@ -161,7 +161,6 @@ namespace riaps {
                 create = (riaps::ComponentBase *(*)(component_conf_j&, Actor&)) dlsym(handle, "create_component");
                 riaps::ComponentBase* component_instance = (riaps::ComponentBase *)create(component_config, *this);
                 _components.push_back(component_instance);
-                //riaps::ComponentBase *component_instance = (  riaps::ComponentBase *) create(cconf);
             }
         }
     }
@@ -290,16 +289,17 @@ namespace riaps {
     riaps::Actor::~Actor() {
         //deregister_actor(GetActorId());
 
-        for (auto component : _components){
+        for (riaps::ComponentBase* component : _components){
             delete component;
         }
 
+        zpoller_destroy(&_poller);
         zuuid_destroy(&_actor_id);
         zsock_destroy(&_discovery_socket);
         zsock_destroy(&_actor_zsock);
-        zpoller_destroy(&_poller);
 
-        for (auto handle : _component_dll_handles){
+
+        for (void* handle : _component_dll_handles){
             dlclose(handle);
         }
     }

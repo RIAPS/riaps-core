@@ -27,22 +27,6 @@ namespace riaps{
                 throw std::runtime_error("Couldn't bind publisher port.");
             }
 
-
-            //_port_socket = zsock_new_pub(pub_endpoint.c_str());
-
-            //zsock_endpoint(_port_socket);
-
-            /*if (config.port == 0) {
-
-            } else {
-                char tmp[256];
-                sprintf(tmp, "tcp://*:%d", config.port);
-                _port = zsock_bind(_port_socket, tmp);
-
-            }*/
-
-            //zsock_
-
             std::cout << "Publisher is created on : " << _host << " " << _port << std::endl;
 
 
@@ -52,10 +36,6 @@ namespace riaps{
             }
 
         }
-
-        //void PublisherPort::SendMessage() {
-//
-        //}
 
         _component_port_pub_j PublisherPort::GetConfig() {
             return _configuration;
@@ -68,7 +48,12 @@ namespace riaps{
             return "";
         }
 
+
+        // Before sending the publisher sets up the message type
         void PublisherPort::Send(zmsg_t *msg) const {
+
+            zmsg_pushstr(msg, _configuration.message_type.c_str());
+
             int rc = zmsg_send(&msg, _port_socket);
             assert(rc == 0);
         }

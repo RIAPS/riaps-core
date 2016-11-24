@@ -50,6 +50,7 @@ CAPNP_DECLARE_SCHEMA(998280f9b0a23bc9);
 CAPNP_DECLARE_SCHEMA(88610ca13bd9da6b);
 CAPNP_DECLARE_SCHEMA(9b59f65915902dd4);
 CAPNP_DECLARE_SCHEMA(e469aa488cf1aac0);
+CAPNP_DECLARE_SCHEMA(9f687a139e48e75d);
 
 }  // namespace schemas
 }  // namespace capnp
@@ -245,6 +246,21 @@ struct DiscoRep {
 
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(e469aa488cf1aac0, 1, 1)
+    #if !CAPNP_LITE
+    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    #endif  // !CAPNP_LITE
+  };
+};
+
+struct ProviderUpdatePush {
+  ProviderUpdatePush() = delete;
+
+  class Reader;
+  class Builder;
+  class Pipeline;
+
+  struct _capnpPrivate {
+    CAPNP_DECLARE_STRUCT_HEADER(9f687a139e48e75d, 0, 2)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
     #endif  // !CAPNP_LITE
@@ -1397,6 +1413,98 @@ private:
 };
 #endif  // !CAPNP_LITE
 
+class ProviderUpdatePush::Reader {
+public:
+  typedef ProviderUpdatePush Reads;
+
+  Reader() = default;
+  inline explicit Reader(::capnp::_::StructReader base): _reader(base) {}
+
+  inline ::capnp::MessageSize totalSize() const {
+    return _reader.totalSize().asPublic();
+  }
+
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const {
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+  }
+#endif  // !CAPNP_LITE
+
+  inline bool hasProviderpath() const;
+  inline  ::capnp::Text::Reader getProviderpath() const;
+
+  inline bool hasNewvalues() const;
+  inline  ::capnp::List< ::capnp::Text>::Reader getNewvalues() const;
+
+private:
+  ::capnp::_::StructReader _reader;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::List;
+  friend class ::capnp::MessageBuilder;
+  friend class ::capnp::Orphanage;
+};
+
+class ProviderUpdatePush::Builder {
+public:
+  typedef ProviderUpdatePush Builds;
+
+  Builder() = delete;  // Deleted to discourage incorrect usage.
+                       // You can explicitly initialize to nullptr instead.
+  inline Builder(decltype(nullptr)) {}
+  inline explicit Builder(::capnp::_::StructBuilder base): _builder(base) {}
+  inline operator Reader() const { return Reader(_builder.asReader()); }
+  inline Reader asReader() const { return *this; }
+
+  inline ::capnp::MessageSize totalSize() const { return asReader().totalSize(); }
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const { return asReader().toString(); }
+#endif  // !CAPNP_LITE
+
+  inline bool hasProviderpath();
+  inline  ::capnp::Text::Builder getProviderpath();
+  inline void setProviderpath( ::capnp::Text::Reader value);
+  inline  ::capnp::Text::Builder initProviderpath(unsigned int size);
+  inline void adoptProviderpath(::capnp::Orphan< ::capnp::Text>&& value);
+  inline ::capnp::Orphan< ::capnp::Text> disownProviderpath();
+
+  inline bool hasNewvalues();
+  inline  ::capnp::List< ::capnp::Text>::Builder getNewvalues();
+  inline void setNewvalues( ::capnp::List< ::capnp::Text>::Reader value);
+  inline void setNewvalues(::kj::ArrayPtr<const  ::capnp::Text::Reader> value);
+  inline  ::capnp::List< ::capnp::Text>::Builder initNewvalues(unsigned int size);
+  inline void adoptNewvalues(::capnp::Orphan< ::capnp::List< ::capnp::Text>>&& value);
+  inline ::capnp::Orphan< ::capnp::List< ::capnp::Text>> disownNewvalues();
+
+private:
+  ::capnp::_::StructBuilder _builder;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  friend class ::capnp::Orphanage;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+};
+
+#if !CAPNP_LITE
+class ProviderUpdatePush::Pipeline {
+public:
+  typedef ProviderUpdatePush Pipelines;
+
+  inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
+  inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
+      : _typeless(kj::mv(typeless)) {}
+
+private:
+  ::capnp::AnyPointer::Pipeline _typeless;
+  friend class ::capnp::PipelineHook;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+};
+#endif  // !CAPNP_LITE
+
 // =======================================================================================
 
 inline bool ActorRegReq::Reader::hasAppName() const {
@@ -2409,6 +2517,74 @@ inline ::capnp::Orphan< ::ServiceLookupRep> DiscoRep::Builder::disownServiceLook
               "Must check which() before get()ing a union member.");
   return ::capnp::_::PointerHelpers< ::ServiceLookupRep>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+
+inline bool ProviderUpdatePush::Reader::hasProviderpath() const {
+  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline bool ProviderUpdatePush::Builder::hasProviderpath() {
+  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::Text::Reader ProviderUpdatePush::Reader::getProviderpath() const {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _reader.getPointerField(0 * ::capnp::POINTERS));
+}
+inline  ::capnp::Text::Builder ProviderUpdatePush::Builder::getProviderpath() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void ProviderUpdatePush::Builder::setProviderpath( ::capnp::Text::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
+      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+}
+inline  ::capnp::Text::Builder ProviderUpdatePush::Builder::initProviderpath(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
+      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+}
+inline void ProviderUpdatePush::Builder::adoptProviderpath(
+    ::capnp::Orphan< ::capnp::Text>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
+      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::Text> ProviderUpdatePush::Builder::disownProviderpath() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+
+inline bool ProviderUpdatePush::Reader::hasNewvalues() const {
+  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
+}
+inline bool ProviderUpdatePush::Builder::hasNewvalues() {
+  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::List< ::capnp::Text>::Reader ProviderUpdatePush::Reader::getNewvalues() const {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::get(
+      _reader.getPointerField(1 * ::capnp::POINTERS));
+}
+inline  ::capnp::List< ::capnp::Text>::Builder ProviderUpdatePush::Builder::getNewvalues() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::get(
+      _builder.getPointerField(1 * ::capnp::POINTERS));
+}
+inline void ProviderUpdatePush::Builder::setNewvalues( ::capnp::List< ::capnp::Text>::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::set(
+      _builder.getPointerField(1 * ::capnp::POINTERS), value);
+}
+inline void ProviderUpdatePush::Builder::setNewvalues(::kj::ArrayPtr<const  ::capnp::Text::Reader> value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::set(
+      _builder.getPointerField(1 * ::capnp::POINTERS), value);
+}
+inline  ::capnp::List< ::capnp::Text>::Builder ProviderUpdatePush::Builder::initNewvalues(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::init(
+      _builder.getPointerField(1 * ::capnp::POINTERS), size);
+}
+inline void ProviderUpdatePush::Builder::adoptNewvalues(
+    ::capnp::Orphan< ::capnp::List< ::capnp::Text>>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::adopt(
+      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::List< ::capnp::Text>> ProviderUpdatePush::Builder::disownNewvalues() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::disown(
+      _builder.getPointerField(1 * ::capnp::POINTERS));
 }
 
 

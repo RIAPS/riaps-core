@@ -78,5 +78,11 @@ struct DiscoRep {
    }
 }
 
+struct ProviderUpdatePush {
+    providerpath @0 : Text;
+    newvalues    @1 : List(Text);
+}
+
+
 
 

@@ -2,6 +2,8 @@
 
 #define REGULAR_MAINTAIN_PERIOD 3000 //msec
 
+#define DHT_ROUTER_CHANNEL "ipc:///tmp/dhtrouterchannel"
+
 void
 riaps_actor (zsock_t *pipe, void *args)
 {
@@ -26,11 +28,11 @@ riaps_actor (zsock_t *pipe, void *args)
         *ready = false;
     };
     auto done_cb = [=](bool success) {
-        if (success) {
-            std::cout << "success!" << std::endl;
-        } else {
-            std::cout << "failed..." << std::endl;
-        }
+        //if (success) {
+        //    std::cout << "success!" << std::endl;
+        //} else {
+        //    std::cout << "failed..." << std::endl;
+        //}
         std::unique_lock<std::mutex> lk(*mtx);
         cv->wait(lk, [=]{ return *ready; });
         cv->notify_one();
@@ -42,15 +44,19 @@ riaps_actor (zsock_t *pipe, void *args)
 
     init_command_mappings();
 
+
+    zsock_t* dht_router_socket = zsock_new_pull(DHT_ROUTER_CHANNEL);
+    assert(dht_router_socket);
+
     // Response socket for incoming messages from RIAPS Components
     zsock_t * riaps_socket = zsock_new_rep (DISCOVERY_SERVICE_IPC);
     //zsock_t * riaps_socket = zsock_new_router ("ipc://riapsdiscoveryservice");
     assert(riaps_socket);
 
-    zactor_t* async_service_poller = zactor_new(service_poller_actor, NULL);
-    assert(async_service_poller);
+    //zactor_t* async_service_poller = zactor_new(service_poller_actor, NULL);
+    //assert(async_service_poller);
 
-    zpoller_t* poller = zpoller_new(pipe, riaps_socket, async_service_poller, NULL);
+    zpoller_t* poller = zpoller_new(pipe, riaps_socket, dht_router_socket, NULL);
     assert(poller);
 
 
@@ -66,16 +72,19 @@ riaps_actor (zsock_t *pipe, void *args)
     // Pair sockets for Actor communication
     std::map<std::string, actor_details> clients;
 
+    // Client subscriptions to messageTypes
+    std::map<std::string, std::set<std::string>> clientSubscriptions;
 
-    char hostname[256];
-    int hostnameresult = gethostname(hostname, 256);
 
-    if (hostnameresult == -1) {
-        std::cout << "hostname cannot be resolved" << std::endl;
-        return;
-    }
+    //char hostname[256];
+    //int hostnameresult = gethostname(hostname, 256);
 
-    disc_registernode(hostname);
+    //if (hostnameresult == -1) {
+    //    std::cout << "hostname cannot be resolved" << std::endl;
+    //    return;
+    //}
+
+    //disc_registernode(hostname);
 
     while (!terminated){
         void *which = zpoller_wait(poller, REGULAR_MAINTAIN_PERIOD);
@@ -91,9 +100,9 @@ riaps_actor (zsock_t *pipe, void *args)
             char* command = zmsg_popstr(msg);
 
             if (streq(command, "$TERM")){
-                std::cout << "R_ACTOR $TERM arrived, deregister node" << std::endl;
+                std::cout << "R_ACTOR $TERM arrived" << std::endl;
 
-                disc_deregisternode(std::string(hostname));
+                //disc_deregisternode(std::string(hostname));
 
                 terminated = true;
             }
@@ -118,6 +127,39 @@ riaps_actor (zsock_t *pipe, void *args)
                 zstr_free(&command);
             }
             zmsg_destroy(&msg);
+        }
+        else if (which == dht_router_socket){
+            // Process the updated nodes
+            zmsg_t* msg_response = zmsg_recv(dht_router_socket);
+
+            zframe_t* capnp_msgbody = zmsg_pop(msg_response);
+            size_t    size = zframe_size(capnp_msgbody);
+            byte*     data = zframe_data(capnp_msgbody);
+
+            auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
+
+            capnp::FlatArrayMessageReader reader(capnp_data);
+            auto msg_providerupdate = reader.getRoot<ProviderUpdatePush>();
+
+            std::string provider_key = std::string (msg_providerupdate.getProviderpath().cStr());
+
+            auto msg_newproviders = msg_providerupdate.getNewvalues();
+
+            for (int i =0; i<msg_newproviders.size(); i++){
+                std::cout << "New provider: " << msg_newproviders[i].cStr() <<std::endl;
+            }
+
+
+            // Look for services who may interested in the new provider
+            if (clientSubscriptions.find(provider_key)!=clientSubscriptions.end()){
+                for (auto& new_provider : clientSubscriptions[provider_key]){
+
+                }
+            }
+
+
+            zframe_destroy(&capnp_msgbody);
+            zmsg_destroy(&msg_response);
         }
 
         // Handling messages from the RIAPS FW
@@ -144,14 +186,29 @@ riaps_actor (zsock_t *pipe, void *args)
             // Register actor
             if (msg_discoreq.isActorReg()) {
                 auto msg_actorreq = msg_discoreq.getActorReg();
-                auto actorname    = std::string(msg_actorreq.getActorName());
-                auto appname      = std::string(msg_actorreq.getAppName());
+                std::string actorname    = std::string(msg_actorreq.getActorName());
+                std::string appname      = std::string(msg_actorreq.getAppName());
 
                 std::string clientKeyBase = "/" + appname + '/' + actorname + "/";
 
                 // If the actor already registered
                 if (clients.find(clientKeyBase)!=clients.end()) {
-                    // TODO: What to do then?
+                    std::cout << "Cannot register actor. This actor already registered (" << clientKeyBase << ")" << std::endl;
+
+                    capnp::MallocMessageBuilder message;
+                    auto drepmsg = message.initRoot<DiscoRep>();
+                    auto arepmsg = drepmsg.initActorReg();
+
+                    arepmsg.setPort(0);
+                    arepmsg.setStatus(Status::ERR);
+
+                    auto serializedMessage = capnp::messageToFlatArray(message);
+
+                    zmsg_t* msg = zmsg_new();
+                    zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
+
+                    zmsg_send(&msg, riaps_socket);
+
                 } else{
                     // Open a new PAIR socket for actor communication
                     zsock_t * actor_socket = zsock_new (ZMQ_PAIR);
@@ -181,11 +238,12 @@ riaps_actor (zsock_t *pipe, void *args)
                     auto uuid_str = std::to_string(uuid);
                     //zuuid_destroy(&uuid);
 
-                    auto clientKeyLocal = clientKeyBase + uuid_str;
+                    std::string clientKeyLocal = clientKeyBase + uuid_str;
                     clients[clientKeyLocal] = _actor_details{};
                     clients[clientKeyLocal].port = port;
 
-                    auto clientKeyGlobal = clientKeyBase + uuid_str;
+                    std::string clientKeyGlobal = clientKeyBase + uuid_str;
+                    clients[clientKeyGlobal] = _actor_details{};
                     clients[clientKeyGlobal].port = port;
                 }
             } else if (msg_discoreq.isServiceReg()){
@@ -203,7 +261,7 @@ riaps_actor (zsock_t *pipe, void *args)
                 // Insert KV-pair
 
                 /// Consul part (main line now)
-                disc_registerkey(kv_pair.first, kv_pair.second);
+                //disc_registerkey(kv_pair.first, kv_pair.second);
 
                 std::cout << "Register: " + kv_pair.first << std::endl;
 
@@ -214,12 +272,77 @@ riaps_actor (zsock_t *pipe, void *args)
 
                 // Convert the value to bytes
                 std::vector<uint8_t> opendht_data(kv_pair.second.begin(), kv_pair.second.end());
-                dht_node.put(kv_pair.first, dht::Value(opendht_data), [=](bool success){
+                auto keyhash = dht::InfoHash::get(kv_pair.first);
+                //dht_node.put(keyhash, dht::Value(opendht_data), [=](bool success){
                     // Done Callback
-                    done_cb(success);
-                });
+                //    done_cb(success);
+                //});
 
-                wait();
+                //dht::Value opendht_data_value = dht::Value(opendht_data);
+                //opendht_data_value.user_type = kv_pair.first;
+
+                dht_node.put(keyhash, dht::Value(opendht_data));
+
+                std::cout << "keyhash: "<< keyhash << std::endl;
+
+                // Add listener to the added key
+                auto token = dht_node.listen(keyhash,
+                         [kv_pair](const std::vector<std::shared_ptr<dht::Value>>& values) {
+
+                             zsock_t* notify_ractor_socket = zsock_new_push(DHT_ROUTER_CHANNEL);
+
+                             capnp::MallocMessageBuilder message;
+                             auto msg_provider_push       = message.initRoot<ProviderUpdatePush>();
+                             msg_provider_push.setProviderpath(kv_pair.first);
+
+                             std::vector<std::string> update_results;
+                             for (const auto& value :values ){
+                                 std::string result = std::string(value->data.begin(), value->data.end());
+                                 update_results.push_back(result);
+                             }
+
+                             auto number_of_providers = update_results.size();
+                             ::capnp::List< ::capnp::Text>::Builder msg_providers = msg_provider_push.initNewvalues(number_of_providers);
+
+                             int provider_index = 0;
+                             for (std::string provider : update_results){
+                                 ::capnp::Text::Builder b((char*)provider.c_str());
+                                 msg_providers.set(provider_index++, b.asString());
+                             }
+
+                             auto serializedMessage = capnp::messageToFlatArray(message);
+
+                             zmsg_t* msg = zmsg_new();
+                             zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
+
+                             zmsg_send(&msg, notify_ractor_socket);
+
+                             //for (const auto& v : values) {
+                             //    std::cout << "Found value: " << *v << std::endl;
+                             //    std::cout << "In Key: " << kv_pair.first << std::endl;
+                             //    std::cout << "Let's look if anybody is interested in..." << std::endl;
+
+
+                                 /*zmsg_t* q_interested = zmsg_new();
+                                 zmsg_addstr(q_interested, "Szevasz");
+
+                                 zmsg_send(&q_interested, notify_ractor_socket);
+
+                                 zmsg_t* r_interested = zmsg_recv(notify_ractor_socket);
+                                 char*t = zmsg_popstr(r_interested);
+                                  */
+
+
+                              //   std::cout << std::endl;
+                             //}
+
+                             sleep(1);
+                             zsock_destroy(&notify_ractor_socket);
+                             sleep(1);
+
+                             return true; // keep listening
+                         }
+                );
 
                 /////
                 //  End experiment
@@ -245,7 +368,11 @@ riaps_actor (zsock_t *pipe, void *args)
                 auto client = msg_servicelookup.getClient();
                 auto path   = msg_servicelookup.getPath();
 
-                auto key = buildLookupKey(path.getAppName()        ,
+                // Key   -> /appname/msgType/kind
+                // Value -> /appname/clientactorname/clienthost/clientinstancename/clientportname
+                // The "value" is interested in "key"
+                auto lookupkey =
+                           buildLookupKey(path.getAppName()        ,
                                           path.getMsgType()        ,
                                           path.getKind()           ,
                                           path.getScope()          ,
@@ -253,6 +380,9 @@ riaps_actor (zsock_t *pipe, void *args)
                                           client.getActorName()    ,
                                           client.getInstanceName() ,
                                           client.getPortName()     );
+
+
+
 
                 /// Consul part (main line now)
                 //std::string consul_lookup_result = disc_getvalue_by_key(key.first);
@@ -267,10 +397,10 @@ riaps_actor (zsock_t *pipe, void *args)
 
                 // For dht async request - response
 
-                std::cout << "Get: " + key.first << std::endl;
+                std::cout << "Get: " + lookupkey.first << std::endl;
 
                 std::vector<std::string> dht_lookup_results;
-                dht_node.get(key.first, [&](const std::vector<std::shared_ptr<dht::Value>>& values){
+                dht_node.get(lookupkey.first, [&](const std::vector<std::shared_ptr<dht::Value>>& values){
                     // Done Callback
                     for (const auto& value :values ){
                         std::string result = std::string(value->data.begin(), value->data.end());
@@ -333,6 +463,24 @@ riaps_actor (zsock_t *pipe, void *args)
                 zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
 
                 zmsg_send(&msg, riaps_socket);
+
+                // Subscribe, if new provider arrives
+
+                // -- Register with OpenDHT --
+                // This client is interested in this kind of messages. Register it.
+                //std::string client_subscribe_key = lookupkey.first + "_clients";
+                //std::vector<uint8_t> opendht_client_subscribe_data(client_subscribe_key.begin(), client_subscribe_key.end());
+                //auto keyhash = dht::InfoHash::get(client_subscribe_key);
+                //dht_node.put(keyhash, dht::Value(opendht_client_subscribe_data));
+
+
+                // Now using just the discovery service to register the interested clients
+                if (clientSubscriptions.find(lookupkey.first) == clientSubscriptions.end()){
+                    // Nobody subscribed to this messagetype
+                    clientSubscriptions[lookupkey.first] = std::set<std::string>();
+                }
+
+                clientSubscriptions[lookupkey.first].insert(lookupkey.second);
 
             }
 
@@ -456,16 +604,19 @@ riaps_actor (zsock_t *pipe, void *args)
         }
     }
 
-    for (auto client : clients){
-        if (client.second.socket!=NULL) {
-            zsock_destroy(&client.second.socket);
-            client.second.socket=NULL;
+    for (auto it_client = clients.begin(); it_client!=clients.end(); it_client++){
+        if (it_client->second.socket!=NULL) {
+            zsock_destroy(&it_client->second.socket);
+            it_client->second.socket=NULL;
         }
     }
 
 
     zpoller_destroy(&poller);
-    zactor_destroy(&async_service_poller);
+    //zactor_destroy(&async_service_poller);
     zsock_destroy(&riaps_socket);
+    zsock_destroy(&dht_router_socket);
+
+    sleep(1);
 }
 

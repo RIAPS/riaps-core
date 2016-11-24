@@ -256,15 +256,21 @@ register_actor(std::string appname, std::string actorname){
 
         // TODO: Check status
 
-        auto discovery_endpoint = "tcp://localhost:" + std::to_string(port);
-        discovery_port = zsock_new_pair(discovery_endpoint.c_str());
-        assert(discovery_port);
+        if (status == Status::ERR){
+            std::cout << "Couldn't register actor: " << actorname << std::endl;
+        }
+        else {
+            auto discovery_endpoint = "tcp://localhost:" + std::to_string(port);
+            discovery_port = zsock_new_pair(discovery_endpoint.c_str());
+            assert(discovery_port);
+        }
     }
 
     /////
     /// Clean up
     /////
 
+    zsock_disconnect(client, DISCOVERY_SERVICE_IPC);
     zframe_destroy(&capnp_msgbody);
     zmsg_destroy(&msg_response);
     zsock_destroy(&client);

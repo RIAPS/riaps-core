@@ -9,7 +9,17 @@ comp_localestimator::comp_localestimator(_component_conf_j &config, riaps::Actor
 }
 
 void comp_localestimator::OnMessageArrived(std::string messagetype, zmsg_t *msg_body, zsock_t *socket) {
-    std::cout << "on_ready(): " << messagetype << std::endl;
+
+    if (messagetype == PORT_READY) {
+
+        char* msg_content = zmsg_popstr(msg_body);
+
+        if (msg_content) {
+            std::cout << "on_ready(): " << msg_content << std::endl;
+            zstr_free(&msg_content);
+        }
+
+    }
 }
 
 void comp_localestimator::OnTimerFired(std::string timerid) {
