@@ -9,9 +9,8 @@ namespace riaps{
     namespace ports {
 
 
-        SubscriberPort::SubscriberPort(_component_port_sub_j &config, const ComponentBase *component)
-                : PortBase(PortTypes::Subscriber),
-                  _config(config)                ,
+        SubscriberPort::SubscriberPort(const _component_port_sub_j &config, const ComponentBase *component)
+                : PortBase(PortTypes::Subscriber, (component_port_config*)(&config)),
                   _parent_component(component) {
 
             _port_socket = zsock_new(ZMQ_SUB);
@@ -22,7 +21,7 @@ namespace riaps{
             int rc = zsock_connect(_port_socket, pub_endpoint.c_str());
 
             if (rc != 0) {
-                std::cout << "Subscriber '" + _config.port_name + "' couldn't connect to " + pub_endpoint
+                std::cout << "Subscriber '" + _config->port_name + "' couldn't connect to " + pub_endpoint
                           << std::endl;
             } else {
                 std::cout << "Subscriber connected to: " << pub_endpoint << std::endl;
@@ -33,10 +32,11 @@ namespace riaps{
             auto results =
                     subscribe_to_service(_parent_component->GetActor()->GetApplicationName(),
                                          _parent_component->GetConfig().component_name,
+                                         _parent_component->GetActor()->GetActorName(),
                                          Kind::SUB,
                                          Scope::GLOBAL, //TODO: pass in argument
-                                         _config.port_name, // Subscriber name
-                                         _config.message_type);
+                                         _config->port_name, // Subscriber name
+                                         ((_component_port_sub_j*)_config)->message_type);
 
             for (auto result : results) {
                 std::string endpoint = "tcp://" + result.host_name + ":" + std::to_string(result.port);

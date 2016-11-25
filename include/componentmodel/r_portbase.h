@@ -22,7 +22,7 @@ namespace ports {
     public:
         //PortBase(const ComponentBase* parentComponent);
 
-        PortBase(PortTypes portType);
+        PortBase(PortTypes portType, component_port_config* config);
 
         /// \return The ip addres of the specified interface. (e.g.: "eth0")
         //virtual std::string GetInterfaceAddress(std::string ifacename);
@@ -37,7 +37,7 @@ namespace ports {
 
         const PortTypes& GetPortType() const;
 
-        const component_port_config* GetConfig() const;
+        virtual const component_port_config* GetConfig() const;
 
 
         ~PortBase();
@@ -46,7 +46,7 @@ namespace ports {
         PortTypes              _port_type;
         zsock_t*               _port_socket;
         std::string            _port_name;
-        component_port_config* _config;
+        const component_port_config* _config;
         //const ComponentBase* _parentComponent;
     };
 }

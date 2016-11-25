@@ -22,7 +22,7 @@ namespace riaps {
        class PublisherPort : public PortBase {
        public:
 
-           PublisherPort(_component_port_pub_j &config, ComponentBase *parent_component);
+           PublisherPort(const _component_port_pub_j &config, ComponentBase *parent_component);
 
            std::string GetEndpoint();
 

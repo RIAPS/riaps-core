@@ -9,8 +9,9 @@ namespace riaps {
 
     namespace ports {
 
-        PortBase::PortBase(PortTypes portType) {
+        PortBase::PortBase(PortTypes portType, component_port_config* config) {
             _port_type = portType;
+            _config = config;
         }
 
         void PortBase::Send(zmsg_t *msg) const {

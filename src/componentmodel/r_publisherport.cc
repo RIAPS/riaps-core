@@ -9,11 +9,10 @@ namespace riaps{
     namespace ports {
 
         // TODO: Pass scope
-        PublisherPort::PublisherPort(_component_port_pub_j &config, ComponentBase *parent_component)
-            : PortBase(PortTypes::Publisher)
+        PublisherPort::PublisherPort(const _component_port_pub_j &config, ComponentBase *parent_component)
+            : PortBase(PortTypes::Publisher, (component_port_config*)&config)
 
         {
-            _config=&config;
             _port_socket = zsock_new(ZMQ_PUB);
 
             std::string _host = GetInterfaceAddress();

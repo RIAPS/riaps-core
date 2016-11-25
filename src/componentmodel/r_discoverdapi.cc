@@ -118,13 +118,14 @@ bool register_service(std::string              app_name     ,
 
 
 std::vector<service_lookup_result>
-subscribe_to_service(std::string app_name  ,
-                     std::string part_name , // instance_name
+subscribe_to_service(const std::string& app_name  ,
+                     const std::string& part_name , // instance_name
+                     const std::string& actor_name,
  //                       std::string part_type ,
-                     Kind        kind      ,
-                     Scope       scope     ,
-                     std::string port_name ,
-                     std::string msg_type  // PortType
+                     Kind               kind      ,
+                     Scope              scope     ,
+                     const std::string& port_name ,
+                     const std::string& msg_type  // PortType
         ){
 
     std::vector<service_lookup_result> result;
@@ -144,8 +145,11 @@ subscribe_to_service(std::string app_name  ,
     pathBuilder.setKind(kind);
     pathBuilder.setScope(scope);
 
+    clientBuilder.setActorName(actor_name);
     clientBuilder.setInstanceName(part_name);
     clientBuilder.setPortName(port_name);
+
+
 
     auto serializedMessage = capnp::messageToFlatArray(message);
 
@@ -173,7 +177,7 @@ subscribe_to_service(std::string app_name  ,
     auto msg_discoreq= reader.getRoot<DiscoRep>();
 
 
-    // Register actor
+    // Get service
     if (msg_discoreq.isServiceLookup()) {
         auto msg_service_lookup = msg_discoreq.getServiceLookup();
         auto status = msg_service_lookup.getStatus();

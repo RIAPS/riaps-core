@@ -183,6 +183,10 @@ namespace riaps {
 
     }
 
+    const std::string& riaps::Actor::GetActorName() const {
+        return _actor_name;
+    }
+
     void riaps::Actor::UpdatePort(std::string &instancename, std::string &portname, std::string &host, int port) {
         // Get the component
         for (std::vector<ComponentBase *>::iterator it = _components.begin(); it != _components.end(); it++) {

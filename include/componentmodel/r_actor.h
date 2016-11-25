@@ -33,7 +33,8 @@ namespace riaps {
 
         void Init();
         virtual void start();
-        std::string GetActorId();
+        std::string  GetActorId();
+        const std::string& GetActorName() const;
         const std::string& GetApplicationName() const;
         virtual ~Actor();
         void UpdatePort(std::string& instancename, std::string& portname, std::string& host, int port);

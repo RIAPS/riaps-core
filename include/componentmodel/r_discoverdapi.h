@@ -34,13 +34,14 @@ struct _service_lookup_result {
 typedef struct _service_lookup_result service_lookup_result;
 
 extern std::vector<service_lookup_result>
-subscribe_to_service(std::string app_name  ,
-                     std::string part_name , // instance_name
-        //                       std::string part_type ,
-                     Kind        kind      ,
-                     Scope       scope     ,
-                     std::string port_name ,
-                     std::string msg_type  );// PortType
+subscribe_to_service(const std::string& app_name   ,
+                     const std::string& part_name  , // instance_name
+                     const std::string& actor_name ,
+                     Kind               kind       ,
+                     Scope              scope      ,
+                     const std::string& port_name  ,
+                     const std::string& msg_type // PortType
+                     );
 extern bool
 register_service(std::string              app_name     ,
                  std::string              message_type ,

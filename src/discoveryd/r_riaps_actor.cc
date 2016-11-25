@@ -185,6 +185,8 @@ riaps_actor (zsock_t *pipe, void *args)
                                                     "/"
                                                     ;
 
+                        std::cout << "Search for registered actor: " + clientKeyBase <<std::endl;
+
                         // Python reference:
                         // TODO: Figure out, de we really need for this. I don't think so...
                         //if self.hostAddress != actorHost:
@@ -259,6 +261,8 @@ riaps_actor (zsock_t *pipe, void *args)
                 std::string appname      = std::string(msg_actorreq.getAppName());
 
                 std::string clientKeyBase = "/" + appname + '/' + actorname + "/";
+
+                std::cout << "Register actor: " << clientKeyBase << std::endl;
 
                 // If the actor already registered
                 if (clients.find(clientKeyBase)!=clients.end()) {

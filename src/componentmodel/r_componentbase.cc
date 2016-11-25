@@ -41,9 +41,17 @@ namespace riaps{
                 }
 
                 // Add and start publishers
-                for (auto publisher_config : comp->GetConfig().component_ports.pubs) {
-                    comp->InitPublisherPort(publisher_config);
+                //for (auto& publisher_config : comp->GetConfig().component_ports.pubs) {
+                //    comp->InitPublisherPort(publisher_config);
+                //}
+
+                const component_conf_j& comp_conf = comp->GetConfig();
+                for (auto it_pubconf = comp_conf.component_ports.pubs.begin();
+                          it_pubconf != comp_conf.component_ports.pubs.end();
+                          it_pubconf++){
+                    comp->InitPublisherPort(*it_pubconf);
                 }
+
 
                 // Add and start response ports
                 //for (auto response : comp->GetConfig().responses_config) {
@@ -59,7 +67,7 @@ namespace riaps{
                 //}
 
                 // Get subscriber details from discovery service
-                for (auto subscriber_config : comp->GetConfig().component_ports.subs) {
+                for (auto& subscriber_config : comp->GetConfig().component_ports.subs) {
                     auto newPort = comp->InitSubscriberPort(subscriber_config);
                     zpoller_add(poller, (void*)newPort->GetSocket());
                     //SubscriberPort::GetRemoteServiceAsync(subscriber, comp->GetCompUuid());
@@ -86,11 +94,12 @@ namespace riaps{
                         if (host){
                             char* port = zmsg_popstr(msg);
                             if (port){
-                                auto port_tobe_updated = comp->GetPortByName(port);
+                                auto port_tobe_updated = comp->GetPortByName(portname);
 
                                 if (port_tobe_updated!=NULL){
                                     if (port_tobe_updated->GetPortType() == ports::PortTypes::Subscriber){
-
+                                        std::string new_pub_endpoint = std::string(host) + ":" + std::string(port);
+                                        ((ports::SubscriberPort*)port_tobe_updated)->ConnectToPublihser(new_pub_endpoint);
                                     }
                                 }
 
@@ -240,7 +249,7 @@ namespace riaps{
     //    return _zsock_timer;
     //}
 
-    const ports::PublisherPort* ComponentBase::InitPublisherPort(_component_port_pub_j& config) {
+    const ports::PublisherPort* ComponentBase::InitPublisherPort(const _component_port_pub_j& config) {
         auto result = new ports::PublisherPort(config, this);
         std::unique_ptr<ports::PortBase> newport(result);
 
@@ -251,7 +260,7 @@ namespace riaps{
 
 
 
-    const ports::SubscriberPort* ComponentBase::InitSubscriberPort(_component_port_sub_j& config) {
+    const ports::SubscriberPort* ComponentBase::InitSubscriberPort(const _component_port_sub_j& config) {
         std::unique_ptr<ports::SubscriberPort> newport(new ports::SubscriberPort(config, this));
         auto result = newport.get();
         newport->Init();
@@ -276,7 +285,9 @@ namespace riaps{
                   it != _subscriberports.end();
                   it++){
 
-            if ((*it)->GetConfig()->port_name == portName){
+            const component_port_config* conf = (*it)->GetConfig();
+
+            if (conf->port_name == portName){
                 return (*it).get();
             }
         }
