@@ -1,9 +1,0 @@
-table ServiceParameters {
-  service_id:string;
-  service_name:string;
-  ip_address:string;
-  port:string;
-  tags:[string];
-}
-
-root_type ServiceParameters;

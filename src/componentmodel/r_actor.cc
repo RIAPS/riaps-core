@@ -4,6 +4,7 @@
 
 
 #include "componentmodel/r_actor.h"
+#include "componentmodel/r_debugcomponent.h"
 
 
 namespace riaps {
@@ -153,7 +154,13 @@ namespace riaps {
 
             void *handle = dlopen(component_library_name.c_str(), RTLD_NOW);
             if (handle == NULL) {
-                throw std::runtime_error("Cannot open library: " + component_library_name + " (" + dlerror() + ")");
+
+                // TODO: pass in parameter what to do
+                //throw std::runtime_error("Cannot open library: " + component_library_name + " (" + dlerror() + ")");
+
+                //Load a default implementation, for testing
+                riaps::ComponentBase* debug_component = new DebugComponent(component_config, *this);
+                _components.push_back(debug_component);
             }
             else {
                 _component_dll_handles.push_back(handle);

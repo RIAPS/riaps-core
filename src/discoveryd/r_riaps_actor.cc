@@ -73,7 +73,7 @@ riaps_actor (zsock_t *pipe, void *args)
     std::map<std::string, actor_details> clients;
 
     // Client subscriptions to messageTypes
-    std::map<std::string, std::set<std::string>> clientSubscriptions;
+    std::map<std::string, std::vector<std::unique_ptr<client_details>>> clientSubscriptions;
 
 
     //char hostname[256];
@@ -473,14 +473,29 @@ riaps_actor (zsock_t *pipe, void *args)
                 //auto keyhash = dht::InfoHash::get(client_subscribe_key);
                 //dht_node.put(keyhash, dht::Value(opendht_client_subscribe_data));
 
+                auto current_client           = std::unique_ptr<client_details>(new client_details());
+                current_client->app_name      = path.getAppName();
+                current_client->actor_host    = client.getActorHost();
+                current_client->portname      = client.getPortName();
+                current_client->actor_name    = client.getActorName();
+                current_client->instance_name = client.getInstanceName();
+
 
                 // Now using just the discovery service to register the interested clients
                 if (clientSubscriptions.find(lookupkey.first) == clientSubscriptions.end()){
                     // Nobody subscribed to this messagetype
-                    clientSubscriptions[lookupkey.first] = std::set<std::string>();
+                    clientSubscriptions[lookupkey.first] = std::vector<std::unique_ptr<client_details>>();
                 }
 
-                clientSubscriptions[lookupkey.first].insert(lookupkey.second);
+                if (std::find(clientSubscriptions[lookupkey.first].begin(),
+                              clientSubscriptions[lookupkey.first].end()  ,
+                              current_client) == clientSubscriptions[lookupkey.first].end()){
+
+                    clientSubscriptions[lookupkey.first].push_back(std::move(current_client));
+
+
+                }
+
 
             }
 
@@ -618,5 +633,13 @@ riaps_actor (zsock_t *pipe, void *args)
     zsock_destroy(&dht_router_socket);
 
     sleep(1);
+}
+
+bool _client_details::operator==(const client_details &rhs) {
+        return app_name      == rhs.app_name      &&
+               actor_name    == rhs.actor_name    &&
+               actor_host    == rhs.actor_host    &&
+               instance_name == rhs.instance_name &&
+               portname      == rhs.portname;
 }
 

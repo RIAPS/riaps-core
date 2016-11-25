@@ -56,6 +56,19 @@ struct _actor_details {
 
 typedef struct _actor_details actor_details;
 
+
+struct _client_details{
+    std::string app_name;
+    std::string actor_name;
+    std::string actor_host;
+    std::string instance_name;
+    std::string portname;
+
+    bool operator==(const struct _client_details& rhs);
+};
+
+typedef struct _client_details client_details;
+
 void riaps_actor (zsock_t *pipe, void *args);
 
 

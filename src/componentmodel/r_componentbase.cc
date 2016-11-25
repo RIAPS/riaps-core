@@ -190,7 +190,7 @@ namespace riaps{
          //   timer->stop();
         //}
 
-        //zsock_destroy(&timerport);
+        zsock_destroy(&timerport);
         //zsock_destroy(&asyncport);
         zpoller_destroy(&poller);
     };
