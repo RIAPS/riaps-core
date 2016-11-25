@@ -55,6 +55,8 @@ namespace riaps {
 
         ports::SubscriberPort& GetSubscriberByName(const std::string&);
 
+        ports::PortBase* GetPortByName(const std::string&);
+
         bool SendMessageOnPort(zmsg_t* msg, std::string portName) const;
 
 
@@ -71,6 +73,7 @@ namespace riaps {
         const component_conf_j& GetConfig() const;
 
         const Actor* GetActor() const;
+        zactor_t* GetZmqPipe() const;
 
         virtual void OnMessageArrived(std::string messagetype, zmsg_t* msg_body, zsock_t* socket)=0;
         virtual void OnTimerFired(std::string timerid)=0;

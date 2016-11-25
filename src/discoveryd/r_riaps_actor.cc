@@ -145,15 +145,84 @@ riaps_actor (zsock_t *pipe, void *args)
 
             auto msg_newproviders = msg_providerupdate.getNewvalues();
 
-            for (int i =0; i<msg_newproviders.size(); i++){
-                std::cout << "New provider: " << msg_newproviders[i].cStr() <<std::endl;
-            }
+            //for (int i =0; i<msg_newproviders.size(); i++){
+            //    std::cout << "New provider: " << msg_newproviders[i].cStr() <<std::endl;
+            //}
 
 
             // Look for services who may interested in the new provider
             if (clientSubscriptions.find(provider_key)!=clientSubscriptions.end()){
-                for (auto& new_provider : clientSubscriptions[provider_key]){
+                for (auto& subscribedClient : clientSubscriptions[provider_key]){
+                    for (int idx = 0; idx<msg_newproviders.size(); idx++) {
+                        std::string new_provider_endpoint = std::string(msg_newproviders[idx].cStr());
 
+                        auto pos = new_provider_endpoint.find(':');
+                        if (pos == std::string::npos) {
+                            continue;
+                        }
+
+                        std::string host = new_provider_endpoint.substr(0, pos);
+                        std::string port = new_provider_endpoint.substr(pos+1, std::string::npos);
+                        int portNum      = -1;
+
+                        try {
+                            portNum = std::stoi(port);
+                        } catch(std::invalid_argument& e){
+                            std::cout << "Cast error, string -> int, portnumber: " << port << std::endl;
+                            std::cout <<e.what() << std::endl;
+                            continue;
+                        }
+                        catch(std::out_of_range& e){
+                            std::cout << "Cast error, string -> int, portnumber: " << port << std::endl;
+                            std::cout << e.what() << std::endl;
+                            continue;
+                        }
+
+
+
+                        std::string clientKeyBase = "/" + subscribedClient->app_name +
+                                                    "/" + subscribedClient->actor_name +
+                                                    "/"
+                                                    ;
+
+                        // Python reference:
+                        // TODO: Figure out, de we really need for this. I don't think so...
+                        //if self.hostAddress != actorHost:
+                        //continue
+
+                        // If the client port saved before
+                        if (clients.find(clientKeyBase)!=clients.end()){
+                            auto clientSocket = clients[clientKeyBase];
+
+                            if (clientSocket.socket!=NULL){
+                                capnp::MallocMessageBuilder message;
+                                auto msg_discoupd = message.initRoot<DiscoUpd>();
+                                auto msg_client   = msg_discoupd.initClient();
+                                auto msg_socket   = msg_discoupd.initSocket();
+
+                                // Set up client
+                                msg_client.setActorHost(subscribedClient->actor_host);
+                                msg_client.setActorName(subscribedClient->actor_name);
+                                msg_client.setInstanceName(subscribedClient->instance_name);
+                                msg_client.setPortName(subscribedClient->portname);
+
+                                // TODO: Handle local
+                                msg_discoupd.setScope(Scope::GLOBAL);
+
+                                msg_socket.setHost(host);
+                                msg_socket.setPort(portNum);
+
+                                auto serializedMessage = capnp::messageToFlatArray(message);
+
+                                zmsg_t* msg = zmsg_new();
+                                zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
+
+                                zmsg_send(&msg, clientSocket.socket);
+                            }
+                        }
+
+
+                    }
                 }
             }
 
@@ -492,11 +561,7 @@ riaps_actor (zsock_t *pipe, void *args)
                               current_client) == clientSubscriptions[lookupkey.first].end()){
 
                     clientSubscriptions[lookupkey.first].push_back(std::move(current_client));
-
-
                 }
-
-
             }
 
 

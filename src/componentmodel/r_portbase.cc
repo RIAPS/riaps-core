@@ -2,6 +2,7 @@
 // Created by parallels on 9/7/16.
 //
 
+#include <componentmodel/r_configuration.h>
 #include "componentmodel/r_portbase.h"
 
 namespace riaps {
@@ -18,6 +19,10 @@ namespace riaps {
 
         const zsock_t *PortBase::GetSocket() const {
             return _port_socket;
+        }
+
+        const component_port_config* PortBase::GetConfig() const {
+            return _config;
         }
 
         std::string PortBase::GetInterfaceAddress() {

@@ -37,13 +37,16 @@ namespace ports {
 
         const PortTypes& GetPortType() const;
 
+        const component_port_config* GetConfig() const;
+
 
         ~PortBase();
 
     protected:
-        PortTypes             _port_type;
-        zsock_t*              _port_socket;
-        std::string           _port_name;
+        PortTypes              _port_type;
+        zsock_t*               _port_socket;
+        std::string            _port_name;
+        component_port_config* _config;
         //const ComponentBase* _parentComponent;
     };
 }

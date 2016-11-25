@@ -36,6 +36,7 @@ namespace riaps {
         std::string GetActorId();
         const std::string& GetApplicationName() const;
         virtual ~Actor();
+        void UpdatePort(std::string& instancename, std::string& portname, std::string& host, int port);
 
     protected:
         zpoller_t*                 _poller;

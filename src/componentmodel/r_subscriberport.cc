@@ -18,25 +18,29 @@ namespace riaps{
             zsock_set_subscribe(_port_socket, "");
         }
 
+        void SubscriberPort::ConnectToPublihser(const std::string &pub_endpoint) {
+            int rc = zsock_connect(_port_socket, pub_endpoint.c_str());
+
+            if (rc != 0) {
+                std::cout << "Subscriber '" + _config.port_name + "' couldn't connect to " + pub_endpoint
+                          << std::endl;
+            } else {
+                std::cout << "Subscriber connected to: " << pub_endpoint << std::endl;
+            }
+        }
+
         void SubscriberPort::Init() {
             auto results =
                     subscribe_to_service(_parent_component->GetActor()->GetApplicationName(),
                                          _parent_component->GetConfig().component_name,
                                          Kind::SUB,
                                          Scope::GLOBAL, //TODO: pass in argument
-                                         _config.subscriber_name,
+                                         _config.port_name, // Subscriber name
                                          _config.message_type);
 
             for (auto result : results) {
                 std::string endpoint = "tcp://" + result.host_name + ":" + std::to_string(result.port);
-                int rc = zsock_connect(_port_socket, endpoint.c_str());
-
-                if (rc != 0) {
-                    std::cout << "Subscriber '" + _config.subscriber_name + "' couldn't connect to " + endpoint
-                              << std::endl;
-                } else {
-                    std::cout << "Subscriber connected to: " << endpoint << std::endl;
-                }
+                ConnectToPublihser(endpoint);
             }
         }
 

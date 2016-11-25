@@ -26,7 +26,7 @@ namespace riaps {
 
            std::string GetEndpoint();
 
-           _component_port_pub_j GetConfig();
+           _component_port_pub_j* GetConfig();
 
            virtual void Send(zmsg_t *msg) const;
 
@@ -36,7 +36,7 @@ namespace riaps {
 
 
        protected:
-           _component_port_pub_j _configuration;
+           //_component_port_pub_j _configuration;
 
            int _port;
            std::string _host;

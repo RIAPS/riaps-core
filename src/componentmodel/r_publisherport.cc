@@ -10,9 +10,10 @@ namespace riaps{
 
         // TODO: Pass scope
         PublisherPort::PublisherPort(_component_port_pub_j &config, ComponentBase *parent_component)
-            : PortBase(PortTypes::Publisher),
-              _configuration(config)
+            : PortBase(PortTypes::Publisher)
+
         {
+            _config=&config;
             _port_socket = zsock_new(ZMQ_PUB);
 
             std::string _host = GetInterfaceAddress();
@@ -37,8 +38,8 @@ namespace riaps{
 
         }
 
-        _component_port_pub_j PublisherPort::GetConfig() {
-            return _configuration;
+        _component_port_pub_j* PublisherPort::GetConfig() {
+            return (_component_port_pub_j*)_config;
         }
 
         std::string PublisherPort::GetEndpoint() {
@@ -52,7 +53,9 @@ namespace riaps{
         // Before sending the publisher sets up the message type
         void PublisherPort::Send(zmsg_t *msg) const {
 
-            zmsg_pushstr(msg, _configuration.message_type.c_str());
+
+
+            zmsg_pushstr(msg, ((_component_port_pub_j*)_config)->message_type.c_str());
 
             int rc = zmsg_send(&msg, _port_socket);
             assert(rc == 0);

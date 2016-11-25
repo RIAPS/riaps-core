@@ -16,28 +16,13 @@ namespace riaps{
         zsock_t* timerport = zsock_new_pull(comp->GetTimerChannel().c_str());
         assert(timerport);
 
-        //std::cout << "Create async endpoint @" << comp->GetAsyncEndpointName() << std::endl;
-        //zsock_t* asyncport = zsock_new_sub(ASYNC_CHANNEL, comp->GetCompUuid().c_str());
-        //assert(asyncport);
-
         zpoller_t* poller = zpoller_new(pipe, NULL);
         assert(poller);
 
         zsock_signal (pipe, 0);
 
-        //int rc = zpoller_add(poller, asyncport);
-        //assert(rc==0);
-
         int rc = zpoller_add(poller, timerport);
         assert(rc==0);
-
-        // Init subscribers
-
-        // TODO: Uncommented for debug, PUT IT BACK!
-        //for (auto subscriberport : comp->GetSubscriberPorts()) {
-        //    const zsock_t* socket = subscriberport->GetSocket();
-        //    zpoller_add(poller, (zsock_t*)socket);
-        //}
 
         bool terminated = false;
         bool firstrun = true;
@@ -46,8 +31,6 @@ namespace riaps{
 
         while (!terminated) {
             void *which = zpoller_wait(poller, 500);
-
-            //std::cout << "." << std::flush;
 
             if (firstrun) {
                 firstrun = false;
@@ -61,8 +44,6 @@ namespace riaps{
                 for (auto publisher_config : comp->GetConfig().component_ports.pubs) {
                     comp->InitPublisherPort(publisher_config);
                 }
-
-                sleep(1);
 
                 // Add and start response ports
                 //for (auto response : comp->GetConfig().responses_config) {
@@ -97,9 +78,31 @@ namespace riaps{
                 if (streq(command, "$TERM")) {
                     std::cout << "$TERM arrived in component" << std::endl;
                     terminated = true;
+                } else if(streq(command, CMD_UPDATE_PORT)){
+                    char* portname = zmsg_popstr(msg);
+                    if (portname){
+
+                        char* host = zmsg_popstr(msg);
+                        if (host){
+                            char* port = zmsg_popstr(msg);
+                            if (port){
+                                auto port_tobe_updated = comp->GetPortByName(port);
+
+                                if (port_tobe_updated!=NULL){
+                                    if (port_tobe_updated->GetPortType() == ports::PortTypes::Subscriber){
+
+                                    }
+                                }
+
+                                zstr_free(&port);
+                            }
+                            zstr_free(&host);
+                        }
+                        zstr_free(&portname);
+                    }
                 }
 
-                delete command;
+                zstr_free(&command);
                 zmsg_destroy(&msg);
             }
             else if (which == timerport) {
@@ -242,7 +245,7 @@ namespace riaps{
         std::unique_ptr<ports::PortBase> newport(result);
 
         //_publisherports[config.publisher_name] = std::move(newport);
-        _ports[config.publisher_name] = std::move(newport);
+        _ports[config.port_name] = std::move(newport);
         return result;
     }
 
@@ -266,6 +269,19 @@ namespace riaps{
     }
 
     */
+
+    // Todo: add another type of ports too
+    ports::PortBase* ComponentBase::GetPortByName(const std::string & portName) {
+        for (auto it = _subscriberports.begin();
+                  it != _subscriberports.end();
+                  it++){
+
+            if ((*it)->GetConfig()->port_name == portName){
+                return (*it).get();
+            }
+        }
+        return NULL;
+    }
 
 
     void ComponentBase::AddTimer(_component_port_tim_j& config) {
@@ -325,6 +341,10 @@ namespace riaps{
         //delete uuid_str;
 
         return result;
+    }
+
+    zactor_t* ComponentBase::GetZmqPipe() const {
+        return _zactor_component;
     }
 
 

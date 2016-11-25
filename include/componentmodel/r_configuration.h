@@ -48,17 +48,21 @@ typedef struct _component_conf component_conf;
 
 //// New part
 
-struct _component_port_clt_j {};
-struct _component_port_pub_j {
-    std::string publisher_name;
+struct _component_port_config {
+    std::string port_name;
+};
+
+typedef struct _component_port_config component_port_config;
+
+struct _component_port_clt_j : public component_port_config {};
+struct _component_port_pub_j : public component_port_config{
     std::string message_type;
     int port;
 };
-struct _component_port_req_j {};
-struct _component_port_rep_j {};
-struct _component_port_srv_j {};
-struct _component_port_sub_j {
-    std::string subscriber_name;
+struct _component_port_req_j : public component_port_config{};
+struct _component_port_rep_j : public component_port_config{};
+struct _component_port_srv_j : public component_port_config{};
+struct _component_port_sub_j : public component_port_config{
     std::string message_type;
 };
 struct _component_port_tim_j{

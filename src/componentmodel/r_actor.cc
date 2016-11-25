@@ -70,7 +70,7 @@ namespace riaps {
                     auto pubporttype = it_pubport.value()["type"];
 
                     _component_port_pub_j newpubconfig;
-                    newpubconfig.publisher_name = pubportname;
+                    newpubconfig.port_name = pubportname;
                     newpubconfig.message_type = pubporttype;
 
                     new_component_config.component_ports.pubs.push_back(newpubconfig);
@@ -88,7 +88,7 @@ namespace riaps {
                     auto subporttype = it_subport.value()["type"];
 
                     _component_port_sub_j newsubconfig;
-                    newsubconfig.subscriber_name = subportname;
+                    newsubconfig.port_name = subportname;
                     newsubconfig.message_type = subporttype;
 
                     new_component_config.component_ports.subs.push_back(newsubconfig);
@@ -134,6 +134,8 @@ namespace riaps {
         if (_discovery_socket == NULL) {
             throw std::runtime_error("Actor - Discovery socket cannot be NULL after register_actor");
         }
+
+        zpoller_add(_poller, _discovery_socket);
 
         // If no component in the actor => Stop, Error
         if (_component_configurations.empty()){
@@ -181,6 +183,26 @@ namespace riaps {
 
     }
 
+    void riaps::Actor::UpdatePort(std::string &instancename, std::string &portname, std::string &host, int port) {
+        // Get the component
+        for (std::vector<ComponentBase *>::iterator it = _components.begin(); it != _components.end(); it++) {
+            if ((*it)->GetConfig().component_name == instancename) {
+                riaps::ComponentBase *component_instance = (*it);
+                zmsg_t *msg_portupdate = zmsg_new();
+
+                zmsg_addstr(msg_portupdate, CMD_UPDATE_PORT);
+                zmsg_addstr(msg_portupdate, portname.c_str());
+                zmsg_addstr(msg_portupdate, host.c_str());
+                zmsg_addstr(msg_portupdate, std::to_string(port).c_str());
+
+                zmsg_send(&msg_portupdate, (*it)->GetZmqPipe());
+
+                break;
+            }
+        }
+    }
+
+
     void riaps::Actor::start(){
         while (!zsys_interrupted) {
             void *which = zpoller_wait(_poller, 2000);
@@ -189,7 +211,36 @@ namespace riaps {
 
             if (which == _actor_zsock) {
                 // Maybe later, control messages to the actor
-            } else {
+            } else if (which == _discovery_socket){
+                zmsg_t* msg = zmsg_recv(which);
+
+                if (!msg){
+                    std::cout << "No msg => interrupted" << std::endl;
+                    break;
+                }
+
+                zframe_t* capnp_msgbody = zmsg_pop(msg);
+                size_t    size = zframe_size(capnp_msgbody);
+                byte*     data = zframe_data(capnp_msgbody);
+
+                auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
+
+                capnp::FlatArrayMessageReader reader(capnp_data);
+                auto msg_discoupd = reader.getRoot<DiscoUpd>();
+                auto msg_client   = msg_discoupd.getClient();
+                auto msg_socket   = msg_discoupd.getSocket();
+                auto msg_scope    = msg_discoupd.getScope();
+
+                std::string instance_name = msg_client.getInstanceName();
+                std::string port_name     = msg_client.getPortName();
+                std::string host          = msg_socket.getHost();
+                int         port          = msg_socket.getPort();
+
+                UpdatePort(instance_name, port_name, host, port);
+
+                zmsg_destroy(&msg);
+            }
+            else {
             }
         }
         /*std::ifstream ifs(configfile);

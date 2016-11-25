@@ -16,7 +16,7 @@ include_directories(include)
 #include(CMakeLists_arm.txt)
 include(CMakeLists_amd64.txt)
 
-add_subdirectory(opendht)
+#add_subdirectory(opendht)
 
 
 add_subdirectory(src/componentmodel)
