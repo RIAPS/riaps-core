@@ -29,14 +29,17 @@ namespace riaps{
         }
 
         void SubscriberPort::Init() {
+
+            _component_port_sub_j* current_config = (_component_port_sub_j*)_config;
+
             auto results =
                     subscribe_to_service(_parent_component->GetActor()->GetApplicationName(),
                                          _parent_component->GetConfig().component_name,
                                          _parent_component->GetActor()->GetActorName(),
                                          Kind::SUB,
-                                         Scope::GLOBAL, //TODO: pass in argument
+                                         (current_config->isLocal?Scope::LOCAL:Scope::GLOBAL),
                                          _config->port_name, // Subscriber name
-                                         ((_component_port_sub_j*)_config)->message_type);
+                                         current_config->message_type);
 
             for (auto result : results) {
                 std::string endpoint = "tcp://" + result.host_name + ":" + std::to_string(result.port);

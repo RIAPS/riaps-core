@@ -1,4 +1,5 @@
 #include "discoveryd/r_riaps_actor.h"
+#include "componentmodel/r_network_interfaces.h"
 
 #define REGULAR_MAINTAIN_PERIOD 3000 //msec
 
@@ -17,27 +18,10 @@ riaps_actor (zsock_t *pipe, void *args)
     // generated RSA key pair, and listen on port 4222.
     dht_node.run(RIAPS_DHT_NODE_PORT, dht::crypto::generateIdentity(), true);
 
-    auto mtx = std::make_shared<std::mutex>();
-    auto cv = std::make_shared<std::condition_variable>();
-    auto ready = std::make_shared<bool>(false);
 
-    auto wait = [=] {
-        *ready = true;
-        std::unique_lock<std::mutex> lk(*mtx);
-        cv->wait(lk);
-        *ready = false;
-    };
-    auto done_cb = [=](bool success) {
-        //if (success) {
-        //    std::cout << "success!" << std::endl;
-        //} else {
-        //    std::cout << "failed..." << std::endl;
-        //}
-        std::unique_lock<std::mutex> lk(*mtx);
-        cv->wait(lk, [=]{ return *ready; });
-        cv->notify_one();
-    };
 
+    std::string mac_address = GetMacAddressStripped(RIAPS_DEFAULT_IFACE);
+    std::string host_address = GetIPAddress(RIAPS_DEFAULT_IFACE);
 
 
     std::srand(std::time(0));
@@ -49,7 +33,7 @@ riaps_actor (zsock_t *pipe, void *args)
     assert(dht_router_socket);
 
     // Response socket for incoming messages from RIAPS Components
-    zsock_t * riaps_socket = zsock_new_rep (DISCOVERY_SERVICE_IPC);
+    zsock_t * riaps_socket = zsock_new_rep (DISCOVERY_SERVICE_IPC(mac_address));
     //zsock_t * riaps_socket = zsock_new_router ("ipc://riapsdiscoveryservice");
     assert(riaps_socket);
 
@@ -70,7 +54,7 @@ riaps_actor (zsock_t *pipe, void *args)
     std::map<std::string, int64_t> service_checkins;
 
     // Pair sockets for Actor communication
-    std::map<std::string, actor_details> clients;
+    std::map<std::string, std::unique_ptr<actor_details>> clients;
 
     // Client subscriptions to messageTypes
     std::map<std::string, std::vector<std::unique_ptr<client_details>>> clientSubscriptions;
@@ -194,9 +178,9 @@ riaps_actor (zsock_t *pipe, void *args)
 
                         // If the client port saved before
                         if (clients.find(clientKeyBase)!=clients.end()){
-                            auto clientSocket = clients[clientKeyBase];
+                            const actor_details* clientSocket = clients[clientKeyBase].get();
 
-                            if (clientSocket.socket!=NULL){
+                            if (clientSocket->socket!=NULL){
                                 capnp::MallocMessageBuilder message;
                                 auto msg_discoupd = message.initRoot<DiscoUpd>();
                                 auto msg_client   = msg_discoupd.initClient();
@@ -208,8 +192,7 @@ riaps_actor (zsock_t *pipe, void *args)
                                 msg_client.setInstanceName(subscribedClient->instance_name);
                                 msg_client.setPortName(subscribedClient->portname);
 
-                                // TODO: Handle local
-                                msg_discoupd.setScope(Scope::GLOBAL);
+                                msg_discoupd.setScope(subscribedClient->isLocal?Scope::LOCAL:Scope::GLOBAL);
 
                                 msg_socket.setHost(host);
                                 msg_socket.setPort(portNum);
@@ -219,7 +202,7 @@ riaps_actor (zsock_t *pipe, void *args)
                                 zmsg_t* msg = zmsg_new();
                                 zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
 
-                                zmsg_send(&msg, clientSocket.socket);
+                                zmsg_send(&msg, clientSocket->socket);
                             }
                         }
 
@@ -287,9 +270,9 @@ riaps_actor (zsock_t *pipe, void *args)
                     zsock_t * actor_socket = zsock_new (ZMQ_PAIR);
                     auto port = zsock_bind(actor_socket, "tcp://*:!");
 
-                    clients[clientKeyBase] = actor_details{};
-                    clients[clientKeyBase].socket     = actor_socket;
-                    clients[clientKeyBase].port = port;
+                    clients[clientKeyBase] = std::unique_ptr<actor_details>(new actor_details());
+                    clients[clientKeyBase]->socket     = actor_socket;
+                    clients[clientKeyBase]->port = port;
 
                     // Create and send the Response
                     capnp::MallocMessageBuilder message;
@@ -306,18 +289,17 @@ riaps_actor (zsock_t *pipe, void *args)
 
                     zmsg_send(&msg, riaps_socket);
 
-                    // TODO: replace with MacAddress
-                    auto uuid = gethostid();
-                    auto uuid_str = std::to_string(uuid);
+                    //auto uuid = gethostid();
+                    //auto uuid_str = std::to_string(uuid);
                     //zuuid_destroy(&uuid);
 
-                    std::string clientKeyLocal = clientKeyBase + uuid_str;
-                    clients[clientKeyLocal] = _actor_details{};
-                    clients[clientKeyLocal].port = port;
+                    std::string clientKeyLocal = clientKeyBase + mac_address;
+                    clients[clientKeyLocal] = std::unique_ptr<actor_details>(new actor_details());
+                    clients[clientKeyLocal]->port = port;
 
-                    std::string clientKeyGlobal = clientKeyBase + uuid_str;
-                    clients[clientKeyGlobal] = _actor_details{};
-                    clients[clientKeyGlobal].port = port;
+                    std::string clientKeyGlobal = clientKeyBase + host_address;
+                    clients[clientKeyGlobal] = std::unique_ptr<actor_details>(new actor_details());
+                    clients[clientKeyGlobal]->port = port;
                 }
             } else if (msg_discoreq.isServiceReg()){
                 auto msg_servicereg_req = msg_discoreq.getServiceReg();
@@ -336,7 +318,7 @@ riaps_actor (zsock_t *pipe, void *args)
                 /// Consul part (main line now)
                 //disc_registerkey(kv_pair.first, kv_pair.second);
 
-                std::cout << "Register: " + kv_pair.first << std::endl;
+                std::cout << "Register service: " + kv_pair.first << std::endl;
 
                 /////
                 // Experiment OpenDht
@@ -470,6 +452,27 @@ riaps_actor (zsock_t *pipe, void *args)
 
                 // For dht async request - response
 
+                auto mtx = std::make_shared<std::mutex>();
+                auto cv = std::make_shared<std::condition_variable>();
+                auto ready = std::make_shared<bool>(false);
+
+                auto wait = [=] {
+                    *ready = true;
+                    std::unique_lock<std::mutex> lk(*mtx);
+                    cv->wait(lk);
+                    *ready = false;
+                };
+                auto done_cb = [=](bool success) {
+                    //if (success) {
+                    //    std::cout << "success!" << std::endl;
+                    //} else {
+                    //    std::cout << "failed..." << std::endl;
+                    //}
+                    std::unique_lock<std::mutex> lk(*mtx);
+                    cv->wait(lk, [=]{ return *ready; });
+                    cv->notify_one();
+                };
+
                 std::cout << "Get: " + lookupkey.first << std::endl;
 
                 std::vector<std::string> dht_lookup_results;
@@ -552,6 +555,7 @@ riaps_actor (zsock_t *pipe, void *args)
                 current_client->portname      = client.getPortName();
                 current_client->actor_name    = client.getActorName();
                 current_client->instance_name = client.getInstanceName();
+                current_client->isLocal       = path.getScope() == Scope::LOCAL?true:false;
 
 
                 // Now using just the discovery service to register the interested clients
@@ -689,9 +693,9 @@ riaps_actor (zsock_t *pipe, void *args)
     }
 
     for (auto it_client = clients.begin(); it_client!=clients.end(); it_client++){
-        if (it_client->second.socket!=NULL) {
-            zsock_destroy(&it_client->second.socket);
-            it_client->second.socket=NULL;
+        if (it_client->second->socket!=NULL) {
+            zsock_destroy(&it_client->second->socket);
+            it_client->second->socket=NULL;
         }
     }
 
@@ -709,6 +713,7 @@ bool _client_details::operator==(const client_details &rhs) {
                actor_name    == rhs.actor_name    &&
                actor_host    == rhs.actor_host    &&
                instance_name == rhs.instance_name &&
-               portname      == rhs.portname;
+               portname      == rhs.portname      &&
+               isLocal       == rhs.isLocal;
 }
 

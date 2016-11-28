@@ -8,7 +8,6 @@ namespace riaps{
 
     namespace ports {
 
-        // TODO: Pass scope
         PublisherPort::PublisherPort(const _component_port_pub_j &config, ComponentBase *parent_component)
             : PortBase(PortTypes::Publisher, (component_port_config*)&config)
 
@@ -30,8 +29,13 @@ namespace riaps{
             std::cout << "Publisher is created on : " << _host << " " << _port << std::endl;
 
 
-            if (!register_service(parent_component->GetActor()->GetApplicationName(), config.message_type, _host, _port,
-                                  Kind::PUB, Scope::GLOBAL, {})) {
+            if (!register_service(parent_component->GetActor()->GetApplicationName(),
+                                  config.message_type,
+                                  _host,
+                                  _port,
+                                  Kind::PUB,
+                                  (config.isLocal?Scope::LOCAL:Scope::GLOBAL),
+                                  {})) {
                 throw std::runtime_error("Publisher port couldn't be registered.");
             }
 

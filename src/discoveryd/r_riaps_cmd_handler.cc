@@ -3,6 +3,7 @@
 //
 
 #include <discoveryd/r_riaps_cmd_handler.h>
+#include "componentmodel/r_network_interfaces.h"
 
 void init_command_mappings() {
     handler_mapping[CMD_DISC_REGISTER_SERVICE]         = &handle_register_service;
@@ -150,9 +151,12 @@ buildInsertKeyValuePair(std::string appName ,
           + "/" + kindMap[kind];
 
     if (scope == Scope::LOCAL){
-        // TODO: MacAddress instead of hostid
-        auto hostid = gethostid();
-        key += std::to_string(hostid);
+        // hostid
+        //auto hostid = gethostid();
+
+        std::string mac_address = GetMacAddressStripped(RIAPS_DEFAULT_IFACE);
+
+        key += mac_address;
     }
 
     std::string value = host + ":" + std::to_string(port);
@@ -183,11 +187,12 @@ buildLookupKey(std::string appName,
             + "/" + msgType
             + "/" + kindPairs[kind];
 
-    // TODO: MacAddress instead of hostid
-    auto hostid = gethostid();
+    //auto hostid = gethostid();
+
+    std::string hostid = GetMacAddressStripped(RIAPS_DEFAULT_IFACE);
 
     if (scope == Scope::LOCAL){
-        key += std::to_string(hostid);
+        key += hostid;
     }
 
     std::string client =   '/' + appName
@@ -197,7 +202,7 @@ buildLookupKey(std::string appName,
                          + '/' + clientPortName;
 
     if (scope == Scope::LOCAL) {
-        client = client + ":" + std::to_string(hostid);
+        client = client + ":" + hostid;
     }
 
     return {key, client};

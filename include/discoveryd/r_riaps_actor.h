@@ -63,6 +63,7 @@ struct _client_details{
     std::string actor_host;
     std::string instance_name;
     std::string portname;
+    bool        isLocal;
 
     bool operator==(const struct _client_details& rhs);
 };

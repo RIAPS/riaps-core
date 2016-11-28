@@ -7,6 +7,9 @@
 #include "componentmodel/r_debugcomponent.h"
 
 
+#include <set>
+
+
 namespace riaps {
 
     riaps::Actor::Actor(const std::string&     applicationname       ,
@@ -27,6 +30,15 @@ namespace riaps {
         // Get the actor's components, if there is no component => Stop, Error.
         if(json_instances.size()==0) {
             throw std::invalid_argument("No component instances defined for the actor. Check the configuration file!");
+        }
+
+        std::set<std::string> local_messagetypes;
+
+        for (auto it_local  = json_locals.begin();
+                  it_local != json_locals.end();
+                  it_local++){
+            std::string local_type = (it_local.value())["type"];
+            local_messagetypes.insert(local_type);
         }
 
 
@@ -69,9 +81,18 @@ namespace riaps {
                     auto pubportname = it_pubport.key();
                     auto pubporttype = it_pubport.value()["type"];
 
+
+
                     _component_port_pub_j newpubconfig;
                     newpubconfig.port_name = pubportname;
                     newpubconfig.message_type = pubporttype;
+
+                    // If the porttype is defined in the Local list
+                    if (local_messagetypes.find(pubporttype) != local_messagetypes.end()){
+                        newpubconfig.isLocal = true;
+                    } else {
+                        newpubconfig.isLocal = false;
+                    }
 
                     new_component_config.component_ports.pubs.push_back(newpubconfig);
                 }
@@ -90,6 +111,13 @@ namespace riaps {
                     _component_port_sub_j newsubconfig;
                     newsubconfig.port_name = subportname;
                     newsubconfig.message_type = subporttype;
+
+                    // If the porttype is defined in the Local list
+                    if (local_messagetypes.find(subporttype) != local_messagetypes.end()){
+                        newsubconfig.isLocal = true;
+                    } else {
+                        newsubconfig.isLocal = false;
+                    }
 
                     new_component_config.component_ports.subs.push_back(newsubconfig);
                 }

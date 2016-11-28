@@ -1,4 +1,5 @@
 #include "componentmodel/r_discoverdapi.h"
+#include "componentmodel/r_network_interfaces.h"
 
 
 
@@ -12,6 +13,8 @@ bool register_service(std::string              app_name     ,
                       ) {
 
     bool result = false;
+
+    std::string mac_address = GetMacAddressStripped(RIAPS_DEFAULT_IFACE);
 
     /////
     /// Request
@@ -37,7 +40,7 @@ bool register_service(std::string              app_name     ,
     zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
 
 
-    zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC);
+    zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC(mac_address));
     assert(client);
 
     zmsg_send(&msg, client);
@@ -128,6 +131,9 @@ subscribe_to_service(const std::string& app_name  ,
                      const std::string& msg_type  // PortType
         ){
 
+    // TODO: Ask only once
+    std::string mac_address = GetMacAddressStripped(RIAPS_DEFAULT_IFACE);
+
     std::vector<service_lookup_result> result;
 
     /////
@@ -157,7 +163,8 @@ subscribe_to_service(const std::string& app_name  ,
     zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
 
 
-    zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC);
+
+    zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC(mac_address));
     assert(client);
 
     zmsg_send(&msg, client);
@@ -230,7 +237,9 @@ register_actor(std::string appname, std::string actorname){
     zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
 
 
-    zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC);
+    std::string mac_address = GetMacAddressStripped(RIAPS_DEFAULT_IFACE);
+
+    zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC(mac_address));
     assert(client);
 
     zmsg_send(&msg, client);
@@ -274,7 +283,7 @@ register_actor(std::string appname, std::string actorname){
     /// Clean up
     /////
 
-    zsock_disconnect(client, DISCOVERY_SERVICE_IPC);
+    zsock_disconnect(client, DISCOVERY_SERVICE_IPC(mac_address));
     zframe_destroy(&capnp_msgbody);
     zmsg_destroy(&msg_response);
     zsock_destroy(&client);

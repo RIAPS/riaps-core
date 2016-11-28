@@ -50,6 +50,11 @@ typedef struct _component_conf component_conf;
 
 struct _component_port_config {
     std::string port_name;
+    bool isLocal;
+
+    _component_port_config(){
+        isLocal=false;
+    }
 };
 
 typedef struct _component_port_config component_port_config;
