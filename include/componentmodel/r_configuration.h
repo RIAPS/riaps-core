@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 
+/*
 struct _localport_conf{
     std::string servicename;   // Name of the service, this will be registered in the discovery service.
     int         port;          // If 0, the po assigne automatically
@@ -44,13 +45,14 @@ struct _component_conf {
 };
 
 typedef struct _component_conf component_conf;
-
+*/
 
 //// New part
 
 struct _component_port_config {
     std::string port_name;
     bool isLocal;
+    std::string message_type;
 
     _component_port_config(){
         isLocal=false;
@@ -61,14 +63,12 @@ typedef struct _component_port_config component_port_config;
 
 struct _component_port_clt_j : public component_port_config {};
 struct _component_port_pub_j : public component_port_config{
-    std::string message_type;
     int port;
 };
 struct _component_port_req_j : public component_port_config{};
 struct _component_port_rep_j : public component_port_config{};
 struct _component_port_srv_j : public component_port_config{};
 struct _component_port_sub_j : public component_port_config{
-    std::string message_type;
 };
 struct _component_port_tim_j{
     std::string timer_name;

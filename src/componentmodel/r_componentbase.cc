@@ -41,15 +41,18 @@ namespace riaps{
                 }
 
                 // Add and start publishers
-                //for (auto& publisher_config : comp->GetConfig().component_ports.pubs) {
-                //    comp->InitPublisherPort(publisher_config);
-                //}
-
                 const component_conf_j& comp_conf = comp->GetConfig();
                 for (auto it_pubconf = comp_conf.component_ports.pubs.begin();
                           it_pubconf != comp_conf.component_ports.pubs.end();
                           it_pubconf++){
                     comp->InitPublisherPort(*it_pubconf);
+                }
+
+                // Add and start response ports
+                for (auto it_repconf = comp_conf.component_ports.reps.begin();
+                     it_repconf != comp_conf.component_ports.reps.end();
+                     it_repconf++){
+                    comp->InitResponsePort(*it_repconf);
                 }
 
 

@@ -36,13 +36,9 @@ namespace riaps {
 
 
        protected:
-           //_component_port_pub_j _configuration;
-
            int _port;
            std::string _host;
            std::string _endpoint;
-           zsock_t *_discovery_port;
-           //zsock_t*              _port_socket;
        };
    }
 }

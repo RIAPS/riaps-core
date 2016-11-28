@@ -5,8 +5,9 @@
 #ifndef RIAPS_R_PORTBASE_H
 #define RIAPS_R_PORTBASE_H
 
-#include <czmq.h>
+#include "r_configuration.h"
 
+#include <czmq.h>
 #include <string>
 #include <iostream>
 
@@ -43,9 +44,9 @@ namespace ports {
         ~PortBase();
 
     protected:
-        PortTypes              _port_type;
-        zsock_t*               _port_socket;
-        std::string            _port_name;
+        PortTypes                    _port_type;
+        zsock_t*                     _port_socket;
+        std::string                  _port_name;
         const component_port_config* _config;
         //const ComponentBase* _parentComponent;
     };

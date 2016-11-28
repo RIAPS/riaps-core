@@ -5,6 +5,31 @@
 #include "componentmodel/r_responseport.h"
 
 namespace riaps{
+    namespace ports{
+
+        ResponsePort::ResponsePort(const _component_port_rep_j &config, ComponentBase *parent_component) :
+            PortBase(PortTypes::Response, (component_port_config*)&config)
+        {
+
+        }
+
+        _component_port_rep_j* ResponsePort::GetConfig() {
+            throw std::runtime_error("Not implemented exception");
+            return NULL;
+        }
+
+        void ResponsePort::Send(zmsg_t *msg) const {
+            zmsg_pushstr(msg, ((_component_port_pub_j*)_config)->message_type.c_str());
+
+            int rc = zmsg_send(&msg, _port_socket);
+            assert(rc == 0);
+        }
+
+    }
+}
+
+/*
+namespace riaps{
 
 
     std::unique_ptr<ResponsePort> ResponsePort::InitFromConfig(response_conf& config) {
@@ -68,4 +93,4 @@ namespace riaps{
     ResponsePort::~ResponsePort() {
         deregister_service(configuration.servicename);
     }
-}
+}*/

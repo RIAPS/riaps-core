@@ -30,6 +30,7 @@ namespace riaps {
     namespace ports {
         class PublisherPort;
         class SubscriberPort;
+        class ResponsePort;
     }
 
     /**
@@ -41,11 +42,12 @@ namespace riaps {
 
     class ComponentBase {
     public:
-        //ComponentBase(component_conf& config);
         ComponentBase(component_conf_j& config, Actor& actor);
 
         const ports::PublisherPort*  InitPublisherPort(const _component_port_pub_j&);
         const ports::SubscriberPort* InitSubscriberPort(const _component_port_sub_j&);
+        const ports::ResponsePort*   InitResponsePort(const _component_port_rep_j&);
+
         //void AddResponsePort(std::unique_ptr<ResponsePort>&);
         //void AddRequestPort(std::unique_ptr<RequestPort>&);
         void AddTimer(_component_port_tim_j&);
