@@ -63,7 +63,7 @@ typedef struct _component_port_config component_port_config;
 
 struct _component_port_clt_j : public component_port_config {};
 struct _component_port_pub_j : public component_port_config{
-    int port;
+    //int port;
 };
 struct _component_port_req_j : public component_port_config{};
 struct _component_port_rep_j : public component_port_config{};

@@ -22,7 +22,8 @@ namespace riaps {
 
             virtual void Init();
 
-            void ConnectToPublihser(const std::string& pub_endpoint);
+            // Returns false, if the subscriber couldn't connect
+            bool ConnectToPublihser(const std::string& pub_endpoint);
 
             //static std::unique_ptr<SubscriberPort> InitFromServiceDetails(service_details& target_service);
 

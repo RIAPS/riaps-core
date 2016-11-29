@@ -22,11 +22,12 @@ namespace riaps{
             std::string pub_endpoint = "tcp://" + _host + ":!";
             _port = zsock_bind(_port_socket, pub_endpoint.c_str());
 
+
             if (_port == -1) {
                 throw std::runtime_error("Couldn't bind publisher port.");
             }
 
-            std::cout << "Publisher is created on : " << _host << " " << _port << std::endl;
+            std::cout << "Publisher is created on : " << _host << ":" << _port << std::endl;
 
 
             if (!register_service(parent_component->GetActor()->GetApplicationName(),
@@ -59,6 +60,10 @@ namespace riaps{
 
             int rc = zmsg_send(&msg, _port_socket);
             assert(rc == 0);
+        }
+
+        PublisherPort::~PublisherPort() {
+            std::cout << "Publisherport " << _config->port_name << " is stopping" <<std::endl;
         }
     }
 }

@@ -52,16 +52,10 @@ namespace riaps{
                 for (auto it_repconf = comp_conf.component_ports.reps.begin();
                      it_repconf != comp_conf.component_ports.reps.end();
                      it_repconf++){
-                    comp->InitResponsePort(*it_repconf);
+
+                    const ports::PortBase* newPort = comp->InitResponsePort(*it_repconf);
+                    zpoller_add(poller, (void*)newPort->GetSocket());
                 }
-
-
-                // Add and start response ports
-                //for (auto response : comp->GetConfig().responses_config) {
-                //    auto responseport = ResponsePort::InitFromConfig(response);
-                //    zpoller_add(poller, (zsock_t*)responseport->GetSocket());
-                //    comp->AddResponsePort(responseport);
-                //}
 
                 // Add RequestPorts
                 //for (auto requestconfig : comp->GetConfig().requests_config) {
@@ -69,11 +63,12 @@ namespace riaps{
                 //    comp->AddRequestPort(requestport);
                 //}
 
-                // Get subscriber details from discovery service
-                for (auto& subscriber_config : comp->GetConfig().component_ports.subs) {
-                    auto newPort = comp->InitSubscriberPort(subscriber_config);
+                // Add and start subscribers
+                for (auto it_subconf = comp_conf.component_ports.subs.begin();
+                          it_subconf != comp_conf.component_ports.subs.end();
+                          it_subconf++) {
+                    const ports::PortBase* newPort = comp->InitSubscriberPort(*it_subconf);
                     zpoller_add(poller, (void*)newPort->GetSocket());
-                    //SubscriberPort::GetRemoteServiceAsync(subscriber, comp->GetCompUuid());
                 }
             }
 
@@ -101,7 +96,8 @@ namespace riaps{
 
                                 if (port_tobe_updated!=NULL){
                                     if (port_tobe_updated->GetPortType() == ports::PortTypes::Subscriber){
-                                        std::string new_pub_endpoint = std::string(host) + ":" + std::string(port);
+                                        // note: we assume that the publisher uses tcp://
+                                        std::string new_pub_endpoint = "tcp://" + std::string(host) + ":" + std::string(port);
                                         ((ports::SubscriberPort*)port_tobe_updated)->ConnectToPublihser(new_pub_endpoint);
                                     }
                                 }
@@ -181,7 +177,7 @@ namespace riaps{
                     assert(rc==0);
                 }
             }*/
-            // TODO: from one of the publishers?
+
             else if(which){
                 // Message test with more than one field
                 zmsg_t *msg = zmsg_recv(which);
@@ -255,8 +251,6 @@ namespace riaps{
     const ports::PublisherPort* ComponentBase::InitPublisherPort(const _component_port_pub_j& config) {
         auto result = new ports::PublisherPort(config, this);
         std::unique_ptr<ports::PortBase> newport(result);
-
-        //_publisherports[config.publisher_name] = std::move(newport);
         _ports[config.port_name] = std::move(newport);
         return result;
     }
@@ -267,7 +261,14 @@ namespace riaps{
         std::unique_ptr<ports::SubscriberPort> newport(new ports::SubscriberPort(config, this));
         auto result = newport.get();
         newport->Init();
-        _subscriberports.push_back(std::move(newport));
+        _ports[config.port_name] = std::move(newport);
+        return result;
+    }
+
+    const ports::ResponsePort* ComponentBase::InitResponsePort(const _component_port_rep_j & config) {
+        auto result = new ports::ResponsePort(config, this);
+        std::unique_ptr<ports::PortBase> newport(result);
+        _ports[config.port_name] = std::move(newport);
         return result;
     }
 
@@ -282,18 +283,13 @@ namespace riaps{
 
     */
 
-    // Todo: add another type of ports too
+    /// \param portName
+    /// \return Pointer to the RIAPS port with the given name. NULL if the port was not found.
     ports::PortBase* ComponentBase::GetPortByName(const std::string & portName) {
-        for (auto it = _subscriberports.begin();
-                  it != _subscriberports.end();
-                  it++){
-
-            const component_port_config* conf = (*it)->GetConfig();
-
-            if (conf->port_name == portName){
-                return (*it).get();
-            }
+        if (_ports.find(portName)!=_ports.end()){
+            return _ports[portName].get();
         }
+
         return NULL;
     }
 

@@ -14,18 +14,24 @@ namespace riaps{
                   _parent_component(component) {
 
             _port_socket = zsock_new(ZMQ_SUB);
+            assert(_port_socket);
             zsock_set_subscribe(_port_socket, "");
         }
 
-        void SubscriberPort::ConnectToPublihser(const std::string &pub_endpoint) {
+
+        /// \param pub_endpoint The endpoint, INCLUDING the transport layer. e.g.: tcp://192.168.1.1:4245
+        /// \return True if the connection successful. False otherwise.
+        bool SubscriberPort::ConnectToPublihser(const std::string &pub_endpoint) {
             int rc = zsock_connect(_port_socket, pub_endpoint.c_str());
 
             if (rc != 0) {
                 std::cout << "Subscriber '" + _config->port_name + "' couldn't connect to " + pub_endpoint
                           << std::endl;
-            } else {
-                std::cout << "Subscriber connected to: " << pub_endpoint << std::endl;
+                return false;
             }
+
+            std::cout << "Subscriber connected to: " << pub_endpoint << std::endl;
+            return true;
         }
 
         void SubscriberPort::Init() {
