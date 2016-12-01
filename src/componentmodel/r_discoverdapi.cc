@@ -14,7 +14,7 @@ bool register_service(std::string              app_name     ,
 
     bool result = false;
 
-    std::string mac_address = GetMacAddressStripped(RIAPS_DEFAULT_IFACE);
+    std::string mac_address = GetMacAddressStripped();
 
     /////
     /// Request
@@ -132,7 +132,7 @@ subscribe_to_service(const std::string& app_name  ,
         ){
 
     // TODO: Ask only once
-    std::string mac_address = GetMacAddressStripped(RIAPS_DEFAULT_IFACE);
+    std::string mac_address = GetMacAddressStripped();
 
     std::vector<service_lookup_result> result;
 
@@ -237,7 +237,7 @@ register_actor(std::string appname, std::string actorname){
     zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
 
 
-    std::string mac_address = GetMacAddressStripped(RIAPS_DEFAULT_IFACE);
+    std::string mac_address = GetMacAddressStripped();
 
     zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC(mac_address));
     assert(client);

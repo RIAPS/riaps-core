@@ -154,7 +154,7 @@ buildInsertKeyValuePair(std::string appName ,
         // hostid
         //auto hostid = gethostid();
 
-        std::string mac_address = GetMacAddressStripped(RIAPS_DEFAULT_IFACE);
+        std::string mac_address = GetMacAddressStripped();
 
         key += mac_address;
     }
@@ -189,7 +189,7 @@ buildLookupKey(std::string appName,
 
     //auto hostid = gethostid();
 
-    std::string hostid = GetMacAddressStripped(RIAPS_DEFAULT_IFACE);
+    std::string hostid = GetMacAddressStripped();
 
     if (scope == Scope::LOCAL){
         key += hostid;

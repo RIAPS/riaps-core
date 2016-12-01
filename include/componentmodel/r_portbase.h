@@ -29,7 +29,7 @@ namespace ports {
         //virtual std::string GetInterfaceAddress(std::string ifacename);
         ///
         /// \return The ip address of the first ethernet interface
-        virtual std::string GetInterfaceAddress();
+        //virtual std::string GetInterfaceAddress();
 
         /// \return The associated ZMQ socket.
         virtual const zsock_t* GetSocket() const;

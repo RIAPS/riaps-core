@@ -50,7 +50,9 @@ CAPNP_DECLARE_SCHEMA(998280f9b0a23bc9);
 CAPNP_DECLARE_SCHEMA(88610ca13bd9da6b);
 CAPNP_DECLARE_SCHEMA(9b59f65915902dd4);
 CAPNP_DECLARE_SCHEMA(e469aa488cf1aac0);
-CAPNP_DECLARE_SCHEMA(9f687a139e48e75d);
+CAPNP_DECLARE_SCHEMA(f1ffd165271c1fca);
+CAPNP_DECLARE_SCHEMA(fba7aaeced154282);
+CAPNP_DECLARE_SCHEMA(f0d1b2dc7cdf6a2c);
 
 }  // namespace schemas
 }  // namespace capnp
@@ -252,15 +254,49 @@ struct DiscoRep {
   };
 };
 
-struct ProviderUpdatePush {
-  ProviderUpdatePush() = delete;
+struct ProviderListUpdate {
+  ProviderListUpdate() = delete;
 
   class Reader;
   class Builder;
   class Pipeline;
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(9f687a139e48e75d, 0, 2)
+    CAPNP_DECLARE_STRUCT_HEADER(f1ffd165271c1fca, 0, 2)
+    #if !CAPNP_LITE
+    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    #endif  // !CAPNP_LITE
+  };
+};
+
+struct ProviderListGet {
+  ProviderListGet() = delete;
+
+  class Reader;
+  class Builder;
+  class Pipeline;
+
+  struct _capnpPrivate {
+    CAPNP_DECLARE_STRUCT_HEADER(fba7aaeced154282, 0, 3)
+    #if !CAPNP_LITE
+    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    #endif  // !CAPNP_LITE
+  };
+};
+
+struct ProviderListPush {
+  ProviderListPush() = delete;
+
+  class Reader;
+  class Builder;
+  class Pipeline;
+  enum Which: uint16_t {
+    PROVIDER_UPDATE,
+    PROVIDER_GET,
+  };
+
+  struct _capnpPrivate {
+    CAPNP_DECLARE_STRUCT_HEADER(f0d1b2dc7cdf6a2c, 1, 1)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
     #endif  // !CAPNP_LITE
@@ -1413,9 +1449,9 @@ private:
 };
 #endif  // !CAPNP_LITE
 
-class ProviderUpdatePush::Reader {
+class ProviderListUpdate::Reader {
 public:
-  typedef ProviderUpdatePush Reads;
+  typedef ProviderListUpdate Reads;
 
   Reader() = default;
   inline explicit Reader(::capnp::_::StructReader base): _reader(base) {}
@@ -1448,9 +1484,9 @@ private:
   friend class ::capnp::Orphanage;
 };
 
-class ProviderUpdatePush::Builder {
+class ProviderListUpdate::Builder {
 public:
-  typedef ProviderUpdatePush Builds;
+  typedef ProviderListUpdate Builds;
 
   Builder() = delete;  // Deleted to discourage incorrect usage.
                        // You can explicitly initialize to nullptr instead.
@@ -1489,9 +1525,210 @@ private:
 };
 
 #if !CAPNP_LITE
-class ProviderUpdatePush::Pipeline {
+class ProviderListUpdate::Pipeline {
 public:
-  typedef ProviderUpdatePush Pipelines;
+  typedef ProviderListUpdate Pipelines;
+
+  inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
+  inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
+      : _typeless(kj::mv(typeless)) {}
+
+private:
+  ::capnp::AnyPointer::Pipeline _typeless;
+  friend class ::capnp::PipelineHook;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+};
+#endif  // !CAPNP_LITE
+
+class ProviderListGet::Reader {
+public:
+  typedef ProviderListGet Reads;
+
+  Reader() = default;
+  inline explicit Reader(::capnp::_::StructReader base): _reader(base) {}
+
+  inline ::capnp::MessageSize totalSize() const {
+    return _reader.totalSize().asPublic();
+  }
+
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const {
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+  }
+#endif  // !CAPNP_LITE
+
+  inline bool hasPath() const;
+  inline  ::Path::Reader getPath() const;
+
+  inline bool hasClient() const;
+  inline  ::Client::Reader getClient() const;
+
+  inline bool hasResults() const;
+  inline  ::capnp::List< ::capnp::Text>::Reader getResults() const;
+
+private:
+  ::capnp::_::StructReader _reader;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::List;
+  friend class ::capnp::MessageBuilder;
+  friend class ::capnp::Orphanage;
+};
+
+class ProviderListGet::Builder {
+public:
+  typedef ProviderListGet Builds;
+
+  Builder() = delete;  // Deleted to discourage incorrect usage.
+                       // You can explicitly initialize to nullptr instead.
+  inline Builder(decltype(nullptr)) {}
+  inline explicit Builder(::capnp::_::StructBuilder base): _builder(base) {}
+  inline operator Reader() const { return Reader(_builder.asReader()); }
+  inline Reader asReader() const { return *this; }
+
+  inline ::capnp::MessageSize totalSize() const { return asReader().totalSize(); }
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const { return asReader().toString(); }
+#endif  // !CAPNP_LITE
+
+  inline bool hasPath();
+  inline  ::Path::Builder getPath();
+  inline void setPath( ::Path::Reader value);
+  inline  ::Path::Builder initPath();
+  inline void adoptPath(::capnp::Orphan< ::Path>&& value);
+  inline ::capnp::Orphan< ::Path> disownPath();
+
+  inline bool hasClient();
+  inline  ::Client::Builder getClient();
+  inline void setClient( ::Client::Reader value);
+  inline  ::Client::Builder initClient();
+  inline void adoptClient(::capnp::Orphan< ::Client>&& value);
+  inline ::capnp::Orphan< ::Client> disownClient();
+
+  inline bool hasResults();
+  inline  ::capnp::List< ::capnp::Text>::Builder getResults();
+  inline void setResults( ::capnp::List< ::capnp::Text>::Reader value);
+  inline void setResults(::kj::ArrayPtr<const  ::capnp::Text::Reader> value);
+  inline  ::capnp::List< ::capnp::Text>::Builder initResults(unsigned int size);
+  inline void adoptResults(::capnp::Orphan< ::capnp::List< ::capnp::Text>>&& value);
+  inline ::capnp::Orphan< ::capnp::List< ::capnp::Text>> disownResults();
+
+private:
+  ::capnp::_::StructBuilder _builder;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  friend class ::capnp::Orphanage;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+};
+
+#if !CAPNP_LITE
+class ProviderListGet::Pipeline {
+public:
+  typedef ProviderListGet Pipelines;
+
+  inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
+  inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
+      : _typeless(kj::mv(typeless)) {}
+
+  inline  ::Path::Pipeline getPath();
+  inline  ::Client::Pipeline getClient();
+private:
+  ::capnp::AnyPointer::Pipeline _typeless;
+  friend class ::capnp::PipelineHook;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+};
+#endif  // !CAPNP_LITE
+
+class ProviderListPush::Reader {
+public:
+  typedef ProviderListPush Reads;
+
+  Reader() = default;
+  inline explicit Reader(::capnp::_::StructReader base): _reader(base) {}
+
+  inline ::capnp::MessageSize totalSize() const {
+    return _reader.totalSize().asPublic();
+  }
+
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const {
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+  }
+#endif  // !CAPNP_LITE
+
+  inline Which which() const;
+  inline bool isProviderUpdate() const;
+  inline bool hasProviderUpdate() const;
+  inline  ::ProviderListUpdate::Reader getProviderUpdate() const;
+
+  inline bool isProviderGet() const;
+  inline bool hasProviderGet() const;
+  inline  ::ProviderListGet::Reader getProviderGet() const;
+
+private:
+  ::capnp::_::StructReader _reader;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::List;
+  friend class ::capnp::MessageBuilder;
+  friend class ::capnp::Orphanage;
+};
+
+class ProviderListPush::Builder {
+public:
+  typedef ProviderListPush Builds;
+
+  Builder() = delete;  // Deleted to discourage incorrect usage.
+                       // You can explicitly initialize to nullptr instead.
+  inline Builder(decltype(nullptr)) {}
+  inline explicit Builder(::capnp::_::StructBuilder base): _builder(base) {}
+  inline operator Reader() const { return Reader(_builder.asReader()); }
+  inline Reader asReader() const { return *this; }
+
+  inline ::capnp::MessageSize totalSize() const { return asReader().totalSize(); }
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const { return asReader().toString(); }
+#endif  // !CAPNP_LITE
+
+  inline Which which();
+  inline bool isProviderUpdate();
+  inline bool hasProviderUpdate();
+  inline  ::ProviderListUpdate::Builder getProviderUpdate();
+  inline void setProviderUpdate( ::ProviderListUpdate::Reader value);
+  inline  ::ProviderListUpdate::Builder initProviderUpdate();
+  inline void adoptProviderUpdate(::capnp::Orphan< ::ProviderListUpdate>&& value);
+  inline ::capnp::Orphan< ::ProviderListUpdate> disownProviderUpdate();
+
+  inline bool isProviderGet();
+  inline bool hasProviderGet();
+  inline  ::ProviderListGet::Builder getProviderGet();
+  inline void setProviderGet( ::ProviderListGet::Reader value);
+  inline  ::ProviderListGet::Builder initProviderGet();
+  inline void adoptProviderGet(::capnp::Orphan< ::ProviderListGet>&& value);
+  inline ::capnp::Orphan< ::ProviderListGet> disownProviderGet();
+
+private:
+  ::capnp::_::StructBuilder _builder;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  friend class ::capnp::Orphanage;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+};
+
+#if !CAPNP_LITE
+class ProviderListPush::Pipeline {
+public:
+  typedef ProviderListPush Pipelines;
 
   inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
   inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
@@ -2519,72 +2756,293 @@ inline ::capnp::Orphan< ::ServiceLookupRep> DiscoRep::Builder::disownServiceLook
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
-inline bool ProviderUpdatePush::Reader::hasProviderpath() const {
+inline bool ProviderListUpdate::Reader::hasProviderpath() const {
   return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline bool ProviderUpdatePush::Builder::hasProviderpath() {
+inline bool ProviderListUpdate::Builder::hasProviderpath() {
   return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline  ::capnp::Text::Reader ProviderUpdatePush::Reader::getProviderpath() const {
+inline  ::capnp::Text::Reader ProviderListUpdate::Reader::getProviderpath() const {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
       _reader.getPointerField(0 * ::capnp::POINTERS));
 }
-inline  ::capnp::Text::Builder ProviderUpdatePush::Builder::getProviderpath() {
+inline  ::capnp::Text::Builder ProviderListUpdate::Builder::getProviderpath() {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
-inline void ProviderUpdatePush::Builder::setProviderpath( ::capnp::Text::Reader value) {
+inline void ProviderListUpdate::Builder::setProviderpath( ::capnp::Text::Reader value) {
   ::capnp::_::PointerHelpers< ::capnp::Text>::set(
       _builder.getPointerField(0 * ::capnp::POINTERS), value);
 }
-inline  ::capnp::Text::Builder ProviderUpdatePush::Builder::initProviderpath(unsigned int size) {
+inline  ::capnp::Text::Builder ProviderListUpdate::Builder::initProviderpath(unsigned int size) {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
       _builder.getPointerField(0 * ::capnp::POINTERS), size);
 }
-inline void ProviderUpdatePush::Builder::adoptProviderpath(
+inline void ProviderListUpdate::Builder::adoptProviderpath(
     ::capnp::Orphan< ::capnp::Text>&& value) {
   ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
       _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::capnp::Text> ProviderUpdatePush::Builder::disownProviderpath() {
+inline ::capnp::Orphan< ::capnp::Text> ProviderListUpdate::Builder::disownProviderpath() {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
-inline bool ProviderUpdatePush::Reader::hasNewvalues() const {
+inline bool ProviderListUpdate::Reader::hasNewvalues() const {
   return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
 }
-inline bool ProviderUpdatePush::Builder::hasNewvalues() {
+inline bool ProviderListUpdate::Builder::hasNewvalues() {
   return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
 }
-inline  ::capnp::List< ::capnp::Text>::Reader ProviderUpdatePush::Reader::getNewvalues() const {
+inline  ::capnp::List< ::capnp::Text>::Reader ProviderListUpdate::Reader::getNewvalues() const {
   return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::get(
       _reader.getPointerField(1 * ::capnp::POINTERS));
 }
-inline  ::capnp::List< ::capnp::Text>::Builder ProviderUpdatePush::Builder::getNewvalues() {
+inline  ::capnp::List< ::capnp::Text>::Builder ProviderListUpdate::Builder::getNewvalues() {
   return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::get(
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }
-inline void ProviderUpdatePush::Builder::setNewvalues( ::capnp::List< ::capnp::Text>::Reader value) {
+inline void ProviderListUpdate::Builder::setNewvalues( ::capnp::List< ::capnp::Text>::Reader value) {
   ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::set(
       _builder.getPointerField(1 * ::capnp::POINTERS), value);
 }
-inline void ProviderUpdatePush::Builder::setNewvalues(::kj::ArrayPtr<const  ::capnp::Text::Reader> value) {
+inline void ProviderListUpdate::Builder::setNewvalues(::kj::ArrayPtr<const  ::capnp::Text::Reader> value) {
   ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::set(
       _builder.getPointerField(1 * ::capnp::POINTERS), value);
 }
-inline  ::capnp::List< ::capnp::Text>::Builder ProviderUpdatePush::Builder::initNewvalues(unsigned int size) {
+inline  ::capnp::List< ::capnp::Text>::Builder ProviderListUpdate::Builder::initNewvalues(unsigned int size) {
   return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::init(
       _builder.getPointerField(1 * ::capnp::POINTERS), size);
 }
-inline void ProviderUpdatePush::Builder::adoptNewvalues(
+inline void ProviderListUpdate::Builder::adoptNewvalues(
     ::capnp::Orphan< ::capnp::List< ::capnp::Text>>&& value) {
   ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::adopt(
       _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::capnp::List< ::capnp::Text>> ProviderUpdatePush::Builder::disownNewvalues() {
+inline ::capnp::Orphan< ::capnp::List< ::capnp::Text>> ProviderListUpdate::Builder::disownNewvalues() {
   return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::disown(
       _builder.getPointerField(1 * ::capnp::POINTERS));
+}
+
+inline bool ProviderListGet::Reader::hasPath() const {
+  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline bool ProviderListGet::Builder::hasPath() {
+  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline  ::Path::Reader ProviderListGet::Reader::getPath() const {
+  return ::capnp::_::PointerHelpers< ::Path>::get(
+      _reader.getPointerField(0 * ::capnp::POINTERS));
+}
+inline  ::Path::Builder ProviderListGet::Builder::getPath() {
+  return ::capnp::_::PointerHelpers< ::Path>::get(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+#if !CAPNP_LITE
+inline  ::Path::Pipeline ProviderListGet::Pipeline::getPath() {
+  return  ::Path::Pipeline(_typeless.getPointerField(0));
+}
+#endif  // !CAPNP_LITE
+inline void ProviderListGet::Builder::setPath( ::Path::Reader value) {
+  ::capnp::_::PointerHelpers< ::Path>::set(
+      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+}
+inline  ::Path::Builder ProviderListGet::Builder::initPath() {
+  return ::capnp::_::PointerHelpers< ::Path>::init(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void ProviderListGet::Builder::adoptPath(
+    ::capnp::Orphan< ::Path>&& value) {
+  ::capnp::_::PointerHelpers< ::Path>::adopt(
+      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::Path> ProviderListGet::Builder::disownPath() {
+  return ::capnp::_::PointerHelpers< ::Path>::disown(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+
+inline bool ProviderListGet::Reader::hasClient() const {
+  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
+}
+inline bool ProviderListGet::Builder::hasClient() {
+  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
+}
+inline  ::Client::Reader ProviderListGet::Reader::getClient() const {
+  return ::capnp::_::PointerHelpers< ::Client>::get(
+      _reader.getPointerField(1 * ::capnp::POINTERS));
+}
+inline  ::Client::Builder ProviderListGet::Builder::getClient() {
+  return ::capnp::_::PointerHelpers< ::Client>::get(
+      _builder.getPointerField(1 * ::capnp::POINTERS));
+}
+#if !CAPNP_LITE
+inline  ::Client::Pipeline ProviderListGet::Pipeline::getClient() {
+  return  ::Client::Pipeline(_typeless.getPointerField(1));
+}
+#endif  // !CAPNP_LITE
+inline void ProviderListGet::Builder::setClient( ::Client::Reader value) {
+  ::capnp::_::PointerHelpers< ::Client>::set(
+      _builder.getPointerField(1 * ::capnp::POINTERS), value);
+}
+inline  ::Client::Builder ProviderListGet::Builder::initClient() {
+  return ::capnp::_::PointerHelpers< ::Client>::init(
+      _builder.getPointerField(1 * ::capnp::POINTERS));
+}
+inline void ProviderListGet::Builder::adoptClient(
+    ::capnp::Orphan< ::Client>&& value) {
+  ::capnp::_::PointerHelpers< ::Client>::adopt(
+      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::Client> ProviderListGet::Builder::disownClient() {
+  return ::capnp::_::PointerHelpers< ::Client>::disown(
+      _builder.getPointerField(1 * ::capnp::POINTERS));
+}
+
+inline bool ProviderListGet::Reader::hasResults() const {
+  return !_reader.getPointerField(2 * ::capnp::POINTERS).isNull();
+}
+inline bool ProviderListGet::Builder::hasResults() {
+  return !_builder.getPointerField(2 * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::List< ::capnp::Text>::Reader ProviderListGet::Reader::getResults() const {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::get(
+      _reader.getPointerField(2 * ::capnp::POINTERS));
+}
+inline  ::capnp::List< ::capnp::Text>::Builder ProviderListGet::Builder::getResults() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::get(
+      _builder.getPointerField(2 * ::capnp::POINTERS));
+}
+inline void ProviderListGet::Builder::setResults( ::capnp::List< ::capnp::Text>::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::set(
+      _builder.getPointerField(2 * ::capnp::POINTERS), value);
+}
+inline void ProviderListGet::Builder::setResults(::kj::ArrayPtr<const  ::capnp::Text::Reader> value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::set(
+      _builder.getPointerField(2 * ::capnp::POINTERS), value);
+}
+inline  ::capnp::List< ::capnp::Text>::Builder ProviderListGet::Builder::initResults(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::init(
+      _builder.getPointerField(2 * ::capnp::POINTERS), size);
+}
+inline void ProviderListGet::Builder::adoptResults(
+    ::capnp::Orphan< ::capnp::List< ::capnp::Text>>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::adopt(
+      _builder.getPointerField(2 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::List< ::capnp::Text>> ProviderListGet::Builder::disownResults() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::disown(
+      _builder.getPointerField(2 * ::capnp::POINTERS));
+}
+
+inline  ::ProviderListPush::Which ProviderListPush::Reader::which() const {
+  return _reader.getDataField<Which>(0 * ::capnp::ELEMENTS);
+}
+inline  ::ProviderListPush::Which ProviderListPush::Builder::which() {
+  return _builder.getDataField<Which>(0 * ::capnp::ELEMENTS);
+}
+
+inline bool ProviderListPush::Reader::isProviderUpdate() const {
+  return which() == ProviderListPush::PROVIDER_UPDATE;
+}
+inline bool ProviderListPush::Builder::isProviderUpdate() {
+  return which() == ProviderListPush::PROVIDER_UPDATE;
+}
+inline bool ProviderListPush::Reader::hasProviderUpdate() const {
+  if (which() != ProviderListPush::PROVIDER_UPDATE) return false;
+  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline bool ProviderListPush::Builder::hasProviderUpdate() {
+  if (which() != ProviderListPush::PROVIDER_UPDATE) return false;
+  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline  ::ProviderListUpdate::Reader ProviderListPush::Reader::getProviderUpdate() const {
+  KJ_IREQUIRE(which() == ProviderListPush::PROVIDER_UPDATE,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::ProviderListUpdate>::get(
+      _reader.getPointerField(0 * ::capnp::POINTERS));
+}
+inline  ::ProviderListUpdate::Builder ProviderListPush::Builder::getProviderUpdate() {
+  KJ_IREQUIRE(which() == ProviderListPush::PROVIDER_UPDATE,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::ProviderListUpdate>::get(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void ProviderListPush::Builder::setProviderUpdate( ::ProviderListUpdate::Reader value) {
+  _builder.setDataField<ProviderListPush::Which>(
+      0 * ::capnp::ELEMENTS, ProviderListPush::PROVIDER_UPDATE);
+  ::capnp::_::PointerHelpers< ::ProviderListUpdate>::set(
+      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+}
+inline  ::ProviderListUpdate::Builder ProviderListPush::Builder::initProviderUpdate() {
+  _builder.setDataField<ProviderListPush::Which>(
+      0 * ::capnp::ELEMENTS, ProviderListPush::PROVIDER_UPDATE);
+  return ::capnp::_::PointerHelpers< ::ProviderListUpdate>::init(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void ProviderListPush::Builder::adoptProviderUpdate(
+    ::capnp::Orphan< ::ProviderListUpdate>&& value) {
+  _builder.setDataField<ProviderListPush::Which>(
+      0 * ::capnp::ELEMENTS, ProviderListPush::PROVIDER_UPDATE);
+  ::capnp::_::PointerHelpers< ::ProviderListUpdate>::adopt(
+      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::ProviderListUpdate> ProviderListPush::Builder::disownProviderUpdate() {
+  KJ_IREQUIRE(which() == ProviderListPush::PROVIDER_UPDATE,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::ProviderListUpdate>::disown(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+
+inline bool ProviderListPush::Reader::isProviderGet() const {
+  return which() == ProviderListPush::PROVIDER_GET;
+}
+inline bool ProviderListPush::Builder::isProviderGet() {
+  return which() == ProviderListPush::PROVIDER_GET;
+}
+inline bool ProviderListPush::Reader::hasProviderGet() const {
+  if (which() != ProviderListPush::PROVIDER_GET) return false;
+  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline bool ProviderListPush::Builder::hasProviderGet() {
+  if (which() != ProviderListPush::PROVIDER_GET) return false;
+  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline  ::ProviderListGet::Reader ProviderListPush::Reader::getProviderGet() const {
+  KJ_IREQUIRE(which() == ProviderListPush::PROVIDER_GET,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::ProviderListGet>::get(
+      _reader.getPointerField(0 * ::capnp::POINTERS));
+}
+inline  ::ProviderListGet::Builder ProviderListPush::Builder::getProviderGet() {
+  KJ_IREQUIRE(which() == ProviderListPush::PROVIDER_GET,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::ProviderListGet>::get(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void ProviderListPush::Builder::setProviderGet( ::ProviderListGet::Reader value) {
+  _builder.setDataField<ProviderListPush::Which>(
+      0 * ::capnp::ELEMENTS, ProviderListPush::PROVIDER_GET);
+  ::capnp::_::PointerHelpers< ::ProviderListGet>::set(
+      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+}
+inline  ::ProviderListGet::Builder ProviderListPush::Builder::initProviderGet() {
+  _builder.setDataField<ProviderListPush::Which>(
+      0 * ::capnp::ELEMENTS, ProviderListPush::PROVIDER_GET);
+  return ::capnp::_::PointerHelpers< ::ProviderListGet>::init(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void ProviderListPush::Builder::adoptProviderGet(
+    ::capnp::Orphan< ::ProviderListGet>&& value) {
+  _builder.setDataField<ProviderListPush::Which>(
+      0 * ::capnp::ELEMENTS, ProviderListPush::PROVIDER_GET);
+  ::capnp::_::PointerHelpers< ::ProviderListGet>::adopt(
+      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::ProviderListGet> ProviderListPush::Builder::disownProviderGet() {
+  KJ_IREQUIRE(which() == ProviderListPush::PROVIDER_GET,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::ProviderListGet>::disown(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
 

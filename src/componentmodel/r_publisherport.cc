@@ -3,6 +3,7 @@
 //
 
 #include <componentmodel/r_publisherport.h>
+#include <componentmodel/r_network_interfaces.h>
 
 namespace riaps{
 
@@ -14,7 +15,8 @@ namespace riaps{
         {
             _port_socket = zsock_new(ZMQ_PUB);
 
-            std::string _host = GetInterfaceAddress();
+            std::string ipaddress = GetIPAddress();
+
             if (_host == "") {
                 throw std::runtime_error("Publisher cannot be initiated. Cannot find  available network interface.");
             }

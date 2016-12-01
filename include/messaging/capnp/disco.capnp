@@ -78,11 +78,20 @@ struct DiscoRep {
    }
 }
 
-struct ProviderUpdatePush {
-    providerpath @0 : Text;
-    newvalues    @1 : List(Text);
+struct ProviderListUpdate {
+        providerpath @0 : Text;
+        newvalues    @1 : List(Text);
 }
 
+struct ProviderListGet {
+    path         @0 : Path;
+    client       @1 : Client;
+    results      @2 : List(Text);
+}
 
-
-
+struct ProviderListPush {
+    union {
+        providerUpdate @0: ProviderListUpdate;
+        providerGet    @1: ProviderListGet;
+    }
+}

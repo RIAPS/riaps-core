@@ -10,8 +10,14 @@
 // TODO: with C api not from file.
 std::string GetMacAddress(const std::string& ifacename){
 
+    std::string tmp_ifacename = ifacename;
+    if (ifacename == ""){
+        std::string ipaddress;
+        GetFirstGlobalIface(tmp_ifacename, ipaddress);
+    }
+
     std::string iface_path = "/sys/class/net/";
-    std::string address_path = iface_path + ifacename + "/address";
+    std::string address_path = iface_path + tmp_ifacename + "/address";
 
     std::ifstream infile(address_path);
     char* macBuffer = new char[256];
@@ -31,6 +37,15 @@ std::string GetMacAddressStripped(const std::string& ifacename){
 }
 
 std::string GetIPAddress(const std::string& ifacename){
+
+    if (ifacename == ""){
+        std::string ipaddress;
+        std::string tmp_ifacename;
+        GetFirstGlobalIface(tmp_ifacename, ipaddress);
+
+        return ipaddress;
+    }
+
     ziflist_t *iflist = ziflist_new ();
     assert (iflist);
 
@@ -45,7 +60,33 @@ std::string GetIPAddress(const std::string& ifacename){
         name = ziflist_next (iflist);
     }
 
-    delete [] name;
+    ziflist_destroy(&iflist);
 
     return result;
+}
+
+// TODO: delete [] const char* in this case?
+void GetFirstGlobalIface(std::string& ifacename, std::string& ipaddress){
+    ziflist_t *iflist = ziflist_new();
+    assert (iflist);
+
+    const char *name = ziflist_first(iflist);
+    bool result = false;
+
+    while (name && !result) {
+        std::string address(ziflist_address(iflist));
+        if (address != "127.0.0.1") {
+            ifacename = name;
+            ipaddress = address;
+            result = true;
+        }
+        name = ziflist_next(iflist);
+    }
+
+    ziflist_destroy(&iflist);
+
+    if (!result){
+        throw std::runtime_error("Cannot get details of the first global network interface.");
+    }
+
 }

@@ -26,29 +26,6 @@ namespace riaps {
             return _config;
         }
 
-        std::string PortBase::GetInterfaceAddress() {
-            ziflist_t *iflist = ziflist_new();
-            assert (iflist);
-            //size_t items = ziflist_size(iflist);
-
-            const char *name = ziflist_first(iflist);
-            std::string result = "";
-
-            while (name && result == "") {
-                std::string address(ziflist_address(iflist));
-                //std::string namestr(name);
-                //
-                if (address != "127.0.0.1") {
-                    result = address;
-                    break;
-                }
-                name = ziflist_next(iflist);
-
-                // break;
-            }
-
-            return result;
-        }
 
         const PortTypes& PortBase::GetPortType() const {
             return _port_type;
