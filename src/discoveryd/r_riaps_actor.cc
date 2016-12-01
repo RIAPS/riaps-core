@@ -1,5 +1,6 @@
 #include "discoveryd/r_riaps_actor.h"
 #include "componentmodel/r_network_interfaces.h"
+#include "discoveryd/r_odht.h"
 #include <vector>
 #include <map>
 
@@ -10,79 +11,50 @@
 void
 riaps_actor (zsock_t *pipe, void *args)
 {
-
-    /////
-    // Experiment, use OpenDHT
-    ////
-
     std::cout << "Start DHT node." << std::endl;
-
     dht::DhtRunner dht_node;
 
     // Launch a dht node on a new thread, using a
     // generated RSA key pair, and listen on port 4222.
     dht_node.run(RIAPS_DHT_NODE_PORT, dht::crypto::generateIdentity(), true);
 
-
     std::cout << "DHT node started." <<std::endl;
-
 
     std::string mac_address = GetMacAddressStripped();
     std::string host_address = GetIPAddress();
 
-    std::cout << "Discovery service is starting, first global network interface: "
-              << host_address
-              << " MAC address: "
-              << mac_address
-              << std::endl;
+    std::cout << "Discovery service is starting, network interface: " << std::endl
+              << " * " << host_address << std::endl
+              << " * " << mac_address  << std::endl;
 
     std::srand(std::time(0));
-
-    init_command_mappings();
-
 
     zsock_t* dht_router_socket = zsock_new_pull(DHT_ROUTER_CHANNEL);
     assert(dht_router_socket);
 
     // Response socket for incoming messages from RIAPS Components
     zsock_t * riaps_socket = zsock_new_rep (DISCOVERY_SERVICE_IPC(mac_address));
-    //zsock_t * riaps_socket = zsock_new_router ("ipc://riapsdiscoveryservice");
     assert(riaps_socket);
 
-    //zactor_t* async_service_poller = zactor_new(service_poller_actor, NULL);
-    //assert(async_service_poller);
-
+    // Socket for OpenDHT communication.
     zpoller_t* poller = zpoller_new(pipe, riaps_socket, dht_router_socket, NULL);
     assert(poller);
-
-
-
 
     bool terminated = false;
     zsock_signal (pipe, 0);
 
     // Store the last checkins of the registered services
     // If there was no checkin in SERVICE_TIMEOUT ms then, remove the service from consul
-    std::map<std::string, int64_t> service_checkins;
+    //std::map<std::string, int64_t> service_checkins;
 
-    // Pair sockets for Actor communication
+    // Stores pair sockets for actor communication
     std::map<std::string, std::unique_ptr<actor_details>> clients;
 
     // Client subscriptions to messageTypes
     std::map<std::string, std::vector<std::unique_ptr<client_details>>> clientSubscriptions;
 
-    // Registered listeners
+    // Registered OpenDHT listeners. Every key can be registered only once.
     std::map<std::string, std::future<size_t>> registeredListeners;
-
-    //char hostname[256];
-    //int hostnameresult = gethostname(hostname, 256);
-
-    //if (hostnameresult == -1) {
-    //    std::cout << "hostname cannot be resolved" << std::endl;
-    //    return;
-    //}
-
-    //disc_registernode(hostname);
 
     while (!terminated){
         void *which = zpoller_wait(poller, REGULAR_MAINTAIN_PERIOD);
@@ -98,22 +70,19 @@ riaps_actor (zsock_t *pipe, void *args)
             char* command = zmsg_popstr(msg);
 
             if (streq(command, "$TERM")){
-                std::cout << "R_ACTOR $TERM arrived" << std::endl;
-
-                //disc_deregisternode(std::string(hostname));
-
+                std::cout << std::endl << "$TERMINATE arrived, discovery service is stopping..." << std::endl;
                 terminated = true;
             }
             else if (streq(command, "JOIN")) {
-                std::cout << "JOIN arrived" << std::endl;
+                std::cout << "New peer on the network. Join()" << std::endl;
                 bool has_more_msg = true;
 
                 while (has_more_msg){
                     char* newhost = zmsg_popstr(msg);
                     if (newhost){
-                        std::cout << "Connect to: " << newhost;
+                        std::cout << "Join to: " << newhost << std::endl;
                         std::string str_newhost(newhost);
-                        dht_jointocluster(str_newhost, RIAPS_DHT_NODE_PORT, dht_node);
+                        dhtJoinToCluster(str_newhost, RIAPS_DHT_NODE_PORT, dht_node);
                         zstr_free(&newhost);
                     } else{
                         has_more_msg = false;
@@ -128,167 +97,29 @@ riaps_actor (zsock_t *pipe, void *args)
         }
         else if (which == dht_router_socket){
             // Process the updated nodes
-            zmsg_t* msg_response = zmsg_recv(dht_router_socket);
+            zmsg_t* msgResponse = zmsg_recv(dht_router_socket);
 
-            zframe_t* capnp_msgbody = zmsg_pop(msg_response);
-            size_t    size = zframe_size(capnp_msgbody);
-            byte*     data = zframe_data(capnp_msgbody);
+            zframe_t* capnpMsgBody = zmsg_pop(msgResponse);
+            size_t    size = zframe_size(capnpMsgBody);
+            byte*     data = zframe_data(capnpMsgBody);
 
             auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
 
             capnp::FlatArrayMessageReader reader(capnp_data);
-            auto msg_providerlistpush = reader.getRoot<ProviderListPush>();
+            auto msgProviderlistPush = reader.getRoot<ProviderListPush>();
 
             // If update
-            if (msg_providerlistpush.isProviderUpdate()) {
+            if (msgProviderlistPush.isProviderUpdate()) {
+                ProviderListUpdate::Reader msgProviderUpdate = msgProviderlistPush.getProviderUpdate();
+                handleUpdate(msgProviderUpdate, clientSubscriptions, clients);
 
-                auto msg_providerupdate = msg_providerlistpush.getProviderUpdate();
-
-                std::string provider_key = std::string(msg_providerupdate.getProviderpath().cStr());
-
-                auto msg_newproviders = msg_providerupdate.getNewvalues();
-
-                // Look for services who may interested in the new provider
-                if (clientSubscriptions.find(provider_key) != clientSubscriptions.end()) {
-                    for (auto &subscribedClient : clientSubscriptions[provider_key]) {
-                        for (int idx = 0; idx < msg_newproviders.size(); idx++) {
-                            std::string new_provider_endpoint = std::string(msg_newproviders[idx].cStr());
-
-                            auto pos = new_provider_endpoint.find(':');
-                            if (pos == std::string::npos) {
-                                continue;
-                            }
-
-                            std::string host = new_provider_endpoint.substr(0, pos);
-                            std::string port = new_provider_endpoint.substr(pos + 1, std::string::npos);
-                            int portNum = -1;
-
-                            try {
-                                portNum = std::stoi(port);
-                            } catch (std::invalid_argument &e) {
-                                std::cout << "Cast error, string -> int, portnumber: " << port << std::endl;
-                                std::cout << e.what() << std::endl;
-                                continue;
-                            }
-                            catch (std::out_of_range &e) {
-                                std::cout << "Cast error, string -> int, portnumber: " << port << std::endl;
-                                std::cout << e.what() << std::endl;
-                                continue;
-                            }
-
-
-                            std::string clientKeyBase = "/" + subscribedClient->app_name +
-                                                        "/" + subscribedClient->actor_name +
-                                                        "/";
-
-                            std::cout << "Search for registered actor: " + clientKeyBase << std::endl;
-
-                            // Python reference:
-                            // TODO: Figure out, de we really need for this. I don't think so...
-                            //if self.hostAddress != actorHost:
-                            //continue
-
-                            // If the client port saved before
-                            if (clients.find(clientKeyBase) != clients.end()) {
-                                const actor_details *clientSocket = clients[clientKeyBase].get();
-
-                                if (clientSocket->socket != NULL) {
-                                    capnp::MallocMessageBuilder message;
-                                    auto msg_discoupd = message.initRoot<DiscoUpd>();
-                                    auto msg_client = msg_discoupd.initClient();
-                                    auto msg_socket = msg_discoupd.initSocket();
-
-                                    // Set up client
-                                    msg_client.setActorHost(subscribedClient->actor_host);
-                                    msg_client.setActorName(subscribedClient->actor_name);
-                                    msg_client.setInstanceName(subscribedClient->instance_name);
-                                    msg_client.setPortName(subscribedClient->portname);
-
-                                    msg_discoupd.setScope(subscribedClient->isLocal ? Scope::LOCAL : Scope::GLOBAL);
-
-                                    msg_socket.setHost(host);
-                                    msg_socket.setPort(portNum);
-
-                                    auto serializedMessage = capnp::messageToFlatArray(message);
-
-                                    zmsg_t *msg = zmsg_new();
-                                    zmsg_pushmem(msg, serializedMessage.asBytes().begin(),
-                                                 serializedMessage.asBytes().size());
-
-                                    zmsg_send(&msg, clientSocket->socket);
-
-                                    std::cout << "Port update sent to the client: " << std::endl;
-                                }
-                            }
-
-
-                        }
-                    }
-                }
-            } else if (msg_providerlistpush.isProviderGet()){
-                auto msg_providerget = msg_providerlistpush.getProviderGet();
-                auto msg_getresults = msg_providerget.getResults();
-
-                for (int idx = 0; idx < msg_getresults.size(); idx++) {
-                    std::string result_endpoint = std::string(msg_getresults[idx].cStr());
-
-                    auto pos = result_endpoint.find(':');
-                    if (pos == std::string::npos) {
-                        continue;
-                    }
-
-                    std::string host = result_endpoint.substr(0, pos);
-                    std::string port = result_endpoint.substr(pos + 1, std::string::npos);
-                    int portNum = -1;
-
-                    try {
-                        portNum = std::stoi(port);
-                    } catch (std::invalid_argument &e) {
-                        std::cout << "Cast error, string -> int, portnumber: " << port << std::endl;
-                        std::cout << e.what() << std::endl;
-                        continue;
-                    }
-                    catch (std::out_of_range &e) {
-                        std::cout << "Cast error, string -> int, portnumber: " << port << std::endl;
-                        std::cout << e.what() << std::endl;
-                        continue;
-                    }
-
-                    capnp::MallocMessageBuilder message;
-                    auto msg_discoupd = message.initRoot<DiscoUpd>();
-                    auto msg_client = msg_discoupd.initClient();
-                    auto msg_socket = msg_discoupd.initSocket();
-
-                    // Set up client
-                    msg_client.setActorHost(msg_providerget.getClient().getActorHost());
-                    msg_client.setActorName(msg_providerget.getClient().getActorName());
-                    msg_client.setInstanceName(msg_providerget.getClient().getInstanceName());
-                    msg_client.setPortName(msg_providerget.getClient().getPortName());
-
-                    msg_discoupd.setScope(msg_providerget.getPath().getScope());
-
-                    msg_socket.setHost(host);
-                    msg_socket.setPort(portNum);
-
-                    auto serializedMessage = capnp::messageToFlatArray(message);
-
-                    zmsg_t *msg = zmsg_new();
-                    zmsg_pushmem(msg, serializedMessage.asBytes().begin(),
-                                 serializedMessage.asBytes().size());
-
-                    std::string clientKeyBase =  "/" + std::string(msg_providerget.getPath().getAppName())
-                                               + "/" + std::string(msg_providerget.getClient().getActorName())
-                                               + "/";
-
-                    zmsg_send(&msg, clients[clientKeyBase]->socket);
-
-                    std::cout << "Port update sent to the client: " << std::endl;
-                }
+            } else if (msgProviderlistPush.isProviderGet()){
+                ProviderListGet::Reader msgProviderGet = msgProviderlistPush.getProviderGet();
+                handleGet(msgProviderGet, clients);
             }
 
-
-            zframe_destroy(&capnp_msgbody);
-            zmsg_destroy(&msg_response);
+            zframe_destroy(&capnpMsgBody);
+            zmsg_destroy(&msgResponse);
         }
 
         // Handling messages from the RIAPS FW
@@ -363,10 +194,6 @@ riaps_actor (zsock_t *pipe, void *args)
                     zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
 
                     zmsg_send(&msg, riaps_socket);
-
-                    //auto uuid = gethostid();
-                    //auto uuid_str = std::to_string(uuid);
-                    //zuuid_destroy(&uuid);
 
                     std::string clientKeyLocal = clientKeyBase + mac_address;
                     clients[clientKeyLocal] = std::unique_ptr<actor_details>(new actor_details());
@@ -501,15 +328,26 @@ riaps_actor (zsock_t *pipe, void *args)
 
                         auto msg_path = msg_providerget.initPath();
                         auto msg_client = msg_providerget.initClient();
-                        msg_client.setActorName(client.getActorName());
-                        msg_client.setPortName(client.getPortName());
-                        msg_client.setActorHost(client.getActorHost());
-                        msg_client.setInstanceName(client.getInstanceName());
 
-                        msg_path.setScope(path.getScope());
-                        msg_path.setAppName(path.getAppName());
-                        msg_path.setKind(path.getKind());
-                        msg_path.setMsgType(path.getMsgType());
+                        std::string actor_name = client.getActorName();
+                        std::string port_name = client.getPortName();
+                        std::string actor_host = client.getActorHost();
+                        std::string instance_name = client.getInstanceName();
+
+                        msg_client.setActorName(actor_name);
+                        msg_client.setPortName(port_name);
+                        msg_client.setActorHost(actor_host);
+                        msg_client.setInstanceName(instance_name);
+
+                        Scope scope = path.getScope();
+                        std::string app_name = path.getAppName();
+                        Kind kind = path.getKind();
+                        std::string msgtype = path.getMsgType();
+
+                        msg_path.setScope(scope);
+                        msg_path.setAppName(app_name);
+                        msg_path.setKind(kind);
+                        msg_path.setMsgType(msgtype);
 
                         auto number_of_results = dht_lookup_results.size();
                         auto get_results = msg_providerget.initResults(number_of_results);
