@@ -112,7 +112,6 @@ void handleUpdate(const ProviderListUpdate::Reader& msgProviderUpdate,
                     continue;
                 }
 
-
                 std::string clientKeyBase = "/" + subscribedClient->app_name +
                                             "/" + subscribedClient->actor_name +
                                             "/";

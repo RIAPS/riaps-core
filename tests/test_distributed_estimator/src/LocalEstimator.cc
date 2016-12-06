@@ -8,9 +8,12 @@ comp_localestimator::comp_localestimator(_component_conf_j &config, riaps::Actor
 
 }
 
-void comp_localestimator::OnMessageArrived(std::string messagetype, zmsg_t *msg_body, zsock_t *socket) {
+void comp_localestimator::OnMessageArrived(const std::string& messagetype, zmsg_t* msg_body, const riaps::ports::PortBase* port) {
 
-    if (messagetype == PORT_READY) {
+    if (msg_body == NULL && port == NULL){
+
+    }
+    else if (messagetype == PORT_READY) {
 
         char* msg_content = zmsg_popstr(msg_body);
 
@@ -20,10 +23,6 @@ void comp_localestimator::OnMessageArrived(std::string messagetype, zmsg_t *msg_
         }
 
     }
-}
-
-void comp_localestimator::OnTimerFired(std::string timerid) {
-
 }
 
 comp_localestimator::~comp_localestimator() {

@@ -3,13 +3,13 @@
 
 
 
-bool register_service(std::string              app_name     ,
-                      std::string              message_type ,
-                      std::string              ip_address   ,
-                      uint16_t                 port         ,
-                      Kind                     kind         ,
-                      Scope                    scope        ,
-                      std::vector<std::string> tags
+bool register_service(const std::string&              app_name     ,
+                      const std::string&              message_type ,
+                      const std::string&              ip_address   ,
+                      const uint16_t&                 port         ,
+                      Kind                            kind         ,
+                      Scope                           scope        ,
+                      const std::vector<std::string>& tags
                       ) {
 
     bool result = false;
@@ -155,14 +155,10 @@ subscribe_to_service(const std::string& app_name  ,
     clientBuilder.setInstanceName(part_name);
     clientBuilder.setPortName(port_name);
 
-
-
     auto serializedMessage = capnp::messageToFlatArray(message);
 
     zmsg_t* msg = zmsg_new();
     zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
-
-
 
     zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC(mac_address));
     assert(client);
@@ -191,11 +187,13 @@ subscribe_to_service(const std::string& app_name  ,
         auto sockets = msg_service_lookup.getSockets();
 
         if (status == Status::OK) {
-            for (Socket::Reader socket : msg_service_lookup.getSockets()) {
+            auto sockets = msg_service_lookup.getSockets();
+            for (auto it = sockets.begin(); it!=sockets.end();it++){
+
                 service_lookup_result result_item;
 
-                result_item.host_name = socket.getHost();
-                result_item.port      = socket.getPort();
+                result_item.host_name = it->getHost();
+                result_item.port      = it->getPort();
                 result_item.part_name = part_name;
                 result_item.port_name = port_name;
 
@@ -218,7 +216,7 @@ subscribe_to_service(const std::string& app_name  ,
 
 
 zsock_t*
-register_actor(std::string appname, std::string actorname){
+register_actor(const std::string& appname, const std::string& actorname){
 
     /////
     /// Request

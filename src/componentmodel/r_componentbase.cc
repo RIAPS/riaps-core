@@ -29,6 +29,9 @@ namespace riaps{
 
         std::cout << "Component poller starts" << std::endl;
 
+        // Register ZMQ Socket - riapsPort pairs. For the quick retrieve.
+        std::map<const zsock_t*, const ports::PortBase*> portSockets;
+
         while (!terminated) {
             void *which = zpoller_wait(poller, 500);
 
@@ -45,7 +48,10 @@ namespace riaps{
                 for (auto it_pubconf = comp_conf.component_ports.pubs.begin();
                           it_pubconf != comp_conf.component_ports.pubs.end();
                           it_pubconf++){
-                    comp->InitPublisherPort(*it_pubconf);
+                    const ports::PublisherPort* newPort = comp->InitPublisherPort(*it_pubconf);
+                    const zsock_t* zmqSocket = newPort->GetSocket();
+
+                    portSockets[zmqSocket] = newPort;
                 }
 
                 // Add and start response ports
@@ -54,6 +60,8 @@ namespace riaps{
                      it_repconf++){
 
                     const ports::PortBase* newPort = comp->InitResponsePort(*it_repconf);
+                    const zsock_t* zmqSocket = newPort->GetSocket();
+                    portSockets[zmqSocket] = newPort;
                     zpoller_add(poller, (void*)newPort->GetSocket());
                 }
 
@@ -68,6 +76,8 @@ namespace riaps{
                           it_subconf != comp_conf.component_ports.subs.end();
                           it_subconf++) {
                     const ports::PortBase* newPort = comp->InitSubscriberPort(*it_subconf);
+                    const zsock_t* zmqSocket = newPort->GetSocket();
+                    portSockets[zmqSocket] = newPort;
                     zpoller_add(poller, (void*)newPort->GetSocket());
                 }
             }
@@ -87,7 +97,6 @@ namespace riaps{
                 } else if(streq(command, CMD_UPDATE_PORT)){
                     char* portname = zmsg_popstr(msg);
                     if (portname){
-
                         char* host = zmsg_popstr(msg);
                         if (host){
                             char* port = zmsg_popstr(msg);
@@ -123,71 +132,22 @@ namespace riaps{
                 char *param = zmsg_popstr(msg);
 
                 if (param){
-                    comp->OnTimerFired(param);
+                    std::string paramStr(param);
+                    comp->OnMessageArrived(paramStr, NULL, NULL);
                     delete param;
                 }
                 zmsg_destroy(&msg);
 
             }
-            // Message from async query
-            /*else if (which == asyncport){
-                std::cout<< "ASYNC ARRIVED, Create subscriber and connect" << std::endl;
-                std::vector<service_details> services;
-                zmsg_t *msg_response = zmsg_recv(which);
-
-                if (!msg_response){
-                    std::cout << "No msg => interrupted" << std::endl;
-                    continue;
-                }
-
-                // The header must contain the UUID
-                char* msg_header = zmsg_popstr(msg_response);
-
-                // Todo, wrong message => log it
-                if (strcmp(msg_header, comp->GetCompUuid().c_str())){
-                    zmsg_destroy(&msg_response);
-                    free(msg_header);
-                    continue;
-                }
-
-                free(msg_header);
-
-                std::vector<zmsg_t*> responseframes;
-                extract_zmsg(msg_response, responseframes);
-
-                for (auto it = responseframes.begin(); it!=responseframes.end(); it++) {
-                    std::vector<std::string> params;
-                    service_details current_service;
-                    extract_params(*it, params);
-                    params_to_service_details(params, current_service);
-                    services.push_back(current_service);
-                    zmsg_destroy(&(*it));
-                }
-
-                zmsg_destroy(&msg_response);
-
-                /* Old async port creation
-                if (!services.empty()) {
-                    service_details target_service = services.front();
-                    auto subscriberport = SubscriberPort::InitFromServiceDetails(target_service);
-                    auto zmqport = subscriberport->GetSocket();
-                    comp->AddSubscriberPort(subscriberport);
-
-                    rc = zpoller_add(poller, (zsock_t*)zmqport);
-                    assert(rc==0);
-                }
-            }*/
-
             else if(which){
                 // Message test with more than one field
                 zmsg_t *msg = zmsg_recv(which);
 
-                std::cout << zsock_type_str((zsock_t*)which) << std::endl;
-
                 if (msg) {
-                    char* messagetype = zmsg_popstr(msg);
-                    comp->OnMessageArrived(std::string(messagetype), msg, (zsock_t*)which);
-                    zstr_free(&messagetype);
+                    const ports::PortBase* riapsPort = portSockets[(zsock_t*)which];
+                    const std::string& portName = riapsPort->GetPortName();
+
+                    comp->OnMessageArrived(portName, msg, riapsPort);
                     zmsg_destroy(&msg);
                 }
             }

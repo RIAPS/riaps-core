@@ -13,9 +13,8 @@ public:
 
     comp_sensor(_component_conf_j& config, riaps::Actor& actor);
 
-    virtual void OnMessageArrived(std::string messagetype, zmsg_t* msg_body, zsock_t* socket);
+    virtual void OnMessageArrived(const std::string& messagetype, zmsg_t* msg_body, const riaps::ports::PortBase* port);
 
-    virtual void OnTimerFired(std::string timerid);
 
     virtual ~comp_sensor();
 

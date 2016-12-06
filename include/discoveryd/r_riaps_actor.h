@@ -37,7 +37,21 @@ struct _client_details{
     std::string portname;
     bool        isLocal;
 
-    bool operator==(const struct _client_details& rhs);
+
+    _client_details(){
+        isLocal = false;
+    }
+
+    _client_details(const struct _client_details& other){
+        app_name = other.app_name;
+        actor_name = other.actor_name;
+        actor_host = other.actor_host;
+        instance_name = other.instance_name;
+        portname = other.portname;
+        isLocal = other.isLocal;
+    }
+
+    //bool operator==(const struct _client_details& rhs);
 };
 
 

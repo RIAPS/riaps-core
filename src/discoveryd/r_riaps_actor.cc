@@ -103,6 +103,7 @@ riaps_actor (zsock_t *pipe, void *args)
             size_t    size = zframe_size(capnpMsgBody);
             byte*     data = zframe_data(capnpMsgBody);
 
+
             auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
 
             capnp::FlatArrayMessageReader reader(capnp_data);
@@ -267,6 +268,9 @@ riaps_actor (zsock_t *pipe, void *args)
                 current_client->instance_name = client.getInstanceName();
                 current_client->isLocal       = path.getScope() == Scope::LOCAL?true:false;
 
+                // Copy for the get callback
+                client_details currentClientTmp(*current_client);
+
 
                 // Now using just the discovery service to register the interested clients
                 if (clientSubscriptions.find(lookupkey.first) == clientSubscriptions.end()){
@@ -283,33 +287,10 @@ riaps_actor (zsock_t *pipe, void *args)
 
                 dht::InfoHash lookupkeyhash = dht::InfoHash::get(lookupkey.first);
 
-
-
-                /*auto mtx = std::make_shared<std::mutex>();
-                auto cv = std::make_shared<std::condition_variable>();
-                auto ready = std::make_shared<bool>(false);
-
-                auto wait = [=] {
-                    *ready = true;
-                    std::cout << "lock mutex in wait" << std::endl;
-                    std::unique_lock<std::mutex> lk(*mtx);
-                    std::cout << "Lock acquired in wait" << std::endl;
-                    cv->wait(lk);
-                    *ready = false;
-                };
-                auto done_cb = [=](bool success) {
-                    std::cout << "lock mutex in done" << std::endl;
-                    std::unique_lock<std::mutex> lk(*mtx);
-                    std::cout << "Lock acquired in done" << std::endl;
-                    cv->wait(lk, [=]{ return *ready; });
-                    cv->notify_one();
-                    std::cout << "done+Cb" <<std::endl;
-                    std::flush(std::cout);
-                };*/
-
                 std::cout << "Get: " + lookupkey.first << std::endl;
 
-                dht_node.get(lookupkey.first, [&](const std::vector<std::shared_ptr<dht::Value>>& values){
+
+                dht_node.get(lookupkey.first, [currentClientTmp, lookupkey](const std::vector<std::shared_ptr<dht::Value>>& values){
                     // Done Callback
 
                     std::vector<std::string> dht_lookup_results;
@@ -327,54 +308,44 @@ riaps_actor (zsock_t *pipe, void *args)
                         auto msg_providerget = msg_providerlistpush.initProviderGet();
 
                         auto msg_path = msg_providerget.initPath();
-                        auto msg_client = msg_providerget.initClient();
 
-                        std::string actor_name = client.getActorName();
-                        std::string port_name = client.getPortName();
-                        std::string actor_host = client.getActorHost();
-                        std::string instance_name = client.getInstanceName();
-
-                        msg_client.setActorName(actor_name);
-                        msg_client.setPortName(port_name);
-                        msg_client.setActorHost(actor_host);
-                        msg_client.setInstanceName(instance_name);
-
-                        Scope scope = path.getScope();
-                        std::string app_name = path.getAppName();
-                        Kind kind = path.getKind();
-                        std::string msgtype = path.getMsgType();
+                        Scope scope = currentClientTmp.isLocal?Scope::LOCAL:Scope::GLOBAL;
+                        std::string app_name = currentClientTmp.app_name;
 
                         msg_path.setScope(scope);
-                        msg_path.setAppName(app_name);
-                        msg_path.setKind(kind);
-                        msg_path.setMsgType(msgtype);
+                        msg_path.setAppName(currentClientTmp.app_name);
+
+                        auto msg_client = msg_providerget.initClient();
+
+                        msg_client.setActorName(currentClientTmp.actor_name);
+                        msg_client.setPortName(currentClientTmp.portname);
+                        msg_client.setActorHost(currentClientTmp.actor_host);
+                        msg_client.setInstanceName(currentClientTmp.instance_name);
 
                         auto number_of_results = dht_lookup_results.size();
-                        auto get_results = msg_providerget.initResults(number_of_results);
+                        ::capnp::List<::capnp::Text>::Builder get_results = msg_providerget.initResults(number_of_results);
 
-                        int resultindex = 0;
-                        for (auto it = dht_lookup_results.begin();
-                                  it!= dht_lookup_results.end();
-                                  it++){
-                            ::capnp::Text::Builder b((char*)it->c_str());
-                            get_results.set(resultindex++, b.asString());
+                        int provider_index = 0;
+                        for (std::string provider : dht_lookup_results) {
+                            char* c = (char*)provider.c_str();
+                            ::capnp::Text::Builder B(c, provider.length());
+                            get_results.set(provider_index++, B.asString());
                         }
 
                         auto serializedMessage = capnp::messageToFlatArray(message);
 
                         zmsg_t *msg = zmsg_new();
-                        zmsg_pushmem(msg, serializedMessage.asBytes().begin(),
-                                     serializedMessage.asBytes().size());
-
+                        auto bytes = serializedMessage.asBytes();
+                        zmsg_pushmem(msg, bytes.begin(), bytes.size());
                         zmsg_send(&msg, notify_ractor_socket);
-
                         std::cout << "Get results sent to discovery service" << std::endl;
 
                         sleep(1);
                         zsock_destroy(&notify_ractor_socket);
                         sleep(1);
-
-                        return true; // keep listening
+                    }
+                    else {
+                        std::cout << "Get has no results for query: " << lookupkey.first << std::endl;
                     }
 
                     return true;
@@ -446,54 +417,54 @@ riaps_actor (zsock_t *pipe, void *args)
 
                     // Add listener to the added key
                     registeredListeners[lookupkeyhash.toString()] = dht_node.listen(lookupkeyhash,
-                                                                                    [lookupkey](const std::vector<std::shared_ptr<dht::Value>> &values) {
+                        [lookupkey](const std::vector<std::shared_ptr<dht::Value>> &values) {
 
 
-                                                                                        std::cout << "Value changed, send back the changes to the discovery service"<< std::endl;
+                            //std::cout << "Value changed, send back the changes to the discovery service"<< std::endl;
 
-                                                                                        zsock_t *notify_ractor_socket = zsock_new_push(DHT_ROUTER_CHANNEL);
+                            zsock_t *notify_ractor_socket = zsock_new_push(DHT_ROUTER_CHANNEL);
 
-                                                                                        capnp::MallocMessageBuilder message;
+                            capnp::MallocMessageBuilder message;
 
 
-                                                                                        auto msg_providerlist_push = message.initRoot<ProviderListPush>();
-                                                                                        auto msg_provider_update   = msg_providerlist_push.initProviderUpdate();
-                                                                                        msg_provider_update.setProviderpath(lookupkey.first);
+                            auto msg_providerlist_push = message.initRoot<ProviderListPush>();
+                            auto msg_provider_update   = msg_providerlist_push.initProviderUpdate();
+                            msg_provider_update.setProviderpath(lookupkey.first);
 
-                                                                                        std::vector<std::string> update_results;
-                                                                                        for (const auto &value :values) {
-                                                                                            std::string result = std::string(value->data.begin(),
-                                                                                                                             value->data.end());
-                                                                                            update_results.push_back(result);
-                                                                                        }
+                            std::vector<std::string> update_results;
+                            for (const auto &value :values) {
+                                std::string result = std::string(value->data.begin(),
+                                                                 value->data.end());
+                                update_results.push_back(result);
+                            }
 
-                                                                                        auto number_of_providers = update_results.size();
-                                                                                        ::capnp::List<::capnp::Text>::Builder msg_providers = msg_provider_update.initNewvalues(
-                                                                                                number_of_providers);
+                            auto number_of_providers = update_results.size();
+                            ::capnp::List<::capnp::Text>::Builder msg_providers = msg_provider_update.initNewvalues(
+                                    number_of_providers);
 
-                                                                                        int provider_index = 0;
-                                                                                        for (std::string provider : update_results) {
-                                                                                            ::capnp::Text::Builder b((char *) provider.c_str());
-                                                                                            msg_providers.set(provider_index++, b.asString());
-                                                                                        }
+                            int provider_index = 0;
+                            for (std::string provider : update_results) {
+                                ::capnp::Text::Builder b((char *) provider.c_str());
+                                msg_providers.set(provider_index++, b.asString());
+                            }
 
-                                                                                        auto serializedMessage = capnp::messageToFlatArray(message);
+                            auto serializedMessage = capnp::messageToFlatArray(message);
 
-                                                                                        zmsg_t *msg = zmsg_new();
-                                                                                        zmsg_pushmem(msg, serializedMessage.asBytes().begin(),
-                                                                                                     serializedMessage.asBytes().size());
+                            zmsg_t *msg = zmsg_new();
+                            zmsg_pushmem(msg, serializedMessage.asBytes().begin(),
+                                         serializedMessage.asBytes().size());
 
-                                                                                        zmsg_send(&msg, notify_ractor_socket);
+                            zmsg_send(&msg, notify_ractor_socket);
 
-                                                                                        std::cout << "Changes sent to discovery service" << std::endl;
+                            std::cout << "Changes sent to discovery service: " << lookupkey.first << std::endl;
 
-                                                                                        sleep(1);
-                                                                                        zsock_destroy(&notify_ractor_socket);
-                                                                                        sleep(1);
+                            sleep(1);
+                            zsock_destroy(&notify_ractor_socket);
+                            sleep(1);
 
-                                                                                        return true; // keep listening
-                                                                                    }
-                    );
+                            return true; // keep listening
+                        }
+);
                 }
 
                 // Subscribe, if new provider arrives
@@ -644,12 +615,12 @@ riaps_actor (zsock_t *pipe, void *args)
     sleep(1);
 }
 
-bool _client_details::operator==(const client_details &rhs) {
+/*bool _client_details::operator==(const client_details &rhs) {
         return app_name      == rhs.app_name      &&
                actor_name    == rhs.actor_name    &&
                actor_host    == rhs.actor_host    &&
                instance_name == rhs.instance_name &&
                portname      == rhs.portname      &&
                isLocal       == rhs.isLocal;
-}
+}*/
 

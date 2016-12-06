@@ -6,6 +6,7 @@
 #define RIAPS_FW_R_DEBUGCOMPONENT_H
 
 #include "r_componentbase.h"
+#include "r_portbase.h"
 
 // This component prints the arrived messages to the consol.
 // Ports definitions come from the json file.
@@ -13,9 +14,7 @@ class DebugComponent : public riaps::ComponentBase {
 public:
     DebugComponent(_component_conf_j& config, riaps::Actor& actor);
 
-    virtual void OnMessageArrived(std::string messagetype, zmsg_t* msg_body, zsock_t* socket);
-
-    virtual void OnTimerFired(std::string timerid);
+    virtual void OnMessageArrived(const std::string& messagetype, zmsg_t* msg_body, const riaps::ports::PortBase* port);
 
     virtual ~DebugComponent();
 };

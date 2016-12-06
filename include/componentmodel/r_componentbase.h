@@ -48,8 +48,6 @@ namespace riaps {
         const ports::SubscriberPort* InitSubscriberPort(const _component_port_sub_j&);
         const ports::ResponsePort*   InitResponsePort(const _component_port_rep_j&);
 
-        //void AddResponsePort(std::unique_ptr<ResponsePort>&);
-        //void AddRequestPort(std::unique_ptr<RequestPort>&);
         void AddTimer(_component_port_tim_j&);
 
         std::vector<ports::PublisherPort*>  GetPublisherPorts();
@@ -77,8 +75,7 @@ namespace riaps {
         const Actor* GetActor() const;
         zactor_t* GetZmqPipe() const;
 
-        virtual void OnMessageArrived(std::string messagetype, zmsg_t* msg_body, zsock_t* socket)=0;
-        virtual void OnTimerFired(std::string timerid)=0;
+        virtual void OnMessageArrived(const std::string& messagetype, zmsg_t* msg_body, const ports::PortBase* port)=0;
 
         virtual ~ComponentBase();
 
@@ -105,6 +102,9 @@ namespace riaps {
 
         //zsock_t*    zsock_component;
         //zpoller_t*  zpoller;
+
+    private:
+
 
     };
 }

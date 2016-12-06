@@ -9,19 +9,19 @@ comp_sensor::comp_sensor(_component_conf_j &config, riaps::Actor &actor):Compone
 
 }
 
-void comp_sensor::OnMessageArrived(std::string messagetype, zmsg_t *msg_body, zsock_t *socket) {
+void comp_sensor::OnMessageArrived(const std::string &messagetype, zmsg_t *msg_body,
+                                   const riaps::ports::PortBase *port) {
+    if (msg_body == NULL && port == NULL){
 
-}
-
-void comp_sensor::OnTimerFired(std::string timerid) {
-    //std::cout << "Timer fired: " + timerid <<std::endl;
-    zmsg_t* msg = zmsg_new();
-    zmsg_addstr(msg, "Data ready");
-    std::cout << "on_clock(): " << timerid <<std::endl;
-    if (!SendMessageOnPort(msg, PORT_READY)) {
-        std::cout << "Error sending message in timer" << std::endl;
     }
-
+    else {
+        zmsg_t* msg = zmsg_new();
+        zmsg_addstr(msg, "Data ready");
+        std::cout << "on_clock(): " << messagetype <<std::endl;
+        if (!SendMessageOnPort(msg, PORT_READY)) {
+            std::cout << "Error sending message in timer" << std::endl;
+        }
+    }
 }
 
 comp_sensor::~comp_sensor() {

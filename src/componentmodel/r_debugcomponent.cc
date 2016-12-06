@@ -8,14 +8,14 @@ DebugComponent::DebugComponent(_component_conf_j &config, riaps::Actor &actor):C
 
 }
 
-//TODO: add OnPort into the cout message
-void DebugComponent::OnMessageArrived(std::string messagetype, zmsg_t *msg_body, zsock_t *socket) {
+void DebugComponent::OnMessageArrived(const std::string& messagetype, zmsg_t *msg_body, const riaps::ports::PortBase *port) {
+    if (msg_body == NULL && port == NULL){
+        std::cout << "Timer event: " << messagetype << std::endl;
+    }
+    else {
+        std::cout << "Debug component [" << _configuration.component_name << "](OnMessageArrived) "<< messagetype << std::endl;
 
-    std::cout << "Debug component [" << _configuration.component_name << "](OnMessageArrived) "<< messagetype << std::endl;
-}
-
-void DebugComponent::OnTimerFired(std::string timerid) {
-    std::cout << "Debug component [" << _configuration.component_name << "](OnTimerFired) "<< timerid << std::endl;
+    }
 }
 
 DebugComponent::~DebugComponent() {

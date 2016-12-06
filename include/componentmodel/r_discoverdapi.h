@@ -44,17 +44,17 @@ subscribe_to_service(const std::string& app_name   ,
                      const std::string& msg_type // PortType
                      );
 extern bool
-register_service(std::string              app_name     ,
-                 std::string              message_type ,
-                 std::string              ip_address   ,
-                 uint16_t                 port         ,
-                 Kind                     kind         ,
-                 Scope                    scope        ,
-                 std::vector<std::string> tags
+register_service(const std::string&              app_name     ,
+                 const std::string&              message_type ,
+                 const std::string&              ip_address   ,
+                 const uint16_t&                 port         ,
+                 Kind                            kind         ,
+                 Scope                           scope        ,
+                 const std::vector<std::string>& tags
 );
 
 
 extern zsock_t*
-register_actor(std::string appname, std::string actorname);
+register_actor(const std::string& appname, const std::string& actorname);
 
 #endif

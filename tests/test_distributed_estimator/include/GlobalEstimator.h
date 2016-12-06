@@ -13,9 +13,7 @@ public:
 
     comp_globalestimator(_component_conf_j& config, riaps::Actor& actor);
 
-    virtual void OnMessageArrived(std::string messagetype, zmsg_t* msg_body, zsock_t* socket);
-
-    virtual void OnTimerFired(std::string timerid);
+    virtual void OnMessageArrived(const std::string& messagetype, zmsg_t* msg_body, const riaps::ports::PortBase* port);
 
     virtual ~comp_globalestimator();
 
