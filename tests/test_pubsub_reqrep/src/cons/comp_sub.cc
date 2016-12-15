@@ -4,7 +4,7 @@
 
 #include "cons/comp_sub.h"
 
-component_sub::component_sub(component_conf &config) : ComponentBase(config) {}
+component_sub::component_sub(_component_conf_j &config, riaps::Actor& actor) : ComponentBase(config, actor) {}
 
 void component_sub::OnMessageArrived(std::string messagetype, zmsg_t *msg_body, zsock_t* socket) {
     if (messagetype == MSG_GPS) {
@@ -46,8 +46,8 @@ void component_sub::OnTimerFired(std::string timerid) {
 
 component_sub::~component_sub() {}
 
-riaps::ComponentBase* create_component(component_conf& config){
-    return new component_sub(config);
+riaps::ComponentBase* create_component(_component_conf_j& config, riaps::Actor& actor){
+    return new component_sub(config, actor);
 }
 
 void destroy_component(riaps::ComponentBase* comp){

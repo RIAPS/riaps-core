@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 
+/*
 struct _localport_conf{
     std::string servicename;   // Name of the service, this will be registered in the discovery service.
     int         port;          // If 0, the po assigne automatically
@@ -44,5 +45,53 @@ struct _component_conf {
 };
 
 typedef struct _component_conf component_conf;
+*/
+
+//// New part
+
+struct _component_port_config {
+    std::string port_name;
+    bool isLocal;
+    std::string message_type;
+
+    _component_port_config(){
+        isLocal=false;
+    }
+};
+
+typedef struct _component_port_config component_port_config;
+
+struct _component_port_clt_j : public component_port_config {};
+struct _component_port_pub_j : public component_port_config{
+    //int port;
+};
+struct _component_port_req_j : public component_port_config{};
+struct _component_port_rep_j : public component_port_config{};
+struct _component_port_srv_j : public component_port_config{};
+struct _component_port_sub_j : public component_port_config{
+};
+struct _component_port_tim_j{
+    std::string timer_name;
+    ulong       period;
+};
+
+
+struct _component_ports_j {
+    std::vector<_component_port_clt_j> clts;
+    std::vector<_component_port_srv_j> srvs;
+    std::vector<_component_port_pub_j> pubs;
+    std::vector<_component_port_sub_j> subs;
+    std::vector<_component_port_req_j> reqs;
+    std::vector<_component_port_rep_j> reps;
+    std::vector<_component_port_tim_j> tims;
+};
+
+struct _component_conf_j {
+    std::string        component_name;
+    std::string        component_type;
+    _component_ports_j component_ports;
+};
+
+typedef struct _component_conf_j component_conf_j;
 
 #endif //RIAPS_FW_R_CONFIGURATION_H

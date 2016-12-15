@@ -4,15 +4,15 @@
 
 #include "prod/comp_gps.h"
 
-riaps::ComponentBase* create_component(component_conf& config){
-    return new component_gps(config);
+riaps::ComponentBase* create_component(_component_conf_j& config, riaps::Actor& actor){
+    return new component_gps(config, actor);
 }
 
 void destroy_component(riaps::ComponentBase* comp){
     delete comp;
 }
 
-component_gps::component_gps(component_conf& config) : ComponentBase(config) {
+component_gps::component_gps(_component_conf_j& config, riaps::Actor& actor) : ComponentBase(config, actor) {
     double lower_bound = 0;
     double upper_bound = 10000;
     auto tmp = std::unique_ptr<std::uniform_real_distribution<double>>

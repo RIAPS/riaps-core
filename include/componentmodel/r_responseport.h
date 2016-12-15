@@ -6,30 +6,35 @@
 #define RIAPS_FW_R_RESPONSEPORT_H
 
 #include "r_portbase.h"
+#include "r_componentbase.h"
+#include "r_configuration.h"
+
+#include "czmq.h"
+
+#include <string>
 
 namespace riaps {
-    class ResponsePort : public PortBase {
-    public:
 
-        static std::unique_ptr<ResponsePort> InitFromConfig(response_conf& response_service);
+    class ComponentBase;
 
-        std::string GetEndpoint();
+    namespace ports {
 
-        response_conf GetConfig();
+        class ResponsePort : public PortBase {
+        public:
+            ResponsePort(const _component_port_rep_j &config, ComponentBase *parent_component);
+            _component_port_rep_j* GetConfig();
 
-        void SendMessage(zmsg_t** msg);
+            virtual void Send(zmsg_t *msg) const;
 
-        virtual ~ResponsePort();
+            ~ResponsePort();
 
-    protected:
-        ResponsePort();
-        //ResponsePort(response_conf& config);
 
-        response_conf configuration;
-
-        int            port;
-        std::string    endpoint;
-    };
+        protected:
+            int _port;
+            std::string _host;
+            std::string _endpoint;
+        };
+    }
 }
 
 #endif //RIAPS_FW_R_RESPONSEPORT_H

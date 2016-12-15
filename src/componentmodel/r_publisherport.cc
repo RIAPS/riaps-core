@@ -3,56 +3,69 @@
 //
 
 #include <componentmodel/r_publisherport.h>
+#include <componentmodel/r_network_interfaces.h>
 
 namespace riaps{
-    PublisherPort::PublisherPort(publisher_conf& config) {
-        configuration = config;
-        port_socket = zsock_new(ZMQ_PUB);
+
+    namespace ports {
+
+        PublisherPort::PublisherPort(const _component_port_pub_j &config, ComponentBase *parent_component)
+            : PortBase(PortTypes::Publisher, (component_port_config*)&config)
+
+        {
+            _port_socket = zsock_new(ZMQ_PUB);
+
+            std::string ipaddress = GetIPAddress();
+
+            if (_host == "") {
+                throw std::runtime_error("Publisher cannot be initiated. Cannot find  available network interface.");
+            }
+
+            std::string pub_endpoint = "tcp://" + _host + ":!";
+            _port = zsock_bind(_port_socket, pub_endpoint.c_str());
 
 
-        if (config.port == 0) {
-            port = zsock_bind(port_socket, "tcp://*:!");
-        } else {
-            char tmp[256];
-            sprintf(tmp, "tcp://*:%d", config.port);
-            port = zsock_bind(port_socket, tmp);
+            if (_port == -1) {
+                throw std::runtime_error("Couldn't bind publisher port.");
+            }
+
+            std::cout << "Publisher is created on : " << _host << ":" << _port << std::endl;
+
+
+            if (!register_service(parent_component->GetActor()->GetApplicationName(),
+                                  config.message_type,
+                                  _host,
+                                  _port,
+                                  Kind::PUB,
+                                  (config.isLocal?Scope::LOCAL:Scope::GLOBAL),
+                                  {})) {
+                throw std::runtime_error("Publisher port couldn't be registered.");
+            }
+
         }
 
-        endpoint = std::string(zsock_endpoint(port_socket));
-
-        std::cout << "Publisher is created on port: " << port << std::endl;
-
-        std::string ifaddress = GetInterfaceAddress(config.network_iface);
-
-        // TODO: error handling
-        // NOTE: Should be separated form construct
-        if (ifaddress!="") {
-
-            std::cout << "Registering publisher" << std::endl;
-
-            // TODO: Add tags
-            register_service(config.servicename, config.servicename, ifaddress, std::to_string(port), {});
+        _component_port_pub_j* PublisherPort::GetConfig() {
+            return (_component_port_pub_j*)_config;
         }
 
-    }
-
-    publisher_conf PublisherPort::GetConfig() {
-        return configuration;
-    }
-
-    std::string PublisherPort::GetEndpoint() {
-        if (port_socket) {
-            return std::string(zsock_endpoint(port_socket));
+        std::string PublisherPort::GetEndpoint() {
+            if (_port_socket) {
+                return std::string(zsock_endpoint(_port_socket));
+            }
+            return "";
         }
-        return "";
-    }
 
-    void PublisherPort::PublishMessage(zmsg_t **msg) {
-        int rc = zmsg_send(msg, port_socket);
-        assert(rc==0);
-    }
 
-    PublisherPort::~PublisherPort() {
-        deregister_service(configuration.servicename);
+        // Before sending the publisher sets up the message type
+        void PublisherPort::Send(zmsg_t *msg) const {
+            zmsg_pushstr(msg, ((_component_port_pub_j*)_config)->message_type.c_str());
+
+            int rc = zmsg_send(&msg, _port_socket);
+            assert(rc == 0);
+        }
+
+        PublisherPort::~PublisherPort() {
+            std::cout << "Publisherport " << _config->port_name << " is stopping" <<std::endl;
+        }
     }
 }

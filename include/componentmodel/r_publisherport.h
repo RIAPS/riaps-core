@@ -5,28 +5,42 @@
 #ifndef RIAPS_R_PUBLISHERPORT_H
 #define RIAPS_R_PUBLISHERPORT_H
 
-#include "czmq.h"
+#include "r_componentbase.h"
+#include "r_configuration.h"
 #include "r_portbase.h"
 
+#include "czmq.h"
+
+#include <string>
+
 namespace riaps {
-    class PublisherPort : public PortBase {
-    public:
-        PublisherPort(publisher_conf& config);
 
-        std::string GetEndpoint();
+    class ComponentBase;
 
-        publisher_conf GetConfig();
+    namespace ports {
 
-        void PublishMessage(zmsg_t** msg);
+       class PublisherPort : public PortBase {
+       public:
 
-        virtual ~PublisherPort();
+           PublisherPort(const _component_port_pub_j &config, ComponentBase *parent_component);
 
-    protected:
-        publisher_conf configuration;
+           std::string GetEndpoint();
 
-        int            port;
-        std::string    endpoint;
-    };
+           _component_port_pub_j* GetConfig();
+
+           virtual void Send(zmsg_t *msg) const;
+
+           // virtual void SendMessage();
+
+           ~PublisherPort();
+
+
+       protected:
+           int _port;
+           std::string _host;
+           std::string _endpoint;
+       };
+   }
 }
 
 #endif //RIAPS_R_PUBLISHERPORT_H

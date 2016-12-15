@@ -1,7 +1,7 @@
 
 #include "discoveryd/r_consul.h"
 
-void joinToCluster(std::string destination_address){
+void consul_joinToCluster(std::string destination_address){
 	std::string consul_api_host = "localhost";
 	std::string consul_api_getparam = "/v1/agent/join/" + destination_address;
 
@@ -93,6 +93,13 @@ bool disc_deregisterservice(std::string servicename) {
 
 bool disc_registerkey(std::string key, std::string value){
     std::string consul_api_host = "localhost";
+
+    if (key.empty()) return false;
+
+    if (key[0] == '/'){
+        key = key.erase(0, 1);
+    }
+
     std::string consul_api_getparam = "/v1/kv/" + key;
 
     int result = do_put(consul_api_host, CONSUL_PORT, consul_api_getparam, value);
@@ -151,6 +158,24 @@ bool disc_deregisterkey(std::string key, bool recurse=true){
     std::cout << response << "," << result << std::endl;
 
     return true;
+}
+
+std::string disc_getvalue_by_key(std::string key) {
+    std::string consul_api_host = "localhost";
+    std::string consul_api_getparam = "/v1/kv/" + key;
+
+    std::string value;
+    std::string response;
+
+    int result = do_get(consul_api_host, CONSUL_PORT, consul_api_getparam, response);
+
+    nlohmann::json json_response = nlohmann::json::parse(response.c_str());
+
+    if(!json_response.empty()){
+        value = json_response[0]["Value"];
+    }
+
+    return value;
 }
 
 

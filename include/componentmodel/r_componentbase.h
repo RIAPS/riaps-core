@@ -12,13 +12,26 @@
 #include "r_timer.h"
 #include "r_responseport.h"
 #include "r_requestport.h"
+#include "r_actor.h"
 
 #include <iostream>
 #include <vector>
 #include <memory>
 #include <queue>
+#include <random>
+
 
 namespace riaps {
+
+
+
+    class Actor;
+
+    namespace ports {
+        class PublisherPort;
+        class SubscriberPort;
+        class ResponsePort;
+    }
 
     /**
      * @brief
@@ -29,49 +42,69 @@ namespace riaps {
 
     class ComponentBase {
     public:
-        ComponentBase(component_conf& config);
+        ComponentBase(component_conf_j& config, Actor& actor);
 
-        void AddPublisherPort(publisher_conf&);
-        void AddSubscriberPort(std::unique_ptr<SubscriberPort>&);
-        void AddResponsePort(std::unique_ptr<ResponsePort>&);
-        void AddRequestPort(std::unique_ptr<RequestPort>&);
-        void AddTimer(periodic_timer_conf&);
+        const ports::PublisherPort*  InitPublisherPort(const _component_port_pub_j&);
+        const ports::SubscriberPort* InitSubscriberPort(const _component_port_sub_j&);
+        const ports::ResponsePort*   InitResponsePort(const _component_port_rep_j&);
 
-        std::vector<PublisherPort*>  GetPublisherPorts();
-        std::vector<SubscriberPort*> GetSubscriberPorts();
-        std::vector<CallBackTimer*>  GetPeriodicTimers();
-        std::vector<ResponsePort*>   GetResponsePorts();
-        std::vector<RequestPort*>    GetRequestPorts();
+        void AddTimer(_component_port_tim_j&);
+
+        std::vector<ports::PublisherPort*>  GetPublisherPorts();
+        std::vector<ports::SubscriberPort*> GetSubscriberPorts();
+
+        ports::SubscriberPort& GetSubscriberByName(const std::string&);
+
+        ports::PortBase* GetPortByName(const std::string&);
+
+        bool SendMessageOnPort(zmsg_t* msg, std::string portName) const;
+
+
+        //std::vector<CallBackTimer*>  GetPeriodicTimers();
+        //std::vector<ResponsePort*>   GetResponsePorts();
+        //std::vector<RequestPort*>    GetRequestPorts();
 
         //virtual std::vector<CallBackTimer*>  GetTimers();
 
         //virtual const zsock_t* GetTimerPort();
 
-        std::string     GetTimerChannel();
-        std::string     GetCompUuid();
-        component_conf& GetConfig();
+        std::string       GetTimerChannel();
+        std::string       GetCompUuid();
+        const component_conf_j& GetConfig() const;
 
-        virtual void OnMessageArrived(std::string messagetype, zmsg_t* msg_body, zsock_t* socket)=0;
-        virtual void OnTimerFired(std::string timerid)=0;
+        const Actor* GetActor() const;
+        zactor_t* GetZmqPipe() const;
+
+        virtual void OnMessageArrived(const std::string& messagetype, zmsg_t* msg_body, const ports::PortBase* port)=0;
 
         virtual ~ComponentBase();
 
     protected:
-        component_conf configuration;
+        const ports::PortBase* GetPort(std::string portName) const;
+
+        const Actor*     _actor;
+        component_conf_j _configuration;
 
         //std::string    async_address;
         zuuid_t*       _component_uuid;
 
-        std::vector<std::unique_ptr<PublisherPort>>  _publisherports;
-        std::vector<std::unique_ptr<SubscriberPort>> _subscriberports;
+        //std::map<std::string, std::unique_ptr<PublisherPort>>  _publisherports;
+        //std::vector<std::unique_ptr<ports::SubscriberPort>> _subscriberports;
         std::vector<std::unique_ptr<CallBackTimer>>  _periodic_timers;
-        std::vector<std::unique_ptr<ResponsePort>>   _responseports;
-        std::vector<std::unique_ptr<RequestPort>>    _requestports;
+
+        std::map<std::string, std::unique_ptr<ports::PortBase>> _ports;
+
+
+        //std::vector<std::unique_ptr<ResponsePort>>   _responseports;
+        //std::vector<std::unique_ptr<RequestPort>>    _requestports;
 
         zactor_t*   _zactor_component;
 
         //zsock_t*    zsock_component;
         //zpoller_t*  zpoller;
+
+    private:
+
 
     };
 }

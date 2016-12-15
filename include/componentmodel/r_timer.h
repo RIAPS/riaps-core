@@ -16,7 +16,7 @@ namespace riaps {
 
     class CallBackTimer {
     public:
-        CallBackTimer(std::string timerid, std::string timerresponsechannel);
+        CallBackTimer(std::string& timerid, std::string& timerresponsechannel);
 
         ~CallBackTimer();
 

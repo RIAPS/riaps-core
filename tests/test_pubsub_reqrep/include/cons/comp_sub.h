@@ -7,6 +7,7 @@
 
 #include "messages.h"
 #include "componentmodel/r_componentbase.h"
+#include "componentmodel/r_actor.h"
 
 #include <czmq.h>
 
@@ -18,7 +19,7 @@ class component_sub : public riaps::ComponentBase {
 
 public:
 
-    component_sub(component_conf& config);
+    component_sub(_component_conf_j& config, riaps::Actor& actor);
 
     virtual void OnMessageArrived(std::string messagetype, zmsg_t* msg_body, zsock_t* socket);
 
@@ -30,7 +31,7 @@ public:
 
 };
 
-extern "C" riaps::ComponentBase* create_component(component_conf&);
+extern "C" riaps::ComponentBase* create_component(component_conf&, riaps::Actor& actor);
 extern "C" void destroy_component(riaps::ComponentBase*);
 
 #endif //RIAPS_FW_COMP_SUB_H

@@ -8,7 +8,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set (LIBALLPATH_INCLUDE ${DEPENDENCIES}amd64/include)
 set (LIBALLPATH_LIB ${DEPENDENCIES}amd64/lib)
 
-
 include_directories(${LIBALLPATH_INCLUDE})
 
 link_directories(${LIBALLPATH_LIB})

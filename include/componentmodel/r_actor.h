@@ -17,13 +17,27 @@
 #include <fstream>
 #include <json.h>
 
+
 namespace riaps {
+
+    class ComponentBase;
+
     class Actor {
     public:
-        Actor(std::string actorid);
-        virtual void start(std::string configfile="config.json");
+        Actor(const std::string& applicationname,
+              const std::string& actorname,
+              nlohmann::json& json_actorconfig,
+              nlohmann::json& json_componentsconfig,
+              nlohmann::json& json_messagesconfig)
+        ;
 
+        void Init();
+        virtual void start();
+        std::string  GetActorId();
+        const std::string& GetActorName() const;
+        const std::string& GetApplicationName() const;
         virtual ~Actor();
+        void UpdatePort(std::string& instancename, std::string& portname, std::string& host, int port);
 
     protected:
         zpoller_t*                 _poller;
@@ -31,10 +45,24 @@ namespace riaps {
         // Channel for incomming controll messages (e.g.: restart component)
         zsock_t*                   _actor_zsock;
 
-        int                        _actor_port;
-        std::string                _actor_endpoint;
-        std::string                _actor_id;
-        std::vector<ComponentBase> _components;
+        zsock_t*                   _discovery_socket;
+
+        int                         _actor_port;
+        std::string                 _actor_endpoint;
+        zuuid_t*                    _actor_id;
+        std::string                 _actor_name;
+        std::string                 _application_name;
+        std::vector<ComponentBase*> _components;
+        std::vector<void*>          _component_dll_handles;
+
+        // Configurations
+        ////
+
+
+        std::vector<component_conf_j> _component_configurations;
+
+        //Components, componentkey - componenttype
+        //std::map<std::string, std::string> _componentname_type;
     };
 }
 

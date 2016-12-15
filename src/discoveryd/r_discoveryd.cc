@@ -12,7 +12,7 @@
  *
  *
  * Features:
- *   - Discover local nodes with CZMQ zbeacon
+ *   - Discover local nodes with CZMQ zbeaconld
  *
  * \author Istvan Madari
  * \return
@@ -26,8 +26,9 @@
 
 #include "utils/r_utils.h"
 //#include "../include/r_consul.h"
-#include "discoveryd/r_consul_actor.h"
-#include "discoveryd/r_riaps_actor.h"
+//#include "discoveryd/r_consul_actor.h"
+//#include "discoveryd/r_riaps_actor.h"
+//#include "loggerd/r_loggerd.h"
 
 // Frequency of sending UDP packets.
 // Starting with higher rate and then switch to lower rate.
@@ -44,7 +45,7 @@
 int main()
 {
     // Consul actor
-    zactor_t *c_actor = zactor_new (consul_actor, NULL);
+    //zactor_t *c_actor = zactor_new (consul_actor, NULL);
 
     // RIAPS actor
     zactor_t *r_actor = zactor_new(riaps_actor, NULL);
@@ -55,6 +56,10 @@ int main()
 
     // listen for UDP packages
     zactor_t *listener  = zactor_new (zbeacon, NULL);
+
+    // Create logger subscribe
+    //void *logger = zsys_socket (ZMQ_SUB, NULL, 0);
+    //assert (logger);
 
     // Register node
     // TODO: put in method
@@ -123,7 +128,7 @@ int main()
                 zmsg_addstr(join_msg, it->first.c_str());
             }
             
-            zmsg_send(&join_msg, c_actor);
+            zmsg_send(&join_msg, r_actor);
 
             has_joined=true;
         }
@@ -205,10 +210,13 @@ int main()
     zactor_destroy(&r_actor);
     //zclock_sleep(5000);
 
+    
 
     zactor_destroy(&listener);
     zactor_destroy(&speaker);
-    zactor_destroy(&c_actor);
+    //zactor_destroy(&c_actor);
 
+    sleep(3);
+    
     return 0;
 }

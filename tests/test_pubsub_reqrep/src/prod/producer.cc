@@ -5,8 +5,8 @@
 #include <componentmodel/r_actor.h>
 
 int main(){
-    riaps::Actor a("ActorProducer");
-    a.start("prod_config.json");
+    riaps::Actor actor;
+    actor.start("prod_config.json");
 
     return 0;
 }

@@ -9,17 +9,17 @@
 #include "json.h"
 #include "utils/r_message.h"
 
-void joinToCluster(std::string destination_ip);
+void consul_joinToCluster(std::string destination_ip);
 void registerService(service_details& params);
 void deregisterService(std::string service_name);
 bool disc_getservices(std::vector<std::string>& service_list);
 bool disc_getservicedetails(std::string, std::vector<service_details>&);
 bool disc_deregisterservice(std::string);
 
-
 bool disc_containskey(std::string keyname);
 bool disc_registerkey(std::string key, std::string value);
 bool disc_deregisterkey(std::string key, bool recurse);
+std::string disc_getvalue_by_key(std::string key);
 
 bool disc_registernode(std::string nodename);
 bool disc_deregisternode(std::string nodename);
