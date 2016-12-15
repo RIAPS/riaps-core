@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(riaps_fw VERSION 0.0.0)
+project(riaps_core VERSION 0.1.0)
 
 set (CMAKE_CXX_FLAGS "-std=c++11")
 
@@ -13,15 +13,15 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_HOME_DIRECTORY}/bin)
 include_directories(include)
 
 #Set the platform
-#include(CMakeLists_arm.txt)
-include(CMakeLists_amd64.txt)
+include(CMakeLists_arm.txt)
+#include(CMakeLists_amd64.txt)
 
 #add_subdirectory(opendht)
 
 
 add_subdirectory(src/componentmodel)
 add_subdirectory(src/discoveryd)
-add_subdirectory(src/loggerd)
+#add_subdirectory(src/loggerd)
 
 
 # Tests

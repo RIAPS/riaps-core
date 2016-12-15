@@ -11,21 +11,23 @@
 void
 riaps_actor (zsock_t *pipe, void *args)
 {
-    std::cout << "Start DHT node." << std::endl;
-    dht::DhtRunner dht_node;
-
-    // Launch a dht node on a new thread, using a
-    // generated RSA key pair, and listen on port 4222.
-    dht_node.run(RIAPS_DHT_NODE_PORT, dht::crypto::generateIdentity(), true);
-
-    std::cout << "DHT node started." <<std::endl;
-
     std::string mac_address = GetMacAddressStripped();
     std::string host_address = GetIPAddress();
 
     std::cout << "Discovery service is starting, network interface: " << std::endl
               << " * " << host_address << std::endl
               << " * " << mac_address  << std::endl;
+
+
+    std::cout << "Start DHT node." << std::endl;
+    dht::DhtRunner dht_node;
+
+    // Launch a dht node on a new thread, using a
+    // generated RSA key pair, and listen on port 4222.
+
+    dht_node.run(RIAPS_DHT_NODE_PORT, dht::crypto::generateIdentity(), true);
+
+    std::cout << "DHT node started." <<std::endl;
 
     std::srand(std::time(0));
 
@@ -598,6 +600,10 @@ riaps_actor (zsock_t *pipe, void *args)
             //std::cout << std::endl;
         }
     }
+
+    //dht_node.setOnStatusChanged()
+
+    dht_node.join();
 
     for (auto it_client = clients.begin(); it_client!=clients.end(); it_client++){
         if (it_client->second->socket!=NULL) {
