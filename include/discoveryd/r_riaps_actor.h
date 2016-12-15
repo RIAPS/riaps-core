@@ -3,7 +3,6 @@
 
 
 
-#include "discoveryd/r_service_poller.h"
 #include "discoveryd/r_riaps_cmd_handler.h"
 #include "discoveryd/r_odht.h"
 #include "componentmodel/r_discoverdapi.h"

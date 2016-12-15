@@ -23,12 +23,8 @@
 #include <string>
 #include <map>
 #include <vector>
-
+#include <discoveryd/r_riaps_actor.h>
 #include "utils/r_utils.h"
-//#include "../include/r_consul.h"
-//#include "discoveryd/r_consul_actor.h"
-//#include "discoveryd/r_riaps_actor.h"
-//#include "loggerd/r_loggerd.h"
 
 // Frequency of sending UDP packets.
 // Starting with higher rate and then switch to lower rate.

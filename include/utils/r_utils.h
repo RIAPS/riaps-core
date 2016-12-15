@@ -7,7 +7,6 @@
 #include <czmq.h>
 #include <vector>
 
-#include "discoveryd/r_consul.h"
 
 void print_cacheips(std::map<std::string, int64_t>& ipcache);
 

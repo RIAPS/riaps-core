@@ -1,10 +1,6 @@
 #ifndef R_DISCOVERD_API
 #define R_DISCOVERD_API
 
-//#define DISCOVERY_SERVICE_IPC "ipc:///tmp/riapsdiscoveryservice"
-
-//#define DISCOVERY_SERVICE_IPC "tcp://127.0.0.1:75846"
-
 #define DISCOVERY_SERVICE_IPC(X) (std::string("ipc:///tmp/riaps-disco") + std::string(X)).c_str()
 
 #include <string>

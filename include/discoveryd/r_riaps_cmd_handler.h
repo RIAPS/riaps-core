@@ -7,7 +7,6 @@
 
 #include "componentmodel/r_riaps_actor_commands.h"
 #include "utils/r_message.h"
-#include "discoveryd/r_consul.h"
 #include "messaging/disco.capnp.h"
 
 #include <map>
