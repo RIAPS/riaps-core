@@ -15,15 +15,3 @@ set (LIBALLPATH_LIB ${DEPENDENCIES}armhf/lib)
 include_directories(${LIBALLPATH_INCLUDE})
 link_directories(${LIBALLPATH_LIB})
 
-
-# Create compressed artifact output
-install(DIRECTORY ${CMAKE_HOME_DIRECTORY}/bin DESTINATION ${CMAKE_SOURCE_DIR}/artifacts/)
-
-set(CPACK_GENERATOR "TGZ")
-set(CPACK_SOURCE_GENERATOR "TGZ")
-
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_NAME} project")
-
-set(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
-set(CPACK_PACKAGE_VENDOR "vanderbilt")
-include(CPack)
