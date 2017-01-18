@@ -212,7 +212,7 @@ int main()
     zactor_destroy(&speaker);
     //zactor_destroy(&c_actor);
 
-    sleep(3);
+    sleep(2);
     
     return 0;
 }
