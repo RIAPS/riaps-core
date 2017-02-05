@@ -1,5 +1,6 @@
 #include "discoveryd/r_riaps_actor.h"
 #include "componentmodel/r_network_interfaces.h"
+#include "discoveryd/r_discoveryd_commands.h"
 #include "discoveryd/r_odht.h"
 #include <vector>
 #include <map>
@@ -77,7 +78,7 @@ riaps_actor (zsock_t *pipe, void *args)
                 std::cout << std::endl << "$TERMINATE arrived, discovery service is stopping..." << std::endl;
                 terminated = true;
             }
-            else if (streq(command, "JOIN")) {
+            else if (streq(command, CMD_JOIN)) {
                 std::cout << "New peer on the network. Join()" << std::endl;
                 bool has_more_msg = true;
 

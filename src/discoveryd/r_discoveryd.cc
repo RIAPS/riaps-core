@@ -4,15 +4,9 @@
  * Goal of the service:
  *   - Discover other RIAPS nodes on the local network
  *   - Maintain an ip address cache about the discovered RIAPS nodes
- *   - Control the local Discovery Service client (currently consul)
- *     - Send commands to consul
- *     - Return values from consul
+ *   - Control the local Discovery Service client (currently OpenDHT)
  *
  * CZMQ zbeacon  used to discover other riaps nodes in the local network. Each riaps node send a UDP packet periodically,
- *
- *
- * Features:
- *   - Discover local nodes with CZMQ zbeaconld
  *
  * \author Istvan Madari
  * \return
@@ -25,6 +19,8 @@
 #include <vector>
 #include <discoveryd/r_riaps_actor.h>
 #include "utils/r_utils.h"
+#include "componentmodel/r_network_interfaces.h"
+#include <discoveryd/r_discoveryd_commands.h>
 
 // Frequency of sending UDP packets.
 // Starting with higher rate and then switch to lower rate.
@@ -36,15 +32,14 @@
 
 #define UDP_PACKET_PORT 9999
 
+#define CONTROL_SOCKET "ipc:///tmp/discoverycontrol"
 
 
 int main()
 {
-    // Consul actor
-    //zactor_t *c_actor = zactor_new (consul_actor, NULL);
 
-    // RIAPS actor
     zactor_t *r_actor = zactor_new(riaps_actor, NULL);
+    zsock_t * control = zsock_new_router(CONTROL_SOCKET);
 
     // CZMQ zbeacons are used to discover the local network
     // New zbeacon for publishing IP
@@ -56,17 +51,6 @@ int main()
     // Create logger subscribe
     //void *logger = zsys_socket (ZMQ_SUB, NULL, 0);
     //assert (logger);
-
-    // Register node
-    // TODO: put in method
-    //zmsg_t* regnode_msg = zmsg_new();
-
-    //zmsg_addstr(regnode_msg, CMD_DISC_REGISTER_NODE);
-    //zmsg_addstr(regnode_msg, hostname);
-    //free(hostname);
-
-    //zactor_send(r_actor, &regnode_msg);
-
 
     #ifdef _DEBUG_
         zstr_sendx (speaker, "VERBOSE", NULL);
@@ -83,6 +67,7 @@ int main()
     char* hostname = zstr_recv (listener);
     if (!*hostname) {
         printf ("No listener hostname, no UDP listening.\n");
+
         zactor_destroy (&listener);
         free (hostname);
         return -1;
@@ -108,16 +93,54 @@ int main()
     // Store the ip addresses and timestamps here
     std::map<std::string, int64_t> ipcache;
 
+    // Node ips from commands, not from UDP packages
+    std::map<std::string, int64_t> externalipcache;
+
     bool has_joined = false;
+
+    zpoller_t* poller = zpoller_new(control, NULL);
 
     while (!zsys_interrupted) {
         // Wait for at most UDP_READ_TIMEOUT millisecond for UDP package
         zsock_set_rcvtimeo (listener, UDP_READ_TIMEOUT);
 
+        void *which = zpoller_wait(poller, 1);
+
+        // Command arrived from external scripts
+        if (which == control){
+            zmsg_t* msg = zmsg_recv(which);
+            if (!msg) {
+                std::cout << "No msg from external scripts => interrupted" << std::endl;
+            } else{
+                char* command = zmsg_popstr(msg);
+
+                if (streq(command, CMD_JOIN)){
+                    char* newhost = zmsg_popstr(msg);
+                    if (newhost){
+
+                        // Check if the node already connected
+                        bool is_newitem = ipcache.find(std::string(newhost)) == ipcache.end();
+                        if (is_newitem){
+                            std::cout << "Join to DHT node: " << newhost << std::endl;
+
+                            zmsg_t* join_msg = zmsg_new();
+                            zmsg_addstr(join_msg, CMD_JOIN);
+                            zmsg_addstr(msg, newhost);
+                            zmsg_send(&join_msg, r_actor);
+                        }
+                        zstr_free(&newhost);
+                    }
+                }
+
+                if (command){
+                    zstr_free(&command);
+                }
+            }
+        }
 
         if (!has_joined && ipcache.size()>1){
             zmsg_t* join_msg = zmsg_new();
-            zmsg_addstr(join_msg, "JOIN");
+            zmsg_addstr(join_msg, CMD_JOIN);
 
             // Compose the JOIN command with the available ipaddresses
             for (auto it=ipcache.begin(); it!=ipcache.end(); it++){
@@ -201,7 +224,7 @@ int main()
     //std::cout << "MEssage sent, wait" << std::endl;
 
 
-
+    zsock_destroy(&control);
     //zclock_sleep(5000);
     zactor_destroy(&r_actor);
     //zclock_sleep(5000);
