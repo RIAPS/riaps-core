@@ -94,6 +94,7 @@ int main()
     std::map<std::string, int64_t> ipcache;
 
     // Node ips from commands, not from UDP packages
+    // TODO: Timeout for external nodes
     std::map<std::string, int64_t> externalipcache;
 
     bool has_joined = false;
@@ -119,9 +120,12 @@ int main()
                     if (newhost){
 
                         // Check if the node already connected
-                        bool is_newitem = ipcache.find(std::string(newhost)) == ipcache.end();
+                        bool is_newitem = externalipcache.find(std::string(newhost)) == externalipcache.end();
                         if (is_newitem){
                             std::cout << "Join to DHT node: " << newhost << std::endl;
+
+                            int64_t time = zclock_mono();
+                            externalipcache[newhost] = time;
 
                             zmsg_t* join_msg = zmsg_new();
                             zmsg_addstr(join_msg, CMD_JOIN);
@@ -178,19 +182,6 @@ int main()
                 print_cacheips(ipcache);
             }
 
-            //std::cout << "Package arrived from: " << ipaddress << " at: " << time << endl;
-            //std::cout << "Stored ips now: ";
-
-            //zlistx_t * keys = zhashx_keys(ipcache);
-            //void* item = zlistx_first(keys);
-            //while (item!=NULL){
-            //    std::cout << (char*)item << "; ";
-            //    item = zlistx_next(keys);
-            // }
-            //zlistx_destroy(&keys);
-
-            //std::cout << endl;
-
             zframe_t *content = zframe_recv (listener);
             assert (zframe_size (content) == 2);
             assert (zframe_data (content) [0] == 0xCA);
@@ -205,9 +196,6 @@ int main()
             }
         }
     }
-
-    //std::cout << "while end, wait" << std::endl;
-    //zclock_sleep(5000);
 
     // Register node
     // TODO: put in method
@@ -225,15 +213,10 @@ int main()
 
 
     zsock_destroy(&control);
-    //zclock_sleep(5000);
     zactor_destroy(&r_actor);
-    //zclock_sleep(5000);
-
-    
 
     zactor_destroy(&listener);
     zactor_destroy(&speaker);
-    //zactor_destroy(&c_actor);
 
     sleep(2);
     
