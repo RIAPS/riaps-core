@@ -84,9 +84,28 @@ struct DiscoReq {
 
 struct DiscoRep {
    union {
-      actorReg @0 : ActorUnregRep;
+      actorReg @0 : ActorRegRep;
       serviceReg @1 : ServiceRegRep;
       serviceLookup @2 : ServiceLookupRep;
       actorUnreg @3 : ActorUnregRep;
    }
 }
+
+struct ProviderListUpdate {
+        providerpath @0 : Text;
+        newvalues    @1 : List(Text);
+}
+
+struct ProviderListGet {
+    path         @0 : Path;
+    client       @1 : Client;
+    results      @2 : List(Text);
+}
+
+struct ProviderListPush {
+    union {
+        providerUpdate @0: ProviderListUpdate;
+        providerGet    @1: ProviderListGet;
+    }
+}
+

@@ -13,7 +13,7 @@ def addNode(ipAddress):
 
 def main(argv):
     try:
-        opts, args = getopt.getopt(argv,"hi:o:",["ifile=","ofile="])
+        opts, args = getopt.getopt(argv,"a:",["address="])
     except getopt.GetoptError:
         print 'addDhtNode.py -a <IP address>'
         sys.exit(2)

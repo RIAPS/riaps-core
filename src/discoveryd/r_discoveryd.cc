@@ -34,6 +34,8 @@
 
 #define CONTROL_SOCKET "ipc:///tmp/discoverycontrol"
 
+//#define NO_UDP_BEACON
+
 
 int main()
 {
@@ -86,9 +88,12 @@ int main()
 
     // We will broadcast the magic value 0xCAFE
     byte announcement [2] = { 0xCA, 0xFE };
+
+#ifndef NO_UDP_BEACON
     zsock_send (speaker, "sbi", "PUBLISH", announcement, 2, HIGH_BEACON_FREQ);
 
     zsock_send (listener, "sb", "SUBSCRIBE", "", 0);
+#endif
 
     // Store the ip addresses and timestamps here
     std::map<std::string, int64_t> ipcache;
@@ -102,9 +107,10 @@ int main()
     zpoller_t* poller = zpoller_new(control, NULL);
 
     while (!zsys_interrupted) {
+#ifndef NO_UDP_BEACON
         // Wait for at most UDP_READ_TIMEOUT millisecond for UDP package
         zsock_set_rcvtimeo (listener, UDP_READ_TIMEOUT);
-
+#endif
         void *which = zpoller_wait(poller, 1);
 
         // Command arrived from external scripts

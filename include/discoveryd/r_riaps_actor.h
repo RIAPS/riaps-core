@@ -18,8 +18,15 @@ struct _actor_details {
         socket=NULL;
     }
 
+    // PAIR socket for sending messages to the actor
+    // New socket is created for each actor.
     zsock_t* socket;
+
+    // The port of the socket
     int port;
+
+    // The actor's PID, so we can detect if the porcess died.
+    int pid;
 
     ~_actor_details(){
         if (socket!=NULL) {

@@ -40,6 +40,8 @@ enum class Scope_b772213e98ab2d6b: uint16_t {
 CAPNP_DECLARE_ENUM(Scope, b772213e98ab2d6b);
 CAPNP_DECLARE_SCHEMA(dd81ef2fce62e663);
 CAPNP_DECLARE_SCHEMA(e07ee9af7989d4c1);
+CAPNP_DECLARE_SCHEMA(ecebb57cd5b660f2);
+CAPNP_DECLARE_SCHEMA(d1dea2ebe3e7a70b);
 CAPNP_DECLARE_SCHEMA(e643a41a040909be);
 CAPNP_DECLARE_SCHEMA(c1cbdb4d5d25d951);
 CAPNP_DECLARE_SCHEMA(e3b69c956b458278);
@@ -88,6 +90,36 @@ struct ActorRegRep {
 
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(e07ee9af7989d4c1, 1, 0)
+    #if !CAPNP_LITE
+    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    #endif  // !CAPNP_LITE
+  };
+};
+
+struct ActorUnregReq {
+  ActorUnregReq() = delete;
+
+  class Reader;
+  class Builder;
+  class Pipeline;
+
+  struct _capnpPrivate {
+    CAPNP_DECLARE_STRUCT_HEADER(ecebb57cd5b660f2, 0, 3)
+    #if !CAPNP_LITE
+    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    #endif  // !CAPNP_LITE
+  };
+};
+
+struct ActorUnregRep {
+  ActorUnregRep() = delete;
+
+  class Reader;
+  class Builder;
+  class Pipeline;
+
+  struct _capnpPrivate {
+    CAPNP_DECLARE_STRUCT_HEADER(d1dea2ebe3e7a70b, 1, 0)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
     #endif  // !CAPNP_LITE
@@ -224,6 +256,7 @@ struct DiscoReq {
     ACTOR_REG,
     SERVICE_REG,
     SERVICE_LOOKUP,
+    ACTOR_UNREG,
   };
 
   struct _capnpPrivate {
@@ -244,6 +277,7 @@ struct DiscoRep {
     ACTOR_REG,
     SERVICE_REG,
     SERVICE_LOOKUP,
+    ACTOR_UNREG,
   };
 
   struct _capnpPrivate {
@@ -474,6 +508,188 @@ private:
 class ActorRegRep::Pipeline {
 public:
   typedef ActorRegRep Pipelines;
+
+  inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
+  inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
+      : _typeless(kj::mv(typeless)) {}
+
+private:
+  ::capnp::AnyPointer::Pipeline _typeless;
+  friend class ::capnp::PipelineHook;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+};
+#endif  // !CAPNP_LITE
+
+class ActorUnregReq::Reader {
+public:
+  typedef ActorUnregReq Reads;
+
+  Reader() = default;
+  inline explicit Reader(::capnp::_::StructReader base): _reader(base) {}
+
+  inline ::capnp::MessageSize totalSize() const {
+    return _reader.totalSize().asPublic();
+  }
+
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const {
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+  }
+#endif  // !CAPNP_LITE
+
+  inline bool hasAppName() const;
+  inline  ::capnp::Text::Reader getAppName() const;
+
+  inline bool hasVersion() const;
+  inline  ::capnp::Text::Reader getVersion() const;
+
+  inline bool hasActorName() const;
+  inline  ::capnp::Text::Reader getActorName() const;
+
+private:
+  ::capnp::_::StructReader _reader;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::List;
+  friend class ::capnp::MessageBuilder;
+  friend class ::capnp::Orphanage;
+};
+
+class ActorUnregReq::Builder {
+public:
+  typedef ActorUnregReq Builds;
+
+  Builder() = delete;  // Deleted to discourage incorrect usage.
+                       // You can explicitly initialize to nullptr instead.
+  inline Builder(decltype(nullptr)) {}
+  inline explicit Builder(::capnp::_::StructBuilder base): _builder(base) {}
+  inline operator Reader() const { return Reader(_builder.asReader()); }
+  inline Reader asReader() const { return *this; }
+
+  inline ::capnp::MessageSize totalSize() const { return asReader().totalSize(); }
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const { return asReader().toString(); }
+#endif  // !CAPNP_LITE
+
+  inline bool hasAppName();
+  inline  ::capnp::Text::Builder getAppName();
+  inline void setAppName( ::capnp::Text::Reader value);
+  inline  ::capnp::Text::Builder initAppName(unsigned int size);
+  inline void adoptAppName(::capnp::Orphan< ::capnp::Text>&& value);
+  inline ::capnp::Orphan< ::capnp::Text> disownAppName();
+
+  inline bool hasVersion();
+  inline  ::capnp::Text::Builder getVersion();
+  inline void setVersion( ::capnp::Text::Reader value);
+  inline  ::capnp::Text::Builder initVersion(unsigned int size);
+  inline void adoptVersion(::capnp::Orphan< ::capnp::Text>&& value);
+  inline ::capnp::Orphan< ::capnp::Text> disownVersion();
+
+  inline bool hasActorName();
+  inline  ::capnp::Text::Builder getActorName();
+  inline void setActorName( ::capnp::Text::Reader value);
+  inline  ::capnp::Text::Builder initActorName(unsigned int size);
+  inline void adoptActorName(::capnp::Orphan< ::capnp::Text>&& value);
+  inline ::capnp::Orphan< ::capnp::Text> disownActorName();
+
+private:
+  ::capnp::_::StructBuilder _builder;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  friend class ::capnp::Orphanage;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+};
+
+#if !CAPNP_LITE
+class ActorUnregReq::Pipeline {
+public:
+  typedef ActorUnregReq Pipelines;
+
+  inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
+  inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
+      : _typeless(kj::mv(typeless)) {}
+
+private:
+  ::capnp::AnyPointer::Pipeline _typeless;
+  friend class ::capnp::PipelineHook;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+};
+#endif  // !CAPNP_LITE
+
+class ActorUnregRep::Reader {
+public:
+  typedef ActorUnregRep Reads;
+
+  Reader() = default;
+  inline explicit Reader(::capnp::_::StructReader base): _reader(base) {}
+
+  inline ::capnp::MessageSize totalSize() const {
+    return _reader.totalSize().asPublic();
+  }
+
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const {
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+  }
+#endif  // !CAPNP_LITE
+
+  inline  ::Status getStatus() const;
+
+  inline  ::int32_t getPort() const;
+
+private:
+  ::capnp::_::StructReader _reader;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::List;
+  friend class ::capnp::MessageBuilder;
+  friend class ::capnp::Orphanage;
+};
+
+class ActorUnregRep::Builder {
+public:
+  typedef ActorUnregRep Builds;
+
+  Builder() = delete;  // Deleted to discourage incorrect usage.
+                       // You can explicitly initialize to nullptr instead.
+  inline Builder(decltype(nullptr)) {}
+  inline explicit Builder(::capnp::_::StructBuilder base): _builder(base) {}
+  inline operator Reader() const { return Reader(_builder.asReader()); }
+  inline Reader asReader() const { return *this; }
+
+  inline ::capnp::MessageSize totalSize() const { return asReader().totalSize(); }
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const { return asReader().toString(); }
+#endif  // !CAPNP_LITE
+
+  inline  ::Status getStatus();
+  inline void setStatus( ::Status value);
+
+  inline  ::int32_t getPort();
+  inline void setPort( ::int32_t value);
+
+private:
+  ::capnp::_::StructBuilder _builder;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  friend class ::capnp::Orphanage;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+};
+
+#if !CAPNP_LITE
+class ActorUnregRep::Pipeline {
+public:
+  typedef ActorUnregRep Pipelines;
 
   inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
   inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
@@ -1261,6 +1477,10 @@ public:
   inline bool hasServiceLookup() const;
   inline  ::ServiceLookupReq::Reader getServiceLookup() const;
 
+  inline bool isActorUnreg() const;
+  inline bool hasActorUnreg() const;
+  inline  ::ActorRegReq::Reader getActorUnreg() const;
+
 private:
   ::capnp::_::StructReader _reader;
   template <typename, ::capnp::Kind>
@@ -1313,6 +1533,14 @@ public:
   inline  ::ServiceLookupReq::Builder initServiceLookup();
   inline void adoptServiceLookup(::capnp::Orphan< ::ServiceLookupReq>&& value);
   inline ::capnp::Orphan< ::ServiceLookupReq> disownServiceLookup();
+
+  inline bool isActorUnreg();
+  inline bool hasActorUnreg();
+  inline  ::ActorRegReq::Builder getActorUnreg();
+  inline void setActorUnreg( ::ActorRegReq::Reader value);
+  inline  ::ActorRegReq::Builder initActorUnreg();
+  inline void adoptActorUnreg(::capnp::Orphan< ::ActorRegReq>&& value);
+  inline ::capnp::Orphan< ::ActorRegReq> disownActorUnreg();
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -1370,6 +1598,10 @@ public:
   inline bool hasServiceLookup() const;
   inline  ::ServiceLookupRep::Reader getServiceLookup() const;
 
+  inline bool isActorUnreg() const;
+  inline bool hasActorUnreg() const;
+  inline  ::ActorUnregRep::Reader getActorUnreg() const;
+
 private:
   ::capnp::_::StructReader _reader;
   template <typename, ::capnp::Kind>
@@ -1422,6 +1654,14 @@ public:
   inline  ::ServiceLookupRep::Builder initServiceLookup();
   inline void adoptServiceLookup(::capnp::Orphan< ::ServiceLookupRep>&& value);
   inline ::capnp::Orphan< ::ServiceLookupRep> disownServiceLookup();
+
+  inline bool isActorUnreg();
+  inline bool hasActorUnreg();
+  inline  ::ActorUnregRep::Builder getActorUnreg();
+  inline void setActorUnreg( ::ActorUnregRep::Reader value);
+  inline  ::ActorUnregRep::Builder initActorUnreg();
+  inline void adoptActorUnreg(::capnp::Orphan< ::ActorUnregRep>&& value);
+  inline ::capnp::Orphan< ::ActorUnregRep> disownActorUnreg();
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -1864,6 +2104,130 @@ inline  ::int32_t ActorRegRep::Builder::getPort() {
       1 * ::capnp::ELEMENTS);
 }
 inline void ActorRegRep::Builder::setPort( ::int32_t value) {
+  _builder.setDataField< ::int32_t>(
+      1 * ::capnp::ELEMENTS, value);
+}
+
+inline bool ActorUnregReq::Reader::hasAppName() const {
+  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline bool ActorUnregReq::Builder::hasAppName() {
+  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::Text::Reader ActorUnregReq::Reader::getAppName() const {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _reader.getPointerField(0 * ::capnp::POINTERS));
+}
+inline  ::capnp::Text::Builder ActorUnregReq::Builder::getAppName() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void ActorUnregReq::Builder::setAppName( ::capnp::Text::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
+      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+}
+inline  ::capnp::Text::Builder ActorUnregReq::Builder::initAppName(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
+      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+}
+inline void ActorUnregReq::Builder::adoptAppName(
+    ::capnp::Orphan< ::capnp::Text>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
+      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::Text> ActorUnregReq::Builder::disownAppName() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+
+inline bool ActorUnregReq::Reader::hasVersion() const {
+  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
+}
+inline bool ActorUnregReq::Builder::hasVersion() {
+  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::Text::Reader ActorUnregReq::Reader::getVersion() const {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _reader.getPointerField(1 * ::capnp::POINTERS));
+}
+inline  ::capnp::Text::Builder ActorUnregReq::Builder::getVersion() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _builder.getPointerField(1 * ::capnp::POINTERS));
+}
+inline void ActorUnregReq::Builder::setVersion( ::capnp::Text::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
+      _builder.getPointerField(1 * ::capnp::POINTERS), value);
+}
+inline  ::capnp::Text::Builder ActorUnregReq::Builder::initVersion(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
+      _builder.getPointerField(1 * ::capnp::POINTERS), size);
+}
+inline void ActorUnregReq::Builder::adoptVersion(
+    ::capnp::Orphan< ::capnp::Text>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
+      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::Text> ActorUnregReq::Builder::disownVersion() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
+      _builder.getPointerField(1 * ::capnp::POINTERS));
+}
+
+inline bool ActorUnregReq::Reader::hasActorName() const {
+  return !_reader.getPointerField(2 * ::capnp::POINTERS).isNull();
+}
+inline bool ActorUnregReq::Builder::hasActorName() {
+  return !_builder.getPointerField(2 * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::Text::Reader ActorUnregReq::Reader::getActorName() const {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _reader.getPointerField(2 * ::capnp::POINTERS));
+}
+inline  ::capnp::Text::Builder ActorUnregReq::Builder::getActorName() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _builder.getPointerField(2 * ::capnp::POINTERS));
+}
+inline void ActorUnregReq::Builder::setActorName( ::capnp::Text::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
+      _builder.getPointerField(2 * ::capnp::POINTERS), value);
+}
+inline  ::capnp::Text::Builder ActorUnregReq::Builder::initActorName(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
+      _builder.getPointerField(2 * ::capnp::POINTERS), size);
+}
+inline void ActorUnregReq::Builder::adoptActorName(
+    ::capnp::Orphan< ::capnp::Text>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
+      _builder.getPointerField(2 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::Text> ActorUnregReq::Builder::disownActorName() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
+      _builder.getPointerField(2 * ::capnp::POINTERS));
+}
+
+inline  ::Status ActorUnregRep::Reader::getStatus() const {
+  return _reader.getDataField< ::Status>(
+      0 * ::capnp::ELEMENTS);
+}
+
+inline  ::Status ActorUnregRep::Builder::getStatus() {
+  return _builder.getDataField< ::Status>(
+      0 * ::capnp::ELEMENTS);
+}
+inline void ActorUnregRep::Builder::setStatus( ::Status value) {
+  _builder.setDataField< ::Status>(
+      0 * ::capnp::ELEMENTS, value);
+}
+
+inline  ::int32_t ActorUnregRep::Reader::getPort() const {
+  return _reader.getDataField< ::int32_t>(
+      1 * ::capnp::ELEMENTS);
+}
+
+inline  ::int32_t ActorUnregRep::Builder::getPort() {
+  return _builder.getDataField< ::int32_t>(
+      1 * ::capnp::ELEMENTS);
+}
+inline void ActorUnregRep::Builder::setPort( ::int32_t value) {
   _builder.setDataField< ::int32_t>(
       1 * ::capnp::ELEMENTS, value);
 }
@@ -2593,6 +2957,58 @@ inline ::capnp::Orphan< ::ServiceLookupReq> DiscoReq::Builder::disownServiceLook
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
+inline bool DiscoReq::Reader::isActorUnreg() const {
+  return which() == DiscoReq::ACTOR_UNREG;
+}
+inline bool DiscoReq::Builder::isActorUnreg() {
+  return which() == DiscoReq::ACTOR_UNREG;
+}
+inline bool DiscoReq::Reader::hasActorUnreg() const {
+  if (which() != DiscoReq::ACTOR_UNREG) return false;
+  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline bool DiscoReq::Builder::hasActorUnreg() {
+  if (which() != DiscoReq::ACTOR_UNREG) return false;
+  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline  ::ActorRegReq::Reader DiscoReq::Reader::getActorUnreg() const {
+  KJ_IREQUIRE(which() == DiscoReq::ACTOR_UNREG,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::ActorRegReq>::get(
+      _reader.getPointerField(0 * ::capnp::POINTERS));
+}
+inline  ::ActorRegReq::Builder DiscoReq::Builder::getActorUnreg() {
+  KJ_IREQUIRE(which() == DiscoReq::ACTOR_UNREG,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::ActorRegReq>::get(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void DiscoReq::Builder::setActorUnreg( ::ActorRegReq::Reader value) {
+  _builder.setDataField<DiscoReq::Which>(
+      0 * ::capnp::ELEMENTS, DiscoReq::ACTOR_UNREG);
+  ::capnp::_::PointerHelpers< ::ActorRegReq>::set(
+      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+}
+inline  ::ActorRegReq::Builder DiscoReq::Builder::initActorUnreg() {
+  _builder.setDataField<DiscoReq::Which>(
+      0 * ::capnp::ELEMENTS, DiscoReq::ACTOR_UNREG);
+  return ::capnp::_::PointerHelpers< ::ActorRegReq>::init(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void DiscoReq::Builder::adoptActorUnreg(
+    ::capnp::Orphan< ::ActorRegReq>&& value) {
+  _builder.setDataField<DiscoReq::Which>(
+      0 * ::capnp::ELEMENTS, DiscoReq::ACTOR_UNREG);
+  ::capnp::_::PointerHelpers< ::ActorRegReq>::adopt(
+      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::ActorRegReq> DiscoReq::Builder::disownActorUnreg() {
+  KJ_IREQUIRE(which() == DiscoReq::ACTOR_UNREG,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::ActorRegReq>::disown(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+
 inline  ::DiscoRep::Which DiscoRep::Reader::which() const {
   return _reader.getDataField<Which>(0 * ::capnp::ELEMENTS);
 }
@@ -2753,6 +3169,58 @@ inline ::capnp::Orphan< ::ServiceLookupRep> DiscoRep::Builder::disownServiceLook
   KJ_IREQUIRE(which() == DiscoRep::SERVICE_LOOKUP,
               "Must check which() before get()ing a union member.");
   return ::capnp::_::PointerHelpers< ::ServiceLookupRep>::disown(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+
+inline bool DiscoRep::Reader::isActorUnreg() const {
+  return which() == DiscoRep::ACTOR_UNREG;
+}
+inline bool DiscoRep::Builder::isActorUnreg() {
+  return which() == DiscoRep::ACTOR_UNREG;
+}
+inline bool DiscoRep::Reader::hasActorUnreg() const {
+  if (which() != DiscoRep::ACTOR_UNREG) return false;
+  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline bool DiscoRep::Builder::hasActorUnreg() {
+  if (which() != DiscoRep::ACTOR_UNREG) return false;
+  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline  ::ActorUnregRep::Reader DiscoRep::Reader::getActorUnreg() const {
+  KJ_IREQUIRE(which() == DiscoRep::ACTOR_UNREG,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::ActorUnregRep>::get(
+      _reader.getPointerField(0 * ::capnp::POINTERS));
+}
+inline  ::ActorUnregRep::Builder DiscoRep::Builder::getActorUnreg() {
+  KJ_IREQUIRE(which() == DiscoRep::ACTOR_UNREG,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::ActorUnregRep>::get(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void DiscoRep::Builder::setActorUnreg( ::ActorUnregRep::Reader value) {
+  _builder.setDataField<DiscoRep::Which>(
+      0 * ::capnp::ELEMENTS, DiscoRep::ACTOR_UNREG);
+  ::capnp::_::PointerHelpers< ::ActorUnregRep>::set(
+      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+}
+inline  ::ActorUnregRep::Builder DiscoRep::Builder::initActorUnreg() {
+  _builder.setDataField<DiscoRep::Which>(
+      0 * ::capnp::ELEMENTS, DiscoRep::ACTOR_UNREG);
+  return ::capnp::_::PointerHelpers< ::ActorUnregRep>::init(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void DiscoRep::Builder::adoptActorUnreg(
+    ::capnp::Orphan< ::ActorUnregRep>&& value) {
+  _builder.setDataField<DiscoRep::Which>(
+      0 * ::capnp::ELEMENTS, DiscoRep::ACTOR_UNREG);
+  ::capnp::_::PointerHelpers< ::ActorUnregRep>::adopt(
+      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::ActorUnregRep> DiscoRep::Builder::disownActorUnreg() {
+  KJ_IREQUIRE(which() == DiscoRep::ACTOR_UNREG,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::ActorUnregRep>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
