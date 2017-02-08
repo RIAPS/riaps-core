@@ -209,6 +209,55 @@ riaps_actor (zsock_t *pipe, void *args)
                     clients[clientKeyGlobal] = std::unique_ptr<actor_details>(new actor_details());
                     clients[clientKeyGlobal]->port = port;
                 }
+            } else if (msg_discoreq.isActorUnreg()){
+                auto msg_actorunreq = msg_discoreq.getActorUnreg();
+                std::string actorname    = std::string(msg_actorunreq.getActorName());
+                std::string appname      = std::string(msg_actorunreq.getAppName());
+
+                std::string clientKeyBase = "/" + appname + '/' + actorname + "/";
+                std::string clientKeyLocal = clientKeyBase + mac_address;
+                std::string clientKeyGlobal = clientKeyBase + host_address;
+
+                std::vector<std::string> keysToBeErased{clientKeyBase, clientKeyLocal, clientKeyGlobal};
+
+                std::cout << "Unregister actor: " << clientKeyBase << std::endl;
+
+                int port = -1;
+                if (clients.find(clientKeyBase)!=clients.end()){
+                    port = clients[clientKeyBase]->port;
+                }
+
+                for (auto it = keysToBeErased.begin(); it!=keysToBeErased.end(); it++){
+                    if (clients.find(*it)!=clients.end()){
+
+                        // erased elements
+                        int erased = clients.erase(*it);
+                        if (erased == 0) {
+                            std::cout << "Couldn't find actor to unregister: " << *it << std::endl;
+                        }
+                    }
+                }
+
+                // Create and send the Response
+                capnp::MallocMessageBuilder message;
+                auto drepmsg = message.initRoot<DiscoRep>();
+                auto unregrepmsg = drepmsg.initActorUnreg();
+
+                // If the socket was found
+                if (port!=-1) {
+                    unregrepmsg.setStatus(Status::OK);
+                    unregrepmsg.setPort(port);
+                } else {
+                    unregrepmsg.setStatus(Status::ERR);
+                }
+
+                auto serializedMessage = capnp::messageToFlatArray(message);
+
+                zmsg_t* msg = zmsg_new();
+                zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
+
+                zmsg_send(&msg, riaps_socket);
+
             } else if (msg_discoreq.isServiceReg()){
                 auto msg_servicereg_req = msg_discoreq.getServiceReg();
                 auto msg_path           = msg_servicereg_req.getPath();
