@@ -13,8 +13,8 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_HOME_DIRECTORY}/bin)
 include_directories(include)
 
 #Set the platform
-#include(CMakeLists_arm.txt)
-include(CMakeLists_amd64.txt)
+include(CMakeLists_arm.txt)
+#include(CMakeLists_amd64.txt)
 
 #add_subdirectory(opendht)
 

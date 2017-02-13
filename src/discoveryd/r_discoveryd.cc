@@ -119,8 +119,8 @@ int main()
             if (!msg) {
                 std::cout << "No msg from external scripts => interrupted" << std::endl;
             } else{
+                char* header = zmsg_popstr(msg);
                 char* command = zmsg_popstr(msg);
-
                 if (streq(command, CMD_JOIN)){
                     char* newhost = zmsg_popstr(msg);
                     if (newhost){
@@ -142,10 +142,11 @@ int main()
                     }
                 }
 
-                if (command){
-                    zstr_free(&command);
-                }
+                zstr_free(&command);
+                zstr_free(&header);
+                zmsg_destroy(&msg);
             }
+
         }
 
         if (!has_joined && ipcache.size()>1){
