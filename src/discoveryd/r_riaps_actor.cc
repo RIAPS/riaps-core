@@ -693,12 +693,4 @@ int deregisterActor(const std::string& appName,
     return port;
 }
 
-/*bool _client_details::operator==(const client_details &rhs) {
-        return app_name      == rhs.app_name      &&
-               actor_name    == rhs.actor_name    &&
-               actor_host    == rhs.actor_host    &&
-               instance_name == rhs.instance_name &&
-               portname      == rhs.portname      &&
-               isLocal       == rhs.isLocal;
-}*/
 
