@@ -20,6 +20,7 @@ struct _actor_details;
 typedef struct _client_details client_details;
 typedef struct _actor_details actor_details;
 
+
 #define RIAPS_DHT_NODE_PORT 4222
 
 void dhtJoinToCluster(std::string&, int port, dht::DhtRunner&);

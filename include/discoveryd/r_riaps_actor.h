@@ -10,6 +10,11 @@
 #include <czmq.h>
 
 
+struct _client_details;
+struct _actor_details;
+
+typedef struct _client_details client_details;
+typedef struct _actor_details actor_details;
 
 
 
@@ -63,6 +68,11 @@ struct _client_details{
 
 
 void riaps_actor (zsock_t *pipe, void *args);
+int deregisterActor(const std::string& appName,
+                    const std::string& actorName,
+                    const std::string& macAddress,
+                    const std::string& hostAddress,
+                    std::map<std::string, std::unique_ptr<actor_details>>& clients);
 
 
 

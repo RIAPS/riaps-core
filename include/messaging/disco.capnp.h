@@ -74,7 +74,7 @@ struct ActorRegReq {
   class Pipeline;
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(dd81ef2fce62e663, 0, 3)
+    CAPNP_DECLARE_STRUCT_HEADER(dd81ef2fce62e663, 1, 3)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
     #endif  // !CAPNP_LITE
@@ -179,7 +179,7 @@ struct ServiceRegReq {
   class Pipeline;
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(80529beffe2767a4, 0, 2)
+    CAPNP_DECLARE_STRUCT_HEADER(80529beffe2767a4, 1, 2)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
     #endif  // !CAPNP_LITE
@@ -365,6 +365,8 @@ public:
   inline bool hasActorName() const;
   inline  ::capnp::Text::Reader getActorName() const;
 
+  inline  ::int32_t getPid() const;
+
 private:
   ::capnp::_::StructReader _reader;
   template <typename, ::capnp::Kind>
@@ -413,6 +415,9 @@ public:
   inline  ::capnp::Text::Builder initActorName(unsigned int size);
   inline void adoptActorName(::capnp::Orphan< ::capnp::Text>&& value);
   inline ::capnp::Orphan< ::capnp::Text> disownActorName();
+
+  inline  ::int32_t getPid();
+  inline void setPid( ::int32_t value);
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -1024,6 +1029,8 @@ public:
   inline bool hasSocket() const;
   inline  ::Socket::Reader getSocket() const;
 
+  inline  ::int32_t getPid() const;
+
 private:
   ::capnp::_::StructReader _reader;
   template <typename, ::capnp::Kind>
@@ -1065,6 +1072,9 @@ public:
   inline  ::Socket::Builder initSocket();
   inline void adoptSocket(::capnp::Orphan< ::Socket>&& value);
   inline ::capnp::Orphan< ::Socket> disownSocket();
+
+  inline  ::int32_t getPid();
+  inline void setPid( ::int32_t value);
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -2080,6 +2090,20 @@ inline ::capnp::Orphan< ::capnp::Text> ActorRegReq::Builder::disownActorName() {
       _builder.getPointerField(2 * ::capnp::POINTERS));
 }
 
+inline  ::int32_t ActorRegReq::Reader::getPid() const {
+  return _reader.getDataField< ::int32_t>(
+      0 * ::capnp::ELEMENTS);
+}
+
+inline  ::int32_t ActorRegReq::Builder::getPid() {
+  return _builder.getDataField< ::int32_t>(
+      0 * ::capnp::ELEMENTS);
+}
+inline void ActorRegReq::Builder::setPid( ::int32_t value) {
+  _builder.setDataField< ::int32_t>(
+      0 * ::capnp::ELEMENTS, value);
+}
+
 inline  ::Status ActorRegRep::Reader::getStatus() const {
   return _reader.getDataField< ::Status>(
       0 * ::capnp::ELEMENTS);
@@ -2570,6 +2594,20 @@ inline void ServiceRegReq::Builder::adoptSocket(
 inline ::capnp::Orphan< ::Socket> ServiceRegReq::Builder::disownSocket() {
   return ::capnp::_::PointerHelpers< ::Socket>::disown(
       _builder.getPointerField(1 * ::capnp::POINTERS));
+}
+
+inline  ::int32_t ServiceRegReq::Reader::getPid() const {
+  return _reader.getDataField< ::int32_t>(
+      0 * ::capnp::ELEMENTS);
+}
+
+inline  ::int32_t ServiceRegReq::Builder::getPid() {
+  return _builder.getDataField< ::int32_t>(
+      0 * ::capnp::ELEMENTS);
+}
+inline void ServiceRegReq::Builder::setPid( ::int32_t value) {
+  _builder.setDataField< ::int32_t>(
+      0 * ::capnp::ELEMENTS, value);
 }
 
 inline  ::Status ServiceRegRep::Reader::getStatus() const {

@@ -159,25 +159,34 @@ riaps_actor (zsock_t *pipe, void *args)
 
                 std::cout << "Register actor: " << clientKeyBase << std::endl;
 
-                // If the actor already registered
-                if (clients.find(clientKeyBase)!=clients.end()) {
-                    std::cout << "Cannot register actor. This actor already registered (" << clientKeyBase << ")" << std::endl;
+                bool isRegistered = clients.find(clientKeyBase)!=clients.end();
+                bool isRunning = isRegistered && kill(clients.find(clientKeyBase)->second->pid,0)==0;
+
+                // If the actor already registered and running
+                if (isRunning) {
+                    std::cout << "Cannot register actor. This actor already registered (" << clientKeyBase << ")"
+                              << std::endl;
 
                     capnp::MallocMessageBuilder message;
                     auto drepmsg = message.initRoot<DiscoRep>();
                     auto arepmsg = drepmsg.initActorReg();
-
                     arepmsg.setPort(0);
                     arepmsg.setStatus(Status::ERR);
 
+
                     auto serializedMessage = capnp::messageToFlatArray(message);
 
-                    zmsg_t* msg = zmsg_new();
+                    zmsg_t *msg = zmsg_new();
                     zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
-
                     zmsg_send(&msg, riaps_socket);
 
                 } else{
+
+                    // Purge the old instance
+                    if (isRegistered && !isRunning){
+                        deregisterActor(appname, actorname, mac_address, host_address, clients);
+                    }
+
                     // Open a new PAIR socket for actor communication
                     zsock_t * actor_socket = zsock_new (ZMQ_PAIR);
                     auto port = zsock_bind(actor_socket, "tcp://*:!");
@@ -214,29 +223,7 @@ riaps_actor (zsock_t *pipe, void *args)
                 std::string actorname    = std::string(msg_actorunreq.getActorName());
                 std::string appname      = std::string(msg_actorunreq.getAppName());
 
-                std::string clientKeyBase = "/" + appname + '/' + actorname + "/";
-                std::string clientKeyLocal = clientKeyBase + mac_address;
-                std::string clientKeyGlobal = clientKeyBase + host_address;
-
-                std::vector<std::string> keysToBeErased{clientKeyBase, clientKeyLocal, clientKeyGlobal};
-
-                std::cout << "Unregister actor: " << clientKeyBase << std::endl;
-
-                int port = -1;
-                if (clients.find(clientKeyBase)!=clients.end()){
-                    port = clients[clientKeyBase]->port;
-                }
-
-                for (auto it = keysToBeErased.begin(); it!=keysToBeErased.end(); it++){
-                    if (clients.find(*it)!=clients.end()){
-
-                        // erased elements
-                        int erased = clients.erase(*it);
-                        if (erased == 0) {
-                            std::cout << "Couldn't find actor to unregister: " << *it << std::endl;
-                        }
-                    }
-                }
+                int port = deregisterActor(appname, actorname, mac_address, host_address, clients);
 
                 // Create and send the Response
                 capnp::MallocMessageBuilder message;
@@ -671,6 +658,39 @@ riaps_actor (zsock_t *pipe, void *args)
     zsock_destroy(&dht_router_socket);
 
     sleep(1);
+}
+
+int deregisterActor(const std::string& appName,
+                     const std::string& actorName,
+                     const std::string& macAddress,
+                     const std::string& hostAddress,
+                     std::map<std::string, std::unique_ptr<actor_details>>& clients){
+
+    std::string clientKeyBase = "/" + appName + '/' + actorName + "/";
+    std::string clientKeyLocal = clientKeyBase + macAddress;
+    std::string clientKeyGlobal = clientKeyBase + hostAddress;
+
+    std::vector<std::string> keysToBeErased{clientKeyBase, clientKeyLocal, clientKeyGlobal};
+
+    std::cout << "Unregister actor: " << clientKeyBase << std::endl;
+
+    int port = -1;
+    if (clients.find(clientKeyBase)!=clients.end()){
+        port = clients[clientKeyBase]->port;
+    }
+
+    for (auto it = keysToBeErased.begin(); it!=keysToBeErased.end(); it++){
+        if (clients.find(*it)!=clients.end()){
+
+            // erased elements
+            int erased = clients.erase(*it);
+            if (erased == 0) {
+                std::cout << "Couldn't find actor to unregister: " << *it << std::endl;
+            }
+        }
+    }
+
+    return port;
 }
 
 /*bool _client_details::operator==(const client_details &rhs) {
