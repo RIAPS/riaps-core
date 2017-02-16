@@ -10,7 +10,7 @@ void dhtJoinToCluster(std::string& destination_host, int port, dht::DhtRunner& d
 }
 
 void handleGet(const ProviderListGet::Reader& msgProviderGet,
-               const std::map<std::string, std::unique_ptr<actor_details>>& clients)
+               const std::map<std::string, std::unique_ptr<actor_details_t>>& clients)
 {
     auto msgGetResults = msgProviderGet.getResults();
 
@@ -77,8 +77,8 @@ void handleGet(const ProviderListGet::Reader& msgProviderGet,
 /// \param clientSubscriptions List of current key subscribtions.
 /// \param clients  Holds the ZMQ sockets of the client actors.
 void handleUpdate(const ProviderListUpdate::Reader& msgProviderUpdate,
-                  const std::map<std::string, std::vector<std::unique_ptr<client_details>>>& clientSubscriptions,
-                  const std::map<std::string, std::unique_ptr<actor_details>>& clients){
+                  const std::map<std::string, std::vector<std::unique_ptr<client_details_t>>>& clientSubscriptions,
+                  const std::map<std::string, std::unique_ptr<actor_details_t>>& clients){
 
     std::string provider_key = std::string(msgProviderUpdate.getProviderpath().cStr());
 
@@ -125,7 +125,7 @@ void handleUpdate(const ProviderListUpdate::Reader& msgProviderUpdate,
 
                 // If the client port saved before
                 if (clients.find(clientKeyBase) != clients.end()) {
-                    const actor_details *clientSocket = clients.at(clientKeyBase).get();
+                    const actor_details_t *clientSocket = clients.at(clientKeyBase).get();
 
                     if (clientSocket->socket != NULL) {
                         capnp::MallocMessageBuilder message;

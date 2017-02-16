@@ -10,16 +10,17 @@
 #include <czmq.h>
 
 
-struct _client_details;
-struct _actor_details;
+struct _client_details_t;
+struct _actor_details_t;
+struct _service_checkins_t;
 
-typedef struct _client_details client_details;
-typedef struct _actor_details actor_details;
+typedef struct _client_details_t client_details_t;
+typedef struct _actor_details_t actor_details_t;
+typedef struct _service_checkins_t service_checkins_t;
 
 
-
-struct _actor_details {
-    _actor_details(){
+struct _actor_details_t {
+    _actor_details_t(){
         socket=NULL;
     }
 
@@ -33,14 +34,14 @@ struct _actor_details {
     // The actor's PID, so we can detect if the porcess died.
     int pid;
 
-    ~_actor_details(){
+    ~_actor_details_t(){
         if (socket!=NULL) {
             zsock_destroy(&socket);
         }
     }
 };
 
-struct _client_details{
+struct _client_details_t{
     std::string app_name;
     std::string actor_name;
     std::string actor_host;
@@ -49,11 +50,11 @@ struct _client_details{
     bool        isLocal;
 
 
-    _client_details(){
+    _client_details_t(){
         isLocal = false;
     }
 
-    _client_details(const struct _client_details& other){
+    _client_details_t(const struct _client_details_t& other){
         app_name = other.app_name;
         actor_name = other.actor_name;
         actor_host = other.actor_host;
@@ -65,6 +66,19 @@ struct _client_details{
     //bool operator==(const struct _client_details& rhs);
 };
 
+struct _service_checkins_t {
+    std::string key;
+    std::string value;
+    pid_t pid;
+    //uint64_t lastCheckinTime;
+    uint64_t createdTime;
+    uint64_t timeout; // in millisec
+
+    _service_checkins_t(){
+        // 10 mins
+        timeout = 10*60*1000;
+    }
+};
 
 
 void riaps_actor (zsock_t *pipe, void *args);
@@ -72,7 +86,9 @@ int deregisterActor(const std::string& appName,
                     const std::string& actorName,
                     const std::string& macAddress,
                     const std::string& hostAddress,
-                    std::map<std::string, std::unique_ptr<actor_details>>& clients);
+                    std::map<std::string, std::unique_ptr<actor_details_t>>& clients);
+
+void maintainRenewal(std::map<pid_t, std::vector<std::unique_ptr<service_checkins_t>>>& serviceCheckins, dht::DhtRunner& dhtNode);
 
 
 

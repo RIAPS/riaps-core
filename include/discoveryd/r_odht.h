@@ -14,11 +14,11 @@
 #include <memory>
 #include <vector>
 
-struct _client_details;
-struct _actor_details;
+struct _client_details_t;
+struct _actor_details_t;
 
-typedef struct _client_details client_details;
-typedef struct _actor_details actor_details;
+typedef struct _client_details_t client_details_t;
+typedef struct _actor_details_t actor_details_t;
 
 
 #define RIAPS_DHT_NODE_PORT 4222
@@ -26,10 +26,10 @@ typedef struct _actor_details actor_details;
 void dhtJoinToCluster(std::string&, int port, dht::DhtRunner&);
 
 void handleGet(const ProviderListGet::Reader& msgProviderGet,
-               const std::map<std::string, std::unique_ptr<actor_details>>& clients);
+               const std::map<std::string, std::unique_ptr<actor_details_t>>& clients);
 
 void handleUpdate(const ProviderListUpdate::Reader&                                          msgProviderUpdate,
-                  const std::map<std::string, std::vector<std::unique_ptr<client_details>>>& clientSubscriptions,
-                  const std::map<std::string, std::unique_ptr<actor_details>>&               clients);
+                  const std::map<std::string, std::vector<std::unique_ptr<client_details_t>>>& clientSubscriptions,
+                  const std::map<std::string, std::unique_ptr<actor_details_t>>&               clients);
 
 #endif //RIAPS_FW_R_ODHT_H

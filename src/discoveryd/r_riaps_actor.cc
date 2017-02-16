@@ -21,13 +21,13 @@ riaps_actor (zsock_t *pipe, void *args)
 
 
     std::cout << "Start DHT node." << std::endl;
-    dht::DhtRunner dht_node;
+    dht::DhtRunner dhtNode;
 
     // Launch a dht node on a new thread, using a
     // generated RSA key pair, and listen on port 4222.
 
     //dht_node.run(RIAPS_DHT_NODE_PORT, dht::crypto::generateIdentity(), true);
-    dht_node.run(RIAPS_DHT_NODE_PORT, {}, true);
+    dhtNode.run(RIAPS_DHT_NODE_PORT, {}, true);
 
 
     std::cout << "DHT node started." <<std::endl;
@@ -53,16 +53,28 @@ riaps_actor (zsock_t *pipe, void *args)
     //std::map<std::string, int64_t> service_checkins;
 
     // Stores pair sockets for actor communication
-    std::map<std::string, std::unique_ptr<actor_details>> clients;
+    std::map<std::string, std::unique_ptr<actor_details_t>> clients;
 
     // Client subscriptions to messageTypes
-    std::map<std::string, std::vector<std::unique_ptr<client_details>>> clientSubscriptions;
+    std::map<std::string, std::vector<std::unique_ptr<client_details_t>>> clientSubscriptions;
 
     // Registered OpenDHT listeners. Every key can be registered only once.
     std::map<std::string, std::future<size_t>> registeredListeners;
 
+    // Registered services, with PID-s. We are using this local cache for renew services in the OpenDHT.
+    // Checking the registered services in every 20th seconds.
+    std::map<pid_t, std::vector<std::unique_ptr<service_checkins_t>>> serviceCheckins;
+    int64_t lastServiceCheckin = zclock_mono();
+    const uint16_t serviceCheckPeriod = 20000; // In msec.
+
     while (!terminated){
         void *which = zpoller_wait(poller, REGULAR_MAINTAIN_PERIOD);
+
+        // Check services whether they are still alive.
+        // Reregister the too old services (OpenDHT ValueType settings, it is 10 minutes by default)
+        if ((zclock_mono()-lastServiceCheckin) > serviceCheckPeriod){
+            maintainRenewal(serviceCheckins, dhtNode);
+        }
 
         // Handling messages from the caller (e.g.: $TERM$)
         if (which == pipe) {
@@ -87,7 +99,7 @@ riaps_actor (zsock_t *pipe, void *args)
                     if (newhost){
                         std::cout << "Join to: " << newhost << std::endl;
                         std::string str_newhost(newhost);
-                        dhtJoinToCluster(str_newhost, RIAPS_DHT_NODE_PORT, dht_node);
+                        dhtJoinToCluster(str_newhost, RIAPS_DHT_NODE_PORT, dhtNode);
                         zstr_free(&newhost);
                     } else{
                         has_more_msg = false;
@@ -191,7 +203,7 @@ riaps_actor (zsock_t *pipe, void *args)
                     zsock_t * actor_socket = zsock_new (ZMQ_PAIR);
                     auto port = zsock_bind(actor_socket, "tcp://*:!");
 
-                    clients[clientKeyBase] = std::unique_ptr<actor_details>(new actor_details());
+                    clients[clientKeyBase] = std::unique_ptr<actor_details_t>(new actor_details_t());
                     clients[clientKeyBase]->socket     = actor_socket;
                     clients[clientKeyBase]->port = port;
 
@@ -211,11 +223,11 @@ riaps_actor (zsock_t *pipe, void *args)
                     zmsg_send(&msg, riaps_socket);
 
                     std::string clientKeyLocal = clientKeyBase + mac_address;
-                    clients[clientKeyLocal] = std::unique_ptr<actor_details>(new actor_details());
+                    clients[clientKeyLocal] = std::unique_ptr<actor_details_t>(new actor_details_t());
                     clients[clientKeyLocal]->port = port;
 
                     std::string clientKeyGlobal = clientKeyBase + host_address;
-                    clients[clientKeyGlobal] = std::unique_ptr<actor_details>(new actor_details());
+                    clients[clientKeyGlobal] = std::unique_ptr<actor_details_t>(new actor_details_t());
                     clients[clientKeyGlobal]->port = port;
                 }
             } else if (msg_discoreq.isActorUnreg()){
@@ -249,6 +261,8 @@ riaps_actor (zsock_t *pipe, void *args)
                 auto msg_servicereg_req = msg_discoreq.getServiceReg();
                 auto msg_path           = msg_servicereg_req.getPath();
                 auto msg_sock           = msg_servicereg_req.getSocket();
+                auto servicePid         = msg_servicereg_req.getPid();
+
 
                 auto kv_pair = buildInsertKeyValuePair(msg_path.getAppName(),
                                                        msg_path.getMsgType(),
@@ -260,12 +274,24 @@ riaps_actor (zsock_t *pipe, void *args)
 
                 std::cout << "Register service: " + kv_pair.first << std::endl;
 
+                // New pid
+                if (serviceCheckins.find(servicePid) == serviceCheckins.end()){
+                     serviceCheckins[servicePid] = std::vector<std::unique_ptr<service_checkins_t>>();
+                }
+
+                std::unique_ptr<service_checkins_t> newItem = std::unique_ptr<service_checkins_t>(new service_checkins_t());
+                newItem->createdTime = zclock_mono();
+                newItem->key = kv_pair.first;
+                newItem->value = kv_pair.second;
+                newItem->pid = servicePid;
+                serviceCheckins[servicePid].push_back(std::move(newItem));
+
                 // Convert the value to bytes
                 std::vector<uint8_t> opendht_data(kv_pair.second.begin(), kv_pair.second.end());
                 auto keyhash = dht::InfoHash::get(kv_pair.first);
 
 
-                dht_node.put(keyhash, dht::Value(opendht_data));
+                dhtNode.put(keyhash, dht::Value(opendht_data));
 
                 //Send response
                 capnp::MallocMessageBuilder message;
@@ -301,7 +327,7 @@ riaps_actor (zsock_t *pipe, void *args)
                                           client.getPortName()     );
 
                 // This client is interested in this kind of messages. Register it.
-                auto current_client           = std::unique_ptr<client_details>(new client_details());
+                auto current_client           = std::unique_ptr<client_details_t>(new client_details_t());
                 current_client->app_name      = path.getAppName();
                 current_client->actor_host    = client.getActorHost();
                 current_client->portname      = client.getPortName();
@@ -310,13 +336,13 @@ riaps_actor (zsock_t *pipe, void *args)
                 current_client->isLocal       = path.getScope() == Scope::LOCAL?true:false;
 
                 // Copy for the get callback
-                client_details currentClientTmp(*current_client);
+                client_details_t currentClientTmp(*current_client);
 
 
                 // Now using just the discovery service to register the interested clients
                 if (clientSubscriptions.find(lookupkey.first) == clientSubscriptions.end()){
                     // Nobody subscribed to this messagetype
-                    clientSubscriptions[lookupkey.first] = std::vector<std::unique_ptr<client_details>>();
+                    clientSubscriptions[lookupkey.first] = std::vector<std::unique_ptr<client_details_t>>();
                 }
 
                 if (std::find(clientSubscriptions[lookupkey.first].begin(),
@@ -331,7 +357,7 @@ riaps_actor (zsock_t *pipe, void *args)
                 std::cout << "Get: " + lookupkey.first << std::endl;
 
 
-                dht_node.get(lookupkey.first, [currentClientTmp, lookupkey](const std::vector<std::shared_ptr<dht::Value>>& values){
+                dhtNode.get(lookupkey.first, [currentClientTmp, lookupkey](const std::vector<std::shared_ptr<dht::Value>>& values){
                     // Done Callback
 
                     std::vector<std::string> dht_lookup_results;
@@ -457,7 +483,7 @@ riaps_actor (zsock_t *pipe, void *args)
                 if (registeredListeners.find(lookupkeyhash.toString())==registeredListeners.end()) {
 
                     // Add listener to the added key
-                    registeredListeners[lookupkeyhash.toString()] = dht_node.listen(lookupkeyhash,
+                    registeredListeners[lookupkeyhash.toString()] = dhtNode.listen(lookupkeyhash,
                         [lookupkey](const std::vector<std::shared_ptr<dht::Value>> &values) {
 
 
@@ -642,7 +668,7 @@ riaps_actor (zsock_t *pipe, void *args)
 
     //dht_node.setOnStatusChanged()
 
-    dht_node.join();
+    dhtNode.join();
 
     for (auto it_client = clients.begin(); it_client!=clients.end(); it_client++){
         if (it_client->second->socket!=NULL) {
@@ -664,7 +690,7 @@ int deregisterActor(const std::string& appName,
                      const std::string& actorName,
                      const std::string& macAddress,
                      const std::string& hostAddress,
-                     std::map<std::string, std::unique_ptr<actor_details>>& clients){
+                     std::map<std::string, std::unique_ptr<actor_details_t>>& clients){
 
     std::string clientKeyBase = "/" + appName + '/' + actorName + "/";
     std::string clientKeyLocal = clientKeyBase + macAddress;
@@ -691,6 +717,41 @@ int deregisterActor(const std::string& appName,
     }
 
     return port;
+}
+
+
+void maintainRenewal(std::map<pid_t, std::vector<std::unique_ptr<service_checkins_t>>>& serviceCheckins, dht::DhtRunner& dhtNode){
+
+    std::vector<pid_t> toBeRemoved;
+    for (auto it= serviceCheckins.begin(); it!=serviceCheckins.end(); it++){
+        // Check pid, mark the removable pids
+        if (!kill(it->first,0)==0){
+            toBeRemoved.push_back(it->first);
+        }
+    }
+
+    // Remove killed PIDs
+    for (auto it = toBeRemoved.begin(); it!=toBeRemoved.end(); it++){
+        serviceCheckins.erase(*it);
+    }
+
+    // Renew too old services
+    int64_t now = zclock_mono();
+    for (auto pidIt= serviceCheckins.begin(); pidIt!=serviceCheckins.end(); pidIt++){
+        for(auto serviceIt = pidIt->second.begin(); serviceIt!=pidIt->second.end(); serviceIt++){
+
+            // Renew
+            if (now - (*serviceIt)->createdTime > (*serviceIt)->timeout){
+                (*serviceIt)->createdTime = now;
+
+                // Reput key-value
+                std::vector<uint8_t> opendht_data((*serviceIt)->value.begin(), (*serviceIt)->value.end());
+                auto keyhash = dht::InfoHash::get((*serviceIt)->key);
+
+                dhtNode.put(keyhash, dht::Value(opendht_data));
+            }
+        }
+    }
 }
 
 
