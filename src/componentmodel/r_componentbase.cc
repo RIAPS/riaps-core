@@ -114,6 +114,9 @@ namespace riaps{
                                         // note: we assume that the publisher uses tcp://
                                         std::string new_pub_endpoint = "tcp://" + std::string(host) + ":" + std::string(port);
                                         ((ports::SubscriberPort*)port_tobe_updated)->ConnectToPublihser(new_pub_endpoint);
+                                    } else if (port_tobe_updated->GetPortType() == ports::PortTypes::Request){
+                                        std::string new_rep_endpoint = "tcp://" + std::string(host) + ":" + std::string(port);
+                                        ((ports::RequestPort*)port_tobe_updated)->ConnectToResponse(new_rep_endpoint);
                                     }
                                 }
 
@@ -238,12 +241,12 @@ namespace riaps{
         return result;
     }
 
-    const ports::RequestPort*   ComponentBase::InitRequestPort(const _component_port_req_j&){
-
-
-        throw std::runtime_error("Not implemented.");
-
-        return NULL;
+    const ports::RequestPort*   ComponentBase::InitRequestPort(const _component_port_req_j& config){
+        std::unique_ptr<ports::RequestPort> newport(new ports::RequestPort(config, this));
+        auto result = newport.get();
+        newport->Init();
+        _ports[config.port_name] = std::move(newport);
+        return result;
     }
 
     /*

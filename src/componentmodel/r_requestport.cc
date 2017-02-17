@@ -8,6 +8,31 @@
 namespace riaps {
     namespace ports {
 
+        RequestPort::RequestPort(const _component_port_req_j &config, const ComponentBase *component)
+                : PortBase(PortTypes::Request, (component_port_config*)(&config)),
+                    _parent_component(component) {
+
+        }
+
+        void RequestPort::Init() {
+
+            _component_port_req_j* current_config = (_component_port_req_j*)_config;
+
+            auto results =
+                    subscribe_to_service(_parent_component->GetActor()->GetApplicationName(),
+                                         _parent_component->GetConfig().component_name,
+                                         _parent_component->GetActor()->GetActorName(),
+                                         Kind::REQ,
+                                         (current_config->isLocal?Scope::LOCAL:Scope::GLOBAL),
+                                         _config->port_name, // Subscriber name
+                                         current_config->message_type);
+
+            for (auto result : results) {
+                std::string endpoint = "tcp://" + result.host_name + ":" + std::to_string(result.port);
+                ConnectToResponse(endpoint);
+            }
+        }
+
         bool RequestPort::ConnectToResponse(const std::string &rep_endpoint) {
             int rc = zsock_connect(_port_socket, rep_endpoint.c_str());
 

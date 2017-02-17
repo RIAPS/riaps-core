@@ -20,7 +20,8 @@ namespace riaps {
         class RequestPort : public PortBase {
         public:
 
-            //RequestPort(request_conf& config);
+            RequestPort(const _component_port_req_j &config, const ComponentBase *component);
+            virtual void Init();
 
             //static std::unique_ptr<RequestPort> InitFromConfig(request_conf& target_service);
 
@@ -37,8 +38,7 @@ namespace riaps {
 
             //virtual ~RequestPort();
         protected:
-            //service_details GetRemoteService(request_conf& config);
-            //request_conf _config;
+            const ComponentBase *_parent_component;
 
         };
     }
