@@ -32,7 +32,7 @@ namespace riaps {
         }
 
         const std::string& PortBase::GetPortName() const {
-            return _config->port_name;
+            return _config->portName;
         }
         /*PortBase::PortBase(const ComponentBase* parentComponent) {
             port_socket = NULL;

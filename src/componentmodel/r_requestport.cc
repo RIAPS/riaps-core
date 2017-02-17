@@ -24,8 +24,8 @@ namespace riaps {
                                          _parent_component->GetActor()->GetActorName(),
                                          Kind::REQ,
                                          (current_config->isLocal?Scope::LOCAL:Scope::GLOBAL),
-                                         _config->port_name, // Subscriber name
-                                         current_config->message_type);
+                                         _config->portName, // Subscriber name
+                                         current_config->messageType);
 
             for (auto result : results) {
                 std::string endpoint = "tcp://" + result.host_name + ":" + std::to_string(result.port);
@@ -37,7 +37,7 @@ namespace riaps {
             int rc = zsock_connect(_port_socket, rep_endpoint.c_str());
 
             if (rc != 0) {
-                std::cout << "Request '" + _config->port_name + "' couldn't connect to " + rep_endpoint
+                std::cout << "Request '" + _config->portName + "' couldn't connect to " + rep_endpoint
                           << std::endl;
                 return false;
             }
@@ -48,7 +48,7 @@ namespace riaps {
 
         // Before sending the publisher sets up the message type
         void RequestPort::Send(zmsg_t *msg) const {
-            zmsg_pushstr(msg, ((_component_port_req_j*)_config)->message_type.c_str());
+            zmsg_pushstr(msg, ((_component_port_req_j*)_config)->messageType.c_str());
 
             int rc = zmsg_send(&msg, _port_socket);
             assert(rc == 0);

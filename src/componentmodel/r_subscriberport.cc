@@ -25,7 +25,7 @@ namespace riaps{
             int rc = zsock_connect(_port_socket, pub_endpoint.c_str());
 
             if (rc != 0) {
-                std::cout << "Subscriber '" + _config->port_name + "' couldn't connect to " + pub_endpoint
+                std::cout << "Subscriber '" + _config->portName + "' couldn't connect to " + pub_endpoint
                           << std::endl;
                 return false;
             }
@@ -44,8 +44,8 @@ namespace riaps{
                                          _parent_component->GetActor()->GetActorName(),
                                          Kind::SUB,
                                          (current_config->isLocal?Scope::LOCAL:Scope::GLOBAL),
-                                         _config->port_name, // Subscriber name
-                                         current_config->message_type);
+                                         _config->portName, // Subscriber name
+                                         current_config->messageType);
 
             for (auto result : results) {
                 std::string endpoint = "tcp://" + result.host_name + ":" + std::to_string(result.port);

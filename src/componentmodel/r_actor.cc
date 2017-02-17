@@ -84,8 +84,8 @@ namespace riaps {
 
 
                     _component_port_pub_j newpubconfig;
-                    newpubconfig.port_name = pubportname;
-                    newpubconfig.message_type = pubporttype;
+                    newpubconfig.portName = pubportname;
+                    newpubconfig.messageType = pubporttype;
 
                     // If the porttype is defined in the Local list
                     if (local_messagetypes.find(pubporttype) != local_messagetypes.end()){
@@ -109,8 +109,8 @@ namespace riaps {
                     auto subporttype = it_subport.value()["type"];
 
                     _component_port_sub_j newsubconfig;
-                    newsubconfig.port_name = subportname;
-                    newsubconfig.message_type = subporttype;
+                    newsubconfig.portName = subportname;
+                    newsubconfig.messageType = subporttype;
 
                     // If the porttype is defined in the Local list
                     if (local_messagetypes.find(subporttype) != local_messagetypes.end()){
@@ -134,8 +134,8 @@ namespace riaps {
                     auto timperiod = it_tim.value()["period"];
 
                     _component_port_tim_j newtimconfig;
-                    newtimconfig.timer_name = timname;
-                    newtimconfig.period     = timperiod;
+                    newtimconfig.portName = timname;
+                    newtimconfig.period   = timperiod;
 
                     new_component_config.component_ports.tims.push_back(newtimconfig);
                 }

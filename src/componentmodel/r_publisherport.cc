@@ -33,7 +33,7 @@ namespace riaps{
 
 
             if (!register_service(parent_component->GetActor()->GetApplicationName(),
-                                  config.message_type,
+                                  config.messageType,
                                   _host,
                                   _port,
                                   Kind::PUB,
@@ -58,14 +58,14 @@ namespace riaps{
 
         // Before sending the publisher sets up the message type
         void PublisherPort::Send(zmsg_t *msg) const {
-            zmsg_pushstr(msg, ((_component_port_pub_j*)_config)->message_type.c_str());
+            zmsg_pushstr(msg, ((_component_port_pub_j*)_config)->messageType.c_str());
 
             int rc = zmsg_send(&msg, _port_socket);
             assert(rc == 0);
         }
 
         PublisherPort::~PublisherPort() {
-            std::cout << "Publisherport " << _config->port_name << " is stopping" <<std::endl;
+            std::cout << "Publisherport " << _config->portName << " is stopping" <<std::endl;
         }
     }
 }

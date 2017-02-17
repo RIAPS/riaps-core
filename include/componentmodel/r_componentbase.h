@@ -92,7 +92,7 @@ namespace riaps {
 
         //std::map<std::string, std::unique_ptr<PublisherPort>>  _publisherports;
         //std::vector<std::unique_ptr<ports::SubscriberPort>> _subscriberports;
-        std::vector<std::unique_ptr<CallBackTimer>>  _periodic_timers;
+        std::vector<std::unique_ptr<ports::CallBackTimer>>  _periodic_timers;
 
         std::map<std::string, std::unique_ptr<ports::PortBase>> _ports;
 

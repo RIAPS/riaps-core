@@ -220,7 +220,7 @@ namespace riaps{
     const ports::PublisherPort* ComponentBase::InitPublisherPort(const _component_port_pub_j& config) {
         auto result = new ports::PublisherPort(config, this);
         std::unique_ptr<ports::PortBase> newport(result);
-        _ports[config.port_name] = std::move(newport);
+        _ports[config.portName] = std::move(newport);
         return result;
     }
 
@@ -230,14 +230,14 @@ namespace riaps{
         std::unique_ptr<ports::SubscriberPort> newport(new ports::SubscriberPort(config, this));
         auto result = newport.get();
         newport->Init();
-        _ports[config.port_name] = std::move(newport);
+        _ports[config.portName] = std::move(newport);
         return result;
     }
 
     const ports::ResponsePort* ComponentBase::InitResponsePort(const _component_port_rep_j & config) {
         auto result = new ports::ResponsePort(config, this);
         std::unique_ptr<ports::PortBase> newport(result);
-        _ports[config.port_name] = std::move(newport);
+        _ports[config.portName] = std::move(newport);
         return result;
     }
 
@@ -245,7 +245,7 @@ namespace riaps{
         std::unique_ptr<ports::RequestPort> newport(new ports::RequestPort(config, this));
         auto result = newport.get();
         newport->Init();
-        _ports[config.port_name] = std::move(newport);
+        _ports[config.portName] = std::move(newport);
         return result;
     }
 
@@ -273,7 +273,7 @@ namespace riaps{
 
     void ComponentBase::AddTimer(_component_port_tim_j& config) {
         std::string timerchannel = GetTimerChannel();
-        std::unique_ptr<CallBackTimer> newtimer(new CallBackTimer(config.timer_name, timerchannel));
+        std::unique_ptr<ports::CallBackTimer> newtimer(new ports::CallBackTimer(timerchannel, config));
         newtimer->start(config.period);
         _periodic_timers.push_back(std::move(newtimer));
     }

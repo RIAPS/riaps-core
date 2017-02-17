@@ -19,7 +19,7 @@ namespace riaps{
         }
 
         void ResponsePort::Send(zmsg_t *msg) const {
-            zmsg_pushstr(msg, ((_component_port_pub_j*)_config)->message_type.c_str());
+            zmsg_pushstr(msg, ((_component_port_pub_j*)_config)->messageType.c_str());
 
             int rc = zmsg_send(&msg, _port_socket);
             assert(rc == 0);

@@ -50,9 +50,9 @@ typedef struct _component_conf component_conf;
 //// New part
 
 struct _component_port_config {
-    std::string port_name;
-    bool isLocal;
-    std::string message_type;
+    std::string portName;
+    bool        isLocal;
+    std::string messageType;
 
     _component_port_config(){
         isLocal=false;
@@ -70,8 +70,7 @@ struct _component_port_rep_j : public component_port_config{};
 struct _component_port_srv_j : public component_port_config{};
 struct _component_port_sub_j : public component_port_config{
 };
-struct _component_port_tim_j{
-    std::string timer_name;
+struct _component_port_tim_j : public component_port_config {
     ulong       period;
 };
 
