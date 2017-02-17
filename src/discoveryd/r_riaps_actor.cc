@@ -204,6 +204,7 @@ void maintainRenewal(std::map<pid_t, std::vector<std::unique_ptr<service_checkin
 
     // Remove killed PIDs
     for (auto it = toBeRemoved.begin(); it!=toBeRemoved.end(); it++){
+        std::cout << "Remove services with PID: " << *it << std::endl;
         serviceCheckins.erase(*it);
     }
 

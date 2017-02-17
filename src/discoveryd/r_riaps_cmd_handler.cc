@@ -155,10 +155,11 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
 
             std::string clientKeyBase = "/" + appname + '/' + actorname + "/";
 
-            std::cout << "Register actor: " << clientKeyBase << std::endl;
+            std::cout << "Register actor with PID - " << msg_actorreq.getPid() << " : " << clientKeyBase << std::endl;
 
-            bool isRegistered = clients.find(clientKeyBase) != clients.end();
-            bool isRunning = isRegistered && kill(clients.find(clientKeyBase)->second->pid, 0) == 0;
+            auto registeredActorIt = clients.find(clientKeyBase);
+            bool isRegistered =  registeredActorIt!= clients.end();
+            bool isRunning = isRegistered && kill(registeredActorIt->second->pid, 0) == 0;
 
             // If the actor already registered and running
             if (isRunning) {
@@ -192,6 +193,7 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
                 clients[clientKeyBase] = std::unique_ptr<actor_details_t>(new actor_details_t());
                 clients[clientKeyBase]->socket = actor_socket;
                 clients[clientKeyBase]->port = port;
+                clients[clientKeyBase]->pid = msg_actorreq.getPid();
 
                 // Create and send the Response
                 capnp::MallocMessageBuilder message;
@@ -211,10 +213,12 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
                 std::string clientKeyLocal = clientKeyBase + macAddress;
                 clients[clientKeyLocal] = std::unique_ptr<actor_details_t>(new actor_details_t());
                 clients[clientKeyLocal]->port = port;
+                clients[clientKeyLocal]->pid = msg_actorreq.getPid();
 
                 std::string clientKeyGlobal = clientKeyBase + hostAddress;
                 clients[clientKeyGlobal] = std::unique_ptr<actor_details_t>(new actor_details_t());
                 clients[clientKeyGlobal]->port = port;
+                clients[clientKeyGlobal]->pid = msg_actorreq.getPid();
             }
         } else if (msg_discoreq.isActorUnreg()) {
             auto msg_actorunreq = msg_discoreq.getActorUnreg();
@@ -265,6 +269,8 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
                 serviceCheckins[servicePid] = std::vector<std::unique_ptr<service_checkins_t>>();
             }
 
+
+            // Add PID - Service Details
             std::unique_ptr<service_checkins_t> newItem = std::unique_ptr<service_checkins_t>(new service_checkins_t());
             newItem->createdTime = zclock_mono();
             newItem->key = kv_pair.first;
