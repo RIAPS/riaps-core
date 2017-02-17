@@ -13,27 +13,35 @@
 #include <string>
 
 namespace riaps {
-    class RequestPort {
-    public:
 
-        //RequestPort(request_conf& config);
+    class ComponentBase;
 
-        //static std::unique_ptr<RequestPort> InitFromConfig(request_conf& target_service);
+    namespace ports {
+        class RequestPort : public PortBase {
+        public:
 
+            //RequestPort(request_conf& config);
 
+            //static std::unique_ptr<RequestPort> InitFromConfig(request_conf& target_service);
 
-       // zmsg_t* SendMessage(zmsg_t** msg);
+            // Returns false, if the request port couldn't connect
+            bool ConnectToResponse(const std::string& rep_endpoint);
 
-        //static std::unique_ptr<RequestPort> InitFromServiceDetails(service_details& target_service);
+            virtual void Send(zmsg_t *msg) const;
 
-        //static void GetRemoteServiceAsync(request_conf& config, std::string asyncendpoint);
+            // zmsg_t* SendMessage(zmsg_t** msg);
 
-        //virtual ~RequestPort();
-    protected:
-        //service_details GetRemoteService(request_conf& config);
-        //request_conf _config;
+            //static std::unique_ptr<RequestPort> InitFromServiceDetails(service_details& target_service);
 
-    };
+            //static void GetRemoteServiceAsync(request_conf& config, std::string asyncendpoint);
+
+            //virtual ~RequestPort();
+        protected:
+            //service_details GetRemoteService(request_conf& config);
+            //request_conf _config;
+
+        };
+    }
 }
 
 #endif //RIAPS_FW_R_REQUESTPORT_H

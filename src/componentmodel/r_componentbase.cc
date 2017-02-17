@@ -66,10 +66,16 @@ namespace riaps{
                 }
 
                 // Add RequestPorts
-                //for (auto requestconfig : comp->GetConfig().requests_config) {
-                //    auto requestport = std::unique_ptr<RequestPort>(new RequestPort(requestconfig));
-                //    comp->AddRequestPort(requestport);
-                //}
+                // Add the request port to the poller, just to be compatible with riaps-pycom
+                // (and support the not really "async" behavior)
+                for (auto it_reqconf = comp_conf.component_ports.reqs.begin();
+                          it_reqconf!= comp_conf.component_ports.reqs.end();
+                          it_reqconf++) {
+                    const ports::PortBase* newPort = comp->InitRequestPort(*it_reqconf);
+                    const zsock_t* zmqSocket = newPort->GetSocket();
+                    portSockets[zmqSocket] = newPort;
+                    zpoller_add(poller, (void*)newPort->GetSocket());
+                }
 
                 // Add and start subscribers
                 for (auto it_subconf = comp_conf.component_ports.subs.begin();
@@ -230,6 +236,14 @@ namespace riaps{
         std::unique_ptr<ports::PortBase> newport(result);
         _ports[config.port_name] = std::move(newport);
         return result;
+    }
+
+    const ports::RequestPort*   ComponentBase::InitRequestPort(const _component_port_req_j&){
+
+
+        throw std::runtime_error("Not implemented.");
+
+        return NULL;
     }
 
     /*

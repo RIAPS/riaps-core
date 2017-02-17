@@ -12,7 +12,7 @@ set(FRAMEWORK_LIB_FILES r_discoverdapi.cc
                         r_debugcomponent.cc
                         r_network_interfaces.cc
                         r_responseport.cc
-                        #r_requestport.cc
+                        r_requestport.cc
         )
 
 add_library(riaps SHARED ${FRAMEWORK_LIB_FILES})
