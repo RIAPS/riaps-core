@@ -7,6 +7,8 @@
 
 #include "componentmodel/r_componentbase.h"
 
+# define PORT_CLOCK "clock"
+
 class comp_sensor : public riaps::ComponentBase {
 
 public:

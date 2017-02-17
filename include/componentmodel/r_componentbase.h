@@ -48,9 +48,10 @@ namespace riaps {
         const ports::PublisherPort*  InitPublisherPort(const _component_port_pub_j&);
         const ports::SubscriberPort* InitSubscriberPort(const _component_port_sub_j&);
         const ports::ResponsePort*   InitResponsePort(const _component_port_rep_j&);
-        const ports::RequestPort*   InitRequestPort(const _component_port_req_j&);
+        const ports::RequestPort*    InitRequestPort(const _component_port_req_j&);
+        const ports::CallBackTimer*  InitTimerPort(const _component_port_tim_j&);
 
-        void AddTimer(_component_port_tim_j&);
+        //void AddTimer(_component_port_tim_j&);
 
         std::vector<ports::PublisherPort*>  GetPublisherPorts();
         std::vector<ports::SubscriberPort*> GetSubscriberPorts();
@@ -92,7 +93,7 @@ namespace riaps {
 
         //std::map<std::string, std::unique_ptr<PublisherPort>>  _publisherports;
         //std::vector<std::unique_ptr<ports::SubscriberPort>> _subscriberports;
-        std::vector<std::unique_ptr<ports::CallBackTimer>>  _periodic_timers;
+        //std::vector<std::unique_ptr<ports::CallBackTimer>>  _periodic_timers;
 
         std::map<std::string, std::unique_ptr<ports::PortBase>> _ports;
 

@@ -17,13 +17,13 @@ namespace riaps {
 
     namespace ports {
 
-        class CallBackTimer : PortBase {
+        class CallBackTimer : public PortBase {
         public:
             CallBackTimer(std::string &timerresponsechannel, const _component_port_tim_j& config);
 
             ~CallBackTimer();
 
-            const zsock_t *GetSocket();
+            virtual const zsock_t* GetSocket() const;
 
             void stop();
 

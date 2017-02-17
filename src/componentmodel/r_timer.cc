@@ -20,7 +20,7 @@ namespace riaps {
             zsock_destroy(&_zsock_timer);
         }
 
-        const zsock_t *CallBackTimer::GetSocket() {
+        const zsock_t *CallBackTimer::GetSocket() const {
             return _zsock_timer;
         }
 

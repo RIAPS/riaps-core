@@ -5,9 +5,10 @@
 #ifndef RIAPS_FW_LOCALESTIMATOR_H
 #define RIAPS_FW_LOCALESTIMATOR_H
 
-#include "common.h"
+
 #include "componentmodel/r_componentbase.h"
 
+#define PORT_READY "ready"
 
 class comp_localestimator : public riaps::ComponentBase {
 

@@ -3,25 +3,30 @@
 //
 
 #include "Sensor.h"
-#include "common.h"
-
+#
 comp_sensor::comp_sensor(_component_conf_j &config, riaps::Actor &actor):ComponentBase(config, actor) {
 
 }
 
 void comp_sensor::OnMessageArrived(const std::string &messagetype, zmsg_t *msg_body,
                                    const riaps::ports::PortBase *port) {
-    if (msg_body == NULL && port == NULL){
 
+    if (port->GetPortName() == PORT_CLOCK){
+        std::cout << port->GetPortName() << std::endl;
     }
-    else {
-        zmsg_t* msg = zmsg_new();
-        zmsg_addstr(msg, "Data ready");
-        std::cout << "on_clock(): " << messagetype <<std::endl;
-        if (!SendMessageOnPort(msg, PORT_READY)) {
-            std::cout << "Error sending message in timer" << std::endl;
-        }
-    }
+//    if (port->GetPortName() == "")
+//
+//    if (msg_body == NULL && port == NULL){
+//
+//    }
+//    else {
+//        zmsg_t* msg = zmsg_new();
+//        zmsg_addstr(msg, "Data ready");
+//        std::cout << "on_clock(): " << messagetype <<std::endl;
+//        if (!SendMessageOnPort(msg, PORT_READY)) {
+//            std::cout << "Error sending message in timer" << std::endl;
+//        }
+//    }
 }
 
 comp_sensor::~comp_sensor() {
