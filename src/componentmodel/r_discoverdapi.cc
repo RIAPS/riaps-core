@@ -228,6 +228,7 @@ register_actor(const std::string& appname, const std::string& actorname){
     areqBuilder.setActorName(actorname);
     areqBuilder.setAppName(appname);
     areqBuilder.setVersion("0");
+    areqBuilder.setPid(::getpid());
 
     auto serializedMessage = capnp::messageToFlatArray(message);
 

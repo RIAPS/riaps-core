@@ -15,7 +15,7 @@ namespace riaps{
         {
             _port_socket = zsock_new(ZMQ_PUB);
 
-            std::string ipaddress = GetIPAddress();
+            _host = GetIPAddress();
 
             if (_host == "") {
                 throw std::runtime_error("Publisher cannot be initiated. Cannot find  available network interface.");
