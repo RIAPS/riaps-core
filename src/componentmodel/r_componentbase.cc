@@ -40,10 +40,9 @@ namespace riaps{
 
                 // Add and start timers
                 for (auto config : comp->GetConfig().component_ports.tims) {
+                    // Don't put the zmqSocket into portSockets[zmqSocket], just one timer port exist in the component.
+                    // Cannot differentiate timerports based on ZMQ Sockets.
                     comp->InitTimerPort(config);
-                    //const ports::CallBackTimer* newPort = comp->InitTimerPort(config);
-                    //const zsock_t* zmqSocket = newPort->GetSocket();
-                    //portSockets[zmqSocket] = newPort;
                 }
 
                 // Add and start publishers
@@ -140,21 +139,9 @@ namespace riaps{
                 if (msg) {
                     char *portName = zmsg_popstr(msg);
                     ports::CallBackTimer* timerPort = (ports::CallBackTimer*)comp->GetPortByName(portName);
-                    //const ports::PortBase* riapsPort = portSockets[(zsock_t*)which];
-                    //const std::string& portName = riapsPort->GetPortName();
-
                     comp->OnMessageArrived(portName, NULL, timerPort);
                     zstr_free(&portName);
                     zmsg_destroy(&msg);
-
-//                    char *param = zmsg_popstr(msg);
-//
-//                    if (param) {
-//                        std::string paramStr(param);
-//                        comp->OnMessageArrived(paramStr, NULL, NULL);
-//                        delete param;
-//                    }
-//                    zmsg_destroy(&msg);
                 }
             }
             else if(which){
@@ -301,12 +288,20 @@ namespace riaps{
         return _actor;
     }
 
-    bool ComponentBase::SendMessageOnPort(zmsg_t *msg, std::string portName) const {
+    bool ComponentBase::SendMessageOnPort(zmsg_t *msg, const std::string& portName) const {
         auto port = GetPort(portName);
         if (port == NULL) return false;
 
         port->Send(msg);
         return true;
+    }
+
+    bool ComponentBase::SendMessageOnPort(const std::string message, std::string portName) const{
+        zmsg_t* msg = zmsg_new();
+        zmsg_addstr(msg, message.c_str());
+
+        return SendMessageOnPort(msg, portName);
+
     }
 
     const ports::PortBase* ComponentBase::GetPort(std::string portName) const {

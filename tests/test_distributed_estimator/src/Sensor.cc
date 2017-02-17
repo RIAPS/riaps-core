@@ -11,8 +11,11 @@ comp_sensor::comp_sensor(_component_conf_j &config, riaps::Actor &actor):Compone
 void comp_sensor::OnMessageArrived(const std::string &messagetype, zmsg_t *msg_body,
                                    const riaps::ports::PortBase *port) {
 
+    // port -> GetPortName() == messageType
     if (port->GetPortName() == PORT_CLOCK){
         std::cout << port->GetPortName() << std::endl;
+
+        SendMessageOnPort("ready", PORT_READY);
     }
 //    if (port->GetPortName() == "")
 //

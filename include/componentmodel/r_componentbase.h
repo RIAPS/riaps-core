@@ -60,7 +60,8 @@ namespace riaps {
 
         ports::PortBase* GetPortByName(const std::string&);
 
-        bool SendMessageOnPort(zmsg_t* msg, std::string portName) const;
+        bool SendMessageOnPort(zmsg_t* msg, const std::string& portName) const;
+        bool SendMessageOnPort(const std::string message, std::string portName) const;
 
 
         //std::vector<CallBackTimer*>  GetPeriodicTimers();
