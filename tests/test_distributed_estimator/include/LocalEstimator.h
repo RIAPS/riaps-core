@@ -8,7 +8,9 @@
 
 #include "componentmodel/r_componentbase.h"
 
-#define PORT_READY "ready"
+#define PORT_READY    "ready"
+#define PORT_QUERY    "query"
+#define PORT_ESTIMATE "estimate"
 
 class comp_localestimator : public riaps::ComponentBase {
 

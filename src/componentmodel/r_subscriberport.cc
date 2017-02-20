@@ -53,6 +53,10 @@ namespace riaps{
             }
         }
 
+        SubscriberPort* SubscriberPort::AsSubscribePort() {
+            return this;
+        }
+
         /*std::unique_ptr<SubscriberPort> SubscriberPort::InitFromServiceDetails(service_details& target_service) {
             std::unique_ptr<SubscriberPort> result(new SubscriberPort());
 

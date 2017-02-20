@@ -25,6 +25,10 @@ namespace riaps{
             assert(rc == 0);
         }
 
+        ResponsePort* ResponsePort::AsResponsePort() {
+            return this;
+        }
+
     }
 }
 

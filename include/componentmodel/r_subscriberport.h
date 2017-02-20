@@ -25,6 +25,8 @@ namespace riaps {
             // Returns false, if the subscriber couldn't connect
             bool ConnectToPublihser(const std::string& pub_endpoint);
 
+            virtual SubscriberPort* AsSubscribePort();
+
             //static std::unique_ptr<SubscriberPort> InitFromServiceDetails(service_details& target_service);
 
             //static void GetRemoteServiceAsync(subscriber_conf& config, std::string asyncendpoint);

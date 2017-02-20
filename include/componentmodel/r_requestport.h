@@ -28,7 +28,12 @@ namespace riaps {
             // Returns false, if the request port couldn't connect
             bool ConnectToResponse(const std::string& rep_endpoint);
 
-            virtual void Send(zmsg_t *msg) const;
+            virtual void Send(zmsg_t** msg) const;
+            virtual void Send(std::string message) const;
+
+            virtual std::string Recv();
+
+            virtual RequestPort* AsRequestPort();
 
             // zmsg_t* SendMessage(zmsg_t** msg);
 

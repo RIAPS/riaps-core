@@ -4,6 +4,8 @@
 
 #include "LocalEstimator.h"
 
+
+
 comp_localestimator::comp_localestimator(_component_conf_j &config, riaps::Actor &actor):ComponentBase(config, actor) {
 
 }
@@ -19,6 +21,16 @@ void comp_localestimator::OnMessageArrived(const std::string& messagetype, zmsg_
 
         if (msg_content) {
             std::cout << "on_ready(): " << msg_content << std::endl;
+
+            auto  port = GetPortByName(PORT_QUERY);
+
+            if (port !=NULL && port->AsRequestPort()!=NULL){
+                port->Send("Hello");
+                std::cout << "Response on " << port->GetPortName() << " : " << port->AsRequestPort()->Recv();
+            }
+
+
+
             zstr_free(&msg_content);
         }
 

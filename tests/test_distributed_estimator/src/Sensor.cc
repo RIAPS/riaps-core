@@ -16,6 +16,15 @@ void comp_sensor::OnMessageArrived(const std::string &messagetype, zmsg_t *msg_b
         std::cout << port->GetPortName() << std::endl;
 
         SendMessageOnPort("ready", PORT_READY);
+    } else if (messagetype == PORT_REQUEST){
+        if (msg_body){
+            char* msgStr = zmsg_popstr(msg_body);
+
+            if (msgStr){
+                std::cout << "Arrived: " << msgStr <<std::endl;
+                zstr_free(&msgStr);
+            }
+        }
     }
 //    if (port->GetPortName() == "")
 //

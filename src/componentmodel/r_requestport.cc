@@ -46,12 +46,44 @@ namespace riaps {
             return true;
         }
 
-        // Before sending the publisher sets up the message type
-        void RequestPort::Send(zmsg_t *msg) const {
-            zmsg_pushstr(msg, ((_component_port_req_j*)_config)->messageType.c_str());
+        RequestPort* RequestPort::AsRequestPort() {
+            return this;
+        }
 
-            int rc = zmsg_send(&msg, _port_socket);
+        std::string RequestPort::Recv() {
+            zmsg_t* msg = zmsg_recv((void*)GetSocket());
+            std::string result;
+
+            if (msg){
+                char* messageType = zmsg_popstr(msg);
+                if (messageType){
+                    char* messageStr = zmsg_popstr(msg);
+                    if (messageStr){
+
+                        result = std::string(messageStr);
+
+                        zstr_free(&messageStr);
+                    }
+                    zstr_free(&messageType);
+                }
+            }
+
+            return result;
+        }
+
+        // Before sending the publisher sets up the message type
+        void RequestPort::Send(zmsg_t **msg) const {
+            zmsg_pushstr(*msg, ((_component_port_req_j*)_config)->messageType.c_str());
+
+            int rc = zmsg_send(msg, _port_socket);
             assert(rc == 0);
+        }
+
+        void RequestPort::Send(std::string msg) const{
+            zmsg_t* zmsg = zmsg_new();
+            zmsg_addstr(zmsg, msg.c_str());
+
+            Send(&zmsg);
         }
     }
 }

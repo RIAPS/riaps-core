@@ -16,8 +16,11 @@
 namespace riaps {
 
     class ComponentBase;
+    //class PortBase;
 
     namespace ports {
+
+        //class PortBase;
 
         class ResponsePort : public PortBase {
         public:
@@ -25,6 +28,8 @@ namespace riaps {
             _component_port_rep_j* GetConfig();
 
             virtual void Send(zmsg_t *msg) const;
+
+            virtual ResponsePort* AsResponsePort();
 
             ~ResponsePort();
 
