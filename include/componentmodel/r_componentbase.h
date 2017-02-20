@@ -60,7 +60,7 @@ namespace riaps {
 
         ports::PortBase* GetPortByName(const std::string&);
 
-        bool SendMessageOnPort(zmsg_t* msg, const std::string& portName) const;
+        bool SendMessageOnPort(zmsg_t** msg, const std::string& portName) const;
         bool SendMessageOnPort(const std::string message, std::string portName) const;
 
 
@@ -96,7 +96,7 @@ namespace riaps {
         //std::vector<std::unique_ptr<ports::SubscriberPort>> _subscriberports;
         //std::vector<std::unique_ptr<ports::CallBackTimer>>  _periodic_timers;
 
-        std::map<std::string, std::unique_ptr<ports::PortBase>> _ports;
+
 
 
         //std::vector<std::unique_ptr<ResponsePort>>   _responseports;
@@ -108,7 +108,7 @@ namespace riaps {
         //zpoller_t*  zpoller;
 
     private:
-
+        std::map<std::string, std::unique_ptr<ports::PortBase>> _ports;
 
     };
 }

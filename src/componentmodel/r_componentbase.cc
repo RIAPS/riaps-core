@@ -288,7 +288,7 @@ namespace riaps{
         return _actor;
     }
 
-    bool ComponentBase::SendMessageOnPort(zmsg_t *msg, const std::string& portName) const {
+    bool ComponentBase::SendMessageOnPort(zmsg_t** msg, const std::string& portName) const {
         auto port = GetPort(portName);
         if (port == NULL) return false;
 
@@ -300,7 +300,7 @@ namespace riaps{
         zmsg_t* msg = zmsg_new();
         zmsg_addstr(msg, message.c_str());
 
-        return SendMessageOnPort(msg, portName);
+        return SendMessageOnPort(&msg, portName);
 
     }
 

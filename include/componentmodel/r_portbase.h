@@ -10,11 +10,20 @@
 #include <czmq.h>
 #include <string>
 #include <iostream>
+//#include <componentmodel/r_responseport.h>
+//#include <componentmodel/r_publisherport.h>
+//#include <componentmodel/r_subscriberport.h>
+//#include <componentmodel/r_requestport.h>
 
 #define SERVICE_POLLING_INTERVAL 2000
 
 namespace riaps {
 namespace ports {
+
+    class RequestPort;
+    class ResponsePort;
+    class PublisherPort;
+    class SubscriberPort;
 
     enum PortTypes {Publisher, Subscriber, Request, Response, Timer};
 
@@ -34,13 +43,21 @@ namespace ports {
         /// \return The associated ZMQ socket.
         virtual const zsock_t* GetSocket() const;
 
-        virtual void Send(zmsg_t* msg) const;
+        virtual void Send(zmsg_t** msg) const;
+
+        virtual void Send(std::string message) const;
 
         const PortTypes& GetPortType() const;
 
         virtual const component_port_config* GetConfig() const;
 
         virtual const std::string& GetPortName() const;
+
+        // Return NULL if the called conversion is unavailable or invalid
+        virtual RequestPort*  AsRequestPort();
+        virtual PublisherPort*  AsPublishPort();
+        virtual ResponsePort* AsResponsePort();
+        virtual SubscriberPort* AsSubscribePort();
 
 
         ~PortBase();

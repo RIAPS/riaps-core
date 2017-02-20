@@ -3,7 +3,7 @@
 //
 
 #include <componentmodel/r_configuration.h>
-#include "componentmodel/r_portbase.h"
+#include <componentmodel/r_portbase.h>
 
 namespace riaps {
 
@@ -14,8 +14,12 @@ namespace riaps {
             _config = config;
         }
 
-        void PortBase::Send(zmsg_t *msg) const {
-            throw std::runtime_error("Send not implemented on this kind of port.");
+        void PortBase::Send(zmsg_t** msg) const {
+            throw std::runtime_error("Send not implemented for this port : " + _config->portName);
+        }
+
+        void PortBase::Send(std::string msg) const {
+            throw std::runtime_error("Send not implemented for this port : " + _config->portName);
         }
 
         const zsock_t *PortBase::GetSocket() const {
@@ -34,6 +38,26 @@ namespace riaps {
         const std::string& PortBase::GetPortName() const {
             return _config->portName;
         }
+
+        RequestPort* PortBase::AsRequestPort() {
+            return NULL;
+        }
+
+        PublisherPort* PortBase::AsPublishPort() {
+            return NULL;
+        }
+
+        ResponsePort * PortBase::AsResponsePort() {
+            return NULL;
+        }
+
+        SubscriberPort * PortBase::AsSubscribePort() {
+            return NULL;
+        }
+
+        //virtual PublishPort*  PortBase::AsPublishPort() const;
+        //virtual ResponsePort* PortBase::AsResponsePort() const;
+        //virtual SubscibePort* PortBase::AsSubscribePort() const;
         /*PortBase::PortBase(const ComponentBase* parentComponent) {
             port_socket = NULL;
             _parentComponent = parentComponent;
