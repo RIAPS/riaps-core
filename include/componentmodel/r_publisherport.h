@@ -28,9 +28,9 @@ namespace riaps {
 
            _component_port_pub_j* GetConfig();
 
-           virtual void Send(zmsg_t** msg) const;
+           virtual bool Send(zmsg_t** msg) const;
 
-           virtual void Send(std::string message) const;
+           virtual bool Send(std::string message) const;
 
            virtual PublisherPort*  AsPublishPort();
 

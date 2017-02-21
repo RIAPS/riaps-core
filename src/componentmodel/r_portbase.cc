@@ -12,13 +12,14 @@ namespace riaps {
         PortBase::PortBase(PortTypes portType, component_port_config* config) {
             _port_type = portType;
             _config = config;
+            _port_socket = NULL;
         }
 
-        void PortBase::Send(zmsg_t** msg) const {
+        bool PortBase::Send(zmsg_t** msg) const {
             throw std::runtime_error("Send not implemented for this port : " + _config->portName);
         }
 
-        void PortBase::Send(std::string msg) const {
+        bool PortBase::Send(std::string msg) const {
             throw std::runtime_error("Send not implemented for this port : " + _config->portName);
         }
 

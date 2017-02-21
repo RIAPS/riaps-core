@@ -43,9 +43,9 @@ namespace ports {
         /// \return The associated ZMQ socket.
         virtual const zsock_t* GetSocket() const;
 
-        virtual void Send(zmsg_t** msg) const;
+        virtual bool Send(zmsg_t** msg) const;
 
-        virtual void Send(std::string message) const;
+        virtual bool Send(std::string message) const;
 
         const PortTypes& GetPortType() const;
 

@@ -11,7 +11,9 @@ namespace riaps {
         RequestPort::RequestPort(const _component_port_req_j &config, const ComponentBase *component)
                 : PortBase(PortTypes::Request, (component_port_config*)(&config)),
                     _parent_component(component) {
-
+            _port_socket = zsock_new(ZMQ_REQ);
+            int timeout = 500;//msec
+            zmq_setsockopt(_port_socket, ZMQ_SNDTIMEO, &timeout , sizeof(int));
         }
 
         void RequestPort::Init() {
@@ -72,18 +74,25 @@ namespace riaps {
         }
 
         // Before sending the publisher sets up the message type
-        void RequestPort::Send(zmsg_t **msg) const {
-            zmsg_pushstr(*msg, ((_component_port_req_j*)_config)->messageType.c_str());
+        bool RequestPort::Send(zmsg_t **msg) const {
+            if (_port_socket == NULL){
+                zmsg_destroy(msg);
+                return false;
+            }
+
+            zmsg_pushstr(*msg, ((_component_port_req_j *) _config)->messageType.c_str());
 
             int rc = zmsg_send(msg, _port_socket);
-            assert(rc == 0);
+            if (rc!=0) return false;
+
+            return true;
         }
 
-        void RequestPort::Send(std::string msg) const{
+        bool RequestPort::Send(std::string msg) const{
             zmsg_t* zmsg = zmsg_new();
             zmsg_addstr(zmsg, msg.c_str());
 
-            Send(&zmsg);
+            return Send(&zmsg);
         }
     }
 }

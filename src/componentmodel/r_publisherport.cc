@@ -62,14 +62,14 @@ namespace riaps{
 
 
         // Before sending the publisher sets up the message type
-        void PublisherPort::Send(zmsg_t** msg) const {
+        bool PublisherPort::Send(zmsg_t** msg) const {
             zmsg_pushstr(*msg, ((_component_port_pub_j*)_config)->messageType.c_str());
 
             int rc = zmsg_send(msg, _port_socket);
             assert(rc == 0);
         }
 
-        void PublisherPort::Send(std::string msg) const{
+        bool PublisherPort::Send(std::string msg) const{
             zmsg_t* zmsg = zmsg_new();
             zmsg_addstr(zmsg, msg.c_str());
 

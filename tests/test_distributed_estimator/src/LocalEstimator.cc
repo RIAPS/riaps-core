@@ -25,8 +25,9 @@ void comp_localestimator::OnMessageArrived(const std::string& messagetype, zmsg_
             auto  port = GetPortByName(PORT_QUERY);
 
             if (port !=NULL && port->AsRequestPort()!=NULL){
-                port->Send("Hello");
-                std::cout << "Response on " << port->GetPortName() << " : " << port->AsRequestPort()->Recv();
+                if (port->Send("Hello")){
+                    std::cout << "Response on " << port->GetPortName() << " : " << port->AsRequestPort()->Recv();
+                }
             }
 
 

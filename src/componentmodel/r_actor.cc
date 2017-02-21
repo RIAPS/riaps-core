@@ -132,8 +132,8 @@ namespace riaps {
                      it_reqport++){
 
                     auto reqportname = it_reqport.key();
-                    auto reqtype = it_reqport.value()[J_PORT_REQTYPE];
-                    auto reptype = it_reqport.value()[J_PORT_REPTYPE];
+                    std::string reqtype = it_reqport.value()[J_PORT_REQTYPE];
+                    std::string reptype = it_reqport.value()[J_PORT_REPTYPE];
 
                     _component_port_req_j newreqconfig;
                     newreqconfig.portName = reqportname;
@@ -160,8 +160,8 @@ namespace riaps {
                      it_repport++){
 
                     auto repportname = it_repport.key();
-                    auto reqtype = it_repport.value()[J_PORT_REQTYPE];
-                    auto reptype = it_repport.value()[J_PORT_REPTYPE];
+                    std::string reqtype = it_repport.value()[J_PORT_REQTYPE];
+                    std::string reptype = it_repport.value()[J_PORT_REPTYPE];
 
                     _component_port_rep_j newrepconfig;
                     newrepconfig.portName = repportname;
