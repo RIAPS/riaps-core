@@ -30,7 +30,7 @@ namespace riaps{
 
 
             if (!register_service(parent_component->GetActor()->GetApplicationName(),
-                                  config.rep_type,
+                                  config.messageType,
                                   _host,
                                   _port,
                                   Kind::REP,

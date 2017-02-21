@@ -52,7 +52,7 @@ typedef struct _component_conf component_conf;
 struct _component_port_config {
     std::string portName;
     bool        isLocal;
-    //std::string messageType;
+    std::string messageType;
 
     _component_port_config(){
         isLocal=false;
@@ -62,9 +62,7 @@ struct _component_port_config {
 typedef struct _component_port_config component_port_config;
 
 struct _component_port_clt_j : public component_port_config {};
-struct _component_port_pub_j : public component_port_config {
-    std::string messageType;
-};
+struct _component_port_pub_j : public component_port_config {};
 
 struct _component_port_req_j : public component_port_config {
     std::string req_type;

@@ -134,12 +134,14 @@ namespace riaps {
                     auto reqportname = it_reqport.key();
                     std::string reqtype = it_reqport.value()[J_PORT_REQTYPE];
                     std::string reptype = it_reqport.value()[J_PORT_REPTYPE];
+                    std::string messagetype = reqtype + "#" + reptype;
 
                     _component_port_req_j newreqconfig;
                     newreqconfig.portName = reqportname;
                     //newreqconfig.messageType = subporttype;
                     newreqconfig.req_type = reqtype;
                     newreqconfig.rep_type = reptype;
+                    newreqconfig.messageType = messagetype;
 
                     // If the porttype is defined in the Local list
                     if (local_messagetypes.find(reqtype) != local_messagetypes.end()){
@@ -162,11 +164,13 @@ namespace riaps {
                     auto repportname = it_repport.key();
                     std::string reqtype = it_repport.value()[J_PORT_REQTYPE];
                     std::string reptype = it_repport.value()[J_PORT_REPTYPE];
+                    std::string messagetype = reqtype + "#" + reptype;
 
                     _component_port_rep_j newrepconfig;
                     newrepconfig.portName = repportname;
                     newrepconfig.req_type = reqtype;
                     newrepconfig.rep_type = reptype;
+                    newrepconfig.messageType = messagetype;
 
                     // If the porttype is defined in the Local list
                     if (local_messagetypes.find(reqtype) != local_messagetypes.end()){

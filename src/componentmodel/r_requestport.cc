@@ -31,7 +31,7 @@ namespace riaps {
                                          Kind::REQ,
                                          (current_config->isLocal?Scope::LOCAL:Scope::GLOBAL),
                                          _config->portName, // Subscriber name
-                                         current_config->req_type);
+                                         current_config->messageType);
 
             for (auto result : results) {
                 std::string endpoint = "tcp://" + result.host_name + ":" + std::to_string(result.port);
