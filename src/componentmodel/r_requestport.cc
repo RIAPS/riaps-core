@@ -13,7 +13,11 @@ namespace riaps {
                     _parent_component(component) {
             _port_socket = zsock_new(ZMQ_REQ);
             int timeout = 500;//msec
+            int lingerValue = 0;
             zmq_setsockopt(_port_socket, ZMQ_SNDTIMEO, &timeout , sizeof(int));
+            zmq_setsockopt(_port_socket, ZMQ_LINGER, &lingerValue, sizeof(int));
+
+            _isConnected = false;
         }
 
         void RequestPort::Init() {
@@ -27,7 +31,7 @@ namespace riaps {
                                          Kind::REQ,
                                          (current_config->isLocal?Scope::LOCAL:Scope::GLOBAL),
                                          _config->portName, // Subscriber name
-                                         current_config->messageType);
+                                         current_config->req_type);
 
             for (auto result : results) {
                 std::string endpoint = "tcp://" + result.host_name + ":" + std::to_string(result.port);
@@ -44,6 +48,7 @@ namespace riaps {
                 return false;
             }
 
+            _isConnected = true;
             std::cout << "Request port connected to: " << rep_endpoint << std::endl;
             return true;
         }
@@ -75,12 +80,12 @@ namespace riaps {
 
         // Before sending the publisher sets up the message type
         bool RequestPort::Send(zmsg_t **msg) const {
-            if (_port_socket == NULL){
+            if (_port_socket == NULL || !_isConnected){
                 zmsg_destroy(msg);
                 return false;
             }
 
-            zmsg_pushstr(*msg, ((_component_port_req_j *) _config)->messageType.c_str());
+            zmsg_pushstr(*msg, ((_component_port_req_j *) _config)->req_type.c_str());
 
             int rc = zmsg_send(msg, _port_socket);
             if (rc!=0) return false;

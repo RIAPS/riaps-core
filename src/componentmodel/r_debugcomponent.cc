@@ -8,7 +8,7 @@ DebugComponent::DebugComponent(_component_conf_j &config, riaps::Actor &actor):C
 
 }
 
-void DebugComponent::OnMessageArrived(const std::string& messagetype, zmsg_t *msg_body, const riaps::ports::PortBase *port) {
+void DebugComponent::OnMessageArrived(const std::string& messagetype, zmsg_t *msg_body, riaps::ports::PortBase *port) {
     if (msg_body == NULL && port == NULL){
         std::cout << "Timer event: " << messagetype << std::endl;
     }

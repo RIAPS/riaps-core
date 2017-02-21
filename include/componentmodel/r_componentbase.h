@@ -79,7 +79,7 @@ namespace riaps {
         const Actor* GetActor() const;
         zactor_t* GetZmqPipe() const;
 
-        virtual void OnMessageArrived(const std::string& messagetype, zmsg_t* msg_body, const ports::PortBase* port)=0;
+        virtual void OnMessageArrived(const std::string& messagetype, zmsg_t* msg_body, ports::PortBase* port)=0;
 
         virtual ~ComponentBase();
 

@@ -61,10 +61,10 @@ namespace riaps{
                      it_repconf != comp_conf.component_ports.reps.end();
                      it_repconf++){
 
-                    //const ports::ResponsePort* newPort = comp->InitResponsePort(*it_repconf);
-                    //const zsock_t* zmqSocket = newPort->GetSocket();
-                    //portSockets[zmqSocket] = newPort;
-                    //zpoller_add(poller, (void*)newPort->GetSocket());
+                    const ports::ResponsePort* newPort = comp->InitResponsePort(*it_repconf);
+                    const zsock_t* zmqSocket = newPort->GetSocket();
+                    portSockets[zmqSocket] = newPort;
+                    zpoller_add(poller, (void*)newPort->GetSocket());
                 }
 
                 // Add RequestPorts
@@ -73,8 +73,6 @@ namespace riaps{
                 for (auto it_reqconf = comp_conf.component_ports.reqs.begin();
                           it_reqconf!= comp_conf.component_ports.reqs.end();
                           it_reqconf++) {
-
-                    //auto tmp = *it_reqconf;
 
                     const ports::RequestPort* newPort = comp->InitRequestPort(*it_reqconf);
                     const zsock_t* zmqSocket = newPort->GetSocket();
@@ -152,7 +150,7 @@ namespace riaps{
                 zmsg_t *msg = zmsg_recv(which);
 
                 if (msg) {
-                    const ports::PortBase* riapsPort = portSockets[(zsock_t*)which];
+                    ports::PortBase* riapsPort = (ports::PortBase*)portSockets[(zsock_t*)which];
                     const std::string& portName = riapsPort->GetPortName();
 
                     comp->OnMessageArrived(portName, msg, riapsPort);

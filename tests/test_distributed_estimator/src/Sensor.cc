@@ -9,7 +9,7 @@ comp_sensor::comp_sensor(_component_conf_j &config, riaps::Actor &actor):Compone
 }
 
 void comp_sensor::OnMessageArrived(const std::string &messagetype, zmsg_t *msg_body,
-                                   const riaps::ports::PortBase *port) {
+                                   riaps::ports::PortBase *port) {
 
     // port -> GetPortName() == messageType
     if (port->GetPortName() == PORT_CLOCK){
@@ -23,6 +23,11 @@ void comp_sensor::OnMessageArrived(const std::string &messagetype, zmsg_t *msg_b
             if (msgStr){
                 std::cout << "Arrived: " << msgStr <<std::endl;
                 zstr_free(&msgStr);
+
+                auto rport = port->AsResponsePort();
+                if (rport!=NULL){
+                    rport->Send("Cool");
+                }
             }
         }
     }

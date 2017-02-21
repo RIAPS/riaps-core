@@ -44,6 +44,7 @@ namespace riaps {
             //virtual ~RequestPort();
         protected:
             const ComponentBase *_parent_component;
+            bool _isConnected;
 
         };
     }

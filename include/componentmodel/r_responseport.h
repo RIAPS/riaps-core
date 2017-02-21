@@ -27,7 +27,8 @@ namespace riaps {
             ResponsePort(const _component_port_rep_j &config, ComponentBase *parent_component);
             _component_port_rep_j* GetConfig();
 
-            virtual void Send(zmsg_t *msg) const;
+            virtual bool Send(zmsg_t** msg) const;
+            virtual bool Send(std::string msg) const;
 
             virtual ResponsePort* AsResponsePort();
 
