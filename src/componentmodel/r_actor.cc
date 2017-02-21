@@ -3,8 +3,9 @@
 //
 
 
-#include "componentmodel/r_actor.h"
-#include "componentmodel/r_debugcomponent.h"
+#include <componentmodel/r_actor.h>
+#include <componentmodel/r_debugcomponent.h>
+#include <const/r_jsonmodel.h>
 
 
 #include <set>
@@ -21,10 +22,10 @@ namespace riaps {
         _actor_name       = actorname;
         _application_name = applicationname;
 
-        auto json_instances = json_actorconfig["instances"];
-        auto json_internals = json_actorconfig["internals"];
-        auto json_locals    = json_actorconfig["locals"];
-        auto json_wires     = json_actorconfig["wires"];
+        auto json_instances = json_actorconfig[J_INSTANCES];
+        auto json_internals = json_actorconfig[J_INTERNALS];
+        auto json_locals    = json_actorconfig[J_LOCALS];
+        auto json_wires     = json_actorconfig[J_WIRES];
 
 
         // Get the actor's components, if there is no component => Stop, Error.
@@ -37,7 +38,7 @@ namespace riaps {
         for (auto it_local  = json_locals.begin();
                   it_local != json_locals.end();
                   it_local++){
-            std::string local_type = (it_local.value())["type"];
+            std::string local_type = (it_local.value())[J_PORTTYPE];
             local_messagetypes.insert(local_type);
         }
 
@@ -48,7 +49,7 @@ namespace riaps {
                   it_currentconfig++) {
 
             auto componentName = it_currentconfig.key();
-            std::string componentType = (it_currentconfig.value())["type"];
+            std::string componentType = (it_currentconfig.value())[J_PORTTYPE];
 
             // Check if the component in the map already (wrong configuration)
             for (auto component_config : _component_configurations) {
@@ -69,17 +70,17 @@ namespace riaps {
             auto json_componentconfig = json_componentsconfig[componentType];
 
             // Get the ports
-            auto json_portsconfig = json_componentconfig["ports"];
+            auto json_portsconfig = json_componentconfig[J_PORTS];
 
             // Get the publishers
-            if (json_portsconfig.count("pubs")!=0){
-                auto json_pubports = json_portsconfig["pubs"];
+            if (json_portsconfig.count(J_PORTS_PUBS)!=0){
+                auto json_pubports = json_portsconfig[J_PORTS_PUBS];
                 for (auto it_pubport=json_pubports.begin();
                           it_pubport!=json_pubports.end();
                           it_pubport++){
 
                     auto pubportname = it_pubport.key();
-                    auto pubporttype = it_pubport.value()["type"];
+                    auto pubporttype = it_pubport.value()[J_PORTTYPE];
 
 
 
@@ -99,14 +100,14 @@ namespace riaps {
             }
 
             // Parse subscribers from the config
-            if (json_portsconfig.count("subs")!=0){
-                auto json_subports = json_portsconfig["subs"];
+            if (json_portsconfig.count(J_PORTS_SUBS)!=0){
+                auto json_subports = json_portsconfig[J_PORTS_SUBS];
                 for (auto it_subport = json_subports.begin();
                           it_subport != json_subports.end() ;
                           it_subport++){
 
                     auto subportname = it_subport.key();
-                    auto subporttype = it_subport.value()["type"];
+                    auto subporttype = it_subport.value()[J_PORTTYPE];
 
                     _component_port_sub_j newsubconfig;
                     newsubconfig.portName = subportname;
@@ -123,9 +124,64 @@ namespace riaps {
                 }
             }
 
+            // Parse request ports
+            if (json_portsconfig.count(J_PORTS_REQS)!=0){
+                auto json_reqports = json_portsconfig[J_PORTS_REQS];
+                for (auto it_reqport = json_reqports.begin();
+                     it_reqport != json_reqports.end() ;
+                     it_reqport++){
+
+                    auto reqportname = it_reqport.key();
+                    auto reqtype = it_reqport.value()[J_PORT_REQTYPE];
+                    auto reptype = it_reqport.value()[J_PORT_REPTYPE];
+
+                    _component_port_req_j newreqconfig;
+                    newreqconfig.portName = reqportname;
+                    //newreqconfig.messageType = subporttype;
+                    newreqconfig.req_type = reqtype;
+                    newreqconfig.rep_type = reptype;
+
+                    // If the porttype is defined in the Local list
+                    if (local_messagetypes.find(reqtype) != local_messagetypes.end()){
+                        newreqconfig.isLocal = true;
+                    } else {
+                        newreqconfig.isLocal = false;
+                    }
+
+                    new_component_config.component_ports.reqs.push_back(newreqconfig);
+                }
+            }
+
+            // Parse response ports
+            if (json_portsconfig.count(J_PORTS_REPS)!=0){
+                auto json_repports = json_portsconfig[J_PORTS_REPS];
+                for (auto it_repport = json_repports.begin();
+                     it_repport != json_repports.end() ;
+                     it_repport++){
+
+                    auto repportname = it_repport.key();
+                    auto reqtype = it_repport.value()[J_PORT_REQTYPE];
+                    auto reptype = it_repport.value()[J_PORT_REPTYPE];
+
+                    _component_port_rep_j newrepconfig;
+                    newrepconfig.portName = repportname;
+                    newrepconfig.req_type = reqtype;
+                    newrepconfig.rep_type = reptype;
+
+                    // If the porttype is defined in the Local list
+                    if (local_messagetypes.find(reqtype) != local_messagetypes.end()){
+                        newrepconfig.isLocal = true;
+                    } else {
+                        newrepconfig.isLocal = false;
+                    }
+
+                    new_component_config.component_ports.reps.push_back(newrepconfig);
+                }
+            }
+
             // Get the timers
-            if (json_portsconfig.count("tims")!=0){
-                auto json_tims = json_portsconfig["tims"];
+            if (json_portsconfig.count(J_PORTS_TIMS)!=0){
+                auto json_tims = json_portsconfig[J_PORTS_TIMS];
                 for (auto it_tim = json_tims.begin();
                           it_tim != json_tims.end() ;
                           it_tim++){
