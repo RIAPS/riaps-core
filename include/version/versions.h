@@ -1,0 +1,27 @@
+//
+// Created by istvan on 2/22/17.
+//
+
+#ifndef RIAPS_CORE_VERSIONS_H_H
+#define RIAPS_CORE_VERSIONS_H_H
+
+#include <string>
+
+#define RIAPS_DISCOVERY_VERSION_MAJOR 2
+#define RIAPS_DISCOVERY_VERSION_MINOR 0
+#define RIAPS_DISCOVERY_VERSION_PATCH 0
+
+#define RIAPS_MAKE_VERSION(major, minor, patch) \
+    ((major) * 10000 + (minor) * 100 + (patch))
+
+#define RIAPS_MAKE_PRINTABLE_VERSION(major, minor, patch)\
+    "v" + std::to_string(major) + "." + std::to_string(minor) + "." + std::to_string(patch)
+
+#define RIAPS_DISCOVERY_VERSION \
+    RIAPS_MAKE_VERSION(RIAPS_DISCOVERY_VERSION_MAJOR, RIAPS_DISCOVERY_VERSION_MINOR, RIAPS_DISCOVERY_VERSION_PATCH)
+
+#define RIAPS_DISCOVERY_PRINTABLE_VERSION \
+    RIAPS_MAKE_PRINTABLE_VERSION(RIAPS_DISCOVERY_VERSION_MAJOR, RIAPS_DISCOVERY_VERSION_MINOR, RIAPS_DISCOVERY_VERSION_PATCH)
+
+
+#endif //RIAPS_CORE_VERSIONS_H_H
