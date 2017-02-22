@@ -17,7 +17,9 @@ public:
 
     comp_sensor(_component_conf_j& config, riaps::Actor& actor);
 
-    virtual void OnMessageArrived(const std::string& messagetype, zmsg_t* msg_body, riaps::ports::PortBase* port);
+    virtual void OnMessageArrived(const std::string& messagetype,
+                                  std::vector<std::string>& msgFields,
+                                  riaps::ports::PortBase* port);
 
 
     virtual ~comp_sensor();

@@ -8,26 +8,22 @@ comp_sensor::comp_sensor(_component_conf_j &config, riaps::Actor &actor):Compone
 
 }
 
-void comp_sensor::OnMessageArrived(const std::string &messagetype, zmsg_t *msg_body,
-                                   riaps::ports::PortBase *port) {
+void comp_sensor::OnMessageArrived(const std::string& messagetype,
+                                   std::vector<std::string>& msgFields,
+                                   riaps::ports::PortBase* port) {
 
     PrintMessageOnPort(port);
 
     // port -> GetPortName() == messageType is the same
     if (port->GetPortName() == PORT_CLOCK){
+        SendMessageOnPort(" -> msg <- ", PORT_READY);
+    }
 
-        SendMessageOnPort("ready", PORT_READY);
-    } else if (messagetype == PORT_REQUEST){
-        if (msg_body){
-            char* msgStr = zmsg_popstr(msg_body);
-
-            if (msgStr){
-                zstr_free(&msgStr);
-
-                auto rport = port->AsResponsePort();
-                if (rport!=NULL){
-                    rport->Send("Cool");
-                }
+    else if (messagetype == PORT_REQUEST){
+        riaps::ports::ResponsePort* repPort = GetResponsePortByName(PORT_READY);
+        if (repPort != NULL) {
+            if (repPort->Send("")) {
+                std::cout << "Response on " << repPort->GetPortName() << " : " << port->AsRequestPort()->Recv();
             }
         }
     }

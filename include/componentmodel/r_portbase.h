@@ -52,7 +52,7 @@ namespace ports {
 
         virtual const component_port_config* GetConfig() const;
 
-        virtual const std::string& GetPortName() const;
+        virtual const std::string GetPortName() const;
 
         // Return NULL if the called conversion is unavailable or invalid
         virtual RequestPort*    AsRequestPort();
@@ -67,6 +67,8 @@ namespace ports {
     protected:
         PortTypes                    _port_type;
         zsock_t*                     _port_socket;
+
+    private:
         //std::string                  _port_name;
         const component_port_config* _config;
         //const ComponentBase* _parentComponent;

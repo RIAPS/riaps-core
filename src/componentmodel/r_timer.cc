@@ -46,7 +46,8 @@ namespace riaps {
 
                     // Send FIRE message
                     zmsg_t *msg = zmsg_new();
-                    zmsg_addstr(msg, GetPortName().c_str());
+                    auto portName = GetPortName();
+                    zmsg_addstr(msg, portName.c_str());
                     zmsg_send(&msg, this->_zsock_timer);
 
                     std::this_thread::sleep_for(

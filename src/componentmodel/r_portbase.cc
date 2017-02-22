@@ -36,7 +36,7 @@ namespace riaps {
             return _port_type;
         }
 
-        const std::string& PortBase::GetPortName() const {
+        const std::string PortBase::GetPortName() const {
             return _config->portName;
         }
 

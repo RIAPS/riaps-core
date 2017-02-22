@@ -140,8 +140,9 @@ namespace riaps{
                 if (msg) {
                     char *portName = zmsg_popstr(msg);
                     ports::CallBackTimer* timerPort = (ports::CallBackTimer*)comp->GetPortByName(portName);
-                    comp->OnMessageArrived(portName, NULL, timerPort);
-                    zstr_free(&portName);
+                    std::vector<std::string> fields;
+                    comp->OnMessageArrived(portName, fields, timerPort);
+                    //zstr_free(&portName);
                     zmsg_destroy(&msg);
                 }
             }
@@ -150,11 +151,25 @@ namespace riaps{
                 zmsg_t *msg = zmsg_recv(which);
 
                 if (msg) {
-                    ports::PortBase* riapsPort = (ports::PortBase*)portSockets[(zsock_t*)which];
-                    const std::string& portName = riapsPort->GetPortName();
 
-                    comp->OnMessageArrived(portName, msg, riapsPort);
-                    zmsg_destroy(&msg);
+                    char* messageType = zmsg_popstr(msg);
+                    if (messageType){
+                        ports::PortBase* riapsPort = (ports::PortBase*)portSockets[(zsock_t*)which];
+                        std::vector<std::string> fields;
+                        std::string messageTypeStr = std::string(messageType);
+
+                        char* field = zmsg_popstr(msg);
+                        while (field){
+                            std::string fieldStr = std::string(field);
+                            fields.push_back(fieldStr);
+                            zstr_free(&field);
+                            field = zmsg_popstr(msg);
+                        }
+
+                        comp->OnMessageArrived(messageTypeStr, fields, riapsPort);
+                        zmsg_destroy(&msg);
+                        zstr_free(&messageType);
+                    }
                 }
             }
             else{
@@ -257,6 +272,26 @@ namespace riaps{
         return result;
     }
 
+    ports::PublisherPort* ComponentBase::GetPublisherPortByName(const std::string &portName) {
+        ports::PortBase* portBase = GetPortByName(portName);
+        if (portBase == NULL) return NULL;
+        return portBase->AsPublishPort();
+    }
+
+    ports::RequestPort* ComponentBase::GetRequestPortByName(const std::string &portName) {
+        ports::PortBase* portBase = GetPortByName(portName);
+        if (portBase == NULL) return NULL;
+        return portBase->AsRequestPort();
+    }
+
+    ports::ResponsePort* ComponentBase::GetResponsePortByName(const std::string &portName) {
+        ports::PortBase* portBase = GetPortByName(portName);
+        if (portBase == NULL) return NULL;
+        return portBase->AsResponsePort();
+    }
+
+
+
     /*
     void ComponentBase::AddResponsePort(std::unique_ptr<ResponsePort>& responsePort) {
         //_responseports.push_back(std::move(responsePort));
@@ -346,6 +381,7 @@ namespace riaps{
 
     void ComponentBase::PrintMessageOnPort(ports::PortBase *port, std::string message) {
 
+        if (port == NULL) return;
         std::string direction = (port->AsSubscribePort()!=NULL || port->AsResponsePort() || port->AsTimerPort()) ?
                                 "=> " : "<= ";
 

@@ -246,11 +246,11 @@ namespace riaps {
             if (handle == NULL) {
 
                 // TODO: pass in parameter what to do
-                //throw std::runtime_error("Cannot open library: " + component_library_name + " (" + dlerror() + ")");
+                throw std::runtime_error("Cannot open library: " + component_library_name + " (" + dlerror() + ")");
 
                 //Load a default implementation, for testing
-                riaps::ComponentBase* debug_component = new DebugComponent(component_config, *this);
-                _components.push_back(debug_component);
+                //riaps::ComponentBase* debug_component = new DebugComponent(component_config, *this);
+               // _components.push_back(debug_component);
             }
             else {
                 _component_dll_handles.push_back(handle);

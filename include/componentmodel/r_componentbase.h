@@ -51,7 +51,10 @@ namespace riaps {
         const ports::RequestPort*    InitRequestPort(const _component_port_req_j&);
         const ports::CallBackTimer*  InitTimerPort(const _component_port_tim_j&);
 
-        //void AddTimer(_component_port_tim_j&);
+        ports::PublisherPort* GetPublisherPortByName(const std::string& portName);
+        ports::RequestPort*   GetRequestPortByName(const std::string& portName);
+        ports::ResponsePort*  GetResponsePortByName(const std::string& portName);
+
 
         std::vector<ports::PublisherPort*>  GetPublisherPorts();
         std::vector<ports::SubscriberPort*> GetSubscriberPorts();
@@ -64,23 +67,18 @@ namespace riaps {
         bool SendMessageOnPort(const std::string message, std::string portName) const;
 
 
-        //std::vector<CallBackTimer*>  GetPeriodicTimers();
-        //std::vector<ResponsePort*>   GetResponsePorts();
-        //std::vector<RequestPort*>    GetRequestPorts();
-
-        //virtual std::vector<CallBackTimer*>  GetTimers();
-
-        //virtual const zsock_t* GetTimerPort();
-
-        std::string       GetTimerChannel();
-        std::string       GetCompUuid();
+        std::string             GetTimerChannel();
+        std::string             GetCompUuid();
         const component_conf_j& GetConfig() const;
 
         const Actor* GetActor() const;
         zactor_t* GetZmqPipe() const;
 
-        virtual void OnMessageArrived(const std::string& messagetype, zmsg_t* msg_body, ports::PortBase* port)=0;
-        
+        //virtual void OnMessageArrived(const std::string& messagetype, zmsg_t* msg_body, ports::PortBase* port)=0;
+        virtual void OnMessageArrived(const std::string& messagetype,
+                                      std::vector<std::string>& msgFields,
+                                      ports::PortBase* port)=0;
+
         virtual void PrintMessageOnPort(ports::PortBase* port, std::string message="");
 
         virtual ~ComponentBase();
