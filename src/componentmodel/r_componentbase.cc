@@ -344,6 +344,20 @@ namespace riaps{
         return _zactor_component;
     }
 
+    void ComponentBase::PrintMessageOnPort(ports::PortBase *port, std::string message) {
+
+        std::string direction = (port->AsSubscribePort()!=NULL || port->AsResponsePort() || port->AsTimerPort()) ?
+                                "=> " : "<= ";
+
+        std::cout << direction
+                  << GetConfig().component_type
+                  << "::"
+                  << port->GetConfig()->portName
+                  << ((port->GetConfig()->messageType=="")?"":" -> " + port->GetConfig()->messageType)
+                  << ((message=="")?"":" -> " + message)
+                  << std::endl;
+    }
+
 
 /*
     std::vector<RequestPort*> ComponentBase::GetRequestPorts() {

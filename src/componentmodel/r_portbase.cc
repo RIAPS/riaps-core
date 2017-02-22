@@ -56,6 +56,10 @@ namespace riaps {
             return NULL;
         }
 
+        CallBackTimer * PortBase::AsTimerPort() {
+            return NULL;
+        }
+
         //virtual PublishPort*  PortBase::AsPublishPort() const;
         //virtual ResponsePort* PortBase::AsResponsePort() const;
         //virtual SubscibePort* PortBase::AsSubscribePort() const;

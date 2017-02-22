@@ -7,6 +7,8 @@
 namespace riaps {
 
     namespace ports {
+
+
         CallBackTimer::CallBackTimer(std::string &timerresponsechannel, const _component_port_tim_j& config)
                 : PortBase(PortTypes::Timer, (component_port_config*)&config),_execute(false) {
             _zsock_timer = zsock_new_push(timerresponsechannel.c_str());
@@ -18,6 +20,10 @@ namespace riaps {
             };
 
             zsock_destroy(&_zsock_timer);
+        }
+
+        CallBackTimer* CallBackTimer::AsTimerPort() {
+            return this;
         }
 
         const zsock_t *CallBackTimer::GetSocket() const {

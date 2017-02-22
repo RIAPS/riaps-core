@@ -24,6 +24,7 @@ namespace ports {
     class ResponsePort;
     class PublisherPort;
     class SubscriberPort;
+    class CallBackTimer;
 
     enum PortTypes {Publisher, Subscriber, Request, Response, Timer};
 
@@ -54,10 +55,11 @@ namespace ports {
         virtual const std::string& GetPortName() const;
 
         // Return NULL if the called conversion is unavailable or invalid
-        virtual RequestPort*  AsRequestPort();
+        virtual RequestPort*    AsRequestPort();
         virtual PublisherPort*  AsPublishPort();
-        virtual ResponsePort* AsResponsePort();
+        virtual ResponsePort*   AsResponsePort();
         virtual SubscriberPort* AsSubscribePort();
+        virtual CallBackTimer*  AsTimerPort();
 
 
         ~PortBase();

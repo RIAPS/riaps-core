@@ -14,6 +14,7 @@ namespace riaps {
             _port_socket = zsock_new(ZMQ_REQ);
             int timeout = 500;//msec
             int lingerValue = 0;
+            int connectTimeout = 1000; //msec
             zmq_setsockopt(_port_socket, ZMQ_SNDTIMEO, &timeout , sizeof(int));
             zmq_setsockopt(_port_socket, ZMQ_LINGER, &lingerValue, sizeof(int));
 

@@ -15,7 +15,7 @@ riaps_actor (zsock_t *pipe, void *args)
     std::string mac_address = GetMacAddressStripped();
     std::string host_address = GetIPAddress();
 
-    std::cout << "Discovery service is starting, network interface: " << std::endl
+    std::cout //<< "Discovery service is starting, network interface: " << std::endl
               << " * " << host_address << std::endl
               << " * " << mac_address  << std::endl;
 

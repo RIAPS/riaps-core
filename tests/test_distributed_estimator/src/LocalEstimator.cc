@@ -12,6 +12,8 @@ comp_localestimator::comp_localestimator(_component_conf_j &config, riaps::Actor
 
 void comp_localestimator::OnMessageArrived(const std::string& messagetype, zmsg_t* msg_body, riaps::ports::PortBase* port) {
 
+    PrintMessageOnPort(port);
+    
     if (msg_body == NULL && port == NULL){
 
     }
@@ -20,7 +22,6 @@ void comp_localestimator::OnMessageArrived(const std::string& messagetype, zmsg_
         char* msg_content = zmsg_popstr(msg_body);
 
         if (msg_content) {
-            std::cout << "on_ready(): " << msg_content << std::endl;
 
             auto reqPort = GetPortByName(PORT_QUERY);
             if (reqPort !=NULL && reqPort->AsRequestPort()!=NULL){

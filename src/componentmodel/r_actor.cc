@@ -299,7 +299,7 @@ namespace riaps {
         while (!zsys_interrupted) {
             void *which = zpoller_wait(_poller, 2000);
 
-            std::cout << "." << std::flush;
+            //std::cout << "." << std::flush;
 
             if (which == _actor_zsock) {
                 // Maybe later, control messages to the actor

@@ -10,7 +10,7 @@ comp_globalestimator::comp_globalestimator(_component_conf_j &config, riaps::Act
 }
 
 void comp_globalestimator::OnMessageArrived(const std::string& messagetype, zmsg_t* msg_body, riaps::ports::PortBase* port) {
-
+    PrintMessageOnPort(port);
 }
 
 comp_globalestimator::~comp_globalestimator() {

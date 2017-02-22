@@ -13,14 +13,17 @@
  */
 
 
+
+#include <discoveryd/r_riaps_actor.h>
+#include <discoveryd/r_discoveryd_commands.h>
+#include <utils/r_utils.h>
+#include <componentmodel/r_network_interfaces.h>
+#include <version/versions.h>
+
 #include <iostream>
 #include <string>
 #include <map>
 #include <vector>
-#include <discoveryd/r_riaps_actor.h>
-#include "utils/r_utils.h"
-#include "componentmodel/r_network_interfaces.h"
-#include <discoveryd/r_discoveryd_commands.h>
 
 // Frequency of sending UDP packets.
 // Starting with higher rate and then switch to lower rate.
@@ -39,6 +42,7 @@
 
 int main()
 {
+    std::cout << "Starting RIAPS DISCOVERY SERVICE " << RIAPS_DISCOVERY_PRINTABLE_VERSION << std::endl;
 
     zactor_t *r_actor = zactor_new(riaps_actor, NULL);
     zsock_t * control = zsock_new_router(CONTROL_SOCKET);

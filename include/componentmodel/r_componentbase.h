@@ -80,6 +80,8 @@ namespace riaps {
         zactor_t* GetZmqPipe() const;
 
         virtual void OnMessageArrived(const std::string& messagetype, zmsg_t* msg_body, ports::PortBase* port)=0;
+        
+        virtual void PrintMessageOnPort(ports::PortBase* port, std::string message="");
 
         virtual ~ComponentBase();
 
