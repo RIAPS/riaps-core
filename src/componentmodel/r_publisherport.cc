@@ -44,8 +44,8 @@ namespace riaps{
 
         }
 
-        _component_port_pub_j* PublisherPort::GetConfig() {
-            return (_component_port_pub_j*)PortBase::GetConfig();
+        const _component_port_pub_j* PublisherPort::GetConfig() const {
+            return (_component_port_pub_j*)GetPortBaseConfig();
         }
 
         std::string PublisherPort::GetEndpoint() {
@@ -63,7 +63,9 @@ namespace riaps{
 
         // Before sending the publisher sets up the message type
         bool PublisherPort::Send(zmsg_t** msg) const {
-            zmsg_pushstr(*msg, ((_component_port_pub_j*)GetConfig())->messageType.c_str());
+            const _component_port_pub_j* currentConfig = GetConfig();
+            std::string messageType = currentConfig->messageType;
+            zmsg_pushstr(*msg, messageType.c_str());
 
             int rc = zmsg_send(msg, _port_socket);
             assert(rc == 0);
@@ -77,7 +79,7 @@ namespace riaps{
         }
 
         PublisherPort::~PublisherPort() {
-            std::cout << "Publisherport " << _config->portName << " is stopping" <<std::endl;
+            std::cout << "Publisherport " << GetConfig()->portName << " is stopping" <<std::endl;
         }
     }
 }

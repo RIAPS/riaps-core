@@ -19,11 +19,11 @@ void comp_sensor::OnMessageArrived(const std::string& messagetype,
         SendMessageOnPort(" -> msg <- ", PORT_READY);
     }
 
-    else if (messagetype == PORT_REQUEST){
-        riaps::ports::ResponsePort* repPort = GetResponsePortByName(PORT_READY);
+    else if (port->GetPortName() == PORT_REQUEST){
+        riaps::ports::ResponsePort* repPort = GetResponsePortByName(PORT_REQUEST);
         if (repPort != NULL) {
             if (repPort->Send("")) {
-                std::cout << "Response on " << repPort->GetPortName() << " : " << port->AsRequestPort()->Recv();
+                //std::cout << "Response on " << repPort->GetPortName() << " : " << port->AsRequestPort()->Recv();
             }
         }
     }

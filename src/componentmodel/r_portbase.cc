@@ -27,7 +27,7 @@ namespace riaps {
             return _port_socket;
         }
 
-        const component_port_config* PortBase::GetConfig() const {
+        const component_port_config* PortBase::GetPortBaseConfig() const {
             return _config;
         }
 

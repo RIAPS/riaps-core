@@ -40,13 +40,12 @@ namespace riaps{
             }
         }
 
-        _component_port_rep_j* ResponsePort::GetConfig() {
-            throw std::runtime_error("Not implemented exception");
-            return NULL;
+        const _component_port_rep_j* ResponsePort::GetConfig() const{
+            return (_component_port_rep_j*)GetPortBaseConfig();
         }
 
         bool ResponsePort::Send(zmsg_t** msg) const {
-            zmsg_pushstr(*msg, ((_component_port_rep_j*)_config)->rep_type.c_str());
+            zmsg_pushstr(*msg, GetConfig()->rep_type.c_str());
 
             int rc = zmsg_send(msg, _port_socket);
             assert(rc == 0);

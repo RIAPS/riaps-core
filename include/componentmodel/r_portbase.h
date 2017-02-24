@@ -50,7 +50,7 @@ namespace ports {
 
         const PortTypes& GetPortType() const;
 
-        virtual const component_port_config* GetConfig() const;
+        virtual const component_port_config* GetPortBaseConfig() const;
 
         virtual const std::string GetPortName() const;
 

@@ -25,7 +25,7 @@ namespace riaps{
             int rc = zsock_connect(_port_socket, pub_endpoint.c_str());
 
             if (rc != 0) {
-                std::cout << "Subscriber '" + _config->portName + "' couldn't connect to " + pub_endpoint
+                std::cout << "Subscriber '" + GetPortBaseConfig()->portName + "' couldn't connect to " + pub_endpoint
                           << std::endl;
                 return false;
             }
@@ -36,7 +36,7 @@ namespace riaps{
 
         void SubscriberPort::Init() {
 
-            _component_port_sub_j* current_config = (_component_port_sub_j*)_config;
+            _component_port_sub_j* current_config = (_component_port_sub_j*)GetConfig();
 
             auto results =
                     subscribe_to_service(_parent_component->GetActor()->GetApplicationName(),
@@ -44,13 +44,17 @@ namespace riaps{
                                          _parent_component->GetActor()->GetActorName(),
                                          Kind::SUB,
                                          (current_config->isLocal?Scope::LOCAL:Scope::GLOBAL),
-                                         _config->portName, // Subscriber name
+                                         current_config->portName, // Subscriber name
                                          current_config->messageType);
 
             for (auto result : results) {
                 std::string endpoint = "tcp://" + result.host_name + ":" + std::to_string(result.port);
                 ConnectToPublihser(endpoint);
             }
+        }
+
+        const _component_port_sub_j* SubscriberPort::GetConfig() const{
+            return (_component_port_sub_j*)GetPortBaseConfig();
         }
 
         SubscriberPort* SubscriberPort::AsSubscribePort() {

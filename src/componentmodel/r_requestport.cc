@@ -23,7 +23,7 @@ namespace riaps {
 
         void RequestPort::Init() {
 
-            _component_port_req_j* current_config = (_component_port_req_j*)_config;
+            const _component_port_req_j* current_config = GetConfig();
 
             auto results =
                     subscribe_to_service(_parent_component->GetActor()->GetApplicationName(),
@@ -31,7 +31,7 @@ namespace riaps {
                                          _parent_component->GetActor()->GetActorName(),
                                          Kind::REQ,
                                          (current_config->isLocal?Scope::LOCAL:Scope::GLOBAL),
-                                         _config->portName, // Subscriber name
+                                         current_config->portName, // Subscriber name
                                          current_config->messageType);
 
             for (auto result : results) {
@@ -44,7 +44,7 @@ namespace riaps {
             int rc = zsock_connect(_port_socket, rep_endpoint.c_str());
 
             if (rc != 0) {
-                std::cout << "Request '" + _config->portName + "' couldn't connect to " + rep_endpoint
+                std::cout << "Request '" + GetConfig()->portName + "' couldn't connect to " + rep_endpoint
                           << std::endl;
                 return false;
             }
@@ -52,6 +52,10 @@ namespace riaps {
             _isConnected = true;
             std::cout << "Request port connected to: " << rep_endpoint << std::endl;
             return true;
+        }
+
+        const _component_port_req_j* RequestPort::GetConfig() const{
+            return (_component_port_req_j*)GetPortBaseConfig();
         }
 
         RequestPort* RequestPort::AsRequestPort() {
@@ -85,8 +89,8 @@ namespace riaps {
                 zmsg_destroy(msg);
                 return false;
             }
-
-            zmsg_pushstr(*msg, ((_component_port_req_j *) _config)->req_type.c_str());
+            std::string messageType = GetConfig()->req_type;
+            zmsg_pushstr(*msg, messageType.c_str());
 
             int rc = zmsg_send(msg, _port_socket);
             if (rc!=0) return false;

@@ -27,6 +27,8 @@ namespace riaps {
 
             virtual SubscriberPort* AsSubscribePort();
 
+            virtual const _component_port_sub_j* GetConfig() const;
+
             //static std::unique_ptr<SubscriberPort> InitFromServiceDetails(service_details& target_service);
 
             //static void GetRemoteServiceAsync(subscriber_conf& config, std::string asyncendpoint);

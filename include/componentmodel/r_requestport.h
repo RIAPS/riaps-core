@@ -35,6 +35,8 @@ namespace riaps {
 
             virtual RequestPort* AsRequestPort();
 
+            virtual const _component_port_req_j* GetConfig() const;
+
             // zmsg_t* SendMessage(zmsg_t** msg);
 
             //static std::unique_ptr<RequestPort> InitFromServiceDetails(service_details& target_service);

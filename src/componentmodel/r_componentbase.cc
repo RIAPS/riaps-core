@@ -38,15 +38,19 @@ namespace riaps{
             if (firstrun) {
                 firstrun = false;
 
+                const component_conf_j& comp_conf = comp->GetConfig();
+
+
                 // Add and start timers
-                for (auto config : comp->GetConfig().component_ports.tims) {
+                for (auto it_timconf = comp_conf.component_ports.tims.begin();
+                          it_timconf != comp_conf.component_ports.tims.end();
+                          it_timconf++){
                     // Don't put the zmqSocket into portSockets[zmqSocket], just one timer port exist in the component.
                     // Cannot differentiate timerports based on ZMQ Sockets.
-                    comp->InitTimerPort(config);
+                    comp->InitTimerPort(*it_timconf);
                 }
 
                 // Add and start publishers
-                const component_conf_j& comp_conf = comp->GetConfig();
                 for (auto it_pubconf = comp_conf.component_ports.pubs.begin();
                           it_pubconf != comp_conf.component_ports.pubs.end();
                           it_pubconf++){
@@ -382,14 +386,14 @@ namespace riaps{
     void ComponentBase::PrintMessageOnPort(ports::PortBase *port, std::string message) {
 
         if (port == NULL) return;
-        std::string direction = (port->AsSubscribePort()!=NULL || port->AsResponsePort() || port->AsTimerPort()) ?
+        std::string direction = (port->AsSubscribePort()!=NULL || port->AsResponsePort()!=NULL || port->AsTimerPort()!=NULL) ?
                                 "=> " : "<= ";
 
         std::cout << direction
                   << GetConfig().component_type
                   << "::"
-                  << port->GetConfig()->portName
-                  << ((port->GetConfig()->messageType=="")?"":" -> " + port->GetConfig()->messageType)
+                  << port->GetPortBaseConfig()->portName
+                  << ((port->GetPortBaseConfig()->messageType=="")?"":" -> " + port->GetPortBaseConfig()->messageType)
                   << ((message=="")?"":" -> " + message)
                   << std::endl;
     }

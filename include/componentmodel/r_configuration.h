@@ -79,6 +79,10 @@ struct _component_port_sub_j : public component_port_config{
 };
 struct _component_port_tim_j : public component_port_config {
     ulong       period;
+
+    virtual ~_component_port_tim_j(){
+        int i =5;
+    }
 };
 
 
