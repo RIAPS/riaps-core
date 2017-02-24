@@ -15,12 +15,12 @@ void comp_sensor::OnMessageArrived(const std::string& messagetype,
     PrintMessageOnPort(port);
 
     // port -> GetPortName() == messageType is the same
-    if (port->GetPortName() == PORT_CLOCK){
-        SendMessageOnPort(" -> msg <- ", PORT_READY);
+    if (port->GetPortName() == PORT_TIMER_CLOCK){
+        SendMessageOnPort(" -> msg <- ", PORT_PUB_READY);
     }
 
-    else if (port->GetPortName() == PORT_REQUEST){
-        riaps::ports::ResponsePort* repPort = GetResponsePortByName(PORT_REQUEST);
+    else if (port->GetPortName() == PORT_REP_REQUEST){
+        riaps::ports::ResponsePort* repPort = GetResponsePortByName(PORT_REP_REQUEST);
         if (repPort != NULL) {
             if (repPort->Send("")) {
                 //std::cout << "Response on " << repPort->GetPortName() << " : " << port->AsRequestPort()->Recv();

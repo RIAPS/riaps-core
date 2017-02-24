@@ -62,25 +62,27 @@ namespace riaps {
             return this;
         }
 
-        std::string RequestPort::Recv() {
+        bool RequestPort::Recv(std::string& messageType, std::vector<std::string>& msgFields) {
             zmsg_t* msg = zmsg_recv((void*)GetSocket());
-            std::string result;
 
             if (msg){
-                char* messageType = zmsg_popstr(msg);
-                if (messageType){
-                    char* messageStr = zmsg_popstr(msg);
-                    if (messageStr){
-
-                        result = std::string(messageStr);
-
-                        zstr_free(&messageStr);
+                char* msgType = zmsg_popstr(msg);
+                messageType = msgType;
+                if (msgType!=NULL){
+                    char* msgField = zmsg_popstr(msg);
+                    while(msgField!=NULL){
+                        std::string newMessageField = msgField;
+                        msgFields.push_back(newMessageField);
+                        zstr_free(&msgField);
+                        msgField = zmsg_popstr(msg);
                     }
-                    zstr_free(&messageType);
+                    zstr_free(&msgType);
+                    return true;
                 }
+                return false;
             }
 
-            return result;
+            return false;
         }
 
         // Before sending the publisher sets up the message type

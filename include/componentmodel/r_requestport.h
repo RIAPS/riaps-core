@@ -31,7 +31,7 @@ namespace riaps {
             virtual bool Send(zmsg_t** msg) const;
             virtual bool Send(std::string message) const;
 
-            virtual std::string Recv();
+            virtual bool Recv(std::string& messageType, std::vector<std::string>& msgFields);
 
             virtual RequestPort* AsRequestPort();
 

@@ -7,6 +7,9 @@
 
 #include "componentmodel/r_componentbase.h"
 
+#define PORT_SUB_ESTIMATE "estimate"
+#define PORT_TIMER_WAKEUP "wakeup"
+
 class comp_globalestimator : public riaps::ComponentBase {
 
 public:

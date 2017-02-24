@@ -16,37 +16,19 @@ void comp_localestimator::OnMessageArrived(const std::string& messagetype,
 
     PrintMessageOnPort(port);
 
-    if (port->GetPortName() == PORT_READY) {
-        auto reqPort = GetPortByName(PORT_QUERY);
-        if (reqPort != NULL && reqPort->AsRequestPort() != NULL) {
+    if (port->GetPortName() == PORT_SUB_READY) {
+        auto reqPort = GetRequestPortByName(PORT_REQ_QUERY);
+        if (reqPort != NULL) {
             if (reqPort->Send("")) {
-                std::cout << "Response on " << reqPort->GetPortName() << " : " << reqPort->AsRequestPort()->Recv();
+                std::string messageType;
+                std::vector<std::string> messageFields;
+                if (reqPort->AsRequestPort()->Recv(messageType, messageFields)){
+                    std::string firstField = messageFields.front();
+                    GetPublisherPortByName(PORT_PUB_ESTIMATE)->Send(firstField);
+                }
             }
         }
     }
-    
-//    if (msg_body == NULL && port == NULL){
-//
-//    }
-//    else if (messagetype == PORT_READY) {
-//
-//        char* msg_content = zmsg_popstr(msg_body);
-//
-//        if (msg_content) {
-//
-//            auto reqPort = GetPortByName(PORT_QUERY);
-//            if (reqPort !=NULL && reqPort->AsRequestPort()!=NULL){
-//                if (reqPort->Send("Hello")){
-//                    std::cout << "Response on " << reqPort->GetPortName() << " : " << reqPort->AsRequestPort()->Recv();
-//                }
-//            }
-//
-//
-//
-//            zstr_free(&msg_content);
-//        }
-//
-//    }
 }
 
 comp_localestimator::~comp_localestimator() {
