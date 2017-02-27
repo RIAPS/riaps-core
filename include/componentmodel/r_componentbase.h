@@ -51,20 +51,21 @@ namespace riaps {
         const ports::RequestPort*    InitRequestPort(const _component_port_req_j&);
         const ports::CallBackTimer*  InitTimerPort(const _component_port_tim_j&);
 
-        ports::PublisherPort* GetPublisherPortByName(const std::string& portName);
-        ports::RequestPort*   GetRequestPortByName(const std::string& portName);
-        ports::ResponsePort*  GetResponsePortByName(const std::string& portName);
+        ports::PublisherPort*  GetPublisherPortByName(const std::string& portName);
+        ports::RequestPort*    GetRequestPortByName(const std::string& portName);
+        ports::ResponsePort*   GetResponsePortByName(const std::string& portName);
+        ports::SubscriberPort* GetSubscriberPortByName(const std::string& portName);
 
 
         std::vector<ports::PublisherPort*>  GetPublisherPorts();
         std::vector<ports::SubscriberPort*> GetSubscriberPorts();
 
-        ports::SubscriberPort& GetSubscriberByName(const std::string&);
+
 
         ports::PortBase* GetPortByName(const std::string&);
 
-        bool SendMessageOnPort(zmsg_t** msg, const std::string& portName) const;
-        bool SendMessageOnPort(const std::string message, std::string portName) const;
+        //bool SendMessageOnPort(zmsg_t** msg, const std::string& portName) const;
+        bool SendMessageOnPort(std::string message, std::string portName);
 
 
         std::string             GetTimerChannel();

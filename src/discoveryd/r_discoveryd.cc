@@ -17,7 +17,6 @@
 #include <discoveryd/r_riaps_actor.h>
 #include <discoveryd/r_discoveryd_commands.h>
 #include <utils/r_utils.h>
-#include <componentmodel/r_network_interfaces.h>
 #include <version/versions.h>
 
 #include <iostream>

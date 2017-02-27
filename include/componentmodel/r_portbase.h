@@ -10,6 +10,8 @@
 #include <czmq.h>
 #include <string>
 #include <iostream>
+
+#include <boost/format.hpp>
 //#include <componentmodel/r_responseport.h>
 //#include <componentmodel/r_publisherport.h>
 //#include <componentmodel/r_subscriberport.h>
@@ -44,9 +46,9 @@ namespace ports {
         /// \return The associated ZMQ socket.
         virtual const zsock_t* GetSocket() const;
 
-        virtual bool Send(zmsg_t** msg) const;
 
-        virtual bool Send(std::string message) const;
+        bool Send(std::string message) const;
+        bool Send(std::vector<std::string>& fields) const;
 
         const PortTypes& GetPortType() const;
 
@@ -55,16 +57,19 @@ namespace ports {
         virtual const std::string GetPortName() const;
 
         // Return NULL if the called conversion is unavailable or invalid
-        virtual RequestPort*    AsRequestPort();
-        virtual PublisherPort*  AsPublishPort();
-        virtual ResponsePort*   AsResponsePort();
-        virtual SubscriberPort* AsSubscribePort();
-        virtual CallBackTimer*  AsTimerPort();
+        virtual RequestPort*    AsRequestPort()    ;
+        virtual PublisherPort*  AsPublishPort()    ;
+        virtual ResponsePort*   AsResponsePort()   ;
+        virtual SubscriberPort* AsSubscribePort()  ;
+        virtual CallBackTimer*  AsTimerPort()      ;
 
 
         ~PortBase();
 
     protected:
+
+        virtual bool Send(zmsg_t** zmessage) const;
+
         PortTypes                    _port_type;
         zsock_t*                     _port_socket;
 

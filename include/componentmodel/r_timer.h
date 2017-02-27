@@ -32,7 +32,7 @@ namespace riaps {
 
             bool is_running() const noexcept;
 
-            virtual CallBackTimer*  AsTimerPort();
+            virtual CallBackTimer*  AsTimerPort()  ;
 
         protected:
             std::atomic<bool> _execute;

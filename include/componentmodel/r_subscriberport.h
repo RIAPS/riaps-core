@@ -25,7 +25,7 @@ namespace riaps {
             // Returns false, if the subscriber couldn't connect
             bool ConnectToPublihser(const std::string& pub_endpoint);
 
-            virtual SubscriberPort* AsSubscribePort();
+            virtual SubscriberPort* AsSubscribePort() ;
 
             virtual const _component_port_sub_j* GetConfig() const;
 
@@ -39,6 +39,10 @@ namespace riaps {
         protected:
 
             const ComponentBase *_parent_component;
+
+        //private:
+
+            //virtual bool Send(zmsg_t** zmessage) const;
 
 
         };

@@ -19,6 +19,7 @@ namespace riaps {
     namespace ports {
         class RequestPort : public PortBase {
         public:
+            using PortBase::Send;
 
             RequestPort(const _component_port_req_j &config, const ComponentBase *component);
             virtual void Init();
@@ -28,14 +29,17 @@ namespace riaps {
             // Returns false, if the request port couldn't connect
             bool ConnectToResponse(const std::string& rep_endpoint);
 
-            virtual bool Send(zmsg_t** msg) const;
-            virtual bool Send(std::string message) const;
+
+            //virtual bool Send(std::string& message) const;
+            //virtual bool Send(std::vector<std::string>& fields) const;
 
             virtual bool Recv(std::string& messageType, std::vector<std::string>& msgFields);
 
-            virtual RequestPort* AsRequestPort();
+            virtual RequestPort* AsRequestPort() ;
 
             virtual const _component_port_req_j* GetConfig() const;
+
+
 
             // zmsg_t* SendMessage(zmsg_t** msg);
 
@@ -47,6 +51,8 @@ namespace riaps {
         protected:
             const ComponentBase *_parent_component;
             bool _isConnected;
+
+            virtual bool Send(zmsg_t** zmessage) const;
 
         };
     }

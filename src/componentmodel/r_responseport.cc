@@ -2,7 +2,7 @@
 // Created by parallels on 9/29/16.
 //
 
-#include <componentmodel/r_network_interfaces.h>
+#include <framework/rfw_network_interfaces.h>
 #include <componentmodel/r_responseport.h>
 
 namespace riaps{
@@ -12,7 +12,7 @@ namespace riaps{
             PortBase(PortTypes::Response, (component_port_config*)&config)
         {
             _port_socket = zsock_new(ZMQ_REP);
-            _host = GetIPAddress();
+            _host = riaps::framework::Network::GetIPAddress();
 
             if (_host == "") {
                 throw std::runtime_error("Response cannot be initiated. Cannot find  available network interface.");
@@ -48,15 +48,25 @@ namespace riaps{
             zmsg_pushstr(*msg, GetConfig()->rep_type.c_str());
 
             int rc = zmsg_send(msg, _port_socket);
-            assert(rc == 0);
+            return rc == 0;
         }
 
-        bool ResponsePort::Send(std::string msg) const {
-            zmsg_t* zmsg = zmsg_new();
-            zmsg_addstr(zmsg, msg.c_str());
-
-            return Send(&zmsg);
-        }
+//        bool ResponsePort::Send(std::string& message) const {
+//            zmsg_t* zmsg = zmsg_new();
+//            zmsg_addstr(zmsg, message.c_str());
+//
+//            return Send(&zmsg);
+//        }
+//
+//        bool ResponsePort::Send(std::vector<std::string>& fields) const{
+//            zmsg_t* zmsg = zmsg_new();
+//
+//            for (auto it = fields.begin(); it!=fields.end(); it++){
+//                zmsg_addstr(zmsg, it->c_str());
+//            }
+//
+//            return Send(&zmsg);
+//        }
 
         ResponsePort* ResponsePort::AsResponsePort() {
             return this;

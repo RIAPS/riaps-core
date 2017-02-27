@@ -5,8 +5,9 @@
 #ifndef RIAPS_FW_R_ACTOR_MAIN_H
 #define RIAPS_FW_R_ACTOR_MAIN_H
 
-#include "componentmodel/r_actor.h"
-#include "loggerd/r_logger_utilities.h"
+#include <componentmodel/r_actor.h>
+#include <loggerd/r_logger_utilities.h>
+#include <framework/rfw_network_interfaces.h>
 
 //nlohmann json
 #include "json.h"
@@ -16,6 +17,7 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+
 
 
 char* getCmdOption(char ** begin, char ** end, const std::string & option);

@@ -328,18 +328,21 @@ namespace riaps{
         return _actor;
     }
 
-    bool ComponentBase::SendMessageOnPort(zmsg_t** msg, const std::string& portName) const {
-        auto port = GetPort(portName);
-        if (port == NULL) return false;
+//    bool ComponentBase::SendMessageOnPort(zmsg_t** msg, const std::string& portName) const {
+//        auto port = GetPort(portName);
+//        if (port == NULL) return false;
+//
+//        return port->Send(msg);
+//    }
 
-        return port->Send(msg);
-    }
+    bool ComponentBase::SendMessageOnPort(std::string message, std::string portName){
+        ports::PortBase* port = GetPortByName(portName);
 
-    bool ComponentBase::SendMessageOnPort(const std::string message, std::string portName) const{
-        zmsg_t* msg = zmsg_new();
-        zmsg_addstr(msg, message.c_str());
+        if (port->AsSubscribePort() == NULL && port->AsTimerPort() == NULL){
+            return port->Send(message);
+        }
 
-        return SendMessageOnPort(&msg, portName);
+        return false;
 
     }
 

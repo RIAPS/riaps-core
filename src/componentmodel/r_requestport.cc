@@ -2,7 +2,7 @@
 // Created by istvan on 9/30/16.
 //
 
-#include "componentmodel/r_requestport.h"
+#include <componentmodel/r_requestport.h>
 
 
 namespace riaps {
@@ -95,17 +95,25 @@ namespace riaps {
             zmsg_pushstr(*msg, messageType.c_str());
 
             int rc = zmsg_send(msg, _port_socket);
-            if (rc!=0) return false;
-
-            return true;
+            return rc==0;
         }
 
-        bool RequestPort::Send(std::string msg) const{
-            zmsg_t* zmsg = zmsg_new();
-            zmsg_addstr(zmsg, msg.c_str());
-
-            return Send(&zmsg);
-        }
+//        bool RequestPort::Send(std::string& message) const{
+//            zmsg_t* zmsg = zmsg_new();
+//            zmsg_addstr(zmsg, message.c_str());
+//
+//            return Send(&zmsg);
+//        }
+//
+//        bool RequestPort::Send(std::vector<std::string>& fields) const{
+//            zmsg_t* zmsg = zmsg_new();
+//
+//            for (auto it = fields.begin(); it!=fields.end(); it++){
+//                zmsg_addstr(zmsg, it->c_str());
+//            }
+//
+//            return Send(&zmsg);
+//        }
     }
 }
 

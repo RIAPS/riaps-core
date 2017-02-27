@@ -2,7 +2,7 @@
 // Created by parallels on 9/6/16.
 //
 
-#include "componentmodel/r_subscriberport.h"
+#include <componentmodel/r_subscriberport.h>
 
 namespace riaps{
 
@@ -60,6 +60,10 @@ namespace riaps{
         SubscriberPort* SubscriberPort::AsSubscribePort() {
             return this;
         }
+
+        //bool SubscriberPort::Send(zmsg_t **zmessage) const {
+        //    throw std::runtime_error("Sending messages on Subscriber port is not allowed : " + GetPortBaseConfig()->portName);
+        //}
 
         /*std::unique_ptr<SubscriberPort> SubscriberPort::InitFromServiceDetails(service_details& target_service) {
             std::unique_ptr<SubscriberPort> result(new SubscriberPort());

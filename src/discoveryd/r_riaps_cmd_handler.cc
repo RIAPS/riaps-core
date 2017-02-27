@@ -3,11 +3,11 @@
 //
 
 #include <discoveryd/r_riaps_cmd_handler.h>
-#include <componentmodel/r_network_interfaces.h>
-
-#include <iostream>
 #include <discoveryd/r_discoveryd_commands.h>
 #include <discoveryd/r_odht.h>
+#include <framework/rfw_network_interfaces.h>
+
+#include <iostream>
 
 std::pair<std::string, std::string>
 buildInsertKeyValuePair(std::string appName ,
@@ -25,7 +25,7 @@ buildInsertKeyValuePair(std::string appName ,
         // hostid
         //auto hostid = gethostid();
 
-        std::string mac_address = GetMacAddressStripped();
+        std::string mac_address = riaps::framework::Network::GetMacAddressStripped();
 
         key += mac_address;
     }
@@ -60,7 +60,7 @@ buildLookupKey(std::string appName,
 
     //auto hostid = gethostid();
 
-    std::string hostid = GetMacAddressStripped();
+    std::string hostid = riaps::framework::Network::GetMacAddressStripped();
 
     if (scope == Scope::LOCAL){
         key += hostid;
