@@ -5,7 +5,6 @@
 #ifndef RIAPS_FW_R_TIMER_H
 #define RIAPS_FW_R_TIMER_H
 
-#include <componentmodel/r_ipc_endpoints.h>
 #include <componentmodel/r_portbase.h>
 
 #include <czmq.h>
