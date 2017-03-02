@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(riaps_core VERSION 0.1.0)
 
+option(RIAPS_TARGET "AMD64/ARMHF" "AMD64")
+
 set (CMAKE_CXX_FLAGS "-std=c++11")
 
 set(DEPENDENCIES /opt/riaps/)
@@ -13,20 +15,20 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_HOME_DIRECTORY}/bin)
 include_directories(include)
 
 #Set the platform
-include(CMakeLists_arm.txt)
-#include(CMakeLists_amd64.txt)
+if (${RIAPS_TARGET} STREQUAL "AMD64")
+    include(CMakeLists_amd64.txt)
+elseif(${RIAPS_TARGET} STREQUAL "ARMHF")
+    include(CMakeLists_arm.txt)
+endif()
 
-#add_subdirectory(opendht)
 
 
 add_subdirectory(src/componentmodel)
 add_subdirectory(src/discoveryd)
-#add_subdirectory(src/loggerd)
 
 
 # Tests
 #add_subdirectory(tests/test_pubsub)
 #add_subdirectory(tests/test_getservice_async)
 #add_subdirectory(tests/test_pubsub_reqrep)
-
-add_subdirectory(tests/test_distributed_estimator)
+#add_subdirectory(tests/test_distributed_estimator)
