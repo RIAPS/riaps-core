@@ -28,7 +28,9 @@ namespace riaps {
               const std::string& actorname,
               nlohmann::json& json_actorconfig,
               nlohmann::json& json_componentsconfig,
-              nlohmann::json& json_messagesconfig)
+              nlohmann::json& json_messagesconfig,
+              std::map<std::string, std::string>& actualActorParams
+        )
         ;
 
         void Init();

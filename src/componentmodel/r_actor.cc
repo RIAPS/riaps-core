@@ -9,15 +9,17 @@
 
 
 #include <set>
+#include <componentmodel/r_parameter.h>
 
 
 namespace riaps {
 
     riaps::Actor::Actor(const std::string&     applicationname       ,
                         const std::string&     actorname             ,
-                        nlohmann::json& json_actorconfig      ,
-                        nlohmann::json& json_componentsconfig ,
-                        nlohmann::json& json_messagesconfig)
+                        nlohmann::json& json_actorconfig             ,
+                        nlohmann::json& json_componentsconfig        ,
+                        nlohmann::json& json_messagesconfig          ,
+                        std::map<std::string, std::string>& actualActorParams)
     {
         _actor_name       = actorname;
         _application_name = applicationname;
@@ -25,7 +27,42 @@ namespace riaps {
         auto json_instances = json_actorconfig[J_INSTANCES];
         auto json_internals = json_actorconfig[J_INTERNALS];
         auto json_locals    = json_actorconfig[J_LOCALS];
-        auto json_wires     = json_actorconfig[J_WIRES];
+        auto json_formals   = json_actorconfig[J_FORMALS];
+
+        riaps::componentmodel::Parameters actorParams; // name, default value
+
+        for (auto it_formal = json_formals.begin();
+                  it_formal != json_formals.end();
+                  it_formal++){
+            std::string formalName = (it_formal.value())[J_FORMAL_NAME];
+            bool isOptional = it_formal.value()[J_FORMAL_DEF] != NULL;
+
+            std::string formalDefault =isOptional?"": (it_formal.value())[J_FORMAL_DEF];
+
+            // Optional
+            if (isOptional){
+
+                // Optional parameter is not passed to the actor
+                // Set it to the default value
+                if (actualActorParams.find(formalName) == actualActorParams.end()){
+                    actorParams.AddParam(formalName, "", formalDefault);
+                }
+
+                // Optional parameter is passed, set the parameter to the passed value
+                else {
+                    actorParams.AddParam(formalName, actualActorParams[formalName], formalDefault);
+                }
+            }
+            // Mandatory
+            else {
+                if (!isOptional && actualActorParams.find(formalName) == actualActorParams.end()){
+                    throw std::invalid_argument("Mandatory parameter is missing from the actor: " +
+                                                        _actor_name +
+                                                        "(" + formalName + ")"
+                    );
+                }
+            }
+        }
 
 
         // Get the actor's components, if there is no component => Stop, Error.

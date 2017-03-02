@@ -9,7 +9,15 @@
 #define J_INSTANCES    "instances"
 #define J_INTERNALS    "internals"
 #define J_LOCALS       "locals"
-#define J_WIRES        "wires"
+
+
+#define J_FORMALS      "formals"
+#define J_FORMAL_NAME  "name"
+#define J_FORMAL_DEF   "default"
+
+#define J_ACTUALS      "actuals"
+#define J_ACTUAL_NAME  "name"
+#define J_ACTUAL_PARAM "param"
 
 #define J_PORTS        "ports"
 #define J_PORTS_CLTS   "clts"

@@ -13,6 +13,7 @@ set(FRAMEWORK_LIB_FILES r_discoverdapi.cc
         #delete_r_network_interfaces.cc
                         r_responseport.cc
                         r_requestport.cc
+                        r_parameter.cc
                         ../framework/rfw_network_interfaces.cc
                         ../framework/rfw_configuration.cc
         )

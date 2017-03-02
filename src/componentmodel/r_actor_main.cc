@@ -3,6 +3,7 @@
 //
 
 #include "componentmodel/r_actor_main.h"
+#include <regex>
 
 int main(int argc, char* argv[]) {
 
@@ -34,6 +35,32 @@ int main(int argc, char* argv[]) {
         if (actorname.empty()){
             std::cerr << "Actorname cannot be empty string" << std::endl;
             return -1;
+        }
+
+
+        // get the rest of the params
+        std::map<std::string, std::string> actualParams;
+        for (int i = 3; i<argc; i++){
+            std::string currentParam = std::string(argv[i]);
+            std::regex paramRegex("--(.+)=(.+)");
+
+            std::smatch paramMatch;
+
+            if (!std::regex_search(currentParam, paramMatch, paramRegex)) {
+                std::cerr << "Wrong parameter: " << argv[i] << std::endl;
+                return -1;
+            }
+
+            if (paramMatch.size()<3){
+                std::cerr << "Wrong parameter: " << argv[i] << std::endl;
+                return -1;
+            }
+
+            std::string paramName = paramMatch[1];
+            std::string paramValue = paramMatch[2];
+
+            actualParams[paramName] = paramValue;
+
         }
 
         nlohmann::json config_json;
@@ -70,7 +97,15 @@ int main(int argc, char* argv[]) {
 
             // Create and start the Actor
 
-            actor = std::unique_ptr<riaps::Actor>(new riaps::Actor(applicationName, actorname, json_currentactor, json_components, json_messages));
+            actor = std::unique_ptr<riaps::Actor>(
+                    new riaps::Actor(
+                            applicationName,
+                            actorname,
+                            json_currentactor,
+                            json_components,
+                            json_messages,
+                            actualParams
+                    ));
             actor->Init();
             actor->start();
         }
