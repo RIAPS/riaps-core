@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.0.0)
 project(riaps_core VERSION 0.1.0)
 
 option(RIAPS_TARGET "AMD64/ARMHF" "AMD64")
+option(BUILD_TESTS  "Build tests" ON)
 
 set (CMAKE_CXX_FLAGS "-std=c++11")
 
@@ -21,14 +22,14 @@ elseif(${RIAPS_TARGET} STREQUAL "ARMHF")
     include(CMakeLists_arm.txt)
 endif()
 
-
-
 add_subdirectory(src/componentmodel)
 add_subdirectory(src/discoveryd)
 
 
-# Tests
-#add_subdirectory(tests/test_pubsub)
-#add_subdirectory(tests/test_getservice_async)
-#add_subdirectory(tests/test_pubsub_reqrep)
-#add_subdirectory(tests/test_distributed_estimator)
+if (BUILD_TESTS)
+    # Tests
+    #add_subdirectory(tests/test_pubsub)
+    #add_subdirectory(tests/test_getservice_async)
+    #add_subdirectory(tests/test_pubsub_reqrep)
+    add_subdirectory(tests/test_distributed_estimator)
+endif()
