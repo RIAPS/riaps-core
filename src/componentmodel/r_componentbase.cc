@@ -216,22 +216,9 @@ namespace riaps{
 
         _zactor_component = zactor_new(component_actor, this);
 
-        // Create publishers
-        //for (auto publisher : config.publishers_config) {
-        //    AddPublisherPort(publisher);
-        //}
-
-        // Create subscribers
-        //for (auto subscriber : config.subscribers_config) {
-        //    AddSubscriberPort(subscriber);
-        //}
-
 
     }
 
-    //const zsock_t* ComponentBase::GetTimerPort() {
-    //    return _zsock_timer;
-    //}
 
     const ports::PublisherPort* ComponentBase::InitPublisherPort(const _component_port_pub_j& config) {
         auto result = new ports::PublisherPort(config, this);
@@ -239,8 +226,6 @@ namespace riaps{
         _ports[config.portName] = std::move(newport);
         return result;
     }
-
-
 
     const ports::SubscriberPort* ComponentBase::InitSubscriberPort(const _component_port_sub_j& config) {
         std::unique_ptr<ports::SubscriberPort> newport(new ports::SubscriberPort(config, this));
@@ -296,17 +281,6 @@ namespace riaps{
 
 
 
-    /*
-    void ComponentBase::AddResponsePort(std::unique_ptr<ResponsePort>& responsePort) {
-        //_responseports.push_back(std::move(responsePort));
-    }
-
-    void ComponentBase::AddRequestPort(std::unique_ptr<RequestPort>& requestPort) {
-        //_requestports.push_back(std::move(requestPort));
-    }
-
-    */
-
     /// \param portName
     /// \return Pointer to the RIAPS port with the given name. NULL if the port was not found.
     ports::PortBase* ComponentBase::GetPortByName(const std::string & portName) {
@@ -316,8 +290,6 @@ namespace riaps{
 
         return NULL;
     }
-
-
 
 
     const component_conf_j& ComponentBase::GetConfig() const {

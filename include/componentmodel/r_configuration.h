@@ -5,10 +5,12 @@
 #ifndef RIAPS_FW_R_CONFIGURATION_H
 #define RIAPS_FW_R_CONFIGURATION_H
 
-
+#include <componentmodel/r_parameter.h>
 
 #include <string>
 #include <vector>
+
+using namespace riaps::componentmodel;
 
 /*
 struct _localport_conf{
@@ -92,10 +94,13 @@ struct _component_ports_j {
     std::vector<_component_port_tim_j> tims;
 };
 
+
+
 struct _component_conf_j {
     std::string        component_name;
     std::string        component_type;
     _component_ports_j component_ports;
+    Parameters         component_parameters;
 };
 
 typedef struct _component_conf_j component_conf_j;

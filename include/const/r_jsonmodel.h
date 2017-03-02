@@ -18,6 +18,7 @@
 #define J_ACTUALS      "actuals"
 #define J_ACTUAL_NAME  "name"
 #define J_ACTUAL_PARAM "param"
+#define J_ACTUAL_VALUE "value"
 
 #define J_PORTS        "ports"
 #define J_PORTS_CLTS   "clts"

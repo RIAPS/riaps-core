@@ -8,6 +8,7 @@
 #include <string>
 #include <map>
 #include <memory>
+#include <vector>
 
 namespace riaps {
 
@@ -19,18 +20,22 @@ namespace riaps {
         public:
             Parameters();
 
-            void AddParam(std::string name, std::string value, std::string defaultValue = "");
+            void AddParam(std::string name, std::string value, bool isOptional, std::string defaultValue = "");
+            const Parameter* SetParamValue(std::string name, std::string value);
+            const Parameter* GetParam(std::string name);
 
-            const Parameter *GetParam(std::string name);
+            std::vector<std::string> GetParameterNames();
+
+            ~Parameters();
 
         private:
-            std::map<std::string, std::unique_ptr<Parameter>> _params;
+            std::map<std::string, std::shared_ptr<Parameter>> _params;
         };
 
-        // Todo: with templates
+        // Todo: check whether templates can be used here?
         class Parameter {
         public:
-            Parameter(std::string fieldName, std::string defaultValue = "");
+            Parameter(std::string fieldName, bool isOptional, std::string defaultValue = "");
             Parameter();
 
             void SetValue(std::string value);
@@ -41,10 +46,13 @@ namespace riaps {
 
             bool GetValueAsBool();
 
+            bool IsOptional();
+
         private:
             std::string _paramName;
             std::string _paramDefaultValue;
             std::string _paramValue;
+            bool        _isOptional;
         };
     }
 }

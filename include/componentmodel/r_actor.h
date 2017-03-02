@@ -5,17 +5,17 @@
 #ifndef RIAPS_R_ACTOR_H
 #define RIAPS_R_ACTOR_H
 
-#include <czmq.h>
-#include <iostream>
-#include <string>
-#include <dlfcn.h>
-
-
 #include <componentmodel/r_discoverdapi.h>
 #include <componentmodel/r_componentbase.h>
 
-#include <fstream>
 #include <json.h>
+
+#include <czmq.h>
+#include <dlfcn.h>
+
+#include <iostream>
+#include <string>
+#include <fstream>
 
 
 namespace riaps {
@@ -62,6 +62,12 @@ namespace riaps {
 
 
         std::vector<component_conf_j> _component_configurations;
+
+    private:
+        Parameters    GetComponentFormals(nlohmann::json& jsonFormals);
+
+        std::map<std::string, std::string> GetActualParams(nlohmann::json &jsonActuals,
+                                                           std::map<std::string, std::string>& actorParams);
 
         //Components, componentkey - componenttype
         //std::map<std::string, std::string> _componentname_type;
