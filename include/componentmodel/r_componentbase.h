@@ -57,11 +57,6 @@ namespace riaps {
         ports::SubscriberPort* GetSubscriberPortByName(const std::string& portName);
 
 
-        std::vector<ports::PublisherPort*>  GetPublisherPorts();
-        std::vector<ports::SubscriberPort*> GetSubscriberPorts();
-
-
-
         ports::PortBase* GetPortByName(const std::string&);
 
         //bool SendMessageOnPort(zmsg_t** msg, const std::string& portName) const;

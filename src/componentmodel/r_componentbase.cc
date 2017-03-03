@@ -325,21 +325,7 @@ namespace riaps{
         }
         return NULL;
     }
-
-
-    std::vector<ports::PublisherPort*> ComponentBase::GetPublisherPorts() {
-
-        std::vector<ports::PublisherPort*> results;
-
-        // Fixme
-        throw std::runtime_error("Not implemented");
-
-        //for (auto it=_publisherports.begin(); it!=_publisherports.end(); it++){
-        //    results.push_back(it->second.get());
-        //}
-
-        return results;
-    }
+    
 
     std::string ComponentBase::GetTimerChannel() {
         std::string prefix= "inproc://timer";
