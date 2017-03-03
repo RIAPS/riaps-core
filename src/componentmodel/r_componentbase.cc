@@ -325,7 +325,7 @@ namespace riaps{
         }
         return NULL;
     }
-    
+
 
     std::string ComponentBase::GetTimerChannel() {
         std::string prefix= "inproc://timer";
@@ -335,8 +335,6 @@ namespace riaps{
     std::string ComponentBase::GetCompUuid(){
         const char* uuid_str = zuuid_str(_component_uuid);
         std::string result (uuid_str);
-        //delete uuid_str;
-
         return result;
     }
 
@@ -365,48 +363,6 @@ namespace riaps{
             std::cout << *it << " : " << _configuration.component_parameters.GetParam(*it)->GetValueAsString() << std::endl;
         }
     }
-
-
-/*
-    std::vector<RequestPort*> ComponentBase::GetRequestPorts() {
-
-        std::vector<RequestPort*> results;
-
-        //for (auto it=_requestports.begin(); it!=_requestports.end(); it++){
-        //    results.push_back(it->get());
-        //}
-
-        return results;
-    }
-
-    std::vector<CallBackTimer*> ComponentBase::GetPeriodicTimers() {
-        std::vector<CallBackTimer*> results;
-
-        //for (auto it=_periodic_timers.begin(); it!=_periodic_timers.end(); it++){
-        //    results.push_back(it->get());
-        //}
-
-        return results;
-    }
-
-
-
-
-
-
-
-    std::vector<SubscriberPort*> ComponentBase::GetSubscriberPorts() {
-
-        std::vector<SubscriberPort*> results;
-
-        //for (auto it=_subscriberports.begin(); it!=_subscriberports.end(); it++){
-        //    results.push_back(it->get());
-        //}
-
-        return results;
-    }*/
-
-
 
     ComponentBase::~ComponentBase() {
 

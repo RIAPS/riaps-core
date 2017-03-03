@@ -5,10 +5,13 @@
 #ifndef RIAPS_CORE_COLLECTOR_H_H
 #define RIAPS_CORE_COLLECTOR_H_H
 
+#include "common.h"
 #include <componentmodel/r_componentbase.h>
 
-#define PORT_SUB_ESTIMATE "estimate"
-#define PORT_TIMER_WAKEUP "wakeup"
+#include <fstream>
+
+#define PORT_SUB_GETTEMPERATURE "getTemperature"
+
 
 using namespace riaps;
 
@@ -23,6 +26,11 @@ public:
                                   ports::PortBase* port);
 
     virtual ~Collector();
+
+protected:
+    std::string  _logfilePath;
+    std::fstream _logStream;
+    int          _messageCounter;
 
 };
 

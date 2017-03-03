@@ -24,12 +24,13 @@ namespace riaps{
 
 
 
-        const Parameter* Parameters::GetParam(std::string name) {
+        const Parameter* Parameters::GetParam(std::string name) const {
             if (_params.find(name) == _params.end()){
                 return NULL;
             }
+            auto ptr = (_params.find(name))->second;
 
-            return _params[name].get();
+            return ptr.get();
         }
 
         const Parameter* Parameters::SetParamValue(std::string name, std::string value) {
@@ -67,7 +68,7 @@ namespace riaps{
             _paramValue = value;
         }
 
-        std::string Parameter::GetValueAsString() const{
+        const std::string& Parameter::GetValueAsString() const{
             return _paramValue;
         }
 

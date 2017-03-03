@@ -14,7 +14,6 @@ void comp_sensor::OnMessageArrived(const std::string& messagetype,
 
     PrintMessageOnPort(port);
 
-    // port -> GetPortName() == messageType is the same
     if (port->GetPortName() == PORT_TIMER_CLOCK){
         SendMessageOnPort(" -> msg <- ", PORT_PUB_READY);
     }

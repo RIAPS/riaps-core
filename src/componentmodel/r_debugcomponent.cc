@@ -13,7 +13,7 @@ void DebugComponent::OnMessageArrived(const std::string& messagetype, zmsg_t *ms
         std::cout << "Timer event: " << messagetype << std::endl;
     }
     else {
-        std::cout << "Debug component [" << _configuration.component_name << "](OnMessageArrived) "<< messagetype << std::endl;
+        std::cout << "Debug component [" << GetConfig().component_name << "](OnMessageArrived) "<< messagetype << std::endl;
 
     }
 }

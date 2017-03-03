@@ -84,7 +84,7 @@ namespace riaps {
         const ports::PortBase* GetPort(std::string portName) const;
 
         const Actor*     _actor;
-        component_conf_j _configuration;
+
 
         //std::string    async_address;
         zuuid_t*       _component_uuid;
@@ -105,6 +105,9 @@ namespace riaps {
         //zpoller_t*  zpoller;
 
     private:
+
+        // Reach the configuration by GetConfig(), never ever directly.
+        component_conf_j _configuration;
         std::map<std::string, std::unique_ptr<ports::PortBase>> _ports;
 
     };
