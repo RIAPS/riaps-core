@@ -40,13 +40,13 @@ namespace riaps {
 
             void SetValue(std::string value);
 
-            std::string GetValueAsString();
+            std::string GetValueAsString() const;
 
-            int GetValueAsInt();
+            int GetValueAsInt() const;
 
-            bool GetValueAsBool();
+            bool GetValueAsBool() const;
 
-            bool IsOptional();
+            bool IsOptional() const;
 
         private:
             std::string _paramName;

@@ -373,6 +373,13 @@ namespace riaps{
                   << std::endl;
     }
 
+    void ComponentBase::PrintParameters() {
+        auto parameters = _configuration.component_parameters.GetParameterNames();
+        for (auto it = parameters.begin(); it!=parameters.end(); it++){
+            std::cout << *it << " : " << _configuration.component_parameters.GetParam(*it)->GetValueAsString() << std::endl;
+        }
+    }
+
 
 /*
     std::vector<RequestPort*> ComponentBase::GetRequestPorts() {

@@ -22,6 +22,8 @@ namespace riaps{
             _params[name] = newItem;
         }
 
+
+
         const Parameter* Parameters::GetParam(std::string name) {
             if (_params.find(name) == _params.end()){
                 return NULL;
@@ -65,11 +67,11 @@ namespace riaps{
             _paramValue = value;
         }
 
-        std::string Parameter::GetValueAsString() {
+        std::string Parameter::GetValueAsString() const{
             return _paramValue;
         }
 
-        bool Parameter::IsOptional() {
+        bool Parameter::IsOptional() const {
             return _isOptional;
         }
     }

@@ -5,7 +5,7 @@
 #include "Sensor.h"
 
 comp_sensor::comp_sensor(_component_conf_j &config, riaps::Actor &actor):ComponentBase(config, actor) {
-
+    PrintParameters();
 }
 
 void comp_sensor::OnMessageArrived(const std::string& messagetype,

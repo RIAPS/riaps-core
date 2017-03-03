@@ -7,7 +7,7 @@
 
 
 comp_localestimator::comp_localestimator(_component_conf_j &config, riaps::Actor &actor):ComponentBase(config, actor) {
-
+    PrintParameters();
 }
 
 void comp_localestimator::OnMessageArrived(const std::string& messagetype,

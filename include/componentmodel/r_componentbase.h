@@ -81,6 +81,7 @@ namespace riaps {
                                       ports::PortBase* port)=0;
 
         virtual void PrintMessageOnPort(ports::PortBase* port, std::string message="");
+        virtual void PrintParameters();
 
         virtual ~ComponentBase();
 
