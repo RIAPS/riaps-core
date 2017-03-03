@@ -1,0 +1,14 @@
+2017-03-03 17:23:21 zopkio [INFO] Starting zopkio
+2017-03-03 17:23:21 naarad [INFO] Available graphing modules:  
+2017-03-03 17:23:21 zopkio.test_runner [INFO] Setting up configuration: single execution
+2017-03-03 17:25:46 zopkio.deployer [ERROR] Log file /tmp/subfirst_ActorTest1s.log does not exist on 192.168.1.120
+2017-03-03 17:25:47 zopkio.deployer [ERROR] Log file /tmp/subfirst_ActorTest1p.log does not exist on 192.168.1.120
+2017-03-03 17:25:47 naarad.utils [WARNING] /home/istvan/work/riaps-core/tests/testPubSub/test_1_1/naarad.cfg : file does not exist.
+2017-03-03 17:25:47 naarad.utils [WARNING] /home/istvan/work/riaps-core/tests/testPubSub/test_1_1/naarad.cfg : file does not exist.
+2017-03-03 17:25:47 naarad.utils [WARNING] /home/istvan/work/riaps-core/tests/testPubSub/test_1_1/naarad.cfg : file does not exist.
+2017-03-03 17:25:48 zopkio.test_runner [INFO] Execution of configuration: single execution complete
+2017-03-03 17:25:48 zopkio.test_runner [INFO] test_pub_send_pub_first----failed
+2017-03-03 17:25:48 zopkio.test_runner [INFO] ["TypeError: 'NoneType' object cannot be interpreted as an index\n"]
+2017-03-03 17:25:48 zopkio.test_runner [INFO] test_pub_send_sub_first----failed
+2017-03-03 17:25:48 zopkio.test_runner [INFO] ["IOError: [Errno 2] No such file or directory: '/tmp/riaps_test/collected_logs/subfirst_ActorTest1p-subfirst_ActorTest1p.log'\n"]
+2017-03-03 17:25:48 zopkio [INFO] Exiting zopkio

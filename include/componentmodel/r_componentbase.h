@@ -59,7 +59,6 @@ namespace riaps {
 
         ports::PortBase* GetPortByName(const std::string&);
 
-        //bool SendMessageOnPort(zmsg_t** msg, const std::string& portName) const;
         bool SendMessageOnPort(std::string message, std::string portName);
 
 
@@ -70,7 +69,6 @@ namespace riaps {
         const Actor* GetActor() const;
         zactor_t* GetZmqPipe() const;
 
-        //virtual void OnMessageArrived(const std::string& messagetype, zmsg_t* msg_body, ports::PortBase* port)=0;
         virtual void OnMessageArrived(const std::string& messagetype,
                                       std::vector<std::string>& msgFields,
                                       ports::PortBase* port)=0;
@@ -82,32 +80,16 @@ namespace riaps {
 
     protected:
         const ports::PortBase* GetPort(std::string portName) const;
-
         const Actor*     _actor;
-
-
-        //std::string    async_address;
         zuuid_t*       _component_uuid;
-
-        //std::map<std::string, std::unique_ptr<PublisherPort>>  _publisherports;
-        //std::vector<std::unique_ptr<ports::SubscriberPort>> _subscriberports;
-        //std::vector<std::unique_ptr<ports::CallBackTimer>>  _periodic_timers;
-
-
-
-
-        //std::vector<std::unique_ptr<ResponsePort>>   _responseports;
-        //std::vector<std::unique_ptr<RequestPort>>    _requestports;
 
         zactor_t*   _zactor_component;
 
-        //zsock_t*    zsock_component;
-        //zpoller_t*  zpoller;
-
     private:
-
         // Reach the configuration by GetConfig(), never ever directly.
         component_conf_j _configuration;
+
+        // All the component ports
         std::map<std::string, std::unique_ptr<ports::PortBase>> _ports;
 
     };

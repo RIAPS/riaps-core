@@ -15,8 +15,7 @@ def test_pub_send_pub_first():
     testId = "pubfirst_" + pubActorName
     deployer = runtime.get_deployer(pubActorName)
     deployer.start(testId, configs={"sync": False,
-                                    'args': [runtime.get_active_config('app_dir'),
-                                             runtime.get_active_config('app_dir') + '.json',
+                                    'args': [runtime.get_active_config('app_dir') + '.json',
                                              pubActorName,
                                              '--logfile="' + testId + '.log"']})
 
@@ -31,8 +30,7 @@ def test_pub_send_pub_first():
     testId = "pubfirst_" + subActorName
     deployer = runtime.get_deployer(subActorName)
     deployer.start(testId, configs={"sync": False,
-                                    'args': [runtime.get_active_config('app_dir'),
-                                             runtime.get_active_config('app_dir') + '.json',
+                                    'args': [runtime.get_active_config('app_dir') + '.json',
                                              subActorName,
                                              '--logfile="' + testId + '.log"']})
 

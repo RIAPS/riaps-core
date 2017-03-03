@@ -12,11 +12,12 @@
       "actor": "ActorTest1p"
     },
     {
-      "host": "192.168.1.121",
+      "host": "192.168.1.120",
       "actor": "ActorTest1s"
     }
   ],
-  "riaps_apps_path": "riaps_apps",
+  "target_bin_path": "/opt/riaps/armhf/bin/",
+  "target_lib_path": "/opt/riaps/armhf/lib/",
   "username":"riaps",
   "password":"riapspwd"
 }

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(riaps_core VERSION 0.1.0)
 
-option(RIAPS_TARGET "AMD64/ARMHF" "AMD64")
+option(RIAPS_TARGET "AMD64/ARMHF" "ARMHF")
 option(BUILD_TESTS  "Build tests" ON)
 
 set (CMAKE_CXX_FLAGS "-std=c++11")

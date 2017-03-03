@@ -11,10 +11,12 @@ def setup_suite():
     runtime.set_user(username, password)
 
     # Set up the target directories and properties
-    userdir = os.path.join("/home", username)
-    riaps_app_path = os.path.join(userdir, runtime.get_active_config("riaps_apps_path"))
-    env = {"PATH": "~/.local/bin/:$PATH",
-           "RIAPSHOME": "$HOME/.local/riaps",
+    #userdir = os.path.join("/home", username)
+    #riaps_app_path = os.path.join(userdir, runtime.get_active_config("riaps_apps_path"))
+    install_bin_path = runtime.get_active_config("target_bin_path")
+    install_lib_path = runtime.get_active_config("target_lib_path")
+
+    env = {"RIAPSHOME": "/usr/local/riaps",
            "RIAPSAPPS": "$HOME/riaps_apps"}
 
     start_riaps_lang = "riaps_lang " + runtime.get_active_config('model_file')
@@ -47,9 +49,9 @@ def setup_suite():
 
         killDeployer = adhoc_deployer.SSHDeployer(deployerId, {
             'executable': killscriptpath,
-            'install_path': riaps_app_path,
+            'install_path': install_bin_path,
             'hostname': target["host"],
-            "start_command": "python3 " + os.path.join(riaps_app_path, killRiapsScript)
+            "start_command": "python3 " + os.path.join(install_bin_path, killRiapsScript)
         })
         runtime.set_deployer(deployerId, killDeployer)
         killDeployer.install(deployerId)
@@ -62,9 +64,9 @@ def setup_suite():
 
         startDiscoveryDeployer = adhoc_deployer.SSHDeployer(deployerId, {
             'executable': startscriptpath,
-            'install_path': riaps_app_path,
+            'install_path': install_bin_path,
             'hostname': target["host"],
-            "start_command": "python3 " + os.path.join(riaps_app_path, discoStartScript)
+            "start_command": "python3 " + os.path.join(install_bin_path, discoStartScript)
         })
         runtime.set_deployer(deployerId, startDiscoveryDeployer)
         startDiscoveryDeployer.install(deployerId)
@@ -77,9 +79,9 @@ def setup_suite():
 
         stopDiscoveryDeployer = adhoc_deployer.SSHDeployer(deployerId, {
             'executable': stopscriptpath,
-            'install_path': riaps_app_path,
+            'install_path': install_bin_path,
             'hostname': target["host"],
-            "start_command": "python3 " + os.path.join(riaps_app_path, discoStopScript)
+            "start_command": "python3 " + os.path.join(install_bin_path, discoStopScript)
         })
         runtime.set_deployer(deployerId, stopDiscoveryDeployer)
         stopDiscoveryDeployer.install(deployerId)
@@ -92,9 +94,9 @@ def setup_suite():
 
         checkDiscoDeployer = adhoc_deployer.SSHDeployer(deployerId, {
             'executable': checkscriptpath,
-            'install_path': riaps_app_path,
+            'install_path': install_bin_path,
             'hostname': target["host"],
-            "start_command": "python3 " + os.path.join(riaps_app_path, "checkDiscoveryService.py")
+            "start_command": "python3 " + os.path.join(install_bin_path, "checkDiscoveryService.py")
         })
         runtime.set_deployer(deployerId, checkDiscoDeployer)
         checkDiscoDeployer.install(deployerId)
@@ -103,10 +105,9 @@ def setup_suite():
     for target in runtime.get_active_config('targets'):
         model_deployer = adhoc_deployer.SSHDeployer(target["actor"], {
             'executable': model_path,
-            'install_path': os.path.join(riaps_app_path,
-                                         runtime.get_active_config('app_dir')),
+            'install_path': install_bin_path,
             'hostname': target["host"],
-            'start_command': os.path.join(userdir, ".local/bin/riaps_actor"),
+            'start_command': os.path.join(install_bin_path, "start_actor"),
             'args': [runtime.get_active_config('app_dir'),
                      runtime.get_active_config('app_dir') + '.json',
                      target["actor"]],
@@ -128,16 +129,20 @@ def setup_suite():
                          '--logfile="' + testcase + '.log"']})
 
 
-        for component in runtime.get_active_config('components_py'):
+        for component in runtime.get_active_config('components_so'):
+            #localPath = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+            #                         runtime.get_active_config('app_dir'),
+            #                         component)
             localPath = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                     runtime.get_active_config('app_dir'),
+                                     "../../../bin",
                                      component)
-            targetPath = os.path.join(riaps_app_path, runtime.get_active_config('app_dir'))
+
+            targetPath = install_lib_path#os.path.join(riaps_app_path, runtime.get_active_config('app_dir'))
             component_deployer = adhoc_deployer.SSHDeployer(component, {
                 'executable': localPath,
                 'install_path': targetPath,
                 'hostname': target["host"],
-                'start_command': os.path.join(userdir, ".local/bin/riaps_actor"),
+                'start_command': os.path.join(install_bin_path, "start_actor"),
                 'args': [runtime.get_active_config('app_dir'),
                          runtime.get_active_config('app_dir') + '.json',
                          target["actor"]],

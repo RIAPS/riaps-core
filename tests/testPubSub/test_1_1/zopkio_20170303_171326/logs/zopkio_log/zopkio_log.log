@@ -1,0 +1,13 @@
+2017-03-03 17:13:26 zopkio [INFO] Starting zopkio
+2017-03-03 17:13:26 naarad [INFO] Available graphing modules:  
+2017-03-03 17:13:26 zopkio.test_runner [INFO] Setting up configuration: single execution
+2017-03-03 17:13:56 zopkio.remote_host_helper [ERROR] Traceback (most recent call last):
+  File "/opt/riaps/armhf/bin/checkDiscoveryService.py", line 16, in <module>
+    raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), "riaps-disco")
+FileNotFoundError: [Errno 2] No such file or directory: 'riaps-disco'
+
+2017-03-03 17:14:16 zopkio.remote_host_helper [ERROR] Traceback (most recent call last):
+  File "/opt/riaps/armhf/bin/checkDiscoveryService.py", line 16, in <module>
+    raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), "riaps-disco")
+FileNotFoundError: [Errno 2] No such file or directory: 'riaps-disco'
+
