@@ -145,7 +145,11 @@ namespace riaps{
                     char *portName = zmsg_popstr(msg);
                     ports::CallBackTimer* timerPort = (ports::CallBackTimer*)comp->GetPortByName(portName);
                     std::vector<std::string> fields;
-                    comp->OnMessageArrived(portName, fields, timerPort);
+
+                    comp->DispatchMessage(timerPort->GetPortName(), fields, timerPort);
+
+                    //comp->DispatchMessage(portName, fields, timerPort);
+                    //comp->OnMessageArrived(portName, fields, timerPort);
                     //zstr_free(&portName);
                     zmsg_destroy(&msg);
                 }
@@ -170,7 +174,9 @@ namespace riaps{
                             field = zmsg_popstr(msg);
                         }
 
-                        comp->OnMessageArrived(messageTypeStr, fields, riapsPort);
+                        comp->DispatchMessage(messageTypeStr, fields, riapsPort);
+
+                        //comp->OnMessageArrived(messageTypeStr, fields, riapsPort);
                         zmsg_destroy(&msg);
                         zstr_free(&messageType);
                     }
@@ -217,6 +223,12 @@ namespace riaps{
         _zactor_component = zactor_new(component_actor, this);
 
 
+    }
+
+    void ComponentBase::DispatchMessage(const std::string &messagetype, std::vector<std::string> &msgFields,
+                                        ports::PortBase *port) {
+        auto handler = GetHandler(port->GetPortName());
+        (this->*handler)(messagetype, msgFields, port);
     }
 
 
@@ -362,6 +374,17 @@ namespace riaps{
         for (auto it = parameters.begin(); it!=parameters.end(); it++){
             std::cout << *it << " : " << _configuration.component_parameters.GetParam(*it)->GetValueAsString() << std::endl;
         }
+    }
+
+    void ComponentBase::RegisterHandler(const std::string &portName, riaps_handler handler) {
+        _handlers.insert(std::make_pair(portName, handler));
+    }
+
+    riaps_handler ComponentBase::GetHandler(std::string portName) {
+        if (_handlers.find(portName) == _handlers.end()){
+            return NULL;
+        }
+        return _handlers[portName];
     }
 
     ComponentBase::~ComponentBase() {

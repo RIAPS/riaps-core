@@ -21,6 +21,7 @@
 #include <random>
 
 
+
 namespace riaps {
 
 
@@ -40,6 +41,8 @@ namespace riaps {
      * @param args
      */
     void component_actor(zsock_t* pipe, void* args);
+
+    typedef void (riaps::ComponentBase::*riaps_handler)(const std::string&, std::vector<std::string>&, riaps::ports::PortBase*);
 
     class ComponentBase {
     public:
@@ -69,30 +72,50 @@ namespace riaps {
         const Actor* GetActor() const;
         zactor_t* GetZmqPipe() const;
 
-        virtual void OnMessageArrived(const std::string& messagetype,
-                                      std::vector<std::string>& msgFields,
-                                      ports::PortBase* port)=0;
+        //virtual void OnMessageArrived(const std::string& messagetype,
+        //                              std::vector<std::string>& msgFields,
+        //                              ports::PortBase* port)=0;
+
+        void DispatchMessage(const std::string& messagetype,
+                             std::vector<std::string>& msgFields,
+                             ports::PortBase* port);
+
+
 
         virtual void PrintMessageOnPort(ports::PortBase* port, std::string message="");
         virtual void PrintParameters();
+
+
+
 
         virtual ~ComponentBase();
 
     protected:
         const ports::PortBase* GetPort(std::string portName) const;
+        virtual void RegisterHandler(const std::string& portName, riaps_handler);
+
+
         const Actor*     _actor;
         zuuid_t*       _component_uuid;
-
         zactor_t*   _zactor_component;
 
     private:
+        virtual riaps_handler GetHandler(std::string portName);
+        //=0;
+
         // Reach the configuration by GetConfig(), never ever directly.
         component_conf_j _configuration;
 
         // All the component ports
         std::map<std::string, std::unique_ptr<ports::PortBase>> _ports;
+        std::map<std::string, riaps_handler> _handlers;
 
     };
+
+
 }
+
+
+
 
 #endif //RIAPS_R_COMPONENTBASE_H

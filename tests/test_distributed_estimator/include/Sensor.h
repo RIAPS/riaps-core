@@ -5,24 +5,28 @@
 #ifndef RIAPS_FW_SENSOR_H
 #define RIAPS_FW_SENSOR_H
 
-#include "componentmodel/r_componentbase.h"
+#include "SensorBase.h"
 
-#define PORT_TIMER_CLOCK   "clock"
-#define PORT_PUB_READY   "ready"
-#define PORT_REP_REQUEST "request"
-
-class comp_sensor : public riaps::ComponentBase {
+class comp_sensor : public comp_sensorbase {
 
 public:
 
     comp_sensor(_component_conf_j& config, riaps::Actor& actor);
 
-    virtual void OnMessageArrived(const std::string& messagetype,
-                                  std::vector<std::string>& msgFields,
-                                  riaps::ports::PortBase* port);
+
+
+    virtual void OnClock(const std::string& messagetype,
+                         std::vector<std::string>& msgFields,
+                         riaps::ports::PortBase* port);
+
+    virtual void OnRequest(const std::string& messagetype,
+                           std::vector<std::string>& msgFields,
+                           riaps::ports::PortBase* port);
 
 
     virtual ~comp_sensor();
+
+
 
 private:
     std::unique_ptr<std::uniform_real_distribution<double>> unif;
