@@ -5,7 +5,7 @@
 #ifndef RIAPS_FW_SENSOR_H
 #define RIAPS_FW_SENSOR_H
 
-#include "SensorBase.h"
+#include "base/SensorBase.h"
 
 class comp_sensor : public comp_sensorbase {
 

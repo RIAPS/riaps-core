@@ -5,22 +5,25 @@
 #ifndef RIAPS_FW_GLOBALESTIMATOR_H
 #define RIAPS_FW_GLOBALESTIMATOR_H
 
-#include "componentmodel/r_componentbase.h"
+#include "base/GlobalEstimatorBase.h"
 
-#define PORT_SUB_ESTIMATE "estimate"
-#define PORT_TIMER_WAKEUP "wakeup"
 
-class comp_globalestimator : public riaps::ComponentBase {
+
+class GlobalEstimator : public GlobalEstimatorBase {
 
 public:
 
-    comp_globalestimator(_component_conf_j& config, riaps::Actor& actor);
+    GlobalEstimator(_component_conf_j& config, riaps::Actor& actor);
 
-    virtual void OnMessageArrived(const std::string& messagetype,
-                                  std::vector<std::string>& msgFields,
-                                  riaps::ports::PortBase* port);
+    virtual void OnEstimate(const std::string& messagetype,
+                            std::vector<std::string>& msgFields,
+                            riaps::ports::PortBase* port);
 
-    virtual ~comp_globalestimator();
+    virtual void OnWakeup(const std::string& messagetype,
+                          std::vector<std::string>& msgFields,
+                          riaps::ports::PortBase* port);
+
+    virtual ~GlobalEstimator();
 
 private:
     std::unique_ptr<std::uniform_real_distribution<double>> unif;

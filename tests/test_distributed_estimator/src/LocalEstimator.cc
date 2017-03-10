@@ -6,37 +6,42 @@
 
 
 
-comp_localestimator::comp_localestimator(_component_conf_j &config, riaps::Actor &actor):ComponentBase(config, actor) {
-    PrintParameters();
+LocalEstimator::LocalEstimator(_component_conf_j &config, riaps::Actor &actor):LocalEstimatorBase(config, actor) {
+    //PrintParameters();
 }
 
-void comp_localestimator::OnMessageArrived(const std::string& messagetype,
-                                           std::vector<std::string>& msgFields,
-                                           riaps::ports::PortBase* port) {
+void LocalEstimator::OnReady(const std::string& messagetype,
+                             std::vector<std::string>& msgFields,
+                             riaps::ports::PortBase* port) {
 
     PrintMessageOnPort(port);
 
-    if (port->GetPortName() == PORT_SUB_READY) {
-        auto reqPort = GetRequestPortByName(PORT_REQ_QUERY);
-        if (reqPort != NULL) {
-            if (reqPort->Send("")) {
-                std::string messageType;
-                std::vector<std::string> messageFields;
-                if (reqPort->AsRequestPort()->Recv(messageType, messageFields)){
-                    std::string firstField = messageFields.front();
-                    GetPublisherPortByName(PORT_PUB_ESTIMATE)->Send(firstField);
-                }
+
+    // Send the request
+    auto reqPort = GetRequestPortByName(PORT_REQ_QUERY);
+    if (reqPort != NULL) {
+        if (reqPort->Send("")) {
+            std::string messageType;
+            std::vector<std::string> messageFields;
+
+            // Wait for the response, and forward the message
+            if (reqPort->AsRequestPort()->Recv(messageType, messageFields)) {
+                PrintMessageOnPort(reqPort);
+                std::string firstField = messageFields.front();
+                GetPublisherPortByName(PORT_PUB_ESTIMATE)->Send(firstField);
             }
         }
     }
 }
 
-comp_localestimator::~comp_localestimator() {
+LocalEstimator::~LocalEstimator() {
 
 }
 
 riaps::ComponentBase* create_component(_component_conf_j& config, riaps::Actor& actor){
-    return new comp_localestimator(config, actor);
+    auto result = new LocalEstimator(config, actor);
+    result->RegisterHandlers();
+    return result;
 }
 
 void destroy_component(riaps::ComponentBase* comp){

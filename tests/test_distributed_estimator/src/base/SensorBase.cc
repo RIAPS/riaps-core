@@ -2,7 +2,7 @@
 // Created by istvan on 3/10/17.
 //
 
-#include <SensorBase.h>
+#include <base/SensorBase.h>
 
 comp_sensorbase::comp_sensorbase(_component_conf_j &config, riaps::Actor &actor):ComponentBase(config, actor) {
 

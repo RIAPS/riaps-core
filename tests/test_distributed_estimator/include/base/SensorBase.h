@@ -7,6 +7,7 @@
 
 #include "componentmodel/r_componentbase.h"
 
+// Name of the ports from the model file
 #define PORT_TIMER_CLOCK "clock"
 #define PORT_PUB_READY   "ready"
 #define PORT_REP_REQUEST "request"

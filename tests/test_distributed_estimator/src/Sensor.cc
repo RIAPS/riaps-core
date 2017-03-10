@@ -15,6 +15,7 @@ comp_sensor::comp_sensor(_component_conf_j &config, riaps::Actor &actor):comp_se
 void comp_sensor::OnClock(const std::string &messagetype, std::vector<std::string> &msgFields,
                           riaps::ports::PortBase *port) {
     PrintMessageOnPort(port);
+    SendMessageOnPort("ready message", PORT_PUB_READY);
 }
 
 void comp_sensor::OnRequest(const std::string &messagetype, std::vector<std::string> &msgFields,

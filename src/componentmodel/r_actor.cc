@@ -553,8 +553,25 @@ namespace riaps {
             std::string formalName = (it_formal.value())[J_FORMAL_NAME];
             bool hasDefault = it_formal.value()[J_FORMAL_DEF] != NULL;
 
-            std::string formalDefault = !hasDefault ? "": (it_formal.value())[J_FORMAL_DEF];
 
+            //std::string formalDefault = !hasDefault ? "": (it_formal.value())[J_FORMAL_DEF];
+
+
+            std::string formalDefault = "";
+
+
+
+            // Must check the type
+            if (hasDefault){
+                auto j_formalValue = (it_formal.value())[J_FORMAL_DEF];
+                if (j_formalValue.is_string()){
+                    formalDefault = j_formalValue;
+                } else if (j_formalValue.is_boolean()){
+                    formalDefault = std::to_string((bool)j_formalValue);
+                } else if (j_formalValue.is_number()){
+                    formalDefault = std::to_string((double)j_formalValue);
+                }
+            }
 
             // If default value is specified, then the parameter is not mandatory.
             results.AddParam(formalName, "", hasDefault, formalDefault);
