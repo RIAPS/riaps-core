@@ -8,13 +8,14 @@ addons:
     - g++-5
     - g++-arm-linux-gnueabihf
 env:
-  secure: pn9tH7Ke2ILlG5u4zYLlApRzw8hzyrHcpW7dSCTJYrJcf0MYZBAmkI/ry+RD6Veh2HCIEySPc2eqx4B4FFvKX6zt6kofbzYYD1xhVOy5FYXYG7OmW5nSKzI48lVVb8B7F65YvVVnMyICouQ4K2KwYLrAmIUxQAabQp8Qq7IXZkuXxcuTTBTp4UQyO9lg427y+7Xp7dMKLD4XjAaiPJgYC/jOUcUMOPpVIhOu+sY1Coj5jeI1LWlwm41MlWEU4GXPG5smuLgQbcRCk96YQhexRALhiNm2MrQPiJ/JcFOQ1jywL3SKG0lXabP7C7zpO/N0aB1UhZ9/xs6nTdYSkCINVeptkBJpdgDBJmrSyTsuZLNX/pp9po3WGfnnhBZXAFtkjRhh1v0q2h0mQhQRWlr+oL7aEgNgmMx/uvA+HIsfnM8N5aWBYJ6Br7J+Mlt7qc+5+P3BJ18FQ2crvmkdxYHxLOHGluxWLt18eVN+KkDYb6rH7KSPiepkm/57YOeaMwg/rekl4hCC/sebcrRUujamAsZOcwLOaKxQDEM7fDGsIELhUncSeGbPENzrIpaAylNR5cCSiORbj1TK1s3lu0fp2TNiPRZtXAAcsArp/0m+E9oZ488qn9emiZCC/tNXNNP4JgGvxi0uBxIqZipd3oP4T4l3iiXXo9dUM4E293pSTB4=
+  secure: dItmuutoyf9tBY7nyiK2qTb0od72AataLLuFoBqNTYmcFDg/xNuwHvwAAcu1jG4a9SSQS3jxcTRGn3J5hmRVRprpoJOeao8LRyXd3s1xBHKRjoutqKXAJSxJyJgZZED+qrYBok0s1spoQf0uGnwruJgXuZZhPmEAcfPowrgz0SPHGmNT4EbcZ1rJoZKi6wxmYNvgeaI52++zA7XRH6Vfyw3cGDyAsvD/02hLDhg0PCu0Y3eHLYCGTpBbb6MoieCNiDj43UPdxi7x95wr4hhseu4ObLFDLSyZbFjYfTQygkas4Xgg7X7myGwF3kG3YT1ZWNSgP1ZSk2MBXdRVfvRy13EMscWuCAMFSBrwS+6iRsPys9NAjj2eX9PzlBA4VVse5VBx7FblJ3eVE8LljUBZjWj4oYh078GIZ6I7DljnJk6queY0PbKOodEfZzoXa1QC+NswawpU6U85NwYjnet3FUVALJ2GAUbwkR8Vjfk+jzw6/7IyS2tyBhfQdhCuakJJw/bgu7ny05yuLBZy0m1rIrQzCQHxxzNvtIF9vXoHvqdjF5UcSwwwpzojYdUY/rkVhtGkcFl4Q3+MIbyOfK4N12CtoOlwT82T3F/GFdGeWY1JGTwJvLSqBN0HWBmJqFajhL3ceGczcmQDiB+ZO5DUrl4D7l8tXWMaJyM2Y7aOsFw=
 script:
 - wget https://github.com/gruntwork-io/fetch/releases/download/v0.1.1/fetch_linux_amd64
 - chmod +x fetch_linux_amd64
-- ./fetch_linux_amd64 --repo="https://github.com/RIAPS/externals/" --tag="0.5" --release-asset="riaps-externals-armhf.deb" .
-- ./fetch_linux_amd64 --repo="https://github.com/RIAPS/externals/" --tag="0.5" --release-asset="riaps-externals-amd64.deb" .
+- ./fetch_linux_amd64 --repo="https://github.com/RIAPS/externals/" --tag="0.5" --release-asset="riaps-externals-armhf.deb"
+  .
+- ./fetch_linux_amd64 --repo="https://github.com/RIAPS/externals/" --tag="0.5" --release-asset="riaps-externals-amd64.deb"
+  .
 - sudo dpkg -i riaps-externals-armhf.deb
 - sudo dpkg -i riaps-externals-amd64.deb
 - find /opt
-
