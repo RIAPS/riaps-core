@@ -6,6 +6,7 @@
 #define RIAPS_CORE_SENSORBASE_H
 
 #include "componentmodel/r_componentbase.h"
+#include "messages/SensorReady.h"
 
 // Name of the ports from the model file
 #define PORT_TIMER_CLOCK "clock"
@@ -37,7 +38,7 @@ public:
 
     virtual bool SendRequest(const std::string& message);
 
-    virtual bool SendReady(const std::string& message);
+    virtual bool SendReady(const SensorReady& message);
 
 
     virtual ~comp_sensorbase();

@@ -7,9 +7,6 @@
 
 #include "componentmodel/r_componentbase.h"
 
-#include <string>
-#include <vector>
-
 // Name of the ports from the model file
 #define PORT_SUB_READY    "ready"
 #define PORT_REQ_QUERY    "query"
@@ -34,11 +31,7 @@ public:
     //                     std::vector<std::string>& msgFields,
     //                     riaps::ports::PortBase* port)=0;
 
-    virtual bool SendQuery(const std::string& message);
 
-    virtual bool SendEstimate(const std::string& message);
-
-    virtual bool RecvQuery(std::string& messageType, std::vector<std::string>& messageFields);
 
     virtual ~LocalEstimatorBase();
 

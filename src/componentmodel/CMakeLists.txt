@@ -16,6 +16,7 @@ set(FRAMEWORK_LIB_FILES r_discoverdapi.cc
                         r_parameter.cc
                         ../framework/rfw_network_interfaces.cc
                         ../framework/rfw_configuration.cc
+                        ../messaging/r_message.cc
         )
 
 add_library(riaps SHARED ${FRAMEWORK_LIB_FILES})

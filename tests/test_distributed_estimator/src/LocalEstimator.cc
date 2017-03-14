@@ -18,18 +18,30 @@ void LocalEstimator::OnReady(const std::string& messagetype,
 
 
     // Send the request
-    auto reqPort = GetRequestPortByName(PORT_REQ_QUERY);
-    if (reqPort != NULL) {
-        if (reqPort->Send("")) {
-            std::string messageType;
-            std::vector<std::string> messageFields;
+//    auto reqPort = GetRequestPortByName(PORT_REQ_QUERY);
+//    if (reqPort != NULL) {
+//        if (reqPort->Send("")) {
+//            std::string messageType;
+//            std::vector<std::string> messageFields;
+//
+//            // Wait for the response, and forward the message
+//            if (reqPort->AsRequestPort()->Recv(messageType, messageFields)) {
+//                PrintMessageOnPort(reqPort);
+//                std::string firstField = messageFields.front();
+//                GetPublisherPortByName(PORT_PUB_ESTIMATE)->Send(firstField);
+//            }
+//        }
+//    }
 
-            // Wait for the response, and forward the message
-            if (reqPort->AsRequestPort()->Recv(messageType, messageFields)) {
-                PrintMessageOnPort(reqPort);
-                std::string firstField = messageFields.front();
-                GetPublisherPortByName(PORT_PUB_ESTIMATE)->Send(firstField);
-            }
+    // Send the request, if succeded wait for the answer
+    if (SendQuery("")){
+        std::string messageType;
+        std::vector<std::string> messageFields;
+
+        if (RecvQuery(messageType, messageFields)){
+
+            // Forward the next field
+            SendEstimate(messageFields.front());
         }
     }
 }

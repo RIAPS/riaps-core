@@ -48,45 +48,17 @@ namespace riaps {
     public:
         ComponentBase(component_conf_j& config, Actor& actor);
 
-        const ports::PublisherPort*  InitPublisherPort(const _component_port_pub_j&);
-        const ports::SubscriberPort* InitSubscriberPort(const _component_port_sub_j&);
-        const ports::ResponsePort*   InitResponsePort(const _component_port_rep_j&);
-        const ports::RequestPort*    InitRequestPort(const _component_port_req_j&);
-        const ports::CallBackTimer*  InitTimerPort(const _component_port_tim_j&);
-
-        ports::PublisherPort*  GetPublisherPortByName(const std::string& portName);
-        ports::RequestPort*    GetRequestPortByName(const std::string& portName);
-        ports::ResponsePort*   GetResponsePortByName(const std::string& portName);
-        ports::SubscriberPort* GetSubscriberPortByName(const std::string& portName);
-
-
-        ports::PortBase* GetPortByName(const std::string&);
-
-        bool SendMessageOnPort(std::string message, std::string portName);
-
-
-        std::string             GetTimerChannel();
-        std::string             GetCompUuid();
-        const component_conf_j& GetConfig() const;
-
         const Actor* GetActor() const;
         zactor_t* GetZmqPipe() const;
 
-        //virtual void OnMessageArrived(const std::string& messagetype,
-        //                              std::vector<std::string>& msgFields,
-        //                              ports::PortBase* port)=0;
+        friend void component_actor(zsock_t* pipe, void* args);
 
-        void DispatchMessage(const std::string& messagetype,
-                             std::vector<std::string>& msgFields,
-                             ports::PortBase* port);
+        bool SendMessageOnPort(std::string message, std::string portName);
 
-
+        const component_conf_j& GetConfig() const;
 
         virtual void PrintMessageOnPort(ports::PortBase* port, std::string message="");
         virtual void PrintParameters();
-
-
-
 
         virtual ~ComponentBase();
 
@@ -94,14 +66,32 @@ namespace riaps {
         const ports::PortBase* GetPort(std::string portName) const;
         virtual void RegisterHandler(const std::string& portName, riaps_handler);
 
+        ports::PublisherPort*  GetPublisherPortByName(const std::string& portName);
+        ports::RequestPort*    GetRequestPortByName(const std::string& portName);
+        ports::ResponsePort*   GetResponsePortByName(const std::string& portName);
+        ports::SubscriberPort* GetSubscriberPortByName(const std::string& portName);
+
+        ports::PortBase* GetPortByName(const std::string&);
 
         const Actor*     _actor;
         zuuid_t*       _component_uuid;
         zactor_t*   _zactor_component;
 
     private:
+        const ports::PublisherPort*  InitPublisherPort(const _component_port_pub_j&);
+        const ports::SubscriberPort* InitSubscriberPort(const _component_port_sub_j&);
+        const ports::ResponsePort*   InitResponsePort(const _component_port_rep_j&);
+        const ports::RequestPort*    InitRequestPort(const _component_port_req_j&);
+        const ports::CallBackTimer*  InitTimerPort(const _component_port_tim_j&);
+
+        std::string             GetTimerChannel();
+        std::string             GetCompUuid();
+
         virtual riaps_handler GetHandler(std::string portName);
-        //=0;
+
+        void DispatchMessage(const std::string& messagetype,
+                             std::vector<std::string>& msgFields,
+                             ports::PortBase* port);
 
         // Reach the configuration by GetConfig(), never ever directly.
         component_conf_j _configuration;
@@ -109,10 +99,7 @@ namespace riaps {
         // All the component ports
         std::map<std::string, std::unique_ptr<ports::PortBase>> _ports;
         std::map<std::string, riaps_handler> _handlers;
-
     };
-
-
 }
 
 
