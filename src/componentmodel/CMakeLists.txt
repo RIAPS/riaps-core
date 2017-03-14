@@ -20,3 +20,7 @@ target_link_libraries(riaps czmq dl capnp kj)
 
 add_executable(start_actor r_actor_main.cc)
 target_link_libraries(start_actor czmq riaps capnp)
+
+
+install(TARGETS start_actor DESTINATION bin)
+install(TARGETS riaps DESTINATION lib)

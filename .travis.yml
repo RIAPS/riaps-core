@@ -18,8 +18,8 @@ env:
 before_script:
   - wget https://github.com/gruntwork-io/fetch/releases/download/v0.1.1/fetch_linux_amd64
   - chmod +x fetch_linux_amd64
-  - ./fetch_linux_amd64 --repo="https://github.com/RIAPS/externals/" --tag="0.5" --release-asset="riaps-externals-armhf.deb" .
-  - ./fetch_linux_amd64 --repo="https://github.com/RIAPS/externals/" --tag="0.5" --release-asset="riaps-externals-amd64.deb" .
+  - ./fetch_linux_amd64 --repo="https://github.com/RIAPS/externals/" --tag="0.1" --release-asset="riaps-externals-armhf.deb" .
+  - ./fetch_linux_amd64 --repo="https://github.com/RIAPS/externals/" --tag="0.1" --release-asset="riaps-externals-amd64.deb" .
   - sudo dpkg -i riaps-externals-armhf.deb
   - sudo dpkg -i riaps-externals-amd64.deb
 

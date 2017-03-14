@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(riaps_core VERSION 0.1.0)
 
-option(RIAPS_TARGET "AMD64/ARMHF" "AMD64")
+option(arch "amd64/armhf" "amd64")
 option(BUILD_TESTS  "Build tests" ON)
 
 set (CMAKE_CXX_FLAGS "-std=c++11")
@@ -16,9 +16,9 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_HOME_DIRECTORY}/bin)
 include_directories(include)
 
 #Set the platform
-if (${RIAPS_TARGET} STREQUAL "AMD64")
+if (${arch} STREQUAL "amd64")
     include(CMakeLists_amd64.txt)
-elseif(${RIAPS_TARGET} STREQUAL "ARMHF")
+elseif(${arch} STREQUAL "armhf")
     include(CMakeLists_arm.txt)
 endif()
 
