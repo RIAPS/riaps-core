@@ -22,6 +22,13 @@ before_script:
   - ./fetch_linux_amd64 --repo="https://github.com/RIAPS/externals/" --tag="0.2" --release-asset="riaps-externals-amd64.deb" .
   - sudo dpkg -i riaps-externals-armhf.deb
   - sudo dpkg -i riaps-externals-amd64.deb
+  - sudo add-apt-repository 'deb http://fr.archive.ubuntu.com/ubuntu/ wily main'
+  - sudo add-apt-repository 'deb-src http://fr.archive.ubuntu.com/ubuntu/ wily main'
+  - sudo apt-get install g++-5-arm-linux-gnueabihf
+  - sudo rm -f /usr/bin/arm-linux-gnueabihf-gcc
+  - sudo rm -f /usr/bin/arm-linux-gnueabihf-g++
+  - sudo ln -s /usr/bin/arm-linux-gnueabihf-gcc-5 /usr/bin/arm-linux-gnueabihf-gcc
+  - sudo ln -s /usr/bin/arm-linux-gnueabihf-g++-5 /usr/bin/arm-linux-gnueabihf-g++
 
 script:
 - mkdir build-$arch
