@@ -3,7 +3,8 @@ include_directories(include)
 add_library(globalestimator SHARED src/GlobalEstimator.cc src/base/GlobalEstimatorBase.cc)
 add_library(localestimator SHARED src/LocalEstimator.cc src/base/LocalEstimatorBase.cc)
 add_library(sensor SHARED src/Sensor.cc
-                          src/base/SensorBase.cc)
+                          src/base/SensorBase.cc
+                          src/messages/SensorReady.cc)
 
 target_link_libraries(localestimator czmq riaps dl capnp kj )
 target_link_libraries(globalestimator czmq riaps )
