@@ -34,5 +34,5 @@ script:
 - mkdir build-$arch
 - cd build-$arch
 - cmake -Darch=$arch  ..
-- PATH=/opt/riaps/amd64/bin:$PATH make
+- PATH=/opt/riaps/amd64/bin:$PATH make VERBOSE=1
 
