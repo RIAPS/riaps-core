@@ -7,22 +7,27 @@ set(CMAKE_SYSTEM_NAME Linux)
 
 #Set the platform
 if (${arch} STREQUAL "armhf")
-set(TOOLCHAIN_PREFIX arm-linux-gnueabihf)
-set(CMAKE_C_COMPILER ${TOOLCHAIN_PREFIX}-gcc)
-set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}-g++)
-set(CMAKE_FIND_ROOT_PATH /usr/${TOOLCHAIN_PREFIX})
+ set(TOOLCHAIN_PREFIX arm-linux-gnueabihf)
+ set(CMAKE_C_COMPILER ${TOOLCHAIN_PREFIX}-gcc)
+ set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}-g++)
+ set(CMAKE_FIND_ROOT_PATH /usr/${TOOLCHAIN_PREFIX})
+ set (CMAKE_CXX_FLAGS "-std=c++11")
+ set (CMAKE_C_FLAGS "-std=c99")
 else()
-set(CMAKE_C_COMPILER gcc-5)
-set(CMAKE_CXX_COMPILER g++-5)
+ set(CMAKE_C_COMPILER gcc-5)
+ set(CMAKE_CXX_COMPILER g++-5)
+ set (CMAKE_CXX_FLAGS "-std=c++11 -D_GLIBCXX_USE_CXX11_ABI=0")
+ set (CMAKE_C_FLAGS "-std=c99")
 endif()
+
+
+
 set(DEPENDENCIES /opt/riaps/)
 set (LIBALLPATH_INCLUDE ${DEPENDENCIES}/${arch}/include)
 set (LIBALLPATH_LIB ${DEPENDENCIES}/${arch}/lib)
 include_directories(${LIBALLPATH_INCLUDE})
 link_directories(${LIBALLPATH_LIB})
 
-set (CMAKE_CXX_FLAGS "-std=c++11 -D_GLIBCXX_USE_CXX11_ABI=0")
-set (CMAKE_C_FLAGS "-std=c99")
 
 # Debug binaries are to be copied into "./bin" directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_HOME_DIRECTORY}/bin)
@@ -33,8 +38,8 @@ include_directories(include)
 add_subdirectory(src/componentmodel)
 add_subdirectory(src/discoveryd)
 if (BUILD_TESTS)
-include(CTest)
-enable_testing()
+    include(CTest)
+    enable_testing()
     # Tests
     #add_subdirectory(tests/test_pubsub)
     #add_subdirectory(tests/test_getservice_async)
