@@ -1,4 +1,17 @@
 .idea
 .vscode
+3rdparty
+build*
+
+build-armhf
+build-amd64
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Makefile
+cmake_install.cmake
+install_manifest.txt
+CTestTestfile.cmake
+
 bin
 cmake-build-debug
