@@ -5,8 +5,6 @@ addons:
     sources:
     - ubuntu-toolchain-r-test
     packages:
-    - g++-5
-    - g++-arm-linux-gnueabihf
     - capnproto
 env:
   global:
@@ -24,7 +22,7 @@ before_script:
   - sudo dpkg -i riaps-externals-amd64.deb
   - sudo add-apt-repository 'deb http://fr.archive.ubuntu.com/ubuntu/ wily main'
   - sudo apt-get update
-  - sudo apt-get install g++-5-arm-linux-gnueabihf
+  - sudo apt-get install g++-5-arm-linux-gnueabihf g++-5
   - sudo rm -f /usr/bin/arm-linux-gnueabihf-gcc
   - sudo rm -f /usr/bin/arm-linux-gnueabihf-g++
   - sudo ln -s /usr/bin/arm-linux-gnueabihf-gcc-5 /usr/bin/arm-linux-gnueabihf-gcc
