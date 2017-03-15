@@ -4,10 +4,30 @@
 
 #include <messages/SensorReady.h>
 
-std::string SensorReady::DeserializeMessage(zmsg_t *message) {
+namespace distributedestimator {
+    namespace messages {
+        SensorReady::SensorReady() {
 
+        }
+
+        void SensorReady::SetMsg(const std::string &msg) {
+            _msg = msg;
+        }
+
+        const std::string &SensorReady::GetMsg() {
+            return _msg;
+        }
+
+        SensorReady::~SensorReady() {
+
+        }
+    }
 }
 
-zmsg_t* SensorReady::SerializeMessage(std::string message) {
-
-}
+//std::string SensorReady::DeserializeMessage(zmsg_t *message) {
+//
+//}
+//
+//zmsg_t* SensorReady::SerializeMessage(std::string message) {
+//
+//}

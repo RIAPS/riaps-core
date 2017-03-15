@@ -6,18 +6,44 @@
 #define RIAPS_CORE_SENSORREADY_H
 
 #include <vector>
-#include <messaging/r_message.h>
+#include <msgpack.hpp>
 
-class SensorReady : public IRiapsMessage<std::string>
-{
-    SensorReady();
+//#include <messaging/r_message.h>
 
-    zmsg_t* SerializeMessage(std::string message);
+//class SensorReady : public IRiapsMessage<std::string>
+//{
+//    SensorReady();
+//
+//    zmsg_t* SerializeMessage(std::string message);
+//    byte*   SerializeMessage(std::string message);
+//
+//    std::string DeserializeMessage(zmsg_t* message);
+//    std::string DeserializeMessage(byte* message);
+//
+//
+//    ~SensorReady();
+//};
 
-    std::string DeserializeMessage(zmsg_t* message);
+namespace distributedestimator {
+    namespace messages {
 
+        class SensorReady {
+        public:
+            SensorReady();
 
-    ~SensorReady();
-};
+            void SetMsg(const std::string &msg);
+
+            const std::string &GetMsg();
+
+            MSGPACK_DEFINE (_msg);
+
+            ~SensorReady();
+
+        private:
+            std::string _msg;
+
+        };
+    }
+}
 
 #endif //RIAPS_CORE_SENSORREADY_H

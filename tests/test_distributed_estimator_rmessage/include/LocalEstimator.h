@@ -8,6 +8,7 @@
 
 #include "base/LocalEstimatorBase.h"
 
+using namespace distributedestimator;
 
 class LocalEstimator : public LocalEstimatorBase {
 
@@ -16,7 +17,7 @@ public:
     LocalEstimator(_component_conf_j& config, riaps::Actor& actor);
 
     virtual void OnReady(const std::string& messagetype,
-                         std::vector<std::string>& msgFields,
+                         const messages::SensorReady& message,
                          riaps::ports::PortBase* port);
 
 

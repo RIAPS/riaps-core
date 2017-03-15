@@ -12,17 +12,23 @@ comp_sensor::comp_sensor(_component_conf_j &config, riaps::Actor &actor):comp_se
 }
 
 
-void comp_sensor::OnClock(const std::string &messagetype, std::vector<std::string> &msgFields,
-                          riaps::ports::PortBase *port) {
+void comp_sensor::OnClock(const std::string &messagetype, riaps::ports::PortBase *port) {
     PrintMessageOnPort(port);
     //SendMessageOnPort("ready message", PORT_PUB_READY);
-    SendReady("ready message");
+
+    messages::SensorReady readyMsg;
+    SendReady(readyMsg);
 }
 
-void comp_sensor::OnRequest(const std::string &messagetype, std::vector<std::string> &msgFields,
+void comp_sensor::OnRequest(const std::string &messagetype, const messages::SensorQuery& message,
                             riaps::ports::PortBase *port) {
+    PrintMessageOnPort(port);
+    messages::SensorValue responseMessage;
+    responseMessage.SetMsg("Kukucs");
+    SendRequest(responseMessage);
+
     // Sync Request arrived, send response back
-    SendRequest("ResponseContent");
+    //SendRequest("ResponseContent");
     //riaps::ports::ResponsePort* repPort = GetResponsePortByName(PORT_REP_REQUEST);
     //if (repPort != NULL) {
     //    if (repPort->Send("ResponseContent")) {
@@ -37,7 +43,7 @@ comp_sensor::~comp_sensor() {
 
 riaps::ComponentBase* create_component(_component_conf_j& config, riaps::Actor& actor){
     auto result = new comp_sensor(config, actor);
-    result->RegisterHandlers();
+    //result->RegisterHandlers();
     return result;
 }
 

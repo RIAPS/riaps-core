@@ -62,25 +62,35 @@ namespace riaps {
             return this;
         }
 
-        bool RequestPort::Recv(std::string& messageType, std::vector<std::string>& msgFields) {
+        bool RequestPort::Recv(std::string& messageType, msgpack::sbuffer& message) {
             zmsg_t* msg = zmsg_recv((void*)GetSocket());
 
             if (msg){
                 char* msgType = zmsg_popstr(msg);
                 messageType = msgType;
                 if (msgType!=NULL){
-                    char* msgField = zmsg_popstr(msg);
-                    while(msgField!=NULL){
-                        std::string newMessageField = msgField;
-                        msgFields.push_back(newMessageField);
-                        zstr_free(&msgField);
-                        msgField = zmsg_popstr(msg);
-                    }
-                    zstr_free(&msgType);
+                    zframe_t* bodyFrame = zmsg_pop(msg);
+                    size_t size = zframe_size(bodyFrame);
+                    byte* data = zframe_data(bodyFrame);
+
+                    message.write((const char*)data, size);
+
+                    zframe_destroy(&bodyFrame);
                     return true;
+
+//                    char* msgField = zmsg_popstr(msg);
+//                    while(msgField!=NULL){
+//                        std::string newMessageField = msgField;
+//                        msgFields.push_back(newMessageField);
+//                        zstr_free(&msgField);
+//                        msgField = zmsg_popstr(msg);
+//                    }
+//                    zstr_free(&msgType);
+//                    return true;
                 }
                 return false;
             }
+            zmsg_destroy(&msg);
 
             return false;
         }

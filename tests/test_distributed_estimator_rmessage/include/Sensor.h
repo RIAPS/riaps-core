@@ -16,11 +16,10 @@ public:
 
 
     virtual void OnClock(const std::string& messagetype,
-                         std::vector<std::string>& msgFields,
                          riaps::ports::PortBase* port);
 
     virtual void OnRequest(const std::string& messagetype,
-                           std::vector<std::string>& msgFields,
+                           const messages::SensorQuery& message,
                            riaps::ports::PortBase* port);
 
 

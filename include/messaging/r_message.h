@@ -12,8 +12,10 @@ template <class T>
 class IRiapsMessage{
 public:
     IRiapsMessage();
-    virtual zmsg_t* SerializeMessage(T message) = 0;
-    virtual T DeserializeMessage(zmsg_t* message) = 0;
+    virtual zmsg_t* RMessageToZmq(T message) = 0;
+    virtual byte*   RMessageToByte(T message) = 0;
+    virtual T ZmqToRMessage(zmsg_t* message) = 0;
+    virtual T ByteToRMessage(byte* message) = 0;
     virtual ~IRiapsMessage();
 };
 

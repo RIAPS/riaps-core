@@ -14,6 +14,8 @@
 #include "r_requestport.h"
 #include "r_actor.h"
 
+#include <msgpack.hpp>
+
 #include <iostream>
 #include <vector>
 #include <memory>
@@ -42,7 +44,7 @@ namespace riaps {
      */
     void component_actor(zsock_t* pipe, void* args);
 
-    typedef void (riaps::ComponentBase::*riaps_handler)(const std::string&, std::vector<std::string>&, riaps::ports::PortBase*);
+    typedef void (riaps::ComponentBase::*riaps_handler)(const std::string&, msgpack::sbuffer*, riaps::ports::PortBase*);
 
     class ComponentBase {
     public:
@@ -53,7 +55,9 @@ namespace riaps {
 
         friend void component_actor(zsock_t* pipe, void* args);
 
-        bool SendMessageOnPort(std::string message, std::string portName);
+        bool SendMessageOnPort(std::string message, const std::string& portName);
+        bool SendMessageOnPort(zmsg_t** message, const std::string& portName);
+        bool SendMessageOnPort(msgpack::sbuffer& message, const std::string& portName);
 
         const component_conf_j& GetConfig() const;
 
@@ -73,9 +77,13 @@ namespace riaps {
 
         ports::PortBase* GetPortByName(const std::string&);
 
-        const Actor*     _actor;
-        zuuid_t*       _component_uuid;
-        zactor_t*   _zactor_component;
+        virtual void DispatchMessage(const std::string& messagetype,
+                                     msgpack::sbuffer* message,
+                                     ports::PortBase* port);
+
+        const Actor* _actor;
+        zuuid_t*     _component_uuid;
+        zactor_t*    _zactor_component;
 
     private:
         const ports::PublisherPort*  InitPublisherPort(const _component_port_pub_j&);
@@ -89,9 +97,7 @@ namespace riaps {
 
         virtual riaps_handler GetHandler(std::string portName);
 
-        void DispatchMessage(const std::string& messagetype,
-                             std::vector<std::string>& msgFields,
-                             ports::PortBase* port);
+
 
         // Reach the configuration by GetConfig(), never ever directly.
         component_conf_j _configuration;

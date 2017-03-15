@@ -11,28 +11,38 @@ LocalEstimator::LocalEstimator(_component_conf_j &config, riaps::Actor &actor):L
 }
 
 void LocalEstimator::OnReady(const std::string& messagetype,
-                             std::vector<std::string>& msgFields,
+                             const messages::SensorReady& message,
                              riaps::ports::PortBase* port) {
 
     PrintMessageOnPort(port);
 
+    messages::SensorQuery queryMsg;
+    SendQuery(queryMsg);
+
+    std::string messageType;
+    messages::SensorValue sensorValue;
+    if (RecvQuery(messageType, sensorValue)){
+        std::cout << sensorValue.GetMsg() << std::endl;
+    }
 
     // Send the request
-    auto reqPort = GetRequestPortByName(PORT_REQ_QUERY);
-    if (reqPort != NULL) {
-        if (reqPort->Send("")) {
-            std::string messageType;
-            std::vector<std::string> messageFields;
-
-            // Wait for the response, and forward the message
-            if (reqPort->AsRequestPort()->Recv(messageType, messageFields)) {
-                PrintMessageOnPort(reqPort);
-                std::string firstField = messageFields.front();
-                GetPublisherPortByName(PORT_PUB_ESTIMATE)->Send(firstField);
-            }
-        }
-    }
+//    auto reqPort = GetRequestPortByName(PORT_REQ_QUERY);
+//    if (reqPort != NULL) {
+//        if (reqPort->Send("")) {
+//            std::string messageType;
+//            std::vector<std::string> messageFields;
+//
+//            // Wait for the response, and forward the message
+//            if (reqPort->AsRequestPort()->Recv(messageType, messageFields)) {
+//                PrintMessageOnPort(reqPort);
+//                std::string firstField = messageFields.front();
+//                GetPublisherPortByName(PORT_PUB_ESTIMATE)->Send(firstField);
+//            }
+//        }
+//    }
 }
+
+
 
 LocalEstimator::~LocalEstimator() {
 
@@ -40,7 +50,7 @@ LocalEstimator::~LocalEstimator() {
 
 riaps::ComponentBase* create_component(_component_conf_j& config, riaps::Actor& actor){
     auto result = new LocalEstimator(config, actor);
-    result->RegisterHandlers();
+    //result->RegisterHandlers();
     return result;
 }
 

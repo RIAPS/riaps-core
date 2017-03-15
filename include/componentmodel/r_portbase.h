@@ -49,6 +49,7 @@ namespace ports {
 
         bool Send(std::string message) const;
         bool Send(std::vector<std::string>& fields) const;
+        virtual bool Send(zmsg_t** zmessage) const;
 
         const PortTypes& GetPortType() const;
 
@@ -68,7 +69,7 @@ namespace ports {
 
     protected:
 
-        virtual bool Send(zmsg_t** zmessage) const;
+
 
         PortTypes                    _port_type;
         zsock_t*                     _port_socket;

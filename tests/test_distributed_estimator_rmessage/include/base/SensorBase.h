@@ -7,12 +7,15 @@
 
 #include "componentmodel/r_componentbase.h"
 #include "messages/SensorReady.h"
+#include "messages/SensorValue.h"
+#include "messages/SensorQuery.h"
 
 // Name of the ports from the model file
 #define PORT_TIMER_CLOCK "clock"
 #define PORT_PUB_READY   "ready"
 #define PORT_REP_REQUEST "request"
 
+using namespace distributedestimator;
 
 class comp_sensorbase : public riaps::ComponentBase {
 
@@ -20,11 +23,9 @@ public:
 
     comp_sensorbase(_component_conf_j& config, riaps::Actor& actor);
 
-    virtual void RegisterHandlers();
+    //virtual void RegisterHandlers();
 
-    virtual void OnClock(const std::string& messagetype,
-                         std::vector<std::string>& msgFields,
-                         riaps::ports::PortBase* port)=0;
+    virtual void OnClock(const std::string& messagetype, riaps::ports::PortBase* port)=0;
 
     // No handler for publisher
     // But send function for publisher, request, response makes sense, maybe easier for the developer
@@ -33,15 +34,22 @@ public:
     //                     riaps::ports::PortBase* port)=0;
 
     virtual void OnRequest(const std::string& messagetype,
-                           std::vector<std::string>& msgFields,
+                           const messages::SensorQuery& message,
                            riaps::ports::PortBase* port)=0;
 
-    virtual bool SendRequest(const std::string& message);
+    virtual bool SendRequest(const messages::SensorValue& message);
 
-    virtual bool SendReady(const SensorReady& message);
+    virtual bool SendReady(const messages::SensorReady& message);
+
 
 
     virtual ~comp_sensorbase();
+
+protected:
+    virtual void DispatchMessage(const std::string&        messagetype,
+                                 msgpack::sbuffer*         message,
+                                 riaps::ports::PortBase*   port);
+
 
 };
 

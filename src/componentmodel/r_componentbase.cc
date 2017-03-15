@@ -146,7 +146,7 @@ namespace riaps{
                     ports::CallBackTimer* timerPort = (ports::CallBackTimer*)comp->GetPortByName(portName);
                     std::vector<std::string> fields;
 
-                    comp->DispatchMessage(timerPort->GetPortName(), fields, timerPort);
+                    comp->DispatchMessage(timerPort->GetPortName(), NULL, timerPort);
 
                     //comp->DispatchMessage(portName, fields, timerPort);
                     //comp->OnMessageArrived(portName, fields, timerPort);
@@ -163,18 +163,25 @@ namespace riaps{
                     char* messageType = zmsg_popstr(msg);
                     if (messageType){
                         ports::PortBase* riapsPort = (ports::PortBase*)portSockets[(zsock_t*)which];
-                        std::vector<std::string> fields;
+                        //std::vector<std::string> fields;
                         std::string messageTypeStr = std::string(messageType);
 
-                        char* field = zmsg_popstr(msg);
-                        while (field){
-                            std::string fieldStr = std::string(field);
-                            fields.push_back(fieldStr);
-                            zstr_free(&field);
-                            field = zmsg_popstr(msg);
-                        }
+                        zframe_t* bodyFrame = zmsg_pop(msg);
+                        size_t size = zframe_size(bodyFrame);
+                        byte* data = zframe_data(bodyFrame);
 
-                        comp->DispatchMessage(messageTypeStr, fields, riapsPort);
+                        msgpack::sbuffer sbuf;
+                        sbuf.write((const char*)data, size);
+
+                        //char* field = zmsg_popstr(msg);
+                        //while (field){
+                        //    std::string fieldStr = std::string(field);
+//                            fields.push_back(fieldStr);
+//                            zstr_free(&field);
+//                            field = zmsg_popstr(msg);
+//                        }
+
+                        comp->DispatchMessage(messageTypeStr, &sbuf, riapsPort);
 
                         //comp->OnMessageArrived(messageTypeStr, fields, riapsPort);
                         zmsg_destroy(&msg);
@@ -225,10 +232,11 @@ namespace riaps{
 
     }
 
-    void ComponentBase::DispatchMessage(const std::string &messagetype, std::vector<std::string> &msgFields,
+    // For the timer port
+    void ComponentBase::DispatchMessage(const std::string &messagetype, msgpack::sbuffer* message,
                                         ports::PortBase *port) {
         auto handler = GetHandler(port->GetPortName());
-        (this->*handler)(messagetype, msgFields, port);
+        (this->*handler)(messagetype, message, port);
     }
 
 
@@ -319,7 +327,7 @@ namespace riaps{
 //        return port->Send(msg);
 //    }
 
-    bool ComponentBase::SendMessageOnPort(std::string message, std::string portName){
+    bool ComponentBase::SendMessageOnPort(std::string message, const std::string& portName){
         ports::PortBase* port = GetPortByName(portName);
 
         if (port->AsSubscribePort() == NULL && port->AsTimerPort() == NULL){
@@ -329,6 +337,24 @@ namespace riaps{
         return false;
 
     }
+
+    bool ComponentBase::SendMessageOnPort(zmsg_t **message, const std::string &portName) {
+        ports::PortBase* port = GetPortByName(portName);
+
+        if (port->AsSubscribePort() == NULL && port->AsTimerPort() == NULL){
+            return port->Send(message);
+        }
+
+        return false;
+    }
+
+    bool ComponentBase::SendMessageOnPort(msgpack::sbuffer &message, const std::string &portName) {
+        zmsg_t* msg = zmsg_new();
+        zmsg_pushmem(msg, message.data(), message.size());
+        return SendMessageOnPort(&msg, portName);
+
+    }
+
 
     const ports::PortBase* ComponentBase::GetPort(std::string portName) const {
         auto port_it = _ports.find(portName);
