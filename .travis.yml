@@ -27,6 +27,8 @@ before_script:
   - sudo rm -f /usr/bin/arm-linux-gnueabihf-g++
   - sudo ln -s /usr/bin/arm-linux-gnueabihf-gcc-5 /usr/bin/arm-linux-gnueabihf-gcc
   - sudo ln -s /usr/bin/arm-linux-gnueabihf-g++-5 /usr/bin/arm-linux-gnueabihf-g++
+  - sudo rm -f /usr/bin/gcc
+  - sudo rm -f /usr/bin/g++
   - sudo ln -s /usr/bin/gcc-5 /usr/bin/gcc
   - sudo ln -s /usr/bin/g++-5 /usr/bin/g++
   
