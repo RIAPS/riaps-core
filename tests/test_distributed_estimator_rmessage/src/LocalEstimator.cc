@@ -4,28 +4,35 @@
 
 #include "LocalEstimator.h"
 
+namespace distributedestimator {
+    namespace components {
 
 
-LocalEstimator::LocalEstimator(_component_conf_j &config, riaps::Actor &actor):LocalEstimatorBase(config, actor) {
-    //PrintParameters();
-}
+        LocalEstimator::LocalEstimator(_component_conf_j &config, riaps::Actor &actor) : LocalEstimatorBase(config,
+                                                                                                            actor) {
+            //PrintParameters();
+        }
 
-void LocalEstimator::OnReady(const std::string& messagetype,
-                             const messages::SensorReady& message,
-                             riaps::ports::PortBase* port) {
+        void LocalEstimator::OnReady(const std::string &messagetype,
+                                     const messages::SensorReady &message,
+                                     riaps::ports::PortBase *port) {
 
-    PrintMessageOnPort(port);
+            PrintMessageOnPort(port);
 
-    messages::SensorQuery queryMsg;
-    SendQuery(queryMsg);
+            messages::SensorQuery queryMsg;
+            SendQuery(queryMsg);
 
-    std::string messageType;
-    messages::SensorValue sensorValue;
-    if (RecvQuery(messageType, sensorValue)){
-        std::cout << sensorValue.GetMsg() << std::endl;
-    }
+            std::string messageType;
+            messages::SensorValue sensorValue;
+            if (RecvQuery(messageType, sensorValue)) {
+                std::cout << sensorValue.GetMsg() << std::endl;
 
-    // Send the request
+                messages::Estimate estimateMessage;
+                estimateMessage.SetMsg(sensorValue.GetMsg());
+                SendEstimate(estimateMessage);
+            }
+
+            // Send the request
 //    auto reqPort = GetRequestPortByName(PORT_REQ_QUERY);
 //    if (reqPort != NULL) {
 //        if (reqPort->Send("")) {
@@ -40,20 +47,23 @@ void LocalEstimator::OnReady(const std::string& messagetype,
 //            }
 //        }
 //    }
+        }
+
+
+        LocalEstimator::~LocalEstimator() {
+
+        }
+
+
+    }
 }
 
-
-
-LocalEstimator::~LocalEstimator() {
-
-}
-
-riaps::ComponentBase* create_component(_component_conf_j& config, riaps::Actor& actor){
-    auto result = new LocalEstimator(config, actor);
+riaps::ComponentBase *create_component(_component_conf_j &config, riaps::Actor &actor) {
+    auto result = new distributedestimator::components::LocalEstimator(config, actor);
     //result->RegisterHandlers();
     return result;
 }
 
-void destroy_component(riaps::ComponentBase* comp){
+void destroy_component(riaps::ComponentBase *comp) {
     delete comp;
 }

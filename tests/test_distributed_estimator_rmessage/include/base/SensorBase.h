@@ -15,42 +15,44 @@
 #define PORT_PUB_READY   "ready"
 #define PORT_REP_REQUEST "request"
 
-using namespace distributedestimator;
+namespace distributedestimator {
+    namespace components {
 
-class comp_sensorbase : public riaps::ComponentBase {
+        class comp_sensorbase : public riaps::ComponentBase {
 
-public:
+        public:
 
-    comp_sensorbase(_component_conf_j& config, riaps::Actor& actor);
+            comp_sensorbase(_component_conf_j &config, riaps::Actor &actor);
 
-    //virtual void RegisterHandlers();
+            //virtual void RegisterHandlers();
 
-    virtual void OnClock(const std::string& messagetype, riaps::ports::PortBase* port)=0;
+            virtual void OnClock(const std::string &messagetype, riaps::ports::PortBase *port)=0;
 
-    // No handler for publisher
-    // But send function for publisher, request, response makes sense, maybe easier for the developer
-    //virtual void OnReady(const std::string& messagetype,
-    //                     std::vector<std::string>& msgFields,
-    //                     riaps::ports::PortBase* port)=0;
+            // No handler for publisher
+            // But send function for publisher, request, response makes sense, maybe easier for the developer
+            //virtual void OnReady(const std::string& messagetype,
+            //                     std::vector<std::string>& msgFields,
+            //                     riaps::ports::PortBase* port)=0;
 
-    virtual void OnRequest(const std::string& messagetype,
-                           const messages::SensorQuery& message,
-                           riaps::ports::PortBase* port)=0;
+            virtual void OnRequest(const std::string &messagetype,
+                                   const messages::SensorQuery &message,
+                                   riaps::ports::PortBase *port)=0;
 
-    virtual bool SendRequest(const messages::SensorValue& message);
+            virtual bool SendRequest(const messages::SensorValue &message);
 
-    virtual bool SendReady(const messages::SensorReady& message);
-
-
-
-    virtual ~comp_sensorbase();
-
-protected:
-    virtual void DispatchMessage(const std::string&        messagetype,
-                                 msgpack::sbuffer*         message,
-                                 riaps::ports::PortBase*   port);
+            virtual bool SendReady(const messages::SensorReady &message);
 
 
-};
+            virtual ~comp_sensorbase();
+
+        protected:
+            virtual void DispatchMessage(const std::string &messagetype,
+                                         msgpack::sbuffer *message,
+                                         riaps::ports::PortBase *port);
+
+
+        };
+    }
+}
 
 #endif //RIAPS_CORE_SENSORBASE_H

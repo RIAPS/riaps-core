@@ -7,30 +7,33 @@
 
 #include "base/SensorBase.h"
 
-class comp_sensor : public comp_sensorbase {
+namespace distributedestimator {
+    namespace components {
 
-public:
+        class comp_sensor : public comp_sensorbase {
 
-    comp_sensor(_component_conf_j& config, riaps::Actor& actor);
+        public:
 
-
-
-    virtual void OnClock(const std::string& messagetype,
-                         riaps::ports::PortBase* port);
-
-    virtual void OnRequest(const std::string& messagetype,
-                           const messages::SensorQuery& message,
-                           riaps::ports::PortBase* port);
+            comp_sensor(_component_conf_j &config, riaps::Actor &actor);
 
 
-    virtual ~comp_sensor();
+            virtual void OnClock(const std::string &messagetype,
+                                 riaps::ports::PortBase *port);
+
+            virtual void OnRequest(const std::string &messagetype,
+                                   const messages::SensorQuery &message,
+                                   riaps::ports::PortBase *port);
 
 
+            virtual ~comp_sensor();
 
-private:
-    std::unique_ptr<std::uniform_real_distribution<double>> unif;
-    std::default_random_engine                              re;
-};
+
+        private:
+            std::unique_ptr<std::uniform_real_distribution<double>> unif;
+            std::default_random_engine re;
+        };
+    }
+}
 
 extern "C" riaps::ComponentBase* create_component(_component_conf_j&, riaps::Actor& actor);
 extern "C" void destroy_component(riaps::ComponentBase*);

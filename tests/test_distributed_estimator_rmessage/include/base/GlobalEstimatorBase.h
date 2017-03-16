@@ -6,31 +6,40 @@
 #define RIAPS_CORE_GLOBALESTIMATORBASE_H
 
 #include "componentmodel/r_componentbase.h"
+#include "messages/Estimate.h"
 
 #define PORT_SUB_ESTIMATE "estimate"
 #define PORT_TIMER_WAKEUP "wakeup"
 
-class GlobalEstimatorBase : public riaps::ComponentBase {
+namespace distributedestimator{
+    namespace components{
+        class GlobalEstimatorBase : public riaps::ComponentBase {
 
-public:
+        public:
 
-    GlobalEstimatorBase(_component_conf_j& config, riaps::Actor& actor);
+            GlobalEstimatorBase(_component_conf_j& config, riaps::Actor& actor);
 
-    virtual void RegisterHandlers();
+            virtual void OnEstimate(const std::string& messagetype,
+                                    const messages::Estimate& message,
+                                    riaps::ports::PortBase* port)=0;
 
-    virtual void OnEstimate(const std::string& messagetype,
-                         std::vector<std::string>& msgFields,
-                         riaps::ports::PortBase* port)=0;
+            virtual void OnWakeup(const std::string& messagetype,
+                                  riaps::ports::PortBase* port)=0;
 
-    virtual void OnWakeup(const std::string& messagetype,
-                         std::vector<std::string>& msgFields,
-                         riaps::ports::PortBase* port)=0;
+            virtual ~GlobalEstimatorBase();
 
-    virtual ~GlobalEstimatorBase();
+        protected:
+            virtual void DispatchMessage(const std::string&        messagetype,
+                                         msgpack::sbuffer*         message,
+                                         riaps::ports::PortBase*   port);
 
-private:
-    std::unique_ptr<std::uniform_real_distribution<double>> unif;
-    std::default_random_engine                              re;
-};
+
+        private:
+            std::unique_ptr<std::uniform_real_distribution<double>> unif;
+            std::default_random_engine                              re;
+        };
+    }
+}
+
 
 #endif //RIAPS_CORE_GLOBALESTIMATORBASE_H

@@ -8,25 +8,28 @@
 
 #include "base/LocalEstimatorBase.h"
 
-using namespace distributedestimator;
+namespace distributedestimator {
+    namespace components {
 
-class LocalEstimator : public LocalEstimatorBase {
+        class LocalEstimator : public LocalEstimatorBase {
 
-public:
+        public:
 
-    LocalEstimator(_component_conf_j& config, riaps::Actor& actor);
+            LocalEstimator(_component_conf_j &config, riaps::Actor &actor);
 
-    virtual void OnReady(const std::string& messagetype,
-                         const messages::SensorReady& message,
-                         riaps::ports::PortBase* port);
+            virtual void OnReady(const std::string &messagetype,
+                                 const messages::SensorReady &message,
+                                 riaps::ports::PortBase *port);
 
 
-    virtual ~LocalEstimator();
+            virtual ~LocalEstimator();
 
-private:
-    std::unique_ptr<std::uniform_real_distribution<double>> unif;
-    std::default_random_engine                              re;
-};
+        private:
+            std::unique_ptr<std::uniform_real_distribution<double>> unif;
+            std::default_random_engine re;
+        };
+    }
+}
 
 extern "C" riaps::ComponentBase* create_component(_component_conf_j&, riaps::Actor& actor);
 extern "C" void destroy_component(riaps::ComponentBase*);

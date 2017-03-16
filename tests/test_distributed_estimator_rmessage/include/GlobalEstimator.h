@@ -7,28 +7,30 @@
 
 #include "base/GlobalEstimatorBase.h"
 
+namespace distributedestimator {
+    namespace components {
 
+        class GlobalEstimator : public GlobalEstimatorBase {
 
-class GlobalEstimator : public GlobalEstimatorBase {
+        public:
 
-public:
+            GlobalEstimator(_component_conf_j &config, riaps::Actor &actor);
 
-    GlobalEstimator(_component_conf_j& config, riaps::Actor& actor);
+            virtual void OnEstimate(const std::string &messagetype,
+                                    const messages::Estimate &message,
+                                    riaps::ports::PortBase *port);
 
-    virtual void OnEstimate(const std::string& messagetype,
-                            std::vector<std::string>& msgFields,
-                            riaps::ports::PortBase* port);
+            virtual void OnWakeup(const std::string &messagetype,
+                                  riaps::ports::PortBase *port);
 
-    virtual void OnWakeup(const std::string& messagetype,
-                          std::vector<std::string>& msgFields,
-                          riaps::ports::PortBase* port);
+            virtual ~GlobalEstimator();
 
-    virtual ~GlobalEstimator();
-
-private:
-    std::unique_ptr<std::uniform_real_distribution<double>> unif;
-    std::default_random_engine                              re;
-};
+        private:
+            std::unique_ptr<std::uniform_real_distribution<double>> unif;
+            std::default_random_engine re;
+        };
+    }
+}
 
 extern "C" riaps::ComponentBase* create_component(_component_conf_j&, riaps::Actor& actor);
 extern "C" void destroy_component(riaps::ComponentBase*);

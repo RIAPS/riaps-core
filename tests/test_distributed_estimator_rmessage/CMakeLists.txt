@@ -1,11 +1,15 @@
 include_directories(include)
 
-add_library(globalestimator SHARED src/GlobalEstimator.cc src/base/GlobalEstimatorBase.cc)
+add_library(globalestimator SHARED src/GlobalEstimator.cc
+                                   src/base/GlobalEstimatorBase.cc
+                                   src/messages/Estimate.cc)
+
 add_library(localestimator SHARED src/LocalEstimator.cc
                                   src/base/LocalEstimatorBase.cc
                                   src/messages/SensorReady.cc
                                   src/messages/SensorQuery.cc
-                                  src/messages/SensorValue.cc)
+                                  src/messages/SensorValue.cc
+                                  src/messages/Estimate.cc)
 
 add_library(sensor SHARED src/Sensor.cc
                           src/base/SensorBase.cc
