@@ -37,13 +37,13 @@ script:
 - cmake -Darch=$arch  ..
 - PATH=/opt/riaps/amd64/bin:$PATH make VERBOSE=1
 - make package
-- mv riaps_core_0.5.0.deb riaps_core_$arch_0.5.0.deb
+- mv riaps_core_0.5.0.deb riaps_core_$arch.deb
 deploy:
   provider: releases  
   overwrite: true
   api_key:
     secure: eKL5j2VunlQ74uiHzFW191CTsFFOPbcQDEdaQIVYtmakRht/0rBB1rQxpYzPhYQDRZ17vqN35N/giy6WEL8phyUbiM7k7fByQTe7isrCRMuAWQj5eH3rzhq9bvyqMQWTBFAZUSq2c7BGgfHr3c9lxHCKCMd4hmbAc3XTpiLbOmkfOYUcBrCXM2uY/MHu3Zt7d/JOPeAyBeLn1dShr3YmmQ9wSkw/3KxKEsFP8wTj8crK8NX+IkpE6N0d9gS6lIcxLrZ7qHJbNiDpeUDnaZxquM9fPEI9PIaZw9J/uZo9wkycB/2dB1a/NTVS9AwwaKsfg22YDSlwKBKjFHM0K5kFpN7Lhu17KQqfglY0Bguiyw4MdMcj7MeBaKkx69961ig2lhBT0t8jnY8KpjsHAXZaMKWN/Jyqv0+EwpLPNjmFVFqT7qtIXfgrmpJPQBaI2swHbVkRA0gypl/s9zSOIqtvz93guSmZ5anWEh6Ik9jX/ESNWHxaSnHiUYYLSNJe4HqffHmG9uXDW9ITk178DbsjvI2MudzSfLNUD72DJYgMw3M78vASV0XDenqBuWo28yJ7n2L2TbpUpeTvfxlslXIVFrwtPPe9Chf5gqoe6BsrjyfGQrXBTInwb/++jWfrG/vztuW4m2E8qUYipyBe4J5fsnJpopjgC7/QZletikXngMI=
-  file: riaps_core_$arch_0.5.0.deb
+  file: riaps_core_$arch.deb
   skip_cleanup: true
   on:
     tags: true
