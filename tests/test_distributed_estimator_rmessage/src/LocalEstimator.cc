@@ -28,7 +28,10 @@ namespace distributedestimator {
                 std::cout << sensorValue.GetMsg() << std::endl;
 
                 messages::Estimate estimateMessage;
+                estimateMessage._emb.SetLofasz("Lofasz");
                 estimateMessage.SetMsg(sensorValue.GetMsg());
+                estimateMessage.GetData().push_back(1.05);
+                estimateMessage.GetData().push_back(10.05);
                 SendEstimate(estimateMessage);
             }
 

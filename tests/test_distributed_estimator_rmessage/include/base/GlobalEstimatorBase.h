@@ -20,7 +20,7 @@ namespace distributedestimator{
             GlobalEstimatorBase(_component_conf_j& config, riaps::Actor& actor);
 
             virtual void OnEstimate(const std::string& messagetype,
-                                    const messages::Estimate& message,
+                                    messages::Estimate& message,
                                     riaps::ports::PortBase* port)=0;
 
             virtual void OnWakeup(const std::string& messagetype,

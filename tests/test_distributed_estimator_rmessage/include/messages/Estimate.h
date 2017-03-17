@@ -11,6 +11,18 @@
 
 namespace distributedestimator{
     namespace messages{
+
+        class EmB{
+        public:
+            void SetLofasz(const std::string& message);
+            std::string GetLofasz();
+
+            MSGPACK_DEFINE(_lofasz);
+
+        private:
+            std::string _lofasz;
+        };
+
         class Estimate{
         public:
             Estimate();
@@ -18,11 +30,16 @@ namespace distributedestimator{
             void SetMsg(const std::string& msg);
             const std::string& GetMsg();
 
-            MSGPACK_DEFINE(_msg);
+            std::vector<double>& GetData();
+
+            EmB _emb;
+
+            MSGPACK_DEFINE(_msg, _data, _emb);
 
             ~Estimate();
         private:
-            std::string _msg;
+            std::string         _msg;
+            std::vector<double> _data;
 
         };
     }

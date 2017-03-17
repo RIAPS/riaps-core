@@ -15,9 +15,12 @@ namespace distributedestimator {
         }
 
         void GlobalEstimator::OnEstimate(const std::string &messagetype,
-                                         const messages::Estimate &message,
+                                         messages::Estimate &message,
                                          riaps::ports::PortBase *port) {
             PrintMessageOnPort(port);
+
+            //auto d = message.GetData();
+            std::cout << " " << *(message.GetData().begin()) << " " << message.GetData()[1] << " " << message._emb.GetLofasz() << std::endl;
         }
 
         void GlobalEstimator::OnWakeup(const std::string &messagetype,
