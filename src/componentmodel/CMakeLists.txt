@@ -10,6 +10,7 @@ set(FRAMEWORK_LIB_FILES r_discoverdapi.cc
                         r_portbase.cc
                         r_timer.cc
                         r_debugcomponent.cc
+                        r_messagebase.cc
         #delete_r_network_interfaces.cc
                         r_responseport.cc
                         r_requestport.cc
