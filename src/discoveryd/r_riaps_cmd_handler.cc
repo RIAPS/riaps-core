@@ -9,6 +9,7 @@
 
 #include <iostream>
 
+
 std::pair<std::string, std::string>
 buildInsertKeyValuePair(std::string appName ,
                         std::string msgType ,

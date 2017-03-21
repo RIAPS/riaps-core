@@ -7,14 +7,6 @@
 namespace distributedestimator {
     namespace messages {
 
-        std::string EmB::GetLofasz() {
-            return _lofasz;
-        }
-
-        void EmB::SetLofasz(const std::string &message) {
-            _lofasz = message;
-        }
-
         Estimate::Estimate() {
         }
 
