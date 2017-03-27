@@ -5,43 +5,39 @@
 #ifndef RIAPS_CORE_SENSORREADY_H
 #define RIAPS_CORE_SENSORREADY_H
 
+#include "capnp/distributedestimator.capnp.h"
+#include <componentmodel/r_messagebase.h>
+
 #include <vector>
-#include <msgpack.hpp>
+#include <string>
+#include <algorithm>
+#include <memory>
 
-//#include <messaging/r_message.h>
-
-//class SensorReady : public IRiapsMessage<std::string>
-//{
-//    SensorReady();
-//
-//    zmsg_t* SerializeMessage(std::string message);
-//    byte*   SerializeMessage(std::string message);
-//
-//    std::string DeserializeMessage(zmsg_t* message);
-//    std::string DeserializeMessage(byte* message);
-//
-//
-//    ~SensorReady();
-//};
 
 namespace distributedestimator {
     namespace messages {
 
-        class SensorReady {
+        class SensorReady : public riaps::MessageBase {
         public:
+
+            /// Default constructor. Use for building messages (for serialization).
             SensorReady();
 
+            // Use this constructor for deserializing messages. (capnp reader message)
+            SensorReady(kj::ArrayPtr<const capnp::word>& rawMessage);
+
+            //virtual void InitFields();
+
             void SetMsg(const std::string &msg);
+            const std::string GetMsg();
 
-            const std::string &GetMsg();
-
-            MSGPACK_DEFINE (_msg);
+            //virtual kj::ArrayPtr<const kj::ArrayPtr<const capnp::word>> GetBytes();
 
             ~SensorReady();
 
         private:
-            std::string _msg;
-
+            ::SensorReady::Builder _builder;
+            ::SensorReady::Reader  _reader;
         };
     }
 }

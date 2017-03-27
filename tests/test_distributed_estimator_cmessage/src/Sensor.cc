@@ -15,9 +15,8 @@ namespace distributedestimator {
 
         void comp_sensor::OnClock(const std::string &messagetype, riaps::ports::PortBase *port) {
             PrintMessageOnPort(port);
-            //SendMessageOnPort("ready message", PORT_PUB_READY);
-
             messages::SensorReady readyMsg;
+            readyMsg.SetMsg("Kukucs");
             SendReady(readyMsg);
         }
 

@@ -8,10 +8,29 @@
 #include <capnp/message.h>
 #include <capnp/serialize.h>
 
-class MessageBase{
-public:
-    MessageBase();
-    ~MessageBase();
+namespace riaps {
+
+    class MessageBase {
+    public:
+        MessageBase();
+        MessageBase(kj::ArrayPtr<const capnp::word>& array);
+
+        //virtual void InitFields();
+
+        virtual kj::ArrayPtr<const kj::ArrayPtr<const capnp::word>> GetBytes();
+
+        ~MessageBase();
+
+    protected:
+        bool IsBuilder();
+
+        ::capnp::MallocMessageBuilder _message;
+
+        kj::ArrayPtr<const capnp::word>* _bytesForReader;
+
+    private:
+        bool _isBuilder;
+    };
 };
 
 #endif //RIAPS_CORE_R_MESSAGEBASE_H

@@ -22,6 +22,10 @@ namespace distributedestimator {
             return _data;
         }
 
+        kj::ArrayPtr<const kj::ArrayPtr<const capnp::word>> Estimate::GetBytes() {
+            return _message.getSegmentsForOutput();
+        }
+
         Estimate::~Estimate() {}
     }
 }

@@ -7,9 +7,9 @@
 
 #include "r_componentbase.h"
 #include "r_configuration.h"
+#include "r_messagebase.h"
 
 #include "czmq.h"
-#include "msgpack.hpp"
 
 #include <string>
 
@@ -34,7 +34,7 @@ namespace riaps {
             //virtual bool Send(std::string& message) const;
             //virtual bool Send(std::vector<std::string>& fields) const;
 
-            virtual bool Recv(std::string& messageType, msgpack::sbuffer& message);
+            virtual bool Recv(std::string& messageType, riaps::MessageBase& message);
 
             virtual RequestPort* AsRequestPort() ;
 

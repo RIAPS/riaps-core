@@ -6,16 +6,26 @@
 
 namespace distributedestimator {
     namespace messages {
-        SensorValue::SensorValue() {
+        SensorValue::SensorValue() :
+                _builder(_message.getRoot<::SensorValue>()) {
 
         }
+
+//        void SensorValue::InitFields() {
+//
+//        }
 
         void SensorValue::SetMsg(const std::string &msg) {
-            _msg = msg;
+            _builder.setMsg(msg);
         }
 
-        const std::string &SensorValue::GetMsg() {
-            return _msg;
+//        kj::ArrayPtr<const kj::ArrayPtr<const capnp::word>> SensorValue::GetBytes() {
+//            return _message.getSegmentsForOutput();
+//        }
+
+        const std::string SensorValue::GetMsg() {
+
+            return _builder.asReader().getMsg();
         }
 
         SensorValue::~SensorValue() {

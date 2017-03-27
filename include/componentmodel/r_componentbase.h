@@ -13,6 +13,7 @@
 #include "r_responseport.h"
 #include "r_requestport.h"
 #include "r_actor.h"
+#include "r_messagebase.h"
 
 #include <msgpack.hpp>
 
@@ -58,6 +59,7 @@ namespace riaps {
         bool SendMessageOnPort(std::string message, const std::string& portName);
         bool SendMessageOnPort(zmsg_t** message, const std::string& portName);
         bool SendMessageOnPort(msgpack::sbuffer& message, const std::string& portName);
+        bool SendMessageOnPort(MessageBase* message, const std::string& portName);
 
         const component_conf_j& GetConfig() const;
 
@@ -77,9 +79,18 @@ namespace riaps {
 
         ports::PortBase* GetPortByName(const std::string&);
 
-        virtual void DispatchMessage(const std::string& messagetype,
+/*        virtual void DispatchMessage(const std::string& messagetype,
                                      msgpack::sbuffer* message,
                                      ports::PortBase* port);
+*/
+        /*virtual void DispatchMessage(const std::string& messagetype,
+                                     riaps::MessageBase* message,
+                                     ports::PortBase* port) = 0;
+*/
+
+        virtual void DispatchMessage(const std::string& messagetype,
+                                     kj::ArrayPtr<const capnp::word>* data,
+                                     ports::PortBase* port) = 0;
 
         const Actor* _actor;
         zuuid_t*     _component_uuid;

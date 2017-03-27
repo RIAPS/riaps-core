@@ -12,7 +12,7 @@ namespace distributedestimator {
 
         }
 
-        void GlobalEstimatorBase::DispatchMessage(const std::string &messagetype, msgpack::sbuffer *message,
+        void GlobalEstimatorBase::DispatchMessage(const std::string &messagetype, riaps::MessageBase* message,
                                                   riaps::ports::PortBase *port) {
             auto portName = port->GetPortName();
             if (portName == PORT_TIMER_WAKEUP) {

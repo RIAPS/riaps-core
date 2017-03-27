@@ -170,18 +170,14 @@ namespace riaps{
                         size_t size = zframe_size(bodyFrame);
                         byte* data = zframe_data(bodyFrame);
 
-                        msgpack::sbuffer sbuf;
-                        sbuf.write((const char*)data, size);
+                        auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
 
-                        //char* field = zmsg_popstr(msg);
-                        //while (field){
-                        //    std::string fieldStr = std::string(field);
-//                            fields.push_back(fieldStr);
-//                            zstr_free(&field);
-//                            field = zmsg_popstr(msg);
-//                        }
+                        //msgpack::sbuffer sbuf;
+                        //sbuf.write((const char*)data, size);
 
-                        comp->DispatchMessage(messageTypeStr, &sbuf, riapsPort);
+
+
+                        comp->DispatchMessage(messageTypeStr, &capnp_data, riapsPort);
 
                         //comp->OnMessageArrived(messageTypeStr, fields, riapsPort);
                         zmsg_destroy(&msg);
@@ -233,11 +229,17 @@ namespace riaps{
     }
 
     // For the timer port
-    void ComponentBase::DispatchMessage(const std::string &messagetype, msgpack::sbuffer* message,
-                                        ports::PortBase *port) {
-        auto handler = GetHandler(port->GetPortName());
-        (this->*handler)(messagetype, message, port);
-    }
+//    void ComponentBase::DispatchMessage(const std::string &messagetype, msgpack::sbuffer* message,
+//                                        ports::PortBase *port) {
+//        auto handler = GetHandler(port->GetPortName());
+//        (this->*handler)(messagetype, message, port);
+//    }
+
+    //void ComponentBase::DispatchMessage(const std::string &messagetype, MessageBase* message,
+    //                                    ports::PortBase *port) {
+    //    auto handler = GetHandler(port->GetPortName());
+    //    (this->*handler)(messagetype, message, port);
+    //}
 
 
     const ports::PublisherPort* ComponentBase::InitPublisherPort(const _component_port_pub_j& config) {
@@ -353,6 +355,13 @@ namespace riaps{
         zmsg_pushmem(msg, message.data(), message.size());
         return SendMessageOnPort(&msg, portName);
 
+    }
+
+    bool ComponentBase::SendMessageOnPort(MessageBase* message, const std::string &portName) {
+        auto serialized = message->GetBytes();
+        zmsg_t* msg = zmsg_new();
+        zmsg_pushmem(msg, serialized.asBytes().begin(), serialized.asBytes().size());
+        return SendMessageOnPort(&msg, portName);
     }
 
 
