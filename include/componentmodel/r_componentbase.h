@@ -88,8 +88,12 @@ namespace riaps {
                                      ports::PortBase* port) = 0;
 */
 
+//        virtual void DispatchMessage(const std::string& messagetype,
+//                                     kj::ArrayPtr<const capnp::word>* data,
+//                                     ports::PortBase* port) = 0;
+
         virtual void DispatchMessage(const std::string& messagetype,
-                                     kj::ArrayPtr<const capnp::word>* data,
+                                     capnp::FlatArrayMessageReader& capnpreader,
                                      ports::PortBase* port) = 0;
 
         const Actor* _actor;
