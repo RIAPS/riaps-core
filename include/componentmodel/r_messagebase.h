@@ -13,20 +13,23 @@ namespace riaps {
     class MessageBase {
     public:
         MessageBase();
-        MessageBase(kj::ArrayPtr<const capnp::word>& array);
+
+        //void ReadFromBytes(kj::ArrayPtr<const capnp::word>& array);
+        virtual void InitReader(capnp::FlatArrayMessageReader* flatArrayMessageReader) = 0;
 
         //virtual void InitFields();
 
-        virtual kj::ArrayPtr<const kj::ArrayPtr<const capnp::word>> GetBytes();
+        virtual kj::Array<capnp::word> GetBytes();
 
         ~MessageBase();
 
     protected:
-        bool IsBuilder();
+        bool IsBuilder() const;
+        void SetAsReader();
 
         ::capnp::MallocMessageBuilder _message;
 
-        kj::ArrayPtr<const capnp::word>* _bytesForReader;
+       // kj::ArrayPtr<const capnp::word>* _bytesForReader;
 
     private:
         bool _isBuilder;

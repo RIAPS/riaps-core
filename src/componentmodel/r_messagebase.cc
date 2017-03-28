@@ -10,20 +10,25 @@ namespace riaps {
         _isBuilder = true;
     }
 
-    MessageBase::MessageBase(kj::ArrayPtr<const capnp::word>& array)  {
-        _isBuilder = false;
-        _bytesForReader = &array;
-    }
+    //void MessageBase::ReadFromBytes(kj::ArrayPtr<const capnp::word> &array) {
+    //    _isBuilder = false;
+    //    _bytesForReader = &array;
+    //}
+
 
     //void MessageBase::InitFields() {
     //    throw std::runtime_error("Invalid function call.");
     //}
 
-    kj::ArrayPtr<const kj::ArrayPtr<const capnp::word>> MessageBase::GetBytes() {
-        return _message.getSegmentsForOutput();
+    kj::Array<capnp::word> MessageBase::GetBytes() {
+        return capnp::messageToFlatArray(_message);;
     }
 
-    bool MessageBase::IsBuilder() {
+    void MessageBase::SetAsReader() {
+        _isBuilder = false;
+    }
+
+    bool MessageBase::IsBuilder() const {
         return _isBuilder;
     }
 
