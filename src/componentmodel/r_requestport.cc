@@ -62,7 +62,7 @@ namespace riaps {
             return this;
         }
 
-        bool RequestPort::Recv(std::string& messageType, riaps::MessageBase& message) {
+        bool RequestPort::Recv(std::string& messageType, riaps::MessageBase* message) {
             zmsg_t* msg = zmsg_recv((void*)GetSocket());
 
             if (msg){
@@ -74,9 +74,8 @@ namespace riaps {
                     byte* data = zframe_data(bodyFrame);
 
                     auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
-
-                    //message = MessageBase(capnp_data);
-
+                    capnp::FlatArrayMessageReader capnpReader(capnp_data);
+                    message->InitReader(capnpReader);
 
                     zframe_destroy(&bodyFrame);
                     return true;
