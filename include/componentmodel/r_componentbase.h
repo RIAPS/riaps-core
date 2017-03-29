@@ -93,7 +93,7 @@ namespace riaps {
 //                                     ports::PortBase* port) = 0;
 
         virtual void DispatchMessage(const std::string& messagetype,
-                                     capnp::FlatArrayMessageReader& capnpreader,
+                                     capnp::FlatArrayMessageReader* capnpreader,
                                      ports::PortBase* port) = 0;
 
         const Actor* _actor;

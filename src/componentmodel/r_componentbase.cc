@@ -172,12 +172,16 @@ namespace riaps{
 
                         auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
 
+
+                        capnp::FlatArrayMessageReader capnpReader(capnp_data);
+                        //message->InitReader(capnpReader);
+
                         //msgpack::sbuffer sbuf;
                         //sbuf.write((const char*)data, size);
 
 
 
-                        comp->DispatchMessage(messageTypeStr, &capnp_data, riapsPort);
+                        comp->DispatchMessage(messageTypeStr, &capnpReader, riapsPort);
 
                         //comp->OnMessageArrived(messageTypeStr, fields, riapsPort);
                         zmsg_destroy(&msg);
@@ -358,10 +362,14 @@ namespace riaps{
     }
 
     bool ComponentBase::SendMessageOnPort(MessageBase* message, const std::string &portName) {
-        auto serialized = message->GetBytes();
-        zmsg_t* msg = zmsg_new();
-        zmsg_pushmem(msg, serialized.asBytes().begin(), serialized.asBytes().size());
+        zmsg_t* msg = message->AsZmqMessage();
         return SendMessageOnPort(&msg, portName);
+//        auto serialized = message->GetBytes();
+//        zmsg_t* msg = zmsg_new();
+//        auto size = serialized.asBytes().size();
+//        auto bytes = serialized.asBytes();
+//        zmsg_pushmem(msg, bytes.begin(), size);
+//        return SendMessageOnPort(&msg, portName);
     }
 
 
