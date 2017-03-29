@@ -3,7 +3,6 @@
 //
 
 #include <componentmodel/r_messagebase.h>
-#include <stdexcept>
 
 namespace riaps {
     MessageBase::MessageBase() {
@@ -20,8 +19,14 @@ namespace riaps {
     //    throw std::runtime_error("Invalid function call.");
     //}
 
-    kj::Array<capnp::word> MessageBase::GetBytes() {
-        return capnp::messageToFlatArray(_message);;
+    zmsg_t* MessageBase::AsZmqMessage() {
+        auto serializedMessage = capnp::messageToFlatArray(_message);
+
+        zmsg_t* msg = zmsg_new();
+        auto size = serializedMessage.asBytes().size();
+        auto bytes = serializedMessage.asBytes().begin();
+        zmsg_pushmem(msg, bytes, size);
+        return msg;
     }
 
     void MessageBase::SetAsReader() {

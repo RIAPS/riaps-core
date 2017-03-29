@@ -5,6 +5,7 @@
 #ifndef RIAPS_CORE_R_MESSAGEBASE_H
 #define RIAPS_CORE_R_MESSAGEBASE_H
 
+#include <czmq.h>
 #include <capnp/message.h>
 #include <capnp/serialize.h>
 
@@ -19,7 +20,9 @@ namespace riaps {
 
         //virtual void InitFields();
 
-        virtual kj::Array<capnp::word> GetBytes();
+        //virtual kj::Array<capnp::word> GetBytes();
+
+        zmsg_t* AsZmqMessage();
 
         ~MessageBase();
 
