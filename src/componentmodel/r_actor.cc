@@ -6,7 +6,6 @@
 #include <componentmodel/r_actor.h>
 #include <const/r_jsonmodel.h>
 
-
 #include <set>
 
 
@@ -37,7 +36,7 @@ namespace riaps {
             std::string formalName = (it_formal.value())[J_FORMAL_NAME];
             bool isOptional = it_formal.value()[J_FORMAL_DEF] != NULL;
 
-            std::string formalDefault =isOptional?"": (it_formal.value())[J_FORMAL_DEF];
+            std::string formalDefault = isOptional ? (it_formal.value())[J_FORMAL_DEF] : "";
 
             // Optional
             if (isOptional){
