@@ -53,6 +53,8 @@ namespace riaps {
             const ComponentBase *_parent_component;
             bool _isConnected;
 
+            capnp::FlatArrayMessageReader _capnpReader;
+
             virtual bool Send(zmsg_t** zmessage) const;
 
         };

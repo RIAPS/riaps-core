@@ -10,7 +10,8 @@ namespace riaps {
 
         RequestPort::RequestPort(const _component_port_req_j &config, const ComponentBase *component)
                 : PortBase(PortTypes::Request, (component_port_config*)(&config)),
-                    _parent_component(component) {
+                    _parent_component(component),
+                    _capnpReader(capnp::FlatArrayMessageReader(nullptr)){
             _port_socket = zsock_new(ZMQ_REQ);
             int timeout = 500;//msec
             int lingerValue = 0;
@@ -74,15 +75,16 @@ namespace riaps {
                     byte* data = zframe_data(bodyFrame);
 
                     auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
-                    capnp::FlatArrayMessageReader capnpReader(capnp_data);
-                    message->InitReader(capnpReader);
+                    //capnp::FlatArrayMessageReader capnpReader(capnp_data);
+                   _capnpReader = capnp::FlatArrayMessageReader(capnp_data);
+                    message->InitReader(&_capnpReader);
 
-                    zframe_destroy(&bodyFrame);
+                    //zframe_destroy(&bodyFrame);
                     return true;
                 }
                 return false;
             }
-            zmsg_destroy(&msg);
+            //zmsg_destroy(&msg);
 
             return false;
         }
