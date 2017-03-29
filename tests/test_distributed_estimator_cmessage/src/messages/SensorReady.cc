@@ -7,24 +7,18 @@
 namespace distributedestimator {
     namespace messages {
         SensorReady::SensorReady() :
-                _builder(nullptr)
-        {
-            _builder = _message.getRoot<::SensorReady>();
+                _builder(_message.initRoot<::SensorReady>()) {
         }
 
-        SensorReady::SensorReady(kj::ArrayPtr<const capnp::word>& rawMessage) :
-                MessageBase(rawMessage),
-                _builder(nullptr)
-        {
-
+        void SensorReady::InitReader(capnp::FlatArrayMessageReader* flatArrayMessageReader) {
+            SetAsReader();
+            _reader= flatArrayMessageReader->getRoot<::SensorReady>();
         }
 
        // void SensorReady::InitFields() {
             // Init all fields.
             // Simply types, like strings, ints etc shouldn be initialized
             // Including the complex types and all fields of the complex types
-
-
         //}
 
 //        kj::ArrayPtr<const kj::ArrayPtr<const capnp::word>> SensorReady::GetBytes() {
@@ -32,7 +26,6 @@ namespace distributedestimator {
 //        }
 
         void SensorReady::SetMsg(const std::string &msg) {
-
             if (IsBuilder()) {
                 _builder.setMsg(msg);
             }

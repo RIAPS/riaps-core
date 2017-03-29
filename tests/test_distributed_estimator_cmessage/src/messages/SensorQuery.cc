@@ -9,12 +9,14 @@ namespace distributedestimator {
     namespace messages {
 
         SensorQuery::SensorQuery() :
-                _builder(_message.getRoot<::SensorQuery>()) {
+                _builder(_message.initRoot<::SensorQuery>()) {
         }
 
-        //void SensorQuery::InitFields() {
+        void SensorQuery::InitReader(capnp::FlatArrayMessageReader* flatArrayMessageReader) {
+            SetAsReader();
+            _reader= flatArrayMessageReader->getRoot<::SensorQuery>();
+        }
 
-        //}
 
         void SensorQuery::SetMsg(const std::string &msg) {
 
@@ -26,7 +28,7 @@ namespace distributedestimator {
             }
         }
 
-        const std::string SensorQuery::GetMsg() {
+        const std::string SensorQuery::GetMsg() const {
             if (IsBuilder())
                 return _builder.asReader().getMsg();
             return _reader.getMsg();

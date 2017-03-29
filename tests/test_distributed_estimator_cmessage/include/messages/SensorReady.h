@@ -23,15 +23,11 @@ namespace distributedestimator {
             /// Default constructor. Use for building messages (for serialization).
             SensorReady();
 
+            virtual void InitReader(capnp::FlatArrayMessageReader* flatArrayMessageReader);
+
             // Use this constructor for deserializing messages. (capnp reader message)
-            SensorReady(kj::ArrayPtr<const capnp::word>& rawMessage);
-
-            //virtual void InitFields();
-
             void SetMsg(const std::string &msg);
             const std::string GetMsg();
-
-            //virtual kj::ArrayPtr<const kj::ArrayPtr<const capnp::word>> GetBytes();
 
             ~SensorReady();
 

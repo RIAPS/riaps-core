@@ -8,6 +8,7 @@
 #include "capnp/distributedestimator.capnp.h"
 #include <componentmodel/r_messagebase.h>
 #include <string>
+#include <vector>
 
 
 namespace distributedestimator{
@@ -16,19 +17,17 @@ namespace distributedestimator{
         class Estimate : public riaps::MessageBase {
         public:
             Estimate();
-            //virtual void InitFields();
+            virtual void InitReader(capnp::FlatArrayMessageReader* flatArrayMessageReader);
 
             void SetMsg(const std::string& msg);
             const std::string GetMsg();
 
             std::vector<double>& GetData();
 
-            //virtual kj::ArrayPtr<const kj::ArrayPtr<const capnp::word>> GetBytes();
-
-
             ~Estimate();
         private:
-            ::Estimate::Builder&& _builder;
+            ::Estimate::Builder _builder;
+            ::Estimate::Reader  _reader;
 
         };
     }

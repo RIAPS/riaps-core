@@ -14,10 +14,15 @@ namespace distributedestimator{
         class SensorQuery : public riaps::MessageBase{
         public:
             SensorQuery();
+
+            virtual void InitReader(capnp::FlatArrayMessageReader* flatArrayMessageReader);
+
             //virtual void InitFields();
 
             void SetMsg(const std::string& msg);
-            const std::string GetMsg();
+            const std::string GetMsg() const;
+
+
 
             //virtual kj::ArrayPtr<const kj::ArrayPtr<const capnp::word>> GetBytes();
 

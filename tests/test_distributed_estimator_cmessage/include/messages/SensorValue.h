@@ -15,16 +15,12 @@ namespace distributedestimator{
         class SensorValue : public riaps::MessageBase {
         public:
             SensorValue();
-            //virtual void InitFields();
+            virtual void InitReader(capnp::FlatArrayMessageReader* flatArrayMessageReader);
 
             void SetMsg(const std::string &msg);
-
             const std::string GetMsg();
 
-            //virtual kj::ArrayPtr<const kj::ArrayPtr<const capnp::word>> GetBytes();
-
             ~SensorValue();
-
         private:
             ::SensorValue::Builder _builder;
             ::SensorValue::Reader  _reader;

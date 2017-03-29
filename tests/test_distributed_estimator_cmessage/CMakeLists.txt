@@ -1,15 +1,15 @@
 include_directories(include)
 
-#add_library(globalestimator SHARED src/GlobalEstimator.cc
-#                                   src/base/GlobalEstimatorBase.cc
-#                                   src/messages/Estimate.cc)
+add_library(globalestimator SHARED src/GlobalEstimator.cc
+                                   src/base/GlobalEstimatorBase.cc
+                                   src/messages/Estimate.cc)
 
 add_library(localestimator SHARED src/LocalEstimator.cc
                                   src/base/LocalEstimatorBase.cc
                                   src/messages/SensorReady.cc
                                   src/messages/SensorQuery.cc
                                   src/messages/SensorValue.cc
-#                                  src/messages/Estimate.cc
+                                  src/messages/Estimate.cc
         )
 
 add_library(sensor SHARED src/Sensor.cc
@@ -19,8 +19,8 @@ add_library(sensor SHARED src/Sensor.cc
                           src/messages/SensorValue.cc
         )
 
-#target_link_libraries(localestimator czmq riaps dl capnp kj )
-#target_link_libraries(globalestimator czmq riaps )
+target_link_libraries(localestimator czmq riaps dl capnp kj )
+target_link_libraries(globalestimator czmq riaps dl capnp kj)
 target_link_libraries(sensor czmq riaps dl capnp kj)
 
 # add_executable(actor_prod src/prod/producer.cc

@@ -30,7 +30,7 @@ namespace distributedestimator{
 
         protected:
             virtual void DispatchMessage(const std::string&        messagetype,
-                                         kj::ArrayPtr<const capnp::word>* data,
+                                         capnp::FlatArrayMessageReader* capnpreader,
                                          riaps::ports::PortBase*   port);
 
 

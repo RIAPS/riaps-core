@@ -39,18 +39,18 @@ namespace distributedestimator {
             //                     riaps::ports::PortBase* port)=0;
 
 
-            bool SendQuery(const messages::SensorQuery &message);
+            bool SendQuery(messages::SensorQuery &message);
 
             bool RecvQuery(std::string &messageType, messages::SensorValue &message);
 
-            bool SendEstimate(const messages::Estimate &message);
+            bool SendEstimate(messages::Estimate &message);
 
 
             virtual ~LocalEstimatorBase();
 
         protected:
             virtual void DispatchMessage(const std::string &messagetype,
-                                         kj::ArrayPtr<const capnp::word>* data,
+                                         capnp::FlatArrayMessageReader* capnpreader,
                                          riaps::ports::PortBase *port);
 
         };

@@ -13,46 +13,28 @@ namespace distributedestimator {
         }
 
         void LocalEstimatorBase::DispatchMessage(const std::string &messagetype,
-                                                 kj::ArrayPtr<const capnp::word>* data,
+                                                 capnp::FlatArrayMessageReader* capnpreader,
                                                  riaps::ports::PortBase *port) {
             if (port->GetPortName() == PORT_SUB_READY) {
-
-                messages::SensorReady sensorReady(*data);
-
+                messages::SensorReady sensorReady;
+                sensorReady.InitReader(capnpreader);
                 OnReady(messagetype, sensorReady, port);
             }
-
         }
 
-        bool LocalEstimatorBase::SendQuery(const messages::SensorQuery &message) {
-            //msgpack::sbuffer sbuf;
-            //msgpack::pack(sbuf, message);
-
-            //return SendMessageOnPort(NULL, PORT_REQ_QUERY);
-            return true;
+        bool LocalEstimatorBase::SendQuery(messages::SensorQuery &message) {
+            return SendMessageOnPort(&message, PORT_REQ_QUERY);
         }
 
         bool LocalEstimatorBase::RecvQuery(std::string &messageType, messages::SensorValue &message) {
             auto port = GetRequestPortByName(PORT_REQ_QUERY);
             if (port == NULL) return false;
 
-//            if (port->Recv(messageType, sbuf)) {
-//                msgpack::unpacked msg;
-//                msgpack::unpack(&msg, sbuf.data(), sbuf.size());
-//                msgpack::object obj = msg.get();
-//
-//                obj.convert(&message);
-//                return true;
-//            }
-            return false;
-
+            return port->Recv(messageType, &message);
         }
 
-        bool LocalEstimatorBase::SendEstimate(const messages::Estimate &message) {
-            //msgpack::sbuffer sbuf;
-            //msgpack::pack(sbuf, message);
-            return true;
-            //return SendMessageOnPort(sbuf, PORT_PUB_ESTIMATE);
+        bool LocalEstimatorBase::SendEstimate(messages::Estimate &message) {
+            return SendMessageOnPort(&message, PORT_PUB_ESTIMATE);
         }
 
         LocalEstimatorBase::~LocalEstimatorBase() {

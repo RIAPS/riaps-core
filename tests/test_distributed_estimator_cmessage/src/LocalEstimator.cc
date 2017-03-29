@@ -8,8 +8,8 @@ namespace distributedestimator {
     namespace components {
 
 
-        LocalEstimator::LocalEstimator(_component_conf_j &config, riaps::Actor &actor) : LocalEstimatorBase(config,
-                                                                                                            actor) {
+        LocalEstimator::LocalEstimator(_component_conf_j &config, riaps::Actor &actor) :
+                LocalEstimatorBase(config, actor) {
             //PrintParameters();
         }
 
@@ -20,43 +20,25 @@ namespace distributedestimator {
             PrintMessageOnPort(port);
 
             messages::SensorQuery queryMsg;
-            SendQuery(queryMsg);
+            queryMsg.SetMsg("query");
+            auto result = SendQuery(queryMsg);
+            if (result) {
 
-            std::string messageType;
-            messages::SensorValue sensorValue;
-            if (RecvQuery(messageType, sensorValue)) {
-                std::cout << sensorValue.GetMsg() << std::endl;
-
-                messages::Estimate estimateMessage;
-                estimateMessage.SetMsg(sensorValue.GetMsg());
-                estimateMessage.GetData().push_back(1.05);
-                estimateMessage.GetData().push_back(10.05);
-                SendEstimate(estimateMessage);
+                std::string messageType;
+                messages::SensorValue sensorValue;
+                if (RecvQuery(messageType, sensorValue)) {
+                    std::cout << sensorValue.GetMsg() << std::endl;
+                    messages::Estimate estimateMessage;
+                    //estimateMessage.GetData().push_back(1.05);
+                    //estimateMessage.GetData().push_back(10.05);
+                    SendEstimate(estimateMessage);
+                }
             }
-
-            // Send the request
-//    auto reqPort = GetRequestPortByName(PORT_REQ_QUERY);
-//    if (reqPort != NULL) {
-//        if (reqPort->Send("")) {
-//            std::string messageType;
-//            std::vector<std::string> messageFields;
-//
-//            // Wait for the response, and forward the message
-//            if (reqPort->AsRequestPort()->Recv(messageType, messageFields)) {
-//                PrintMessageOnPort(reqPort);
-//                std::string firstField = messageFields.front();
-//                GetPublisherPortByName(PORT_PUB_ESTIMATE)->Send(firstField);
-//            }
-//        }
-//    }
         }
-
 
         LocalEstimator::~LocalEstimator() {
 
         }
-
-
     }
 }
 
