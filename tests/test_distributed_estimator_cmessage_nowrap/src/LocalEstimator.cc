@@ -31,6 +31,13 @@ namespace distributedestimator {
                 messages::SensorValue::Reader sensorValue;
                 if (RecvQuery(messageType, sensorValue)) {
                     std::cout << sensorValue.getMsg().cStr() << std::endl;
+                    capnp::MallocMessageBuilder builderEstimate;
+                    auto estimateMsg = builderEstimate.initRoot<messages::Estimate>();
+                    estimateMsg.setMsg("Estimate message");
+                    auto valueList = estimateMsg.initValues(2);
+                    valueList.set(0, 1.05);
+                    valueList.set(1, 10.05);
+                    SendEstimate(builderEstimate, estimateMsg);
                     //messages::Estimate estimateMessage;
                     //estimateMessage.GetData().push_back(1.05);
                     //estimateMessage.GetData().push_back(10.05);
