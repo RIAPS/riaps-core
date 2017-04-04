@@ -16,6 +16,8 @@
 #include "r_messagebase.h"
 
 #include <msgpack.hpp>
+#include <capnp/message.h>
+#include <capnp/serialize.h>
 
 #include <iostream>
 #include <vector>
