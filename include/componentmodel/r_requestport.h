@@ -36,6 +36,8 @@ namespace riaps {
 
             virtual bool Recv(std::string& messageType, riaps::MessageBase* message);
 
+            virtual bool Recv(std::string& messageType, capnp::FlatArrayMessageReader** messageReader);
+
             virtual RequestPort* AsRequestPort() ;
 
             virtual const _component_port_req_j* GetConfig() const;
