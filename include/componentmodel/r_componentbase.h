@@ -60,6 +60,7 @@ namespace riaps {
         bool SendMessageOnPort(zmsg_t** message, const std::string& portName);
         bool SendMessageOnPort(msgpack::sbuffer& message, const std::string& portName);
         bool SendMessageOnPort(MessageBase* message, const std::string& portName);
+        bool SendMessageOnPort(capnp::MallocMessageBuilder& message, const std::string& portName);
 
         const component_conf_j& GetConfig() const;
 

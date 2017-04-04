@@ -150,7 +150,7 @@ namespace riaps{
 
                     //comp->DispatchMessage(portName, fields, timerPort);
                     //comp->OnMessageArrived(portName, fields, timerPort);
-                    //zstr_free(&portName);
+                    zstr_free(&portName);
                     zmsg_destroy(&msg);
                 }
             }
@@ -166,6 +166,7 @@ namespace riaps{
                         //std::vector<std::string> fields;
                         std::string messageTypeStr = std::string(messageType);
 
+                        // zmsg_op transfers the ownership, the frame is being removed from the zmsg
                         zframe_t* bodyFrame = zmsg_pop(msg);
                         size_t size = zframe_size(bodyFrame);
                         byte* data = zframe_data(bodyFrame);
@@ -174,16 +175,10 @@ namespace riaps{
 
 
                         capnp::FlatArrayMessageReader capnpReader(capnp_data);
-                        //message->InitReader(capnpReader);
-
-                        //msgpack::sbuffer sbuf;
-                        //sbuf.write((const char*)data, size);
-
-
 
                         comp->DispatchMessage(messageTypeStr, &capnpReader, riapsPort);
 
-                        //comp->OnMessageArrived(messageTypeStr, fields, riapsPort);
+                        zframe_destroy(&bodyFrame);
                         zmsg_destroy(&msg);
                         zstr_free(&messageType);
                     }
@@ -207,29 +202,10 @@ namespace riaps{
     ComponentBase::ComponentBase(component_conf_j& config, Actor& actor) : _actor(&actor) {
         _configuration = config;
 
-
-
-
-        //async uuid to the component instance
+        //uuid to the component instance
         _component_uuid = zuuid_new();
 
-        //get_servicebyname_poll_async("aaa", GetCompUuid());
-
-
-        //zsock_component = zsock_new_rep("tcp://*:!");
-        //assert(zsock_component);
-
-        //async_address = "tcp://192.168.1.103:14352";
-        //async_address = "";
-        //_zsock_timer = zsock_new_pull(CHAN_TIMER_INPROC);
-        //assert(_zsock_timer);
-
-        //zpoller = zpoller_new(zsock_component, NULL);
-        //assert(zpoller);
-
         _zactor_component = zactor_new(component_actor, this);
-
-
     }
 
     // For the timer port
@@ -364,12 +340,15 @@ namespace riaps{
     bool ComponentBase::SendMessageOnPort(MessageBase* message, const std::string &portName) {
         zmsg_t* msg = message->AsZmqMessage();
         return SendMessageOnPort(&msg, portName);
-//        auto serialized = message->GetBytes();
-//        zmsg_t* msg = zmsg_new();
-//        auto size = serialized.asBytes().size();
-//        auto bytes = serialized.asBytes();
-//        zmsg_pushmem(msg, bytes.begin(), size);
-//        return SendMessageOnPort(&msg, portName);
+    }
+
+    bool ComponentBase::SendMessageOnPort(capnp::MallocMessageBuilder& message, const std::string &portName) {
+        auto serializedMessage = capnp::messageToFlatArray(message);
+        zmsg_t* msg = zmsg_new();
+        auto size = serializedMessage.asBytes().size();
+        auto bytes = serializedMessage.asBytes().begin();
+        zmsg_pushmem(msg, bytes, size);
+        return SendMessageOnPort(&msg, portName);
     }
 
 
