@@ -146,10 +146,11 @@ namespace riaps{
                     ports::CallBackTimer* timerPort = (ports::CallBackTimer*)comp->GetPortByName(portName);
                     std::vector<std::string> fields;
 
-                    comp->DispatchMessage(timerPort->GetPortName(), NULL, timerPort);
+                    // comp->DispatchMessage(timerPort->GetPortName(), NULL, timerPort);
+                    comp->DispatchMessage(NULL, timerPort);
 
-                    //comp->DispatchMessage(portName, fields, timerPort);
-                    //comp->OnMessageArrived(portName, fields, timerPort);
+
+
                     zstr_free(&portName);
                     zmsg_destroy(&msg);
                 }
@@ -160,28 +161,26 @@ namespace riaps{
 
                 if (msg) {
 
-                    char* messageType = zmsg_popstr(msg);
-                    if (messageType){
-                        ports::PortBase* riapsPort = (ports::PortBase*)portSockets[(zsock_t*)which];
-                        //std::vector<std::string> fields;
-                        std::string messageTypeStr = std::string(messageType);
+                    //char* messageType = zmsg_popstr(msg);
+                    //if (messageType){
+                    ports::PortBase* riapsPort = (ports::PortBase*)portSockets[(zsock_t*)which];
 
-                        // zmsg_op transfers the ownership, the frame is being removed from the zmsg
-                        zframe_t* bodyFrame = zmsg_pop(msg);
-                        size_t size = zframe_size(bodyFrame);
-                        byte* data = zframe_data(bodyFrame);
+                    // zmsg_op transfers the ownership, the frame is being removed from the zmsg
+                    zframe_t* bodyFrame = zmsg_pop(msg);
+                    size_t size = zframe_size(bodyFrame);
+                    byte* data = zframe_data(bodyFrame);
 
-                        auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
+                    auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
 
 
-                        capnp::FlatArrayMessageReader capnpReader(capnp_data);
+                    capnp::FlatArrayMessageReader capnpReader(capnp_data);
 
-                        comp->DispatchMessage(messageTypeStr, &capnpReader, riapsPort);
+                    comp->DispatchMessage(&capnpReader, riapsPort);
 
-                        zframe_destroy(&bodyFrame);
-                        zmsg_destroy(&msg);
-                        zstr_free(&messageType);
-                    }
+                    zframe_destroy(&bodyFrame);
+                    zmsg_destroy(&msg);
+                        //zstr_free(&messageType);
+                    //}
                 }
             }
             else{

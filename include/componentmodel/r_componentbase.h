@@ -95,8 +95,12 @@ namespace riaps {
 //                                     kj::ArrayPtr<const capnp::word>* data,
 //                                     ports::PortBase* port) = 0;
 
-        virtual void DispatchMessage(const std::string& messagetype,
-                                     capnp::FlatArrayMessageReader* capnpreader,
+//        virtual void DispatchMessage(const std::string& messagetype,
+//                                     capnp::FlatArrayMessageReader* capnpreader,
+//                                     ports::PortBase* port) = 0;
+
+        // Removed messageType param, looks redundant here.
+        virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
                                      ports::PortBase* port) = 0;
 
         const Actor* _actor;
