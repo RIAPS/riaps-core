@@ -34,9 +34,9 @@ namespace riaps {
             //virtual bool Send(std::string& message) const;
             //virtual bool Send(std::vector<std::string>& fields) const;
 
-            virtual bool Recv(std::string& messageType, riaps::MessageBase* message);
+            //virtual bool Recv(std::string& messageType, riaps::MessageBase* message);
 
-            virtual bool Recv(std::string& messageType, capnp::FlatArrayMessageReader** messageReader);
+            virtual bool Recv(capnp::FlatArrayMessageReader** messageReader);
 
             virtual RequestPort* AsRequestPort() ;
 

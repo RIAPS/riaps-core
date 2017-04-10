@@ -63,39 +63,39 @@ namespace riaps {
             return this;
         }
 
-        bool RequestPort::Recv(std::string& messageType, riaps::MessageBase* message) {
+//        bool RequestPort::Recv(std::string& messageType, riaps::MessageBase* message) {
+//            zmsg_t* msg = zmsg_recv((void*)GetSocket());
+//
+//            if (msg){
+//                char* msgType = zmsg_popstr(msg);
+//                messageType = msgType;
+//                if (msgType!=NULL){
+//                    zframe_t* bodyFrame = zmsg_pop(msg);
+//                    size_t size = zframe_size(bodyFrame);
+//                    byte* data = zframe_data(bodyFrame);
+//
+//                    auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
+//                   _capnpReader = capnp::FlatArrayMessageReader(capnp_data);
+//                    message->InitReader(&_capnpReader);
+//
+//                    zframe_destroy(&bodyFrame);
+//                    return true;
+//                }
+//                return false;
+//            }
+//            zmsg_destroy(&msg);
+//
+//            return false;
+//        }
+
+
+        bool RequestPort::Recv(capnp::FlatArrayMessageReader** messageReader) {
             zmsg_t* msg = zmsg_recv((void*)GetSocket());
 
             if (msg){
-                char* msgType = zmsg_popstr(msg);
-                messageType = msgType;
-                if (msgType!=NULL){
-                    zframe_t* bodyFrame = zmsg_pop(msg);
-                    size_t size = zframe_size(bodyFrame);
-                    byte* data = zframe_data(bodyFrame);
-
-                    auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
-                   _capnpReader = capnp::FlatArrayMessageReader(capnp_data);
-                    message->InitReader(&_capnpReader);
-
-                    zframe_destroy(&bodyFrame);
-                    return true;
-                }
-                return false;
-            }
-            zmsg_destroy(&msg);
-
-            return false;
-        }
-
-
-        bool RequestPort::Recv(std::string &messageType, capnp::FlatArrayMessageReader** messageReader) {
-            zmsg_t* msg = zmsg_recv((void*)GetSocket());
-
-            if (msg){
-                char* msgType = zmsg_popstr(msg);
-                messageType = msgType;
-                if (msgType!=NULL){
+                //char* msgType = zmsg_popstr(msg);
+                //messageType = msgType;
+                //if (msgType!=NULL){
                     zframe_t* bodyFrame = zmsg_pop(msg);
                     size_t size = zframe_size(bodyFrame);
                     byte* data = zframe_data(bodyFrame);
@@ -106,8 +106,8 @@ namespace riaps {
 
                     zframe_destroy(&bodyFrame);
                     return true;
-                }
-                return false;
+                //}
+                //return false;
             }
             zmsg_destroy(&msg);
 
