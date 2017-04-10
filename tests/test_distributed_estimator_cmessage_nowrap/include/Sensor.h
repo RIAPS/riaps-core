@@ -17,11 +17,9 @@ namespace distributedestimator {
             comp_sensor(_component_conf_j &config, riaps::Actor &actor);
 
 
-            virtual void OnClock(const std::string &messagetype,
-                                 riaps::ports::PortBase *port);
+            virtual void OnClock(riaps::ports::PortBase *port);
 
-            virtual void OnRequest(const std::string &messagetype,
-                                   const messages::SensorQuery::Reader &message,
+            virtual void OnRequest(const messages::SensorQuery::Reader &message,
                                    riaps::ports::PortBase *port);
 
 

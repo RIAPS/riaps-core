@@ -12,12 +12,11 @@ namespace distributedestimator {
 
         }
 
-        void LocalEstimatorBase::DispatchMessage(const std::string &messagetype,
-                                                 capnp::FlatArrayMessageReader* capnpreader,
+        void LocalEstimatorBase::DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
                                                  riaps::ports::PortBase *port) {
             if (port->GetPortName() == PORT_SUB_READY) {
                 messages::SensorReady::Reader sensorReady = capnpreader->getRoot<messages::SensorReady>();
-                OnReady(messagetype, sensorReady, port);
+                OnReady(sensorReady, port);
             }
         }
 
@@ -26,13 +25,13 @@ namespace distributedestimator {
             return SendMessageOnPort(messageBuilder, PORT_REQ_QUERY);
         }
 
-        bool LocalEstimatorBase::RecvQuery(std::string &messageType, messages::SensorValue::Reader &message) {
+        bool LocalEstimatorBase::RecvQuery(messages::SensorValue::Reader &message) {
             auto port = GetRequestPortByName(PORT_REQ_QUERY);
             if (port == NULL) return false;
 
             capnp::FlatArrayMessageReader* messageReader;
 
-            if (port->Recv(messageType, &messageReader)){
+            if (port->Recv(&messageReader)){
                 message = messageReader->getRoot<messages::SensorValue>();
                 return true;
             }

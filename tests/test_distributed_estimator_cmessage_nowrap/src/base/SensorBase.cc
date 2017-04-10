@@ -12,16 +12,14 @@ namespace distributedestimator {
 
         }
 
-        void comp_sensorbase::DispatchMessage(const std::string &messagetype,
-                                              capnp::FlatArrayMessageReader* capnpreader,
+        void comp_sensorbase::DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
                                               riaps::ports::PortBase *port) {
             auto portName = port->GetPortName();
             if (portName == PORT_TIMER_CLOCK) {
-                OnClock(messagetype, port);
+                OnClock(port);
             } else if (portName == PORT_REP_REQUEST) {
                 auto sensorQuery = capnpreader->getRoot<messages::SensorQuery>();
-                //sensorQuery.InitReader(capnpreader);
-                OnRequest(messagetype, sensorQuery, port);
+                OnRequest(sensorQuery, port);
             }
 
         }

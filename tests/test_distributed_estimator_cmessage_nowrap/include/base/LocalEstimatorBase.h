@@ -24,8 +24,7 @@ namespace distributedestimator {
 
             //virtual void RegisterHandlers();
 
-            virtual void OnReady(const std::string &messagetype,
-                                 const messages::SensorReady::Reader &message,
+            virtual void OnReady(const messages::SensorReady::Reader &message,
                                  riaps::ports::PortBase *port)=0;
 
             // I think we don't need handler for the request port. Request-Response should be sync anyway.
@@ -39,7 +38,7 @@ namespace distributedestimator {
             bool SendQuery(capnp::MallocMessageBuilder&    messageBuilder,
                            messages::SensorQuery::Builder& message);
 
-            bool RecvQuery(std::string &messageType, messages::SensorValue::Reader &message);
+            bool RecvQuery(messages::SensorValue::Reader &message);
 
             bool SendEstimate(capnp::MallocMessageBuilder& messageBuilder,
                               messages::Estimate::Builder& message);
@@ -48,8 +47,7 @@ namespace distributedestimator {
             virtual ~LocalEstimatorBase();
 
         protected:
-            virtual void DispatchMessage(const std::string &messagetype,
-                                         capnp::FlatArrayMessageReader* capnpreader,
+            virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
                                          riaps::ports::PortBase *port);
 
         };

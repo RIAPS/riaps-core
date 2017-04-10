@@ -14,17 +14,18 @@ namespace distributedestimator {
             //PrintParameters();
         }
 
-        void GlobalEstimator::OnEstimate(const std::string &messagetype,
-                                         messages::Estimate::Reader &message,
+        void GlobalEstimator::OnEstimate(messages::Estimate::Reader &message,
                                          riaps::ports::PortBase *port) {
-            PrintMessageOnPort(port);
+            //PrintMessageOnPort(port);
 
-            std::cout << " " << message.getValues()[0] << " " << message.getValues()[1] << std::endl;
+            std::cout << "GlobalEstimator::OnEstimate(): " << message.getMsg().cStr() << std::endl;
+
+            //std::cout << " " << message.getValues()[0] << " " << message.getValues()[1] << std::endl;
         }
 
-        void GlobalEstimator::OnWakeup(const std::string &messagetype,
-                                       riaps::ports::PortBase *port) {
-            PrintMessageOnPort(port);
+        void GlobalEstimator::OnWakeup(riaps::ports::PortBase *port) {
+            //PrintMessageOnPort(port);
+            std::cout << "GlobalEstimator::OnWakeUp(): " << port->GetPortName() << std::endl;
         }
 
         GlobalEstimator::~GlobalEstimator() {

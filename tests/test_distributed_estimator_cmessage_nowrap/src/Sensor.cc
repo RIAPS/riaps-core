@@ -13,25 +13,30 @@ namespace distributedestimator {
             PrintParameters();
         }
 
-        void comp_sensor::OnClock(const std::string &messagetype, riaps::ports::PortBase *port) {
-            PrintMessageOnPort(port);
+        void comp_sensor::OnClock(riaps::ports::PortBase *port) {
+            //PrintMessageOnPort(port);
+
+            int64_t time = zclock_mono();
+            std::cout << "Sensor::OnClock(): " << time << std::endl;
 
             capnp::MallocMessageBuilder messageBuilder;
             auto msgSensorReady = messageBuilder.initRoot<messages::SensorReady>();
-            msgSensorReady.setMsg("ready");
+            msgSensorReady.setMsg("data_ready");
 
             SendReady(messageBuilder, msgSensorReady);
         }
 
-        void comp_sensor::OnRequest(const std::string &messagetype, const messages::SensorQuery::Reader &message,
+        void comp_sensor::OnRequest(const messages::SensorQuery::Reader &message,
                                     riaps::ports::PortBase *port) {
             //PrintMessageOnPort(port);
 
-            std::cout << "Sensor::OnRequest() " << message.getMsg().cStr() << std::endl;
+            //std::cout << "Sensor::OnRequest() " << message.getMsg().cStr() << std::endl;
+
+            std::cout << "Sensor::OnRequest(): " << message.getMsg().cStr() <<std::endl;
 
             capnp::MallocMessageBuilder messageBuilder;
             messages::SensorValue::Builder msgSensorValue = messageBuilder.initRoot<messages::SensorValue>();
-            msgSensorValue.setMsg("response");
+            msgSensorValue.setMsg("sensor_rep");
 
             if (!SendRequest(messageBuilder, msgSensorValue)){
                 // Couldn't send the response

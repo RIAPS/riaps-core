@@ -16,6 +16,6 @@ struct SensorValue {
  }
 
  struct Estimate {
-    msg @0        : Text;
+    msg    @0    : Text;
     values @1    : List(Float64);
  }

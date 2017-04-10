@@ -17,8 +17,7 @@ namespace distributedestimator {
 
             LocalEstimator(_component_conf_j &config, riaps::Actor &actor);
 
-            virtual void OnReady(const std::string &messagetype,
-                                 const messages::SensorReady::Reader &message,
+            virtual void OnReady(const messages::SensorReady::Reader &message,
                                  riaps::ports::PortBase *port);
 
 

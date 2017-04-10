@@ -12,14 +12,14 @@ namespace distributedestimator {
 
         }
 
-        void GlobalEstimatorBase::DispatchMessage(const std::string &messagetype, capnp::FlatArrayMessageReader* capnpreader,
+        void GlobalEstimatorBase::DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
                                                   riaps::ports::PortBase *port) {
             auto portName = port->GetPortName();
             if (portName == PORT_TIMER_WAKEUP) {
-                OnWakeup(messagetype, port);
+                OnWakeup(port);
             } else if (portName == PORT_SUB_ESTIMATE) {
                 auto estimate = capnpreader->getRoot<messages::Estimate>();
-                OnEstimate(messagetype, estimate, port);
+                OnEstimate(estimate, port);
             }
         }
 
