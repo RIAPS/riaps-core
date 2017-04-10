@@ -8,6 +8,8 @@ set(riaps_prefix "/opt/riaps/" CACHE STRING "the riaps prefix")
 
 
 
+
+
 #Set the platform
 if (${arch} STREQUAL "armhf")
  set(TOOLCHAIN_PREFIX arm-linux-gnueabihf)
