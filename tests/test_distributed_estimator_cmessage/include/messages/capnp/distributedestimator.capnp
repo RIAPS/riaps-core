@@ -13,6 +13,7 @@ struct SensorValue {
  }
 
  struct Estimate {
-    msg @0     : Text;
-    strings @1 : List(Float64);
+    msg @0        : Text;
+    strings @1    : List(Float64);
+    experiment @2 : List(List(Float64));
  }

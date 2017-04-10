@@ -120,8 +120,8 @@ namespace riaps {
                 zmsg_destroy(msg);
                 return false;
             }
-            std::string messageType = GetConfig()->req_type;
-            zmsg_pushstr(*msg, messageType.c_str());
+            //std::string messageType = GetConfig()->req_type;
+            //zmsg_pushstr(*msg, messageType.c_str());
 
             int rc = zmsg_send(msg, _port_socket);
             return rc==0;

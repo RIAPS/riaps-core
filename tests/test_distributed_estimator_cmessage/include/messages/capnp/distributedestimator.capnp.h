@@ -76,7 +76,7 @@ struct Estimate {
   class Pipeline;
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(a2bfa6930feff039, 0, 2)
+    CAPNP_DECLARE_STRUCT_HEADER(a2bfa6930feff039, 0, 3)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
     #endif  // !CAPNP_LITE
@@ -351,6 +351,9 @@ public:
   inline bool hasStrings() const;
   inline  ::capnp::List<double>::Reader getStrings() const;
 
+  inline bool hasExperiment() const;
+  inline  ::capnp::List< ::capnp::List<double>>::Reader getExperiment() const;
+
 private:
   ::capnp::_::StructReader _reader;
   template <typename, ::capnp::Kind>
@@ -393,6 +396,14 @@ public:
   inline  ::capnp::List<double>::Builder initStrings(unsigned int size);
   inline void adoptStrings(::capnp::Orphan< ::capnp::List<double>>&& value);
   inline ::capnp::Orphan< ::capnp::List<double>> disownStrings();
+
+  inline bool hasExperiment();
+  inline  ::capnp::List< ::capnp::List<double>>::Builder getExperiment();
+  inline void setExperiment( ::capnp::List< ::capnp::List<double>>::Reader value);
+  inline void setExperiment(::kj::ArrayPtr<const  ::capnp::List<double>::Reader> value);
+  inline  ::capnp::List< ::capnp::List<double>>::Builder initExperiment(unsigned int size);
+  inline void adoptExperiment(::capnp::Orphan< ::capnp::List< ::capnp::List<double>>>&& value);
+  inline ::capnp::Orphan< ::capnp::List< ::capnp::List<double>>> disownExperiment();
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -584,6 +595,42 @@ inline void Estimate::Builder::adoptStrings(
 inline ::capnp::Orphan< ::capnp::List<double>> Estimate::Builder::disownStrings() {
   return ::capnp::_::PointerHelpers< ::capnp::List<double>>::disown(
       _builder.getPointerField(1 * ::capnp::POINTERS));
+}
+
+inline bool Estimate::Reader::hasExperiment() const {
+  return !_reader.getPointerField(2 * ::capnp::POINTERS).isNull();
+}
+inline bool Estimate::Builder::hasExperiment() {
+  return !_builder.getPointerField(2 * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::List< ::capnp::List<double>>::Reader Estimate::Reader::getExperiment() const {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<double>>>::get(
+      _reader.getPointerField(2 * ::capnp::POINTERS));
+}
+inline  ::capnp::List< ::capnp::List<double>>::Builder Estimate::Builder::getExperiment() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<double>>>::get(
+      _builder.getPointerField(2 * ::capnp::POINTERS));
+}
+inline void Estimate::Builder::setExperiment( ::capnp::List< ::capnp::List<double>>::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<double>>>::set(
+      _builder.getPointerField(2 * ::capnp::POINTERS), value);
+}
+inline void Estimate::Builder::setExperiment(::kj::ArrayPtr<const  ::capnp::List<double>::Reader> value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<double>>>::set(
+      _builder.getPointerField(2 * ::capnp::POINTERS), value);
+}
+inline  ::capnp::List< ::capnp::List<double>>::Builder Estimate::Builder::initExperiment(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<double>>>::init(
+      _builder.getPointerField(2 * ::capnp::POINTERS), size);
+}
+inline void Estimate::Builder::adoptExperiment(
+    ::capnp::Orphan< ::capnp::List< ::capnp::List<double>>>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<double>>>::adopt(
+      _builder.getPointerField(2 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::List< ::capnp::List<double>>> Estimate::Builder::disownExperiment() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<double>>>::disown(
+      _builder.getPointerField(2 * ::capnp::POINTERS));
 }
 
 

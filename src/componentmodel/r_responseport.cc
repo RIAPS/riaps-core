@@ -45,7 +45,7 @@ namespace riaps{
         }
 
         bool ResponsePort::Send(zmsg_t** msg) const {
-            zmsg_pushstr(*msg, GetConfig()->rep_type.c_str());
+            //zmsg_pushstr(*msg, GetConfig()->rep_type.c_str());
 
             int rc = zmsg_send(msg, _port_socket);
             return rc == 0;

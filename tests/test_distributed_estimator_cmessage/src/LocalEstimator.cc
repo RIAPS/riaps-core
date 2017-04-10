@@ -14,10 +14,13 @@ namespace distributedestimator {
         }
 
         void LocalEstimator::OnReady(const std::string &messagetype,
-                                     const messages::SensorReady &message,
+                                     const messages::SensorReady::Reader &message,
                                      riaps::ports::PortBase *port) {
 
             PrintMessageOnPort(port);
+
+            auto msgQueryMessageBuilder = capnp::MallocMessageBuilder;
+            msgQueryMessageBuilder.
 
             messages::SensorQuery queryMsg;
             queryMsg.SetMsg("query");

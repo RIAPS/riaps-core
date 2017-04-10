@@ -60,13 +60,10 @@ namespace riaps{
             return this;
         }
 
-
-
-        // Before sending the publisher sets up the message type
         bool PublisherPort::Send(zmsg_t** zmessage) const {
-            const _component_port_pub_j* currentConfig = GetConfig();
-            std::string messageType = currentConfig->messageType;
-            zmsg_pushstr(*zmessage, messageType.c_str());
+            //const _component_port_pub_j* currentConfig = GetConfig();
+            //std::string messageType = currentConfig->messageType;
+            //zmsg_pushstr(*zmessage, messageType.c_str());
 
             int rc = zmsg_send(zmessage, _port_socket);
             return rc == 0;

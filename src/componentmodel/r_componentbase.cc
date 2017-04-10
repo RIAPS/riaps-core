@@ -344,9 +344,10 @@ namespace riaps{
     bool ComponentBase::SendMessageOnPort(capnp::MallocMessageBuilder& message, const std::string &portName) {
         auto serializedMessage = capnp::messageToFlatArray(message);
         zmsg_t* msg = zmsg_new();
-        auto size = serializedMessage.asBytes().size();
-        auto bytes = serializedMessage.asBytes().begin();
-        zmsg_pushmem(msg, bytes, size);
+        auto bytes = serializedMessage.asBytes();
+        //auto size = serializedMessage.asBytes().size();
+        //auto bytes = serializedMessage.asBytes().begin();
+        zmsg_pushmem(msg, bytes.begin(), bytes.size());
         return SendMessageOnPort(&msg, portName);
     }
 
