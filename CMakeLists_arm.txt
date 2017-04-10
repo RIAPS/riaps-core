@@ -1,0 +1,17 @@
+
+
+SET(CMAKE_C_COMPILER   /usr/bin/arm-linux-gnueabihf-gcc)
+SET(CMAKE_CXX_COMPILER /usr/bin/arm-linux-gnueabihf-g++)
+SET(CMAKE_STRIP /usr/bin/arm-linux-gnueabihf-strip)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
+include(CTest)
+enable_testing()
+
+set (LIBALLPATH_INCLUDE ${DEPENDENCIES}armhf/include)
+set (LIBALLPATH_LIB ${DEPENDENCIES}armhf/lib)
+
+include_directories(${LIBALLPATH_INCLUDE})
+link_directories(${LIBALLPATH_LIB})
+
