@@ -16,8 +16,7 @@
       "actor": "ActorTest1s"
     }
   ],
-  "target_bin_path": "/opt/riaps/armhf/bin/",
-  "target_lib_path": "/opt/riaps/armhf/lib/",
+  "target_path": "riaps_apps",
   "username":"riaps",
   "password":"riapspwd"
 }

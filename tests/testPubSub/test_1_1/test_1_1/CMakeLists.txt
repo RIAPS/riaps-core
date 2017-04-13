@@ -1,6 +1,9 @@
 include_directories(include)
 
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_HOME_DIRECTORY}/bin/test_1_1)
+
+#set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_HOME_DIRECTORY}/bin/test_1_1)
+
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 
 add_library(collector SHARED include/messages/testmessages.capnp.c++
                                    src/Collector.cc
