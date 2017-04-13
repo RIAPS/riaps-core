@@ -5,10 +5,12 @@
 #ifndef RIAPS_FW_R_CONFIGURATION_H
 #define RIAPS_FW_R_CONFIGURATION_H
 
-
+#include <componentmodel/r_parameter.h>
 
 #include <string>
 #include <vector>
+
+using namespace riaps::componentmodel;
 
 /*
 struct _localport_conf{
@@ -50,9 +52,9 @@ typedef struct _component_conf component_conf;
 //// New part
 
 struct _component_port_config {
-    std::string port_name;
-    bool isLocal;
-    std::string message_type;
+    std::string portName;
+    bool        isLocal;
+    std::string messageType;
 
     _component_port_config(){
         isLocal=false;
@@ -62,16 +64,22 @@ struct _component_port_config {
 typedef struct _component_port_config component_port_config;
 
 struct _component_port_clt_j : public component_port_config {};
-struct _component_port_pub_j : public component_port_config{
-    //int port;
+struct _component_port_pub_j : public component_port_config {};
+
+struct _component_port_req_j : public component_port_config {
+    std::string req_type;
+    std::string rep_type;
 };
-struct _component_port_req_j : public component_port_config{};
-struct _component_port_rep_j : public component_port_config{};
+
+struct _component_port_rep_j : public component_port_config{
+    std::string req_type;
+    std::string rep_type;
+};
 struct _component_port_srv_j : public component_port_config{};
 struct _component_port_sub_j : public component_port_config{
+    std::string messageType;
 };
-struct _component_port_tim_j{
-    std::string timer_name;
+struct _component_port_tim_j : public component_port_config {
     ulong       period;
 };
 
@@ -86,10 +94,13 @@ struct _component_ports_j {
     std::vector<_component_port_tim_j> tims;
 };
 
+
+
 struct _component_conf_j {
     std::string        component_name;
     std::string        component_type;
     _component_ports_j component_ports;
+    Parameters         component_parameters;
 };
 
 typedef struct _component_conf_j component_conf_j;

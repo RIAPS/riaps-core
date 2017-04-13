@@ -3,9 +3,8 @@
 //
 
 
-#include "componentmodel/r_actor.h"
-#include "componentmodel/r_debugcomponent.h"
-
+#include <componentmodel/r_actor.h>
+#include <const/r_jsonmodel.h>
 
 #include <set>
 
@@ -14,18 +13,55 @@ namespace riaps {
 
     riaps::Actor::Actor(const std::string&     applicationname       ,
                         const std::string&     actorname             ,
-                        nlohmann::json& json_actorconfig      ,
-                        nlohmann::json& json_componentsconfig ,
-                        nlohmann::json& json_messagesconfig)
+                        nlohmann::json& json_actorconfig             ,
+                        nlohmann::json& json_componentsconfig        ,
+                        nlohmann::json& json_messagesconfig          ,
+                        std::map<std::string, std::string>& actualActorParams)
     {
         _actor_name       = actorname;
         _application_name = applicationname;
 
-        auto json_instances = json_actorconfig["instances"];
-        auto json_internals = json_actorconfig["internals"];
-        auto json_locals    = json_actorconfig["locals"];
-        auto json_wires     = json_actorconfig["wires"];
+        auto json_instances = json_actorconfig[J_INSTANCES];
+        auto json_internals = json_actorconfig[J_INTERNALS];
+        auto json_locals    = json_actorconfig[J_LOCALS];
+        auto json_formals   = json_actorconfig[J_FORMALS];
 
+
+        // Process and check actor parameters
+        riaps::componentmodel::Parameters actorParams; // name, default value
+
+        for (auto it_formal = json_formals.begin();
+             it_formal != json_formals.end();
+             it_formal++){
+            std::string formalName = (it_formal.value())[J_FORMAL_NAME];
+            bool isOptional = it_formal.value()[J_FORMAL_DEF] != NULL;
+
+            std::string formalDefault = isOptional ? (it_formal.value())[J_FORMAL_DEF] : "";
+
+            // Optional
+            if (isOptional){
+
+                // Optional parameter is not passed to the actor
+                // Set it to the default value
+                if (actualActorParams.find(formalName) == actualActorParams.end()){
+                    actorParams.AddParam(formalName, "", isOptional, formalDefault);
+                }
+
+                    // Optional parameter is passed, set the parameter to the passed value
+                else {
+                    actorParams.AddParam(formalName, actualActorParams[formalName], isOptional, formalDefault);
+                }
+            }
+                // Mandatory
+            else {
+                if (!isOptional && actualActorParams.find(formalName) == actualActorParams.end()){
+                    throw std::invalid_argument("Mandatory parameter is missing from the actor: " +
+                                                _actor_name +
+                                                "(" + formalName + ")"
+                    );
+                }
+            }
+        }
 
         // Get the actor's components, if there is no component => Stop, Error.
         if(json_instances.size()==0) {
@@ -37,7 +73,7 @@ namespace riaps {
         for (auto it_local  = json_locals.begin();
                   it_local != json_locals.end();
                   it_local++){
-            std::string local_type = (it_local.value())["type"];
+            std::string local_type = (it_local.value())[J_PORTTYPE];
             local_messagetypes.insert(local_type);
         }
 
@@ -48,7 +84,7 @@ namespace riaps {
                   it_currentconfig++) {
 
             auto componentName = it_currentconfig.key();
-            std::string componentType = (it_currentconfig.value())["type"];
+            std::string componentType = (it_currentconfig.value())[J_PORTTYPE];
 
             // Check if the component in the map already (wrong configuration)
             for (auto component_config : _component_configurations) {
@@ -67,25 +103,95 @@ namespace riaps {
 
             // Get the details of the component
             auto json_componentconfig = json_componentsconfig[componentType];
+            auto json_componentformals = json_componentconfig[J_FORMALS];
+            auto json_componentactuals = (it_currentconfig.value())[J_ACTUALS];
+
+            // Get the formals
+            new_component_config.component_parameters = GetComponentFormals(json_componentformals);
+            auto componentParameters = &new_component_config.component_parameters;
+
+            // Set the actuals
+            for (auto it_actual = json_componentactuals.begin();
+                      it_actual!= json_componentactuals.end();
+                      it_actual++){
+
+                std::string actualName = (it_actual.value())[J_ACTUAL_NAME];
+
+                auto j_actualParam = (it_actual.value())[J_ACTUAL_PARAM];
+                bool hasActualParam = j_actualParam!=NULL;
+                std::string actualParam = !hasActualParam?"":j_actualParam;
+
+                auto j_actualValue = (it_actual.value())[J_ACTUAL_VALUE];
+                bool hasActualValue = j_actualValue!=NULL;
+                std::string actualValue = "";
+
+                // Must check the type
+                if (hasActualValue){
+                    if (j_actualValue.is_string()){
+                        actualValue = j_actualValue;
+                    } else if (j_actualValue.is_boolean()){
+                        actualValue = std::to_string((bool)j_actualValue);
+                    } else if (j_actualValue.is_number()){
+                        actualValue = std::to_string((double)j_actualValue);
+                    }
+                }
+
+
+
+                // Check 1 : ActualName is defined in the ComponentFormals
+                if (componentParameters->GetParam(actualName) == NULL){
+                    throw std::invalid_argument("Parameter "
+                                                + actualName
+                                                + " is missing from the Component "
+                                                + componentName
+                                                + " definition");
+                }
+
+                // Check 2 : Instead of values, passing a parameter. Check the paramater to be passed if exists or not.
+                if (hasActualParam){
+                    if (actualActorParams.find(actualParam) == actualActorParams.end()){
+                        throw std::invalid_argument("Parameter "
+                                                    + actualParam
+                                                    + " cannot be passed to component "
+                                                    + componentName);
+                    }
+
+                    // Everything is fine, set the value
+                    if (componentParameters->SetParamValue(actualName, actualActorParams[actualParam])==NULL){
+                        throw std::invalid_argument("Parameter "
+                                                    + actualParam
+                                                    + " cannot be set in component "
+                                                    + componentName);
+                    }
+                } else if (componentParameters->SetParamValue(actualName, actualValue)==NULL){
+                    throw std::invalid_argument("Value "
+                                                + actualValue
+                                                + " cannot be set in component "
+                                                + componentName);
+                }
+
+            }
+
+            //auto debuglist = componentParameters->GetParameterNames();
 
             // Get the ports
-            auto json_portsconfig = json_componentconfig["ports"];
+            auto json_portsconfig = json_componentconfig[J_PORTS];
 
             // Get the publishers
-            if (json_portsconfig.count("pubs")!=0){
-                auto json_pubports = json_portsconfig["pubs"];
+            if (json_portsconfig.count(J_PORTS_PUBS)!=0){
+                auto json_pubports = json_portsconfig[J_PORTS_PUBS];
                 for (auto it_pubport=json_pubports.begin();
                           it_pubport!=json_pubports.end();
                           it_pubport++){
 
                     auto pubportname = it_pubport.key();
-                    auto pubporttype = it_pubport.value()["type"];
+                    auto pubporttype = it_pubport.value()[J_PORTTYPE];
 
 
 
                     _component_port_pub_j newpubconfig;
-                    newpubconfig.port_name = pubportname;
-                    newpubconfig.message_type = pubporttype;
+                    newpubconfig.portName = pubportname;
+                    newpubconfig.messageType = pubporttype;
 
                     // If the porttype is defined in the Local list
                     if (local_messagetypes.find(pubporttype) != local_messagetypes.end()){
@@ -99,18 +205,18 @@ namespace riaps {
             }
 
             // Parse subscribers from the config
-            if (json_portsconfig.count("subs")!=0){
-                auto json_subports = json_portsconfig["subs"];
+            if (json_portsconfig.count(J_PORTS_SUBS)!=0){
+                auto json_subports = json_portsconfig[J_PORTS_SUBS];
                 for (auto it_subport = json_subports.begin();
                           it_subport != json_subports.end() ;
                           it_subport++){
 
                     auto subportname = it_subport.key();
-                    auto subporttype = it_subport.value()["type"];
+                    auto subporttype = it_subport.value()[J_PORTTYPE];
 
                     _component_port_sub_j newsubconfig;
-                    newsubconfig.port_name = subportname;
-                    newsubconfig.message_type = subporttype;
+                    newsubconfig.portName = subportname;
+                    newsubconfig.messageType = subporttype;
 
                     // If the porttype is defined in the Local list
                     if (local_messagetypes.find(subporttype) != local_messagetypes.end()){
@@ -123,9 +229,68 @@ namespace riaps {
                 }
             }
 
+            // Parse request ports
+            if (json_portsconfig.count(J_PORTS_REQS)!=0){
+                auto json_reqports = json_portsconfig[J_PORTS_REQS];
+                for (auto it_reqport = json_reqports.begin();
+                     it_reqport != json_reqports.end() ;
+                     it_reqport++){
+
+                    auto reqportname = it_reqport.key();
+                    std::string reqtype = it_reqport.value()[J_PORT_REQTYPE];
+                    std::string reptype = it_reqport.value()[J_PORT_REPTYPE];
+                    std::string messagetype = reqtype + "#" + reptype;
+
+                    _component_port_req_j newreqconfig;
+                    newreqconfig.portName = reqportname;
+                    //newreqconfig.messageType = subporttype;
+                    newreqconfig.req_type = reqtype;
+                    newreqconfig.rep_type = reptype;
+                    newreqconfig.messageType = messagetype;
+
+                    // If the porttype is defined in the Local list
+                    if (local_messagetypes.find(reqtype) != local_messagetypes.end()){
+                        newreqconfig.isLocal = true;
+                    } else {
+                        newreqconfig.isLocal = false;
+                    }
+
+                    new_component_config.component_ports.reqs.push_back(newreqconfig);
+                }
+            }
+
+            // Parse response ports
+            if (json_portsconfig.count(J_PORTS_REPS)!=0){
+                auto json_repports = json_portsconfig[J_PORTS_REPS];
+                for (auto it_repport = json_repports.begin();
+                     it_repport != json_repports.end() ;
+                     it_repport++){
+
+                    auto repportname = it_repport.key();
+                    std::string reqtype = it_repport.value()[J_PORT_REQTYPE];
+                    std::string reptype = it_repport.value()[J_PORT_REPTYPE];
+                    std::string messagetype = reqtype + "#" + reptype;
+
+                    _component_port_rep_j newrepconfig;
+                    newrepconfig.portName = repportname;
+                    newrepconfig.req_type = reqtype;
+                    newrepconfig.rep_type = reptype;
+                    newrepconfig.messageType = messagetype;
+
+                    // If the porttype is defined in the Local list
+                    if (local_messagetypes.find(reqtype) != local_messagetypes.end()){
+                        newrepconfig.isLocal = true;
+                    } else {
+                        newrepconfig.isLocal = false;
+                    }
+
+                    new_component_config.component_ports.reps.push_back(newrepconfig);
+                }
+            }
+
             // Get the timers
-            if (json_portsconfig.count("tims")!=0){
-                auto json_tims = json_portsconfig["tims"];
+            if (json_portsconfig.count(J_PORTS_TIMS)!=0){
+                auto json_tims = json_portsconfig[J_PORTS_TIMS];
                 for (auto it_tim = json_tims.begin();
                           it_tim != json_tims.end() ;
                           it_tim++){
@@ -134,8 +299,8 @@ namespace riaps {
                     auto timperiod = it_tim.value()["period"];
 
                     _component_port_tim_j newtimconfig;
-                    newtimconfig.timer_name = timname;
-                    newtimconfig.period     = timperiod;
+                    newtimconfig.portName = timname;
+                    newtimconfig.period   = timperiod;
 
                     new_component_config.component_ports.tims.push_back(newtimconfig);
                 }
@@ -186,11 +351,11 @@ namespace riaps {
             if (handle == NULL) {
 
                 // TODO: pass in parameter what to do
-                //throw std::runtime_error("Cannot open library: " + component_library_name + " (" + dlerror() + ")");
+                throw std::runtime_error("Cannot open library: " + component_library_name + " (" + dlerror() + ")");
 
                 //Load a default implementation, for testing
-                riaps::ComponentBase* debug_component = new DebugComponent(component_config, *this);
-                _components.push_back(debug_component);
+                //riaps::ComponentBase* debug_component = new DebugComponent(component_config, *this);
+               // _components.push_back(debug_component);
             }
             else {
                 _component_dll_handles.push_back(handle);
@@ -239,7 +404,7 @@ namespace riaps {
         while (!zsys_interrupted) {
             void *which = zpoller_wait(_poller, 2000);
 
-            std::cout << "." << std::flush;
+            //std::cout << "." << std::flush;
 
             if (which == _actor_zsock) {
                 // Maybe later, control messages to the actor
@@ -374,6 +539,75 @@ namespace riaps {
             }
         }
          */
+    }
+
+
+
+    Parameters riaps::Actor::GetComponentFormals(nlohmann::json &jsonFormals) {
+        Parameters results;
+
+        for (auto it_formal = jsonFormals.begin();
+             it_formal != jsonFormals.end();
+             it_formal++){
+            std::string formalName = (it_formal.value())[J_FORMAL_NAME];
+            bool hasDefault = it_formal.value()[J_FORMAL_DEF] != NULL;
+
+
+            //std::string formalDefault = !hasDefault ? "": (it_formal.value())[J_FORMAL_DEF];
+
+
+            std::string formalDefault = "";
+
+
+
+            // Must check the type
+            if (hasDefault){
+                auto j_formalValue = (it_formal.value())[J_FORMAL_DEF];
+                if (j_formalValue.is_string()){
+                    formalDefault = j_formalValue;
+                } else if (j_formalValue.is_boolean()){
+                    formalDefault = std::to_string((bool)j_formalValue);
+                } else if (j_formalValue.is_number()){
+                    formalDefault = std::to_string((double)j_formalValue);
+                }
+            }
+
+            // If default value is specified, then the parameter is not mandatory.
+            results.AddParam(formalName, "", hasDefault, formalDefault);
+        }
+
+        return results;
+    }
+
+    std::map<std::string, std::string> riaps::Actor::GetActualParams(nlohmann::json &jsonActuals,
+                                                                     std::map<std::string, std::string>& actorParams) {
+        std::map<std::string, std::string> results;
+
+        for (auto it_actual = jsonActuals.begin();
+             it_actual != jsonActuals.end();
+             it_actual++) {
+            std::string actualName = (it_actual.value())[J_ACTUAL_NAME];
+            bool isActualParam = (it_actual.value())[J_ACTUAL_PARAM]!=NULL;
+            std::string actualParam = !isActualParam?"":(it_actual.value())[J_ACTUAL_PARAM];
+            std::string actualValue = (it_actual.value())[J_ACTUAL_NAME]==NULL?"":(it_actual.value())[J_ACTUAL_NAME];
+
+            // Parameter is passed from the actor
+            if (isActualParam){
+                if (actorParams.find(actualParam) == actorParams.end()){
+                    throw std::invalid_argument("Cannot pass parameter: " +
+                                                        actualParam +
+                                                        " to " +
+                                                        actualName +
+                                                        " in actor: " + _actor_name);
+                }
+                results[actualName] = actorParams[actualParam];
+            }
+            else {
+                results[actualName] = actualValue;
+            }
+        }
+
+        return results;
     }
 
     riaps::Actor::~Actor() {

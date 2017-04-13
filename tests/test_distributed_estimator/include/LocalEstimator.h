@@ -5,20 +5,22 @@
 #ifndef RIAPS_FW_LOCALESTIMATOR_H
 #define RIAPS_FW_LOCALESTIMATOR_H
 
-#include "common.h"
-#include "componentmodel/r_componentbase.h"
+
+#include "base/LocalEstimatorBase.h"
 
 
-class comp_localestimator : public riaps::ComponentBase {
+class LocalEstimator : public LocalEstimatorBase {
 
 public:
 
-    comp_localestimator(_component_conf_j& config, riaps::Actor& actor);
+    LocalEstimator(_component_conf_j& config, riaps::Actor& actor);
 
-    virtual void OnMessageArrived(const std::string& messagetype, zmsg_t* msg_body, const riaps::ports::PortBase* port);
+    virtual void OnReady(const std::string& messagetype,
+                         std::vector<std::string>& msgFields,
+                         riaps::ports::PortBase* port);
 
 
-    virtual ~comp_localestimator();
+    virtual ~LocalEstimator();
 
 private:
     std::unique_ptr<std::uniform_real_distribution<double>> unif;

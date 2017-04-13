@@ -2,7 +2,8 @@
 // Created by parallels on 9/29/16.
 //
 
-#include "componentmodel/r_responseport.h"
+#include <framework/rfw_network_interfaces.h>
+#include <componentmodel/r_responseport.h>
 
 namespace riaps{
     namespace ports{
@@ -10,19 +11,65 @@ namespace riaps{
         ResponsePort::ResponsePort(const _component_port_rep_j &config, ComponentBase *parent_component) :
             PortBase(PortTypes::Response, (component_port_config*)&config)
         {
+            _port_socket = zsock_new(ZMQ_REP);
+            _host = riaps::framework::Network::GetIPAddress();
 
+            if (_host == "") {
+                throw std::runtime_error("Response cannot be initiated. Cannot find  available network interface.");
+            }
+
+            std::string rep_endpoint = "tcp://" + _host + ":!";
+            _port = zsock_bind(_port_socket, rep_endpoint.c_str());
+
+
+            if (_port == -1) {
+                throw std::runtime_error("Couldn't bind response port.");
+            }
+
+            std::cout << "Response is created on : " << _host << ":" << _port << std::endl;
+
+
+            if (!register_service(parent_component->GetActor()->GetApplicationName(),
+                                  config.messageType,
+                                  _host,
+                                  _port,
+                                  Kind::REP,
+                                  (config.isLocal?Scope::LOCAL:Scope::GLOBAL),
+                                  {})) {
+                throw std::runtime_error("Response port couldn't be registered.");
+            }
         }
 
-        _component_port_rep_j* ResponsePort::GetConfig() {
-            throw std::runtime_error("Not implemented exception");
-            return NULL;
+        const _component_port_rep_j* ResponsePort::GetConfig() const{
+            return (_component_port_rep_j*)GetPortBaseConfig();
         }
 
-        void ResponsePort::Send(zmsg_t *msg) const {
-            zmsg_pushstr(msg, ((_component_port_pub_j*)_config)->message_type.c_str());
+        bool ResponsePort::Send(zmsg_t** msg) const {
+            //zmsg_pushstr(*msg, GetConfig()->rep_type.c_str());
 
-            int rc = zmsg_send(&msg, _port_socket);
-            assert(rc == 0);
+            int rc = zmsg_send(msg, _port_socket);
+            return rc == 0;
+        }
+
+//        bool ResponsePort::Send(std::string& message) const {
+//            zmsg_t* zmsg = zmsg_new();
+//            zmsg_addstr(zmsg, message.c_str());
+//
+//            return Send(&zmsg);
+//        }
+//
+//        bool ResponsePort::Send(std::vector<std::string>& fields) const{
+//            zmsg_t* zmsg = zmsg_new();
+//
+//            for (auto it = fields.begin(); it!=fields.end(); it++){
+//                zmsg_addstr(zmsg, it->c_str());
+//            }
+//
+//            return Send(&zmsg);
+//        }
+
+        ResponsePort* ResponsePort::AsResponsePort() {
+            return this;
         }
 
     }

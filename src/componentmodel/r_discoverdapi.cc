@@ -1,5 +1,5 @@
-#include "componentmodel/r_discoverdapi.h"
-#include "componentmodel/r_network_interfaces.h"
+#include <componentmodel/r_discoverdapi.h>
+#include <framework/rfw_configuration.h>
 
 
 
@@ -14,7 +14,7 @@ bool register_service(const std::string&              app_name     ,
 
     bool result = false;
 
-    std::string mac_address = GetMacAddressStripped();
+    //std::string mac_address = GetMacAddressStripped();
 
     /////
     /// Request
@@ -39,8 +39,8 @@ bool register_service(const std::string&              app_name     ,
     zmsg_t* msg = zmsg_new();
     zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
 
-
-    zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC(mac_address));
+    //zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC(mac_address));
+    zsock_t * client = zsock_new_req (riaps::framework::Configuration::GetDiscoveryServiceIpc().c_str());
     assert(client);
 
     zmsg_send(&msg, client);
@@ -132,7 +132,7 @@ subscribe_to_service(const std::string& app_name  ,
         ){
 
     // TODO: Ask only once
-    std::string mac_address = GetMacAddressStripped();
+    //std::string mac_address = GetMacAddressStripped();
 
     std::vector<service_lookup_result> result;
 
@@ -160,7 +160,8 @@ subscribe_to_service(const std::string& app_name  ,
     zmsg_t* msg = zmsg_new();
     zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
 
-    zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC(mac_address));
+    //zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC(mac_address));
+    zsock_t * client = zsock_new_req (riaps::framework::Configuration::GetDiscoveryServiceIpc().c_str());
     assert(client);
 
     zmsg_send(&msg, client);
@@ -236,9 +237,9 @@ register_actor(const std::string& appname, const std::string& actorname){
     zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
 
 
-    std::string mac_address = GetMacAddressStripped();
-
-    zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC(mac_address));
+    //std::string mac_address = GetMacAddressStripped();
+    std::string ipcAddress = riaps::framework::Configuration::GetDiscoveryServiceIpc();
+    zsock_t * client = zsock_new_req (ipcAddress.c_str());
     assert(client);
 
     zmsg_send(&msg, client);
@@ -281,8 +282,7 @@ register_actor(const std::string& appname, const std::string& actorname){
     /////
     /// Clean up
     /////
-
-    zsock_disconnect(client, DISCOVERY_SERVICE_IPC(mac_address));
+    zsock_disconnect(client, ipcAddress.c_str());
     zframe_destroy(&capnp_msgbody);
     zmsg_destroy(&msg_response);
     zsock_destroy(&client);

@@ -10,9 +10,14 @@ set(FRAMEWORK_LIB_FILES r_discoverdapi.cc
                         r_portbase.cc
                         r_timer.cc
                         r_debugcomponent.cc
-                        r_network_interfaces.cc
+                        r_messagebase.cc
+        #delete_r_network_interfaces.cc
                         r_responseport.cc
                         r_requestport.cc
+                        r_parameter.cc
+                        ../framework/rfw_network_interfaces.cc
+                        ../framework/rfw_configuration.cc
+                        ../messaging/r_message.cc
         )
 
 add_library(riaps SHARED ${FRAMEWORK_LIB_FILES})

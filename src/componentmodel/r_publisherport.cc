@@ -3,7 +3,8 @@
 //
 
 #include <componentmodel/r_publisherport.h>
-#include <componentmodel/r_network_interfaces.h>
+#include <framework/rfw_network_interfaces.h>
+
 
 namespace riaps{
 
@@ -15,7 +16,7 @@ namespace riaps{
         {
             _port_socket = zsock_new(ZMQ_PUB);
 
-            _host = GetIPAddress();
+            _host = riaps::framework::Network::GetIPAddress();
 
             if (_host == "") {
                 throw std::runtime_error("Publisher cannot be initiated. Cannot find  available network interface.");
@@ -33,7 +34,7 @@ namespace riaps{
 
 
             if (!register_service(parent_component->GetActor()->GetApplicationName(),
-                                  config.message_type,
+                                  config.messageType,
                                   _host,
                                   _port,
                                   Kind::PUB,
@@ -44,8 +45,8 @@ namespace riaps{
 
         }
 
-        _component_port_pub_j* PublisherPort::GetConfig() {
-            return (_component_port_pub_j*)_config;
+        const _component_port_pub_j* PublisherPort::GetConfig() const {
+            return (_component_port_pub_j*)GetPortBaseConfig();
         }
 
         std::string PublisherPort::GetEndpoint() {
@@ -55,17 +56,38 @@ namespace riaps{
             return "";
         }
 
-
-        // Before sending the publisher sets up the message type
-        void PublisherPort::Send(zmsg_t *msg) const {
-            zmsg_pushstr(msg, ((_component_port_pub_j*)_config)->message_type.c_str());
-
-            int rc = zmsg_send(&msg, _port_socket);
-            assert(rc == 0);
+        PublisherPort* PublisherPort::AsPublishPort() {
+            return this;
         }
 
+        bool PublisherPort::Send(zmsg_t** zmessage) const {
+            //const _component_port_pub_j* currentConfig = GetConfig();
+            //std::string messageType = currentConfig->messageType;
+            //zmsg_pushstr(*zmessage, messageType.c_str());
+
+            int rc = zmsg_send(zmessage, _port_socket);
+            return rc == 0;
+        }
+
+//        bool PublisherPort::Send(std::string& message) const{
+//            zmsg_t* zmsg = zmsg_new();
+//            zmsg_addstr(zmsg, message.c_str());
+//
+//            return Send(&zmsg);
+//        }
+//
+//        bool PublisherPort::Send(std::vector<std::string>& fields) const {
+//            zmsg_t* zmsg = zmsg_new();
+//
+//            for (auto it = fields.begin(); it!=fields.end(); it++){
+//                zmsg_addstr(zmsg, it->c_str());
+//            }
+//
+//            return Send(&zmsg);
+//        }
+
         PublisherPort::~PublisherPort() {
-            std::cout << "Publisherport " << _config->port_name << " is stopping" <<std::endl;
+            std::cout << "Publisherport " << GetConfig()->portName << " is stopping" <<std::endl;
         }
     }
 }

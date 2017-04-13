@@ -1,12 +1,12 @@
 #ifndef R_DISCOVERD_API
 #define R_DISCOVERD_API
 
-#define DISCOVERY_SERVICE_IPC(X) (std::string("ipc:///tmp/riaps-disco") + std::string(X)).c_str()
 
 #include <string>
 #include <vector>
 #include <czmq.h>
 #include <iostream>
+#include <boost/format.hpp>
 
 #include <capnp/message.h>
 #include <capnp/serialize.h>
@@ -17,6 +17,7 @@
 #include "r_riaps_actor_commands.h"
 #include "messaging/disco.capnp.h"
 #include "componentmodel/r_componentbase.h"
+
 
 
 

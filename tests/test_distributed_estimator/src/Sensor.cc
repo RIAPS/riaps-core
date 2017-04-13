@@ -3,25 +3,32 @@
 //
 
 #include "Sensor.h"
-#include "common.h"
 
-comp_sensor::comp_sensor(_component_conf_j &config, riaps::Actor &actor):ComponentBase(config, actor) {
 
+
+
+comp_sensor::comp_sensor(_component_conf_j &config, riaps::Actor &actor):comp_sensorbase(config, actor) {
+    PrintParameters();
 }
 
-void comp_sensor::OnMessageArrived(const std::string &messagetype, zmsg_t *msg_body,
-                                   const riaps::ports::PortBase *port) {
-    if (msg_body == NULL && port == NULL){
 
-    }
-    else {
-        zmsg_t* msg = zmsg_new();
-        zmsg_addstr(msg, "Data ready");
-        std::cout << "on_clock(): " << messagetype <<std::endl;
-        if (!SendMessageOnPort(msg, PORT_READY)) {
-            std::cout << "Error sending message in timer" << std::endl;
-        }
-    }
+void comp_sensor::OnClock(const std::string &messagetype, std::vector<std::string> &msgFields,
+                          riaps::ports::PortBase *port) {
+    PrintMessageOnPort(port);
+    //SendMessageOnPort("ready message", PORT_PUB_READY);
+    SendReady("ready message");
+}
+
+void comp_sensor::OnRequest(const std::string &messagetype, std::vector<std::string> &msgFields,
+                            riaps::ports::PortBase *port) {
+    // Sync Request arrived, send response back
+    SendRequest("ResponseContent");
+    //riaps::ports::ResponsePort* repPort = GetResponsePortByName(PORT_REP_REQUEST);
+    //if (repPort != NULL) {
+    //    if (repPort->Send("ResponseContent")) {
+    //        //Success
+    //    }
+   // }
 }
 
 comp_sensor::~comp_sensor() {
@@ -29,10 +36,10 @@ comp_sensor::~comp_sensor() {
 }
 
 riaps::ComponentBase* create_component(_component_conf_j& config, riaps::Actor& actor){
-    return new comp_sensor(config, actor);
+    auto result = new comp_sensor(config, actor);
+    result->RegisterHandlers();
+    return result;
 }
-
-
 
 void destroy_component(riaps::ComponentBase* comp){
     delete comp;

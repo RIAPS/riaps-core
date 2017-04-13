@@ -3,7 +3,7 @@
 //
 
 #include <componentmodel/r_configuration.h>
-#include "componentmodel/r_portbase.h"
+#include <componentmodel/r_portbase.h>
 
 namespace riaps {
 
@@ -12,17 +12,43 @@ namespace riaps {
         PortBase::PortBase(PortTypes portType, component_port_config* config) {
             _port_type = portType;
             _config = config;
+            _port_socket = NULL;
         }
 
-        void PortBase::Send(zmsg_t *msg) const {
-            throw std::runtime_error("Send not implemented on this kind of port.");
+        bool PortBase::Send(zmsg_t** zmessage) const {
+            throw std::runtime_error("ZMQ message cannot be sent on this port port : " + GetPortBaseConfig()->portName);
+        }
+
+//        bool PortBase::Send(std::string& message) const {
+//            throw std::runtime_error("Send not implemented for this port : " + GetPortBaseConfig()->portName);
+//        }
+//
+//        bool PortBase::Send(std::vector<std::string>& fields) const{
+//            throw std::runtime_error("Send not implemented for this port : " + GetPortBaseConfig()->portName);
+//        }
+
+        bool PortBase::Send(std::string message) const{
+            zmsg_t* zmsg = zmsg_new();
+            zmsg_addstr(zmsg, message.c_str());
+
+            return Send(&zmsg);
+        }
+
+        bool PortBase::Send(std::vector<std::string>& fields) const {
+            zmsg_t* zmsg = zmsg_new();
+
+            for (auto it = fields.begin(); it!=fields.end(); it++){
+                zmsg_addstr(zmsg, it->c_str());
+            }
+
+            return Send(&zmsg);
         }
 
         const zsock_t *PortBase::GetSocket() const {
             return _port_socket;
         }
 
-        const component_port_config* PortBase::GetConfig() const {
+        const component_port_config* PortBase::GetPortBaseConfig() const {
             return _config;
         }
 
@@ -31,9 +57,33 @@ namespace riaps {
             return _port_type;
         }
 
-        const std::string& PortBase::GetPortName() const {
-            return _config->port_name;
+        const std::string PortBase::GetPortName() const {
+            return _config->portName;
         }
+
+        RequestPort* PortBase::AsRequestPort()  {
+            return NULL;
+        }
+
+        PublisherPort* PortBase::AsPublishPort()  {
+            return NULL;
+        }
+
+        ResponsePort * PortBase::AsResponsePort()  {
+            return NULL;
+        }
+
+        SubscriberPort * PortBase::AsSubscribePort()  {
+            return NULL;
+        }
+
+        CallBackTimer * PortBase::AsTimerPort()  {
+            return NULL;
+        }
+
+        //virtual PublishPort*  PortBase::AsPublishPort() const;
+        //virtual ResponsePort* PortBase::AsResponsePort() const;
+        //virtual SubscibePort* PortBase::AsSubscribePort() const;
         /*PortBase::PortBase(const ComponentBase* parentComponent) {
             port_socket = NULL;
             _parentComponent = parentComponent;

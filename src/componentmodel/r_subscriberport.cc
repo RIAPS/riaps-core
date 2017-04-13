@@ -2,7 +2,7 @@
 // Created by parallels on 9/6/16.
 //
 
-#include "componentmodel/r_subscriberport.h"
+#include <componentmodel/r_subscriberport.h>
 
 namespace riaps{
 
@@ -25,7 +25,7 @@ namespace riaps{
             int rc = zsock_connect(_port_socket, pub_endpoint.c_str());
 
             if (rc != 0) {
-                std::cout << "Subscriber '" + _config->port_name + "' couldn't connect to " + pub_endpoint
+                std::cout << "Subscriber '" + GetPortBaseConfig()->portName + "' couldn't connect to " + pub_endpoint
                           << std::endl;
                 return false;
             }
@@ -36,7 +36,7 @@ namespace riaps{
 
         void SubscriberPort::Init() {
 
-            _component_port_sub_j* current_config = (_component_port_sub_j*)_config;
+            _component_port_sub_j* current_config = (_component_port_sub_j*)GetConfig();
 
             auto results =
                     subscribe_to_service(_parent_component->GetActor()->GetApplicationName(),
@@ -44,14 +44,26 @@ namespace riaps{
                                          _parent_component->GetActor()->GetActorName(),
                                          Kind::SUB,
                                          (current_config->isLocal?Scope::LOCAL:Scope::GLOBAL),
-                                         _config->port_name, // Subscriber name
-                                         current_config->message_type);
+                                         current_config->portName, // Subscriber name
+                                         current_config->messageType);
 
             for (auto result : results) {
                 std::string endpoint = "tcp://" + result.host_name + ":" + std::to_string(result.port);
                 ConnectToPublihser(endpoint);
             }
         }
+
+        const _component_port_sub_j* SubscriberPort::GetConfig() const{
+            return (_component_port_sub_j*)GetPortBaseConfig();
+        }
+
+        SubscriberPort* SubscriberPort::AsSubscribePort() {
+            return this;
+        }
+
+        //bool SubscriberPort::Send(zmsg_t **zmessage) const {
+        //    throw std::runtime_error("Sending messages on Subscriber port is not allowed : " + GetPortBaseConfig()->portName);
+        //}
 
         /*std::unique_ptr<SubscriberPort> SubscriberPort::InitFromServiceDetails(service_details& target_service) {
             std::unique_ptr<SubscriberPort> result(new SubscriberPort());

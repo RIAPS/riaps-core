@@ -1,0 +1,23 @@
+{
+
+  "app_dir": "test_1_1",
+  "model_file": "model.riaps",
+  "components_so": [
+    "libtemperaturesensor.so",
+    "libcollector.so"
+  ],
+  "targets": [
+    {
+      "host": "192.168.1.120",
+      "actor": "ActorTest1p"
+    },
+    {
+      "host": "192.168.1.120",
+      "actor": "ActorTest1s"
+    }
+  ],
+  "target_bin_path": "/opt/riaps/armhf/bin/",
+  "target_lib_path": "/opt/riaps/armhf/lib/",
+  "username":"riaps",
+  "password":"riapspwd"
+}

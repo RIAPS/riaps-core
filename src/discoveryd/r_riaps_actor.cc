@@ -1,21 +1,27 @@
-#include "discoveryd/r_riaps_actor.h"
-#include "componentmodel/r_network_interfaces.h"
-#include "discoveryd/r_discoveryd_commands.h"
-#include "discoveryd/r_odht.h"
+#include <discoveryd/r_riaps_actor.h>
+//#include <componentmodel/delete_r_network_interfaces.h>
+#include <discoveryd/r_discoveryd_commands.h>
+#include <discoveryd/r_odht.h>
+#include <framework/rfw_configuration.h>
+#include <framework/rfw_network_interfaces.h>
+
 #include <vector>
 #include <map>
 
 #define REGULAR_MAINTAIN_PERIOD 3000 //msec
+
+//extern "C" std::string riaps::framework::Network::GetIPAddress(const std::string& ifacename);
 
 
 
 void
 riaps_actor (zsock_t *pipe, void *args)
 {
-    std::string mac_address = GetMacAddressStripped();
-    std::string host_address = GetIPAddress();
+    std::string mac_address = riaps::framework::Network::GetMacAddressStripped();
+    std::string host_address = riaps::framework::Network::GetIPAddress();
 
-    std::cout << "Discovery service is starting, network interface: " << std::endl
+
+    std::cout //<< "Discovery service is starting, network interface: " << std::endl
               << " * " << host_address << std::endl
               << " * " << mac_address  << std::endl;
 
@@ -38,7 +44,7 @@ riaps_actor (zsock_t *pipe, void *args)
     assert(dht_router_socket);
 
     // Response socket for incoming messages from RIAPS Components
-    zsock_t * riaps_socket = zsock_new_rep (DISCOVERY_SERVICE_IPC(mac_address));
+    zsock_t * riaps_socket = zsock_new_rep (riaps::framework::Configuration::GetDiscoveryServiceIpc().c_str());
     assert(riaps_socket);
 
     // Socket for OpenDHT communication.

@@ -25,6 +25,10 @@ namespace riaps {
             // Returns false, if the subscriber couldn't connect
             bool ConnectToPublihser(const std::string& pub_endpoint);
 
+            virtual SubscriberPort* AsSubscribePort() ;
+
+            virtual const _component_port_sub_j* GetConfig() const;
+
             //static std::unique_ptr<SubscriberPort> InitFromServiceDetails(service_details& target_service);
 
             //static void GetRemoteServiceAsync(subscriber_conf& config, std::string asyncendpoint);
@@ -35,6 +39,10 @@ namespace riaps {
         protected:
 
             const ComponentBase *_parent_component;
+
+        //private:
+
+            //virtual bool Send(zmsg_t** zmessage) const;
 
 
         };

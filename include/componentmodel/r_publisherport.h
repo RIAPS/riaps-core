@@ -21,24 +21,28 @@ namespace riaps {
 
        class PublisherPort : public PortBase {
        public:
+           using PortBase::Send;
 
            PublisherPort(const _component_port_pub_j &config, ComponentBase *parent_component);
 
            std::string GetEndpoint();
 
-           _component_port_pub_j* GetConfig();
+           virtual const _component_port_pub_j* GetConfig() const;
 
-           virtual void Send(zmsg_t *msg) const;
 
-           // virtual void SendMessage();
+           //virtual bool Send(std::string& message) const;
+           //virtual bool Send(std::vector<std::string>& fields) const;
+
+           virtual PublisherPort*  AsPublishPort() ;
 
            ~PublisherPort();
-
 
        protected:
            int _port;
            std::string _host;
            std::string _endpoint;
+
+           virtual bool Send(zmsg_t** zmessage) const;
        };
    }
 }

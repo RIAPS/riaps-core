@@ -2,7 +2,7 @@
 // Created by istvan on 9/30/16.
 //
 
-#include "componentmodel/r_requestport.h"
+#include <componentmodel/r_requestport.h>
 
 
 namespace riaps {
@@ -10,13 +10,21 @@ namespace riaps {
 
         RequestPort::RequestPort(const _component_port_req_j &config, const ComponentBase *component)
                 : PortBase(PortTypes::Request, (component_port_config*)(&config)),
-                    _parent_component(component) {
+                    _parent_component(component),
+                    _capnpReader(capnp::FlatArrayMessageReader(nullptr)){
+            _port_socket = zsock_new(ZMQ_REQ);
+            int timeout = 500;//msec
+            int lingerValue = 0;
+            int connectTimeout = 1000; //msec
+            zmq_setsockopt(_port_socket, ZMQ_SNDTIMEO, &timeout , sizeof(int));
+            zmq_setsockopt(_port_socket, ZMQ_LINGER, &lingerValue, sizeof(int));
 
+            _isConnected = false;
         }
 
         void RequestPort::Init() {
 
-            _component_port_req_j* current_config = (_component_port_req_j*)_config;
+            const _component_port_req_j* current_config = GetConfig();
 
             auto results =
                     subscribe_to_service(_parent_component->GetActor()->GetApplicationName(),
@@ -24,8 +32,8 @@ namespace riaps {
                                          _parent_component->GetActor()->GetActorName(),
                                          Kind::REQ,
                                          (current_config->isLocal?Scope::LOCAL:Scope::GLOBAL),
-                                         _config->port_name, // Subscriber name
-                                         current_config->message_type);
+                                         current_config->portName, // Subscriber name
+                                         current_config->messageType);
 
             for (auto result : results) {
                 std::string endpoint = "tcp://" + result.host_name + ":" + std::to_string(result.port);
@@ -37,22 +45,104 @@ namespace riaps {
             int rc = zsock_connect(_port_socket, rep_endpoint.c_str());
 
             if (rc != 0) {
-                std::cout << "Request '" + _config->port_name + "' couldn't connect to " + rep_endpoint
+                std::cout << "Request '" + GetConfig()->portName + "' couldn't connect to " + rep_endpoint
                           << std::endl;
                 return false;
             }
 
+            _isConnected = true;
             std::cout << "Request port connected to: " << rep_endpoint << std::endl;
             return true;
         }
 
-        // Before sending the publisher sets up the message type
-        void RequestPort::Send(zmsg_t *msg) const {
-            zmsg_pushstr(msg, ((_component_port_req_j*)_config)->message_type.c_str());
-
-            int rc = zmsg_send(&msg, _port_socket);
-            assert(rc == 0);
+        const _component_port_req_j* RequestPort::GetConfig() const{
+            return (_component_port_req_j*)GetPortBaseConfig();
         }
+
+        RequestPort* RequestPort::AsRequestPort() {
+            return this;
+        }
+
+//        bool RequestPort::Recv(std::string& messageType, riaps::MessageBase* message) {
+//            zmsg_t* msg = zmsg_recv((void*)GetSocket());
+//
+//            if (msg){
+//                char* msgType = zmsg_popstr(msg);
+//                messageType = msgType;
+//                if (msgType!=NULL){
+//                    zframe_t* bodyFrame = zmsg_pop(msg);
+//                    size_t size = zframe_size(bodyFrame);
+//                    byte* data = zframe_data(bodyFrame);
+//
+//                    auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
+//                   _capnpReader = capnp::FlatArrayMessageReader(capnp_data);
+//                    message->InitReader(&_capnpReader);
+//
+//                    zframe_destroy(&bodyFrame);
+//                    return true;
+//                }
+//                return false;
+//            }
+//            zmsg_destroy(&msg);
+//
+//            return false;
+//        }
+
+
+        bool RequestPort::Recv(capnp::FlatArrayMessageReader** messageReader) {
+            zmsg_t* msg = zmsg_recv((void*)GetSocket());
+
+            if (msg){
+                //char* msgType = zmsg_popstr(msg);
+                //messageType = msgType;
+                //if (msgType!=NULL){
+                    zframe_t* bodyFrame = zmsg_pop(msg);
+                    size_t size = zframe_size(bodyFrame);
+                    byte* data = zframe_data(bodyFrame);
+
+                    auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
+                    _capnpReader = capnp::FlatArrayMessageReader(capnp_data);
+                    *messageReader = &_capnpReader;
+
+                    zframe_destroy(&bodyFrame);
+                    return true;
+                //}
+                //return false;
+            }
+            zmsg_destroy(&msg);
+
+            return false;
+        }
+
+        // Before sending the publisher sets up the message type
+        bool RequestPort::Send(zmsg_t **msg) const {
+            if (_port_socket == NULL || !_isConnected){
+                zmsg_destroy(msg);
+                return false;
+            }
+            //std::string messageType = GetConfig()->req_type;
+            //zmsg_pushstr(*msg, messageType.c_str());
+
+            int rc = zmsg_send(msg, _port_socket);
+            return rc==0;
+        }
+
+//        bool RequestPort::Send(std::string& message) const{
+//            zmsg_t* zmsg = zmsg_new();
+//            zmsg_addstr(zmsg, message.c_str());
+//
+//            return Send(&zmsg);
+//        }
+//
+//        bool RequestPort::Send(std::vector<std::string>& fields) const{
+//            zmsg_t* zmsg = zmsg_new();
+//
+//            for (auto it = fields.begin(); it!=fields.end(); it++){
+//                zmsg_addstr(zmsg, it->c_str());
+//            }
+//
+//            return Send(&zmsg);
+//        }
     }
 }
 

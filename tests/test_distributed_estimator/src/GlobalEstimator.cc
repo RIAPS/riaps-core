@@ -5,20 +5,30 @@
 
 #include <GlobalEstimator.h>
 
-comp_globalestimator::comp_globalestimator(_component_conf_j &config, riaps::Actor &actor):ComponentBase(config, actor) {
-
+GlobalEstimator::GlobalEstimator(_component_conf_j &config, riaps::Actor &actor):GlobalEstimatorBase(config, actor) {
+    //PrintParameters();
 }
 
-void comp_globalestimator::OnMessageArrived(const std::string& messagetype, zmsg_t* msg_body, const riaps::ports::PortBase* port) {
-
+void GlobalEstimator::OnEstimate(const std::string& messagetype,
+                        std::vector<std::string>& msgFields,
+                        riaps::ports::PortBase* port){
+    PrintMessageOnPort(port);
 }
 
-comp_globalestimator::~comp_globalestimator() {
+void GlobalEstimator::OnWakeup(const std::string& messagetype,
+                      std::vector<std::string>& msgFields,
+                      riaps::ports::PortBase* port){
+    PrintMessageOnPort(port);
+}
+
+GlobalEstimator::~GlobalEstimator() {
 
 }
 
 riaps::ComponentBase* create_component(_component_conf_j& config, riaps::Actor& actor){
-    return new comp_globalestimator(config, actor);
+    auto result = new GlobalEstimator(config, actor);
+    result->RegisterHandlers();
+    return result;
 }
 
 void destroy_component(riaps::ComponentBase* comp){
