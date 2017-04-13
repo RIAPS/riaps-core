@@ -47,7 +47,7 @@ if (BUILD_TESTS)
     include(CTest)
     enable_testing()
     # Tests
-    #add_subdirectory(tests/test_pubsub)
+    add_subdirectory(tests/testPubSub/test_1_1/test_1_1)
     #add_subdirectory(tests/test_getservice_async)
     #add_subdirectory(tests/test_pubsub_reqrep)
     #add_subdirectory(tests/test_distributed_estimator)

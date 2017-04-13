@@ -1,14 +1,16 @@
 include_directories(include)
 
-add_library(test11collector SHARED include/messages/testmessages.capnp.c++
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_HOME_DIRECTORY}/bin/test_1_1)
+
+add_library(collector SHARED include/messages/testmessages.capnp.c++
                                    src/Collector.cc
                                    src/base/CollectorBase.cc)
-add_library(test11temperaturesensor SHARED include/messages/testmessages.capnp.c++
+add_library(temperaturesensor SHARED include/messages/testmessages.capnp.c++
                                            src/TemperatureSensor.cc
                                            src/base/TemperatureSensorBase.cc)
 
-target_link_libraries(test11collector czmq riaps dl capnp kj )
-target_link_libraries(test11collector czmq riaps )
+target_link_libraries(collector czmq riaps dl capnp kj )
+target_link_libraries(temperaturesensor czmq riaps dl capnp kj)
 
 #cmake_minimum_required(VERSION 3.0.0)
 #project(riaps_core VERSION 0.1.0)
