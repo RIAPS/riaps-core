@@ -2,8 +2,8 @@ app test_1_1 {
     message SensorValue;
 
     component TemperatureSensor(logfile="") {
-      timer clock 1000; 							// Periodic timer trigger to trigger sensor every 1 sec
-      pub sendTemperature : SensorValue ;			// Publish port for SensorReady messages
+      timer clock 1000; 						// Periodic timer trigger to trigger sensor every 1 sec
+      pub temperature : SensorValue ;			// Publish port for SensorReady messages
     }
 
     // Collects data from temperature sensors

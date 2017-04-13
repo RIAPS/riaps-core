@@ -3,7 +3,9 @@ include_directories(include)
 add_library(test11collector SHARED include/messages/testmessages.capnp.c++
                                    src/Collector.cc
                                    src/base/CollectorBase.cc)
-add_library(test11temperaturesensor SHARED include/messages/testmessages.capnp.c++)
+add_library(test11temperaturesensor SHARED include/messages/testmessages.capnp.c++
+                                           src/TemperatureSensor.cc
+                                           src/base/TemperatureSensorBase.cc)
 
 target_link_libraries(test11collector czmq riaps dl capnp kj )
 target_link_libraries(test11collector czmq riaps )
