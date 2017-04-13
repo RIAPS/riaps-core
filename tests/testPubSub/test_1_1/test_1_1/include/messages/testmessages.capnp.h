@@ -30,7 +30,7 @@ struct SensorValue {
   class Pipeline;
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(a66ef26ce705251a, 0, 1)
+    CAPNP_DECLARE_STRUCT_HEADER(a66ef26ce705251a, 1, 0)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
     #endif  // !CAPNP_LITE
@@ -56,8 +56,7 @@ public:
   }
 #endif  // !CAPNP_LITE
 
-  inline bool hasMsg() const;
-  inline  ::capnp::Text::Reader getMsg() const;
+  inline  ::int64_t getMsg() const;
 
 private:
   ::capnp::_::StructReader _reader;
@@ -87,12 +86,8 @@ public:
   inline ::kj::StringTree toString() const { return asReader().toString(); }
 #endif  // !CAPNP_LITE
 
-  inline bool hasMsg();
-  inline  ::capnp::Text::Builder getMsg();
-  inline void setMsg( ::capnp::Text::Reader value);
-  inline  ::capnp::Text::Builder initMsg(unsigned int size);
-  inline void adoptMsg(::capnp::Orphan< ::capnp::Text>&& value);
-  inline ::capnp::Orphan< ::capnp::Text> disownMsg();
+  inline  ::int64_t getMsg();
+  inline void setMsg( ::int64_t value);
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -122,36 +117,18 @@ private:
 
 // =======================================================================================
 
-inline bool SensorValue::Reader::hasMsg() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+inline  ::int64_t SensorValue::Reader::getMsg() const {
+  return _reader.getDataField< ::int64_t>(
+      0 * ::capnp::ELEMENTS);
 }
-inline bool SensorValue::Builder::hasMsg() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+
+inline  ::int64_t SensorValue::Builder::getMsg() {
+  return _builder.getDataField< ::int64_t>(
+      0 * ::capnp::ELEMENTS);
 }
-inline  ::capnp::Text::Reader SensorValue::Reader::getMsg() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
-}
-inline  ::capnp::Text::Builder SensorValue::Builder::getMsg() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
-}
-inline void SensorValue::Builder::setMsg( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
-}
-inline  ::capnp::Text::Builder SensorValue::Builder::initMsg(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS), size);
-}
-inline void SensorValue::Builder::adoptMsg(
-    ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
-}
-inline ::capnp::Orphan< ::capnp::Text> SensorValue::Builder::disownMsg() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+inline void SensorValue::Builder::setMsg( ::int64_t value) {
+  _builder.setDataField< ::int64_t>(
+      0 * ::capnp::ELEMENTS, value);
 }
 
 }  // namespace
