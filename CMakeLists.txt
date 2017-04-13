@@ -8,19 +8,21 @@ set(riaps_prefix "/opt/riaps/" CACHE STRING "the riaps prefix")
 
 
 
+
+
 #Set the platform
 if (${arch} STREQUAL "armhf")
-    set(TOOLCHAIN_PREFIX arm-linux-gnueabihf)
-    set(CMAKE_C_COMPILER ${TOOLCHAIN_PREFIX}-gcc)
-    set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}-g++)
-    set(CMAKE_FIND_ROOT_PATH /usr/${TOOLCHAIN_PREFIX})
-    set (CMAKE_CXX_FLAGS "-std=c++11")
-    set (CMAKE_C_FLAGS "-std=c99")
+ set(TOOLCHAIN_PREFIX arm-linux-gnueabihf)
+ set(CMAKE_C_COMPILER ${TOOLCHAIN_PREFIX}-gcc)
+ set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}-g++)
+ set(CMAKE_FIND_ROOT_PATH /usr/${TOOLCHAIN_PREFIX})
+ set (CMAKE_CXX_FLAGS "-std=c++11")
+ set (CMAKE_C_FLAGS "-std=c99")
 else()
-    set(CMAKE_C_COMPILER gcc-5)
-    set(CMAKE_CXX_COMPILER g++-5)
-    set (CMAKE_CXX_FLAGS "-std=c++11 -D_GLIBCXX_USE_CXX11_ABI=0")
-    set (CMAKE_C_FLAGS "-std=c99")
+ set(CMAKE_C_COMPILER gcc-5)
+ set(CMAKE_CXX_COMPILER g++-5)
+ set (CMAKE_CXX_FLAGS "-std=c++11 -D_GLIBCXX_USE_CXX11_ABI=0")
+ set (CMAKE_C_FLAGS "-std=c99")
 endif()
 
 
