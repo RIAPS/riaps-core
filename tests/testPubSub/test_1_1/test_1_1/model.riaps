@@ -1,5 +1,3 @@
-// RIAPS Sample
-
 app test_1_1 {
     message SensorValue;
 

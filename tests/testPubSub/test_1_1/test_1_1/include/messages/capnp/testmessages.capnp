@@ -4,5 +4,5 @@ using Cxx = import "/capnp/c++.capnp";
 $Cxx.namespace("testing::messages");
 
 struct SensorValue {
-   msg @0 : Text;
+   msg @0 : Int64;
  }

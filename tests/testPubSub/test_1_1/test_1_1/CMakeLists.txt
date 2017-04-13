@@ -1,10 +1,12 @@
 include_directories(include)
 
-add_library(collector SHARED src/collector.cc)
-add_library(temperaturesensor SHARED src/temperaturesensor.cc)
+add_library(test11collector SHARED include/messages/testmessages.capnp.c++
+                                   src/Collector.cc
+                                   src/base/CollectorBase.cc)
+add_library(test11temperaturesensor SHARED include/messages/testmessages.capnp.c++)
 
-target_link_libraries(collector czmq riaps dl capnp kj )
-target_link_libraries(temperaturesensor czmq riaps )
+target_link_libraries(test11collector czmq riaps dl capnp kj )
+target_link_libraries(test11collector czmq riaps )
 
 #cmake_minimum_required(VERSION 3.0.0)
 #project(riaps_core VERSION 0.1.0)
