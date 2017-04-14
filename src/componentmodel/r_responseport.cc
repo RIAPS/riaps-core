@@ -72,6 +72,10 @@ namespace riaps{
             return this;
         }
 
+        ResponsePort::~ResponsePort() noexcept {
+
+        }
+
     }
 }
 

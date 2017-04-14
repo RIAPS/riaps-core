@@ -25,16 +25,8 @@ namespace riaps {
             RequestPort(const _component_port_req_j &config, const ComponentBase *component);
             virtual void Init();
 
-            //static std::unique_ptr<RequestPort> InitFromConfig(request_conf& target_service);
-
             // Returns false, if the request port couldn't connect
             bool ConnectToResponse(const std::string& rep_endpoint);
-
-
-            //virtual bool Send(std::string& message) const;
-            //virtual bool Send(std::vector<std::string>& fields) const;
-
-            //virtual bool Recv(std::string& messageType, riaps::MessageBase* message);
 
             virtual bool Recv(capnp::FlatArrayMessageReader** messageReader);
 
@@ -42,15 +34,7 @@ namespace riaps {
 
             virtual const _component_port_req_j* GetConfig() const;
 
-
-
-            // zmsg_t* SendMessage(zmsg_t** msg);
-
-            //static std::unique_ptr<RequestPort> InitFromServiceDetails(service_details& target_service);
-
-            //static void GetRemoteServiceAsync(request_conf& config, std::string asyncendpoint);
-
-            //virtual ~RequestPort();
+            ~RequestPort() noexcept ;
         protected:
             const ComponentBase *_parent_component;
             bool _isConnected;

@@ -65,7 +65,7 @@ namespace ports {
         virtual CallBackTimer*  AsTimerPort()      ;
 
 
-        ~PortBase();
+        virtual ~PortBase() noexcept ;
 
     protected:
 

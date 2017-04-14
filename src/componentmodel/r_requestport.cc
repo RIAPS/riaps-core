@@ -22,6 +22,8 @@ namespace riaps {
             _isConnected = false;
         }
 
+
+
         void RequestPort::Init() {
 
             const _component_port_req_j* current_config = GetConfig();
@@ -112,6 +114,10 @@ namespace riaps {
             zmsg_destroy(&msg);
 
             return false;
+        }
+
+        RequestPort::~RequestPort() noexcept {
+
         }
 
         // Before sending the publisher sets up the message type

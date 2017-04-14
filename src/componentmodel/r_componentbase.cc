@@ -189,9 +189,10 @@ namespace riaps{
         }
 
         // Stop timers
-        //for (auto timer : comp->GetPeriodicTimers()){
-         //   timer->stop();
-        //}
+        for (auto& config : comp->GetConfig().component_ports.tims){
+            std::cout << "Stop timer: " << config.portName << std::endl;
+            comp->_ports[config.portName]->AsTimerPort()->stop();
+        }
 
         zsock_destroy(&timerport);
         //zsock_destroy(&asyncport);
@@ -410,12 +411,14 @@ namespace riaps{
     }
 
     ComponentBase::~ComponentBase() {
-
+        // std::cout << "ComponentBase destructor" << std::endl;
 
         zmsg_t* termmsg = zmsg_new();
 
         zmsg_addstr(termmsg,"$TERM");
         zactor_send(_zactor_component, &termmsg);
+
+        std::cout << "$TERM sent to the component zactor" << std::endl;
 
         zclock_sleep(1000);
 
@@ -423,7 +426,7 @@ namespace riaps{
         //zsock_destroy(&zsock_component);
         //zsock_destroy(&_zsock_timer);
         zactor_destroy(&_zactor_component);
-
+        std::cout << "zactor destroyed" << std::endl;
     }
 
 }

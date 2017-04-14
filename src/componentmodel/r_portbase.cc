@@ -16,16 +16,9 @@ namespace riaps {
         }
 
         bool PortBase::Send(zmsg_t** zmessage) const {
-            throw std::runtime_error("ZMQ message cannot be sent on this port port : " + GetPortBaseConfig()->portName);
+            return false;
+            //throw std::runtime_error("ZMQ message cannot be sent on this port port : " + GetPortBaseConfig()->portName);
         }
-
-//        bool PortBase::Send(std::string& message) const {
-//            throw std::runtime_error("Send not implemented for this port : " + GetPortBaseConfig()->portName);
-//        }
-//
-//        bool PortBase::Send(std::vector<std::string>& fields) const{
-//            throw std::runtime_error("Send not implemented for this port : " + GetPortBaseConfig()->portName);
-//        }
 
         bool PortBase::Send(std::string message) const{
             zmsg_t* zmsg = zmsg_new();
@@ -81,45 +74,9 @@ namespace riaps {
             return NULL;
         }
 
-        //virtual PublishPort*  PortBase::AsPublishPort() const;
-        //virtual ResponsePort* PortBase::AsResponsePort() const;
-        //virtual SubscibePort* PortBase::AsSubscribePort() const;
-        /*PortBase::PortBase(const ComponentBase* parentComponent) {
-            port_socket = NULL;
-            _parentComponent = parentComponent;
-        }*/
-
-        /*PortBase::PortBase() {
-
-        }
-
-
-
-        std::string PortBase::GetInterfaceAddress(std::string ifacename){
-            ziflist_t *iflist = ziflist_new ();
-            assert (iflist);
-            size_t items = ziflist_size (iflist);
-
-            const char *name = ziflist_first (iflist);
-            std::string result = "";
-
-            while (name && result == "") {
-                std::string namestr(name);
-                if (namestr == ifacename){
-                    result = ziflist_address (iflist);
-                }
-                name = ziflist_next (iflist);
-            }
-
-            return result;
-        }
-
-    */
-
         PortBase::~PortBase() {
-            std::cout << "Destroy called " << std::endl;
             if (_port_socket) {
-                std::cout << "Destroy portbase socket : " << _port_socket << std::endl;
+                std::cout << "Destroy port socket : " << GetPortName() << std::endl;
                 zsock_destroy(&_port_socket);
             }
         }

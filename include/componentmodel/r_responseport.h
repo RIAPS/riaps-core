@@ -35,7 +35,7 @@ namespace riaps {
 
             virtual ResponsePort* AsResponsePort() ;
 
-            ~ResponsePort();
+            ~ResponsePort() noexcept ;
 
 
         protected:
