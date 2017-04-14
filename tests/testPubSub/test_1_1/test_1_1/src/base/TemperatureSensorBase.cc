@@ -16,6 +16,14 @@ namespace testing {
             return SendMessageOnPort(messageBuilder, PORT_PUB_TEMPERATURE);
         }
 
+        void TemperatureSensorBase::DispatchMessage(capnp::FlatArrayMessageReader *capnpreader,
+                                                    riaps::ports::PortBase *port) {
+            auto portName = port->GetPortName();
+            if (portName == PORT_TIMER_CLOCK) {
+                OnClock(port);
+            }
+        }
+
         TemperatureSensorBase::~TemperatureSensorBase() {
 
         }
