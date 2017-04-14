@@ -16,7 +16,7 @@
       "actor": "ActorTest1s"
     }
   ],
-  "target_path": "riaps_apps",
+  "riaps_apps_path": "riaps_apps",
   "username":"riaps",
   "password":"riapspwd"
 }
