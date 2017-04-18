@@ -1,0 +1,14 @@
+
+app TimerTest {
+    message m;
+
+	component Generator {
+      timer clock 1;
+    }
+    
+    actor GActor {
+       {
+            g : Generator;
+       }
+    }
+}
