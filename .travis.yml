@@ -4,25 +4,19 @@ addons:
   apt:
     sources:
     - ubuntu-toolchain-r-test
-    packages:
-    - capnproto
 env:
   global:
   - secure: dItmuutoyf9tBY7nyiK2qTb0od72AataLLuFoBqNTYmcFDg/xNuwHvwAAcu1jG4a9SSQS3jxcTRGn3J5hmRVRprpoJOeao8LRyXd3s1xBHKRjoutqKXAJSxJyJgZZED+qrYBok0s1spoQf0uGnwruJgXuZZhPmEAcfPowrgz0SPHGmNT4EbcZ1rJoZKi6wxmYNvgeaI52++zA7XRH6Vfyw3cGDyAsvD/02hLDhg0PCu0Y3eHLYCGTpBbb6MoieCNiDj43UPdxi7x95wr4hhseu4ObLFDLSyZbFjYfTQygkas4Xgg7X7myGwF3kG3YT1ZWNSgP1ZSk2MBXdRVfvRy13EMscWuCAMFSBrwS+6iRsPys9NAjj2eX9PzlBA4VVse5VBx7FblJ3eVE8LljUBZjWj4oYh078GIZ6I7DljnJk6queY0PbKOodEfZzoXa1QC+NswawpU6U85NwYjnet3FUVALJ2GAUbwkR8Vjfk+jzw6/7IyS2tyBhfQdhCuakJJw/bgu7ny05yuLBZy0m1rIrQzCQHxxzNvtIF9vXoHvqdjF5UcSwwwpzojYdUY/rkVhtGkcFl4Q3+MIbyOfK4N12CtoOlwT82T3F/GFdGeWY1JGTwJvLSqBN0HWBmJqFajhL3ceGczcmQDiB+ZO5DUrl4D7l8tXWMaJyM2Y7aOsFw=
-  matrix:
-  - arch=amd64
-  - arch=armhf
 before_script:
+- source version.sh
 - wget https://github.com/gruntwork-io/fetch/releases/download/v0.1.1/fetch_linux_amd64
 - source version.sh
 - chmod +x fetch_linux_amd64
-- ./fetch_linux_amd64 --repo="https://github.com/RIAPS/riaps-externals/" --tag=$externalsversion --release-asset="riaps-externals-armhf.deb" .
 - ./fetch_linux_amd64 --repo="https://github.com/RIAPS/riaps-externals/" --tag=$externalsversion --release-asset="riaps-externals-amd64.deb" .
-- sudo dpkg -i riaps-externals-armhf.deb
 - sudo dpkg -i riaps-externals-amd64.deb
 - sudo add-apt-repository 'deb http://fr.archive.ubuntu.com/ubuntu/ wily main'
 - sudo apt-get update
-- sudo apt-get install g++-5-arm-linux-gnueabihf g++-5
+- sudo apt-get install g++-5-arm-linux-gnueabihf g++-5 fakeroot
 - sudo rm -f /usr/bin/arm-linux-gnueabihf-gcc
 - sudo rm -f /usr/bin/arm-linux-gnueabihf-g++
 - sudo ln -s /usr/bin/arm-linux-gnueabihf-gcc-5 /usr/bin/arm-linux-gnueabihf-gcc
@@ -32,19 +26,17 @@ before_script:
 - sudo ln -s /usr/bin/gcc-5 /usr/bin/gcc
 - sudo ln -s /usr/bin/g++-5 /usr/bin/g++
 script:
-- mkdir build-$arch
 - g++-5 -v
-- cd build-$arch
-- cmake -Darch=$arch  ..
-- PATH=/opt/riaps/amd64/bin:$PATH make VERBOSE=1
-- make package
-- mv riaps_core_0.5.0.deb riapscore-$arch.deb
+- chmod +x build.sh package.sh
+- ./build.sh &&  ./package.sh
 deploy:
   provider: releases
   overwrite: true
   api_key:
     secure: eKL5j2VunlQ74uiHzFW191CTsFFOPbcQDEdaQIVYtmakRht/0rBB1rQxpYzPhYQDRZ17vqN35N/giy6WEL8phyUbiM7k7fByQTe7isrCRMuAWQj5eH3rzhq9bvyqMQWTBFAZUSq2c7BGgfHr3c9lxHCKCMd4hmbAc3XTpiLbOmkfOYUcBrCXM2uY/MHu3Zt7d/JOPeAyBeLn1dShr3YmmQ9wSkw/3KxKEsFP8wTj8crK8NX+IkpE6N0d9gS6lIcxLrZ7qHJbNiDpeUDnaZxquM9fPEI9PIaZw9J/uZo9wkycB/2dB1a/NTVS9AwwaKsfg22YDSlwKBKjFHM0K5kFpN7Lhu17KQqfglY0Bguiyw4MdMcj7MeBaKkx69961ig2lhBT0t8jnY8KpjsHAXZaMKWN/Jyqv0+EwpLPNjmFVFqT7qtIXfgrmpJPQBaI2swHbVkRA0gypl/s9zSOIqtvz93guSmZ5anWEh6Ik9jX/ESNWHxaSnHiUYYLSNJe4HqffHmG9uXDW9ITk178DbsjvI2MudzSfLNUD72DJYgMw3M78vASV0XDenqBuWo28yJ7n2L2TbpUpeTvfxlslXIVFrwtPPe9Chf5gqoe6BsrjyfGQrXBTInwb/++jWfrG/vztuW4m2E8qUYipyBe4J5fsnJpopjgC7/QZletikXngMI=
-  file: riapscore-$arch.deb
+  file:
+   - package/riaps-externals-amd64.deb 
+   - package/riaps-externals-armhf.deb
   skip_cleanup: true
   on:
     tags: true
