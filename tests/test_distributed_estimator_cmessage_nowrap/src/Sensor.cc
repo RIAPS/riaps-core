@@ -14,8 +14,6 @@ namespace distributedestimator {
         }
 
         void comp_sensor::OnClock(riaps::ports::PortBase *port) {
-            //PrintMessageOnPort(port);
-
             int64_t time = zclock_mono();
             std::cout << "Sensor::OnClock(): " << time << std::endl;
 

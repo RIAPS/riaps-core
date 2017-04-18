@@ -15,7 +15,9 @@ def setup_suite():
     riaps_app_path = os.path.join(userdir, runtime.get_active_config("riaps_apps_path"))
     test_app_path = os.path.join(riaps_app_path, runtime.get_active_config('app_dir'))
 
-    env = {"PATH": "/usr/local/bin/:$PATH",
+    start_actor_path = "/opt/riaps/armhf/bin/"
+
+    env = {"PATH": "/usr/local/bin/:" + start_actor_path + ":$PATH",
            "RIAPSHOME": "/usr/local/riaps",
            "RIAPSAPPS": "$HOME/riaps_apps",
            "LD_LIBRARY_PATH": "/opt/riaps/armhf/lib:"+test_app_path
@@ -113,24 +115,27 @@ def setup_suite():
             'executable': model_path,
             'install_path': test_app_path,
             'hostname': target["host"],
-            'start_command': os.path.join(riaps_app_path, "start_actor"),
-            'args': [runtime.get_active_config('app_dir'),
-                     runtime.get_active_config('app_dir') + '.json',
-                     target["actor"]],
+            #'start_command': os.path.join(start_actor_path, "start_actor"),
+            'start_command': "start_actor",
+
+            #'args': [os.path.join(test_app_path, runtime.get_active_config('app_dir') + '.json'),
+            #         target["actor"]],
             'env': env,
-            'terminate_only': True,
-            'pid_keyword': model_path,
+            #'terminate_only': False,
+            #'pid_keyword': model_path,
             'post_install_cmds': [start_riaps_lang]
         })
         runtime.set_deployer(target["actor"], model_deployer)
 
         # Add test cases
-        testcases = ["pubfirst_"+target["actor"], "subfirst_"+target["actor"]]
+        #testcases = ["pubfirst_"+target["actor"], "subfirst_"+target["actor"]]
+        testcases = ["pubfirst_"+target["actor"]]
+
 
         for testcase in testcases:
             model_deployer.install(testcase, {
-                'args': [runtime.get_active_config('app_dir') + '.json',
-                         target["actor"],
+                'args': [os.path.join(test_app_path, runtime.get_active_config('app_dir') + '.json'),
+                          target["actor"],
                          '--logfile="' + testcase + '.log"']})
 
 
@@ -148,13 +153,13 @@ def setup_suite():
                 'executable': localPath,
                 'install_path': test_app_path,
                 'hostname': target["host"],
-                'start_command': "start_actor",  #os.path.join(target_path, "start_actor"),
-                'args': [runtime.get_active_config('app_dir'),
-                         runtime.get_active_config('app_dir') + '.json',
-                         target["actor"]],
+                #'start_command': "start_actor",  #os.path.join(target_path, "start_actor"),
+                #'args': [runtime.get_active_config('app_dir'),
+                #         runtime.get_active_config('app_dir') + '.json',
+                #         target["actor"]],
                 'env': env,
-                'terminate_only': True,
-                'pid_keyword': component,
+                #'terminate_only': True,
+                #'pid_keyword': component,
             })
             runtime.set_deployer(component, component_deployer)
             component_deployer.install(component)

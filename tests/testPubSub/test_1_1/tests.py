@@ -9,15 +9,23 @@ def test_pub_send_pub_first():
 
     print("Start test: pub_send_pub_first")
 
+    username = runtime.get_active_config("username")
+    userdir = os.path.join("/home", username)
+    riaps_app_path = os.path.join(userdir, runtime.get_active_config("riaps_apps_path"))
+    test_app_path = os.path.join(riaps_app_path, runtime.get_active_config('app_dir'))
+
     pubActorName = "ActorTest1p"
     subActorName = "ActorTest1s"
 
     testId = "pubfirst_" + pubActorName
     deployer = runtime.get_deployer(pubActorName)
-    deployer.start(testId, configs={"sync": False,
-                                    'args': [runtime.get_active_config('app_dir') + '.json',
-                                             pubActorName,
-                                             '--logfile="' + testId + '.log"']})
+    deployer.start(testId, configs={'sync': False,
+                                     'args': [os.path.join(test_app_path, runtime.get_active_config('app_dir') + '.json'),
+                                              pubActorName,
+                                              '--logfile="' + testId + '.log"',
+                                              '> /dev/null']})
+
+
 
     # start test, publisher comes first
     #for target in runtime.get_active_config("targets"):
@@ -27,12 +35,12 @@ def test_pub_send_pub_first():
 
     sleep(2)
 
-    testId = "pubfirst_" + subActorName
-    deployer = runtime.get_deployer(subActorName)
-    deployer.start(testId, configs={"sync": False,
-                                    'args': [runtime.get_active_config('app_dir') + '.json',
-                                             subActorName,
-                                             '--logfile="' + testId + '.log"']})
+    #testId = "pubfirst_" + subActorName
+    #deployer = runtime.get_deployer(subActorName)
+    #deployer.start(testId, configs={"sync": False,
+    #                                'args': [os.path.join(test_app_path, runtime.get_active_config('app_dir') + '.json'),
+    #                                         subActorName,
+    #                                         '--logfile="' + testId + '.log"']})
 
 
     # start subscriber
@@ -44,7 +52,12 @@ def test_pub_send_pub_first():
     sleep(30)
 
 
-def test_pub_send_sub_first():
+def tqest_pub_send_sub_first():
+
+    username = runtime.get_active_config("username")
+    userdir = os.path.join("/home", username)
+    riaps_app_path = os.path.join(userdir, runtime.get_active_config("riaps_apps_path"))
+    test_app_path = os.path.join(riaps_app_path, runtime.get_active_config('app_dir'))
 
     pubActorName = "ActorTest1p"
     subActorName = "ActorTest1s"
@@ -57,8 +70,7 @@ def test_pub_send_sub_first():
     testId = "subfirst_" + subActorName
     deployer = runtime.get_deployer(subActorName)
     deployer.start(testId, configs={"sync": False,
-                                    'args': [runtime.get_active_config('app_dir'),
-                                             runtime.get_active_config('app_dir') + '.json',
+                                    'args': [os.path.join(test_app_path, runtime.get_active_config('app_dir') + '.json'),
                                              subActorName,
                                              '--logfile="' + testId + '.log"']})
 
@@ -67,13 +79,12 @@ def test_pub_send_sub_first():
 
 
     # start publisher
-    testId = "subfirst_" + pubActorName
-    deployer = runtime.get_deployer(pubActorName)
-    deployer.start(testId, configs={"sync": False,
-                                    'args': [runtime.get_active_config('app_dir'),
-                                             runtime.get_active_config('app_dir') + '.json',
-                                             pubActorName,
-                                             '--logfile="' + testId + '.log"']})
+    #testId = "subfirst_" + pubActorName
+    #deployer = runtime.get_deployer(pubActorName)
+    #deployer.start(testId, configs={"sync": False,
+    #                                'args': [os.path.join(test_app_path, runtime.get_active_config('app_dir') + '.json'),
+    #                                         pubActorName,
+    #                                         '--logfile="' + testId + '.log"']})
 
 
     #for target in runtime.get_active_config("targets"):
@@ -105,7 +116,7 @@ def validate_pub_send_pub_first():
 
     assert "Received messages: 10" in sub_logs, "Subscriber didn't get 10 messages"
 
-def validate_pub_send_sub_first():
+def vqalidate_pub_send_sub_first():
     print("Validate, pubsub 1:1 sub first")
 
     pubActorName = "ActorTest1p"

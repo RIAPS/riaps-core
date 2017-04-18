@@ -20,6 +20,7 @@
 #include <capnp/serialize.h>
 
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <memory>
 #include <queue>

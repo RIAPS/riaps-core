@@ -81,7 +81,7 @@
                 "clts":{},
                 "inss":{},
                 "pubs":{
-                    "sendTemperature":{
+                    "temperature":{
                         "type":"SensorValue"
                     }
                 },

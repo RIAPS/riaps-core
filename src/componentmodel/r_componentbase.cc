@@ -11,8 +11,9 @@
 namespace riaps{
 
     void component_actor(zsock_t* pipe, void* args){
-        ComponentBase* comp = (ComponentBase*)args;
 
+
+        ComponentBase* comp = (ComponentBase*)args;
         zsock_t* timerport = zsock_new_pull(comp->GetTimerChannel().c_str());
         assert(timerport);
 
@@ -187,6 +188,7 @@ namespace riaps{
                 // just poll timeout
             }
         }
+
 
         // Stop timers
         for (auto& config : comp->GetConfig().component_ports.tims){

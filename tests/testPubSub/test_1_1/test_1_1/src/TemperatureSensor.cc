@@ -10,6 +10,9 @@ namespace testing {
     namespace components{
         TemperatureSensor::TemperatureSensor(_component_conf_j &config, riaps::Actor &actor)
                 : TemperatureSensorBase(config, actor)  {
+
+            //PrintParameters();
+
             if ((GetConfig().component_parameters).GetParam(LOGFILEPATH)!=NULL){
                 std::string logfile = GetConfig().component_parameters.GetParam(LOGFILEPATH)->GetValueAsString();
                 _logfilePath = "/tmp/" + logfile;
@@ -18,22 +21,35 @@ namespace testing {
                 std::cout << "Logfile parameter is not passed.";
             }
 
+            _messageCounter = 0;
+
             _logStream.open(_logfilePath, std::fstream::out);
+            _logStream << "Logfile opened" << std::endl;
         }
 
 
 
         void TemperatureSensor::OnClock(riaps::ports::PortBase *port) {
+            _logStream.write("Lofasz",5);
+            _logStream << "OnClock " << std::endl;
             capnp::MallocMessageBuilder messageBuilder;
             auto msgSensorReady = messageBuilder.initRoot<messages::SensorValue>();
             msgSensorReady.setMsg(_messageCounter);
 
-            SendTemperature(messageBuilder, msgSensorReady);
-            _logStream << "Sent messages: " << _messageCounter++ << std::endl;
+            if (_messageCounter<10) {
+                SendTemperature(messageBuilder, msgSensorReady);
+                std::cout << "Sent messages: " << _messageCounter << std::endl;
+                _logStream << "Sent messages: " << _messageCounter++ << std::endl;
+                _logStream << std::flush;
+            } else if(_logStream.is_open()) {
+                _logStream.close();
+            }
         }
 
         TemperatureSensor::~TemperatureSensor() {
-            _logStream.close();
+            if(_logStream.is_open()) {
+                _logStream.close();
+            }
         }
     }
 }
