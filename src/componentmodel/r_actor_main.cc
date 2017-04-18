@@ -5,12 +5,18 @@
 #include "componentmodel/r_actor_main.h"
 #include <regex>
 
+#include <sched.h>
+
 int main(int argc, char* argv[]) {
 
     // Logger experiment
     //zsock_t* logger_socket = initLogger();
     //sendLogMessage(logger_socket, "Actor started...");
+    sched_param x;
+    x.__sched_priority = 99;
+    auto ret = sched_setscheduler(0, SCHED_FIFO, &x);
 
+    assert(ret==0);
 
     if (cmdOptionExists(argv, argv+argc, "-h") || argc < 3){
         std::cout << "Usage: start_actor <model> <actor> [-h]" << std::endl;
