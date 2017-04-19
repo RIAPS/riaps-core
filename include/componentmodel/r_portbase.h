@@ -11,7 +11,7 @@
 #include <string>
 #include <iostream>
 
-#include <boost/format.hpp>
+//#include <boost/format.hpp>
 //#include <componentmodel/r_responseport.h>
 //#include <componentmodel/r_publisherport.h>
 //#include <componentmodel/r_subscriberport.h>

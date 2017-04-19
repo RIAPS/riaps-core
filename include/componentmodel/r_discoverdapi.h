@@ -6,7 +6,7 @@
 #include <vector>
 #include <czmq.h>
 #include <iostream>
-#include <boost/format.hpp>
+//#include <boost/format.hpp>
 
 #include <capnp/message.h>
 #include <capnp/serialize.h>
