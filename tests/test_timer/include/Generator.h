@@ -1,6 +1,9 @@
 #ifndef RIAPS_FW_GENERATOR_H
 #define RIAPS_FW_GENERATOR_H
 
+#include <libsoc_pwm.h>
+#include <libsoc_debug.h>
+
 #include "base/GeneratorBase.h"
 
 namespace timertest {
@@ -19,8 +22,8 @@ namespace timertest {
             virtual ~Generator();
 
         private:
-            std::array<std::chrono::time_point<std::chrono::high_resolution_clock>, 500> _results;
-            int _counter=0;
+            double _phase = 0.0;
+            pwm*   _pwm_output;
         };
     }
 }
