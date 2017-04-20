@@ -13,12 +13,16 @@ namespace timertest {
         }
 
         void GeneratorBase::DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
-                                              riaps::ports::PortBase *port) {
+                                            riaps::ports::PortBase *port) {
             auto portName = port->GetPortName();
             if (portName == PORT_TIMER_CLOCK) {
                 OnClock(port);
             }
+        }
 
+        bool GeneratorBase::SendSignalValue(capnp::MallocMessageBuilder &messageBuilder,
+                                            messages::SignalValue::Builder &message) {
+            return SendMessageOnPort(messageBuilder, PORT_PUB_SIGNALVALUE);
         }
 
 

@@ -1,9 +1,16 @@
 include_directories(include)
 
 add_library(generator SHARED src/Generator.cc
-                             src/base/GeneratorBase.cc)
+                             src/base/GeneratorBase.cc
+                             include/messages/timertest.capnp.c++)
 
-target_link_libraries(generator czmq riaps dl capnp kj)
+target_link_libraries(generator czmq riaps dl capnp kj soc)
+
+add_library(receiver SHARED src/Receiver.cc
+                            src/base/ReceiverBase.cc
+                            include/messages/timertest.capnp.c++)
+
+target_link_libraries(receiver czmq riaps dl capnp kj soc)
 
 # add_executable(actor_prod src/prod/producer.cc
 #                          src/messages.cc)

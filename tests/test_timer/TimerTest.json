@@ -11,6 +11,18 @@
             "internals":[],
             "locals":[],
             "wires":[]
+        },
+        "RActor":{
+            "formals":[],
+            "instances":{
+                "r":{
+                    "actuals":[],
+                    "type":"Receiver"
+                }
+            },
+            "internals":[],
+            "locals":[],
+            "wires":[]
         }
     },
     "components":{
@@ -20,7 +32,11 @@
             "ports":{
                 "clts":{},
                 "inss":{},
-                "pubs":{},
+                "pubs":{
+                    "signalValue":{
+                        "type":"SignalValue"
+                    }
+                },
                 "reps":{},
                 "reqs":{},
                 "srvs":{},
@@ -31,13 +47,31 @@
                     }
                 }
             }
+        },
+        "Receiver":{
+            "formals":[],
+            "name":"Receiver",
+            "ports":{
+                "clts":{},
+                "inss":{},
+                "pubs":{},
+                "reps":{},
+                "reqs":{},
+                "srvs":{},
+                "subs":{
+                    "signalValue":{
+                        "type":"SignalValue"
+                    }
+                },
+                "tims":{}
+            }
         }
     },
     "devices":{},
     "libraries":[],
     "messages":[
         {
-            "name":"m"
+            "name":"SignalValue"
         }
     ],
     "name":"TimerTest"

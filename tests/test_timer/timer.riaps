@@ -1,14 +1,25 @@
 
 app TimerTest {
-    message m;
+    message SignalValue;
 
 	component Generator {
-      timer clock 1;
+        timer clock 1;
+        pub signalValue : SignalValue;
+    }
+
+    component Receiver {
+        sub signalValue : SignalValue;
     }
     
     actor GActor {
        {
             g : Generator;
        }
+    }
+
+    actor RActor {
+        {
+            r : Receiver;
+        }
     }
 }

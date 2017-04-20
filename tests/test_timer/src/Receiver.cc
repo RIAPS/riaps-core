@@ -2,7 +2,7 @@
 // Created by istvan on 11/11/16.
 //
 
-#include "Generator.h"
+#include "Receiver.h"
 #include <capnp/serialize.h>
 #include <capnp/message.h>
 
@@ -21,7 +21,7 @@
 namespace timertest {
     namespace components {
 
-        Generator::Generator(_component_conf_j &config, riaps::Actor &actor) : GeneratorBase(config, actor) {
+        Receiver::Receiver(_component_conf_j &config, riaps::Actor &actor) : ReceiverBase(config, actor) {
             _pwm_output = libsoc_pwm_request(PWM_OUTPUT_CHIP, PWM_CHIP_OUTPUT, LS_SHARED);
             _pwm_output = libsoc_pwm_request(PWM_OUTPUT_CHIP, PWM_CHIP_OUTPUT, LS_SHARED);
             if (!_pwm_output) {
@@ -53,29 +53,21 @@ namespace timertest {
             }
         }
 
-        void Generator::OnClock(riaps::ports::PortBase *port) {
-            float currentValue = PWM_PERIOD * (1.0 + sin(_phase)) / 2.0;
-            _phase+=DPHASE;
-
-            capnp::MallocMessageBuilder messageBuilder;
-            auto msgSignalValue = messageBuilder.initRoot<messages::SignalValue>();
-            msgSignalValue.setVal(currentValue);
-
-            libsoc_pwm_set_duty_cycle(_pwm_output, PWM_PERIOD * (1.0 + sin(_phase)) / 2.0 );
-            SendSignalValue(messageBuilder, msgSignalValue);
-
+        void Receiver::OnSignalValue(const messages::SignalValue::Reader &message, riaps::ports::PortBase *port) {
+            //std::cout << "Value: " << message.getVal() << std::endl;
+            libsoc_pwm_set_duty_cycle(_pwm_output, message.getVal() );
         }
 
 
 
-        Generator::~Generator() {
+        Receiver::~Receiver() {
             libsoc_pwm_free(_pwm_output);
         }
     }
 }
 
 riaps::ComponentBase* create_component(_component_conf_j& config, riaps::Actor& actor){
-    auto result = new timertest::components::Generator(config, actor);
+    auto result = new timertest::components::Receiver(config, actor);
     return result;
 }
 
