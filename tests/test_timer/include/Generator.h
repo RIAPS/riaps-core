@@ -18,6 +18,7 @@ namespace timertest {
 
             virtual void OnClock(riaps::ports::PortBase *port);
 
+            void OnOneShotTimer(const std::string& timerid);
 
             virtual ~Generator();
 

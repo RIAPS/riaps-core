@@ -1,8 +1,10 @@
 #ifndef RIAPS_FW_GENERATOR_H
 #define RIAPS_FW_GENERATOR_H
 
-#include <libsoc_pwm.h>
+
 #include <libsoc_debug.h>
+#include <libsoc_gpio.h>
+#define PPS_OUTPUT  22
 
 #include "base/ReceiverBase.h"
 
@@ -19,12 +21,22 @@ namespace timertest {
             void OnSignalValue(const messages::SignalValue::Reader &message,
                                riaps::ports::PortBase *port);
 
+            void OnOneShotTimer(const std::string &timerid);
 
             virtual ~Receiver();
 
         private:
-            double _phase = 0.0;
-            pwm*   _pwm_output;
+            double _lastValue = 0.0;
+            //pwm*   _pwm_output;
+            gpio*  _pps_output;
+
+
+//            std::array<timespec, 500> predicted;
+//            std::array<timespec, 500> current;
+//            std::array<timespec, 500> called;
+//            int idx = 0;
+
+
         };
     }
 }

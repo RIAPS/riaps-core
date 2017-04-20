@@ -54,15 +54,35 @@ namespace timertest {
         }
 
         void Generator::OnClock(riaps::ports::PortBase *port) {
-            float currentValue = PWM_PERIOD * (1.0 + sin(_phase)) / 2.0;
+            float currentValue = sin(_phase);
             _phase+=DPHASE;
 
             capnp::MallocMessageBuilder messageBuilder;
             auto msgSignalValue = messageBuilder.initRoot<messages::SignalValue>();
             msgSignalValue.setVal(currentValue);
+            auto msgTimeStamp   = msgSignalValue.initTimestamp();
 
-            libsoc_pwm_set_duty_cycle(_pwm_output, PWM_PERIOD * (1.0 + sin(_phase)) / 2.0 );
+            timespec
+                      t1Spec
+                    //, t2Spec
+                    //, tAvg
+                    ;
+            clock_gettime(CLOCK_REALTIME, &t1Spec);
+            libsoc_pwm_set_duty_cycle(_pwm_output, PWM_PERIOD * (1.0 + currentValue) / 2.0 );
+            //clock_gettime(CLOCK_REALTIME, &t2Spec);
+            //tAvg.tv_nsec = (t1Spec.tv_nsec + t2Spec.tv_nsec)/2.0;
+            //tAvg.tv_sec  = (t1Spec.tv_sec  + t2Spec.tv_sec)/2.0;
+
+            //msgTimeStamp.setNsec(tAvg.tv_nsec);
+            //msgTimeStamp.setSec(tAvg.tv_sec);
+            msgTimeStamp.setNsec(t1Spec.tv_nsec);
+            msgTimeStamp.setSec(t1Spec.tv_sec);
+
             SendSignalValue(messageBuilder, msgSignalValue);
+
+        }
+
+        void Generator::OnOneShotTimer(const std::string &timerid) {
 
         }
 

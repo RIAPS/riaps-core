@@ -84,6 +84,7 @@ struct _component_port_tim_j : public component_port_config {
 };
 
 
+
 struct _component_ports_j {
     std::vector<_component_port_clt_j> clts;
     std::vector<_component_port_srv_j> srvs;

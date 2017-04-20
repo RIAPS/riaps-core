@@ -22,46 +22,64 @@ namespace timertest {
     namespace components {
 
         Receiver::Receiver(_component_conf_j &config, riaps::Actor &actor) : ReceiverBase(config, actor) {
-            _pwm_output = libsoc_pwm_request(PWM_OUTPUT_CHIP, PWM_CHIP_OUTPUT, LS_SHARED);
-            _pwm_output = libsoc_pwm_request(PWM_OUTPUT_CHIP, PWM_CHIP_OUTPUT, LS_SHARED);
-            if (!_pwm_output) {
-                perror("unable to request PWM pin:");
-                fprintf(stderr, "make sure, you enabled the PWM overlay:\n\techo BB-PWM1 >  /sys/devices/platform/bone_capemgr/slots\n");
+
+
+            _pps_output = libsoc_gpio_request(PPS_OUTPUT, LS_SHARED);
+            if (!_pps_output) {
+                perror("unable to request gpio pin:");
                 exit(-1);
             }
+            libsoc_gpio_set_direction(_pps_output, OUTPUT);
 
-            libsoc_pwm_set_enabled(_pwm_output, ENABLED);
-            if (!libsoc_pwm_get_enabled(_pwm_output))
+            if (libsoc_gpio_get_direction(_pps_output) != OUTPUT)
             {
-                perror("unable to enable PWM pin:");
+                perror("unable to set output direction:");
                 exit(-1);
             }
 
-
-            libsoc_pwm_set_polarity(_pwm_output, NORMAL);
-            if (libsoc_pwm_get_polarity(_pwm_output) != NORMAL)
-            {
-                perror("unable to set PWM polarity:");
-                exit(-1);
-            }
-
-            libsoc_pwm_set_period(_pwm_output, PWM_PERIOD);
-            if (libsoc_pwm_get_period(_pwm_output) != PWM_PERIOD)
-            {
-                perror("unable to set PWM period:");
-                exit(-1);
-            }
         }
 
         void Receiver::OnSignalValue(const messages::SignalValue::Reader &message, riaps::ports::PortBase *port) {
-            //std::cout << "Value: " << message.getVal() << std::endl;
-            libsoc_pwm_set_duty_cycle(_pwm_output, message.getVal() );
+            auto currentValue     = message.getVal();
+
+
+
+            if (_lastValue<0 && currentValue>0){
+                auto currentTimestamp = message.getTimestamp();
+
+                int64_t predictNsec = currentTimestamp.getNsec() + 20000000l;
+                int64_t predictSec  = currentTimestamp.getSec();
+
+                if (predictNsec>1000000000l){
+                    predictSec++;
+                    predictNsec-=1000000000l;
+                }
+
+                timespec predSpec={predictSec,predictNsec};
+
+                if (CreateOneShotTimer("predTimer", predSpec)){
+
+                }
+
+
+            }
+            _lastValue = currentValue;
+
+
+        }
+
+
+        void Receiver::OnOneShotTimer(const std::string &timerid) {
+
+            libsoc_gpio_set_level(_pps_output, HIGH);
+            libsoc_gpio_set_level(_pps_output, LOW);
+
         }
 
 
 
         Receiver::~Receiver() {
-            libsoc_pwm_free(_pwm_output);
+            libsoc_gpio_free(_pps_output);
         }
     }
 }

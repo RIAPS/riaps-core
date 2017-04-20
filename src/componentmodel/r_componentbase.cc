@@ -17,6 +17,9 @@ namespace riaps{
         zsock_t* timerport = zsock_new_pull(comp->GetTimerChannel().c_str());
         assert(timerport);
 
+        zsock_t* timerportOneShot = zsock_new_pull(comp->GetOneShotTimerChannel().c_str());
+        assert(timerportOneShot);
+
         zpoller_t* poller = zpoller_new(pipe, NULL);
         assert(poller);
 
@@ -24,6 +27,10 @@ namespace riaps{
 
         int rc = zpoller_add(poller, timerport);
         assert(rc==0);
+
+        rc = zpoller_add(poller, timerportOneShot);
+        assert(rc==0);
+
 
         bool terminated = false;
         bool firstrun = true;
@@ -156,6 +163,27 @@ namespace riaps{
                     zmsg_destroy(&msg);
                 }
             }
+            // One shot timer fired somewhere
+            else if (which == timerportOneShot){
+                zmsg_t *msg = zmsg_recv(which);
+
+                if (msg) {
+                    char *timerId = zmsg_popstr(msg);
+                    if (timerId){
+                        std::string tid = std::string(timerId);
+                        comp->OnOneShotTimer(tid);
+                        zstr_free(&timerId);
+                    }
+                    zmsg_destroy(&msg);
+                }
+
+                if (comp->_oneShotTimer!=NULL){
+                    comp->_oneShotTimer->stop();
+                    delete comp->_oneShotTimer;
+                    comp->_oneShotTimer = NULL;
+                }
+
+            }
             else if(which){
                 // Message test with more than one field
                 zmsg_t *msg = zmsg_recv(which);
@@ -189,6 +217,11 @@ namespace riaps{
             }
         }
 
+        if (comp->_oneShotTimer!=NULL){
+            comp->_oneShotTimer->stop();
+            delete comp->_oneShotTimer;
+            comp->_oneShotTimer = NULL;
+        }
 
         // Stop timers
         for (auto& config : comp->GetConfig().component_ports.tims){
@@ -196,12 +229,13 @@ namespace riaps{
             comp->_ports[config.portName]->AsTimerPort()->stop();
         }
 
+        zsock_destroy(&timerportOneShot);
         zsock_destroy(&timerport);
         //zsock_destroy(&asyncport);
         zpoller_destroy(&poller);
     };
 
-    ComponentBase::ComponentBase(component_conf_j& config, Actor& actor) : _actor(&actor) {
+    ComponentBase::ComponentBase(component_conf_j& config, Actor& actor) : _actor(&actor), _oneShotTimer(NULL) {
         _configuration = config;
 
         //uuid to the component instance
@@ -281,6 +315,17 @@ namespace riaps{
         ports::PortBase* portBase = GetPortByName(portName);
         if (portBase == NULL) return NULL;
         return portBase->AsResponsePort();
+    }
+
+    bool ComponentBase::CreateOneShotTimer(const std::string &timerid, timespec &wakeuptime) {
+        if (_oneShotTimer!=NULL) return false;
+
+        _oneShotTimer = new timers::OneShotTimer(GetOneShotTimerChannel(),
+                                                 timerid,
+                                                 wakeuptime);
+
+        _oneShotTimer->start();
+        return true;
     }
 
 
@@ -366,6 +411,11 @@ namespace riaps{
 
     std::string ComponentBase::GetTimerChannel() {
         std::string prefix= "inproc://timer";
+        return prefix + GetCompUuid();
+    }
+
+    std::string ComponentBase::GetOneShotTimerChannel() {
+        std::string prefix= "inproc://oneshottimer";
         return prefix + GetCompUuid();
     }
 

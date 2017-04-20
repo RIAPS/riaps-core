@@ -14,6 +14,7 @@
 #include "r_requestport.h"
 #include "r_actor.h"
 #include "r_messagebase.h"
+#include "r_oneshottimer.h"
 
 #include <msgpack.hpp>
 #include <capnp/message.h>
@@ -25,6 +26,7 @@
 #include <memory>
 #include <queue>
 #include <random>
+#include <ctime>
 
 
 
@@ -83,6 +85,9 @@ namespace riaps {
 
         ports::PortBase* GetPortByName(const std::string&);
 
+        bool CreateOneShotTimer(const std::string& timerid, timespec& wakeuptime);
+        virtual void OnOneShotTimer(const std::string& timerid)=0;
+
 /*        virtual void DispatchMessage(const std::string& messagetype,
                                      msgpack::sbuffer* message,
                                      ports::PortBase* port);
@@ -117,6 +122,10 @@ namespace riaps {
 
         std::string             GetTimerChannel();
         std::string             GetCompUuid();
+        std::string             GetOneShotTimerChannel();
+
+        // TODO: uniqueptr
+        timers::OneShotTimer*   _oneShotTimer;
 
         virtual riaps_handler GetHandler(std::string portName);
 
