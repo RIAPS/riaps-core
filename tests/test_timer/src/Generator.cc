@@ -17,8 +17,7 @@
 #define PWM_OUTPUT_CHIP 0
 #define PWM_CHIP_OUTPUT 0
 
-
-namespace timertest {
+namespace timertest{
     namespace components {
 
         Generator::Generator(_component_conf_j &config, riaps::Actor &actor) : GeneratorBase(config, actor) {
@@ -67,8 +66,9 @@ namespace timertest {
                     //, t2Spec
                     //, tAvg
                     ;
-            clock_gettime(CLOCK_REALTIME, &t1Spec);
+
             libsoc_pwm_set_duty_cycle(_pwm_output, PWM_PERIOD * (1.0 + currentValue) / 2.0 );
+            clock_gettime(CLOCK_REALTIME, &t1Spec);
             //clock_gettime(CLOCK_REALTIME, &t2Spec);
             //tAvg.tv_nsec = (t1Spec.tv_nsec + t2Spec.tv_nsec)/2.0;
             //tAvg.tv_sec  = (t1Spec.tv_sec  + t2Spec.tv_sec)/2.0;
@@ -81,6 +81,56 @@ namespace timertest {
             SendSignalValue(messageBuilder, msgSignalValue);
 
         }
+
+
+//        void Generator::OnClock(riaps::ports::PortBase *port) {
+//            auto now = std::chrono::high_resolution_clock::now();
+//            _cycle=0;
+//            while (true) {
+//                float currentValue = sin(_phase);
+//                _phase += DPHASE;
+//                capnp::MallocMessageBuilder messageBuilder;
+//                auto msgSignalValue = messageBuilder.initRoot<messages::SignalValue>();
+//                auto msgTimeStamp = msgSignalValue.initTimestamp();
+//                timespec
+//                        t1Spec
+//                //, t2Spec
+//                //, tAvg
+//                ;
+//
+//
+//                auto diff = std::chrono::milliseconds(1);
+//                now+=diff;
+//
+//                std::this_thread::sleep_until(now);
+//
+//
+//
+//
+//                msgSignalValue.setVal(currentValue);
+//
+//
+//
+//
+//                libsoc_pwm_set_duty_cycle(_pwm_output, PWM_PERIOD * (1.0 + currentValue) / 2.0);
+//                clock_gettime(CLOCK_REALTIME, &t1Spec);
+//                //clock_gettime(CLOCK_REALTIME, &t2Spec);
+//                //tAvg.tv_nsec = (t1Spec.tv_nsec + t2Spec.tv_nsec)/2.0;
+//                //tAvg.tv_sec  = (t1Spec.tv_sec  + t2Spec.tv_sec)/2.0;
+//
+//                //msgTimeStamp.setNsec(tAvg.tv_nsec);
+//                //msgTimeStamp.setSec(tAvg.tv_sec);
+//                msgTimeStamp.setNsec(t1Spec.tv_nsec);
+//                msgTimeStamp.setSec(t1Spec.tv_sec);
+//
+//                SendSignalValue(messageBuilder, msgSignalValue);
+//
+//                if (++_cycle == 9000){
+//                    break;
+//                }
+//            }
+//        }
+
 
         void Generator::OnOneShotTimer(const std::string &timerid) {
 

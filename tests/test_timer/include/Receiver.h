@@ -8,6 +8,8 @@
 
 #include "base/ReceiverBase.h"
 
+#define DEBUG_SAMPLES 200
+
 namespace timertest {
     namespace components {
 
@@ -26,15 +28,18 @@ namespace timertest {
             virtual ~Receiver();
 
         private:
-            double _lastValue = 0.0;
+            double   _lastValue = 0.0;
+            timespec _lastTimestamp;
             //pwm*   _pwm_output;
             gpio*  _pps_output;
 
 
-//            std::array<timespec, 500> predicted;
-//            std::array<timespec, 500> current;
-//            std::array<timespec, 500> called;
-//            int idx = 0;
+            //std::array<timespec, DEBUG_SAMPLES> _timestamp;
+            //std::array<timespec, DEBUG_SAMPLES> _predicted;
+            //std::array<timespec, DEBUG_SAMPLES> _triggered;
+            //std::array<double, DEBUG_SAMPLES> _lastVal;
+            //std::array<double, DEBUG_SAMPLES> _currVal;
+            //int idx = 0;
 
 
         };

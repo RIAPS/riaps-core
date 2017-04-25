@@ -23,8 +23,9 @@ namespace timertest {
             virtual ~Generator();
 
         private:
-            double _phase = 0.0;
-            pwm*   _pwm_output;
+            double    _phase = 0.0;
+            pwm*      _pwm_output;
+            uint64_t  _cycle = 0;
         };
     }
 }
