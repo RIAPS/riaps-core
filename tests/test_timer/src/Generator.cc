@@ -10,8 +10,6 @@
 #define SIGNAL_FREQ 60 // Hz
 #define PWM_PERIOD 4000 // nanoseconds
 
-
-#define SAMPLING_INTERVAL (1000000000L / SAMPLING_RATE) // nanoseconds
 #define DPHASE (2 * M_PI * SIGNAL_FREQ / SAMPLING_RATE)
 
 #define PWM_OUTPUT_CHIP 0
@@ -52,6 +50,7 @@ namespace timertest{
             }
         }
 
+        // With RIAPS timer
         void Generator::OnClock(riaps::ports::PortBase *port) {
             float currentValue = sin(_phase);
             _phase+=DPHASE;
@@ -82,7 +81,7 @@ namespace timertest{
 
         }
 
-
+// --> Without RIAPS timer <--
 //        void Generator::OnClock(riaps::ports::PortBase *port) {
 //            auto now = std::chrono::high_resolution_clock::now();
 //            _cycle=0;

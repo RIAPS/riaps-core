@@ -30,8 +30,8 @@ namespace timertest {
         private:
             double   _lastValue = 0.0;
             timespec _lastTimestamp;
-            //pwm*   _pwm_output;
-            gpio*  _pps_output;
+            gpio*    _pps_output;
+            bool     _isHigh = false;
 
 
             //std::array<timespec, DEBUG_SAMPLES> _timestamp;

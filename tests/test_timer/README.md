@@ -41,4 +41,4 @@ sudo /opt/riaps/armhf/bin/start_actor TimerTest.json RActor
 sudo /opt/riaps/armhf/bin/start_actor TimerTest.json GActor
 ```
 
-[Expected results](./scope.png)
+[Expected results](./scope2.png)
