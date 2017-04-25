@@ -42,3 +42,5 @@ sudo /opt/riaps/armhf/bin/start_actor TimerTest.json GActor
 ```
 
 [Expected results](./scope2.png)
+
+We used the bbb-19bb as master (generator), and the bbb-918 as slave (receiver);
