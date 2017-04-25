@@ -2,7 +2,10 @@
 .vscode
 3rdparty
 build*
-
+amd64-opt/
+armhf-opt/
+armhf/
+package
 build-armhf
 build-amd64
 CMakeCache.txt

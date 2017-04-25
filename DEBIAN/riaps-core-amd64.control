@@ -1,0 +1,7 @@
+Package: riaps-core-amd64
+Architecture: amd64
+Maintainer: Institute for Software Integrated Systems 
+Depends: debconf (>= 0.5.00),  riaps-externals-amd64
+Priority: required
+Version:  @version@
+Description: These are the riaps core libraries including the platform services for the amd64 architecture.
