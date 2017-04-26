@@ -36,7 +36,7 @@
 
 #define CONTROL_SOCKET "ipc:///tmp/discoverycontrol"
 
-//#define NO_UDP_BEACON
+#define NO_UDP_BEACON
 
 
 int main()
@@ -46,6 +46,7 @@ int main()
     zactor_t *r_actor = zactor_new(riaps_actor, NULL);
     zsock_t * control = zsock_new_router(CONTROL_SOCKET);
 
+#ifndef NO_UDP_BEACON
     // CZMQ zbeacons are used to discover the local network
     // New zbeacon for publishing IP
     zactor_t *speaker = zactor_new (zbeacon, NULL);
@@ -53,9 +54,7 @@ int main()
     // listen for UDP packages
     zactor_t *listener  = zactor_new (zbeacon, NULL);
 
-    // Create logger subscribe
-    //void *logger = zsys_socket (ZMQ_SUB, NULL, 0);
-    //assert (logger);
+
 
     #ifdef _DEBUG_
         zstr_sendx (speaker, "VERBOSE", NULL);
@@ -92,7 +91,6 @@ int main()
     // We will broadcast the magic value 0xCAFE
     byte announcement [2] = { 0xCA, 0xFE };
 
-#ifndef NO_UDP_BEACON
     zsock_send (speaker, "sbi", "PUBLISH", announcement, 2, HIGH_BEACON_FREQ);
 
     zsock_send (listener, "sb", "SUBSCRIBE", "", 0);
@@ -138,7 +136,7 @@ int main()
 
                             zmsg_t* join_msg = zmsg_new();
                             zmsg_addstr(join_msg, CMD_JOIN);
-                            zmsg_addstr(msg, newhost);
+                            zmsg_addstr(join_msg, newhost);
                             zmsg_send(&join_msg, r_actor);
                         }
                         zstr_free(&newhost);
@@ -173,6 +171,7 @@ int main()
         }
 
         // Source of the incoming UDP package
+#ifndef NO_UDP_BEACON
         char *ipaddress = zstr_recv (listener);
         if (ipaddress) {
             
@@ -205,28 +204,19 @@ int main()
                 print_cacheips(ipcache);
             }
         }
+#endif
     }
 
-    // Register node
-    // TODO: put in method
-    //hostname = zsys_hostname();
-    //zmsg_t* deregnode_msg = zmsg_new();
-    //zmsg_addstr(deregnode_msg, CMD_DISC_DEREGISTER_NODE);
-    //zmsg_addstr(deregnode_msg, hostname);
-    //free(hostname);
-    //zactor_send(r_actor, &deregnode_msg);
-    //zmsg_t* rrr = zactor_recv(r_actor);
-    //if(rrr) {
-    //    zmsg_destroy(&rrr);
-   // }
-    //std::cout << "MEssage sent, wait" << std::endl;
 
 
     zsock_destroy(&control);
     zactor_destroy(&r_actor);
 
+#ifndef NO_UDP_BEACON
+
     zactor_destroy(&listener);
     zactor_destroy(&speaker);
+#endif
 
     sleep(2);
     
