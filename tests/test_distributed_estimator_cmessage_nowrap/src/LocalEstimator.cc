@@ -46,6 +46,10 @@ namespace distributedestimator {
             }
         }
 
+        void LocalEstimator::OnOneShotTimer(const std::string &timerid) {
+
+        }
+
         LocalEstimator::~LocalEstimator() {
 
         }

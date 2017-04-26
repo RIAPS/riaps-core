@@ -28,6 +28,10 @@ namespace distributedestimator {
             std::cout << "GlobalEstimator::OnWakeUp(): " << port->GetPortName() << std::endl;
         }
 
+        void GlobalEstimator::OnOneShotTimer(const std::string& timerid){
+
+        }
+
         GlobalEstimator::~GlobalEstimator() {
 
         }

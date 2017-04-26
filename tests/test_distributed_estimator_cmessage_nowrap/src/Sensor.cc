@@ -41,6 +41,10 @@ namespace distributedestimator {
             }
         }
 
+        void comp_sensor::OnOneShotTimer(const std::string &timerid) {
+
+        }
+
         comp_sensor::~comp_sensor() {
 
         }

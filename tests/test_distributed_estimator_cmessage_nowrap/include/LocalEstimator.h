@@ -20,6 +20,8 @@ namespace distributedestimator {
             virtual void OnReady(const messages::SensorReady::Reader &message,
                                  riaps::ports::PortBase *port);
 
+            virtual void OnOneShotTimer(const std::string& timerid);
+
 
             virtual ~LocalEstimator();
 

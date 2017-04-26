@@ -21,6 +21,8 @@ namespace distributedestimator {
 
             virtual void OnWakeup(riaps::ports::PortBase *port);
 
+            virtual void OnOneShotTimer(const std::string& timerid);
+
             virtual ~GlobalEstimator();
 
         private:
