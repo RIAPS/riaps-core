@@ -67,6 +67,8 @@ namespace riaps {
         bool SendMessageOnPort(MessageBase* message, const std::string& portName);
         bool SendMessageOnPort(capnp::MallocMessageBuilder& message, const std::string& portName);
 
+        void StopComponent();
+
         const component_conf_j& GetConfig() const;
 
         virtual void PrintMessageOnPort(ports::PortBase* port, std::string message="");
@@ -109,9 +111,10 @@ namespace riaps {
         virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
                                      ports::PortBase* port) = 0;
 
-        const Actor* _actor;
-        zuuid_t*     _component_uuid;
-        zactor_t*    _zactor_component;
+        const Actor*      _actor;
+        zuuid_t*          _component_uuid;
+        zactor_t*         _zactor_component;
+        //std::atomic<bool> _execute;
 
     private:
         const ports::PublisherPort*  InitPublisherPort(const _component_port_pub_j&);

@@ -13,11 +13,16 @@ namespace riaps {
                     _parent_component(component),
                     _capnpReader(capnp::FlatArrayMessageReader(nullptr)){
             _port_socket = zsock_new(ZMQ_REQ);
+
+            auto i = zsock_rcvtimeo (_port_socket);
+
             int timeout = 500;//msec
             int lingerValue = 0;
             int connectTimeout = 1000; //msec
             zmq_setsockopt(_port_socket, ZMQ_SNDTIMEO, &timeout , sizeof(int));
             zmq_setsockopt(_port_socket, ZMQ_LINGER, &lingerValue, sizeof(int));
+
+            i = zsock_rcvtimeo (_port_socket);
 
             _isConnected = false;
         }

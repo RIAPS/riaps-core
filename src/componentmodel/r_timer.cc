@@ -10,15 +10,15 @@ namespace riaps {
 
 
         CallBackTimer::CallBackTimer(std::string &timerresponsechannel, const _component_port_tim_j& config)
-                : PortBase(PortTypes::Timer, (component_port_config*)&config),_execute(false) {
-            _zsock_timer = zsock_new_push(timerresponsechannel.c_str());
+                : PortBase(PortTypes::Timer, (component_port_config*)&config),_execute(false),_timerresponsechannel(timerresponsechannel) {
+
         }
 
         CallBackTimer::~CallBackTimer() {
             if (_execute.load(std::memory_order_acquire)) {
                 stop();
             };
-            zsock_destroy(&_zsock_timer);
+
         }
 
         CallBackTimer* CallBackTimer::AsTimerPort() {
@@ -26,13 +26,19 @@ namespace riaps {
         }
 
         const zsock_t *CallBackTimer::GetSocket() const {
-            return _zsock_timer;
+            return NULL;
         }
 
         void CallBackTimer::stop() {
+            std::cout << "Timer stopping" << std::endl;
             _execute.store(false, std::memory_order_release);
-            if (_thd.joinable())
+            std::cout << "_execute stored" << std::endl;
+            if (_thd.joinable()) {
+                std::cout << "joinable" << std::endl;
                 _thd.join();
+                std::cout << "joined" << std::endl;
+            }
+            std::cout << "Timer stopped" << std::endl;
         }
 
         void CallBackTimer::start(int interval) {
@@ -45,6 +51,7 @@ namespace riaps {
                 //clock_gettime(CLOCK_REALTIME, &now);
 
                 auto now = std::chrono::high_resolution_clock::now();
+                zsock_t* _zsock_timer = zsock_new_push(_timerresponsechannel.c_str());
 
                 while (_execute.load(std::memory_order_acquire)) {
 
@@ -85,12 +92,15 @@ namespace riaps {
 //                        perror("rc is not 0 but " + rc);
 //                        exit(-1);
 //                    }
-                    zmsg_send(&msg, this->_zsock_timer);
+
+                    if (_execute.load(std::memory_order_acquire))
+                        zmsg_send(&msg, _zsock_timer);
 
 
                     //std::this_thread::sleep_for(
                     //        std::chrono::milliseconds(interval));
                 }
+                zsock_destroy(&_zsock_timer);
             });
         }
 

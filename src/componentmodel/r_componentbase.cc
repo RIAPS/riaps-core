@@ -13,7 +13,10 @@ namespace riaps{
     void component_actor(zsock_t* pipe, void* args){
 
 
+
         ComponentBase* comp = (ComponentBase*)args;
+        //comp->_execute.store(true);
+
         zsock_t* timerport = zsock_new_pull(comp->GetTimerChannel().c_str());
         assert(timerport);
 
@@ -40,6 +43,7 @@ namespace riaps{
         // Register ZMQ Socket - riapsPort pairs. For the quick retrieve.
         std::map<const zsock_t*, const ports::PortBase*> portSockets;
 
+        //while (comp->_execute.load()) {
         while (!terminated) {
             void *which = zpoller_wait(poller, 500);
 
@@ -114,6 +118,7 @@ namespace riaps{
 
                 if (streq(command, "$TERM")) {
                     std::cout << "$TERM arrived in component" << std::endl;
+                    //comp->_execute.store(false);
                     terminated = true;
                 } else if(streq(command, CMD_UPDATE_PORT)){
                     char* portname = zmsg_popstr(msg);
@@ -155,7 +160,8 @@ namespace riaps{
                     std::vector<std::string> fields;
 
                     // comp->DispatchMessage(timerPort->GetPortName(), NULL, timerPort);
-                    comp->DispatchMessage(NULL, timerPort);
+                    if (!terminated)
+                        comp->DispatchMessage(NULL, timerPort);
 
 
 
@@ -204,7 +210,8 @@ namespace riaps{
 
                     capnp::FlatArrayMessageReader capnpReader(capnp_data);
 
-                    comp->DispatchMessage(&capnpReader, riapsPort);
+                    if (!terminated)
+                        comp->DispatchMessage(&capnpReader, riapsPort);
 
                     zframe_destroy(&bodyFrame);
                     zmsg_destroy(&msg);
@@ -223,17 +230,51 @@ namespace riaps{
             comp->_oneShotTimer = NULL;
         }
 
-        // Stop timers
-        for (auto& config : comp->GetConfig().component_ports.tims){
-            std::cout << "Stop timer: " << config.portName << std::endl;
-            comp->_ports[config.portName]->AsTimerPort()->stop();
+        for (auto it = comp->_ports.begin(); it!=comp->_ports.end(); it++){
+            if (it->second->GetSocket()!=NULL){
+                zsock_disconnect(it->second->GetSocket());
+            }
         }
 
+
+        zpoller_destroy(&poller);
         zsock_destroy(&timerportOneShot);
         zsock_destroy(&timerport);
         //zsock_destroy(&asyncport);
-        zpoller_destroy(&poller);
+
+        std::cout << "zactor thread ended" << std::endl;
     };
+
+    void ComponentBase::StopComponent() {
+        //_execute.store(false);
+
+        zmsg_t* termmsg = zmsg_new();
+
+
+        zmsg_addstr(termmsg,"$TERM");
+        std::cout << "$TERM is being sent to the component " << GetConfig().component_name << " zactor " << std::endl;
+        auto rc = zactor_send(_zactor_component, &termmsg);
+        std::cout << "$TERM sent to the component " << GetConfig().component_name << " zactor " <<  rc << std::endl;
+
+        zclock_sleep(1000);
+
+        // Stop timers
+        for (auto& config : GetConfig().component_ports.tims){
+            std::cout << "Stop timer: " << config.portName << std::endl;
+            _ports[config.portName]->AsTimerPort()->stop();
+        }
+
+
+
+
+
+        //zclock_sleep(1000);
+
+
+
+
+        zclock_sleep(1000);
+    }
 
     ComponentBase::ComponentBase(component_conf_j& config, Actor& actor) : _actor(&actor), _oneShotTimer(NULL) {
         _configuration = config;
@@ -369,7 +410,7 @@ namespace riaps{
 
     bool ComponentBase::SendMessageOnPort(zmsg_t **message, const std::string &portName) {
         ports::PortBase* port = GetPortByName(portName);
-
+        if (port == NULL) return false;
         if (port->AsSubscribePort() == NULL && port->AsTimerPort() == NULL){
             return port->Send(message);
         }
@@ -463,22 +504,20 @@ namespace riaps{
     }
 
     ComponentBase::~ComponentBase() {
-        // std::cout << "ComponentBase destructor" << std::endl;
 
-        zmsg_t* termmsg = zmsg_new();
+        std::cout << "ComponentBase destructor" << std::endl;
 
-        zmsg_addstr(termmsg,"$TERM");
-        zactor_send(_zactor_component, &termmsg);
+        // Delete ports
+        for (auto it = _ports.begin(); it!=_ports.end(); it++){
+            auto port = it->second.release();
+            delete port;
+        }
 
-        std::cout << "$TERM sent to the component zactor" << std::endl;
-
-        zclock_sleep(1000);
+        zactor_destroy(&_zactor_component);
 
         zuuid_destroy(&_component_uuid);
-        //zsock_destroy(&zsock_component);
-        //zsock_destroy(&_zsock_timer);
-        zactor_destroy(&_zactor_component);
-        std::cout << "zactor destroyed" << std::endl;
+
+        std::cout << "Component zactor destroyed" << std::endl;
     }
 
 }

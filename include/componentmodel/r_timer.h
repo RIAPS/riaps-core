@@ -36,7 +36,8 @@ namespace riaps {
         protected:
             std::atomic<bool> _execute;
             std::thread _thd;
-            zsock_t *_zsock_timer;
+            std::string _timerresponsechannel;
+            //zsock_t *_zsock_timer;
         };
     }
 }

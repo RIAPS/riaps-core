@@ -401,6 +401,7 @@ namespace riaps {
 
 
     void riaps::Actor::start(){
+        int c = 0;
         while (!zsys_interrupted) {
             void *which = zpoller_wait(_poller, 2000);
 
@@ -614,8 +615,14 @@ namespace riaps {
         //deregister_actor(GetActorId());
 
         for (riaps::ComponentBase* component : _components){
+            component->StopComponent();
+        }
+
+        for (riaps::ComponentBase* component : _components){
             delete component;
         }
+
+
 
         zpoller_destroy(&_poller);
         zuuid_destroy(&_actor_id);
