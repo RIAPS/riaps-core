@@ -8,7 +8,7 @@ set(FRAMEWORK_LIB_FILES r_discoverdapi.cc
                         r_publisherport.cc
                         r_actor.cc
                         r_portbase.cc
-                        r_timer.cc
+                        r_periodictimer.cc
                         r_debugcomponent.cc
                         r_messagebase.cc
         #delete_r_network_interfaces.cc

@@ -70,7 +70,7 @@ namespace riaps {
             return NULL;
         }
 
-        CallBackTimer * PortBase::AsTimerPort()  {
+        PeriodicTimer * PortBase::AsTimerPort()  {
             return NULL;
         }
 

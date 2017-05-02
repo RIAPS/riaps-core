@@ -46,6 +46,10 @@ riaps_actor (zsock_t *pipe, void *args)
     // Response socket for incoming messages from RIAPS Components
     zsock_t * riaps_socket = zsock_new_rep (riaps::framework::Configuration::GetDiscoveryServiceIpc().c_str());
     assert(riaps_socket);
+    int lingerValue = 0;
+    int sendtimeout = 0; // 0 - returns immediately with EAGAIN if the message cannot be sent
+    zmq_setsockopt(riaps_socket, ZMQ_LINGER, &lingerValue, sizeof(int));
+    zmq_setsockopt(riaps_socket, ZMQ_SNDTIMEO, &sendtimeout, sizeof(int));
 
     // Socket for OpenDHT communication.
     zpoller_t* poller = zpoller_new(pipe, riaps_socket, dht_router_socket, NULL);

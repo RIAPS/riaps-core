@@ -26,7 +26,7 @@ namespace ports {
     class ResponsePort;
     class PublisherPort;
     class SubscriberPort;
-    class CallBackTimer;
+    class PeriodicTimer;
 
     enum PortTypes {Publisher, Subscriber, Request, Response, Timer};
 
@@ -62,7 +62,7 @@ namespace ports {
         virtual PublisherPort*  AsPublishPort()    ;
         virtual ResponsePort*   AsResponsePort()   ;
         virtual SubscriberPort* AsSubscribePort()  ;
-        virtual CallBackTimer*  AsTimerPort()      ;
+        virtual PeriodicTimer*  AsTimerPort();
 
 
         virtual ~PortBase() noexcept ;

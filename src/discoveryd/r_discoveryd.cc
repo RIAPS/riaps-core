@@ -36,7 +36,7 @@
 
 #define CONTROL_SOCKET "ipc:///tmp/discoverycontrol"
 
-#define NO_UDP_BEACON
+//#define NO_UDP_BEACON
 
 
 int main()

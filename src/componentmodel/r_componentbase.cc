@@ -11,20 +11,19 @@
 namespace riaps{
 
     void component_actor(zsock_t* pipe, void* args){
-
-
-
         ComponentBase* comp = (ComponentBase*)args;
         //comp->_execute.store(true);
 
         zsock_t* timerport = zsock_new_pull(comp->GetTimerChannel().c_str());
         assert(timerport);
 
+
         zsock_t* timerportOneShot = zsock_new_pull(comp->GetOneShotTimerChannel().c_str());
         assert(timerportOneShot);
 
         zpoller_t* poller = zpoller_new(pipe, NULL);
         assert(poller);
+        zpoller_ignore_interrupts (poller);
 
         zsock_signal (pipe, 0);
 
@@ -118,7 +117,6 @@ namespace riaps{
 
                 if (streq(command, "$TERM")) {
                     std::cout << "$TERM arrived in component" << std::endl;
-                    //comp->_execute.store(false);
                     terminated = true;
                 } else if(streq(command, CMD_UPDATE_PORT)){
                     char* portname = zmsg_popstr(msg);
@@ -156,7 +154,7 @@ namespace riaps{
 
                 if (msg) {
                     char *portName = zmsg_popstr(msg);
-                    ports::CallBackTimer* timerPort = (ports::CallBackTimer*)comp->GetPortByName(portName);
+                    ports::PeriodicTimer* timerPort = (ports::PeriodicTimer*)comp->GetPortByName(portName);
                     std::vector<std::string> fields;
 
                     // comp->DispatchMessage(timerPort->GetPortName(), NULL, timerPort);
@@ -230,50 +228,28 @@ namespace riaps{
             comp->_oneShotTimer = NULL;
         }
 
-        for (auto it = comp->_ports.begin(); it!=comp->_ports.end(); it++){
-            if (it->second->GetSocket()!=NULL){
-                zsock_disconnect(it->second->GetSocket());
-            }
-        }
-
-
         zpoller_destroy(&poller);
         zsock_destroy(&timerportOneShot);
         zsock_destroy(&timerport);
-        //zsock_destroy(&asyncport);
-
-        std::cout << "zactor thread ended" << std::endl;
     };
 
     void ComponentBase::StopComponent() {
         //_execute.store(false);
-
-        zmsg_t* termmsg = zmsg_new();
-
-
-        zmsg_addstr(termmsg,"$TERM");
-        std::cout << "$TERM is being sent to the component " << GetConfig().component_name << " zactor " << std::endl;
-        auto rc = zactor_send(_zactor_component, &termmsg);
-        std::cout << "$TERM sent to the component " << GetConfig().component_name << " zactor " <<  rc << std::endl;
-
-        zclock_sleep(1000);
-
         // Stop timers
         for (auto& config : GetConfig().component_ports.tims){
             std::cout << "Stop timer: " << config.portName << std::endl;
             _ports[config.portName]->AsTimerPort()->stop();
         }
 
+        zactor_destroy(&_zactor_component);
 
+        // Delete ports
+        for (auto it = _ports.begin(); it!=_ports.end(); it++){
+            auto port = it->second.release();
+            delete port;
+        }
 
-
-
-        //zclock_sleep(1000);
-
-
-
-
-        zclock_sleep(1000);
+        zuuid_destroy(&_component_uuid);
     }
 
     ComponentBase::ComponentBase(component_conf_j& config, Actor& actor) : _actor(&actor), _oneShotTimer(NULL) {
@@ -329,10 +305,21 @@ namespace riaps{
         return result;
     }
 
-    const ports::CallBackTimer* ComponentBase::InitTimerPort(const _component_port_tim_j& config) {
+//    const ports::CallBackTimer* ComponentBase::InitTimerPort(const _component_port_tim_j& config) {
+//        std::string timerchannel = GetTimerChannel();
+//        std::unique_ptr<ports::CallBackTimer> newtimer(new ports::CallBackTimer(timerchannel, config));
+//        newtimer->start(config.period);
+//
+//        auto result = newtimer.get();
+//
+//        _ports[config.portName] = std::move(newtimer);
+//        return result;
+//    }
+
+    const ports::PeriodicTimer* ComponentBase::InitTimerPort(const _component_port_tim_j& config) {
         std::string timerchannel = GetTimerChannel();
-        std::unique_ptr<ports::CallBackTimer> newtimer(new ports::CallBackTimer(timerchannel, config));
-        newtimer->start(config.period);
+        std::unique_ptr<ports::PeriodicTimer> newtimer(new ports::PeriodicTimer(timerchannel, config));
+        newtimer->start();
 
         auto result = newtimer.get();
 
@@ -505,19 +492,6 @@ namespace riaps{
 
     ComponentBase::~ComponentBase() {
 
-        std::cout << "ComponentBase destructor" << std::endl;
-
-        // Delete ports
-        for (auto it = _ports.begin(); it!=_ports.end(); it++){
-            auto port = it->second.release();
-            delete port;
-        }
-
-        zactor_destroy(&_zactor_component);
-
-        zuuid_destroy(&_component_uuid);
-
-        std::cout << "Component zactor destroyed" << std::endl;
     }
 
 }

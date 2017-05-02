@@ -9,7 +9,7 @@
 #include "r_subscriberport.h"
 #include "r_discoverdapi.h"
 #include "r_configuration.h"
-#include "r_timer.h"
+#include "r_periodictimer.h"
 #include "r_responseport.h"
 #include "r_requestport.h"
 #include "r_actor.h"
@@ -121,7 +121,7 @@ namespace riaps {
         const ports::SubscriberPort* InitSubscriberPort(const _component_port_sub_j&);
         const ports::ResponsePort*   InitResponsePort(const _component_port_rep_j&);
         const ports::RequestPort*    InitRequestPort(const _component_port_req_j&);
-        const ports::CallBackTimer*  InitTimerPort(const _component_port_tim_j&);
+        const ports::PeriodicTimer*  InitTimerPort(const _component_port_tim_j&);
 
         std::string             GetTimerChannel();
         std::string             GetCompUuid();
