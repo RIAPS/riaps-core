@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(riaps_core VERSION 0.1.0)
+project(riaps_core VERSION 0.4.3)
 option(arch "amd64/armhf" "amd64")
-option(BUILD_TESTS  "Build tests" ON)
+option(BUILD_TESTS  "Build tests" OFF)
 set(CMAKE_SYSTEM_NAME Linux)
 
 set(riaps_prefix "/opt/riaps/" CACHE STRING "the riaps prefix")
@@ -61,8 +61,8 @@ endif()
 
 
 SET(MAJOR_VERSION "0")
-SET(MINOR_VERSION "5")
-SET(PATCH_VERSION "0")
+SET(MINOR_VERSION "4")
+SET(PATCH_VERSION "3")
 
 IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
     INCLUDE(InstallRequiredSystemLibraries)
