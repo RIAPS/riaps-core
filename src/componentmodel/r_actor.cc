@@ -16,7 +16,7 @@ namespace riaps {
                         nlohmann::json& json_actorconfig             ,
                         nlohmann::json& json_componentsconfig        ,
                         nlohmann::json& json_messagesconfig          ,
-                        std::map<std::string, std::string>& actualActorParams)
+                        std::map<std::string, std::string>& commandLineParams)
     {
         _actor_name       = actorname;
         _application_name = applicationname;
@@ -27,41 +27,9 @@ namespace riaps {
         auto json_formals   = json_actorconfig[J_FORMALS];
 
 
-        // Process and check actor parameters
-        riaps::componentmodel::Parameters actorParams; // name, default value
 
-        for (auto it_formal = json_formals.begin();
-             it_formal != json_formals.end();
-             it_formal++){
-            std::string formalName = (it_formal.value())[J_FORMAL_NAME];
-            bool isOptional = it_formal.value()[J_FORMAL_DEF] != NULL;
 
-            std::string formalDefault = isOptional ? (it_formal.value())[J_FORMAL_DEF] : "";
 
-            // Optional
-            if (isOptional){
-
-                // Optional parameter is not passed to the actor
-                // Set it to the default value
-                if (actualActorParams.find(formalName) == actualActorParams.end()){
-                    actorParams.AddParam(formalName, "", isOptional, formalDefault);
-                }
-
-                    // Optional parameter is passed, set the parameter to the passed value
-                else {
-                    actorParams.AddParam(formalName, actualActorParams[formalName], isOptional, formalDefault);
-                }
-            }
-                // Mandatory
-            else {
-                if (!isOptional && actualActorParams.find(formalName) == actualActorParams.end()){
-                    throw std::invalid_argument("Mandatory parameter is missing from the actor: " +
-                                                _actor_name +
-                                                "(" + formalName + ")"
-                    );
-                }
-            }
-        }
 
         // Get the actor's components, if there is no component => Stop, Error.
         if(json_instances.size()==0) {
@@ -73,7 +41,7 @@ namespace riaps {
         for (auto it_local  = json_locals.begin();
                   it_local != json_locals.end();
                   it_local++){
-            std::string local_type = (it_local.value())[J_PORTTYPE];
+            std::string local_type = (it_local.value())[J_TYPE];
             local_messagetypes.insert(local_type);
         }
 
@@ -84,7 +52,7 @@ namespace riaps {
                   it_currentconfig++) {
 
             auto componentName = it_currentconfig.key();
-            std::string componentType = (it_currentconfig.value())[J_PORTTYPE];
+            std::string componentType = (it_currentconfig.value())[J_TYPE];
 
             // Check if the component in the map already (wrong configuration)
             for (auto component_config : _component_configurations) {
@@ -101,76 +69,8 @@ namespace riaps {
             new_component_config.component_name = componentName;
             new_component_config.component_type = componentType;
 
-            // Get the details of the component
             auto json_componentconfig = json_componentsconfig[componentType];
-            auto json_componentformals = json_componentconfig[J_FORMALS];
-            auto json_componentactuals = (it_currentconfig.value())[J_ACTUALS];
 
-            // Get the formals
-            new_component_config.component_parameters = GetComponentFormals(json_componentformals);
-            auto componentParameters = &new_component_config.component_parameters;
-
-            // Set the actuals
-            for (auto it_actual = json_componentactuals.begin();
-                      it_actual!= json_componentactuals.end();
-                      it_actual++){
-
-                std::string actualName = (it_actual.value())[J_ACTUAL_NAME];
-
-                auto j_actualParam = (it_actual.value())[J_ACTUAL_PARAM];
-                bool hasActualParam = j_actualParam!=NULL;
-                std::string actualParam = !hasActualParam?"":j_actualParam;
-
-                auto j_actualValue = (it_actual.value())[J_ACTUAL_VALUE];
-                bool hasActualValue = j_actualValue!=NULL;
-                std::string actualValue = "";
-
-                // Must check the type
-                if (hasActualValue){
-                    if (j_actualValue.is_string()){
-                        actualValue = j_actualValue;
-                    } else if (j_actualValue.is_boolean()){
-                        actualValue = std::to_string((bool)j_actualValue);
-                    } else if (j_actualValue.is_number()){
-                        actualValue = std::to_string((double)j_actualValue);
-                    }
-                }
-
-
-
-                // Check 1 : ActualName is defined in the ComponentFormals
-                if (componentParameters->GetParam(actualName) == NULL){
-                    throw std::invalid_argument("Parameter "
-                                                + actualName
-                                                + " is missing from the Component "
-                                                + componentName
-                                                + " definition");
-                }
-
-                // Check 2 : Instead of values, passing a parameter. Check the paramater to be passed if exists or not.
-                if (hasActualParam){
-                    if (actualActorParams.find(actualParam) == actualActorParams.end()){
-                        throw std::invalid_argument("Parameter "
-                                                    + actualParam
-                                                    + " cannot be passed to component "
-                                                    + componentName);
-                    }
-
-                    // Everything is fine, set the value
-                    if (componentParameters->SetParamValue(actualName, actualActorParams[actualParam])==NULL){
-                        throw std::invalid_argument("Parameter "
-                                                    + actualParam
-                                                    + " cannot be set in component "
-                                                    + componentName);
-                    }
-                } else if (componentParameters->SetParamValue(actualName, actualValue)==NULL){
-                    throw std::invalid_argument("Value "
-                                                + actualValue
-                                                + " cannot be set in component "
-                                                + componentName);
-                }
-
-            }
 
             //auto debuglist = componentParameters->GetParameterNames();
 
@@ -185,7 +85,7 @@ namespace riaps {
                           it_pubport++){
 
                     auto pubportname = it_pubport.key();
-                    auto pubporttype = it_pubport.value()[J_PORTTYPE];
+                    auto pubporttype = it_pubport.value()[J_TYPE];
 
 
 
@@ -212,7 +112,7 @@ namespace riaps {
                           it_subport++){
 
                     auto subportname = it_subport.key();
-                    auto subporttype = it_subport.value()[J_PORTTYPE];
+                    auto subporttype = it_subport.value()[J_TYPE];
 
                     _component_port_sub_j newsubconfig;
                     newsubconfig.portName = subportname;
@@ -544,41 +444,7 @@ namespace riaps {
 
 
 
-    Parameters riaps::Actor::GetComponentFormals(nlohmann::json &jsonFormals) {
-        Parameters results;
 
-        for (auto it_formal = jsonFormals.begin();
-             it_formal != jsonFormals.end();
-             it_formal++){
-            std::string formalName = (it_formal.value())[J_FORMAL_NAME];
-            bool hasDefault = it_formal.value()[J_FORMAL_DEF] != NULL;
-
-
-            //std::string formalDefault = !hasDefault ? "": (it_formal.value())[J_FORMAL_DEF];
-
-
-            std::string formalDefault = "";
-
-
-
-            // Must check the type
-            if (hasDefault){
-                auto j_formalValue = (it_formal.value())[J_FORMAL_DEF];
-                if (j_formalValue.is_string()){
-                    formalDefault = j_formalValue;
-                } else if (j_formalValue.is_boolean()){
-                    formalDefault = std::to_string((bool)j_formalValue);
-                } else if (j_formalValue.is_number()){
-                    formalDefault = std::to_string((double)j_formalValue);
-                }
-            }
-
-            // If default value is specified, then the parameter is not mandatory.
-            results.AddParam(formalName, "", hasDefault, formalDefault);
-        }
-
-        return results;
-    }
 
     std::map<std::string, std::string> riaps::Actor::GetActualParams(nlohmann::json &jsonActuals,
                                                                      std::map<std::string, std::string>& actorParams) {

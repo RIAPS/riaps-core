@@ -20,11 +20,12 @@ namespace riaps {
         public:
             Parameters();
 
+            void AddParam(const Parameter& param);
             void AddParam(std::string name, std::string value, bool isOptional, std::string defaultValue = "");
             const Parameter* SetParamValue(std::string name, std::string value);
             const Parameter* GetParam(std::string name) const;
 
-            std::vector<std::string> GetParameterNames();
+            std::vector<std::string>      GetParameterNames();
 
             ~Parameters();
 
@@ -45,6 +46,9 @@ namespace riaps {
             int GetValueAsInt() const;
 
             bool GetValueAsBool() const;
+
+            const std::string& GetName() const;
+            const std::string& GetDefaultValue() const;
 
             bool IsOptional() const;
 

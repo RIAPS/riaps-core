@@ -33,6 +33,6 @@
 #define J_PORT_REQTYPE "req_type"
 #define J_PORT_REPTYPE "rep_type"
 
-#define J_PORTTYPE     "type"
+#define J_TYPE     "type"
 
 #endif //RIAPS_CORE_R_JSONMODEL_H_H

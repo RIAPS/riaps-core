@@ -22,6 +22,10 @@ namespace riaps{
             _params[name] = newItem;
         }
 
+        void Parameters::AddParam(const Parameter &param) {
+            AddParam(param.GetName(), param.GetValueAsString(), param.IsOptional(), param.GetDefaultValue());
+        }
+
 
 
         const Parameter* Parameters::GetParam(std::string name) const {
@@ -50,6 +54,8 @@ namespace riaps{
             return results;
         }
 
+
+
         Parameters::~Parameters() {
 
         }
@@ -62,6 +68,14 @@ namespace riaps{
 
         Parameter::Parameter() {
 
+        }
+
+        const std::string& Parameter::GetDefaultValue() const {
+            return _paramDefaultValue;
+        }
+
+        const std::string& Parameter::GetName() const {
+            return _paramName;
         }
 
         void Parameter::SetValue(std::string value) {
