@@ -87,7 +87,7 @@ namespace riaps{
 //        }
 
         PublisherPort::~PublisherPort() {
-            std::cout << "Publisherport " << GetConfig()->portName << " is stopping" <<std::endl;
+            // std::cout << "Publisherport " << GetConfig()->portName << " is stopping" <<std::endl;
         }
     }
 }

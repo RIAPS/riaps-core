@@ -7,10 +7,12 @@
 
 ArgumentParser::ArgumentParser(std::map<std::string, std::string> &commandLineParams,
                                nlohmann::json &json_actorconfig,
-                               nlohmann::json &json_componentsconfig)
+                               nlohmann::json &json_componentsconfig,
+                               const std::string& actorname)
                         : _json_actorconfig(json_actorconfig),
                           _commandLineParams(commandLineParams),
-                          _json_componentsconfig(json_componentsconfig){
+                          _json_componentsconfig(json_componentsconfig),
+                          _actorname(actorname) {
 
 }
 
@@ -22,9 +24,6 @@ riaps::componentmodel::Parameters ArgumentParser::Parse(const std::string& compo
     auto json_locals    = _json_actorconfig[J_LOCALS];
     auto json_actor_formals   = _json_actorconfig[J_FORMALS];
 
-
-    // TODO:
-    std::string actorname = "";
 
     riaps::componentmodel::Parameters actorParams;
 
@@ -61,124 +60,90 @@ riaps::componentmodel::Parameters ArgumentParser::Parse(const std::string& compo
         else {
             if (!isOptional && _commandLineParams.find(formalName) == _commandLineParams.end()){
                 throw std::invalid_argument("Mandatory parameter is missing from the actor: " +
-                                            actorname +
+                                            _actorname +
                                             "(" + formalName + ")"
                 );
+            }
+            else {
+                actorParams.AddParam(formalName, _commandLineParams[formalName], isOptional, formalDefault);
             }
         }
     }
 
     // Get the components
-    auto currentcomponentconfig = json_instances[componentName];
-    std::string componentType   = currentcomponentconfig[J_TYPE];
+    auto json_compinst = json_instances[componentName];
+    std::string componentType   = json_compinst[J_TYPE];
+    auto json_componentactuals = json_compinst[J_ACTUALS];
+    auto componentActuals = GetComponentActuals(json_componentactuals);
 
-    // Get the details of the component
+    riaps::componentmodel::Parameters resolvedComponentParams;
+
+    // Resolve actual params
+    for (auto it_actual = componentActuals.begin();
+              it_actual!= componentActuals.end();
+              it_actual++){
+
+        // Actual value refers to a previously passed parameter -> resolve
+        if (it_actual->HasParamReferred()) {
+            auto currentActorParam = actorParams.GetParam(it_actual->GetReferredParamName());
+
+            // Something is wrong, missing argument
+            if (currentActorParam == NULL){
+                throw std::invalid_argument("Missing argument: "      +
+                                            it_actual->GetReferredParamName() +
+                                            " for component "         +
+                                            componentName);
+            }
+
+            // Found it, create the resolved param
+            Parameter p(it_actual->GetParamName(), currentActorParam->IsOptional());
+            p.SetValue(currentActorParam->GetValueAsString());
+            resolvedComponentParams.AddParam(p);
+        }
+
+        // Just value, leave it as is
+        else {
+            Parameter p(it_actual->GetParamName(), false);
+            p.SetValue(it_actual->GetParamValue());
+            resolvedComponentParams.AddParam(p);
+        }
+
+
+    }
+
+    // Get the component formals
     auto json_componentconfig = _json_componentsconfig[componentType];
     auto json_componentformals = json_componentconfig[J_FORMALS];
-    auto json_componentactuals = currentcomponentconfig[J_ACTUALS];
-
-    //_component_conf_j new_component_config;
-
-    // Get the formals
-    //new_component_config.component_parameters = GetComponentFormals(json_componentformals);
-    //auto componentParameters = &new_component_config.component_parameters;
-
     auto componentFormals = GetComponentFormals(json_componentformals);
-    auto componentActuals = GetComponentActuals(json_componentactuals, actorParams);
+    auto componentFormalNames = componentFormals.GetParameterNames();
 
-    // Check 1 - All the necessary formals are provided
-    auto formalParameterNames = componentFormals.GetParameterNames();
-//    for (auto it_formalparamname = formalParameterNames.begin();
-//              it_formalparamname!=formalParameterNames.end();
-//              it_formalparamname++){
-//
-//        if (componentActuals.GetParam(*it_formalparamname)==NULL){
-//            throw std::invalid_argument("Parameter "
-//                                        + *it_formalparamname
-//                                        + " is missing for Component "
-//                                        + componentName);
-//        }
-//    }
+    // Check if every parameter was passed. If not, check if they are optional.
+    // If not passed and not optional -> error.
 
-    // Go through the actuals, check if the paramater is passed or just assigned
+    for (auto it_formal = componentFormalNames.begin();
+              it_formal != componentFormalNames.end();
+              it_formal++){
+        auto currentFormal = componentFormals.GetParam(*it_formal);
 
-    auto actualParameterNames  = componentActuals.GetParameterNames();
-    auto actualActorParamNames = actorParams.GetParameterNames();
-
-    riaps::componentmodel::Parameters resultComponentParameters;
-
-    for (auto it_formalparamname = formalParameterNames.begin();
-         it_formalparamname!=formalParameterNames.end();
-         it_formalparamname++) {
-
-        auto compFormalParamName = *it_formalparamname;
-
-        // Is it in the actuals?
-        if (componentActuals.GetParam(compFormalParamName)!=NULL){
-            // Yes it is.
-            // Is this parameter passed from the actor? Then try to resolve it
-
+        // Yep, the parameter already exist
+        if (resolvedComponentParams.GetParam(currentFormal->GetName())!=NULL){
+            continue;
+        }
+        // The parameter hasn't passed. Check if it is optional
+        else if (currentFormal->IsOptional()){
+            // Yes it is optional, set the default value
+            Parameter p(currentFormal->GetName(), currentFormal->IsOptional(), currentFormal->GetDefaultValue());
+            p.SetValue(currentFormal->GetDefaultValue());
+            resolvedComponentParams.AddParam(p);
         }
 
-        // Ok, not in the actuals, but it is optional?
-        else if (componentFormals.GetParam(compFormalParamName)->IsOptional()) {
-            // Great. It is optional, add the default value
-            auto p = componentFormals.GetParam(compFormalParamName);
-            resultComponentParameters.AddParam(*p);
-
-        }
+        // Not optional and not passed. Error!
         else {
-            throw std::invalid_argument("Formal parameter: "
-                                      + compFormalParamName
-                                      + " is not in the actuals.");
+            throw std::invalid_argument("Parameter: " + currentFormal->GetName() + " is mandatory, but not passed.");
         }
     }
 
-    for (auto it_actualname  = actualParameterNames.begin();
-              it_actualname != actualParameterNames.end();
-              it_actualname++){
-        if ()
-    }
-
-
-
-//    {
-//
-//
-//
-//        // Check 1 : ActualName is defined in the ComponentFormals
-//        if (componentParameters->GetParam(actualName) == NULL){
-//            throw std::invalid_argument("Parameter "
-//                                        + actualName
-//                                        + " is missing from the Component "
-//                                        + componentName
-//                                        + " definition");
-//        }
-//
-//        // Check 2 : Instead of values, passing a parameter. Check the paramater to be passed if exists or not.
-//        if (hasActualParam){
-//            if (actualActorParams.find(actualParam) == actualActorParams.end()){
-//                throw std::invalid_argument("Parameter "
-//                                            + actualParam
-//                                            + " cannot be passed to component "
-//                                            + componentName);
-//            }
-//
-//            // Everything is fine, set the value
-//            if (componentParameters->SetParamValue(actualName, actualActorParams[actualParam])==NULL){
-//                throw std::invalid_argument("Parameter "
-//                                            + actualParam
-//                                            + " cannot be set in component "
-//                                            + componentName);
-//            }
-//        } else if (componentParameters->SetParamValue(actualName, actualValue)==NULL){
-//            throw std::invalid_argument("Value "
-//                                        + actualValue
-//                                        + " cannot be set in component "
-//                                        + componentName);
-//        }
-//
-//    }
+    return resolvedComponentParams;
 }
 
 riaps::componentmodel::Parameters ArgumentParser::GetComponentFormals(nlohmann::json &jsonFormals) {
@@ -211,9 +176,9 @@ riaps::componentmodel::Parameters ArgumentParser::GetComponentFormals(nlohmann::
     return results;
 }
 
-riaps::componentmodel::Parameters GetComponentActuals(nlohmann::json&                    json_componentactuals,
-                                                      riaps::componentmodel::Parameters& actorParams) {
-    Parameters results;
+
+std::vector<riaps::componentmodel::ComponentActual> ArgumentParser::GetComponentActuals(nlohmann::json& json_componentactuals) {
+    std::vector<riaps::componentmodel::ComponentActual> results;
 
     // Check the component actuals
     for (auto it_actual = json_componentactuals.begin();
@@ -239,17 +204,11 @@ riaps::componentmodel::Parameters GetComponentActuals(nlohmann::json&           
             } else if (j_actualValue.is_number()) {
                 actualValue = std::to_string((double) j_actualValue);
             }
-            results.AddParam(actualName, actualValue, false);
+            ComponentActual act(actualName, actualValue, false);
+            results.push_back(act);
         } else if (hasActualParam){
-
-            auto passedParam = actorParams.GetParam(actualName);
-            // Should be passed from the actor. If not, error.
-            if ( passedParam != NULL){
-                results.AddParam(actualName, passedParam->GetValueAsString(), passedParam->IsOptional(), passedParam->GetDefaultValue());
-            }
-            else {
-                throw std::invalid_argument(actualName + " is not present in actor arguments.");
-            }
+            ComponentActual act(actualName, actualParam, true);
+            results.push_back(act);
         }
     }
 

@@ -7,6 +7,7 @@
 #include <const/r_jsonmodel.h>
 
 #include <set>
+#include <componentmodel/r_argumentparser.h>
 
 
 namespace riaps {
@@ -68,6 +69,9 @@ namespace riaps {
 
             new_component_config.component_name = componentName;
             new_component_config.component_type = componentType;
+
+            ArgumentParser parser(commandLineParams, json_actorconfig, json_componentsconfig, actorname);
+            new_component_config.component_parameters = parser.Parse(componentName);
 
             auto json_componentconfig = json_componentsconfig[componentType];
 
@@ -341,141 +345,13 @@ namespace riaps {
             else {
             }
         }
-        /*std::ifstream ifs(configfile);
-
-        std::vector<std::unique_ptr<riaps::ComponentBase>> components;
-
-        if (ifs.good()){
-
-            nlohmann::json config_json = nlohmann::json::parse(ifs);
-
-            auto actor_config      = config_json["actor"];
-            auto components_config = config_json["components"];
-
-
-
-            // Get the component configs
-            for (auto itcomp = components_config.begin(); itcomp != components_config.end(); ++itcomp) {
-                nlohmann::json current_component = (*itcomp);
-
-                component_conf cconf;
-
-                auto publishers  = current_component["publishers"];
-                auto subscribers = current_component["subscribers"];
-                auto timers      = current_component["timers"];
-                auto clients     = current_component["clients"];
-                auto servers     = current_component["servers"];
-
-                cconf.component_name = current_component["name"];
-
-                // Get the publishers
-                for (auto itpub = publishers.begin(); itpub != publishers.end(); ++itpub) {
-                    nlohmann::json current_publisher = (*itpub);
-
-                    // Publisher port
-                    publisher_conf pport;
-                    pport.servicename = current_publisher["name"];
-                    pport.network_iface = current_publisher["network_iface"];
-                    pport.port = current_publisher["port"];
-
-                    cconf.publishers_config.push_back(pport);
-                }
-
-                // Get the timers
-                for (auto ittim = timers.begin(); ittim != timers.end(); ++ittim) {
-                    nlohmann::json current_timer = (*ittim);
-                    periodic_timer_conf ptimer;
-                    ptimer.timerid   = current_timer["timerid"];
-                    ptimer.interval  = current_timer["interval"];
-                    cconf.periodic_timer_config.push_back(ptimer);
-                }
-
-                // Get the subscribers
-                for (auto itsub = subscribers.begin(); itsub != subscribers.end(); ++itsub) {
-                    nlohmann::json current_subscriber = (*itsub);
-
-                    subscriber_conf sconf;
-                    sconf.remoteservice_name = current_subscriber["remoteservice_name"];
-                    sconf.servicename = current_subscriber["name"];       // Optional parameter
-                    cconf.subscribers_config.push_back(sconf);
-                }
-
-                // Get the clients (request ports)
-                for (auto itcli = clients.begin(); itcli != clients.end(); ++itcli) {
-                    nlohmann::json current_client = (*itcli);
-                    request_conf rconf;
-                    rconf.remoteservice_name = current_client["remoteservice_name"];
-                    cconf.requests_config.push_back(rconf);
-                }
-
-                // Get the server (response ports)
-                for (auto itsrv = servers.begin(); itsrv != servers.end(); ++itsrv) {
-                    nlohmann::json current_server = (*itsrv);
-                    response_conf resp_conf;
-                    resp_conf.network_iface = current_server["network_iface"];
-                    resp_conf.port = current_server["port"]; // auto bind
-                    resp_conf.servicename = current_server["name"];;
-                }
-
-                void *handle = dlopen(("./lib" + cconf.component_name + ".so").c_str(), RTLD_NOW);
-                if (handle == NULL)
-                    std::cerr << dlerror() << std::endl;
-                else {
-                    riaps::ComponentBase * (*create)(component_conf&);
-                    create = (riaps::ComponentBase *(*)(component_conf&)) dlsym(handle, "create_component");
-                    riaps::ComponentBase* component_instance = (riaps::ComponentBase *)create(cconf);
-                    components.push_back(std::unique_ptr<riaps::ComponentBase>(component_instance));
-                    //riaps::ComponentBase *component_instance = (riaps::ComponentBase *) create(cconf);
-                }
-
-            }
-
-            while (!zsys_interrupted) {
-                void *which = zpoller_wait(_poller, 2000);
-
-                if (which == _actor_zsock) {
-                    // Maybe later, control messages to the actor
-                } else {
-                }
-            }
-        }
-         */
     }
 
 
 
 
 
-    std::map<std::string, std::string> riaps::Actor::GetActualParams(nlohmann::json &jsonActuals,
-                                                                     std::map<std::string, std::string>& actorParams) {
-        std::map<std::string, std::string> results;
-
-        for (auto it_actual = jsonActuals.begin();
-             it_actual != jsonActuals.end();
-             it_actual++) {
-            std::string actualName = (it_actual.value())[J_ACTUAL_NAME];
-            bool isActualParam = (it_actual.value())[J_ACTUAL_PARAM]!=NULL;
-            std::string actualParam = !isActualParam?"":(it_actual.value())[J_ACTUAL_PARAM];
-            std::string actualValue = (it_actual.value())[J_ACTUAL_NAME]==NULL?"":(it_actual.value())[J_ACTUAL_NAME];
-
-            // Parameter is passed from the actor
-            if (isActualParam){
-                if (actorParams.find(actualParam) == actorParams.end()){
-                    throw std::invalid_argument("Cannot pass parameter: " +
-                                                        actualParam +
-                                                        " to " +
-                                                        actualName +
-                                                        " in actor: " + _actor_name);
-                }
-                results[actualName] = actorParams[actualParam];
-            }
-            else {
-                results[actualName] = actualValue;
-            }
-        }
-
-        return results;
-    }
+    
 
     riaps::Actor::~Actor() {
         //deregister_actor(GetActorId());

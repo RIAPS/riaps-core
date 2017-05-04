@@ -89,5 +89,40 @@ namespace riaps{
         bool Parameter::IsOptional() const {
             return _isOptional;
         }
+
+        ComponentActual::ComponentActual(const std::string &paramName, const std::string &paramValue, bool hasReferred)
+            : _paramName(paramName),
+              _paramValue(paramValue),
+              _hasParamReferred(hasReferred){
+        }
+
+
+        const std::string& ComponentActual::GetParamValue() const {
+            if (_hasParamReferred){
+                throw std::runtime_error("Cannot query param value of referred parameter here.");
+            }
+            return _paramValue;
+        }
+
+        const std::string& ComponentActual::GetReferredParamName() const {
+            if (_hasParamReferred) return _paramValue;
+            throw std::runtime_error("Cannot query referred param here. It is value type param.");
+        }
+
+        bool ComponentActual::HasValue() {
+            return !_hasParamReferred;
+        }
+
+        bool ComponentActual::HasParamReferred() {
+            return _hasParamReferred;
+        }
+
+        const std::string& ComponentActual::GetParamName() const {
+            return _paramName;
+        }
+
+        ComponentActual::~ComponentActual() {
+
+        }
     }
 }

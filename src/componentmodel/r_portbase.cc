@@ -76,7 +76,7 @@ namespace riaps {
 
         PortBase::~PortBase() {
             if (_port_socket) {
-                std::cout << "Destroy port socket : " << GetPortName() << std::endl;
+                // std::cout << "Destroy port socket : " << GetPortName() << std::endl;
                 zsock_destroy(&_port_socket);
             }
         }

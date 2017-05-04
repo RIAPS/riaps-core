@@ -63,14 +63,7 @@ namespace riaps {
 
         std::vector<component_conf_j> _component_configurations;
 
-    private:
-        //Parameters    GetComponentFormals(nlohmann::json& jsonFormals);
-
-        std::map<std::string, std::string> GetActualParams(nlohmann::json &jsonActuals,
-                                                           std::map<std::string, std::string>& actorParams);
-
-        //Components, componentkey - componenttype
-        //std::map<std::string, std::string> _componentname_type;
+   
     };
 }
 

@@ -58,6 +58,31 @@ namespace riaps {
             std::string _paramValue;
             bool        _isOptional;
         };
+
+        class ComponentActual{
+
+        public:
+            ComponentActual(const std::string& paramName,
+                            const std::string& paramValue,
+                            bool  hasReferred);
+
+
+
+            const std::string& GetParamName()        const;
+            const std::string& GetParamValue()       const;
+            const std::string& GetReferredParamName() const;
+
+            bool HasValue();
+            bool HasParamReferred();
+
+            ~ComponentActual();
+
+        private:
+            std::string _paramName;
+            std::string _paramValue;
+            bool        _hasParamReferred;
+
+        };
     }
 }
 #endif //RIAPS_CORE_R_PARAMETER_H
