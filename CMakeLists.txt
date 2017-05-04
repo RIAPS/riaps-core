@@ -43,6 +43,8 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_HOME_DIRECTORY}/bin)
 include_directories(include)
 add_subdirectory(src/componentmodel)
 add_subdirectory(src/discoveryd)
+add_subdirectory(src/devm)
+
 if (BUILD_TESTS)
     include(CTest)
     enable_testing()
