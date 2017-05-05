@@ -18,8 +18,10 @@ set(FRAMEWORK_LIB_FILES r_discoverdapi.cc
                         ../framework/rfw_network_interfaces.cc
                         ../framework/rfw_configuration.cc
                         ../messaging/r_message.cc
+                        ../../include/messaging/disco.capnp.c++
                         r_oneshottimer.cc
                         r_argumentparser.cc
+
         )
 
 add_library(riaps SHARED ${FRAMEWORK_LIB_FILES})
