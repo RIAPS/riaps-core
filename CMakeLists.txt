@@ -44,6 +44,7 @@ include_directories(include)
 add_subdirectory(src/componentmodel)
 add_subdirectory(src/discoveryd)
 add_subdirectory(src/devm)
+add_subdirectory(src/device)
 
 if (BUILD_TESTS)
     include(CTest)
