@@ -24,14 +24,11 @@ namespace riaps {
 
     class Actor {
     public:
-        Actor(const std::string& applicationname,
-              const std::string& actorname,
-              nlohmann::json& json_actorconfig,
-              nlohmann::json& json_componentsconfig,
-              nlohmann::json& json_messagesconfig,
-              std::map<std::string, std::string>& actualActorParams
-        )
-        ;
+
+
+        static Actor* CreateActor(nlohmann::json& configJson,
+                                  const std::string& actorName,
+                                  std::map<std::string, std::string>& actualParams);
 
         void Init();
         virtual void start();
@@ -42,6 +39,15 @@ namespace riaps {
         void UpdatePort(std::string& instancename, std::string& portname, std::string& host, int port);
 
     protected:
+        Actor(const std::string& applicationname,
+              const std::string& actorname,
+              nlohmann::json& json_actorconfig,
+              nlohmann::json& json_componentsconfig,
+              nlohmann::json& json_messagesconfig,
+              std::map<std::string, std::string>& actualActorParams
+        )
+        ;
+
         zpoller_t*                 _poller;
 
         // Channel for incomming controll messages (e.g.: restart component)

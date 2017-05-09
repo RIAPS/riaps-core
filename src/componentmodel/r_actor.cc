@@ -12,6 +12,32 @@
 
 namespace riaps {
 
+    Actor* riaps::Actor::CreateActor(nlohmann::json& configJson,
+                                     const std::string& actorName,
+                                     std::map<std::string, std::string>& actualParams) {
+        std::string applicationName = configJson["name"];
+        nlohmann::json json_actors     = configJson["actors"];
+        nlohmann::json json_components = configJson["components"];
+        auto json_messages   = configJson["messages"];
+
+        // Find the actor to be started
+        if (json_actors.find(actorName)==json_actors.end()){
+            std::cerr << "Didn't find actor in the model file: " << actorName << std::endl;
+            return NULL;
+        }
+
+        auto json_currentactor = json_actors[actorName];
+
+        return new riaps::Actor(
+                applicationName,
+                actorName,
+                json_currentactor,
+                json_components,
+                json_messages,
+                actualParams
+        );
+    }
+
     riaps::Actor::Actor(const std::string&     applicationname       ,
                         const std::string&     actorname             ,
                         nlohmann::json& json_actorconfig             ,
