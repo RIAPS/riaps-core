@@ -6,6 +6,7 @@
 #include <regex>
 
 #include <sched.h>
+#include <componentmodel/r_commandlineparser.h>
 
 int main(int argc, char* argv[]) {
 
@@ -26,92 +27,22 @@ int main(int argc, char* argv[]) {
         return 0;
     }
     else {
-        std::unique_ptr<riaps::Actor> actor;
-
-        // First param: <model>
-        std::string modelfile = std::string(argv[1]);
-        std::ifstream ifs(modelfile);
-
-        if (!ifs.good()){
-            std::cerr << "Cannot open modelfile: " << modelfile << std::endl;
-            return -1;
-        }
-
-        std::string actorname = std::string(argv[2]);
-        if (actorname.empty()){
-            std::cerr << "Actorname cannot be empty string" << std::endl;
-            return -1;
-        }
 
 
         // get the rest of the params
         std::map<std::string, std::string> actualParams;
-        for (int i = 3; i<argc; i++){
-            std::string currentParam = std::string(argv[i]);
-            std::regex paramRegex("--(.+)=(.+)");
+        std::string actorName;
+        nlohmann::json configJson;
 
-            std::smatch paramMatch;
-
-            if (!std::regex_search(currentParam, paramMatch, paramRegex)) {
-                std::cerr << "Wrong parameter: " << argv[i] << std::endl;
-                return -1;
-            }
-
-            if (paramMatch.size()<3){
-                std::cerr << "Wrong parameter: " << argv[i] << std::endl;
-                return -1;
-            }
-
-            std::string paramName = paramMatch[1];
-            std::string paramValue = paramMatch[2];
-
-            actualParams[paramName] = paramValue;
-
-        }
-
-        nlohmann::json config_json;
-
-        // Parse the model file
-        try {
-            config_json = nlohmann::json::parse(ifs);
-        }
-        catch(std::invalid_argument& e){
-            std::cerr << "Cannot parse: " << modelfile << std::endl;
-            std::cerr << e.what() << std::endl;
+        CommandLineParser cmdLineParser(argv, argc);
+        if (cmdLineParser.Parse(actualParams, actorName, configJson) == -1){
+            std::cerr << "Couldn't parse commandline parameters" << std::endl;
             return -1;
         }
 
-        // Get the model parameters
-        std::string applicationName;
-
-
-
         try {
-            applicationName = config_json["name"];
-
-            auto json_actors     = config_json["actors"];
-            auto json_components = config_json["components"];
-            auto json_messages   = config_json["messages"];
-
-            // Find the actor to be started
-            if (json_actors.find(actorname)==json_actors.end()){
-                std::cerr << "Didn't find actor in the model file: " << actorname << std::endl;
-                return -1;
-            }
-
-            auto json_currentactor = json_actors[actorname];
-
-            // Create and start the Actor
-
-            actor = std::unique_ptr<riaps::Actor>(
-                    new riaps::Actor(
-                            applicationName,
-                            actorname,
-                            json_currentactor,
-                            json_components,
-                            json_messages,
-                            actualParams
-                    ));
+            riaps::Actor* aptr = riaps::Actor::CreateActor(configJson, actorName, actualParams);
+            std::unique_ptr<riaps::Actor> actor = std::unique_ptr<riaps::Actor>(aptr);
             actor->Init();
             actor->start();
         }

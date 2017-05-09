@@ -1,6 +1,8 @@
-//
-// Created by istvan on 5/3/17.
-//
+/*
+ *
+ * Author: Istvan Madari
+ *
+ */
 
 #ifndef RIAPS_CORE_R_ARGUMENTPARSER_H
 #define RIAPS_CORE_R_ARGUMENTPARSER_H
@@ -23,6 +25,9 @@ public:
 
     // Process and check actor parameters
     riaps::componentmodel::Parameters Parse(const std::string& componentName);
+
+
+
 
 
 
