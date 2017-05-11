@@ -5,8 +5,8 @@
 #ifndef RIAPS_CORE_RFW_CONFIGURATION_H
 #define RIAPS_CORE_RFW_CONFIGURATION_H
 
-#define DISCOVERY_SERVICE_IPC "ipc:///tmp/riaps-disco"
 
+#include <const/r_endpointconfigs.h>
 #include <string>
 
 namespace riaps {
@@ -14,6 +14,7 @@ namespace riaps {
         class Configuration{
         public:
             static std::string GetDiscoveryServiceIpc();
+            static std::string GetDeviceManagerServiceIpc();
         };
     }
 }
