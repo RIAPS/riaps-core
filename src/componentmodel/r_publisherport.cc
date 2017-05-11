@@ -37,8 +37,8 @@ namespace riaps{
                                   config.messageType,
                                   _host,
                                   _port,
-                                  Kind::PUB,
-                                  (config.isLocal?Scope::LOCAL:Scope::GLOBAL),
+                                  riaps::discovery::Kind::PUB,
+                                  (config.isLocal?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
                                   {})) {
                 throw std::runtime_error("Publisher port couldn't be registered.");
             }

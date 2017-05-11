@@ -7,8 +7,8 @@ bool register_service(const std::string&              app_name     ,
                       const std::string&              message_type ,
                       const std::string&              ip_address   ,
                       const uint16_t&                 port         ,
-                      Kind                            kind         ,
-                      Scope                           scope        ,
+                      riaps::discovery::Kind          kind         ,
+                      riaps::discovery::Scope         scope        ,
                       const std::vector<std::string>& tags
                       ) {
 
@@ -20,7 +20,7 @@ bool register_service(const std::string&              app_name     ,
     /// Request
     /////
     capnp::MallocMessageBuilder message;
-    auto dreqBuilder = message.initRoot<DiscoReq>();
+    auto dreqBuilder = message.initRoot<riaps::discovery::DiscoReq>();
     auto sreqBuilder = dreqBuilder.initServiceReg();
 
     auto sreqpath   = sreqBuilder.initPath();
@@ -57,7 +57,7 @@ bool register_service(const std::string&              app_name     ,
     auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
 
     capnp::FlatArrayMessageReader reader(capnp_data);
-    auto msg_discoreq= reader.getRoot<DiscoRep>();
+    auto msg_discoreq= reader.getRoot<riaps::discovery::DiscoRep>();
 
 
     // Register actor
@@ -66,7 +66,7 @@ bool register_service(const std::string&              app_name     ,
         auto status = msg_response.getStatus();
 
         // TODO: Check status
-        if (status == Status::OK){
+        if (status == riaps::discovery::Status::OK){
             result = true;
         }
     }
@@ -121,14 +121,13 @@ bool register_service(const std::string&              app_name     ,
 
 
 std::vector<service_lookup_result>
-subscribe_to_service(const std::string& app_name  ,
-                     const std::string& part_name , // instance_name
-                     const std::string& actor_name,
- //                       std::string part_type ,
-                     Kind               kind      ,
-                     Scope              scope     ,
-                     const std::string& port_name ,
-                     const std::string& msg_type  // PortType
+subscribe_to_service(const std::string&      app_name  ,
+                     const std::string&      part_name , // instance_name
+                     const std::string&      actor_name,
+                     riaps::discovery::Kind  kind      ,
+                     riaps::discovery::Scope scope     ,
+                     const std::string&      port_name ,
+                     const std::string&      msg_type  // PortType
         ){
 
     // TODO: Ask only once
@@ -140,7 +139,7 @@ subscribe_to_service(const std::string& app_name  ,
     /// Request
     /////
     capnp::MallocMessageBuilder message;
-    auto dreqBuilder = message.initRoot<DiscoReq>();
+    auto dreqBuilder = message.initRoot<riaps::discovery::DiscoReq>();
     auto slookupBuilder = dreqBuilder.initServiceLookup();
 
     auto pathBuilder = slookupBuilder.initPath();
@@ -178,7 +177,7 @@ subscribe_to_service(const std::string& app_name  ,
     auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
 
     capnp::FlatArrayMessageReader reader(capnp_data);
-    auto msg_discoreq= reader.getRoot<DiscoRep>();
+    auto msg_discoreq= reader.getRoot<riaps::discovery::DiscoRep>();
 
 
     // Get service
@@ -187,7 +186,7 @@ subscribe_to_service(const std::string& app_name  ,
         auto status = msg_service_lookup.getStatus();
         auto sockets = msg_service_lookup.getSockets();
 
-        if (status == Status::OK) {
+        if (status == riaps::discovery::Status::OK) {
             auto sockets = msg_service_lookup.getSockets();
             for (auto it = sockets.begin(); it!=sockets.end();it++){
 
@@ -223,8 +222,8 @@ register_actor(const std::string& appname, const std::string& actorname){
     /// Request
     /////
     capnp::MallocMessageBuilder message;
-    DiscoReq::Builder dreqBuilder = message.initRoot<DiscoReq>();
-    ActorRegReq::Builder areqBuilder = dreqBuilder.initActorReg();
+    riaps::discovery::DiscoReq::Builder dreqBuilder = message.initRoot<riaps::discovery::DiscoReq>();
+    riaps::discovery::ActorRegReq::Builder areqBuilder = dreqBuilder.initActorReg();
 
     areqBuilder.setActorName(actorname);
     areqBuilder.setAppName(appname);
@@ -236,8 +235,6 @@ register_actor(const std::string& appname, const std::string& actorname){
     zmsg_t* msg = zmsg_new();
     zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
 
-
-    //std::string mac_address = GetMacAddressStripped();
     std::string ipcAddress = riaps::framework::Configuration::GetDiscoveryServiceIpc();
     zsock_t * client = zsock_new_req (ipcAddress.c_str());
     assert(client);
@@ -256,7 +253,7 @@ register_actor(const std::string& appname, const std::string& actorname){
     auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
 
     capnp::FlatArrayMessageReader reader(capnp_data);
-    auto msg_discoreq= reader.getRoot<DiscoRep>();
+    auto msg_discoreq= reader.getRoot<riaps::discovery::DiscoRep>();
 
     zsock_t* discovery_port = NULL;
 
@@ -267,9 +264,7 @@ register_actor(const std::string& appname, const std::string& actorname){
         auto port = msg_response.getPort();
 
 
-        // TODO: Check status
-
-        if (status == Status::ERR){
+        if (status == riaps::discovery::Status::ERR){
             std::cout << "Couldn't register actor: " << actorname << std::endl;
         }
         else {
@@ -288,31 +283,4 @@ register_actor(const std::string& appname, const std::string& actorname){
     zsock_destroy(&client);
 
     return discovery_port;
-
-    //if (!msg_response){
-    //    std::cout << "No msg => interrupted" << std::endl;
-    //    return false;
-    //}
-
-
-    /*zmsg_t* msg = zmsg_new();
-    zmsg_addstr(msg, CMD_DISC_REGISTER_ACTOR);
-    zmsg_addstr(msg, actorname.c_str());
-    zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC);
-    assert(client);
-
-    // TODO check return value
-    zmsg_send(&msg, client);
-
-    char* msg_response = zstr_recv(client);
-
-    if (!msg_response){
-        std::cout << "No msg => interrupted" << std::endl;
-        return;
-    }
-    else{
-        free(msg_response);
-    }
-
-    zsock_destroy(&client);*/
 }

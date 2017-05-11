@@ -102,15 +102,15 @@ riaps_actor (zsock_t *pipe, void *args)
             auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
 
             capnp::FlatArrayMessageReader reader(capnp_data);
-            auto msgProviderlistPush = reader.getRoot<ProviderListPush>();
+            auto msgProviderlistPush = reader.getRoot<riaps::discovery::ProviderListPush>();
 
             // If update
             if (msgProviderlistPush.isProviderUpdate()) {
-                ProviderListUpdate::Reader msgProviderUpdate = msgProviderlistPush.getProviderUpdate();
+                riaps::discovery::ProviderListUpdate::Reader msgProviderUpdate = msgProviderlistPush.getProviderUpdate();
                 handleUpdate(msgProviderUpdate, clientSubscriptions, clients);
 
             } else if (msgProviderlistPush.isProviderGet()){
-                ProviderListGet::Reader msgProviderGet = msgProviderlistPush.getProviderGet();
+                riaps::discovery::ProviderListGet::Reader msgProviderGet = msgProviderlistPush.getProviderGet();
                 handleGet(msgProviderGet, clients);
             }
 

@@ -20,26 +20,27 @@
 
 #define DHT_ROUTER_CHANNEL "ipc:///tmp/dhtrouterchannel"
 
-static std::map<Kind, std::string> kindMap = {{Kind::PUB, "pub"},
-                                              {Kind::SUB, "sub"},
-                                              {Kind::CLT, "clt"},
-                                              {Kind::SRV, "srv"},
-                                              {Kind::REQ, "req"},
-                                              {Kind::REP, "rep"}};
+static std::map<riaps::discovery::Kind, std::string> kindMap =
+                                             {{riaps::discovery::Kind::PUB, "pub"},
+                                              {riaps::discovery::Kind::SUB, "sub"},
+                                              {riaps::discovery::Kind::CLT, "clt"},
+                                              {riaps::discovery::Kind::SRV, "srv"},
+                                              {riaps::discovery::Kind::REQ, "req"},
+                                              {riaps::discovery::Kind::REP, "rep"}};
 
 std::pair<std::string, std::string>
 buildInsertKeyValuePair(std::string appName ,
                         std::string msgType ,
-                        Kind        kind    ,
-                        Scope       scope   ,
+                        riaps::discovery::Kind        kind    ,
+                        riaps::discovery::Scope       scope   ,
                         std::string host    ,
                         uint16_t    port    );
 
 std::pair<std::string, std::string>
 buildLookupKey(std::string appName            ,
                std::string msgType            ,
-               Kind        kind               ,
-               Scope       scope              ,
+               riaps::discovery::Kind        kind               ,
+               riaps::discovery::Scope       scope              ,
                std::string clientActorHost    ,
                std::string clientActorName    ,
                std::string clientInstanceName ,

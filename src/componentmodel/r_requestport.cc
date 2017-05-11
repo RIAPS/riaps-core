@@ -37,8 +37,8 @@ namespace riaps {
                     subscribe_to_service(_parent_component->GetActor()->GetApplicationName(),
                                          _parent_component->GetConfig().component_name,
                                          _parent_component->GetActor()->GetActorName(),
-                                         Kind::REQ,
-                                         (current_config->isLocal?Scope::LOCAL:Scope::GLOBAL),
+                                         riaps::discovery::Kind::REQ,
+                                         (current_config->isLocal?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
                                          current_config->portName, // Subscriber name
                                          current_config->messageType);
 

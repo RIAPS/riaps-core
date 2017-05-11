@@ -36,16 +36,16 @@ namespace riaps{
 
         void SubscriberPort::Init() {
 
-            _component_port_sub_j* current_config = (_component_port_sub_j*)GetConfig();
+            _component_port_sub_j* currentConfig = (_component_port_sub_j*)GetConfig();
 
             auto results =
                     subscribe_to_service(_parent_component->GetActor()->GetApplicationName(),
                                          _parent_component->GetConfig().component_name,
                                          _parent_component->GetActor()->GetActorName(),
-                                         Kind::SUB,
-                                         (current_config->isLocal?Scope::LOCAL:Scope::GLOBAL),
-                                         current_config->portName, // Subscriber name
-                                         current_config->messageType);
+                                         riaps::discovery::Kind::SUB,
+                                         (currentConfig->isLocal?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
+                                          currentConfig->portName, // Subscriber name
+                                          currentConfig->messageType);
 
             for (auto result : results) {
                 std::string endpoint = "tcp://" + result.host_name + ":" + std::to_string(result.port);

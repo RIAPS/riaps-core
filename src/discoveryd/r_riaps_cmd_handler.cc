@@ -13,8 +13,8 @@
 std::pair<std::string, std::string>
 buildInsertKeyValuePair(std::string appName ,
                         std::string msgType ,
-                        Kind        kind    ,
-                        Scope       scope   ,
+                        riaps::discovery::Kind        kind    ,
+                        riaps::discovery::Scope       scope   ,
                         std::string host    ,
                         uint16_t    port    ) {
     std::string key;
@@ -22,7 +22,7 @@ buildInsertKeyValuePair(std::string appName ,
           + "/" + msgType
           + "/" + kindMap[kind];
 
-    if (scope == Scope::LOCAL){
+    if (scope == riaps::discovery::Scope::LOCAL){
         // hostid
         //auto hostid = gethostid();
 
@@ -39,8 +39,8 @@ buildInsertKeyValuePair(std::string appName ,
 std::pair<std::string, std::string>
 buildLookupKey(std::string appName,
                std::string msgType,
-               Kind kind,
-               Scope scope,
+               riaps::discovery::Kind kind,
+               riaps::discovery::Scope scope,
                std::string clientActorHost,
                std::string clientActorName,
                std::string clientInstanceName,
@@ -49,11 +49,11 @@ buildLookupKey(std::string appName,
 
     std::string key;
 
-    std::map<Kind, std::string> kindPairs = {
-                          {Kind::SUB, kindMap[Kind::PUB]},
-                          {Kind::CLT, kindMap[Kind::SRV]},
-                          {Kind::REQ, kindMap[Kind::REP]},
-                          {Kind::REP, kindMap[Kind::REQ]}};
+    std::map<riaps::discovery::Kind, std::string> kindPairs = {
+                          {riaps::discovery::Kind::SUB, kindMap[riaps::discovery::Kind::PUB]},
+                          {riaps::discovery::Kind::CLT, kindMap[riaps::discovery::Kind::SRV]},
+                          {riaps::discovery::Kind::REQ, kindMap[riaps::discovery::Kind::REP]},
+                          {riaps::discovery::Kind::REP, kindMap[riaps::discovery::Kind::REQ]}};
 
     key =     "/" + appName
             + "/" + msgType
@@ -63,7 +63,7 @@ buildLookupKey(std::string appName,
 
     std::string hostid = riaps::framework::Network::GetMacAddressStripped();
 
-    if (scope == Scope::LOCAL){
+    if (scope == riaps::discovery::Scope::LOCAL){
         key += hostid;
     }
 
@@ -73,7 +73,7 @@ buildLookupKey(std::string appName,
                          + '/' + clientInstanceName
                          + '/' + clientPortName;
 
-    if (scope == Scope::LOCAL) {
+    if (scope == riaps::discovery::Scope::LOCAL) {
         client = client + ":" + hostid;
     }
 
@@ -144,7 +144,7 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
         auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word *>(data), size / sizeof(capnp::word));
 
         capnp::FlatArrayMessageReader reader(capnp_data);
-        auto msg_discoreq = reader.getRoot<DiscoReq>();
+        auto msg_discoreq = reader.getRoot<riaps::discovery::DiscoReq>();
 
         //zsys_info("Message arrived: %s (%s)", "DiscoReq", msg_discoreq.which());
 
@@ -168,10 +168,10 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
                           << std::endl;
 
                 capnp::MallocMessageBuilder message;
-                auto drepmsg = message.initRoot<DiscoRep>();
+                auto drepmsg = message.initRoot<riaps::discovery::DiscoRep>();
                 auto arepmsg = drepmsg.initActorReg();
                 arepmsg.setPort(0);
-                arepmsg.setStatus(Status::ERR);
+                arepmsg.setStatus(riaps::discovery::Status::ERR);
 
 
                 auto serializedMessage = capnp::messageToFlatArray(message);
@@ -198,11 +198,11 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
 
                 // Create and send the Response
                 capnp::MallocMessageBuilder message;
-                auto drepmsg = message.initRoot<DiscoRep>();
+                auto drepmsg = message.initRoot<riaps::discovery::DiscoRep>();
                 auto arepmsg = drepmsg.initActorReg();
 
                 arepmsg.setPort(port);
-                arepmsg.setStatus(Status::OK);
+                arepmsg.setStatus(riaps::discovery::Status::OK);
 
                 auto serializedMessage = capnp::messageToFlatArray(message);
 
@@ -230,15 +230,15 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
 
             // Create and send the Response
             capnp::MallocMessageBuilder message;
-            auto drepmsg = message.initRoot<DiscoRep>();
+            auto drepmsg = message.initRoot<riaps::discovery::DiscoRep>();
             auto unregrepmsg = drepmsg.initActorUnreg();
 
             // If the socket was found
             if (port != -1) {
-                unregrepmsg.setStatus(Status::OK);
+                unregrepmsg.setStatus(riaps::discovery::Status::OK);
                 unregrepmsg.setPort(port);
             } else {
-                unregrepmsg.setStatus(Status::ERR);
+                unregrepmsg.setStatus(riaps::discovery::Status::ERR);
             }
 
             auto serializedMessage = capnp::messageToFlatArray(message);
@@ -288,10 +288,10 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
 
             //Send response
             capnp::MallocMessageBuilder message;
-            auto msg_discorep = message.initRoot<DiscoRep>();
+            auto msg_discorep = message.initRoot<riaps::discovery::DiscoRep>();
             auto msg_servicereg_rep = msg_discorep.initServiceReg();
 
-            msg_servicereg_rep.setStatus(Status::OK);
+            msg_servicereg_rep.setStatus(riaps::discovery::Status::OK);
 
             auto serializedMessage = capnp::messageToFlatArray(message);
 
@@ -326,7 +326,7 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
             current_client->portname = client.getPortName();
             current_client->actor_name = client.getActorName();
             current_client->instance_name = client.getInstanceName();
-            current_client->isLocal = path.getScope() == Scope::LOCAL ? true : false;
+            current_client->isLocal = path.getScope() == riaps::discovery::Scope::LOCAL ? true : false;
 
             // Copy for the get callback
             client_details_t currentClientTmp(*current_client);
@@ -365,12 +365,12 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
                                 zsock_t *notify_ractor_socket = zsock_new_push(DHT_ROUTER_CHANNEL);
 
                                 capnp::MallocMessageBuilder message;
-                                auto msg_providerlistpush = message.initRoot<ProviderListPush>();
+                                auto msg_providerlistpush = message.initRoot<riaps::discovery::ProviderListPush>();
                                 auto msg_providerget = msg_providerlistpush.initProviderGet();
 
                                 auto msg_path = msg_providerget.initPath();
 
-                                Scope scope = currentClientTmp.isLocal ? Scope::LOCAL : Scope::GLOBAL;
+                                riaps::discovery::Scope scope = currentClientTmp.isLocal ? riaps::discovery::Scope::LOCAL : riaps::discovery::Scope::GLOBAL;
                                 std::string app_name = currentClientTmp.app_name;
 
                                 msg_path.setScope(scope);
@@ -437,10 +437,10 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
 
             //Send response
             capnp::MallocMessageBuilder message;
-            auto msg_discorep = message.initRoot<DiscoRep>();
+            auto msg_discorep = message.initRoot<riaps::discovery::DiscoRep>();
             auto msg_service_lookup_rep = msg_discorep.initServiceLookup();
 
-            msg_service_lookup_rep.setStatus(Status::OK);
+            msg_service_lookup_rep.setStatus(riaps::discovery::Status::OK);
 
             //auto number_of_clients =dht_lookup_results.size();
 
@@ -490,7 +490,7 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
                                                                                    capnp::MallocMessageBuilder message;
 
 
-                                                                                   auto msg_providerlist_push = message.initRoot<ProviderListPush>();
+                                                                                   auto msg_providerlist_push = message.initRoot<riaps::discovery::ProviderListPush>();
                                                                                    auto msg_provider_update = msg_providerlist_push.initProviderUpdate();
                                                                                    msg_provider_update.setProviderpath(
                                                                                            lookupkey.first);

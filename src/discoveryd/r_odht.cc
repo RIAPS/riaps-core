@@ -9,7 +9,7 @@ void dhtJoinToCluster(std::string& destination_host, int port, dht::DhtRunner& d
     dhtrunner.bootstrap(destination_host, std::to_string(port));
 }
 
-void handleGet(const ProviderListGet::Reader& msgProviderGet,
+void handleGet(const riaps::discovery::ProviderListGet::Reader& msgProviderGet,
                const std::map<std::string, std::unique_ptr<actor_details_t>>& clients)
 {
     auto msgGetResults = msgProviderGet.getResults();
@@ -40,7 +40,7 @@ void handleGet(const ProviderListGet::Reader& msgProviderGet,
         }
 
         capnp::MallocMessageBuilder message;
-        auto msg_discoupd = message.initRoot<DiscoUpd>();
+        auto msg_discoupd = message.initRoot<riaps::discovery::DiscoUpd>();
         auto msg_client = msg_discoupd.initClient();
         auto msg_socket = msg_discoupd.initSocket();
 
@@ -76,7 +76,7 @@ void handleGet(const ProviderListGet::Reader& msgProviderGet,
 /// \param msgProviderUpdate The capnp message from the OpenDHT Listen().
 /// \param clientSubscriptions List of current key subscribtions.
 /// \param clients  Holds the ZMQ sockets of the client actors.
-void handleUpdate(const ProviderListUpdate::Reader& msgProviderUpdate,
+void handleUpdate(const riaps::discovery::ProviderListUpdate::Reader& msgProviderUpdate,
                   const std::map<std::string, std::vector<std::unique_ptr<client_details_t>>>& clientSubscriptions,
                   const std::map<std::string, std::unique_ptr<actor_details_t>>& clients){
 
@@ -129,7 +129,7 @@ void handleUpdate(const ProviderListUpdate::Reader& msgProviderUpdate,
 
                     if (clientSocket->socket != NULL) {
                         capnp::MallocMessageBuilder message;
-                        auto msg_discoupd = message.initRoot<DiscoUpd>();
+                        auto msg_discoupd = message.initRoot<riaps::discovery::DiscoUpd>();
                         auto msg_client = msg_discoupd.initClient();
                         auto msg_socket = msg_discoupd.initSocket();
 
@@ -139,7 +139,7 @@ void handleUpdate(const ProviderListUpdate::Reader& msgProviderUpdate,
                         msg_client.setInstanceName(subscribedClient->instance_name);
                         msg_client.setPortName(subscribedClient->portname);
 
-                        msg_discoupd.setScope(subscribedClient->isLocal ? Scope::LOCAL : Scope::GLOBAL);
+                        msg_discoupd.setScope(subscribedClient->isLocal ? riaps::discovery::Scope::LOCAL : riaps::discovery::Scope::GLOBAL);
 
                         msg_socket.setHost(host);
                         msg_socket.setPort(portNum);

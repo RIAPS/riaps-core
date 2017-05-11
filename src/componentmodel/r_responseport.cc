@@ -33,8 +33,8 @@ namespace riaps{
                                   config.messageType,
                                   _host,
                                   _port,
-                                  Kind::REP,
-                                  (config.isLocal?Scope::LOCAL:Scope::GLOBAL),
+                                  riaps::discovery::Kind::REP,
+                                  (config.isLocal?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
                                   {})) {
                 throw std::runtime_error("Response port couldn't be registered.");
             }
