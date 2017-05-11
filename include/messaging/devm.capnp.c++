@@ -683,6 +683,8 @@ const ::capnp::_::RawSchema s_f80e51da568fcc15 = {
 
 // =======================================================================================
 
+namespace riaps {
+namespace devm {
 
 // ActorRegReq
 #ifndef _MSC_VER
@@ -783,4 +785,7 @@ constexpr ::capnp::_::RawSchema const* DevmRep::_capnpPrivate::schema;
 constexpr ::capnp::_::RawBrandedSchema const* DevmRep::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
+
+}  // namespace
+}  // namespace
 

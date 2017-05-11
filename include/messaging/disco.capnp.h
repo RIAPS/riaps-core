@@ -59,6 +59,8 @@ CAPNP_DECLARE_SCHEMA(f0d1b2dc7cdf6a2c);
 }  // namespace schemas
 }  // namespace capnp
 
+namespace riaps {
+namespace discovery {
 
 typedef ::capnp::schemas::Status_aa15a59eb33a15c2 Status;
 
@@ -462,7 +464,7 @@ public:
   }
 #endif  // !CAPNP_LITE
 
-  inline  ::Status getStatus() const;
+  inline  ::riaps::discovery::Status getStatus() const;
 
   inline  ::int32_t getPort() const;
 
@@ -494,8 +496,8 @@ public:
   inline ::kj::StringTree toString() const { return asReader().toString(); }
 #endif  // !CAPNP_LITE
 
-  inline  ::Status getStatus();
-  inline void setStatus( ::Status value);
+  inline  ::riaps::discovery::Status getStatus();
+  inline void setStatus( ::riaps::discovery::Status value);
 
   inline  ::int32_t getPort();
   inline void setPort( ::int32_t value);
@@ -644,7 +646,7 @@ public:
   }
 #endif  // !CAPNP_LITE
 
-  inline  ::Status getStatus() const;
+  inline  ::riaps::discovery::Status getStatus() const;
 
   inline  ::int32_t getPort() const;
 
@@ -676,8 +678,8 @@ public:
   inline ::kj::StringTree toString() const { return asReader().toString(); }
 #endif  // !CAPNP_LITE
 
-  inline  ::Status getStatus();
-  inline void setStatus( ::Status value);
+  inline  ::riaps::discovery::Status getStatus();
+  inline void setStatus( ::riaps::discovery::Status value);
 
   inline  ::int32_t getPort();
   inline void setPort( ::int32_t value);
@@ -731,9 +733,9 @@ public:
   inline bool hasMsgType() const;
   inline  ::capnp::Text::Reader getMsgType() const;
 
-  inline  ::Kind getKind() const;
+  inline  ::riaps::discovery::Kind getKind() const;
 
-  inline  ::Scope getScope() const;
+  inline  ::riaps::discovery::Scope getScope() const;
 
 private:
   ::capnp::_::StructReader _reader;
@@ -777,11 +779,11 @@ public:
   inline void adoptMsgType(::capnp::Orphan< ::capnp::Text>&& value);
   inline ::capnp::Orphan< ::capnp::Text> disownMsgType();
 
-  inline  ::Kind getKind();
-  inline void setKind( ::Kind value);
+  inline  ::riaps::discovery::Kind getKind();
+  inline void setKind( ::riaps::discovery::Kind value);
 
-  inline  ::Scope getScope();
-  inline void setScope( ::Scope value);
+  inline  ::riaps::discovery::Scope getScope();
+  inline void setScope( ::riaps::discovery::Scope value);
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -1024,10 +1026,10 @@ public:
 #endif  // !CAPNP_LITE
 
   inline bool hasPath() const;
-  inline  ::Path::Reader getPath() const;
+  inline  ::riaps::discovery::Path::Reader getPath() const;
 
   inline bool hasSocket() const;
-  inline  ::Socket::Reader getSocket() const;
+  inline  ::riaps::discovery::Socket::Reader getSocket() const;
 
   inline  ::int32_t getPid() const;
 
@@ -1060,18 +1062,18 @@ public:
 #endif  // !CAPNP_LITE
 
   inline bool hasPath();
-  inline  ::Path::Builder getPath();
-  inline void setPath( ::Path::Reader value);
-  inline  ::Path::Builder initPath();
-  inline void adoptPath(::capnp::Orphan< ::Path>&& value);
-  inline ::capnp::Orphan< ::Path> disownPath();
+  inline  ::riaps::discovery::Path::Builder getPath();
+  inline void setPath( ::riaps::discovery::Path::Reader value);
+  inline  ::riaps::discovery::Path::Builder initPath();
+  inline void adoptPath(::capnp::Orphan< ::riaps::discovery::Path>&& value);
+  inline ::capnp::Orphan< ::riaps::discovery::Path> disownPath();
 
   inline bool hasSocket();
-  inline  ::Socket::Builder getSocket();
-  inline void setSocket( ::Socket::Reader value);
-  inline  ::Socket::Builder initSocket();
-  inline void adoptSocket(::capnp::Orphan< ::Socket>&& value);
-  inline ::capnp::Orphan< ::Socket> disownSocket();
+  inline  ::riaps::discovery::Socket::Builder getSocket();
+  inline void setSocket( ::riaps::discovery::Socket::Reader value);
+  inline  ::riaps::discovery::Socket::Builder initSocket();
+  inline void adoptSocket(::capnp::Orphan< ::riaps::discovery::Socket>&& value);
+  inline ::capnp::Orphan< ::riaps::discovery::Socket> disownSocket();
 
   inline  ::int32_t getPid();
   inline void setPid( ::int32_t value);
@@ -1094,8 +1096,8 @@ public:
   inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
       : _typeless(kj::mv(typeless)) {}
 
-  inline  ::Path::Pipeline getPath();
-  inline  ::Socket::Pipeline getSocket();
+  inline  ::riaps::discovery::Path::Pipeline getPath();
+  inline  ::riaps::discovery::Socket::Pipeline getSocket();
 private:
   ::capnp::AnyPointer::Pipeline _typeless;
   friend class ::capnp::PipelineHook;
@@ -1121,7 +1123,7 @@ public:
   }
 #endif  // !CAPNP_LITE
 
-  inline  ::Status getStatus() const;
+  inline  ::riaps::discovery::Status getStatus() const;
 
 private:
   ::capnp::_::StructReader _reader;
@@ -1151,8 +1153,8 @@ public:
   inline ::kj::StringTree toString() const { return asReader().toString(); }
 #endif  // !CAPNP_LITE
 
-  inline  ::Status getStatus();
-  inline void setStatus( ::Status value);
+  inline  ::riaps::discovery::Status getStatus();
+  inline void setStatus( ::riaps::discovery::Status value);
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -1198,10 +1200,10 @@ public:
 #endif  // !CAPNP_LITE
 
   inline bool hasPath() const;
-  inline  ::Path::Reader getPath() const;
+  inline  ::riaps::discovery::Path::Reader getPath() const;
 
   inline bool hasClient() const;
-  inline  ::Client::Reader getClient() const;
+  inline  ::riaps::discovery::Client::Reader getClient() const;
 
 private:
   ::capnp::_::StructReader _reader;
@@ -1232,18 +1234,18 @@ public:
 #endif  // !CAPNP_LITE
 
   inline bool hasPath();
-  inline  ::Path::Builder getPath();
-  inline void setPath( ::Path::Reader value);
-  inline  ::Path::Builder initPath();
-  inline void adoptPath(::capnp::Orphan< ::Path>&& value);
-  inline ::capnp::Orphan< ::Path> disownPath();
+  inline  ::riaps::discovery::Path::Builder getPath();
+  inline void setPath( ::riaps::discovery::Path::Reader value);
+  inline  ::riaps::discovery::Path::Builder initPath();
+  inline void adoptPath(::capnp::Orphan< ::riaps::discovery::Path>&& value);
+  inline ::capnp::Orphan< ::riaps::discovery::Path> disownPath();
 
   inline bool hasClient();
-  inline  ::Client::Builder getClient();
-  inline void setClient( ::Client::Reader value);
-  inline  ::Client::Builder initClient();
-  inline void adoptClient(::capnp::Orphan< ::Client>&& value);
-  inline ::capnp::Orphan< ::Client> disownClient();
+  inline  ::riaps::discovery::Client::Builder getClient();
+  inline void setClient( ::riaps::discovery::Client::Reader value);
+  inline  ::riaps::discovery::Client::Builder initClient();
+  inline void adoptClient(::capnp::Orphan< ::riaps::discovery::Client>&& value);
+  inline ::capnp::Orphan< ::riaps::discovery::Client> disownClient();
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -1263,8 +1265,8 @@ public:
   inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
       : _typeless(kj::mv(typeless)) {}
 
-  inline  ::Path::Pipeline getPath();
-  inline  ::Client::Pipeline getClient();
+  inline  ::riaps::discovery::Path::Pipeline getPath();
+  inline  ::riaps::discovery::Client::Pipeline getClient();
 private:
   ::capnp::AnyPointer::Pipeline _typeless;
   friend class ::capnp::PipelineHook;
@@ -1290,10 +1292,10 @@ public:
   }
 #endif  // !CAPNP_LITE
 
-  inline  ::Status getStatus() const;
+  inline  ::riaps::discovery::Status getStatus() const;
 
   inline bool hasSockets() const;
-  inline  ::capnp::List< ::Socket>::Reader getSockets() const;
+  inline  ::capnp::List< ::riaps::discovery::Socket>::Reader getSockets() const;
 
 private:
   ::capnp::_::StructReader _reader;
@@ -1323,15 +1325,15 @@ public:
   inline ::kj::StringTree toString() const { return asReader().toString(); }
 #endif  // !CAPNP_LITE
 
-  inline  ::Status getStatus();
-  inline void setStatus( ::Status value);
+  inline  ::riaps::discovery::Status getStatus();
+  inline void setStatus( ::riaps::discovery::Status value);
 
   inline bool hasSockets();
-  inline  ::capnp::List< ::Socket>::Builder getSockets();
-  inline void setSockets( ::capnp::List< ::Socket>::Reader value);
-  inline  ::capnp::List< ::Socket>::Builder initSockets(unsigned int size);
-  inline void adoptSockets(::capnp::Orphan< ::capnp::List< ::Socket>>&& value);
-  inline ::capnp::Orphan< ::capnp::List< ::Socket>> disownSockets();
+  inline  ::capnp::List< ::riaps::discovery::Socket>::Builder getSockets();
+  inline void setSockets( ::capnp::List< ::riaps::discovery::Socket>::Reader value);
+  inline  ::capnp::List< ::riaps::discovery::Socket>::Builder initSockets(unsigned int size);
+  inline void adoptSockets(::capnp::Orphan< ::capnp::List< ::riaps::discovery::Socket>>&& value);
+  inline ::capnp::Orphan< ::capnp::List< ::riaps::discovery::Socket>> disownSockets();
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -1377,12 +1379,12 @@ public:
 #endif  // !CAPNP_LITE
 
   inline bool hasClient() const;
-  inline  ::Client::Reader getClient() const;
+  inline  ::riaps::discovery::Client::Reader getClient() const;
 
-  inline  ::Scope getScope() const;
+  inline  ::riaps::discovery::Scope getScope() const;
 
   inline bool hasSocket() const;
-  inline  ::Socket::Reader getSocket() const;
+  inline  ::riaps::discovery::Socket::Reader getSocket() const;
 
 private:
   ::capnp::_::StructReader _reader;
@@ -1413,21 +1415,21 @@ public:
 #endif  // !CAPNP_LITE
 
   inline bool hasClient();
-  inline  ::Client::Builder getClient();
-  inline void setClient( ::Client::Reader value);
-  inline  ::Client::Builder initClient();
-  inline void adoptClient(::capnp::Orphan< ::Client>&& value);
-  inline ::capnp::Orphan< ::Client> disownClient();
+  inline  ::riaps::discovery::Client::Builder getClient();
+  inline void setClient( ::riaps::discovery::Client::Reader value);
+  inline  ::riaps::discovery::Client::Builder initClient();
+  inline void adoptClient(::capnp::Orphan< ::riaps::discovery::Client>&& value);
+  inline ::capnp::Orphan< ::riaps::discovery::Client> disownClient();
 
-  inline  ::Scope getScope();
-  inline void setScope( ::Scope value);
+  inline  ::riaps::discovery::Scope getScope();
+  inline void setScope( ::riaps::discovery::Scope value);
 
   inline bool hasSocket();
-  inline  ::Socket::Builder getSocket();
-  inline void setSocket( ::Socket::Reader value);
-  inline  ::Socket::Builder initSocket();
-  inline void adoptSocket(::capnp::Orphan< ::Socket>&& value);
-  inline ::capnp::Orphan< ::Socket> disownSocket();
+  inline  ::riaps::discovery::Socket::Builder getSocket();
+  inline void setSocket( ::riaps::discovery::Socket::Reader value);
+  inline  ::riaps::discovery::Socket::Builder initSocket();
+  inline void adoptSocket(::capnp::Orphan< ::riaps::discovery::Socket>&& value);
+  inline ::capnp::Orphan< ::riaps::discovery::Socket> disownSocket();
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -1447,8 +1449,8 @@ public:
   inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
       : _typeless(kj::mv(typeless)) {}
 
-  inline  ::Client::Pipeline getClient();
-  inline  ::Socket::Pipeline getSocket();
+  inline  ::riaps::discovery::Client::Pipeline getClient();
+  inline  ::riaps::discovery::Socket::Pipeline getSocket();
 private:
   ::capnp::AnyPointer::Pipeline _typeless;
   friend class ::capnp::PipelineHook;
@@ -1477,19 +1479,19 @@ public:
   inline Which which() const;
   inline bool isActorReg() const;
   inline bool hasActorReg() const;
-  inline  ::ActorRegReq::Reader getActorReg() const;
+  inline  ::riaps::discovery::ActorRegReq::Reader getActorReg() const;
 
   inline bool isServiceReg() const;
   inline bool hasServiceReg() const;
-  inline  ::ServiceRegReq::Reader getServiceReg() const;
+  inline  ::riaps::discovery::ServiceRegReq::Reader getServiceReg() const;
 
   inline bool isServiceLookup() const;
   inline bool hasServiceLookup() const;
-  inline  ::ServiceLookupReq::Reader getServiceLookup() const;
+  inline  ::riaps::discovery::ServiceLookupReq::Reader getServiceLookup() const;
 
   inline bool isActorUnreg() const;
   inline bool hasActorUnreg() const;
-  inline  ::ActorRegReq::Reader getActorUnreg() const;
+  inline  ::riaps::discovery::ActorRegReq::Reader getActorUnreg() const;
 
 private:
   ::capnp::_::StructReader _reader;
@@ -1522,35 +1524,35 @@ public:
   inline Which which();
   inline bool isActorReg();
   inline bool hasActorReg();
-  inline  ::ActorRegReq::Builder getActorReg();
-  inline void setActorReg( ::ActorRegReq::Reader value);
-  inline  ::ActorRegReq::Builder initActorReg();
-  inline void adoptActorReg(::capnp::Orphan< ::ActorRegReq>&& value);
-  inline ::capnp::Orphan< ::ActorRegReq> disownActorReg();
+  inline  ::riaps::discovery::ActorRegReq::Builder getActorReg();
+  inline void setActorReg( ::riaps::discovery::ActorRegReq::Reader value);
+  inline  ::riaps::discovery::ActorRegReq::Builder initActorReg();
+  inline void adoptActorReg(::capnp::Orphan< ::riaps::discovery::ActorRegReq>&& value);
+  inline ::capnp::Orphan< ::riaps::discovery::ActorRegReq> disownActorReg();
 
   inline bool isServiceReg();
   inline bool hasServiceReg();
-  inline  ::ServiceRegReq::Builder getServiceReg();
-  inline void setServiceReg( ::ServiceRegReq::Reader value);
-  inline  ::ServiceRegReq::Builder initServiceReg();
-  inline void adoptServiceReg(::capnp::Orphan< ::ServiceRegReq>&& value);
-  inline ::capnp::Orphan< ::ServiceRegReq> disownServiceReg();
+  inline  ::riaps::discovery::ServiceRegReq::Builder getServiceReg();
+  inline void setServiceReg( ::riaps::discovery::ServiceRegReq::Reader value);
+  inline  ::riaps::discovery::ServiceRegReq::Builder initServiceReg();
+  inline void adoptServiceReg(::capnp::Orphan< ::riaps::discovery::ServiceRegReq>&& value);
+  inline ::capnp::Orphan< ::riaps::discovery::ServiceRegReq> disownServiceReg();
 
   inline bool isServiceLookup();
   inline bool hasServiceLookup();
-  inline  ::ServiceLookupReq::Builder getServiceLookup();
-  inline void setServiceLookup( ::ServiceLookupReq::Reader value);
-  inline  ::ServiceLookupReq::Builder initServiceLookup();
-  inline void adoptServiceLookup(::capnp::Orphan< ::ServiceLookupReq>&& value);
-  inline ::capnp::Orphan< ::ServiceLookupReq> disownServiceLookup();
+  inline  ::riaps::discovery::ServiceLookupReq::Builder getServiceLookup();
+  inline void setServiceLookup( ::riaps::discovery::ServiceLookupReq::Reader value);
+  inline  ::riaps::discovery::ServiceLookupReq::Builder initServiceLookup();
+  inline void adoptServiceLookup(::capnp::Orphan< ::riaps::discovery::ServiceLookupReq>&& value);
+  inline ::capnp::Orphan< ::riaps::discovery::ServiceLookupReq> disownServiceLookup();
 
   inline bool isActorUnreg();
   inline bool hasActorUnreg();
-  inline  ::ActorRegReq::Builder getActorUnreg();
-  inline void setActorUnreg( ::ActorRegReq::Reader value);
-  inline  ::ActorRegReq::Builder initActorUnreg();
-  inline void adoptActorUnreg(::capnp::Orphan< ::ActorRegReq>&& value);
-  inline ::capnp::Orphan< ::ActorRegReq> disownActorUnreg();
+  inline  ::riaps::discovery::ActorRegReq::Builder getActorUnreg();
+  inline void setActorUnreg( ::riaps::discovery::ActorRegReq::Reader value);
+  inline  ::riaps::discovery::ActorRegReq::Builder initActorUnreg();
+  inline void adoptActorUnreg(::capnp::Orphan< ::riaps::discovery::ActorRegReq>&& value);
+  inline ::capnp::Orphan< ::riaps::discovery::ActorRegReq> disownActorUnreg();
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -1598,19 +1600,19 @@ public:
   inline Which which() const;
   inline bool isActorReg() const;
   inline bool hasActorReg() const;
-  inline  ::ActorRegRep::Reader getActorReg() const;
+  inline  ::riaps::discovery::ActorRegRep::Reader getActorReg() const;
 
   inline bool isServiceReg() const;
   inline bool hasServiceReg() const;
-  inline  ::ServiceRegRep::Reader getServiceReg() const;
+  inline  ::riaps::discovery::ServiceRegRep::Reader getServiceReg() const;
 
   inline bool isServiceLookup() const;
   inline bool hasServiceLookup() const;
-  inline  ::ServiceLookupRep::Reader getServiceLookup() const;
+  inline  ::riaps::discovery::ServiceLookupRep::Reader getServiceLookup() const;
 
   inline bool isActorUnreg() const;
   inline bool hasActorUnreg() const;
-  inline  ::ActorUnregRep::Reader getActorUnreg() const;
+  inline  ::riaps::discovery::ActorUnregRep::Reader getActorUnreg() const;
 
 private:
   ::capnp::_::StructReader _reader;
@@ -1643,35 +1645,35 @@ public:
   inline Which which();
   inline bool isActorReg();
   inline bool hasActorReg();
-  inline  ::ActorRegRep::Builder getActorReg();
-  inline void setActorReg( ::ActorRegRep::Reader value);
-  inline  ::ActorRegRep::Builder initActorReg();
-  inline void adoptActorReg(::capnp::Orphan< ::ActorRegRep>&& value);
-  inline ::capnp::Orphan< ::ActorRegRep> disownActorReg();
+  inline  ::riaps::discovery::ActorRegRep::Builder getActorReg();
+  inline void setActorReg( ::riaps::discovery::ActorRegRep::Reader value);
+  inline  ::riaps::discovery::ActorRegRep::Builder initActorReg();
+  inline void adoptActorReg(::capnp::Orphan< ::riaps::discovery::ActorRegRep>&& value);
+  inline ::capnp::Orphan< ::riaps::discovery::ActorRegRep> disownActorReg();
 
   inline bool isServiceReg();
   inline bool hasServiceReg();
-  inline  ::ServiceRegRep::Builder getServiceReg();
-  inline void setServiceReg( ::ServiceRegRep::Reader value);
-  inline  ::ServiceRegRep::Builder initServiceReg();
-  inline void adoptServiceReg(::capnp::Orphan< ::ServiceRegRep>&& value);
-  inline ::capnp::Orphan< ::ServiceRegRep> disownServiceReg();
+  inline  ::riaps::discovery::ServiceRegRep::Builder getServiceReg();
+  inline void setServiceReg( ::riaps::discovery::ServiceRegRep::Reader value);
+  inline  ::riaps::discovery::ServiceRegRep::Builder initServiceReg();
+  inline void adoptServiceReg(::capnp::Orphan< ::riaps::discovery::ServiceRegRep>&& value);
+  inline ::capnp::Orphan< ::riaps::discovery::ServiceRegRep> disownServiceReg();
 
   inline bool isServiceLookup();
   inline bool hasServiceLookup();
-  inline  ::ServiceLookupRep::Builder getServiceLookup();
-  inline void setServiceLookup( ::ServiceLookupRep::Reader value);
-  inline  ::ServiceLookupRep::Builder initServiceLookup();
-  inline void adoptServiceLookup(::capnp::Orphan< ::ServiceLookupRep>&& value);
-  inline ::capnp::Orphan< ::ServiceLookupRep> disownServiceLookup();
+  inline  ::riaps::discovery::ServiceLookupRep::Builder getServiceLookup();
+  inline void setServiceLookup( ::riaps::discovery::ServiceLookupRep::Reader value);
+  inline  ::riaps::discovery::ServiceLookupRep::Builder initServiceLookup();
+  inline void adoptServiceLookup(::capnp::Orphan< ::riaps::discovery::ServiceLookupRep>&& value);
+  inline ::capnp::Orphan< ::riaps::discovery::ServiceLookupRep> disownServiceLookup();
 
   inline bool isActorUnreg();
   inline bool hasActorUnreg();
-  inline  ::ActorUnregRep::Builder getActorUnreg();
-  inline void setActorUnreg( ::ActorUnregRep::Reader value);
-  inline  ::ActorUnregRep::Builder initActorUnreg();
-  inline void adoptActorUnreg(::capnp::Orphan< ::ActorUnregRep>&& value);
-  inline ::capnp::Orphan< ::ActorUnregRep> disownActorUnreg();
+  inline  ::riaps::discovery::ActorUnregRep::Builder getActorUnreg();
+  inline void setActorUnreg( ::riaps::discovery::ActorUnregRep::Reader value);
+  inline  ::riaps::discovery::ActorUnregRep::Builder initActorUnreg();
+  inline void adoptActorUnreg(::capnp::Orphan< ::riaps::discovery::ActorUnregRep>&& value);
+  inline ::capnp::Orphan< ::riaps::discovery::ActorUnregRep> disownActorUnreg();
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -1809,10 +1811,10 @@ public:
 #endif  // !CAPNP_LITE
 
   inline bool hasPath() const;
-  inline  ::Path::Reader getPath() const;
+  inline  ::riaps::discovery::Path::Reader getPath() const;
 
   inline bool hasClient() const;
-  inline  ::Client::Reader getClient() const;
+  inline  ::riaps::discovery::Client::Reader getClient() const;
 
   inline bool hasResults() const;
   inline  ::capnp::List< ::capnp::Text>::Reader getResults() const;
@@ -1846,18 +1848,18 @@ public:
 #endif  // !CAPNP_LITE
 
   inline bool hasPath();
-  inline  ::Path::Builder getPath();
-  inline void setPath( ::Path::Reader value);
-  inline  ::Path::Builder initPath();
-  inline void adoptPath(::capnp::Orphan< ::Path>&& value);
-  inline ::capnp::Orphan< ::Path> disownPath();
+  inline  ::riaps::discovery::Path::Builder getPath();
+  inline void setPath( ::riaps::discovery::Path::Reader value);
+  inline  ::riaps::discovery::Path::Builder initPath();
+  inline void adoptPath(::capnp::Orphan< ::riaps::discovery::Path>&& value);
+  inline ::capnp::Orphan< ::riaps::discovery::Path> disownPath();
 
   inline bool hasClient();
-  inline  ::Client::Builder getClient();
-  inline void setClient( ::Client::Reader value);
-  inline  ::Client::Builder initClient();
-  inline void adoptClient(::capnp::Orphan< ::Client>&& value);
-  inline ::capnp::Orphan< ::Client> disownClient();
+  inline  ::riaps::discovery::Client::Builder getClient();
+  inline void setClient( ::riaps::discovery::Client::Reader value);
+  inline  ::riaps::discovery::Client::Builder initClient();
+  inline void adoptClient(::capnp::Orphan< ::riaps::discovery::Client>&& value);
+  inline ::capnp::Orphan< ::riaps::discovery::Client> disownClient();
 
   inline bool hasResults();
   inline  ::capnp::List< ::capnp::Text>::Builder getResults();
@@ -1885,8 +1887,8 @@ public:
   inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
       : _typeless(kj::mv(typeless)) {}
 
-  inline  ::Path::Pipeline getPath();
-  inline  ::Client::Pipeline getClient();
+  inline  ::riaps::discovery::Path::Pipeline getPath();
+  inline  ::riaps::discovery::Client::Pipeline getClient();
 private:
   ::capnp::AnyPointer::Pipeline _typeless;
   friend class ::capnp::PipelineHook;
@@ -1915,11 +1917,11 @@ public:
   inline Which which() const;
   inline bool isProviderUpdate() const;
   inline bool hasProviderUpdate() const;
-  inline  ::ProviderListUpdate::Reader getProviderUpdate() const;
+  inline  ::riaps::discovery::ProviderListUpdate::Reader getProviderUpdate() const;
 
   inline bool isProviderGet() const;
   inline bool hasProviderGet() const;
-  inline  ::ProviderListGet::Reader getProviderGet() const;
+  inline  ::riaps::discovery::ProviderListGet::Reader getProviderGet() const;
 
 private:
   ::capnp::_::StructReader _reader;
@@ -1952,19 +1954,19 @@ public:
   inline Which which();
   inline bool isProviderUpdate();
   inline bool hasProviderUpdate();
-  inline  ::ProviderListUpdate::Builder getProviderUpdate();
-  inline void setProviderUpdate( ::ProviderListUpdate::Reader value);
-  inline  ::ProviderListUpdate::Builder initProviderUpdate();
-  inline void adoptProviderUpdate(::capnp::Orphan< ::ProviderListUpdate>&& value);
-  inline ::capnp::Orphan< ::ProviderListUpdate> disownProviderUpdate();
+  inline  ::riaps::discovery::ProviderListUpdate::Builder getProviderUpdate();
+  inline void setProviderUpdate( ::riaps::discovery::ProviderListUpdate::Reader value);
+  inline  ::riaps::discovery::ProviderListUpdate::Builder initProviderUpdate();
+  inline void adoptProviderUpdate(::capnp::Orphan< ::riaps::discovery::ProviderListUpdate>&& value);
+  inline ::capnp::Orphan< ::riaps::discovery::ProviderListUpdate> disownProviderUpdate();
 
   inline bool isProviderGet();
   inline bool hasProviderGet();
-  inline  ::ProviderListGet::Builder getProviderGet();
-  inline void setProviderGet( ::ProviderListGet::Reader value);
-  inline  ::ProviderListGet::Builder initProviderGet();
-  inline void adoptProviderGet(::capnp::Orphan< ::ProviderListGet>&& value);
-  inline ::capnp::Orphan< ::ProviderListGet> disownProviderGet();
+  inline  ::riaps::discovery::ProviderListGet::Builder getProviderGet();
+  inline void setProviderGet( ::riaps::discovery::ProviderListGet::Reader value);
+  inline  ::riaps::discovery::ProviderListGet::Builder initProviderGet();
+  inline void adoptProviderGet(::capnp::Orphan< ::riaps::discovery::ProviderListGet>&& value);
+  inline ::capnp::Orphan< ::riaps::discovery::ProviderListGet> disownProviderGet();
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -2104,17 +2106,17 @@ inline void ActorRegReq::Builder::setPid( ::int32_t value) {
       0 * ::capnp::ELEMENTS, value);
 }
 
-inline  ::Status ActorRegRep::Reader::getStatus() const {
-  return _reader.getDataField< ::Status>(
+inline  ::riaps::discovery::Status ActorRegRep::Reader::getStatus() const {
+  return _reader.getDataField< ::riaps::discovery::Status>(
       0 * ::capnp::ELEMENTS);
 }
 
-inline  ::Status ActorRegRep::Builder::getStatus() {
-  return _builder.getDataField< ::Status>(
+inline  ::riaps::discovery::Status ActorRegRep::Builder::getStatus() {
+  return _builder.getDataField< ::riaps::discovery::Status>(
       0 * ::capnp::ELEMENTS);
 }
-inline void ActorRegRep::Builder::setStatus( ::Status value) {
-  _builder.setDataField< ::Status>(
+inline void ActorRegRep::Builder::setStatus( ::riaps::discovery::Status value) {
+  _builder.setDataField< ::riaps::discovery::Status>(
       0 * ::capnp::ELEMENTS, value);
 }
 
@@ -2228,17 +2230,17 @@ inline ::capnp::Orphan< ::capnp::Text> ActorUnregReq::Builder::disownActorName()
       _builder.getPointerField(2 * ::capnp::POINTERS));
 }
 
-inline  ::Status ActorUnregRep::Reader::getStatus() const {
-  return _reader.getDataField< ::Status>(
+inline  ::riaps::discovery::Status ActorUnregRep::Reader::getStatus() const {
+  return _reader.getDataField< ::riaps::discovery::Status>(
       0 * ::capnp::ELEMENTS);
 }
 
-inline  ::Status ActorUnregRep::Builder::getStatus() {
-  return _builder.getDataField< ::Status>(
+inline  ::riaps::discovery::Status ActorUnregRep::Builder::getStatus() {
+  return _builder.getDataField< ::riaps::discovery::Status>(
       0 * ::capnp::ELEMENTS);
 }
-inline void ActorUnregRep::Builder::setStatus( ::Status value) {
-  _builder.setDataField< ::Status>(
+inline void ActorUnregRep::Builder::setStatus( ::riaps::discovery::Status value) {
+  _builder.setDataField< ::riaps::discovery::Status>(
       0 * ::capnp::ELEMENTS, value);
 }
 
@@ -2320,31 +2322,31 @@ inline ::capnp::Orphan< ::capnp::Text> Path::Builder::disownMsgType() {
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }
 
-inline  ::Kind Path::Reader::getKind() const {
-  return _reader.getDataField< ::Kind>(
+inline  ::riaps::discovery::Kind Path::Reader::getKind() const {
+  return _reader.getDataField< ::riaps::discovery::Kind>(
       0 * ::capnp::ELEMENTS);
 }
 
-inline  ::Kind Path::Builder::getKind() {
-  return _builder.getDataField< ::Kind>(
+inline  ::riaps::discovery::Kind Path::Builder::getKind() {
+  return _builder.getDataField< ::riaps::discovery::Kind>(
       0 * ::capnp::ELEMENTS);
 }
-inline void Path::Builder::setKind( ::Kind value) {
-  _builder.setDataField< ::Kind>(
+inline void Path::Builder::setKind( ::riaps::discovery::Kind value) {
+  _builder.setDataField< ::riaps::discovery::Kind>(
       0 * ::capnp::ELEMENTS, value);
 }
 
-inline  ::Scope Path::Reader::getScope() const {
-  return _reader.getDataField< ::Scope>(
+inline  ::riaps::discovery::Scope Path::Reader::getScope() const {
+  return _reader.getDataField< ::riaps::discovery::Scope>(
       1 * ::capnp::ELEMENTS);
 }
 
-inline  ::Scope Path::Builder::getScope() {
-  return _builder.getDataField< ::Scope>(
+inline  ::riaps::discovery::Scope Path::Builder::getScope() {
+  return _builder.getDataField< ::riaps::discovery::Scope>(
       1 * ::capnp::ELEMENTS);
 }
-inline void Path::Builder::setScope( ::Scope value) {
-  _builder.setDataField< ::Scope>(
+inline void Path::Builder::setScope( ::riaps::discovery::Scope value) {
+  _builder.setDataField< ::riaps::discovery::Scope>(
       1 * ::capnp::ELEMENTS, value);
 }
 
@@ -2528,34 +2530,34 @@ inline bool ServiceRegReq::Reader::hasPath() const {
 inline bool ServiceRegReq::Builder::hasPath() {
   return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline  ::Path::Reader ServiceRegReq::Reader::getPath() const {
-  return ::capnp::_::PointerHelpers< ::Path>::get(
+inline  ::riaps::discovery::Path::Reader ServiceRegReq::Reader::getPath() const {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::get(
       _reader.getPointerField(0 * ::capnp::POINTERS));
 }
-inline  ::Path::Builder ServiceRegReq::Builder::getPath() {
-  return ::capnp::_::PointerHelpers< ::Path>::get(
+inline  ::riaps::discovery::Path::Builder ServiceRegReq::Builder::getPath() {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::get(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
-inline  ::Path::Pipeline ServiceRegReq::Pipeline::getPath() {
-  return  ::Path::Pipeline(_typeless.getPointerField(0));
+inline  ::riaps::discovery::Path::Pipeline ServiceRegReq::Pipeline::getPath() {
+  return  ::riaps::discovery::Path::Pipeline(_typeless.getPointerField(0));
 }
 #endif  // !CAPNP_LITE
-inline void ServiceRegReq::Builder::setPath( ::Path::Reader value) {
-  ::capnp::_::PointerHelpers< ::Path>::set(
+inline void ServiceRegReq::Builder::setPath( ::riaps::discovery::Path::Reader value) {
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::set(
       _builder.getPointerField(0 * ::capnp::POINTERS), value);
 }
-inline  ::Path::Builder ServiceRegReq::Builder::initPath() {
-  return ::capnp::_::PointerHelpers< ::Path>::init(
+inline  ::riaps::discovery::Path::Builder ServiceRegReq::Builder::initPath() {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::init(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 inline void ServiceRegReq::Builder::adoptPath(
-    ::capnp::Orphan< ::Path>&& value) {
-  ::capnp::_::PointerHelpers< ::Path>::adopt(
+    ::capnp::Orphan< ::riaps::discovery::Path>&& value) {
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::adopt(
       _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::Path> ServiceRegReq::Builder::disownPath() {
-  return ::capnp::_::PointerHelpers< ::Path>::disown(
+inline ::capnp::Orphan< ::riaps::discovery::Path> ServiceRegReq::Builder::disownPath() {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
@@ -2565,34 +2567,34 @@ inline bool ServiceRegReq::Reader::hasSocket() const {
 inline bool ServiceRegReq::Builder::hasSocket() {
   return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
 }
-inline  ::Socket::Reader ServiceRegReq::Reader::getSocket() const {
-  return ::capnp::_::PointerHelpers< ::Socket>::get(
+inline  ::riaps::discovery::Socket::Reader ServiceRegReq::Reader::getSocket() const {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::get(
       _reader.getPointerField(1 * ::capnp::POINTERS));
 }
-inline  ::Socket::Builder ServiceRegReq::Builder::getSocket() {
-  return ::capnp::_::PointerHelpers< ::Socket>::get(
+inline  ::riaps::discovery::Socket::Builder ServiceRegReq::Builder::getSocket() {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::get(
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
-inline  ::Socket::Pipeline ServiceRegReq::Pipeline::getSocket() {
-  return  ::Socket::Pipeline(_typeless.getPointerField(1));
+inline  ::riaps::discovery::Socket::Pipeline ServiceRegReq::Pipeline::getSocket() {
+  return  ::riaps::discovery::Socket::Pipeline(_typeless.getPointerField(1));
 }
 #endif  // !CAPNP_LITE
-inline void ServiceRegReq::Builder::setSocket( ::Socket::Reader value) {
-  ::capnp::_::PointerHelpers< ::Socket>::set(
+inline void ServiceRegReq::Builder::setSocket( ::riaps::discovery::Socket::Reader value) {
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::set(
       _builder.getPointerField(1 * ::capnp::POINTERS), value);
 }
-inline  ::Socket::Builder ServiceRegReq::Builder::initSocket() {
-  return ::capnp::_::PointerHelpers< ::Socket>::init(
+inline  ::riaps::discovery::Socket::Builder ServiceRegReq::Builder::initSocket() {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::init(
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }
 inline void ServiceRegReq::Builder::adoptSocket(
-    ::capnp::Orphan< ::Socket>&& value) {
-  ::capnp::_::PointerHelpers< ::Socket>::adopt(
+    ::capnp::Orphan< ::riaps::discovery::Socket>&& value) {
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::adopt(
       _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::Socket> ServiceRegReq::Builder::disownSocket() {
-  return ::capnp::_::PointerHelpers< ::Socket>::disown(
+inline ::capnp::Orphan< ::riaps::discovery::Socket> ServiceRegReq::Builder::disownSocket() {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::disown(
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }
 
@@ -2610,17 +2612,17 @@ inline void ServiceRegReq::Builder::setPid( ::int32_t value) {
       0 * ::capnp::ELEMENTS, value);
 }
 
-inline  ::Status ServiceRegRep::Reader::getStatus() const {
-  return _reader.getDataField< ::Status>(
+inline  ::riaps::discovery::Status ServiceRegRep::Reader::getStatus() const {
+  return _reader.getDataField< ::riaps::discovery::Status>(
       0 * ::capnp::ELEMENTS);
 }
 
-inline  ::Status ServiceRegRep::Builder::getStatus() {
-  return _builder.getDataField< ::Status>(
+inline  ::riaps::discovery::Status ServiceRegRep::Builder::getStatus() {
+  return _builder.getDataField< ::riaps::discovery::Status>(
       0 * ::capnp::ELEMENTS);
 }
-inline void ServiceRegRep::Builder::setStatus( ::Status value) {
-  _builder.setDataField< ::Status>(
+inline void ServiceRegRep::Builder::setStatus( ::riaps::discovery::Status value) {
+  _builder.setDataField< ::riaps::discovery::Status>(
       0 * ::capnp::ELEMENTS, value);
 }
 
@@ -2630,34 +2632,34 @@ inline bool ServiceLookupReq::Reader::hasPath() const {
 inline bool ServiceLookupReq::Builder::hasPath() {
   return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline  ::Path::Reader ServiceLookupReq::Reader::getPath() const {
-  return ::capnp::_::PointerHelpers< ::Path>::get(
+inline  ::riaps::discovery::Path::Reader ServiceLookupReq::Reader::getPath() const {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::get(
       _reader.getPointerField(0 * ::capnp::POINTERS));
 }
-inline  ::Path::Builder ServiceLookupReq::Builder::getPath() {
-  return ::capnp::_::PointerHelpers< ::Path>::get(
+inline  ::riaps::discovery::Path::Builder ServiceLookupReq::Builder::getPath() {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::get(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
-inline  ::Path::Pipeline ServiceLookupReq::Pipeline::getPath() {
-  return  ::Path::Pipeline(_typeless.getPointerField(0));
+inline  ::riaps::discovery::Path::Pipeline ServiceLookupReq::Pipeline::getPath() {
+  return  ::riaps::discovery::Path::Pipeline(_typeless.getPointerField(0));
 }
 #endif  // !CAPNP_LITE
-inline void ServiceLookupReq::Builder::setPath( ::Path::Reader value) {
-  ::capnp::_::PointerHelpers< ::Path>::set(
+inline void ServiceLookupReq::Builder::setPath( ::riaps::discovery::Path::Reader value) {
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::set(
       _builder.getPointerField(0 * ::capnp::POINTERS), value);
 }
-inline  ::Path::Builder ServiceLookupReq::Builder::initPath() {
-  return ::capnp::_::PointerHelpers< ::Path>::init(
+inline  ::riaps::discovery::Path::Builder ServiceLookupReq::Builder::initPath() {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::init(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 inline void ServiceLookupReq::Builder::adoptPath(
-    ::capnp::Orphan< ::Path>&& value) {
-  ::capnp::_::PointerHelpers< ::Path>::adopt(
+    ::capnp::Orphan< ::riaps::discovery::Path>&& value) {
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::adopt(
       _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::Path> ServiceLookupReq::Builder::disownPath() {
-  return ::capnp::_::PointerHelpers< ::Path>::disown(
+inline ::capnp::Orphan< ::riaps::discovery::Path> ServiceLookupReq::Builder::disownPath() {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
@@ -2667,48 +2669,48 @@ inline bool ServiceLookupReq::Reader::hasClient() const {
 inline bool ServiceLookupReq::Builder::hasClient() {
   return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
 }
-inline  ::Client::Reader ServiceLookupReq::Reader::getClient() const {
-  return ::capnp::_::PointerHelpers< ::Client>::get(
+inline  ::riaps::discovery::Client::Reader ServiceLookupReq::Reader::getClient() const {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::get(
       _reader.getPointerField(1 * ::capnp::POINTERS));
 }
-inline  ::Client::Builder ServiceLookupReq::Builder::getClient() {
-  return ::capnp::_::PointerHelpers< ::Client>::get(
+inline  ::riaps::discovery::Client::Builder ServiceLookupReq::Builder::getClient() {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::get(
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
-inline  ::Client::Pipeline ServiceLookupReq::Pipeline::getClient() {
-  return  ::Client::Pipeline(_typeless.getPointerField(1));
+inline  ::riaps::discovery::Client::Pipeline ServiceLookupReq::Pipeline::getClient() {
+  return  ::riaps::discovery::Client::Pipeline(_typeless.getPointerField(1));
 }
 #endif  // !CAPNP_LITE
-inline void ServiceLookupReq::Builder::setClient( ::Client::Reader value) {
-  ::capnp::_::PointerHelpers< ::Client>::set(
+inline void ServiceLookupReq::Builder::setClient( ::riaps::discovery::Client::Reader value) {
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::set(
       _builder.getPointerField(1 * ::capnp::POINTERS), value);
 }
-inline  ::Client::Builder ServiceLookupReq::Builder::initClient() {
-  return ::capnp::_::PointerHelpers< ::Client>::init(
+inline  ::riaps::discovery::Client::Builder ServiceLookupReq::Builder::initClient() {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::init(
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }
 inline void ServiceLookupReq::Builder::adoptClient(
-    ::capnp::Orphan< ::Client>&& value) {
-  ::capnp::_::PointerHelpers< ::Client>::adopt(
+    ::capnp::Orphan< ::riaps::discovery::Client>&& value) {
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::adopt(
       _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::Client> ServiceLookupReq::Builder::disownClient() {
-  return ::capnp::_::PointerHelpers< ::Client>::disown(
+inline ::capnp::Orphan< ::riaps::discovery::Client> ServiceLookupReq::Builder::disownClient() {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::disown(
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }
 
-inline  ::Status ServiceLookupRep::Reader::getStatus() const {
-  return _reader.getDataField< ::Status>(
+inline  ::riaps::discovery::Status ServiceLookupRep::Reader::getStatus() const {
+  return _reader.getDataField< ::riaps::discovery::Status>(
       0 * ::capnp::ELEMENTS);
 }
 
-inline  ::Status ServiceLookupRep::Builder::getStatus() {
-  return _builder.getDataField< ::Status>(
+inline  ::riaps::discovery::Status ServiceLookupRep::Builder::getStatus() {
+  return _builder.getDataField< ::riaps::discovery::Status>(
       0 * ::capnp::ELEMENTS);
 }
-inline void ServiceLookupRep::Builder::setStatus( ::Status value) {
-  _builder.setDataField< ::Status>(
+inline void ServiceLookupRep::Builder::setStatus( ::riaps::discovery::Status value) {
+  _builder.setDataField< ::riaps::discovery::Status>(
       0 * ::capnp::ELEMENTS, value);
 }
 
@@ -2718,29 +2720,29 @@ inline bool ServiceLookupRep::Reader::hasSockets() const {
 inline bool ServiceLookupRep::Builder::hasSockets() {
   return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline  ::capnp::List< ::Socket>::Reader ServiceLookupRep::Reader::getSockets() const {
-  return ::capnp::_::PointerHelpers< ::capnp::List< ::Socket>>::get(
+inline  ::capnp::List< ::riaps::discovery::Socket>::Reader ServiceLookupRep::Reader::getSockets() const {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::Socket>>::get(
       _reader.getPointerField(0 * ::capnp::POINTERS));
 }
-inline  ::capnp::List< ::Socket>::Builder ServiceLookupRep::Builder::getSockets() {
-  return ::capnp::_::PointerHelpers< ::capnp::List< ::Socket>>::get(
+inline  ::capnp::List< ::riaps::discovery::Socket>::Builder ServiceLookupRep::Builder::getSockets() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::Socket>>::get(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
-inline void ServiceLookupRep::Builder::setSockets( ::capnp::List< ::Socket>::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::List< ::Socket>>::set(
+inline void ServiceLookupRep::Builder::setSockets( ::capnp::List< ::riaps::discovery::Socket>::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::Socket>>::set(
       _builder.getPointerField(0 * ::capnp::POINTERS), value);
 }
-inline  ::capnp::List< ::Socket>::Builder ServiceLookupRep::Builder::initSockets(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::List< ::Socket>>::init(
+inline  ::capnp::List< ::riaps::discovery::Socket>::Builder ServiceLookupRep::Builder::initSockets(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::Socket>>::init(
       _builder.getPointerField(0 * ::capnp::POINTERS), size);
 }
 inline void ServiceLookupRep::Builder::adoptSockets(
-    ::capnp::Orphan< ::capnp::List< ::Socket>>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::List< ::Socket>>::adopt(
+    ::capnp::Orphan< ::capnp::List< ::riaps::discovery::Socket>>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::Socket>>::adopt(
       _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::capnp::List< ::Socket>> ServiceLookupRep::Builder::disownSockets() {
-  return ::capnp::_::PointerHelpers< ::capnp::List< ::Socket>>::disown(
+inline ::capnp::Orphan< ::capnp::List< ::riaps::discovery::Socket>> ServiceLookupRep::Builder::disownSockets() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::Socket>>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
@@ -2750,48 +2752,48 @@ inline bool DiscoUpd::Reader::hasClient() const {
 inline bool DiscoUpd::Builder::hasClient() {
   return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline  ::Client::Reader DiscoUpd::Reader::getClient() const {
-  return ::capnp::_::PointerHelpers< ::Client>::get(
+inline  ::riaps::discovery::Client::Reader DiscoUpd::Reader::getClient() const {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::get(
       _reader.getPointerField(0 * ::capnp::POINTERS));
 }
-inline  ::Client::Builder DiscoUpd::Builder::getClient() {
-  return ::capnp::_::PointerHelpers< ::Client>::get(
+inline  ::riaps::discovery::Client::Builder DiscoUpd::Builder::getClient() {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::get(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
-inline  ::Client::Pipeline DiscoUpd::Pipeline::getClient() {
-  return  ::Client::Pipeline(_typeless.getPointerField(0));
+inline  ::riaps::discovery::Client::Pipeline DiscoUpd::Pipeline::getClient() {
+  return  ::riaps::discovery::Client::Pipeline(_typeless.getPointerField(0));
 }
 #endif  // !CAPNP_LITE
-inline void DiscoUpd::Builder::setClient( ::Client::Reader value) {
-  ::capnp::_::PointerHelpers< ::Client>::set(
+inline void DiscoUpd::Builder::setClient( ::riaps::discovery::Client::Reader value) {
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::set(
       _builder.getPointerField(0 * ::capnp::POINTERS), value);
 }
-inline  ::Client::Builder DiscoUpd::Builder::initClient() {
-  return ::capnp::_::PointerHelpers< ::Client>::init(
+inline  ::riaps::discovery::Client::Builder DiscoUpd::Builder::initClient() {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::init(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 inline void DiscoUpd::Builder::adoptClient(
-    ::capnp::Orphan< ::Client>&& value) {
-  ::capnp::_::PointerHelpers< ::Client>::adopt(
+    ::capnp::Orphan< ::riaps::discovery::Client>&& value) {
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::adopt(
       _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::Client> DiscoUpd::Builder::disownClient() {
-  return ::capnp::_::PointerHelpers< ::Client>::disown(
+inline ::capnp::Orphan< ::riaps::discovery::Client> DiscoUpd::Builder::disownClient() {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
-inline  ::Scope DiscoUpd::Reader::getScope() const {
-  return _reader.getDataField< ::Scope>(
+inline  ::riaps::discovery::Scope DiscoUpd::Reader::getScope() const {
+  return _reader.getDataField< ::riaps::discovery::Scope>(
       0 * ::capnp::ELEMENTS);
 }
 
-inline  ::Scope DiscoUpd::Builder::getScope() {
-  return _builder.getDataField< ::Scope>(
+inline  ::riaps::discovery::Scope DiscoUpd::Builder::getScope() {
+  return _builder.getDataField< ::riaps::discovery::Scope>(
       0 * ::capnp::ELEMENTS);
 }
-inline void DiscoUpd::Builder::setScope( ::Scope value) {
-  _builder.setDataField< ::Scope>(
+inline void DiscoUpd::Builder::setScope( ::riaps::discovery::Scope value) {
+  _builder.setDataField< ::riaps::discovery::Scope>(
       0 * ::capnp::ELEMENTS, value);
 }
 
@@ -2801,41 +2803,41 @@ inline bool DiscoUpd::Reader::hasSocket() const {
 inline bool DiscoUpd::Builder::hasSocket() {
   return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
 }
-inline  ::Socket::Reader DiscoUpd::Reader::getSocket() const {
-  return ::capnp::_::PointerHelpers< ::Socket>::get(
+inline  ::riaps::discovery::Socket::Reader DiscoUpd::Reader::getSocket() const {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::get(
       _reader.getPointerField(1 * ::capnp::POINTERS));
 }
-inline  ::Socket::Builder DiscoUpd::Builder::getSocket() {
-  return ::capnp::_::PointerHelpers< ::Socket>::get(
+inline  ::riaps::discovery::Socket::Builder DiscoUpd::Builder::getSocket() {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::get(
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
-inline  ::Socket::Pipeline DiscoUpd::Pipeline::getSocket() {
-  return  ::Socket::Pipeline(_typeless.getPointerField(1));
+inline  ::riaps::discovery::Socket::Pipeline DiscoUpd::Pipeline::getSocket() {
+  return  ::riaps::discovery::Socket::Pipeline(_typeless.getPointerField(1));
 }
 #endif  // !CAPNP_LITE
-inline void DiscoUpd::Builder::setSocket( ::Socket::Reader value) {
-  ::capnp::_::PointerHelpers< ::Socket>::set(
+inline void DiscoUpd::Builder::setSocket( ::riaps::discovery::Socket::Reader value) {
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::set(
       _builder.getPointerField(1 * ::capnp::POINTERS), value);
 }
-inline  ::Socket::Builder DiscoUpd::Builder::initSocket() {
-  return ::capnp::_::PointerHelpers< ::Socket>::init(
+inline  ::riaps::discovery::Socket::Builder DiscoUpd::Builder::initSocket() {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::init(
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }
 inline void DiscoUpd::Builder::adoptSocket(
-    ::capnp::Orphan< ::Socket>&& value) {
-  ::capnp::_::PointerHelpers< ::Socket>::adopt(
+    ::capnp::Orphan< ::riaps::discovery::Socket>&& value) {
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::adopt(
       _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::Socket> DiscoUpd::Builder::disownSocket() {
-  return ::capnp::_::PointerHelpers< ::Socket>::disown(
+inline ::capnp::Orphan< ::riaps::discovery::Socket> DiscoUpd::Builder::disownSocket() {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::disown(
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }
 
-inline  ::DiscoReq::Which DiscoReq::Reader::which() const {
+inline  ::riaps::discovery::DiscoReq::Which DiscoReq::Reader::which() const {
   return _reader.getDataField<Which>(0 * ::capnp::ELEMENTS);
 }
-inline  ::DiscoReq::Which DiscoReq::Builder::which() {
+inline  ::riaps::discovery::DiscoReq::Which DiscoReq::Builder::which() {
   return _builder.getDataField<Which>(0 * ::capnp::ELEMENTS);
 }
 
@@ -2853,41 +2855,41 @@ inline bool DiscoReq::Builder::hasActorReg() {
   if (which() != DiscoReq::ACTOR_REG) return false;
   return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline  ::ActorRegReq::Reader DiscoReq::Reader::getActorReg() const {
+inline  ::riaps::discovery::ActorRegReq::Reader DiscoReq::Reader::getActorReg() const {
   KJ_IREQUIRE(which() == DiscoReq::ACTOR_REG,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ActorRegReq>::get(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegReq>::get(
       _reader.getPointerField(0 * ::capnp::POINTERS));
 }
-inline  ::ActorRegReq::Builder DiscoReq::Builder::getActorReg() {
+inline  ::riaps::discovery::ActorRegReq::Builder DiscoReq::Builder::getActorReg() {
   KJ_IREQUIRE(which() == DiscoReq::ACTOR_REG,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ActorRegReq>::get(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegReq>::get(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
-inline void DiscoReq::Builder::setActorReg( ::ActorRegReq::Reader value) {
+inline void DiscoReq::Builder::setActorReg( ::riaps::discovery::ActorRegReq::Reader value) {
   _builder.setDataField<DiscoReq::Which>(
       0 * ::capnp::ELEMENTS, DiscoReq::ACTOR_REG);
-  ::capnp::_::PointerHelpers< ::ActorRegReq>::set(
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegReq>::set(
       _builder.getPointerField(0 * ::capnp::POINTERS), value);
 }
-inline  ::ActorRegReq::Builder DiscoReq::Builder::initActorReg() {
+inline  ::riaps::discovery::ActorRegReq::Builder DiscoReq::Builder::initActorReg() {
   _builder.setDataField<DiscoReq::Which>(
       0 * ::capnp::ELEMENTS, DiscoReq::ACTOR_REG);
-  return ::capnp::_::PointerHelpers< ::ActorRegReq>::init(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegReq>::init(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 inline void DiscoReq::Builder::adoptActorReg(
-    ::capnp::Orphan< ::ActorRegReq>&& value) {
+    ::capnp::Orphan< ::riaps::discovery::ActorRegReq>&& value) {
   _builder.setDataField<DiscoReq::Which>(
       0 * ::capnp::ELEMENTS, DiscoReq::ACTOR_REG);
-  ::capnp::_::PointerHelpers< ::ActorRegReq>::adopt(
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegReq>::adopt(
       _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::ActorRegReq> DiscoReq::Builder::disownActorReg() {
+inline ::capnp::Orphan< ::riaps::discovery::ActorRegReq> DiscoReq::Builder::disownActorReg() {
   KJ_IREQUIRE(which() == DiscoReq::ACTOR_REG,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ActorRegReq>::disown(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegReq>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
@@ -2905,41 +2907,41 @@ inline bool DiscoReq::Builder::hasServiceReg() {
   if (which() != DiscoReq::SERVICE_REG) return false;
   return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline  ::ServiceRegReq::Reader DiscoReq::Reader::getServiceReg() const {
+inline  ::riaps::discovery::ServiceRegReq::Reader DiscoReq::Reader::getServiceReg() const {
   KJ_IREQUIRE(which() == DiscoReq::SERVICE_REG,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ServiceRegReq>::get(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegReq>::get(
       _reader.getPointerField(0 * ::capnp::POINTERS));
 }
-inline  ::ServiceRegReq::Builder DiscoReq::Builder::getServiceReg() {
+inline  ::riaps::discovery::ServiceRegReq::Builder DiscoReq::Builder::getServiceReg() {
   KJ_IREQUIRE(which() == DiscoReq::SERVICE_REG,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ServiceRegReq>::get(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegReq>::get(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
-inline void DiscoReq::Builder::setServiceReg( ::ServiceRegReq::Reader value) {
+inline void DiscoReq::Builder::setServiceReg( ::riaps::discovery::ServiceRegReq::Reader value) {
   _builder.setDataField<DiscoReq::Which>(
       0 * ::capnp::ELEMENTS, DiscoReq::SERVICE_REG);
-  ::capnp::_::PointerHelpers< ::ServiceRegReq>::set(
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegReq>::set(
       _builder.getPointerField(0 * ::capnp::POINTERS), value);
 }
-inline  ::ServiceRegReq::Builder DiscoReq::Builder::initServiceReg() {
+inline  ::riaps::discovery::ServiceRegReq::Builder DiscoReq::Builder::initServiceReg() {
   _builder.setDataField<DiscoReq::Which>(
       0 * ::capnp::ELEMENTS, DiscoReq::SERVICE_REG);
-  return ::capnp::_::PointerHelpers< ::ServiceRegReq>::init(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegReq>::init(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 inline void DiscoReq::Builder::adoptServiceReg(
-    ::capnp::Orphan< ::ServiceRegReq>&& value) {
+    ::capnp::Orphan< ::riaps::discovery::ServiceRegReq>&& value) {
   _builder.setDataField<DiscoReq::Which>(
       0 * ::capnp::ELEMENTS, DiscoReq::SERVICE_REG);
-  ::capnp::_::PointerHelpers< ::ServiceRegReq>::adopt(
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegReq>::adopt(
       _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::ServiceRegReq> DiscoReq::Builder::disownServiceReg() {
+inline ::capnp::Orphan< ::riaps::discovery::ServiceRegReq> DiscoReq::Builder::disownServiceReg() {
   KJ_IREQUIRE(which() == DiscoReq::SERVICE_REG,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ServiceRegReq>::disown(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegReq>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
@@ -2957,41 +2959,41 @@ inline bool DiscoReq::Builder::hasServiceLookup() {
   if (which() != DiscoReq::SERVICE_LOOKUP) return false;
   return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline  ::ServiceLookupReq::Reader DiscoReq::Reader::getServiceLookup() const {
+inline  ::riaps::discovery::ServiceLookupReq::Reader DiscoReq::Reader::getServiceLookup() const {
   KJ_IREQUIRE(which() == DiscoReq::SERVICE_LOOKUP,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ServiceLookupReq>::get(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupReq>::get(
       _reader.getPointerField(0 * ::capnp::POINTERS));
 }
-inline  ::ServiceLookupReq::Builder DiscoReq::Builder::getServiceLookup() {
+inline  ::riaps::discovery::ServiceLookupReq::Builder DiscoReq::Builder::getServiceLookup() {
   KJ_IREQUIRE(which() == DiscoReq::SERVICE_LOOKUP,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ServiceLookupReq>::get(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupReq>::get(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
-inline void DiscoReq::Builder::setServiceLookup( ::ServiceLookupReq::Reader value) {
+inline void DiscoReq::Builder::setServiceLookup( ::riaps::discovery::ServiceLookupReq::Reader value) {
   _builder.setDataField<DiscoReq::Which>(
       0 * ::capnp::ELEMENTS, DiscoReq::SERVICE_LOOKUP);
-  ::capnp::_::PointerHelpers< ::ServiceLookupReq>::set(
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupReq>::set(
       _builder.getPointerField(0 * ::capnp::POINTERS), value);
 }
-inline  ::ServiceLookupReq::Builder DiscoReq::Builder::initServiceLookup() {
+inline  ::riaps::discovery::ServiceLookupReq::Builder DiscoReq::Builder::initServiceLookup() {
   _builder.setDataField<DiscoReq::Which>(
       0 * ::capnp::ELEMENTS, DiscoReq::SERVICE_LOOKUP);
-  return ::capnp::_::PointerHelpers< ::ServiceLookupReq>::init(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupReq>::init(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 inline void DiscoReq::Builder::adoptServiceLookup(
-    ::capnp::Orphan< ::ServiceLookupReq>&& value) {
+    ::capnp::Orphan< ::riaps::discovery::ServiceLookupReq>&& value) {
   _builder.setDataField<DiscoReq::Which>(
       0 * ::capnp::ELEMENTS, DiscoReq::SERVICE_LOOKUP);
-  ::capnp::_::PointerHelpers< ::ServiceLookupReq>::adopt(
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupReq>::adopt(
       _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::ServiceLookupReq> DiscoReq::Builder::disownServiceLookup() {
+inline ::capnp::Orphan< ::riaps::discovery::ServiceLookupReq> DiscoReq::Builder::disownServiceLookup() {
   KJ_IREQUIRE(which() == DiscoReq::SERVICE_LOOKUP,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ServiceLookupReq>::disown(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupReq>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
@@ -3009,48 +3011,48 @@ inline bool DiscoReq::Builder::hasActorUnreg() {
   if (which() != DiscoReq::ACTOR_UNREG) return false;
   return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline  ::ActorRegReq::Reader DiscoReq::Reader::getActorUnreg() const {
+inline  ::riaps::discovery::ActorRegReq::Reader DiscoReq::Reader::getActorUnreg() const {
   KJ_IREQUIRE(which() == DiscoReq::ACTOR_UNREG,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ActorRegReq>::get(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegReq>::get(
       _reader.getPointerField(0 * ::capnp::POINTERS));
 }
-inline  ::ActorRegReq::Builder DiscoReq::Builder::getActorUnreg() {
+inline  ::riaps::discovery::ActorRegReq::Builder DiscoReq::Builder::getActorUnreg() {
   KJ_IREQUIRE(which() == DiscoReq::ACTOR_UNREG,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ActorRegReq>::get(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegReq>::get(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
-inline void DiscoReq::Builder::setActorUnreg( ::ActorRegReq::Reader value) {
+inline void DiscoReq::Builder::setActorUnreg( ::riaps::discovery::ActorRegReq::Reader value) {
   _builder.setDataField<DiscoReq::Which>(
       0 * ::capnp::ELEMENTS, DiscoReq::ACTOR_UNREG);
-  ::capnp::_::PointerHelpers< ::ActorRegReq>::set(
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegReq>::set(
       _builder.getPointerField(0 * ::capnp::POINTERS), value);
 }
-inline  ::ActorRegReq::Builder DiscoReq::Builder::initActorUnreg() {
+inline  ::riaps::discovery::ActorRegReq::Builder DiscoReq::Builder::initActorUnreg() {
   _builder.setDataField<DiscoReq::Which>(
       0 * ::capnp::ELEMENTS, DiscoReq::ACTOR_UNREG);
-  return ::capnp::_::PointerHelpers< ::ActorRegReq>::init(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegReq>::init(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 inline void DiscoReq::Builder::adoptActorUnreg(
-    ::capnp::Orphan< ::ActorRegReq>&& value) {
+    ::capnp::Orphan< ::riaps::discovery::ActorRegReq>&& value) {
   _builder.setDataField<DiscoReq::Which>(
       0 * ::capnp::ELEMENTS, DiscoReq::ACTOR_UNREG);
-  ::capnp::_::PointerHelpers< ::ActorRegReq>::adopt(
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegReq>::adopt(
       _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::ActorRegReq> DiscoReq::Builder::disownActorUnreg() {
+inline ::capnp::Orphan< ::riaps::discovery::ActorRegReq> DiscoReq::Builder::disownActorUnreg() {
   KJ_IREQUIRE(which() == DiscoReq::ACTOR_UNREG,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ActorRegReq>::disown(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegReq>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
-inline  ::DiscoRep::Which DiscoRep::Reader::which() const {
+inline  ::riaps::discovery::DiscoRep::Which DiscoRep::Reader::which() const {
   return _reader.getDataField<Which>(0 * ::capnp::ELEMENTS);
 }
-inline  ::DiscoRep::Which DiscoRep::Builder::which() {
+inline  ::riaps::discovery::DiscoRep::Which DiscoRep::Builder::which() {
   return _builder.getDataField<Which>(0 * ::capnp::ELEMENTS);
 }
 
@@ -3068,41 +3070,41 @@ inline bool DiscoRep::Builder::hasActorReg() {
   if (which() != DiscoRep::ACTOR_REG) return false;
   return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline  ::ActorRegRep::Reader DiscoRep::Reader::getActorReg() const {
+inline  ::riaps::discovery::ActorRegRep::Reader DiscoRep::Reader::getActorReg() const {
   KJ_IREQUIRE(which() == DiscoRep::ACTOR_REG,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ActorRegRep>::get(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegRep>::get(
       _reader.getPointerField(0 * ::capnp::POINTERS));
 }
-inline  ::ActorRegRep::Builder DiscoRep::Builder::getActorReg() {
+inline  ::riaps::discovery::ActorRegRep::Builder DiscoRep::Builder::getActorReg() {
   KJ_IREQUIRE(which() == DiscoRep::ACTOR_REG,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ActorRegRep>::get(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegRep>::get(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
-inline void DiscoRep::Builder::setActorReg( ::ActorRegRep::Reader value) {
+inline void DiscoRep::Builder::setActorReg( ::riaps::discovery::ActorRegRep::Reader value) {
   _builder.setDataField<DiscoRep::Which>(
       0 * ::capnp::ELEMENTS, DiscoRep::ACTOR_REG);
-  ::capnp::_::PointerHelpers< ::ActorRegRep>::set(
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegRep>::set(
       _builder.getPointerField(0 * ::capnp::POINTERS), value);
 }
-inline  ::ActorRegRep::Builder DiscoRep::Builder::initActorReg() {
+inline  ::riaps::discovery::ActorRegRep::Builder DiscoRep::Builder::initActorReg() {
   _builder.setDataField<DiscoRep::Which>(
       0 * ::capnp::ELEMENTS, DiscoRep::ACTOR_REG);
-  return ::capnp::_::PointerHelpers< ::ActorRegRep>::init(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegRep>::init(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 inline void DiscoRep::Builder::adoptActorReg(
-    ::capnp::Orphan< ::ActorRegRep>&& value) {
+    ::capnp::Orphan< ::riaps::discovery::ActorRegRep>&& value) {
   _builder.setDataField<DiscoRep::Which>(
       0 * ::capnp::ELEMENTS, DiscoRep::ACTOR_REG);
-  ::capnp::_::PointerHelpers< ::ActorRegRep>::adopt(
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegRep>::adopt(
       _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::ActorRegRep> DiscoRep::Builder::disownActorReg() {
+inline ::capnp::Orphan< ::riaps::discovery::ActorRegRep> DiscoRep::Builder::disownActorReg() {
   KJ_IREQUIRE(which() == DiscoRep::ACTOR_REG,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ActorRegRep>::disown(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegRep>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
@@ -3120,41 +3122,41 @@ inline bool DiscoRep::Builder::hasServiceReg() {
   if (which() != DiscoRep::SERVICE_REG) return false;
   return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline  ::ServiceRegRep::Reader DiscoRep::Reader::getServiceReg() const {
+inline  ::riaps::discovery::ServiceRegRep::Reader DiscoRep::Reader::getServiceReg() const {
   KJ_IREQUIRE(which() == DiscoRep::SERVICE_REG,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ServiceRegRep>::get(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegRep>::get(
       _reader.getPointerField(0 * ::capnp::POINTERS));
 }
-inline  ::ServiceRegRep::Builder DiscoRep::Builder::getServiceReg() {
+inline  ::riaps::discovery::ServiceRegRep::Builder DiscoRep::Builder::getServiceReg() {
   KJ_IREQUIRE(which() == DiscoRep::SERVICE_REG,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ServiceRegRep>::get(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegRep>::get(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
-inline void DiscoRep::Builder::setServiceReg( ::ServiceRegRep::Reader value) {
+inline void DiscoRep::Builder::setServiceReg( ::riaps::discovery::ServiceRegRep::Reader value) {
   _builder.setDataField<DiscoRep::Which>(
       0 * ::capnp::ELEMENTS, DiscoRep::SERVICE_REG);
-  ::capnp::_::PointerHelpers< ::ServiceRegRep>::set(
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegRep>::set(
       _builder.getPointerField(0 * ::capnp::POINTERS), value);
 }
-inline  ::ServiceRegRep::Builder DiscoRep::Builder::initServiceReg() {
+inline  ::riaps::discovery::ServiceRegRep::Builder DiscoRep::Builder::initServiceReg() {
   _builder.setDataField<DiscoRep::Which>(
       0 * ::capnp::ELEMENTS, DiscoRep::SERVICE_REG);
-  return ::capnp::_::PointerHelpers< ::ServiceRegRep>::init(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegRep>::init(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 inline void DiscoRep::Builder::adoptServiceReg(
-    ::capnp::Orphan< ::ServiceRegRep>&& value) {
+    ::capnp::Orphan< ::riaps::discovery::ServiceRegRep>&& value) {
   _builder.setDataField<DiscoRep::Which>(
       0 * ::capnp::ELEMENTS, DiscoRep::SERVICE_REG);
-  ::capnp::_::PointerHelpers< ::ServiceRegRep>::adopt(
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegRep>::adopt(
       _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::ServiceRegRep> DiscoRep::Builder::disownServiceReg() {
+inline ::capnp::Orphan< ::riaps::discovery::ServiceRegRep> DiscoRep::Builder::disownServiceReg() {
   KJ_IREQUIRE(which() == DiscoRep::SERVICE_REG,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ServiceRegRep>::disown(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegRep>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
@@ -3172,41 +3174,41 @@ inline bool DiscoRep::Builder::hasServiceLookup() {
   if (which() != DiscoRep::SERVICE_LOOKUP) return false;
   return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline  ::ServiceLookupRep::Reader DiscoRep::Reader::getServiceLookup() const {
+inline  ::riaps::discovery::ServiceLookupRep::Reader DiscoRep::Reader::getServiceLookup() const {
   KJ_IREQUIRE(which() == DiscoRep::SERVICE_LOOKUP,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ServiceLookupRep>::get(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupRep>::get(
       _reader.getPointerField(0 * ::capnp::POINTERS));
 }
-inline  ::ServiceLookupRep::Builder DiscoRep::Builder::getServiceLookup() {
+inline  ::riaps::discovery::ServiceLookupRep::Builder DiscoRep::Builder::getServiceLookup() {
   KJ_IREQUIRE(which() == DiscoRep::SERVICE_LOOKUP,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ServiceLookupRep>::get(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupRep>::get(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
-inline void DiscoRep::Builder::setServiceLookup( ::ServiceLookupRep::Reader value) {
+inline void DiscoRep::Builder::setServiceLookup( ::riaps::discovery::ServiceLookupRep::Reader value) {
   _builder.setDataField<DiscoRep::Which>(
       0 * ::capnp::ELEMENTS, DiscoRep::SERVICE_LOOKUP);
-  ::capnp::_::PointerHelpers< ::ServiceLookupRep>::set(
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupRep>::set(
       _builder.getPointerField(0 * ::capnp::POINTERS), value);
 }
-inline  ::ServiceLookupRep::Builder DiscoRep::Builder::initServiceLookup() {
+inline  ::riaps::discovery::ServiceLookupRep::Builder DiscoRep::Builder::initServiceLookup() {
   _builder.setDataField<DiscoRep::Which>(
       0 * ::capnp::ELEMENTS, DiscoRep::SERVICE_LOOKUP);
-  return ::capnp::_::PointerHelpers< ::ServiceLookupRep>::init(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupRep>::init(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 inline void DiscoRep::Builder::adoptServiceLookup(
-    ::capnp::Orphan< ::ServiceLookupRep>&& value) {
+    ::capnp::Orphan< ::riaps::discovery::ServiceLookupRep>&& value) {
   _builder.setDataField<DiscoRep::Which>(
       0 * ::capnp::ELEMENTS, DiscoRep::SERVICE_LOOKUP);
-  ::capnp::_::PointerHelpers< ::ServiceLookupRep>::adopt(
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupRep>::adopt(
       _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::ServiceLookupRep> DiscoRep::Builder::disownServiceLookup() {
+inline ::capnp::Orphan< ::riaps::discovery::ServiceLookupRep> DiscoRep::Builder::disownServiceLookup() {
   KJ_IREQUIRE(which() == DiscoRep::SERVICE_LOOKUP,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ServiceLookupRep>::disown(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupRep>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
@@ -3224,41 +3226,41 @@ inline bool DiscoRep::Builder::hasActorUnreg() {
   if (which() != DiscoRep::ACTOR_UNREG) return false;
   return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline  ::ActorUnregRep::Reader DiscoRep::Reader::getActorUnreg() const {
+inline  ::riaps::discovery::ActorUnregRep::Reader DiscoRep::Reader::getActorUnreg() const {
   KJ_IREQUIRE(which() == DiscoRep::ACTOR_UNREG,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ActorUnregRep>::get(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregRep>::get(
       _reader.getPointerField(0 * ::capnp::POINTERS));
 }
-inline  ::ActorUnregRep::Builder DiscoRep::Builder::getActorUnreg() {
+inline  ::riaps::discovery::ActorUnregRep::Builder DiscoRep::Builder::getActorUnreg() {
   KJ_IREQUIRE(which() == DiscoRep::ACTOR_UNREG,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ActorUnregRep>::get(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregRep>::get(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
-inline void DiscoRep::Builder::setActorUnreg( ::ActorUnregRep::Reader value) {
+inline void DiscoRep::Builder::setActorUnreg( ::riaps::discovery::ActorUnregRep::Reader value) {
   _builder.setDataField<DiscoRep::Which>(
       0 * ::capnp::ELEMENTS, DiscoRep::ACTOR_UNREG);
-  ::capnp::_::PointerHelpers< ::ActorUnregRep>::set(
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregRep>::set(
       _builder.getPointerField(0 * ::capnp::POINTERS), value);
 }
-inline  ::ActorUnregRep::Builder DiscoRep::Builder::initActorUnreg() {
+inline  ::riaps::discovery::ActorUnregRep::Builder DiscoRep::Builder::initActorUnreg() {
   _builder.setDataField<DiscoRep::Which>(
       0 * ::capnp::ELEMENTS, DiscoRep::ACTOR_UNREG);
-  return ::capnp::_::PointerHelpers< ::ActorUnregRep>::init(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregRep>::init(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 inline void DiscoRep::Builder::adoptActorUnreg(
-    ::capnp::Orphan< ::ActorUnregRep>&& value) {
+    ::capnp::Orphan< ::riaps::discovery::ActorUnregRep>&& value) {
   _builder.setDataField<DiscoRep::Which>(
       0 * ::capnp::ELEMENTS, DiscoRep::ACTOR_UNREG);
-  ::capnp::_::PointerHelpers< ::ActorUnregRep>::adopt(
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregRep>::adopt(
       _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::ActorUnregRep> DiscoRep::Builder::disownActorUnreg() {
+inline ::capnp::Orphan< ::riaps::discovery::ActorUnregRep> DiscoRep::Builder::disownActorUnreg() {
   KJ_IREQUIRE(which() == DiscoRep::ACTOR_UNREG,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ActorUnregRep>::disown(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregRep>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
@@ -3336,34 +3338,34 @@ inline bool ProviderListGet::Reader::hasPath() const {
 inline bool ProviderListGet::Builder::hasPath() {
   return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline  ::Path::Reader ProviderListGet::Reader::getPath() const {
-  return ::capnp::_::PointerHelpers< ::Path>::get(
+inline  ::riaps::discovery::Path::Reader ProviderListGet::Reader::getPath() const {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::get(
       _reader.getPointerField(0 * ::capnp::POINTERS));
 }
-inline  ::Path::Builder ProviderListGet::Builder::getPath() {
-  return ::capnp::_::PointerHelpers< ::Path>::get(
+inline  ::riaps::discovery::Path::Builder ProviderListGet::Builder::getPath() {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::get(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
-inline  ::Path::Pipeline ProviderListGet::Pipeline::getPath() {
-  return  ::Path::Pipeline(_typeless.getPointerField(0));
+inline  ::riaps::discovery::Path::Pipeline ProviderListGet::Pipeline::getPath() {
+  return  ::riaps::discovery::Path::Pipeline(_typeless.getPointerField(0));
 }
 #endif  // !CAPNP_LITE
-inline void ProviderListGet::Builder::setPath( ::Path::Reader value) {
-  ::capnp::_::PointerHelpers< ::Path>::set(
+inline void ProviderListGet::Builder::setPath( ::riaps::discovery::Path::Reader value) {
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::set(
       _builder.getPointerField(0 * ::capnp::POINTERS), value);
 }
-inline  ::Path::Builder ProviderListGet::Builder::initPath() {
-  return ::capnp::_::PointerHelpers< ::Path>::init(
+inline  ::riaps::discovery::Path::Builder ProviderListGet::Builder::initPath() {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::init(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 inline void ProviderListGet::Builder::adoptPath(
-    ::capnp::Orphan< ::Path>&& value) {
-  ::capnp::_::PointerHelpers< ::Path>::adopt(
+    ::capnp::Orphan< ::riaps::discovery::Path>&& value) {
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::adopt(
       _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::Path> ProviderListGet::Builder::disownPath() {
-  return ::capnp::_::PointerHelpers< ::Path>::disown(
+inline ::capnp::Orphan< ::riaps::discovery::Path> ProviderListGet::Builder::disownPath() {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
@@ -3373,34 +3375,34 @@ inline bool ProviderListGet::Reader::hasClient() const {
 inline bool ProviderListGet::Builder::hasClient() {
   return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
 }
-inline  ::Client::Reader ProviderListGet::Reader::getClient() const {
-  return ::capnp::_::PointerHelpers< ::Client>::get(
+inline  ::riaps::discovery::Client::Reader ProviderListGet::Reader::getClient() const {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::get(
       _reader.getPointerField(1 * ::capnp::POINTERS));
 }
-inline  ::Client::Builder ProviderListGet::Builder::getClient() {
-  return ::capnp::_::PointerHelpers< ::Client>::get(
+inline  ::riaps::discovery::Client::Builder ProviderListGet::Builder::getClient() {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::get(
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
-inline  ::Client::Pipeline ProviderListGet::Pipeline::getClient() {
-  return  ::Client::Pipeline(_typeless.getPointerField(1));
+inline  ::riaps::discovery::Client::Pipeline ProviderListGet::Pipeline::getClient() {
+  return  ::riaps::discovery::Client::Pipeline(_typeless.getPointerField(1));
 }
 #endif  // !CAPNP_LITE
-inline void ProviderListGet::Builder::setClient( ::Client::Reader value) {
-  ::capnp::_::PointerHelpers< ::Client>::set(
+inline void ProviderListGet::Builder::setClient( ::riaps::discovery::Client::Reader value) {
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::set(
       _builder.getPointerField(1 * ::capnp::POINTERS), value);
 }
-inline  ::Client::Builder ProviderListGet::Builder::initClient() {
-  return ::capnp::_::PointerHelpers< ::Client>::init(
+inline  ::riaps::discovery::Client::Builder ProviderListGet::Builder::initClient() {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::init(
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }
 inline void ProviderListGet::Builder::adoptClient(
-    ::capnp::Orphan< ::Client>&& value) {
-  ::capnp::_::PointerHelpers< ::Client>::adopt(
+    ::capnp::Orphan< ::riaps::discovery::Client>&& value) {
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::adopt(
       _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::Client> ProviderListGet::Builder::disownClient() {
-  return ::capnp::_::PointerHelpers< ::Client>::disown(
+inline ::capnp::Orphan< ::riaps::discovery::Client> ProviderListGet::Builder::disownClient() {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::disown(
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }
 
@@ -3440,10 +3442,10 @@ inline ::capnp::Orphan< ::capnp::List< ::capnp::Text>> ProviderListGet::Builder:
       _builder.getPointerField(2 * ::capnp::POINTERS));
 }
 
-inline  ::ProviderListPush::Which ProviderListPush::Reader::which() const {
+inline  ::riaps::discovery::ProviderListPush::Which ProviderListPush::Reader::which() const {
   return _reader.getDataField<Which>(0 * ::capnp::ELEMENTS);
 }
-inline  ::ProviderListPush::Which ProviderListPush::Builder::which() {
+inline  ::riaps::discovery::ProviderListPush::Which ProviderListPush::Builder::which() {
   return _builder.getDataField<Which>(0 * ::capnp::ELEMENTS);
 }
 
@@ -3461,41 +3463,41 @@ inline bool ProviderListPush::Builder::hasProviderUpdate() {
   if (which() != ProviderListPush::PROVIDER_UPDATE) return false;
   return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline  ::ProviderListUpdate::Reader ProviderListPush::Reader::getProviderUpdate() const {
+inline  ::riaps::discovery::ProviderListUpdate::Reader ProviderListPush::Reader::getProviderUpdate() const {
   KJ_IREQUIRE(which() == ProviderListPush::PROVIDER_UPDATE,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ProviderListUpdate>::get(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListUpdate>::get(
       _reader.getPointerField(0 * ::capnp::POINTERS));
 }
-inline  ::ProviderListUpdate::Builder ProviderListPush::Builder::getProviderUpdate() {
+inline  ::riaps::discovery::ProviderListUpdate::Builder ProviderListPush::Builder::getProviderUpdate() {
   KJ_IREQUIRE(which() == ProviderListPush::PROVIDER_UPDATE,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ProviderListUpdate>::get(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListUpdate>::get(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
-inline void ProviderListPush::Builder::setProviderUpdate( ::ProviderListUpdate::Reader value) {
+inline void ProviderListPush::Builder::setProviderUpdate( ::riaps::discovery::ProviderListUpdate::Reader value) {
   _builder.setDataField<ProviderListPush::Which>(
       0 * ::capnp::ELEMENTS, ProviderListPush::PROVIDER_UPDATE);
-  ::capnp::_::PointerHelpers< ::ProviderListUpdate>::set(
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListUpdate>::set(
       _builder.getPointerField(0 * ::capnp::POINTERS), value);
 }
-inline  ::ProviderListUpdate::Builder ProviderListPush::Builder::initProviderUpdate() {
+inline  ::riaps::discovery::ProviderListUpdate::Builder ProviderListPush::Builder::initProviderUpdate() {
   _builder.setDataField<ProviderListPush::Which>(
       0 * ::capnp::ELEMENTS, ProviderListPush::PROVIDER_UPDATE);
-  return ::capnp::_::PointerHelpers< ::ProviderListUpdate>::init(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListUpdate>::init(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 inline void ProviderListPush::Builder::adoptProviderUpdate(
-    ::capnp::Orphan< ::ProviderListUpdate>&& value) {
+    ::capnp::Orphan< ::riaps::discovery::ProviderListUpdate>&& value) {
   _builder.setDataField<ProviderListPush::Which>(
       0 * ::capnp::ELEMENTS, ProviderListPush::PROVIDER_UPDATE);
-  ::capnp::_::PointerHelpers< ::ProviderListUpdate>::adopt(
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListUpdate>::adopt(
       _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::ProviderListUpdate> ProviderListPush::Builder::disownProviderUpdate() {
+inline ::capnp::Orphan< ::riaps::discovery::ProviderListUpdate> ProviderListPush::Builder::disownProviderUpdate() {
   KJ_IREQUIRE(which() == ProviderListPush::PROVIDER_UPDATE,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ProviderListUpdate>::disown(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListUpdate>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
@@ -3513,43 +3515,45 @@ inline bool ProviderListPush::Builder::hasProviderGet() {
   if (which() != ProviderListPush::PROVIDER_GET) return false;
   return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline  ::ProviderListGet::Reader ProviderListPush::Reader::getProviderGet() const {
+inline  ::riaps::discovery::ProviderListGet::Reader ProviderListPush::Reader::getProviderGet() const {
   KJ_IREQUIRE(which() == ProviderListPush::PROVIDER_GET,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ProviderListGet>::get(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListGet>::get(
       _reader.getPointerField(0 * ::capnp::POINTERS));
 }
-inline  ::ProviderListGet::Builder ProviderListPush::Builder::getProviderGet() {
+inline  ::riaps::discovery::ProviderListGet::Builder ProviderListPush::Builder::getProviderGet() {
   KJ_IREQUIRE(which() == ProviderListPush::PROVIDER_GET,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ProviderListGet>::get(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListGet>::get(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
-inline void ProviderListPush::Builder::setProviderGet( ::ProviderListGet::Reader value) {
+inline void ProviderListPush::Builder::setProviderGet( ::riaps::discovery::ProviderListGet::Reader value) {
   _builder.setDataField<ProviderListPush::Which>(
       0 * ::capnp::ELEMENTS, ProviderListPush::PROVIDER_GET);
-  ::capnp::_::PointerHelpers< ::ProviderListGet>::set(
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListGet>::set(
       _builder.getPointerField(0 * ::capnp::POINTERS), value);
 }
-inline  ::ProviderListGet::Builder ProviderListPush::Builder::initProviderGet() {
+inline  ::riaps::discovery::ProviderListGet::Builder ProviderListPush::Builder::initProviderGet() {
   _builder.setDataField<ProviderListPush::Which>(
       0 * ::capnp::ELEMENTS, ProviderListPush::PROVIDER_GET);
-  return ::capnp::_::PointerHelpers< ::ProviderListGet>::init(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListGet>::init(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 inline void ProviderListPush::Builder::adoptProviderGet(
-    ::capnp::Orphan< ::ProviderListGet>&& value) {
+    ::capnp::Orphan< ::riaps::discovery::ProviderListGet>&& value) {
   _builder.setDataField<ProviderListPush::Which>(
       0 * ::capnp::ELEMENTS, ProviderListPush::PROVIDER_GET);
-  ::capnp::_::PointerHelpers< ::ProviderListGet>::adopt(
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListGet>::adopt(
       _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::ProviderListGet> ProviderListPush::Builder::disownProviderGet() {
+inline ::capnp::Orphan< ::riaps::discovery::ProviderListGet> ProviderListPush::Builder::disownProviderGet() {
   KJ_IREQUIRE(which() == ProviderListPush::PROVIDER_GET,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::ProviderListGet>::disown(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListGet>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
+}  // namespace
+}  // namespace
 
 #endif  // CAPNP_INCLUDED_bfb632a00018ca1b_

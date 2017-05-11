@@ -2,6 +2,9 @@
 
 # RIAPS devm messages
 
+using Cxx = import "/capnp/c++.capnp";
+$Cxx.namespace("riaps::devm");
+
 enum Status { ok @0; err @1; }
 
 struct ActorRegReq {

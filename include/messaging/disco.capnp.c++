@@ -1411,6 +1411,8 @@ const ::capnp::_::RawSchema s_f0d1b2dc7cdf6a2c = {
 
 // =======================================================================================
 
+namespace riaps {
+namespace discovery {
 
 // ActorRegReq
 #ifndef _MSC_VER
@@ -1600,4 +1602,6 @@ constexpr ::capnp::_::RawBrandedSchema const* ProviderListPush::_capnpPrivate::b
 #endif  // !CAPNP_LITE
 
 
+}  // namespace
+}  // namespace
 

@@ -2,6 +2,9 @@
 
 # RIAPS disco messages
 
+using Cxx = import "/capnp/c++.capnp";
+$Cxx.namespace("riaps::discovery");
+
 enum Status { ok @0; err @1; }
 enum Kind { none @0; pub @1; sub @2; clt @3; srv @4; req @5; rep @6; }
 enum Scope { none @0; global @1; local @2; }
