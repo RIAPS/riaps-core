@@ -5,6 +5,11 @@
 #ifndef RIAPS_CORE_R_JSONMODEL_H_H
 #define RIAPS_CORE_R_JSONMODEL_H_H
 
+#define J_NAME         "name"
+#define J_ACTORS       "actors"
+#define J_COMPONENTS   "components"
+#define J_DEVICES      "devices"
+#define J_MESSAGES     "messages"
 
 #define J_INSTANCES    "instances"
 #define J_INTERNALS    "internals"
