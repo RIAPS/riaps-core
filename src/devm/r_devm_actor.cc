@@ -36,7 +36,7 @@ void devm_zactor (zsock_t *pipe, void *args){
     });
 
 
-    std::string endpoint = DEVM_ENDPOINT + mac_address;
+    std::string endpoint = DEVMANAGER_SERVICE_IPC + mac_address;
     zsock_t *devmServer = zsock_new_router(endpoint.c_str());
     assert(devmServer);
 
@@ -76,7 +76,7 @@ void devm_zactor (zsock_t *pipe, void *args){
             auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
 
             capnp::FlatArrayMessageReader reader(capnp_data);
-            auto devmRequest = reader.getRoot<DevmReq>();
+            auto devmRequest = reader.getRoot<riaps::devm::DevmReq>();
 
             riaps::devm::DevmHandler::HandleDevmReq(devmRequest, clients.get(), devmServer);
 

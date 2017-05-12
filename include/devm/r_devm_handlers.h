@@ -42,7 +42,10 @@ namespace riaps{
             static void HandleDeviceReq(const DeviceRegReq::Reader &deviceRegReq);
             static void HandleDeviceUnreq(const DeviceUnregReq::Reader &deviceUnregReq);
 
+            static int StartExecutable(const std::string& command);
+
             static std::map<std::string, actor_details_t*>* _clients;
+            static std::map<std::string, int>               _childThreads;
             static zsock_t* _serverPort;
         };
     }

@@ -5,6 +5,7 @@
 #include <devm/r_devm_handlers.h>
 #include <framework/rfw_network_interfaces.h>
 #include <iostream>
+#include <cstdlib>
 
 
 namespace riaps{
@@ -102,7 +103,7 @@ namespace riaps{
             std::string modelName = deviceRegReq.getModelName();
             std::string typeName = deviceRegReq.getTypeName();
 
-            ::capnp::List< ::DeviceArg>::Reader args = deviceRegReq.getDeviceArgs();
+            ::capnp::List< riaps::devm::DeviceArg>::Reader args = deviceRegReq.getDeviceArgs();
 
             std::cout << "handleDeviceReq: " <<  appName << " " << typeName << " ";
 
@@ -137,9 +138,40 @@ namespace riaps{
         }
 
         // Todo: implement \o/
-        void DevmHandler::StartDevice(const std::string &appName, const std::string &modelName,
-                                      const std::string &typeName, const std::string &cmdArgs) {
+        void DevmHandler::StartDevice(const std::string &appName,
+                                      const std::string &modelName,
+                                      const std::string &typeName,
+                                      const std::string &cmdArgs) {
 
+            std::string command = "/home/istvan/work/riaps-core/bin/start_device";
+
+            // Add model - skip appName, we don't need for that
+            command += " " + modelName; // model.json
+            command += " " + typeName;  // actorname I guess
+            command += " " + cmdArgs;
+
+            int childPid = StartExecutable(command);
+            if (childPid == -1){
+                std::cerr << "Failed to start: " << command <<std::endl;
+            } else {
+                std::string key = appName + "." + typeName;
+                _childThreads[key] = childPid;
+            }
+        }
+
+        int DevmHandler::StartExecutable(const std::string &command) {
+            auto pid = fork();
+            if (pid < 0) return -1; //fork failed
+
+            // Id the pid 0, we are in the child process, start the device
+            if (pid == 0) {
+                std::system(command.c_str());
+                exit(1);
+            }
+            // Parent process returns the PID of the child
+            else {
+                return pid;
+            }
         }
 
 
