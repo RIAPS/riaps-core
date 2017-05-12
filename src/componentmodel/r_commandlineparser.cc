@@ -11,6 +11,10 @@ CommandLineParser::CommandLineParser(char** argv, int argc)
 
 }
 
+bool CommandLineParser::CommandOptionExists(char **begin, char **end, const std::string &option) {
+    return std::find(begin, end, option) != end;
+}
+
 int CommandLineParser::Parse(std::map<std::string, std::string> &actualParams,
                               std::string &actorName,
                               nlohmann::json &jsonConfig) {

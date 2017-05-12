@@ -8,6 +8,8 @@
 #include <sched.h>
 #include <componentmodel/r_commandlineparser.h>
 
+
+// TODO: Move to another directory (e.g.: actor?)
 int main(int argc, char* argv[]) {
 
     // Logger experiment
@@ -19,7 +21,7 @@ int main(int argc, char* argv[]) {
 
     //assert(ret==0);
 
-    if (cmdOptionExists(argv, argv+argc, "-h") || argc < 3){
+    if (CommandLineParser::CommandOptionExists(argv, argv+argc, "-h") || argc < 3){
         std::cout << "Usage: start_actor <model> <actor> [-h]" << std::endl;
         std::cout << std::endl;
         std::cout << std::setw(15) << "model" << std::endl << "\t\tModel file argument (.json)" << std::endl;
@@ -68,9 +70,4 @@ char* getCmdOption(char ** begin, char ** end, const std::string & option)
         return *itr;
     }
     return 0;
-}
-
-bool cmdOptionExists(char** begin, char** end, const std::string& option)
-{
-    return std::find(begin, end, option) != end;
 }

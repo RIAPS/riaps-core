@@ -31,7 +31,7 @@ public:
 
 
 
-
+    static bool CommandOptionExists(char** begin, char** end, const std::string& option);
 
     ~CommandLineParser();
 

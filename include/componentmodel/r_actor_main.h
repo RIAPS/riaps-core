@@ -21,6 +21,5 @@
 
 
 char* getCmdOption(char ** begin, char ** end, const std::string & option);
-bool cmdOptionExists(char** begin, char** end, const std::string& option);
 
 #endif //RIAPS_FW_R_ACTOR_MAIN_H
