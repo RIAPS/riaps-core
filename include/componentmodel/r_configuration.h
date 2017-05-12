@@ -96,12 +96,13 @@ struct _component_ports_j {
 };
 
 
-
+// TODO: Refactor names
 struct _component_conf_j {
     std::string        component_name;
     std::string        component_type;
     _component_ports_j component_ports;
     Parameters         component_parameters;
+    bool               isDevice;
 };
 
 typedef struct _component_conf_j component_conf_j;
