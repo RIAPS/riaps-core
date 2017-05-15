@@ -12,7 +12,8 @@ namespace riaps{
     namespace devm{
 
         std::map<std::string, actor_details_t*>* DevmHandler::_clients;
-        zsock_t* DevmHandler::_serverPort;
+        zsock_t*                                 DevmHandler::_serverPort;
+        std::map<std::string, int>               DevmHandler::_childThreads;
 
         void DevmHandler::HandleDevmReq(const DevmReq::Reader &devmRequest,
                                         std::map<std::string, actor_details_t *> *clients,
@@ -137,7 +138,6 @@ namespace riaps{
             zmsg_send(&zmsg, DevmHandler::_serverPort);
         }
 
-        // Todo: implement \o/
         void DevmHandler::StartDevice(const std::string &appName,
                                       const std::string &modelName,
                                       const std::string &typeName,
