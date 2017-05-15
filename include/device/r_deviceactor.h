@@ -14,7 +14,7 @@
 
 namespace riaps {
 
-    class DeviceActor {
+    class DeviceActor : public Actor {
 
     public:
         ~DeviceActor();
@@ -23,11 +23,13 @@ namespace riaps {
                                     const std::string& deviceName,
                                     std::map<std::string, std::string>& actualParams);
 
-    private:
-        DeviceActor(const std::string&     applicationName   ,
-                    const std::string&     deviceActorName   ,
-                    nlohmann::json&        jsonActorConfig   ,
-                    nlohmann::json&        jsonDevicesConfig ,
+    protected:
+        DeviceActor(const std::string&     applicationname       ,
+                    const std::string&     actorname             ,
+                    nlohmann::json& jsonActorconfig             ,
+                    nlohmann::json& jsonComponentsconfig         ,
+                    nlohmann::json& jsonDevicesconfig            ,
+                    nlohmann::json& jsonMessagesconfig          ,
                     std::map<std::string, std::string>& commandLineParams
         );
 
