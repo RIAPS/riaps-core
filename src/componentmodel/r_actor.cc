@@ -12,74 +12,103 @@
 
 namespace riaps {
 
+
+
     Actor* riaps::Actor::CreateActor(nlohmann::json& configJson,
                                      const std::string& actorName,
                                      std::map<std::string, std::string>& actualParams) {
-        std::string applicationName = configJson["name"];
-        nlohmann::json json_actors     = configJson["actors"];
-        nlohmann::json json_components = configJson["components"];
-        auto json_messages   = configJson["messages"];
+        std::string applicationName    = configJson[J_NAME];
+        nlohmann::json jsonActors      = configJson[J_ACTORS];
 
-        // Find the actor to be started
-        if (json_actors.find(actorName)==json_actors.end()){
+
+        // Find the actor
+        if (jsonActors.find(actorName)==jsonActors.end()){
             std::cerr << "Didn't find actor in the model file: " << actorName << std::endl;
             return NULL;
         }
 
-        auto json_currentactor = json_actors[actorName];
+        auto jsonCurrentActor = jsonActors[actorName];
 
         return new riaps::Actor(
-                applicationName,
-                actorName,
-                json_currentactor,
-                json_components,
-                json_messages,
-                actualParams
-        );
+                            applicationName,
+                            actorName,
+                            jsonCurrentActor,
+                            configJson,
+                            //jsonComponents,
+                            //jsonDevices,
+                            //jsonMessages,
+                            actualParams
+                    );
+    }
+
+    std::set<std::string> riaps::Actor::GetLocalMessageTypes(nlohmann::json &jsonLocals) {
+        std::set<std::string> results;
+        for (auto it_local  = jsonLocals.begin();
+             it_local != jsonLocals.end();
+             it_local++){
+            std::string local_type = (it_local.value())[J_TYPE];
+            results.insert(local_type);
+        }
+        return results;
     }
 
     riaps::Actor::Actor(const std::string&     applicationname       ,
                         const std::string&     actorname             ,
-                        nlohmann::json& json_actorconfig             ,
-                        nlohmann::json& json_componentsconfig        ,
-                        nlohmann::json& json_messagesconfig          ,
+                        nlohmann::json& jsonActorconfig             ,
+                        nlohmann::json& configJson,
                         std::map<std::string, std::string>& commandLineParams)
+        : //_jsonComponentsconfig(jsonComponentsconfig),
+          //_jsonDevicesconfig(jsonDevicesconfig),
+          //_jsonActorconfig(jsonActorconfig),
+          _commandLineParams(commandLineParams)
     {
-        _actor_name       = actorname;
-        _application_name = applicationname;
-
-        auto json_instances = json_actorconfig[J_INSTANCES];
-        auto json_internals = json_actorconfig[J_INTERNALS];
-        auto json_locals    = json_actorconfig[J_LOCALS];
-        auto json_formals   = json_actorconfig[J_FORMALS];
+        _jsonActorconfig       = jsonActorconfig;
+        _jsonComponentsconfig  = configJson[J_COMPONENTS];
+        _jsonDevicesconfig     = configJson[J_DEVICES];
+        //nlohmann::json jsonMessages    = configJson[J_MESSAGES];
 
 
+        _actorName       = actorname;
+        _applicationName = applicationname;
 
+        _jsonInstances = jsonActorconfig[J_INSTANCES];
+        _jsonInternals = jsonActorconfig[J_INTERNALS];
+        _jsonLocals    = jsonActorconfig[J_LOCALS];
+        _jsonFormals   = jsonActorconfig[J_FORMALS];
+        _startDevice   = false;
+    }
 
-
-
+    void riaps::Actor::ParseConfig() {
         // Get the actor's components, if there is no component => Stop, Error.
-        if(json_instances.size()==0) {
+        if(_jsonInstances.size()==0) {
             throw std::invalid_argument("No component instances defined for the actor. Check the configuration file!");
         }
 
-        std::set<std::string> local_messagetypes;
+        auto localMessageTypes = GetLocalMessageTypes(_jsonLocals);
 
-        for (auto it_local  = json_locals.begin();
-                  it_local != json_locals.end();
-                  it_local++){
-            std::string local_type = (it_local.value())[J_TYPE];
-            local_messagetypes.insert(local_type);
-        }
-
-
-        // Get the components
-        for (auto it_currentconfig =  json_instances.begin();
-                  it_currentconfig != json_instances.end();
-                  it_currentconfig++) {
+        // Get the components and devices
+        for (auto it_currentconfig =  _jsonInstances.begin();
+             it_currentconfig != _jsonInstances.end();
+             it_currentconfig++) {
 
             auto componentName = it_currentconfig.key();
             std::string componentType = (it_currentconfig.value())[J_TYPE];
+            bool isDevice = false;
+
+            auto jsonComponentConfig = _jsonComponentsconfig[componentType];
+
+
+            if (jsonComponentConfig == NULL){
+                jsonComponentConfig = _jsonDevicesconfig[componentType];
+                if (jsonComponentConfig == NULL){
+                    throw std::invalid_argument("Device/component has no config section: " + componentName);
+                }
+                isDevice = true;
+            }
+
+            // If the component is not a device, but the actor just starting devices now (beacuse it
+            // started from the DeviceActor class, then skip parsing. Do not deal with components.
+            if (_startDevice && !isDevice) continue;
 
             // Check if the component in the map already (wrong configuration)
             for (auto component_config : _component_configurations) {
@@ -95,24 +124,20 @@ namespace riaps {
 
             new_component_config.component_name = componentName;
             new_component_config.component_type = componentType;
+            new_component_config.isDevice       = isDevice;
 
-            ArgumentParser parser(commandLineParams, json_actorconfig, json_componentsconfig, actorname);
+            ArgumentParser parser(_commandLineParams, _jsonActorconfig, _jsonComponentsconfig, _actorName);
             new_component_config.component_parameters = parser.Parse(componentName);
 
-            auto json_componentconfig = json_componentsconfig[componentType];
-
-
-            //auto debuglist = componentParameters->GetParameterNames();
-
             // Get the ports
-            auto json_portsconfig = json_componentconfig[J_PORTS];
+            auto json_portsconfig = jsonComponentConfig[J_PORTS];
 
             // Get the publishers
             if (json_portsconfig.count(J_PORTS_PUBS)!=0){
                 auto json_pubports = json_portsconfig[J_PORTS_PUBS];
                 for (auto it_pubport=json_pubports.begin();
-                          it_pubport!=json_pubports.end();
-                          it_pubport++){
+                     it_pubport!=json_pubports.end();
+                     it_pubport++){
 
                     auto pubportname = it_pubport.key();
                     auto pubporttype = it_pubport.value()[J_TYPE];
@@ -124,7 +149,7 @@ namespace riaps {
                     newpubconfig.messageType = pubporttype;
 
                     // If the porttype is defined in the Local list
-                    if (local_messagetypes.find(pubporttype) != local_messagetypes.end()){
+                    if (localMessageTypes.find(pubporttype) != localMessageTypes.end()){
                         newpubconfig.isLocal = true;
                     } else {
                         newpubconfig.isLocal = false;
@@ -138,8 +163,8 @@ namespace riaps {
             if (json_portsconfig.count(J_PORTS_SUBS)!=0){
                 auto json_subports = json_portsconfig[J_PORTS_SUBS];
                 for (auto it_subport = json_subports.begin();
-                          it_subport != json_subports.end() ;
-                          it_subport++){
+                     it_subport != json_subports.end() ;
+                     it_subport++){
 
                     auto subportname = it_subport.key();
                     auto subporttype = it_subport.value()[J_TYPE];
@@ -149,7 +174,7 @@ namespace riaps {
                     newsubconfig.messageType = subporttype;
 
                     // If the porttype is defined in the Local list
-                    if (local_messagetypes.find(subporttype) != local_messagetypes.end()){
+                    if (localMessageTypes.find(subporttype) != localMessageTypes.end()){
                         newsubconfig.isLocal = true;
                     } else {
                         newsubconfig.isLocal = false;
@@ -179,7 +204,7 @@ namespace riaps {
                     newreqconfig.messageType = messagetype;
 
                     // If the porttype is defined in the Local list
-                    if (local_messagetypes.find(reqtype) != local_messagetypes.end()){
+                    if (localMessageTypes.find(reqtype) != localMessageTypes.end()){
                         newreqconfig.isLocal = true;
                     } else {
                         newreqconfig.isLocal = false;
@@ -208,7 +233,7 @@ namespace riaps {
                     newrepconfig.messageType = messagetype;
 
                     // If the porttype is defined in the Local list
-                    if (local_messagetypes.find(reqtype) != local_messagetypes.end()){
+                    if (localMessageTypes.find(reqtype) != localMessageTypes.end()){
                         newrepconfig.isLocal = true;
                     } else {
                         newrepconfig.isLocal = false;
@@ -222,8 +247,8 @@ namespace riaps {
             if (json_portsconfig.count(J_PORTS_TIMS)!=0){
                 auto json_tims = json_portsconfig[J_PORTS_TIMS];
                 for (auto it_tim = json_tims.begin();
-                          it_tim != json_tims.end() ;
-                          it_tim++){
+                     it_tim != json_tims.end() ;
+                     it_tim++){
 
                     auto timname = it_tim.key();
                     auto timperiod = it_tim.value()["period"];
@@ -242,8 +267,12 @@ namespace riaps {
 
     void riaps::Actor::Init() {
 
+        ParseConfig();
+
         // unique id / run
         _actor_id = zuuid_new();
+
+        _devm = std::unique_ptr<riaps::devm::DevmApi>(new riaps::devm::DevmApi());
 
         // Open actor REP socket for further communications
         _actor_zsock = zsock_new_rep("tcp://*:!");
@@ -252,18 +281,22 @@ namespace riaps {
         assert(_poller);
 
         // Register the actor in the discovery service
-        _discovery_socket = register_actor(_application_name, _actor_name);
+        _discovery_socket = register_actor(_applicationName, _actorName);
+        _devm->RegisterActor(_actorName, _applicationName, "0");
 
         if (_discovery_socket == NULL) {
             throw std::runtime_error("Actor - Discovery socket cannot be NULL after register_actor");
         }
 
         zpoller_add(_poller, _discovery_socket);
+        zpoller_add(_poller, _devm->GetSocket());
 
         // If no component in the actor => Stop, Error
         if (_component_configurations.empty()){
             throw std::invalid_argument("No components are defined in the configuration file.");
         }
+
+
 
         for (auto component_config : _component_configurations){
             // Load the component library
@@ -288,17 +321,38 @@ namespace riaps {
                // _components.push_back(debug_component);
             }
             else {
-                _component_dll_handles.push_back(handle);
-                riaps::ComponentBase * (*create)(component_conf_j&, Actor&);
-                create = (riaps::ComponentBase *(*)(component_conf_j&, Actor&)) dlsym(handle, "create_component");
-                riaps::ComponentBase* component_instance = (riaps::ComponentBase *)create(component_config, *this);
-                _components.push_back(component_instance);
+
+                // It is not a device, start the component
+                if (!component_config.isDevice || (component_config.isDevice && _startDevice)) {
+                    _component_dll_handles.push_back(handle);
+                    riaps::ComponentBase *(*create)(component_conf_j &, Actor &);
+                    create = (riaps::ComponentBase *(*)(component_conf_j &, Actor &)) dlsym(handle, "create_component");
+                    riaps::ComponentBase *component_instance = (riaps::ComponentBase *) create(component_config, *this);
+                    _components.push_back(component_instance);
+                }
+
+                // If it is a device, but start the pheripheral first
+                else if (component_config.isDevice && !_startDevice){
+                    auto peripheral = new Peripheral(this);
+
+                    // TODO: WTF is a the typename and modelname????
+                    peripheral->Setup(_applicationName, "", "", _commandLineParams);
+                    _peripherals.push_back(peripheral);
+                }
+
+                else {
+
+                }
             }
         }
     }
 
+    riaps::devm::DevmApi* riaps::Actor::GetDeviceManager() const {
+        return _devm.get();
+    }
+
     const std::string& riaps::Actor::GetApplicationName() const {
-        return _application_name;
+        return _applicationName;
     }
 
     std::string riaps::Actor::GetActorId() {
@@ -307,7 +361,7 @@ namespace riaps {
     }
 
     const std::string& riaps::Actor::GetActorName() const {
-        return _actor_name;
+        return _actorName;
     }
 
     void riaps::Actor::UpdatePort(std::string &instancename, std::string &portname, std::string &host, int port) {
@@ -324,14 +378,15 @@ namespace riaps {
 
                 zmsg_send(&msg_portupdate, (*it)->GetZmqPipe());
 
-                break;
+                return;
             }
         }
+
+
     }
 
 
     void riaps::Actor::start(){
-        int c = 0;
         while (!zsys_interrupted) {
             void *which = zpoller_wait(_poller, 2000);
 
@@ -354,7 +409,7 @@ namespace riaps {
                 auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
 
                 capnp::FlatArrayMessageReader reader(capnp_data);
-                auto msg_discoupd = reader.getRoot<DiscoUpd>();
+                auto msg_discoupd = reader.getRoot<riaps::discovery::DiscoUpd>();
                 auto msg_client   = msg_discoupd.getClient();
                 auto msg_socket   = msg_discoupd.getSocket();
                 auto msg_scope    = msg_discoupd.getScope();
@@ -368,16 +423,27 @@ namespace riaps {
 
                 zmsg_destroy(&msg);
             }
+            else if (which == _devm->GetSocket()){
+                // Devm messages
+                zmsg_t* msg = zmsg_recv(which);
+
+                if (!msg){
+                    std::cout << "No msg => interrupted" << std::endl;
+                    break;
+                }
+
+                zframe_t* capnp_msgbody = zmsg_pop(msg);
+                size_t    size = zframe_size(capnp_msgbody);
+                byte*     data = zframe_data(capnp_msgbody);
+
+                auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
+
+                capnp::FlatArrayMessageReader reader(capnp_data);
+            }
             else {
             }
         }
     }
-
-
-
-
-
-    
 
     riaps::Actor::~Actor() {
         //deregister_actor(GetActorId());
@@ -390,13 +456,10 @@ namespace riaps {
             delete component;
         }
 
-
-
         zpoller_destroy(&_poller);
         zuuid_destroy(&_actor_id);
         zsock_destroy(&_discovery_socket);
         zsock_destroy(&_actor_zsock);
-
 
         for (void* handle : _component_dll_handles){
             dlclose(handle);
