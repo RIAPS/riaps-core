@@ -6,7 +6,6 @@
 #include <vector>
 #include <czmq.h>
 #include <iostream>
-//#include <boost/format.hpp>
 
 #include <capnp/message.h>
 #include <capnp/serialize.h>
@@ -32,21 +31,21 @@ struct _service_lookup_result {
 typedef struct _service_lookup_result service_lookup_result;
 
 extern std::vector<service_lookup_result>
-subscribe_to_service(const std::string& app_name   ,
-                     const std::string& part_name  , // instance_name
-                     const std::string& actor_name ,
-                     Kind               kind       ,
-                     Scope              scope      ,
-                     const std::string& port_name  ,
-                     const std::string& msg_type // PortType
+subscribe_to_service(const std::string&      app_name   ,
+                     const std::string&      part_name  , // instance_name
+                     const std::string&      actor_name ,
+                     riaps::discovery::Kind  kind       ,
+                     riaps::discovery::Scope scope      ,
+                     const std::string&      port_name  ,
+                     const std::string&      msg_type     // PortType
                      );
 extern bool
 register_service(const std::string&              app_name     ,
                  const std::string&              message_type ,
                  const std::string&              ip_address   ,
                  const uint16_t&                 port         ,
-                 Kind                            kind         ,
-                 Scope                           scope        ,
+                 riaps::discovery::Kind          kind         ,
+                 riaps::discovery::Scope         scope        ,
                  const std::vector<std::string>& tags
 );
 

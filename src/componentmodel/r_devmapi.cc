@@ -87,7 +87,7 @@ namespace riaps{
         bool DevmApi::RegisterDevice(const std::string &appName,
                                      const std::string &modelName,
                                      const std::string &typeName,
-                                     const std::vector<std::pair<std::string, std::string>> &args) {
+                                     const std::map<std::string, std::string> &args) {
             bool result = true;
 
             /////
@@ -102,10 +102,11 @@ namespace riaps{
 
             if (args.size()>0){
                 auto dargs = dreqBuilder.initDeviceArgs(args.size());
-                for (int i=0; i< args.size(); i++){
+                int i=0;
+                for (auto it = args.begin(); it!=args.end(); it++,i++){
                     riaps::devm::DeviceArg::Builder darg = dargs[i];
-                    darg.setName(args[i].first);
-                    darg.setName(args[i].second);
+                    darg.setName(it->first);
+                    darg.setName(it->second);
                 }
             }
 

@@ -71,7 +71,9 @@ riaps::componentmodel::Parameters ArgumentParser::Parse(const std::string& compo
     }
 
     // Get the components
+    std::cout << json_instances <<std::endl;
     auto json_compinst = json_instances[componentName];
+    std::cout << json_compinst <<std::endl <<std::flush;
     std::string componentType   = json_compinst[J_TYPE];
     auto json_componentactuals = json_compinst[J_ACTUALS];
     auto componentActuals = GetComponentActuals(json_componentactuals);

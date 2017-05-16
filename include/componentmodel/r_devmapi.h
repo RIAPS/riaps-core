@@ -28,7 +28,7 @@ namespace riaps {
             bool RegisterDevice(const std::string& appName,
                                 const std::string& modelName,
                                 const std::string& typeName,
-                                const std::vector<std::pair<std::string, std::string>>& args);
+                                const std::map<std::string, std::string>& args);
 
             bool UnregisterDevice(const std::string &appName,
                                   const std::string &modelName,

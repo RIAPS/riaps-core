@@ -6,6 +6,8 @@
 #define RIAPS_CORE_R_PERIPHERAL_H
 
 #include <componentmodel/r_actor.h>
+#include <map>
+#include <string>
 
 namespace riaps {
 
@@ -19,7 +21,7 @@ namespace riaps {
         void Setup(const std::string &appName,
                    const std::string &modelName,
                    const std::string &typeName,
-                   const std::vector<std::pair<std::string, std::string>> &args);
+                   const std::map<std::string, std::string> &args);
 
         enum STATE { STARTING, INITIAL, READY, ACTIVE, CHECKPOINTING, INACTIVE, PASSIVE, DESTROYED};
 
