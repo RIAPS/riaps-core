@@ -21,7 +21,7 @@ CAPNP_DECLARE_SCHEMA(efb21b65c8301fab);
 }  // namespace schemas
 }  // namespace capnp
 
-namespace testdevices {
+namespace gpiotoggleexample {
 namespace messages {
 
 struct DataValue {

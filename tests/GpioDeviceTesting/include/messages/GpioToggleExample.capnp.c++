@@ -145,7 +145,7 @@ const ::capnp::_::RawSchema s_efb21b65c8301fab = {
 
 // =======================================================================================
 
-namespace testdevices {
+namespace gpiotoggleexample {
 namespace messages {
 
 // DataValue
