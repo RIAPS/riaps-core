@@ -16,6 +16,7 @@ namespace riaps{
 
         std::string Configuration::GetDeviceManagerServiceIpc(){
             auto result = DEVMANAGER_SERVICE_IPC +Network::GetMacAddressStripped();
+            return result;
         }
     }
 }
