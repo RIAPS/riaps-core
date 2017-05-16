@@ -14,7 +14,7 @@ add_library(pubcomp SHARED src/PubComp.cc
 #                          include/messages/distributedestimator.capnp.c++
 #        )
 
-target_link_libraries(localestimator czmq riaps dl capnp kj )
+target_link_libraries(pubcomp czmq riaps dl capnp kj )
 #target_link_libraries(globalestimator czmq riaps dl capnp kj)
 #target_link_libraries(sensor czmq riaps dl capnp kj)
 
