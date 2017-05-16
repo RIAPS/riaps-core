@@ -11,6 +11,9 @@
 #define TIMER_TOGGLE "toggle"                        // Toggle GPIO value
 #define TIMER_READVALUE "readValue"                  // Read current GPIO value
 
+#include <componentmodel/r_actor.h>
+#include "messages/GpioToggleExample.capnp.h"
+
 namespace gpiotoggleexample {
     namespace components {
 
@@ -23,16 +26,14 @@ namespace gpiotoggleexample {
             virtual void OnToggle(riaps::ports::PortBase *port)=0;
             virtual void OnReadValue(riaps::ports::PortBase *port)=0;
 
-
-
-            virtual void OnRequest(const messages::SensorQuery::Reader &message,
-                                   riaps::ports::PortBase *port)=0;
+            virtual void OnCurrentGpioValue(const messages::DataValue::Reader &message,
+                                            riaps::ports::PortBase *port)=0;
 
             virtual bool SendPollGpioValue(capnp::MallocMessageBuilder&    messageBuilder,
-                                     messages::SensorValue::Builder& message);
+                                     messages::ReadRequest::Builder& message);
 
             virtual bool SendWriteGpioValue(capnp::MallocMessageBuilder&    messageBuilder,
-                                   messages::SensorReady::Builder& message);
+                                   messages::WriteRequest::Builder& message);
 
 
             virtual ~ToggleGpioComponentBase();
