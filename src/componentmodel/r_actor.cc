@@ -274,6 +274,7 @@ namespace riaps {
 
         _devm = std::unique_ptr<riaps::devm::DevmApi>(new riaps::devm::DevmApi());
 
+
         // Open actor REP socket for further communications
         _actor_zsock = zsock_new_rep("tcp://*:!");
         assert(_actor_zsock);
@@ -282,14 +283,23 @@ namespace riaps {
 
         // Register the actor in the discovery service
         _discovery_socket = register_actor(_applicationName, _actorName);
-        _devm->RegisterActor(_actorName, _applicationName, "0");
+
 
         if (_discovery_socket == NULL) {
             throw std::runtime_error("Actor - Discovery socket cannot be NULL after register_actor");
         }
 
         zpoller_add(_poller, _discovery_socket);
-        zpoller_add(_poller, _devm->GetSocket());
+
+        // If there is a device, start the device manager client
+        for (auto& component_config : _component_configurations) {
+            if (component_config.isDevice) {
+
+                _devm->RegisterActor(_actorName, _applicationName, "0");
+                zpoller_add(_poller, _devm->GetSocket());
+                break;
+            }
+        }
 
         // If no component in the actor => Stop, Error
         if (_component_configurations.empty()){
@@ -298,7 +308,7 @@ namespace riaps {
 
 
 
-        for (auto component_config : _component_configurations){
+        for (auto& component_config : _component_configurations){
             // Load the component library
 
             std::locale loc;
@@ -423,7 +433,7 @@ namespace riaps {
 
                 zmsg_destroy(&msg);
             }
-            else if (which == _devm->GetSocket()){
+            else if (_devm->GetSocket()!=NULL && which == _devm->GetSocket()){
                 // Devm messages
                 zmsg_t* msg = zmsg_recv(which);
 
