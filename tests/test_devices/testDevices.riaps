@@ -1,0 +1,44 @@
+app testDevices {
+    message PubDeviceData;
+    message SubDeviceData;
+    message ComponentData;
+
+    // Publisher Device
+    device PubDevice {
+      timer clock 2000;
+      pub sendDeviceData : PubDeviceData ;
+    }
+
+    // Publisher
+    component PubComp {
+       sub getDeviceData    : PubDeviceData;
+       pub sendComponentData : ComponentData;
+    }
+
+    // Subscriber Device
+    device SubDevice {
+      sub getDeviceData : SubDeviceData ;
+    }
+
+    // Subscriber component
+    component SubComp {
+       sub getComponentData  : ComponentData;
+       pub sendDeviceData : SubDeviceData;
+    }
+
+    actor PubActor {
+       local PubDeviceData;	// Local message types
+       {
+       	  device : PubDevice;
+          comp   : PubComp;
+       }
+    }
+
+    actor SubActor {
+       local SubDeviceData;	// Local message types
+       {
+       	  device : SubDevice;
+          comp   : SubComp;
+       }
+    }
+}
