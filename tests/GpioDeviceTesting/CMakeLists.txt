@@ -1,8 +1,8 @@
 include_directories(include)
 
-add_library(pubcomp SHARED src/PubComp.cc
-                           src/base/PubCompBase.cc
-                           include/messages/testDevices.capnp.c++)
+add_library(togglegpiocomponent SHARED src/ToggleGpioComponent.cc
+                           src/base/ToggleGpioComponentBase.cc
+                           include/messages/GpioToggleExample.capnp.c++)
 
 #add_library(localestimator SHARED src/LocalEstimator.cc
 #                                  src/base/LocalEstimatorBase.cc
@@ -14,7 +14,7 @@ add_library(pubcomp SHARED src/PubComp.cc
 #                          include/messages/distributedestimator.capnp.c++
 #        )
 
-target_link_libraries(pubcomp czmq riaps dl capnp kj )
+target_link_libraries(togglegpiocomponent czmq riaps dl capnp kj )
 #target_link_libraries(globalestimator czmq riaps dl capnp kj)
 #target_link_libraries(sensor czmq riaps dl capnp kj)
 

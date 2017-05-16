@@ -1,16 +1,16 @@
 @0xbfb633a11018cb2c;
 
 using Cxx = import "/capnp/c++.capnp";
-$Cxx.namespace("testdevices::messages");
+$Cxx.namespace("gpiotoggleexample::messages");
 
-struct PubDeviceData {
+struct DataValue {
   msg @0 : Text;
  }
 
-struct SubDeviceData {
+struct ReadRequest {
    msg @0 : Text;
  }
 
- struct ComponentData {
+ struct WriteRequest {
     msg @0 : Text;
  }

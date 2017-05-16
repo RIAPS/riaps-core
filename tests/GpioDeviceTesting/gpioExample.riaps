@@ -1,0 +1,41 @@
+// GPIO Example Model File
+
+app GpioToggleExample {
+    message DataValue;     // value read on the specified GPIO
+    message ReadRequest;   // request to read the specified GPIO
+    message WriteRequest;  // request to write a value to the specified GPIO
+
+	// GPIO Device - pin name (P8_pin# or P9_pin#), direction (IN or OUT) and pull_up_down (PUD_OFF, PUD_UP or PUD_DOWN)
+	//               the device setup defaults are defined here
+	//
+	// Both read and write requests will return the current value of the GPIO as a published DataValue
+    device GpioDeviceComponent(bbb_pin_name='P8_11', direction='OUT', pull_up_down='PUD_OFF', setup_delay=60) {
+      // Inside port for forwarding messages coming from an internal thread.
+      // The 'default' is optional, it implies a 1 sec timer/ticker thread.
+      inside dataIn_queue; 	 // Receive data from a specified GPIO and send to component
+      inside dataOut_queue;  // Receive from component and write to a specified GPIO
+
+      timer clock 100;                      // Connect to GPIO on first clock
+      pub reportedData : DataValue    ;	    // Publish value read from the specified GPIO
+      sub readGpio     : ReadRequest  ;     // Received request to read the value of the specific GPIO
+      sub writeGpio    : WriteRequest ;     // Received request to write a value to the specific GPIO
+    }
+
+    // Toggle GPIO component
+    component ToggleGpioComponent() {
+      pub pollGpioValue    : ReadRequest  ;	// Publish request to read the specific GPIO value
+      pub writeGpioValue   : WriteRequest ; // Publish request to write a value to the specific GPIO
+      sub currentGpioValue : DataValue    ; // Receive the value of the specific GPIO
+      timer toggle 4000;                    // Toggle GPIO value
+      timer readValue 3500;                 // Read current GPIO value
+    }
+
+    // TestGpioToggle actor
+    actor TestGpioToggleActor() {
+       local DataValue, ReadRequest, WriteRequest;	// Local message types
+       {
+       	  gpioDevice : GpioDeviceComponent(bbb_pin_name='P8_11', direction='OUT', setup_delay=100); // application specific setup options
+          gpioTester : ToggleGpioComponent();
+       }
+    }
+}
