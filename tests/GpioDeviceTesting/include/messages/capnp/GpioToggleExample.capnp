@@ -4,7 +4,7 @@ using Cxx = import "/capnp/c++.capnp";
 $Cxx.namespace("gpiotoggleexample::messages");
 
 struct DataValue {
-  msg @0 : Text;
+  value @0 : UInt8;
  }
 
 struct ReadRequest {
@@ -12,5 +12,5 @@ struct ReadRequest {
  }
 
  struct WriteRequest {
-    msg @0 : Text;
+    value @0 : UInt8;
  }

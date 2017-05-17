@@ -32,7 +32,7 @@ struct DataValue {
   class Pipeline;
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(c9c55a06d22f2505, 0, 1)
+    CAPNP_DECLARE_STRUCT_HEADER(c9c55a06d22f2505, 1, 0)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
     #endif  // !CAPNP_LITE
@@ -62,7 +62,7 @@ struct WriteRequest {
   class Pipeline;
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(efb21b65c8301fab, 0, 1)
+    CAPNP_DECLARE_STRUCT_HEADER(efb21b65c8301fab, 1, 0)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
     #endif  // !CAPNP_LITE
@@ -88,8 +88,7 @@ public:
   }
 #endif  // !CAPNP_LITE
 
-  inline bool hasMsg() const;
-  inline  ::capnp::Text::Reader getMsg() const;
+  inline  ::uint8_t getValue() const;
 
 private:
   ::capnp::_::StructReader _reader;
@@ -119,12 +118,8 @@ public:
   inline ::kj::StringTree toString() const { return asReader().toString(); }
 #endif  // !CAPNP_LITE
 
-  inline bool hasMsg();
-  inline  ::capnp::Text::Builder getMsg();
-  inline void setMsg( ::capnp::Text::Reader value);
-  inline  ::capnp::Text::Builder initMsg(unsigned int size);
-  inline void adoptMsg(::capnp::Orphan< ::capnp::Text>&& value);
-  inline ::capnp::Orphan< ::capnp::Text> disownMsg();
+  inline  ::uint8_t getValue();
+  inline void setValue( ::uint8_t value);
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -250,8 +245,7 @@ public:
   }
 #endif  // !CAPNP_LITE
 
-  inline bool hasMsg() const;
-  inline  ::capnp::Text::Reader getMsg() const;
+  inline  ::uint8_t getValue() const;
 
 private:
   ::capnp::_::StructReader _reader;
@@ -281,12 +275,8 @@ public:
   inline ::kj::StringTree toString() const { return asReader().toString(); }
 #endif  // !CAPNP_LITE
 
-  inline bool hasMsg();
-  inline  ::capnp::Text::Builder getMsg();
-  inline void setMsg( ::capnp::Text::Reader value);
-  inline  ::capnp::Text::Builder initMsg(unsigned int size);
-  inline void adoptMsg(::capnp::Orphan< ::capnp::Text>&& value);
-  inline ::capnp::Orphan< ::capnp::Text> disownMsg();
+  inline  ::uint8_t getValue();
+  inline void setValue( ::uint8_t value);
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -316,36 +306,18 @@ private:
 
 // =======================================================================================
 
-inline bool DataValue::Reader::hasMsg() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+inline  ::uint8_t DataValue::Reader::getValue() const {
+  return _reader.getDataField< ::uint8_t>(
+      0 * ::capnp::ELEMENTS);
 }
-inline bool DataValue::Builder::hasMsg() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+
+inline  ::uint8_t DataValue::Builder::getValue() {
+  return _builder.getDataField< ::uint8_t>(
+      0 * ::capnp::ELEMENTS);
 }
-inline  ::capnp::Text::Reader DataValue::Reader::getMsg() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
-}
-inline  ::capnp::Text::Builder DataValue::Builder::getMsg() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
-}
-inline void DataValue::Builder::setMsg( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
-}
-inline  ::capnp::Text::Builder DataValue::Builder::initMsg(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS), size);
-}
-inline void DataValue::Builder::adoptMsg(
-    ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
-}
-inline ::capnp::Orphan< ::capnp::Text> DataValue::Builder::disownMsg() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+inline void DataValue::Builder::setValue( ::uint8_t value) {
+  _builder.setDataField< ::uint8_t>(
+      0 * ::capnp::ELEMENTS, value);
 }
 
 inline bool ReadRequest::Reader::hasMsg() const {
@@ -380,36 +352,18 @@ inline ::capnp::Orphan< ::capnp::Text> ReadRequest::Builder::disownMsg() {
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
-inline bool WriteRequest::Reader::hasMsg() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+inline  ::uint8_t WriteRequest::Reader::getValue() const {
+  return _reader.getDataField< ::uint8_t>(
+      0 * ::capnp::ELEMENTS);
 }
-inline bool WriteRequest::Builder::hasMsg() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+
+inline  ::uint8_t WriteRequest::Builder::getValue() {
+  return _builder.getDataField< ::uint8_t>(
+      0 * ::capnp::ELEMENTS);
 }
-inline  ::capnp::Text::Reader WriteRequest::Reader::getMsg() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
-}
-inline  ::capnp::Text::Builder WriteRequest::Builder::getMsg() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
-}
-inline void WriteRequest::Builder::setMsg( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
-}
-inline  ::capnp::Text::Builder WriteRequest::Builder::initMsg(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS), size);
-}
-inline void WriteRequest::Builder::adoptMsg(
-    ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
-}
-inline ::capnp::Orphan< ::capnp::Text> WriteRequest::Builder::disownMsg() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+inline void WriteRequest::Builder::setValue( ::uint8_t value) {
+  _builder.setDataField< ::uint8_t>(
+      0 * ::capnp::ELEMENTS, value);
 }
 
 }  // namespace
