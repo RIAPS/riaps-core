@@ -20,6 +20,16 @@ namespace gpiotoggleexample{
 
         }
 
+        void GpioDeviceComponent::OnDataInQueue(const riaps::ports::InsideMessage::Reader &message,
+                                                riaps::ports::PortBase *port) {
+
+        }
+
+        void GpioDeviceComponent::OnDataOutQueue(const riaps::ports::InsideMessage::Reader &message,
+                                                riaps::ports::PortBase *port) {
+
+        }
+
         void GpioDeviceComponent::OnClock(riaps::ports::PortBase *port) {
 
         }

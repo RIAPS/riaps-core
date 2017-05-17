@@ -7,6 +7,7 @@
 
 #include "messages/GpioToggleExample.capnp.h"
 #include <componentmodel/r_componentbase.h>
+#include <messaging/insideport.capnp.h>
 
 #define TIMER_CLOCK "clock"
 #define PORT_PUB_REPORTEDDATA "reportedData"
@@ -30,8 +31,20 @@ namespace gpiotoggleexample {
             virtual void OnWriteGpio(const messages::WriteRequest::Reader &message,
                                     riaps::ports::PortBase *port)=0;
 
+            virtual void OnDataInQueue(const riaps::ports::InsideMessage::Reader &message,
+                                       riaps::ports::PortBase *port)=0;
+
+            virtual void OnDataOutQueue(const riaps::ports::InsideMessage::Reader &message,
+                                        riaps::ports::PortBase *port)=0;
+
             virtual bool SendReportedData(capnp::MallocMessageBuilder&    messageBuilder,
                                           messages::DataValue::Builder& message);
+
+            virtual bool SendDataOutQueue(capnp::MallocMessageBuilder&    messageBuilder,
+                                          riaps::ports::InsideMessage::Builder& message);
+
+            virtual bool SendDataInQueue(capnp::MallocMessageBuilder&    messageBuilder,
+                                         riaps::ports::InsideMessage::Builder& message);
 
             virtual ~GpioDeviceComponentBase();
 

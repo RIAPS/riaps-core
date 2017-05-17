@@ -23,15 +23,27 @@ namespace gpiotoggleexample{
                 auto writeRequest = capnpreader->getRoot<messages::WriteRequest>();
                 OnWriteGpio(writeRequest, port);
             } else if (portName == INSIDE_DATAIN_QUEUE){
-                std::cout << "Inside ports are not implemented" << std::endl;
+                auto insideMessage = capnpreader->getRoot<riaps::ports::InsideMessage>();
+                OnDataInQueue(insideMessage, port);
             } else if (portName == INSIDE_DATAOUT_QUEUE){
-                std::cout << "Inside ports are not implemented" << std::endl;
+                auto insideMessage = capnpreader->getRoot<riaps::ports::InsideMessage>();
+                OnDataInQueue(insideMessage, port);
             }
         }
 
         bool GpioDeviceComponentBase::SendReportedData(capnp::MallocMessageBuilder &messageBuilder,
                                                        messages::DataValue::Builder &message) {
             return SendMessageOnPort(messageBuilder, PORT_PUB_REPORTEDDATA);
+        }
+
+        bool GpioDeviceComponentBase::SendDataOutQueue(capnp::MallocMessageBuilder&    messageBuilder,
+                                                       riaps::ports::InsideMessage::Builder& message){
+            return SendMessageOnPort(messageBuilder, INSIDE_DATAOUT_QUEUE);
+        }
+
+        bool GpioDeviceComponentBase::SendDataInQueue(capnp::MallocMessageBuilder&    messageBuilder,
+                                                      riaps::ports::InsideMessage::Builder& message){
+            return SendMessageOnPort(messageBuilder, INSIDE_DATAIN_QUEUE);
         }
 
         GpioDeviceComponentBase::~GpioDeviceComponentBase() {
