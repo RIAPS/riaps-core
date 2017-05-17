@@ -6,7 +6,8 @@
 namespace gpiotoggleexample{
     namespace components{
         GpioDeviceComponent::GpioDeviceComponent(_component_conf_j &config, riaps::Actor &actor)
-            : GpioDeviceComponentBase(config, actor){
+            : GpioDeviceComponentBase(config, actor),
+              _deviceThread(nullptr){
 
         }
 

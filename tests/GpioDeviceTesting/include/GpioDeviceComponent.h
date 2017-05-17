@@ -5,7 +5,9 @@
 #ifndef RIAPS_CORE_GPIODEVICECOMPONENT_H
 #define RIAPS_CORE_GPIODEVICECOMPONENT_H
 
+
 #include "base/GpioDeviceComponentBase.h"
+#include <componentmodel/r_devicethread.h>
 
 namespace gpiotoggleexample{
     namespace components{
@@ -40,6 +42,8 @@ namespace gpiotoggleexample{
             std::string _triggerEdge;
             uint8_t     _initialValue;
             uint32_t    _setupDelay;
+
+            std::unique_ptr<riaps::components::DeviceThread> _deviceThread;
 
         };
     }

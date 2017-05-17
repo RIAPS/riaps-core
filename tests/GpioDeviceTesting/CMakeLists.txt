@@ -6,6 +6,7 @@ add_library(togglegpiocomponent SHARED src/ToggleGpioComponent.cc
 
 add_library(gpiodevicecomponent SHARED src/GpioDeviceComponent.cc
                                        src/base/GpioDeviceComponentBase.cc
+                                       src/GpioDeviceThread.cc
                                        include/messages/GpioToggleExample.capnp.c++)
 
 
