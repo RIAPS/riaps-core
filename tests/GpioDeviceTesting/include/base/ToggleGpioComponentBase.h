@@ -30,10 +30,10 @@ namespace gpiotoggleexample {
                                             riaps::ports::PortBase *port)=0;
 
             virtual bool SendPollGpioValue(capnp::MallocMessageBuilder&    messageBuilder,
-                                     messages::ReadRequest::Builder& message);
+                                           messages::ReadRequest::Builder& message);
 
             virtual bool SendWriteGpioValue(capnp::MallocMessageBuilder&    messageBuilder,
-                                   messages::WriteRequest::Builder& message);
+                                            messages::WriteRequest::Builder& message);
 
 
             virtual ~ToggleGpioComponentBase();
