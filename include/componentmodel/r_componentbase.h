@@ -14,7 +14,9 @@
 #include "r_requestport.h"
 #include "r_actor.h"
 #include "r_messagebase.h"
+#include "r_insiderport.h"
 #include "r_oneshottimer.h"
+#include <messaging/insideport.capnp.h>
 
 #include <msgpack.hpp>
 #include <capnp/message.h>
@@ -41,6 +43,7 @@ namespace riaps {
         class SubscriberPort;
         class ResponsePort;
         class RequestPort;
+        class Plug;
     }
 
     /**
@@ -122,6 +125,7 @@ namespace riaps {
         const ports::ResponsePort*   InitResponsePort(const _component_port_rep_j&);
         const ports::RequestPort*    InitRequestPort(const _component_port_req_j&);
         const ports::PeriodicTimer*  InitTimerPort(const _component_port_tim_j&);
+        const ports::InsidePort*     InitInsiderPort(const _component_port_ins_j&);
 
         std::string             GetTimerChannel();
         std::string             GetCompUuid();

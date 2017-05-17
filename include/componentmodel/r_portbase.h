@@ -27,8 +27,9 @@ namespace ports {
     class PublisherPort;
     class SubscriberPort;
     class PeriodicTimer;
+    class InsidePort;
 
-    enum PortTypes {Publisher, Subscriber, Request, Response, Timer};
+    enum PortTypes {Publisher, Subscriber, Request, Response, Timer, Inside};
 
     class PortBase {
 
@@ -62,22 +63,19 @@ namespace ports {
         virtual PublisherPort*  AsPublishPort()    ;
         virtual ResponsePort*   AsResponsePort()   ;
         virtual SubscriberPort* AsSubscribePort()  ;
-        virtual PeriodicTimer*  AsTimerPort();
+        virtual PeriodicTimer*  AsTimerPort()      ;
+        virtual InsidePort*     AsInsidePort()     ;
 
 
         virtual ~PortBase() noexcept ;
 
     protected:
 
-
-
         PortTypes                    _port_type;
         zsock_t*                     _port_socket;
 
     private:
-        //std::string                  _port_name;
         const component_port_config* _config;
-        //const ComponentBase* _parentComponent;
     };
 }
 }

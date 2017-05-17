@@ -74,6 +74,10 @@ namespace riaps {
             return NULL;
         }
 
+        InsidePort* PortBase::AsInsidePort()  {
+            return NULL;
+        }
+
         PortBase::~PortBase() {
             if (_port_socket) {
                 // std::cout << "Destroy port socket : " << GetPortName() << std::endl;

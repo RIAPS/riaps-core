@@ -51,6 +51,15 @@ namespace riaps{
 
                 const component_conf_j& comp_conf = comp->GetConfig();
 
+                // Add insider ports
+                for (auto it_insconf = comp_conf.component_ports.inss.begin();
+                     it_insconf != comp_conf.component_ports.inss.end();
+                     it_insconf++){
+                    const ports::InsidePort* newPort = comp->InitInsiderPort(*it_insconf);
+                    const zsock_t* zmqSocket = newPort->GetSocket();
+                    portSockets[zmqSocket] = newPort;
+                    zpoller_add(poller, (void*)newPort->GetSocket());
+                }
 
                 // Add and start timers
                 for (auto it_timconf = comp_conf.component_ports.tims.begin();
@@ -301,6 +310,13 @@ namespace riaps{
         std::unique_ptr<ports::RequestPort> newport(new ports::RequestPort(config, this));
         auto result = newport.get();
         newport->Init();
+        _ports[config.portName] = std::move(newport);
+        return result;
+    }
+
+    const ports::InsidePort* ComponentBase::InitInsiderPort(const _component_port_ins_j& config) {
+        auto result = new ports::InsidePort(config, this);
+        std::unique_ptr<ports::PortBase> newport(result);
         _ports[config.portName] = std::move(newport);
         return result;
     }

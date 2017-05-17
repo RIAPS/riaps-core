@@ -82,6 +82,9 @@ struct _component_port_sub_j : public component_port_config{
 struct _component_port_tim_j : public component_port_config {
     ulong       period;
 };
+struct _component_port_ins_j : public component_port_config{
+
+};
 
 
 
@@ -93,6 +96,7 @@ struct _component_ports_j {
     std::vector<_component_port_req_j> reqs;
     std::vector<_component_port_rep_j> reps;
     std::vector<_component_port_tim_j> tims;
+    std::vector<_component_port_ins_j> inss;
 };
 
 
