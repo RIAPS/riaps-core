@@ -8,7 +8,8 @@ namespace riaps{
     namespace ports{
 
         InsidePort::InsidePort(const _component_port_ins_j &config, ComponentBase *parent_component)
-            : PortBase(PortTypes::Inside, (component_port_config*)&config) {
+            : PortBase(PortTypes::Inside, (component_port_config*)&config),
+              _capnpReader(nullptr) {
             _endpoint = "inproc://inside_" + config.portName;
             _port_socket = zsock_new_pair(_endpoint.c_str());
         }
@@ -27,11 +28,34 @@ namespace riaps{
         }
 
         bool InsidePort::Send(zmsg_t **zmessage) const {
-            int rc = zmsg_send(zmessage, _port_socket);
+            int rc = zmsg_send(zmessage, (void*)GetSocket());
             return rc == 0;
         }
 
-        InsidePort::~InsidePort() {
+        bool InsidePort::Recv(riaps::ports::InsideMessage::Reader** insideMessage) {
+            zmsg_t* msg = zmsg_recv((void*)GetSocket());
+
+            if (msg){
+
+                zframe_t* bodyFrame = zmsg_pop(msg);
+                size_t size = zframe_size(bodyFrame);
+                byte* data = zframe_data(bodyFrame);
+
+                auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
+                _capnpReader = capnp::FlatArrayMessageReader(capnp_data);
+                _insideMessageReader = _capnpReader.getRoot<riaps::ports::InsideMessage>();
+                *insideMessage = &_insideMessageReader;
+
+                zframe_destroy(&bodyFrame);
+                return true;
+
+            }
+            zmsg_destroy(&msg);
+
+            return false;
+        }
+
+        InsidePort::~InsidePort() noexcept {
 
         }
 

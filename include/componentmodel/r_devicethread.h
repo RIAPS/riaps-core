@@ -9,31 +9,49 @@
 #include <componentmodel/r_insiderport.h>
 #include <czmq.h>
 #include <string>
+#include <thread>
+#include <atomic>
 
 namespace riaps {
     namespace components {
 
+        /// \brief Base class for all device threads
+        ///
+        ///
+
         class DeviceThread {
         public:
 
-            DeviceThread(_component_conf_j& deviceConfig);
+            DeviceThread(const _component_conf_j& deviceConfig);
 
-            friend void devThreadActor(zsock_t *pipe, void *args);
+            //friend void devThreadActor(zsock_t *pipe, void *args);
+
+            riaps::ports::InsidePort* GetInsidePortByName(const std::string& portName);
+
+
+            virtual void Run()=0;
 
             void StartThread();
-            void StopThread();
+            void Terminate();
+
+            bool IsTerminated() const;
 
             virtual ~DeviceThread();
 
-        private:
-            zactor_t *_deviceThread;
-            _component_conf_j& _deviceConfig;
-            std::map<std::string, std::unique_ptr<ports::PortBase>> _insidePorts;
+        protected:
+            void InitInsides(zpoller_t* poller= NULL);
 
-            void InitInsides(zpoller_t* poller);
+        private:
+            //zactor_t *_deviceThread;
+            std::thread           _deviceThread;
+            const _component_conf_j&    _deviceConfig;
+            std::map<std::string, std::unique_ptr<ports::PortBase>> _insidePorts;
+            std::atomic<bool> _isTerminated;
+
+
         };
 
-        void devThreadActor(zsock_t *pipe, void *args);
+        //void devThreadActor(zsock_t *pipe, void *args);
     }
 }
 
