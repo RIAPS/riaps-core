@@ -30,6 +30,10 @@ namespace testing {
 //                _logStream.close();
 //            }
         }
+		
+        void Collector::OnOneShotTimer(const std::string& timerid){
+
+        }		
 
         Collector::~Collector() {
 //            if (_logStream.is_open())
