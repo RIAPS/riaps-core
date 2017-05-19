@@ -16,15 +16,16 @@ bool CommandLineParser::CommandOptionExists(char **begin, char **end, const std:
 }
 
 int CommandLineParser::Parse(std::map<std::string, std::string> &actualParams,
-                              std::string &actorName,
-                              nlohmann::json &jsonConfig) {
+                             std::string& actorName,
+                             std::string& modelFile,
+                             nlohmann::json &jsonConfig) {
 
     // First param: <model>
-    std::string modelfile = std::string(_argv[1]);
-    std::ifstream ifs(modelfile);
+    modelFile = std::string(_argv[1]);
+    std::ifstream ifs(modelFile);
 
     if (!ifs.good()){
-        std::cerr << "Cannot open modelfile: " << modelfile << std::endl;
+        std::cerr << "Cannot open modelfile: " << modelFile << std::endl;
         return -1;
     }
 
@@ -39,7 +40,7 @@ int CommandLineParser::Parse(std::map<std::string, std::string> &actualParams,
         jsonConfig = nlohmann::json::parse(ifs);
     }
     catch(std::invalid_argument& e){
-        std::cerr << "Cannot parse: " << modelfile << std::endl;
+        std::cerr << "Cannot parse: " << modelFile << std::endl;
         std::cerr << e.what() << std::endl;
         return -1;
     }

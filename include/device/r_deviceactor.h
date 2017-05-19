@@ -20,14 +20,16 @@ namespace riaps {
         ~DeviceActor();
 
         static DeviceActor* CreateDeviceActor(nlohmann::json& configJson,
-                                    const std::string& deviceName,
-                                    std::map<std::string, std::string>& actualParams);
+                                              const std::string& deviceName,
+                                              const std::string& jsonFile  ,
+                                              std::map<std::string, std::string>& actualParams);
 
     protected:
-        DeviceActor(const std::string&     applicationname       ,
-                    const std::string&     actorname             ,
-                    nlohmann::json jsonActorconfig             ,
-                    nlohmann::json& configJson,
+        DeviceActor(const std::string&     applicationname ,
+                    const std::string&     actorname       ,
+                    const std::string&     jsonFile        ,
+                    nlohmann::json jsonActorconfig         ,
+                    nlohmann::json& configJson             ,
                     std::map<std::string, std::string>& commandLineParams
         );
 

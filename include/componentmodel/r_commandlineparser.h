@@ -27,6 +27,7 @@ public:
     /// \param jsonConfig   out The model file content, parsed into JSON object.
     int Parse(std::map<std::string, std::string>& actualParams,
               std::string&    actorName,
+              std::string&    modelFile,
               nlohmann::json& jsonConfig);
 
 

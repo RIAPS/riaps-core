@@ -23,8 +23,8 @@ namespace riaps{
             /////
             /// Request
             capnp::MallocMessageBuilder message;
-            riaps::devm::DevmReq::Builder root = message.initRoot<riaps::devm::DevmReq>();
-            riaps::devm::ActorRegReq::Builder areqBuilder = root.initActorReg();
+            auto root = message.initRoot<riaps::devm::DevmReq>();
+            auto areqBuilder = root.initActorReg();
 
             areqBuilder.setActorName(actorName);
             areqBuilder.setAppName(appName);
@@ -32,9 +32,11 @@ namespace riaps{
             areqBuilder.setPid(::getpid());
 
             auto serializedMessage = capnp::messageToFlatArray(message);
+            auto s = serializedMessage.asBytes().size();
+            auto c = serializedMessage.asBytes().begin();
 
             zmsg_t* msg = zmsg_new();
-            zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
+            zmsg_pushmem(msg, c, s);
 
             std::string ipcAddress = riaps::framework::Configuration::GetDeviceManagerServiceIpc();
             zsock_t * client = zsock_new_req (ipcAddress.c_str());

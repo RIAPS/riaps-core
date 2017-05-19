@@ -14,8 +14,9 @@ namespace riaps {
 
 
 
-    Actor* riaps::Actor::CreateActor(nlohmann::json& configJson,
-                                     const std::string& actorName,
+    Actor* riaps::Actor::CreateActor(nlohmann::json&    configJson,
+                                     const std::string& actorName ,
+                                     const std::string& jsonFile  ,
                                      std::map<std::string, std::string>& actualParams) {
         std::string applicationName    = configJson[J_NAME];
         nlohmann::json jsonActors      = configJson[J_ACTORS];
@@ -32,6 +33,7 @@ namespace riaps {
         return new riaps::Actor(
                             applicationName,
                             actorName,
+                            jsonFile,
                             jsonCurrentActor,
                             configJson,
                             //jsonComponents,
@@ -52,15 +54,17 @@ namespace riaps {
         return results;
     }
 
-    riaps::Actor::Actor(const std::string&     applicationname       ,
-                        const std::string&     actorname             ,
-                        nlohmann::json& jsonActorconfig             ,
-                        nlohmann::json& configJson,
+    riaps::Actor::Actor(const std::string&     applicationname,
+                        const std::string&     actorname      ,
+                        const std::string&     jsonFile       ,
+                        nlohmann::json&        jsonActorconfig,
+                        nlohmann::json&        configJson     ,
                         std::map<std::string, std::string>& commandLineParams)
         : //_jsonComponentsconfig(jsonComponentsconfig),
           //_jsonDevicesconfig(jsonDevicesconfig),
           //_jsonActorconfig(jsonActorconfig),
-          _commandLineParams(commandLineParams)
+          _commandLineParams(commandLineParams),
+          _jsonFile(jsonFile)
     {
         _jsonActorconfig       = jsonActorconfig;
         _jsonComponentsconfig  = configJson[J_COMPONENTS];
@@ -345,8 +349,7 @@ namespace riaps {
                 else if (component_config.isDevice && !_startDevice){
                     auto peripheral = new Peripheral(this);
 
-                    // TODO: WTF is a the typename and modelname????
-                    peripheral->Setup(_applicationName, "", "", _commandLineParams);
+                    peripheral->Setup(_applicationName, _jsonFile, _actorName, _commandLineParams);
                     _peripherals.push_back(peripheral);
                 }
 

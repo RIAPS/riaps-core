@@ -13,10 +13,10 @@ namespace riaps{
 
     void Peripheral::Setup(const std::string &appName,
                            const std::string &modelName,
-                           const std::string &typeName,
+                           const std::string &actorName,
                            const std::map<std::string, std::string> &args) {
 
-        _parentActor->GetDeviceManager()->RegisterDevice(appName, modelName, typeName, args);
+        _parentActor->GetDeviceManager()->RegisterDevice(appName, modelName, actorName, args);
         _state = Peripheral::READY;
     }
 

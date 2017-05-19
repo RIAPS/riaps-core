@@ -30,8 +30,9 @@ namespace riaps {
     public:
 
 
-        static Actor* CreateActor(nlohmann::json& configJson,
-                                  const std::string& actorName,
+        static Actor* CreateActor(nlohmann::json& configJson   ,
+                                  const std::string& actorName ,
+                                  const std::string& jsonFile  ,
                                   std::map<std::string, std::string>& actualParams);
 
         void Init();
@@ -48,7 +49,8 @@ namespace riaps {
 
         Actor(const std::string&     applicationname       ,
               const std::string&     actorname             ,
-              nlohmann::json&         jsonActorconfig       ,
+              const std::string&     jsonFile              ,
+              nlohmann::json&        jsonActorconfig       ,
               nlohmann::json&        configJson            ,
               std::map<std::string, std::string>& commandLineParams
         );
@@ -66,6 +68,7 @@ namespace riaps {
 
 
         int                         _actor_port;
+        std::string                 _jsonFile;
         std::string                 _actor_endpoint;
         zuuid_t*                    _actor_id;
         std::string                 _actorName;

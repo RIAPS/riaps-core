@@ -34,16 +34,17 @@ int main(int argc, char* argv[]) {
         // get the rest of the params
         std::map<std::string, std::string> actualParams;
         std::string actorName;
+        std::string modelName;
         nlohmann::json configJson;
 
         CommandLineParser cmdLineParser(argv, argc);
-        if (cmdLineParser.Parse(actualParams, actorName, configJson) == -1){
+        if (cmdLineParser.Parse(actualParams, actorName, modelName, configJson) == -1){
             std::cerr << "Couldn't parse commandline parameters" << std::endl;
             return -1;
         }
 
         try {
-            riaps::Actor* aptr = riaps::Actor::CreateActor(configJson, actorName, actualParams);
+            riaps::Actor* aptr = riaps::Actor::CreateActor(configJson, actorName, modelName, actualParams);
             std::unique_ptr<riaps::Actor> actor = std::unique_ptr<riaps::Actor>(aptr);
             actor->Init();
             actor->start();

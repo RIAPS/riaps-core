@@ -23,19 +23,20 @@ int main(int argc, char* argv[]) {
         // get the rest of the params
         std::map<std::string, std::string> actualParams;
         std::string deviceName;
+        std::string modelName;
         nlohmann::json configJson;
 
         CommandLineParser cmdLineParser(argv, argc);
-        if (cmdLineParser.Parse(actualParams, deviceName, configJson) == -1){
+        if (cmdLineParser.Parse(actualParams, deviceName,modelName, configJson) == -1){
             std::cerr << "Couldn't parse commandline parameters" << std::endl;
             return -1;
         }
 
         try {
-            riaps::DeviceActor* dptr = riaps::DeviceActor::CreateDeviceActor(configJson, deviceName, actualParams);
+            riaps::DeviceActor* dptr = riaps::DeviceActor::CreateDeviceActor(configJson, deviceName, modelName, actualParams);
             std::unique_ptr<riaps::DeviceActor> device = std::unique_ptr<riaps::DeviceActor>(dptr);
-            //actor->Init();
-            //actor->start();
+            dptr->Init();
+            dptr->start();
         }
         catch(std::domain_error& e){
             std::cerr << "Configuration file error (probably missing property from the json file)" << std::endl;
