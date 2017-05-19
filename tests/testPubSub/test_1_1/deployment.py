@@ -140,13 +140,13 @@ def setup_suite():
 
 
         for component in runtime.get_active_config('components_so'):
-            #localPath = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-            #                         runtime.get_active_config('app_dir'),
-            #                         component)
             localPath = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                      runtime.get_active_config('app_dir'),
-                                     "lib",
                                      component)
+            #localPath = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+            #                         runtime.get_active_config('app_dir'),
+            #                         "lib",
+            #                         component)
 
             #targetPath = target_path#os.path.join(riaps_app_path, runtime.get_active_config('app_dir'))
             component_deployer = adhoc_deployer.SSHDeployer(component, {

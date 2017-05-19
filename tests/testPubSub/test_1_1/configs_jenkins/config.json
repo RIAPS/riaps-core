@@ -1,0 +1,18 @@
+{
+
+  "app_dir": "test_1_1",
+  "model_file": "model.riaps",
+  "components_so": [
+    "libtemperaturesensor.so",
+    "libcollector.so"
+  ],
+  "targets": [
+    {
+      "host": "bbb-3ed2.local",
+      "actor": "ActorTest1p"
+    }
+  ],
+  "riaps_apps_path": "riaps_apps",
+  "username":"riaps",
+  "password":"riapspwd"
+}

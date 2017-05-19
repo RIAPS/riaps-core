@@ -17,6 +17,8 @@ namespace testing{
             TemperatureSensor(_component_conf_j &config, riaps::Actor &actor);
 
             virtual void OnClock(riaps::ports::PortBase *port);
+			
+			virtual void OnOneShotTimer(const std::string& timerid);
 
             virtual ~TemperatureSensor();
 
