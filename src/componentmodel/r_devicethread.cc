@@ -26,6 +26,7 @@ namespace riaps{
         }
 
         void DeviceThread::Terminate() {
+            std::cout << "Terminate called" <<std::endl;
             _isTerminated.store(true);
             if (_deviceThread.joinable())
                 _deviceThread.join();
@@ -38,7 +39,7 @@ namespace riaps{
                  it_insconf != _deviceConfig.component_ports.inss.end();
                  it_insconf++){
 
-                auto newPortPtr = new ports::InsidePort(*it_insconf, NULL);
+                auto newPortPtr = new ports::InsidePort(*it_insconf, riaps::ports::InsidePortMode::CONNECT, NULL);
                 std::unique_ptr<ports::PortBase> newport(newPortPtr);
                 _insidePorts[it_insconf->portName] = std::move(newport);
 
@@ -47,6 +48,22 @@ namespace riaps{
                 }
             }
         }
+
+        bool DeviceThread::SendMessageOnPort(capnp::MallocMessageBuilder& message, const std::string &portName) {
+            auto serializedMessage = capnp::messageToFlatArray(message);
+            zmsg_t* msg = zmsg_new();
+            auto bytes = serializedMessage.asBytes();
+            zmsg_pushmem(msg, bytes.begin(), bytes.size());
+            return SendMessageOnPort(&msg, portName);
+        }
+
+        bool DeviceThread::SendMessageOnPort(zmsg_t **message, const std::string &portName) {
+            auto port = GetInsidePortByName(portName);
+            if (port == NULL) return false;
+            return port->Send(message);
+        }
+
+
 
         riaps::ports::InsidePort* DeviceThread::GetInsidePortByName(const std::string &portName) {
             if (_insidePorts.find(portName)!=_insidePorts.end()){

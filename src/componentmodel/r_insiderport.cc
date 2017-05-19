@@ -7,11 +7,20 @@
 namespace riaps{
     namespace ports{
 
-        InsidePort::InsidePort(const _component_port_ins_j &config, ComponentBase *parent_component)
+        InsidePort::InsidePort(const _component_port_ins_j &config, InsidePortMode mode, ComponentBase *parent_component)
             : PortBase(PortTypes::Inside, (component_port_config*)&config),
               _capnpReader(nullptr) {
             _endpoint = "inproc://inside_" + config.portName;
-            _port_socket = zsock_new_pair(_endpoint.c_str());
+
+            if (mode == InsidePortMode::CONNECT){
+                _port_socket = zsock_new_pair(_endpoint.c_str());
+            } else {
+                _port_socket = zsock_new(ZMQ_PAIR);
+                zsock_bind(_port_socket, _endpoint.c_str());
+            }
+
+
+            zsock_set_rcvtimeo(_port_socket, 500);
         }
 
         const _component_port_ins_j* InsidePort::GetConfig() const {

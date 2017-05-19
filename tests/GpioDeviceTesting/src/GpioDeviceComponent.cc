@@ -25,11 +25,11 @@ namespace gpiotoggleexample{
         void GpioDeviceComponent::OnWriteGpio(const messages::WriteRequest::Reader &message,
                                               riaps::ports::PortBase *port) {
             if (_deviceThread!= nullptr && _deviceThread->IsGpioAvailable()){
-                std::cout << "on_writeGpio() write " << message.getValue() << std::endl;
+                std::cout << "on_writeGpio() write " << message.getValue().cStr() << std::endl;
 
                 capnp::MallocMessageBuilder builder;
                 auto insideMessage = builder.initRoot<riaps::ports::InsideMessage>();
-                insideMessage.setValue(std::to_string(message.getValue()));
+                insideMessage.setValue(message.getValue());
                 SendDataOutQueue(builder, insideMessage);
                 _deviceThread->RequestGpioWrite();
             }
@@ -45,7 +45,7 @@ namespace gpiotoggleexample{
             capnp::MallocMessageBuilder builder;
             auto dataValue = builder.initRoot<gpiotoggleexample::messages::DataValue>();
 
-            dataValue.setValue(atoi(message.getValue().cStr()));
+            dataValue.setValue(message.getValue().cStr());
             SendReportedData(builder, dataValue);
             std::cout << "GpioDeviceComponent::OnDataInQueue(): published GPIO value = " << message.getValue().cStr() << std::endl;
         }

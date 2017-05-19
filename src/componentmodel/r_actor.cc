@@ -265,6 +265,23 @@ namespace riaps {
                 }
             }
 
+            // Get the inside ports
+            if (json_portsconfig.count(J_PORTS_INSS)!=0){
+                auto json_inss = json_portsconfig[J_PORTS_INSS];
+                for (auto it_ins = json_inss.begin();
+                     it_ins != json_inss.end() ;
+                     it_ins++){
+
+                    auto insname = it_ins.key();
+                    //auto timperiod = it_tim.value()["period"];
+
+                    _component_port_ins_j newinsconfig;
+                    newinsconfig.portName = insname;
+
+                    new_component_config.component_ports.inss.push_back(newinsconfig);
+                }
+            }
+
             _component_configurations.push_back(new_component_config);
         }
     }
@@ -275,6 +292,7 @@ namespace riaps {
 
         // unique id / run
         _actor_id = zuuid_new();
+
 
         _devm = std::unique_ptr<riaps::devm::DevmApi>(new riaps::devm::DevmApi());
 
@@ -326,13 +344,7 @@ namespace riaps {
 
             void *handle = dlopen(component_library_name.c_str(), RTLD_NOW);
             if (handle == NULL) {
-
-                // TODO: pass in parameter what to do
                 throw std::runtime_error("Cannot open library: " + component_library_name + " (" + dlerror() + ")");
-
-                //Load a default implementation, for testing
-                //riaps::ComponentBase* debug_component = new DebugComponent(component_config, *this);
-               // _components.push_back(debug_component);
             }
             else {
 

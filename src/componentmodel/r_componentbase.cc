@@ -315,7 +315,7 @@ namespace riaps{
     }
 
     const ports::InsidePort* ComponentBase::InitInsiderPort(const _component_port_ins_j& config) {
-        auto result = new ports::InsidePort(config, this);
+        auto result = new ports::InsidePort(config, riaps::ports::InsidePortMode::BIND, this);
         std::unique_ptr<ports::PortBase> newport(result);
         _ports[config.portName] = std::move(newport);
         return result;

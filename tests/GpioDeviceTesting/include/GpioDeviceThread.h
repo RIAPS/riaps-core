@@ -34,6 +34,8 @@ namespace gpiotoggleexample {
             std::atomic<bool> _readRequest;
             std::atomic<bool> _writeRequest;
             std::atomic<bool> _edgeTriggerEnable;
+
+            std::string _currentValue;
         };
     }
 }

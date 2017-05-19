@@ -160,7 +160,11 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
 
             auto registeredActorIt = clients.find(clientKeyBase);
             bool isRegistered =  registeredActorIt!= clients.end();
-            bool isRunning = isRegistered && kill(registeredActorIt->second->pid, 0) == 0;
+            
+            // TODO: figure out if we allow this or now.
+            // TODO: start_device is another actor... see?
+            //bool isRunning = isRegistered && kill(registeredActorIt->second->pid, 0) == 0;
+            bool isRunning = false;
 
             // If the actor already registered and running
             if (isRunning) {

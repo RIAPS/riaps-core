@@ -26,7 +26,7 @@ namespace gpiotoggleexample{
 
         private:
             __pid_t _currentPid;
-            uint8_t _value;
+            std::string _value;
         };
     }
 }

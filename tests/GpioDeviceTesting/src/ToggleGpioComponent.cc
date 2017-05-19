@@ -10,19 +10,19 @@ namespace gpiotoggleexample {
         ToggleGpioComponent::ToggleGpioComponent(_component_conf_j &config, riaps::Actor &actor)
             : ToggleGpioComponentBase(config, actor){
             _currentPid = getpid();
-            _value = 0;
+            _value = "0";
             std::cout << "ToggleGpioComponent: " << _currentPid << " starting" << std::endl;
         }
 
         void ToggleGpioComponent::OnToggle(riaps::ports::PortBase *port) {
             std::cout << "OnToggle()[" << _currentPid << "]"<< std::endl;
-            _value = _value?0:1;
+            _value = _value=="0"?"1":"0";
 
             capnp::MallocMessageBuilder messageBuilder;
             auto msgWriteRequest = messageBuilder.initRoot<messages::WriteRequest>();
             msgWriteRequest.setValue(_value);
-            SendWriteGpioValue(messageBuilder, msgWriteRequest);
-            std::cout << "OnToggle()[" << _currentPid << "]: send write request, setValue=" << _value << std::endl;
+            auto result = SendWriteGpioValue(messageBuilder, msgWriteRequest);
+            std::cout << "OnToggle()[" << _currentPid << "]: send write request, setValue=" << _value << "Result " << result<< std::endl;
         }
 
         void ToggleGpioComponent::OnReadValue(riaps::ports::PortBase *port) {
@@ -36,7 +36,7 @@ namespace gpiotoggleexample {
 
         void ToggleGpioComponent::OnCurrentGpioValue(const messages::DataValue::Reader &message,
                                                      riaps::ports::PortBase *port) {
-            std::cout << "OnCurrentGpioValue()[" << _currentPid << "]: " << message.getValue() << std::endl;
+            std::cout << "OnCurrentGpioValue()[" << _currentPid << "]: " << message.getValue().cStr() << std::endl;
         }
 
         void ToggleGpioComponent::OnOneShotTimer(const std::string &timerid) {

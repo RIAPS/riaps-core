@@ -34,6 +34,7 @@
 #define J_PORTS_SRVS   "srvs"
 #define J_PORTS_SUBS   "subs"
 #define J_PORTS_TIMS   "tims"
+#define J_PORTS_INSS   "inss"
 
 #define J_PORT_REQTYPE "req_type"
 #define J_PORT_REPTYPE "rep_type"

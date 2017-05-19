@@ -16,7 +16,11 @@ namespace riaps{
         {
             _port_socket = zsock_new(ZMQ_PUB);
 
-            _host = riaps::framework::Network::GetIPAddress();
+            if (config.isLocal){
+                _host = "127.0.0.1";
+            } else {
+                _host = riaps::framework::Network::GetIPAddress();
+            }
 
             if (_host == "") {
                 throw std::runtime_error("Publisher cannot be initiated. Cannot find  available network interface.");

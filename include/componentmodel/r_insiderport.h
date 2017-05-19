@@ -17,11 +17,13 @@ namespace riaps {
 
     namespace ports {
 
+        enum InsidePortMode {CONNECT, BIND};
+
         class InsidePort : public PortBase {
         public:
             using PortBase::Send;
 
-            InsidePort(const _component_port_ins_j &config, ComponentBase *parent_component);
+            InsidePort(const _component_port_ins_j &config, InsidePortMode mode, ComponentBase *parent_component);
 
             std::string GetEndpoint();
 

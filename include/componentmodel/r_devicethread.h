@@ -41,6 +41,11 @@ namespace riaps {
         protected:
             void InitInsides(zpoller_t* poller= NULL);
 
+            // TODO: Remove duplicated functions
+            // TODO: move it to parent classe. componentbase also inherits this functionality.
+            bool SendMessageOnPort(capnp::MallocMessageBuilder& message, const std::string& portName);
+            bool SendMessageOnPort(zmsg_t **message, const std::string &portName);
+
         private:
             //zactor_t *_deviceThread;
             std::thread           _deviceThread;

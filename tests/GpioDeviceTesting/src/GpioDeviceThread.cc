@@ -29,22 +29,38 @@ namespace gpiotoggleexample {
                 throw std::invalid_argument("cannot find insideport");
             }
 
+            EnableGpio();
+
             while (!IsTerminated()){
+
                 if (_writeRequest.load()){
-                    riaps::ports::InsideMessage::Reader* insideMessage;
+                    riaps::ports::InsideMessage::Reader* insideMessage = NULL;
                     auto result = dataOutPort->Recv(&insideMessage);
 
-                    std::string value = insideMessage->getValue();
-                    std::cout << "WriteRequest, arrived value: " << result;
+                    if (result && insideMessage!=NULL) {
+                        _currentValue = insideMessage->getValue();
+                    }
 
                     _writeRequest.store(false);
                 }
-                else if (_readRequest.load()){
-                    _readRequest.store(false);
+                else {
+                    if (_readRequest.load()) {
+                        std::cout << "read" << std::endl;
+                        capnp::MallocMessageBuilder builder;
+                        auto insideMsg = builder.initRoot<riaps::ports::InsideMessage>();
+                        insideMsg.setValue(_currentValue);
+                        std::cout << "ReadRequest, current value: " << _currentValue << std::endl;
+
+
+                        auto result =  SendMessageOnPort(builder, INSIDE_DATAIN_QUEUE);
+                        std::cout << "Send result: " << result <<std::endl;
+
+                        _readRequest.store(false);
+                    }
                 }
-                else if (_edgeTriggerEnable.load()){
-                    _edgeTriggerEnable.store(false);
-                }
+//                else if (_edgeTriggerEnable.load()){
+//                    _edgeTriggerEnable.store(false);
+//                }
             }
         }
 
