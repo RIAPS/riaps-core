@@ -45,16 +45,11 @@ namespace gpiotoggleexample {
                 }
                 else {
                     if (_readRequest.load()) {
-                        std::cout << "read" << std::endl;
                         capnp::MallocMessageBuilder builder;
                         auto insideMsg = builder.initRoot<riaps::ports::InsideMessage>();
                         insideMsg.setValue(_currentValue);
-                        std::cout << "ReadRequest, current value: " << _currentValue << std::endl;
-
-
                         auto result =  SendMessageOnPort(builder, INSIDE_DATAIN_QUEUE);
-                        std::cout << "Send result: " << result <<std::endl;
-
+                        std::cout << "GpioDeviceThread::ReadRequest value " << _currentValue << " result: " << result << std::endl;
                         _readRequest.store(false);
                     }
                 }
