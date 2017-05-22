@@ -45,6 +45,10 @@ namespace testing {
                 _logStream.close();
             }
         }
+		
+        void TemperatureSensor::OnOneShotTimer(const std::string& timerid){
+
+        }			
 
         TemperatureSensor::~TemperatureSensor() {
             if(_logStream.is_open()) {

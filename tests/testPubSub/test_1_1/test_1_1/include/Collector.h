@@ -21,6 +21,8 @@ namespace testing {
 
             virtual void OnGetTemperature(testing::messages::SensorValue::Reader& message,
                                           riaps::ports::PortBase* port);
+										  
+			virtual void OnOneShotTimer(const std::string& timerid);						  
 
             virtual ~Collector();
 
