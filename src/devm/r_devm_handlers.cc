@@ -175,10 +175,14 @@ namespace riaps{
         }
 
 
-        // Todo: implement \o/
         void DevmHandler::StopDevice(const std::string &appName, const std::string &modelName,
                                      const std::string &typeName) {
-
+            std::string key = appName + "." + typeName;
+            if (_childThreads.find(key)!=_childThreads.end()){
+                auto childPid = _childThreads[key];
+                kill(childPid, SIGINT);
+                _childThreads.erase(key);
+            }
         }
 
         void DevmHandler::HandleDeviceUnreq(const DeviceUnregReq::Reader &deviceUnregReq) {
