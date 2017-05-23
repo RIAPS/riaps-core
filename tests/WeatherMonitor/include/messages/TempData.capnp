@@ -1,8 +1,8 @@
-@0xdbda55a84ff8f35c;
+@0x83a94aca849cde76;
 
 
 using Cxx = import "/capnp/c++.capnp";
-$Cxx.namespace("WeatherMonitor::messages");
+$Cxx.namespace("weathermonitor::messages");
 
 struct TempData
 {
