@@ -1,0 +1,5 @@
+package WeatherMonitor.include.messages
+
+struct TempData{
+	tempature:Double
+}

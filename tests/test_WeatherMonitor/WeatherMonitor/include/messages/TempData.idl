@@ -1,0 +1,14 @@
+module WeatherMonitor
+{
+    module include
+    {
+        module messages
+        {
+            struct TempData
+            {
+                double  tempature;
+            };
+        };
+    };
+};
+
