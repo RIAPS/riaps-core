@@ -8,7 +8,7 @@ namespace weathermonitor {
         }
 
 		void TempMonitor::OnTempupdate(const messages::TempData::Reader &message, riaps::ports::PortBase *port) {
-		    std::cout << "TempMonitor::OnTempupdate(): " << message.getMsg().cStr() << std::endl;
+		    std::cout << "TempMonitor::OnTempupdate(): " << std::to_string(message.getTempature()) << std::endl;
 		}
 		
 		void TempMonitor::OnOneShotTimer(const std::string& timerid){
