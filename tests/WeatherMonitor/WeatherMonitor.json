@@ -1,0 +1,79 @@
+{
+  "WeatherMonitor": {
+    "name": "WeatherMonitor",
+    "devices": {},
+    "components": {
+      "TempMonitor": {
+        "name": "TempMonitor",
+        "formals": [],
+        "ports": {
+          "reqs": {},
+          "pubs": {},
+          "inss": {},
+          "subs": {
+            "tempupdate": {
+              "type": "tempData"
+            }
+          },
+          "clts": {},
+          "srvs": {},
+          "tims": {}
+        }
+      },
+      "TempSensor": {
+        "name": "TempSensor",
+        "formals": [],
+        "ports": {
+          "reqs": {},
+          "pubs": {
+            "ready": {
+              "type": "tempData"
+            }
+          },
+          "inss": {},
+          "subs": {},
+          "clts": {},
+          "srvs": {},
+          "tims": {
+            "clock": {
+              "period": 5000
+            }
+          }
+        }
+      }
+    },
+    "actors": {
+      "WeatherReceiver": {
+        "internals": [],
+        "locals": [],
+        "criticals": [],
+        "formals": [],
+        "wires": [],
+        "instances": {
+          "monitor": {
+            "type": "TempMonitor",
+            "actuals": []
+          }
+        }
+      },
+      "WeatherIndicator": {
+        "internals": [],
+        "locals": [],
+        "criticals": [],
+        "formals": [],
+        "wires": [],
+        "instances": {
+          "sensor": {
+            "type": "TempSensor",
+            "actuals": []
+          }
+        }
+      }
+    },
+    "messages": [
+      {
+        "name": "tempData"
+      }
+    ]
+  }
+}
