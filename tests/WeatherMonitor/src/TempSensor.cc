@@ -12,7 +12,7 @@ namespace weathermonitor {
 		void TempSensor::OnClock(riaps::ports::PortBase *port) {
 			std::cout << "TempSensor::OnClock(): " << port->GetPortName() << std::endl;
 			
-			this->temperature += 1
+			this->temperature += 1;
 			capnp::MallocMessageBuilder messageBuilder;
 			auto msgTempData = messageBuilder.initRoot<messages::TempData>();
 			msgTempData.setMsg(this->temperature);
