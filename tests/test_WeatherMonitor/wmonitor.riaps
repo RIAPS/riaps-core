@@ -1,0 +1,33 @@
+// RIAPS WeatherMonitor
+
+package WeatherMonitor
+
+import WeatherMonitor.include.messages.*
+
+app WeatherMonitor {
+    message tempData: TempData; 
+     
+	// TempSensor component
+    component TempSensor {
+      timer clock 5000 s; 							
+      pub ready : tempData ;	// Publish port for Temperature messages 
+    }
+    
+    // TempMonitor component
+    component TempMonitor {
+      sub tempupdate : tempData;	// Subscriber port to trigger component with Temperature messages
+    }
+
+    // WeatherIndicator actor
+    actor WeatherIndicator {
+       {  // TempSensor publishes 'TempData' messages
+          sensor : TempSensor;				
+       }
+    }
+    
+    actor WeatherReceiver {
+       {  // TempMonitor subscribes to 'TempData' messages
+          monitor : TempMonitor;	
+       }
+    }
+}
