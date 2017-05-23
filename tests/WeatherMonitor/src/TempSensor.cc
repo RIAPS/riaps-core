@@ -14,10 +14,10 @@ namespace weathermonitor {
 			
 			this->temperature += 1
 			capnp::MallocMessageBuilder messageBuilder;
-			auto msgSensorReady = messageBuilder.initRoot<messages::SensorReady>();
-			msgSensorReady.setMsg(this->temperature);
+			auto msgTempData = messageBuilder.initRoot<messages::TempData>();
+			msgTempData.setMsg(this->temperature);
 			
-			if (!SendReady(messageBuilder, msgSensorValue)){
+			if (!SendReady(messageBuilder, msgTempData)){
                 std::cout << "TempSensor::OnClock(): Unable to publish temperature!" << std::endl;
             }
 		}
