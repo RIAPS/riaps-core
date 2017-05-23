@@ -24,7 +24,7 @@ namespace timertest {
     namespace components {
 
         Receiver::Receiver(_component_conf_j &config, riaps::Actor &actor) : ReceiverBase(config, actor) {
-            _pps_output = libsoc_gpio_request(PPS_OUTPUT, LS_SHARED);
+            _pps_output = libsoc_gpio_request(PPS_OUTPUT, LS_GPIO_SHARED);
             if (!_pps_output) {
                 perror("unable to request gpio pin:");
                 exit(-1);

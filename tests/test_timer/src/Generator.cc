@@ -19,8 +19,8 @@ namespace timertest{
     namespace components {
 
         Generator::Generator(_component_conf_j &config, riaps::Actor &actor) : GeneratorBase(config, actor) {
-            _pwm_output = libsoc_pwm_request(PWM_OUTPUT_CHIP, PWM_CHIP_OUTPUT, LS_SHARED);
-            _pwm_output = libsoc_pwm_request(PWM_OUTPUT_CHIP, PWM_CHIP_OUTPUT, LS_SHARED);
+            _pwm_output = libsoc_pwm_request(PWM_OUTPUT_CHIP, PWM_CHIP_OUTPUT, LS_PWM_SHARED);
+            _pwm_output = libsoc_pwm_request(PWM_OUTPUT_CHIP, PWM_CHIP_OUTPUT, LS_PWM_SHARED);
             if (!_pwm_output) {
                 perror("unable to request PWM pin:");
                 fprintf(stderr, "make sure, you enabled the PWM overlay:\n\techo BB-PWM1 >  /sys/devices/platform/bone_capemgr/slots\n");
