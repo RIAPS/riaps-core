@@ -10,8 +10,8 @@
 #include "messages/TempData.capnp.h"
 
 // Name of the ports from the model file
-#define PORT_TIMER_CLOCK "Clock"
-#define PORT_PUB_READY "Ready"
+#define PORT_TIMER_CLOCK "clock"
+#define PORT_PUB_READY "ready"
 
 namespace weathermonitor {
     namespace components {
