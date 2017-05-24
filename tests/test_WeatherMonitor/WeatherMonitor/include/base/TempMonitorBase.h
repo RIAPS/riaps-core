@@ -10,7 +10,7 @@
 #include "messages/TempData.capnp.h"
 
 // Name of the ports from the model file
-#define PORT_SUB_TEMPUPDATE "Tempupdate"
+#define PORT_SUB_TEMPUPDATE "tempupdate"
 
 namespace weathermonitor {
     namespace components {
