@@ -39,7 +39,9 @@ namespace riaps {
             virtual ~DeviceThread();
 
         protected:
-            void InitInsides(zpoller_t* poller= NULL);
+            // Note: Commented out until we figure out de we really need poller in every case
+            //void InitInsides(zpoller_t* poller= NULL);
+            void InitInsides();
 
             // TODO: Remove duplicated functions
             // TODO: move it to parent classe. componentbase also inherits this functionality.
@@ -53,7 +55,7 @@ namespace riaps {
             std::map<std::string, std::unique_ptr<ports::PortBase>> _insidePorts;
             std::atomic<bool> _isTerminated;
 
-
+            zpoller_t* _poller;
         };
 
         //void devThreadActor(zsock_t *pipe, void *args);
