@@ -29,6 +29,7 @@ namespace riaps {
             riaps::ports::InsidePort* GetInsidePortByName(const std::string& portName);
 
 
+
             virtual void Run()=0;
 
             void StartThread();
@@ -42,6 +43,11 @@ namespace riaps {
             // Note: Commented out until we figure out de we really need poller in every case
             //void InitInsides(zpoller_t* poller= NULL);
             void InitInsides();
+
+            /// \brief Polls the registered inside ports for input data.
+            /// \param timeout Poller timeout in msec.
+            /// \return The name of the port
+            std::string PollInsidePorts(int timeout);
 
             // TODO: Remove duplicated functions
             // TODO: move it to parent classe. componentbase also inherits this functionality.

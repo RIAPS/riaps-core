@@ -53,6 +53,19 @@ namespace riaps{
             }
         }
 
+        std::string DeviceThread::PollInsidePorts(int timeout) {
+            void* port = zpoller_wait(_poller, timeout);
+            if (port == NULL) return "";
+            else {
+                for (auto it = _insidePorts.begin(); it!=_insidePorts.end(); it++){
+                    if ((void*)it->second->GetSocket() == port){
+                        return it->first;
+                    }
+                }
+            }
+            return "";
+        }
+
         bool DeviceThread::SendMessageOnPort(capnp::MallocMessageBuilder& message, const std::string &portName) {
             auto serializedMessage = capnp::messageToFlatArray(message);
             zmsg_t* msg = zmsg_new();
