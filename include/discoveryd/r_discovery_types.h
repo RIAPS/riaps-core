@@ -36,6 +36,7 @@ struct _actor_details_t {
     ~_actor_details_t(){
         if (socket!=NULL) {
             zsock_destroy(&socket);
+            socket=NULL;
         }
     }
 };

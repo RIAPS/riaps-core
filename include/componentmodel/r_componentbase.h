@@ -16,7 +16,7 @@
 #include "r_messagebase.h"
 #include "r_insiderport.h"
 #include "r_oneshottimer.h"
-#include <messaging/insideport.capnp.h>
+//#include <messaging/insideport.capnp.h>
 
 #include <msgpack.hpp>
 #include <capnp/message.h>
@@ -113,6 +113,10 @@ namespace riaps {
         // Removed messageType param, looks redundant here.
         virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
                                      ports::PortBase* port) = 0;
+
+        // Removed messageType param, looks redundant here.
+        virtual void DispatchInsideMessage(zmsg_t* zmsg,
+                                           ports::PortBase* port) = 0;
 
         const Actor*      _actor;
         zuuid_t*          _component_uuid;

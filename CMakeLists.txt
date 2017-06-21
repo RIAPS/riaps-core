@@ -51,8 +51,10 @@ if (BUILD_TESTS)
     enable_testing()
     # Tests
     add_subdirectory(tests/test_distributed_estimator_cmessage_nowrap)
-    add_subdirectory(tests/test_timer)
-    add_subdirectory(tests/GpioDeviceTesting)
+    #add_subdirectory(tests/test_timer)
+    #add_subdirectory(tests/GpioDeviceTesting)
+    #add_subdirectory(tests/testPubSub/test_1_1/test_1_1)
+    add_subdirectory(tests/EchoIO)
 endif()
 
 

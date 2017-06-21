@@ -40,7 +40,9 @@ namespace riaps{
         std::cout << "Component poller starts" << std::endl;
 
         // Register ZMQ Socket - riapsPort pairs. For the quick retrieve.
-        std::map<const zsock_t*, const ports::PortBase*> portSockets;
+        std::map<const zsock_t*, const ports::PortBase*>   portSockets;
+
+        std::map<const zsock_t*, const ports::InsidePort*> insidePorts;
 
         //while (comp->_execute.load()) {
         while (!terminated) {
@@ -57,7 +59,7 @@ namespace riaps{
                      it_insconf++){
                     const ports::InsidePort* newPort = comp->InitInsiderPort(*it_insconf);
                     const zsock_t* zmqSocket = newPort->GetSocket();
-                    portSockets[zmqSocket] = newPort;
+                    insidePorts[zmqSocket] = newPort;
                     zpoller_add(poller, (void*)newPort->GetSocket());
                 }
 
@@ -195,35 +197,43 @@ namespace riaps{
                     delete comp->_oneShotTimer;
                     comp->_oneShotTimer = NULL;
                 }
-
             }
             else if(which){
                 // Message test with more than one field
                 zmsg_t *msg = zmsg_recv(which);
-
                 if (msg) {
 
-                    //char* messageType = zmsg_popstr(msg);
-                    //if (messageType){
-                    ports::PortBase* riapsPort = (ports::PortBase*)portSockets[(zsock_t*)which];
+                    // "which" port is an inside port, dispatch ZMQ message
+                    if (insidePorts.find((zsock_t*)which)!=insidePorts.end()){
+                        ports::InsidePort* insidePort = (ports::InsidePort*)insidePorts[(zsock_t*)which];
 
-                    // zmsg_op transfers the ownership, the frame is being removed from the zmsg
-                    zframe_t* bodyFrame = zmsg_pop(msg);
-                    size_t size = zframe_size(bodyFrame);
-                    byte* data = zframe_data(bodyFrame);
+                        if (!terminated)
+                            comp->DispatchInsideMessage(msg, insidePort);
+                    }
 
-                    auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
+                    // "which" port is not an inside port, dispatch CAPNP message
+                    else {
+                        ports::PortBase* riapsPort = (ports::PortBase*)portSockets[(zsock_t*)which];
+
+                        // zmsg_op transfers the ownership, the frame is being removed from the zmsg
+                        zframe_t* bodyFrame = zmsg_pop(msg);
+                        size_t size = zframe_size(bodyFrame);
+                        byte* data = zframe_data(bodyFrame);
+
+                        auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
+
+                        capnp::FlatArrayMessageReader capnpReader(capnp_data);
+
+                        if (!terminated)
+                            comp->DispatchMessage(&capnpReader, riapsPort);
+
+                        zframe_destroy(&bodyFrame);
+                    }
 
 
-                    capnp::FlatArrayMessageReader capnpReader(capnp_data);
 
-                    if (!terminated)
-                        comp->DispatchMessage(&capnpReader, riapsPort);
 
-                    zframe_destroy(&bodyFrame);
                     zmsg_destroy(&msg);
-                        //zstr_free(&messageType);
-                    //}
                 }
             }
             else{

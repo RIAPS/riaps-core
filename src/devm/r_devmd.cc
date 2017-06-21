@@ -20,4 +20,5 @@ int main() {
     }
 
     zactor_destroy(&r_actor);
+    zclock_sleep(1000);
 }

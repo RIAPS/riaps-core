@@ -15,6 +15,7 @@
 #include <map>
 #include <functional>
 #include <memory>
+#include <set>
 
 void devm_zactor (zsock_t *pipe, void *args){
 
@@ -29,6 +30,7 @@ void devm_zactor (zsock_t *pipe, void *args){
         std::cout << "destroying from a custom deleter...\n";
         for (auto it = ptr->begin(); it!=ptr->end(); it++){
             if (it->second == NULL) continue;
+            std::cout << "Delete: " << it->second->port << std::endl;
             delete it->second;
             it->second = NULL;
         }
@@ -63,7 +65,7 @@ void devm_zactor (zsock_t *pipe, void *args){
             char *command = zmsg_popstr(msg);
 
             if (streq(command, "$TERM")) {
-                std::cout << "$TERM arrived in component" << std::endl;
+                std::cout << "$TERM arrived in devm" << std::endl;
                 terminated = true;
             }
         } else if (which == devmServer){
@@ -84,6 +86,10 @@ void devm_zactor (zsock_t *pipe, void *args){
 
         }
     }
+    std::cout << "devm actor stopped, clean up the ports and the poller" << std::endl;
 
+    zpoller_destroy(&poller);
     zsock_destroy(&devmServer);
+
+    std::cout << "devm was cleaned up" << std::endl;
 }

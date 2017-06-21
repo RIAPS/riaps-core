@@ -44,26 +44,22 @@ namespace riaps{
                 std::unique_ptr<ports::PortBase> newport(newPortPtr);
                 _insidePorts[it_insconf->portName] = std::move(newport);
 
-                if (_poller!=NULL) {
-                    zpoller_add(_poller, (void *) newPortPtr->GetSocket());
-                }
-                else{
-                    _poller = zpoller_new((void*)newPortPtr->GetSocket());
-                }
+                AddSocketToPoller(newPortPtr->GetSocket());
             }
         }
 
-        std::string DeviceThread::PollInsidePorts(int timeout) {
+        void* DeviceThread::PollDeviceThreadPorts(int timeout) {
             void* port = zpoller_wait(_poller, timeout);
-            if (port == NULL) return "";
-            else {
-                for (auto it = _insidePorts.begin(); it!=_insidePorts.end(); it++){
-                    if ((void*)it->second->GetSocket() == port){
-                        return it->first;
-                    }
-                }
+            return port;
+        }
+
+        void DeviceThread::AddSocketToPoller(const zsock_t *socket) {
+            if (_poller!=NULL) {
+                zpoller_add(_poller, (void *) socket);
             }
-            return "";
+            else{
+                _poller = zpoller_new((void*)socket);
+            }
         }
 
         bool DeviceThread::SendMessageOnPort(capnp::MallocMessageBuilder& message, const std::string &portName) {

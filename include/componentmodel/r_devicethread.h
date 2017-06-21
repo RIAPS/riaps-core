@@ -46,8 +46,10 @@ namespace riaps {
 
             /// \brief Polls the registered inside ports for input data.
             /// \param timeout Poller timeout in msec.
-            /// \return The name of the port
-            std::string PollInsidePorts(int timeout);
+            /// \return ZMQ socket, where the input data is waiting for recv() call.
+            void* PollDeviceThreadPorts(int timeout);
+
+            void AddSocketToPoller(const zsock_t* socket);
 
             // TODO: Remove duplicated functions
             // TODO: move it to parent classe. componentbase also inherits this functionality.
