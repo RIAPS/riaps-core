@@ -6,11 +6,10 @@
 #define RIAPS_CORE_TEMPMONITOR_H
 
 #include "componentmodel/r_componentbase.h"
-//#include "messages/weathermonitor.capnp.h"
 #include "messages/TempData.capnp.h"
 
 // Name of the ports from the model file
-#define PORT_SUB_TEMPUPDATE "Tempupdate"
+#define PORT_SUB_TEMPUPDATE "tempupdate"
 
 namespace weathermonitor {
     namespace components {
