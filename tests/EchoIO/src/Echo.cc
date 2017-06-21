@@ -23,7 +23,7 @@ namespace echoio{
             SendEcho(builder, echoRep);
         }
 
-        void OnOneShotTimer(const std::string& timerid){
+        void Echo::OnOneShotTimer(const std::string& timerid){
 
         }
 

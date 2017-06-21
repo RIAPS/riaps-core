@@ -4,7 +4,7 @@
 
 #include "messages/EchoIO.capnp.h"
 #include <componentmodel/r_componentbase.h>
-#include <messaging/insideport.capnp.h>
+//#include <messaging/insideport.capnp.h>
 
 #define PORT_TIMER_CLOCK "clock"
 #define PORT_REQ_ECHO "echo"
@@ -22,8 +22,13 @@ namespace echoio {
             virtual void OnEcho(const messages::EchoRep::Reader &message,
                                 riaps::ports::PortBase *port)=0;
 
+            virtual void OnTrigger(zmsg_t* zmsg,
+                                   riaps::ports::PortBase *port) = 0;
+
             virtual bool SendEcho(capnp::MallocMessageBuilder&    messageBuilder,
                                   messages::EchoReq::Builder& message);
+
+            virtual bool SendTrigger(zmsg_t** message);
 
             virtual ~IODeviceBase();
 
@@ -31,6 +36,9 @@ namespace echoio {
 
             virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
                                          riaps::ports::PortBase *port);
+
+            virtual void DispatchInsideMessage(zmsg_t* zmsg,
+                                               riaps::ports::PortBase* port);
         };
     }
 }

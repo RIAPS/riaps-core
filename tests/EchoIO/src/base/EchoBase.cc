@@ -25,6 +25,10 @@ namespace echoio{
             }
         }
 
+        void EchoBase::DispatchInsideMessage(zmsg_t *zmsg, riaps::ports::PortBase *port) {
+
+        }
+
         EchoBase::~EchoBase() {
 
         }

@@ -6,6 +6,7 @@
 #define RIAPS_CORE_IODEVICE_H
 
 #include <base/IODeviceBase.h>
+#include "IODeviceThread.h"
 
 namespace echoio {
     namespace components {
@@ -17,12 +18,18 @@ namespace echoio {
             void OnClock(riaps::ports::PortBase *port);
 
             void OnEcho(const messages::EchoRep::Reader &message,
-                                riaps::ports::PortBase *port);
+                        riaps::ports::PortBase *port);
+
+            void OnTrigger(zmsg_t* zmsg,
+                           riaps::ports::PortBase *port);
 
             void OnOneShotTimer(const std::string&);
 
 
             ~IODevice();
+
+        protected:
+            std::unique_ptr<IODeviceThread> _deviceThread;
         };
     }
 }
