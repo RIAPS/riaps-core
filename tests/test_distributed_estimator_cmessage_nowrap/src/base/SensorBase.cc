@@ -24,6 +24,10 @@ namespace distributedestimator {
 
         }
 
+        void comp_sensorbase::DispatchInsideMessage(zmsg_t *zmsg, riaps::ports::PortBase *port) {
+
+        }
+
         bool comp_sensorbase::SendRequest(capnp::MallocMessageBuilder&    messageBuilder,
                                           messages::SensorValue::Builder& message) {
             return SendMessageOnPort(messageBuilder, PORT_REP_REQUEST);

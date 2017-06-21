@@ -49,6 +49,9 @@ namespace distributedestimator {
             virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
                                          riaps::ports::PortBase *port);
 
+            virtual void DispatchInsideMessage(zmsg_t* zmsg,
+                                               riaps::ports::PortBase* port);
+
 
         };
     }

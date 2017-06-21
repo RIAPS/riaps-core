@@ -23,6 +23,10 @@ namespace distributedestimator {
             }
         }
 
+        void GlobalEstimatorBase::DispatchInsideMessage(zmsg_t *zmsg, riaps::ports::PortBase *port) {
+
+        }
+
         GlobalEstimatorBase::~GlobalEstimatorBase() {
 
         }
