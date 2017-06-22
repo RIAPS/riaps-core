@@ -111,7 +111,7 @@ namespace riaps {
             }
 
             // If the component is not a device, but the actor just starting devices now (beacuse it
-            // started from the DeviceActor class, then skip parsing. Do not deal with components.
+            // started from the DeviceActor class, then skip parsing. Do not deal with regular components.
             if (_startDevice && !isDevice) continue;
 
             // Check if the component in the map already (wrong configuration)
@@ -315,7 +315,9 @@ namespace riaps {
 
         // If there is a device, start the device manager client
         for (auto& component_config : _component_configurations) {
-            if (component_config.isDevice) {
+
+            // If current component is a device, and the actor started from the DeviceActor, then register
+            if (component_config.isDevice && _startDevice) {
 
                 _devm->RegisterActor(_actorName, _applicationName, "0");
                 zpoller_add(_poller, _devm->GetSocket());
