@@ -131,13 +131,13 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
                          const std::string& macAddress,
                          dht::DhtRunner& dhtNode
                          ) {
-    zmsg_t *msg = zmsg_recv(riapsSocket);
+    zmsg_t *riapsMessage = zmsg_recv(riapsSocket);
     bool terminated = false;
-    if (!msg) {
+    if (!riapsMessage) {
         std::cout << "No msg => interrupted" << std::endl;
         terminated = true;
     } else {
-        zframe_t *capnp_msgbody = zmsg_pop(msg);
+        zframe_t *capnp_msgbody = zmsg_pop(riapsMessage);
         size_t size = zframe_size(capnp_msgbody);
         byte *data = zframe_data(capnp_msgbody);
 
@@ -145,6 +145,10 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
 
         capnp::FlatArrayMessageReader reader(capnp_data);
         auto msg_discoreq = reader.getRoot<riaps::discovery::DiscoReq>();
+
+
+        zmsg_destroy(&riapsMessage);
+        zframe_destroy(&capnp_msgbody);
 
         //zsys_info("Message arrived: %s (%s)", "DiscoReq", msg_discoreq.which());
 
@@ -657,6 +661,8 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
 
             free(command);
         }*/
+
+
     }
     return terminated;
 }
