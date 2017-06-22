@@ -208,7 +208,7 @@ int main()
     }
 
 
-
+    zpoller_destroy(&poller);
     zsock_destroy(&control);
     zactor_destroy(&r_actor);
 
