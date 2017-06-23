@@ -20,7 +20,7 @@ namespace riaps {
 
         void Setup(const std::string &appName,
                    const std::string &modelName,
-                   const std::string &actorName,
+                   const std::string &typeName,
                    const std::map<std::string, std::string> &args);
 
         enum STATE { STARTING, INITIAL, READY, ACTIVE, CHECKPOINTING, INACTIVE, PASSIVE, DESTROYED};
