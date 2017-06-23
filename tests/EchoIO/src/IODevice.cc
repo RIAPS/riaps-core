@@ -46,7 +46,9 @@ namespace echoio{
 
         }
 
-        IODevice::~IODevice() {}
+        IODevice::~IODevice() {
+            _deviceThread->Terminate();
+        }
     }
 }
 

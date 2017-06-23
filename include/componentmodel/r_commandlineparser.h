@@ -22,13 +22,17 @@ public:
     CommandLineParser(char** argv,
                       int    argc);
 
-    /// \param actualParams out Contains the commandline parameters in key-value format.
-    /// \param actorName    out The actor name, parsed from commandline arguments.
-    /// \param jsonConfig   out The model file content, parsed into JSON object.
-    int Parse(std::map<std::string, std::string>& actualParams,
-              std::string&    actorName,
-              std::string&    modelFile,
-              nlohmann::json& jsonConfig);
+
+    int ParseActorParams(std::map<std::string, std::string>& actualParams,
+                         std::string&    actorName,
+                         std::string&    modelFile,
+                         nlohmann::json& jsonConfig);
+
+    int ParseDeviceParams(std::map<std::string, std::string>& actualParams,
+                          std::string&    deviceName,
+                          std::string&    modelFile,
+                          nlohmann::json& jsonConfig);
+
 
 
 
@@ -37,6 +41,15 @@ public:
     ~CommandLineParser();
 
 private:
+
+    /// \param actualParams out Contains the commandline parameters in key-value format.
+    /// \param actorName    out The actor name, parsed from commandline arguments.
+    /// \param jsonConfig   out The model file content, parsed into JSON object.
+    int Parse(std::map<std::string, std::string>& actualParams,
+              std::string&    actorName,
+              std::string&    modelFile,
+              nlohmann::json& jsonConfig);
+
     char** _argv;
     int    _argc;
 };

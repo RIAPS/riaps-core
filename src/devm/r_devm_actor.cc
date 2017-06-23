@@ -22,20 +22,22 @@ void devm_zactor (zsock_t *pipe, void *args){
     std::string mac_address = riaps::framework::Network::GetMacAddressStripped();
     std::string host_address = riaps::framework::Network::GetIPAddress();
 
-    std::unique_ptr<std::map<std::string, actor_details_t*>,
-                    std::function<void(std::map<std::string, actor_details_t*>*)>>
+//    std::unique_ptr<std::map<std::string, actor_details_t*>,
+//                    std::function<void(std::map<std::string, actor_details_t*>*)>>
+//
+//            clients(new std::map<std::string, actor_details_t*>,[](std::map<std::string, actor_details_t*>* ptr)
+//    {
+//        std::cout << "destroying from a custom deleter...\n";
+//        for (auto it = ptr->begin(); it!=ptr->end(); it++){
+//            if (it->second == NULL) continue;
+//            std::cout << "Delete: " << it->second->port << std::endl;
+//            //delete it->second;
+//            //it->second = NULL;
+//        }
+//        delete ptr;
+//    });
 
-            clients(new std::map<std::string, actor_details_t*>,[](std::map<std::string, actor_details_t*>* ptr)
-    {
-        std::cout << "destroying from a custom deleter...\n";
-        for (auto it = ptr->begin(); it!=ptr->end(); it++){
-            if (it->second == NULL) continue;
-            std::cout << "Delete: " << it->second->port << std::endl;
-            delete it->second;
-            it->second = NULL;
-        }
-        delete ptr;
-    });
+    std::unique_ptr<std::map<std::string, actor_details_t*>> clients(new std::map<std::string, actor_details_t*>);
 
 
     std::string endpoint = DEVMANAGER_SERVICE_IPC + mac_address;
@@ -65,9 +67,12 @@ void devm_zactor (zsock_t *pipe, void *args){
             char *command = zmsg_popstr(msg);
 
             if (streq(command, "$TERM")) {
+
                 std::cout << "$TERM arrived in devm" << std::endl;
                 terminated = true;
             }
+            zstr_free(&command);
+            zmsg_destroy(&msg);
         } else if (which == devmServer){
             zmsg_t* zmsg = zmsg_recv(devmServer);
 
@@ -82,14 +87,22 @@ void devm_zactor (zsock_t *pipe, void *args){
 
             riaps::devm::DevmHandler::HandleDevmReq(devmRequest, clients.get(), devmServer);
 
-        } else {
+            zmsg_destroy(&zmsg);
+            zframe_destroy(&capnpMsgBody);
 
         }
     }
     std::cout << "devm actor stopped, clean up the ports and the poller" << std::endl;
 
+    riaps::devm::DevmHandler::StopAllDevices();
+
+    for (auto it = clients->begin(); it!=clients->end(); it++){
+        delete it->second;
+    }
+
     zpoller_destroy(&poller);
     zsock_destroy(&devmServer);
+    zclock_sleep(1000);
 
     std::cout << "devm was cleaned up" << std::endl;
 }

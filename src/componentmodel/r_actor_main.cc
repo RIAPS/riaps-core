@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
         nlohmann::json configJson;
 
         CommandLineParser cmdLineParser(argv, argc);
-        if (cmdLineParser.Parse(actualParams, actorName, modelName, configJson) == -1){
+        if (cmdLineParser.ParseActorParams(actualParams, actorName, modelName, configJson) == -1){
             std::cerr << "Couldn't parse commandline parameters" << std::endl;
             return -1;
         }

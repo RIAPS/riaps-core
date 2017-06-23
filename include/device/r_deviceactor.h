@@ -27,6 +27,7 @@ namespace riaps {
     protected:
         DeviceActor(const std::string&     applicationname ,
                     const std::string&     actorname       ,
+                    const std::string&     devicename      ,
                     const std::string&     jsonFile        ,
                     nlohmann::json jsonActorconfig         ,
                     nlohmann::json& configJson             ,

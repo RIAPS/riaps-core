@@ -114,6 +114,10 @@ namespace riaps {
             // started from the DeviceActor class, then skip parsing. Do not deal with regular components.
             if (_startDevice && !isDevice) continue;
 
+            // If the current component is not the device, then go to the next component.
+            // This is because one actor instantiates one device
+            if (_startDevice && _deviceName != componentName) continue;
+
             // Check if the component in the map already (wrong configuration)
             for (auto component_config : _component_configurations) {
 
@@ -301,10 +305,12 @@ namespace riaps {
         _actor_zsock = zsock_new_rep("tcp://*:!");
         assert(_actor_zsock);
         _poller = zpoller_new(_actor_zsock, NULL);
+        zpoller_ignore_interrupts(_poller);
         assert(_poller);
 
         // Register the actor in the discovery service
-        _discovery_socket = register_actor(_applicationName, _actorName);
+        _discovery_socket = _startDevice? register_actor(_applicationName, _deviceName)
+                                        : register_actor(_applicationName, _actorName);
 
 
         if (_discovery_socket == NULL) {
@@ -352,6 +358,12 @@ namespace riaps {
 
                 // It is not a device, start the component
                 if (!component_config.isDevice || (component_config.isDevice && _startDevice)) {
+                    
+                    // Note: Temporary hack, to make devices work
+                    if (_startDevice){
+                        _actorName = component_config.component_name;
+                    }
+                    
                     _component_dll_handles.push_back(handle);
                     riaps::ComponentBase *(*create)(component_conf_j &, Actor &);
                     create = (riaps::ComponentBase *(*)(component_conf_j &, Actor &)) dlsym(handle, "create_component");
@@ -363,7 +375,7 @@ namespace riaps {
                 else if (component_config.isDevice && !_startDevice){
                     auto peripheral = new Peripheral(this);
 
-                    peripheral->Setup(_applicationName, _jsonFile, _actorName, _commandLineParams);
+                    peripheral->Setup(_applicationName, _jsonFile, component_config.component_name, _commandLineParams);
                     _peripherals.push_back(peripheral);
                 }
 
@@ -476,6 +488,7 @@ namespace riaps {
         //deregister_actor(GetActorId());
 
         for (riaps::ComponentBase* component : _components){
+            std::cout << "Stop component: " << component->GetConfig().component_name <<std::endl;
             component->StopComponent();
         }
 

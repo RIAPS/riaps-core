@@ -15,7 +15,10 @@ int main() {
 
     zactor_t *r_actor = zactor_new(devm_zactor, NULL);
 
+    //int repeat = 100;
+
     while (!zsys_interrupted){
+    //while (repeat-->0) {
         zclock_sleep(100);
     }
 

@@ -24,25 +24,31 @@ namespace riaps{
                                       std::map<std::string, actor_details_t *> *clients,
                                       zsock_t *serverPort);
 
+            static void StopAllDevices();
+
         private:
             static int SetupClient(const std::string &appName,
                                    const std::string &appVersion,
                                    const std::string &appActorName);
 
-            static void StartDevice(const std::string& appName,
-                                    const std::string& modelName,
-                                    const std::string& typeName,
-                                    const std::string& cmdArgs);
+            static void StartDevice(const std::string &appName,
+                                    const std::string &modelName,
+                                    const std::string &deviceName,
+                                    const std::string &cmdArgs);
 
             static void StopDevice(const std::string& appName,
                                    const std::string& modelName,
                                    const std::string& typeName);
+
+
 
             static void HandleActorReg(const ActorRegReq::Reader &actorRegReq);
             static void HandleDeviceReq(const DeviceRegReq::Reader &deviceRegReq);
             static void HandleDeviceUnreq(const DeviceUnregReq::Reader &deviceUnregReq);
 
             static int StartExecutable(const std::string& command);
+
+            //static void CleanClients
 
             static std::map<std::string, actor_details_t*>* _clients;
             static std::map<std::string, int>               _childThreads;
