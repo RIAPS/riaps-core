@@ -24,7 +24,7 @@ namespace testing{
 
         protected:
             std::string _logfilePath;
-            std::fstream _logStream;
+            std::ofstream _logStream;
             int _messageCounter;
         };
     }
