@@ -5,16 +5,18 @@
 #ifndef RIAPS_CORE_GPIODEVICECOMPONENTBASE_H
 #define RIAPS_CORE_GPIODEVICECOMPONENTBASE_H
 
+#include <base/Common.h>
 #include "messages/GpioToggleExample.capnp.h"
 #include <componentmodel/r_componentbase.h>
-#include <messaging/insideport.capnp.h>
+//#include <messaging/insideport.capnp.h>
 
 #define TIMER_CLOCK "clock"
 #define PORT_PUB_REPORTEDDATA "reportedData"
 #define PORT_SUB_READGPIO "readGpio"
 #define PORT_SUB_WRITEGPIO "writeGpio"
-#define INSIDE_DATAIN_QUEUE "dataIn_queue"
-#define INSIDE_DATAOUT_QUEUE "dataOut_queue"
+//#define INSIDE_DATAIN_QUEUE "dataIn_queue"
+//#define INSIDE_DATAOUT_QUEUE "dataOut_queue"
+#define INSIDE_DATAQUEUE "dataQueue"
 
 namespace gpiotoggleexample {
     namespace components {
@@ -31,20 +33,12 @@ namespace gpiotoggleexample {
             virtual void OnWriteGpio(const messages::WriteRequest::Reader &message,
                                     riaps::ports::PortBase *port)=0;
 
-            virtual void OnDataInQueue(const riaps::ports::InsideMessage::Reader &message,
-                                       riaps::ports::PortBase *port)=0;
-
-            virtual void OnDataOutQueue(const riaps::ports::InsideMessage::Reader &message,
-                                        riaps::ports::PortBase *port)=0;
+            virtual void OnDataQueue(zmsg_t* zmsg, riaps::ports::PortBase *port) = 0;
 
             virtual bool SendReportedData(capnp::MallocMessageBuilder&    messageBuilder,
                                           messages::DataValue::Builder& message);
 
-            virtual bool SendDataOutQueue(capnp::MallocMessageBuilder&    messageBuilder,
-                                          riaps::ports::InsideMessage::Builder& message);
-
-            virtual bool SendDataInQueue(capnp::MallocMessageBuilder&    messageBuilder,
-                                         riaps::ports::InsideMessage::Builder& message);
+            virtual bool SendDataQueue(zmsg_t** message);
 
             virtual ~GpioDeviceComponentBase();
 
@@ -52,6 +46,8 @@ namespace gpiotoggleexample {
 
             virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
                                          riaps::ports::PortBase *port);
+
+            virtual void DispatchInsideMessage(zmsg_t*, riaps::ports::PortBase*);
         };
     }
 }

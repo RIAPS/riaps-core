@@ -12,8 +12,9 @@ app GpioToggleExample {
     device GpioDeviceComponent(bbb_pin_name='P8_11', direction='OUT', pull_up_down='PUD_OFF', setup_delay=60) {
       // Inside port for forwarding messages coming from an internal thread.
       // The 'default' is optional, it implies a 1 sec timer/ticker thread.
-      inside dataIn_queue; 	 // Receive data from a specified GPIO and send to component
-      inside dataOut_queue;  // Receive from component and write to a specified GPIO
+      //inside dataIn_queue; 	 // Receive data from a specified GPIO and send to component
+      //inside dataOut_queue;  // Receive from component and write to a specified GPIO
+      inside dataQueue;
 
       timer clock 100;                      // Connect to GPIO on first clock
       pub reportedData : DataValue    ;	    // Publish value read from the specified GPIO

@@ -15,44 +15,40 @@ namespace gpiotoggleexample{
                                              riaps::ports::PortBase *port) {
             if (_deviceThread!= nullptr && _deviceThread->IsGpioAvailable()){
                 std::cout << "on_readGpio(): " << message.getMsg().cStr() << std::endl;
-                _deviceThread->RequestGpioRead();
+                zmsg_t* msg = zmsg_new();
+                zmsg_addstr(msg, CMD_READ_REQUEST);
+                SendDataQueue(&msg);
             }
             else{
                 std::cout << "on_readGpio()[" << getpid() << "]: GPIO not available yet" << std::endl;
             }
         }
 
+
+
         void GpioDeviceComponent::OnWriteGpio(const messages::WriteRequest::Reader &message,
                                               riaps::ports::PortBase *port) {
             if (_deviceThread!= nullptr && _deviceThread->IsGpioAvailable()){
                 std::cout << "on_writeGpio() write " << message.getValue().cStr() << std::endl;
-
-                capnp::MallocMessageBuilder builder;
-                auto insideMessage = builder.initRoot<riaps::ports::InsideMessage>();
-                insideMessage.setValue(message.getValue());
-                SendDataOutQueue(builder, insideMessage);
-                _deviceThread->RequestGpioWrite();
+                zmsg_t* msg = zmsg_new();
+                zmsg_addstr(msg, CMD_WRITE_REQUEST);
+                SendDataQueue(&msg);
             }
             else{
                 std::cout << "on_writeGpio()[" << getpid() << "]: GPIO not available yet" << std::endl;
             }
         }
 
-        void GpioDeviceComponent::OnDataInQueue(const riaps::ports::InsideMessage::Reader &message,
-                                                riaps::ports::PortBase *port) {
-            std::cout << "GpioDeviceComponent::OnDataInQueue()[" << getpid() << "]: " << message.getValue().cStr() << std::endl;
+        void GpioDeviceComponent::OnDataQueue(zmsg_t *zmsg, riaps::ports::PortBase *port) {
+            char* value = zmsg_popstr(zmsg);
+            std::cout << "GpioDeviceComponent::OnDataInQueue()[" << getpid() << "]: " << value << std::endl;
 
             capnp::MallocMessageBuilder builder;
             auto dataValue = builder.initRoot<gpiotoggleexample::messages::DataValue>();
-
-            dataValue.setValue(message.getValue().cStr());
+            dataValue.setValue(value);
             SendReportedData(builder, dataValue);
-            std::cout << "GpioDeviceComponent::OnDataInQueue(): published GPIO value = " << message.getValue().cStr() << std::endl;
-        }
 
-        void GpioDeviceComponent::OnDataOutQueue(const riaps::ports::InsideMessage::Reader &message,
-                                                riaps::ports::PortBase *port) {
-
+            std::cout << "GpioDeviceComponent::OnDataInQueue(): published GPIO value = " << value << std::endl;
         }
 
         void GpioDeviceComponent::OnClock(riaps::ports::PortBase *port) {

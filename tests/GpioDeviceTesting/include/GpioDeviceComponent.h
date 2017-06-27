@@ -25,11 +25,7 @@ namespace gpiotoggleexample{
             virtual void OnWriteGpio(const messages::WriteRequest::Reader &message,
                                      riaps::ports::PortBase *port);
 
-            virtual void OnDataInQueue(const riaps::ports::InsideMessage::Reader &message,
-                                       riaps::ports::PortBase *port);
-
-            virtual void OnDataOutQueue(const riaps::ports::InsideMessage::Reader &message,
-                                        riaps::ports::PortBase *port);
+            virtual void OnDataQueue(zmsg_t* zmsg, riaps::ports::PortBase *port);
 
             void OnOneShotTimer(const std::string&);
 
