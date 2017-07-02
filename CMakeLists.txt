@@ -89,3 +89,5 @@ IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
 
 ENDIF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
 
+install(DIRECTORY include/ DESTINATION include
+        PATTERN "boost" EXCLUDE)
