@@ -8,6 +8,7 @@
 #include <string>
 #include <fstream>
 #include <algorithm>
+#include <regex>
 
 namespace riaps{
     namespace framework{
@@ -15,7 +16,14 @@ namespace riaps{
             std::string tmp_ifacename = ifacename;
             if (ifacename == ""){
                 std::string ipaddress;
-                GetFirstGlobalIface(tmp_ifacename, ipaddress);
+
+                // Get the netinterface to be used from the riaps.conf file
+                std::string configuredIface = GetConfiguredIface();
+
+                // If configured interface, get the first global
+                if (configuredIface == "" || !CheckIfaceName(configuredIface))
+                    GetFirstGlobalIface(tmp_ifacename, ipaddress);
+                else tmp_ifacename = configuredIface;
             }
 
             std::string iface_path = "/sys/class/net/";
@@ -29,6 +37,35 @@ namespace riaps{
             delete [] macBuffer;
 
             return mac_str;
+        }
+
+        bool Network::CheckIfaceName(const std::string& ifacename) {
+            if (ifacename=="") return false;
+            std::string iface_path = "/sys/class/net/";
+            std::string address_path = iface_path + ifacename + "/address";
+
+            std::ifstream infile(address_path);
+            return infile.good();
+        }
+
+        std::string Network::GetConfiguredIface() {
+            std::string configPath = "/usr/local/riaps/etc/riaps.conf";
+            std::ifstream f(configPath);
+
+            if (f.good()){
+                std::regex nicNameRegex("^nic_name\\s*=\\s*([a-zA-Z0-9]+)\\s*$");
+                for(std::string line; getline( f, line ); )
+                {
+                    std::smatch match;
+                    if (std::regex_search(line, match, nicNameRegex)){
+                        f.close();
+                        return match[1];
+                    }
+                }
+            }
+
+            f.close();
+            return "";
         }
 
         void Network::GetFirstGlobalIface(std::string &ifacename, std::string &ipaddress) {
@@ -56,12 +93,19 @@ namespace riaps{
         }
 
         std::string Network::GetIPAddress(const std::string &ifacename) {
-            if (ifacename == ""){
-                std::string ipaddress;
-                std::string tmp_ifacename;
-                GetFirstGlobalIface(tmp_ifacename, ipaddress);
+            std::string configuredIface = GetConfiguredIface();
+            std::string tmpIfacename = "";
 
-                return ipaddress;
+            if (ifacename == ""){
+                if (configuredIface == "" || !CheckIfaceName(configuredIface)){
+                    std::string ipaddress;
+                    GetFirstGlobalIface(tmpIfacename, ipaddress);
+                    return ipaddress;
+                } else {
+                    tmpIfacename = configuredIface;
+                }
+            } else {
+                tmpIfacename = ifacename;
             }
 
             ziflist_t *iflist = ziflist_new ();
@@ -72,7 +116,7 @@ namespace riaps{
 
             while (name && result == "") {
                 std::string namestr(name);
-                if (namestr == ifacename){
+                if (namestr == tmpIfacename){
                     result = ziflist_address (iflist);
                 }
                 name = ziflist_next (iflist);

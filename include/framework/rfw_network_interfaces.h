@@ -31,6 +31,15 @@ namespace riaps {
             // Returns the IP address and name of the first global network interface
             static void
             GetFirstGlobalIface(std::string& ifacename, std::string& ipaddress);
+
+            // Returns the nic_name parameter from the riaps.conf
+            static std::string
+            GetConfiguredIface();
+
+
+            // Checks whether the given network interface exists
+            static bool CheckIfaceName(const std::string& ifacename);
+
         };
     }
 }
