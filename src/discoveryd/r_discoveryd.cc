@@ -43,6 +43,9 @@ int main()
 {
     std::cout << "Starting RIAPS DISCOVERY SERVICE " << RIAPS_DISCOVERY_PRINTABLE_VERSION << std::endl;
 
+    // Use all available interfaces
+    zsys_set_interface ("*");
+
     zactor_t *r_actor = zactor_new(riaps_actor, NULL);
     zsock_t * control = zsock_new_router(CONTROL_SOCKET);
 
