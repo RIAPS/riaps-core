@@ -65,9 +65,16 @@ void handleGet(const riaps::discovery::ProviderListGet::Reader& msgProviderGet,
                                      + "/" + std::string(msgProviderGet.getClient().getActorName())
                                      + "/";
 
-        zmsg_send(&msg, clients.at(clientKeyBase)->socket);
+        // Client might gone while the DHT was looking for the values
+        if (clients.find(clientKeyBase) != clients.end()) {
+            zmsg_send(&msg, clients.at(clientKeyBase)->socket);
+            std::cout << "Get results were sent to the client: " << clientKeyBase << std::endl;
+        } else {
+            zmsg_destroy(&msg);
+            std::cout << "Get returned with values, but client has gone. " << std::endl;
+        }
 
-        std::cout << "Get results were sent to the client: " << clientKeyBase << std::endl;
+
     }
 }
 
