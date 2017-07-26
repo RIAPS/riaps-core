@@ -141,14 +141,19 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
         size_t size = zframe_size(capnp_msgbody);
         byte *data = zframe_data(capnp_msgbody);
 
-        auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word *>(data), size / sizeof(capnp::word));
+        riaps::discovery::DiscoReq::Reader msg_discoreq;
 
-        capnp::FlatArrayMessageReader reader(capnp_data);
-        auto msg_discoreq = reader.getRoot<riaps::discovery::DiscoReq>();
+        try {
+
+            auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word *>(data), size / sizeof(capnp::word));
+
+            capnp::FlatArrayMessageReader reader(capnp_data);
+            msg_discoreq = reader.getRoot<riaps::discovery::DiscoReq>();
 
 
-        zmsg_destroy(&riapsMessage);
-        zframe_destroy(&capnp_msgbody);
+            zmsg_destroy(&riapsMessage);
+            zframe_destroy(&capnp_msgbody);
+
 
         //zsys_info("Message arrived: %s (%s)", "DiscoReq", msg_discoreq.which());
 
@@ -431,15 +436,6 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
 
 
 
-            //wait();
-
-            //std::cout << "Get results: ";
-
-            //for (auto r : dht_lookup_results){
-            //    std::cout << r << ", ";
-            //}
-
-            // std::endl(std::cout);
 
 
 
@@ -456,23 +452,6 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
             auto sockets = msg_service_lookup_rep.initSockets(number_of_clients);
 
 
-            //for (int i = 0; i<number_of_clients; i++){
-            //auto dht_result = dht_lookup_results[i];
-            //auto pos = dht_result.find_first_of(':');
-            //if (pos==std::string::npos) continue;
-
-            //auto host = std::string(dht_result.begin(), dht_result.begin()+pos);
-            //auto port = std::string(dht_result.begin()+pos+1, dht_result.end());
-
-            //sockets[i].setHost(host);
-            //sockets[i].setPort(std::stoi(port));
-
-            //std::cout << "Added: " << host << " " << std::stoi(port) << std::endl;
-            //}
-
-            // msg_service_lookup_rep.setSockets()
-
-            //msg_servicereg_rep.setStatus(Status::OK);
 
             auto serializedMessage = capnp::messageToFlatArray(message);
 
@@ -549,118 +528,20 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
                 );
             }
 
-            // Subscribe, if new provider arrives
-
-            // -- Register with OpenDHT --
-
-            //std::string client_subscribe_key = lookupkey.first + "_clients";
-            //std::vector<uint8_t> opendht_client_subscribe_data(client_subscribe_key.begin(), client_subscribe_key.end());
-            //auto keyhash = dht::InfoHash::get(client_subscribe_key);
-            //dht_node.put(keyhash, dht::Value(opendht_client_subscribe_data));
 
 
+
+        }
+
+        } catch (kj::Exception& e){
+            std::cout << "Couldn't deserialize message from riaps_socket" << std::endl;
+            return false;
         }
 
 
 
 
-        //capnp::initMessageBuilderFromFlatArrayCopy(reader.getRoot(), message);
 
-        //capnp::MallocMessageBuilder message;
-        //capnp::initMessageBuilderFromFlatArrayCopy(kjptr, message);
-        /*
-        char* command = zmsg_popstr(msg);
-
-        if (command){
-
-            if (streq(command, CMD_DISC_GETSERVICE_BY_NAME_POLL_ASYNC)) {
-                //zframe_t* flat_msgbody = zmsg_pop(msg);
-                //byte* framedata = zframe_data(flat_msgbody);
-                //auto m = Getmsg_getservice_poll_request(framedata);
-
-                //auto s = m->service_name()->str();
-                //auto r = m->reply_id()->str();
-
-
-                //int i =5;
-            }
-
-                // TODO: only handle_command should be called, without ifs
-            if (streq(command, CMD_DISC_REGISTER_SERVICE)) {
-                bool handle_result = handle_command(command, msg, riaps_socket, async_service_poller);
-                assert(handle_result);
-            }
-            else if (streq(command, CMD_DISC_DEREGISTER_SERVICE)){
-                bool handle_result = handle_command(command, msg, riaps_socket, async_service_poller);
-                assert(handle_result);
-            }
-            else if (streq(command, CMD_DISC_GET_SERVICES)) {
-                bool handle_result = handle_command(command, msg, riaps_socket, async_service_poller);
-                assert(handle_result);
-            }
-            else if (streq(command, CMD_DISC_GETSERVICE_BY_NAME)) {
-                bool handle_result = handle_command(command, msg, riaps_socket, async_service_poller);
-                assert(handle_result);
-            }
-            else if (streq(command, CMD_DISC_GETSERVICE_BY_NAME_ASYNC)){
-                bool handle_result = handle_command(command, msg, riaps_socket, async_service_poller);
-                assert(handle_result);
-            }
-            else if(streq(command, CMD_DISC_REGISTER_NODE)){
-                bool handle_result = handle_command(command, msg, riaps_socket, async_service_poller);
-                assert(handle_result);
-            }
-
-
-            else if (streq(command, CMD_DISC_REGISTER_ACTOR)){
-                char* actorname = zmsg_popstr(msg);
-                if (actorname){
-                    disc_registeractor(hostname, actorname);
-                    free(actorname);
-                    zstr_send(riaps_socket, "OK");
-                }
-            }
-            else if(streq(command, CMD_DISC_DEREGISTER_ACTOR)){
-                char* actorname = zmsg_popstr(msg);
-                if (actorname){
-                    disc_deregisteractor(hostname, actorname);
-
-                    free(actorname);
-
-                    zstr_send(riaps_socket, "OK");
-                }
-            }
-            else if(streq(command, CMD_DISC_PING)){
-
-                std::cout << "Ping arrived" << std::endl;
-
-                char* service_name = zmsg_popstr(msg);
-                if (service_name){
-
-                    //std::cout << "   " << service_name << std::endl;
-                    int64_t time = zclock_mono();
-                    service_checkins[service_name] = time;
-
-                    // remove outdated services from the cache and from the discovery service
-                    auto outdateds = maintain_servicecache(service_checkins);
-
-                    for (auto outdated : outdateds){
-                        std::cout << outdated << ";" ;
-                    }
-
-                    std::cout << std::endl;
-
-                    free(service_name);
-                    //zstr_send("OK", riaps_socket);
-                    zstr_send(riaps_socket, "OK");
-                }
-            }
-            else {
-
-            }
-
-            free(command);
-        }*/
 
 
     }
