@@ -143,7 +143,7 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
 
         riaps::discovery::DiscoReq::Reader msg_discoreq;
 
-        try {
+       // try {
 
             auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word *>(data), size / sizeof(capnp::word));
 
@@ -151,8 +151,8 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
             msg_discoreq = reader.getRoot<riaps::discovery::DiscoReq>();
 
 
-            zmsg_destroy(&riapsMessage);
-            zframe_destroy(&capnp_msgbody);
+            //zmsg_destroy(&riapsMessage);
+            //zframe_destroy(&capnp_msgbody);
 
 
         //zsys_info("Message arrived: %s (%s)", "DiscoReq", msg_discoreq.which());
@@ -533,13 +533,14 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
 
         }
 
-        } catch (kj::Exception& e){
-            std::cout << "Couldn't deserialize message from riaps_socket" << std::endl;
-            return false;
-        }
+//        } catch (kj::Exception& e){
+//            std::cout << "Couldn't deserialize message from riaps_socket" << std::endl;
+//            return false;
+//        }
 
 
-
+        zmsg_destroy(&riapsMessage);
+        zframe_destroy(&capnp_msgbody);
 
 
 
