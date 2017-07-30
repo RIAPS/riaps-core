@@ -99,23 +99,30 @@ riaps_actor (zsock_t *pipe, void *args)
             byte*     data = zframe_data(capnpMsgBody);
 
 
-            auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
+            try {
+                auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word *>(data), size / sizeof(capnp::word));
 
-            capnp::FlatArrayMessageReader reader(capnp_data);
-            auto msgProviderlistPush = reader.getRoot<riaps::discovery::ProviderListPush>();
+                capnp::FlatArrayMessageReader reader(capnp_data);
+                auto msgProviderlistPush = reader.getRoot<riaps::discovery::ProviderListPush>();
 
-            // If update
-            if (msgProviderlistPush.isProviderUpdate()) {
-                riaps::discovery::ProviderListUpdate::Reader msgProviderUpdate = msgProviderlistPush.getProviderUpdate();
-                handleUpdate(msgProviderUpdate, clientSubscriptions, clients);
+                // If update
+                if (msgProviderlistPush.isProviderUpdate()) {
+                    riaps::discovery::ProviderListUpdate::Reader msgProviderUpdate = msgProviderlistPush.getProviderUpdate();
+                    handleUpdate(msgProviderUpdate, clientSubscriptions, clients);
 
-            } else if (msgProviderlistPush.isProviderGet()){
-                riaps::discovery::ProviderListGet::Reader msgProviderGet = msgProviderlistPush.getProviderGet();
-                handleGet(msgProviderGet, clients);
+                } else if (msgProviderlistPush.isProviderGet()) {
+                    riaps::discovery::ProviderListGet::Reader msgProviderGet = msgProviderlistPush.getProviderGet();
+                    handleGet(msgProviderGet, clients);
+                }
+
+                zframe_destroy(&capnpMsgBody);
+                zmsg_destroy(&msgResponse);
             }
+            catch(kj::Exception& e){
+                std::cout << "Couldn't deserialize message from DHT_ROUTER_SOCKET" << std::endl;
+                continue;
 
-            zframe_destroy(&capnpMsgBody);
-            zmsg_destroy(&msgResponse);
+            }
         }
 
         // Handling messages from the RIAPS FW
