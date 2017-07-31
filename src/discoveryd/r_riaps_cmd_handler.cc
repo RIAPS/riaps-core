@@ -540,7 +540,7 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
 
 
         zmsg_destroy(&riapsMessage);
-        zframe_destroy(&capnp_msgbody);
+        //zframe_destroy(&capnp_msgbody);
 
 
 
