@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(riaps_core VERSION 0.5.1)
+project(riaps_core VERSION 0.5.3)
 option(arch "amd64/armhf" "amd64")
 option(BUILD_TESTS  "Build tests" ON)
 set(CMAKE_SYSTEM_NAME Linux)
@@ -64,7 +64,7 @@ endif()
 
 SET(MAJOR_VERSION "0")
 SET(MINOR_VERSION "5")
-SET(PATCH_VERSION "1")
+SET(PATCH_VERSION "3")
 
 IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
     INCLUDE(InstallRequiredSystemLibraries)
