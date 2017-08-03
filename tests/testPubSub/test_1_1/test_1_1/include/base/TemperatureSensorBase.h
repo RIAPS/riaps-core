@@ -32,6 +32,8 @@ namespace testing{
             virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
                                          riaps::ports::PortBase*   port);
 
+			virtual void DispatchInsideMessage(zmsg_t*, riaps::ports::PortBase*);
+
             std::string  _logfilePath;
             std::fstream _logStream;
             int          _messageCounter;
