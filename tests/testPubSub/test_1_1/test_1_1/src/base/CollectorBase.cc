@@ -20,6 +20,10 @@ namespace testing {
             }
         }
 
+		void CollectorBase::DispatchInsideMessage(zmsg_t*, riaps::ports::PortBase*)
+		{
+		}
+
         CollectorBase::~CollectorBase() {
 
         }
