@@ -52,7 +52,7 @@ def test_pub_send_pub_first():
     sleep(30)
 
 
-def tqest_pub_send_sub_first():
+def test_pub_send_sub_first():
 
     username = runtime.get_active_config("username")
     userdir = os.path.join("/home", username)
@@ -116,7 +116,7 @@ def validate_pub_send_pub_first():
 
     assert "Received messages: 10" in sub_logs, "Subscriber didn't get 10 messages"
 
-def vqalidate_pub_send_sub_first():
+def validate_pub_send_sub_first():
     print("Validate, pubsub 1:1 sub first")
 
     pubActorName = "ActorTest1p"
