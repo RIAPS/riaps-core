@@ -35,12 +35,13 @@ def test_pub_send_pub_first():
 
     sleep(2)
 
-    #testId = "pubfirst_" + subActorName
-    #deployer = runtime.get_deployer(subActorName)
-    #deployer.start(testId, configs={"sync": False,
-    #                                'args': [os.path.join(test_app_path, runtime.get_active_config('app_dir') + '.json'),
-    #                                         subActorName,
-    #                                         '--logfile="' + testId + '.log"']})
+    testId = "pubfirst_" + subActorName
+    deployer = runtime.get_deployer(subActorName)
+    deployer.start(testId, configs={"sync": False,
+                                    'args': [os.path.join(test_app_path, runtime.get_active_config('app_dir') + '.json'),
+                                             subActorName,
+                                             '--logfile="' + testId + '.log"',
+                                             '> /dev/null']})
 
 
     # start subscriber
@@ -72,19 +73,21 @@ def test_pub_send_sub_first():
     deployer.start(testId, configs={"sync": False,
                                     'args': [os.path.join(test_app_path, runtime.get_active_config('app_dir') + '.json'),
                                              subActorName,
-                                             '--logfile="' + testId + '.log"']})
+                                             '--logfile="' + testId + '.log"',
+                                             '> /dev/null']})
 
     sleep(2)
 
 
 
     # start publisher
-    #testId = "subfirst_" + pubActorName
-    #deployer = runtime.get_deployer(pubActorName)
-    #deployer.start(testId, configs={"sync": False,
-    #                                'args': [os.path.join(test_app_path, runtime.get_active_config('app_dir') + '.json'),
-    #                                         pubActorName,
-    #                                         '--logfile="' + testId + '.log"']})
+    testId = "subfirst_" + pubActorName
+    deployer = runtime.get_deployer(pubActorName)
+    deployer.start(testId, configs={"sync": False,
+                                    'args': [os.path.join(test_app_path, runtime.get_active_config('app_dir') + '.json'),
+                                             pubActorName,
+                                             '--logfile="' + testId + '.log"',
+                                             '> /dev/null']})
 
 
     #for target in runtime.get_active_config("targets"):
