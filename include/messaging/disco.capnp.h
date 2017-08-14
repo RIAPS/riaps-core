@@ -136,7 +136,7 @@ struct Path {
   class Pipeline;
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(e643a41a040909be, 1, 2)
+    CAPNP_DECLARE_STRUCT_HEADER(e643a41a040909be, 1, 3)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
     #endif  // !CAPNP_LITE
@@ -730,6 +730,9 @@ public:
   inline bool hasAppName() const;
   inline  ::capnp::Text::Reader getAppName() const;
 
+  inline bool hasActorName() const;
+  inline  ::capnp::Text::Reader getActorName() const;
+
   inline bool hasMsgType() const;
   inline  ::capnp::Text::Reader getMsgType() const;
 
@@ -771,6 +774,13 @@ public:
   inline  ::capnp::Text::Builder initAppName(unsigned int size);
   inline void adoptAppName(::capnp::Orphan< ::capnp::Text>&& value);
   inline ::capnp::Orphan< ::capnp::Text> disownAppName();
+
+  inline bool hasActorName();
+  inline  ::capnp::Text::Builder getActorName();
+  inline void setActorName( ::capnp::Text::Reader value);
+  inline  ::capnp::Text::Builder initActorName(unsigned int size);
+  inline void adoptActorName(::capnp::Orphan< ::capnp::Text>&& value);
+  inline ::capnp::Orphan< ::capnp::Text> disownActorName();
 
   inline bool hasMsgType();
   inline  ::capnp::Text::Builder getMsgType();
@@ -2290,36 +2300,68 @@ inline ::capnp::Orphan< ::capnp::Text> Path::Builder::disownAppName() {
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
-inline bool Path::Reader::hasMsgType() const {
+inline bool Path::Reader::hasActorName() const {
   return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
 }
-inline bool Path::Builder::hasMsgType() {
+inline bool Path::Builder::hasActorName() {
   return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
 }
-inline  ::capnp::Text::Reader Path::Reader::getMsgType() const {
+inline  ::capnp::Text::Reader Path::Reader::getActorName() const {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
       _reader.getPointerField(1 * ::capnp::POINTERS));
 }
-inline  ::capnp::Text::Builder Path::Builder::getMsgType() {
+inline  ::capnp::Text::Builder Path::Builder::getActorName() {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }
-inline void Path::Builder::setMsgType( ::capnp::Text::Reader value) {
+inline void Path::Builder::setActorName( ::capnp::Text::Reader value) {
   ::capnp::_::PointerHelpers< ::capnp::Text>::set(
       _builder.getPointerField(1 * ::capnp::POINTERS), value);
 }
-inline  ::capnp::Text::Builder Path::Builder::initMsgType(unsigned int size) {
+inline  ::capnp::Text::Builder Path::Builder::initActorName(unsigned int size) {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
       _builder.getPointerField(1 * ::capnp::POINTERS), size);
 }
-inline void Path::Builder::adoptMsgType(
+inline void Path::Builder::adoptActorName(
     ::capnp::Orphan< ::capnp::Text>&& value) {
   ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
       _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::capnp::Text> Path::Builder::disownMsgType() {
+inline ::capnp::Orphan< ::capnp::Text> Path::Builder::disownActorName() {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
       _builder.getPointerField(1 * ::capnp::POINTERS));
+}
+
+inline bool Path::Reader::hasMsgType() const {
+  return !_reader.getPointerField(2 * ::capnp::POINTERS).isNull();
+}
+inline bool Path::Builder::hasMsgType() {
+  return !_builder.getPointerField(2 * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::Text::Reader Path::Reader::getMsgType() const {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _reader.getPointerField(2 * ::capnp::POINTERS));
+}
+inline  ::capnp::Text::Builder Path::Builder::getMsgType() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _builder.getPointerField(2 * ::capnp::POINTERS));
+}
+inline void Path::Builder::setMsgType( ::capnp::Text::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
+      _builder.getPointerField(2 * ::capnp::POINTERS), value);
+}
+inline  ::capnp::Text::Builder Path::Builder::initMsgType(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
+      _builder.getPointerField(2 * ::capnp::POINTERS), size);
+}
+inline void Path::Builder::adoptMsgType(
+    ::capnp::Orphan< ::capnp::Text>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
+      _builder.getPointerField(2 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::Text> Path::Builder::disownMsgType() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
+      _builder.getPointerField(2 * ::capnp::POINTERS));
 }
 
 inline  ::riaps::discovery::Kind Path::Reader::getKind() const {

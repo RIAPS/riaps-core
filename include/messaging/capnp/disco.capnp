@@ -5,6 +5,8 @@
 using Cxx = import "/capnp/c++.capnp";
 $Cxx.namespace("riaps::discovery");
 
+# RIAPS disco messages
+
 enum Status { ok @0; err @1; }
 enum Kind { none @0; pub @1; sub @2; clt @3; srv @4; req @5; rep @6; }
 enum Scope { none @0; global @1; local @2; }
@@ -34,9 +36,10 @@ struct ActorUnregRep {
 
 struct Path {
   appName @0 : Text;
-  msgType @1 : Text;
-  kind @2 : Kind;
-  scope @3 : Scope;
+  actorName @1 : Text;
+  msgType @2 : Text;
+  kind @3 : Kind;
+  scope @4 : Scope;
 }
 
 struct Client {
@@ -95,6 +98,8 @@ struct DiscoRep {
       actorUnreg @3 : ActorUnregRep;
    }
 }
+
+
 
 struct ProviderListUpdate {
         providerpath @0 : Text;
