@@ -9,6 +9,7 @@ TempMonitor.cc contains a subscriber handler function. TempSensor contains a pub
 
 Building the test will create 2 .so (libtempmonitor.so, libtempsensor.so). They need to be copied to bbb's /home/riaps/riaps_app/test_WeatherMonitor/WeatherMonitor folder. Then execute the below command on 3 terminal windows.
 
+May need to do this on the bbb nodes: export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/riaps/armhf/lib/
 
 Terminal 1:
 rdiscoveryd

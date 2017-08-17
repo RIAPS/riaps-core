@@ -35,6 +35,10 @@ namespace gpiotoggleexample {
             }
         }
 
+        void ToggleGpioComponentBase::DispatchInsideMessage(zmsg_t *, riaps::ports::PortBase *) {
+
+        }
+
         ToggleGpioComponentBase::~ToggleGpioComponentBase() {
 
         }

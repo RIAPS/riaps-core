@@ -38,6 +38,10 @@ namespace distributedestimator {
             return false;
         }
 
+        void LocalEstimatorBase::DispatchInsideMessage(zmsg_t *zmsg, riaps::ports::PortBase *port) {
+
+        }
+
         bool LocalEstimatorBase::SendEstimate(capnp::MallocMessageBuilder &messageBuilder,
                                               messages::Estimate::Builder &message) {
             return SendMessageOnPort(messageBuilder, PORT_PUB_ESTIMATE);

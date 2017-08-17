@@ -5,14 +5,16 @@
 #ifndef RIAPS_CORE_TOGGLEGPIOCOMPONENTBASE_H
 #define RIAPS_CORE_TOGGLEGPIOCOMPONENTBASE_H
 
+
+#include <base/Common.h>
+#include <componentmodel/r_actor.h>
+#include "messages/GpioToggleExample.capnp.h"
+
 #define PORT_PUB_POLLGPIOVAPUE "pollGpioValue"	     // Publish request to read the specific GPIO value
 #define PORT_PUB_WRITEGPIOVALUE "writeGpioValue"     // Publish request to write a value to the specific GPIO
 #define PORT_SUB_CURRENTGPIOVALUE "currentGpioValue" // Receive the value of the specific GPIO
 #define TIMER_TOGGLE "toggle"                        // Toggle GPIO value
 #define TIMER_READVALUE "readValue"                  // Read current GPIO value
-
-#include <componentmodel/r_actor.h>
-#include "messages/GpioToggleExample.capnp.h"
 
 namespace gpiotoggleexample {
     namespace components {
@@ -36,12 +38,16 @@ namespace gpiotoggleexample {
                                             messages::WriteRequest::Builder& message);
 
 
+
+
             virtual ~ToggleGpioComponentBase();
 
         protected:
 
             virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
                                          riaps::ports::PortBase *port);
+
+            virtual void DispatchInsideMessage(zmsg_t*, riaps::ports::PortBase*);
 
 
         };

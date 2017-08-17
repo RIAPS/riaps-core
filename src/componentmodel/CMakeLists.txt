@@ -20,7 +20,7 @@ set(FRAMEWORK_LIB_FILES r_discoverdapi.cc
                         ../framework/rfw_configuration.cc
                         ../messaging/r_message.cc
                         ../../include/messaging/disco.capnp.c++
-                        ../../include/messaging/insideport.capnp.c++
+                        #../../include/messaging/insideport.capnp.c++
                         r_oneshottimer.cc
                         r_commandlineparser.cc
                         r_argumentparser.cc

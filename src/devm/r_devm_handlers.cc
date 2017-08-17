@@ -86,11 +86,11 @@ namespace riaps{
             std::string clientKeyBase = "/" + appName + '/' + appActorName + "/";
             (*DevmHandler::_clients)[clientKeyBase] = actorDetail;
 
-            std::string clientKeyLocal = clientKeyBase + riaps::framework::Network::GetMacAddressStripped();
-            (*DevmHandler::_clients)[clientKeyLocal] = actorDetail;
+            //std::string clientKeyLocal = clientKeyBase + riaps::framework::Network::GetMacAddressStripped();
+            //(*DevmHandler::_clients)[clientKeyLocal] = actorDetail;
 
-            std::string clientKeyGlobal = clientKeyBase + riaps::framework::Network::GetIPAddress();
-            (*DevmHandler::_clients)[clientKeyGlobal] = actorDetail;
+            //std::string clientKeyGlobal = clientKeyBase + riaps::framework::Network::GetIPAddress();
+            //(*DevmHandler::_clients)[clientKeyGlobal] = actorDetail;
 
             return port;
         }
@@ -102,11 +102,11 @@ namespace riaps{
 
             std::string appName = deviceRegReq.getAppName();
             std::string modelName = deviceRegReq.getModelName();
-            std::string typeName = deviceRegReq.getTypeName();
+            std::string deviceName = deviceRegReq.getTypeName();
 
             ::capnp::List< riaps::devm::DeviceArg>::Reader args = deviceRegReq.getDeviceArgs();
 
-            std::cout << "handleDeviceReq: " <<  appName << " " << typeName << " ";
+            std::cout << "handleDeviceReq: " <<  appName << " " << deviceName << " ";
 
             std::string cmdArgs = "";
             for (int i = 0; i<args.size(); i++ ){
@@ -123,7 +123,7 @@ namespace riaps{
             std::cout << std::endl;
 
 
-            DevmHandler::StartDevice(appName, modelName, typeName, cmdArgs);
+            DevmHandler::StartDevice(appName, modelName, deviceName, cmdArgs);
 
             capnp::MallocMessageBuilder builder;
             auto repMessage = builder.initRoot<DevmRep>();
@@ -140,21 +140,22 @@ namespace riaps{
 
         void DevmHandler::StartDevice(const std::string &appName,
                                       const std::string &modelName,
-                                      const std::string &typeName,
+                                      const std::string &deviceName,
                                       const std::string &cmdArgs) {
 
+            // TODO: do not hardcode the path, worst solution ever, but helps to test.
             std::string command = "/home/istvan/work/riaps-core/bin/start_device";
 
             // Add model - skip appName, we don't need for that
             command += " " + modelName; // model.json
-            command += " " + typeName;  // actorname I guess
+            command += " " + deviceName;
             command += " " + cmdArgs;
 
             int childPid = StartExecutable(command);
             if (childPid == -1){
                 std::cerr << "Failed to start: " << command <<std::endl;
             } else {
-                std::string key = appName + "." + typeName;
+                std::string key = appName + "." + deviceName;
                 _childThreads[key] = childPid;
             }
         }
@@ -182,6 +183,15 @@ namespace riaps{
                 auto childPid = _childThreads[key];
                 kill(childPid, SIGINT);
                 _childThreads.erase(key);
+            }
+        }
+
+        void DevmHandler::StopAllDevices() {
+            for (auto it = _childThreads.begin(); it!=_childThreads.end(); it++){
+                auto pid = it->second;
+                std::cout << "Kill: " << pid << std::endl;
+                kill(pid, SIGINT);
+                zclock_sleep(500);
             }
         }
 

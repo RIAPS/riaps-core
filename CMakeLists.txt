@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(riaps_core VERSION 0.4.3)
+project(riaps_core VERSION 0.5.3)
 option(arch "amd64/armhf" "amd64")
 option(BUILD_TESTS  "Build tests" ON)
 set(CMAKE_SYSTEM_NAME Linux)
@@ -16,8 +16,8 @@ if (${arch} STREQUAL "armhf")
  set(CMAKE_C_COMPILER ${TOOLCHAIN_PREFIX}-gcc)
  set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}-g++)
  set(CMAKE_FIND_ROOT_PATH /usr/${TOOLCHAIN_PREFIX})
- set (CMAKE_CXX_FLAGS "-std=c++11")
- set (CMAKE_C_FLAGS "-std=c99")
+ set (CMAKE_CXX_FLAGS "-std=c++11 -g")
+ set (CMAKE_C_FLAGS "-std=c99 -g")
 else()
  set(CMAKE_C_COMPILER gcc-5)
  set(CMAKE_CXX_COMPILER g++-5)
@@ -50,9 +50,11 @@ if (BUILD_TESTS)
     include(CTest)
     enable_testing()
     # Tests
-    add_subdirectory(tests/test_distributed_estimator_cmessage_nowrap)
-    add_subdirectory(tests/test_timer)
-    add_subdirectory(tests/GpioDeviceTesting)
+    #add_subdirectory(tests/test_distributed_estimator_cmessage_nowrap)
+    #add_subdirectory(tests/test_timer)
+    #add_subdirectory(tests/GpioDeviceTesting)
+    #add_subdirectory(tests/testPubSub/test_1_1/test_1_1)
+    #add_subdirectory(tests/EchoIO)
 endif()
 
 
@@ -61,7 +63,7 @@ endif()
 
 
 SET(MAJOR_VERSION "0")
-SET(MINOR_VERSION "4")
+SET(MINOR_VERSION "5")
 SET(PATCH_VERSION "3")
 
 IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
@@ -87,3 +89,5 @@ IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
 
 ENDIF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
 
+install(DIRECTORY include/ DESTINATION include
+        PATTERN "boost" EXCLUDE)

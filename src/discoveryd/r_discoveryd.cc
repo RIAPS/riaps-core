@@ -23,6 +23,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <framework/rfw_network_interfaces.h>
 
 // Frequency of sending UDP packets.
 // Starting with higher rate and then switch to lower rate.
@@ -42,6 +43,19 @@
 int main()
 {
     std::cout << "Starting RIAPS DISCOVERY SERVICE " << RIAPS_DISCOVERY_PRINTABLE_VERSION << std::endl;
+
+    // Use all available interfaces
+    //zsys_set_interface ("*");
+
+    std::string iface = riaps::framework::Network::GetConfiguredIface();
+    if (iface != "")
+        zsys_set_interface(iface.c_str());
+    else {
+        std::string address;
+        riaps::framework::Network::GetFirstGlobalIface(iface, address);
+        assert(iface!="");
+        zsys_set_interface(iface.c_str());
+    }
 
     zactor_t *r_actor = zactor_new(riaps_actor, NULL);
     zsock_t * control = zsock_new_router(CONTROL_SOCKET);
@@ -208,7 +222,7 @@ int main()
     }
 
 
-
+    zpoller_destroy(&poller);
     zsock_destroy(&control);
     zactor_destroy(&r_actor);
 

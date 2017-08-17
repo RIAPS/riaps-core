@@ -29,6 +29,7 @@ namespace riaps {
             riaps::ports::InsidePort* GetInsidePortByName(const std::string& portName);
 
 
+
             virtual void Run()=0;
 
             void StartThread();
@@ -39,7 +40,16 @@ namespace riaps {
             virtual ~DeviceThread();
 
         protected:
-            void InitInsides(zpoller_t* poller= NULL);
+            // Note: Commented out until we figure out de we really need poller in every case
+            //void InitInsides(zpoller_t* poller= NULL);
+            void InitInsides();
+
+            /// \brief Polls the registered inside ports for input data.
+            /// \param timeout Poller timeout in msec.
+            /// \return ZMQ socket, where the input data is waiting for recv() call.
+            void* PollDeviceThreadPorts(int timeout);
+
+            void AddSocketToPoller(const zsock_t* socket);
 
             // TODO: Remove duplicated functions
             // TODO: move it to parent classe. componentbase also inherits this functionality.
@@ -53,7 +63,7 @@ namespace riaps {
             std::map<std::string, std::unique_ptr<ports::PortBase>> _insidePorts;
             std::atomic<bool> _isTerminated;
 
-
+            zpoller_t* _poller;
         };
 
         //void devThreadActor(zsock_t *pipe, void *args);

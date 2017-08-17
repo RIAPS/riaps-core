@@ -13,6 +13,7 @@ namespace riaps{
         DeviceThread::DeviceThread(const _component_conf_j& deviceConfig)
                 : _deviceConfig(deviceConfig){
             _isTerminated.store(false);
+            _poller = NULL;
         }
 
         // Starts the zactor
@@ -32,7 +33,7 @@ namespace riaps{
                 _deviceThread.join();
         }
 
-        void DeviceThread::InitInsides(zpoller_t *poller) {
+        void DeviceThread::InitInsides() {
 
             // Add insider ports
             for (auto&& it_insconf = _deviceConfig.component_ports.inss.begin();
@@ -43,9 +44,21 @@ namespace riaps{
                 std::unique_ptr<ports::PortBase> newport(newPortPtr);
                 _insidePorts[it_insconf->portName] = std::move(newport);
 
-                if (poller!=NULL) {
-                    zpoller_add(poller, (void *) newPortPtr->GetSocket());
-                }
+                AddSocketToPoller(newPortPtr->GetSocket());
+            }
+        }
+
+        void* DeviceThread::PollDeviceThreadPorts(int timeout) {
+            void* port = zpoller_wait(_poller, timeout);
+            return port;
+        }
+
+        void DeviceThread::AddSocketToPoller(const zsock_t *socket) {
+            if (_poller!=NULL) {
+                zpoller_add(_poller, (void *) socket);
+            }
+            else{
+                _poller = zpoller_new((void*)socket);
             }
         }
 
@@ -80,35 +93,6 @@ namespace riaps{
            Terminate();
         }
 
-//        void devThreadActor(zsock_t* pipe, void* args){
-//            DeviceThread* devThreadObj = (DeviceThread*) args;
-//
-//
-//            zpoller_t* poller = zpoller_new(pipe, NULL);
-//            assert(poller);
-//            zpoller_ignore_interrupts (poller);
-//
-//            devThreadObj->InitInsides(poller);
-//
-//            zsock_signal (pipe, 0);
-//            bool terminated = false;
-//            while (!terminated) {
-//                void *which = zpoller_wait(poller, 500);
-//                if (which == pipe) {
-//                    zmsg_t *msg = zmsg_recv(which);
-//                    if (!msg) {
-//                        std::cout << "No msg => interrupted" << std::endl;
-//                        break;
-//                    }
-//
-//                    char *command = zmsg_popstr(msg);
-//
-//                    if (streq(command, "$TERM")) {
-//                        std::cout << "$TERM arrived in component" << std::endl;
-//                        terminated = true;
-//                    }
-//                }
-//            }
-//        }
+
     }
 }

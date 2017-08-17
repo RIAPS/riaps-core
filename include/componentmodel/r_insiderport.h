@@ -6,7 +6,7 @@
 #define RIAPS_CORE_R_INSIDER_H
 
 #include "r_portbase.h"
-#include <messaging/insideport.capnp.h>
+//#include <messaging/insideport.capnp.h>
 #include <capnp/serialize.h>
 #include <capnp/message.h>
 
@@ -32,14 +32,15 @@ namespace riaps {
             virtual InsidePort*  AsInsidePort() ;
 
             virtual bool Send(zmsg_t** zmessage) const;
-            virtual bool Recv(riaps::ports::InsideMessage::Reader** insideMessage);
+            //virtual bool Recv(riaps::ports::InsideMessage::Reader** insideMessage);
+            virtual bool Recv(zmsg_t** insideMessage);
 
             ~InsidePort() noexcept ;
 
         protected:
             std::string _endpoint;
-            capnp::FlatArrayMessageReader       _capnpReader;
-            riaps::ports::InsideMessage::Reader _insideMessageReader;
+            //capnp::FlatArrayMessageReader       _capnpReader;
+            //riaps::ports::InsideMessage::Reader _insideMessageReader;
 
         };
     }

@@ -77,6 +77,9 @@ namespace riaps {
         std::vector<Peripheral*>    _peripherals;
         std::vector<void*>          _component_dll_handles;
         bool                        _startDevice; // The actor doesn;t start the device. The DeviceActor starts it only
+        std::string                 _deviceName;  // If the DeviceActor starts the device, the device name is set here
+                                                  // and not passed in parameters. Only the actorname comes from parameters.
+
 
         std::map<std::string, std::string>&   _commandLineParams;
         std::unique_ptr<riaps::devm::DevmApi> _devm;

@@ -10,6 +10,10 @@
     {
       "host": "192.168.1.120",
       "actor": "ActorTest1p"
+    },
+    {
+      "host": "192.168.1.120",
+      "actor": "ActorTest1s"
     }
   ],
   "riaps_apps_path": "riaps_apps",

@@ -24,26 +24,25 @@ namespace testing {
             _messageCounter = 0;
 
             _logStream.open(_logfilePath, std::fstream::out);
-            _logStream << "Logfile opened" << std::endl;
+            //_logStream << "Logfile opened" << std::endl;
         }
 
 
 
         void TemperatureSensor::OnClock(riaps::ports::PortBase *port) {
-            _logStream.write("Lofasz",5);
-            _logStream << "OnClock " << std::endl;
+            //_logStream << "OnClock " << std::endl;
             capnp::MallocMessageBuilder messageBuilder;
             auto msgSensorReady = messageBuilder.initRoot<messages::SensorValue>();
             msgSensorReady.setMsg(_messageCounter);
 
-            if (_messageCounter<10) {
+            //if (_messageCounter<10) {
                 SendTemperature(messageBuilder, msgSensorReady);
                 std::cout << "Sent messages: " << _messageCounter << std::endl;
                 _logStream << "Sent messages: " << _messageCounter++ << std::endl;
                 _logStream << std::flush;
-            } else if(_logStream.is_open()) {
-                _logStream.close();
-            }
+            //} else if(_logStream.is_open()) {
+                //_logStream.close();
+            //}
         }
 		
         void TemperatureSensor::OnOneShotTimer(const std::string& timerid){

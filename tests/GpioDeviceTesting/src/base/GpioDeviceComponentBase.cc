@@ -22,12 +22,13 @@ namespace gpiotoggleexample{
             } else if (portName == PORT_SUB_WRITEGPIO){
                 auto writeRequest = capnpreader->getRoot<messages::WriteRequest>();
                 OnWriteGpio(writeRequest, port);
-            } else if (portName == INSIDE_DATAIN_QUEUE){
-                auto insideMessage = capnpreader->getRoot<riaps::ports::InsideMessage>();
-                OnDataInQueue(insideMessage, port);
-            } else if (portName == INSIDE_DATAOUT_QUEUE){
-                auto insideMessage = capnpreader->getRoot<riaps::ports::InsideMessage>();
-                OnDataInQueue(insideMessage, port);
+            }
+        }
+
+        void GpioDeviceComponentBase::DispatchInsideMessage(zmsg_t *zmsg, riaps::ports::PortBase *port) {
+            auto portName = port->GetPortName();
+            if (portName == INSIDE_DATAQUEUE) {
+                OnDataQueue(zmsg, port);
             }
         }
 
@@ -36,14 +37,8 @@ namespace gpiotoggleexample{
             return SendMessageOnPort(messageBuilder, PORT_PUB_REPORTEDDATA);
         }
 
-        bool GpioDeviceComponentBase::SendDataOutQueue(capnp::MallocMessageBuilder&    messageBuilder,
-                                                       riaps::ports::InsideMessage::Builder& message){
-            return SendMessageOnPort(messageBuilder, INSIDE_DATAOUT_QUEUE);
-        }
-
-        bool GpioDeviceComponentBase::SendDataInQueue(capnp::MallocMessageBuilder&    messageBuilder,
-                                                      riaps::ports::InsideMessage::Builder& message){
-            return SendMessageOnPort(messageBuilder, INSIDE_DATAIN_QUEUE);
+        bool GpioDeviceComponentBase::SendDataQueue(zmsg_t **message) {
+            return SendMessageOnPort(message, INSIDE_DATAQUEUE);
         }
 
         GpioDeviceComponentBase::~GpioDeviceComponentBase() {

@@ -66,6 +66,8 @@ namespace riaps {
                         started = true;
                         now = std::chrono::high_resolution_clock::now();
                     }
+                    zstr_free(&command);
+                    zmsg_destroy(&msg);
                 }
             }
             zsock_destroy(&_zsock_timer);

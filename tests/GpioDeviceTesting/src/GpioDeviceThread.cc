@@ -13,69 +13,57 @@ namespace gpiotoggleexample {
             : riaps::components::DeviceThread(deviceConfig) {
 
             _isAvailable.store(false);
-            _readRequest.store(false);
-            _writeRequest.store(false);
-            _edgeTriggerEnable.store(false);
         }
 
 
         void GpioDeviceThread::Run() {
+
+
+            // Inside ports are put in a poller automatically
             InitInsides();
+            riaps::ports::InsidePort* dataPort = GetInsidePortByName(INSIDE_DATAQUEUE);
 
-            riaps::ports::InsidePort* dataOutPort = GetInsidePortByName(INSIDE_DATAOUT_QUEUE);
-            riaps::ports::InsidePort* dataInPort  = GetInsidePortByName(INSIDE_DATAIN_QUEUE);
-
-            if (dataInPort == NULL || dataOutPort == NULL){
+            if (dataPort == NULL){
                 throw std::invalid_argument("cannot find insideport");
             }
 
+            zsock_t* dataSocket = (zsock_t*)dataPort->GetSocket();
+
             EnableGpio();
 
-            while (!IsTerminated()){
+            while (!IsTerminated()) {
+                void* port = PollDeviceThreadPorts(100);
 
-                if (_writeRequest.load()){
-                    riaps::ports::InsideMessage::Reader* insideMessage = NULL;
-                    auto result = dataOutPort->Recv(&insideMessage);
+                if (port == dataSocket){
+                    zmsg_t* msg = zmsg_recv(port);
 
-                    if (result && insideMessage!=NULL) {
-                        _currentValue = insideMessage->getValue();
+                    char* command = zmsg_popstr(msg);
+
+                    if (streq(command, CMD_WRITE_REQUEST)){
+                        std::cout << "GPIO write request received." << std::endl;
+                        char* value = zmsg_popstr(msg);
+                        _currentValue = std::string(value);
+                        zstr_free(&value);
+                    } else if (streq(command, CMD_READ_REQUEST)){
+                        std::cout << "GPIO read request received." << std::endl;
+                        zmsg_t* response = zmsg_new();
+                        zmsg_addstr(response, _currentValue.c_str());
+
+                        std::cout << "GpioDeviceThread::ReadRequest value " << _currentValue << std::endl;
                     }
 
-                    _writeRequest.store(false);
+                    zstr_free(&command);
+
                 }
-                else {
-                    if (_readRequest.load()) {
-                        capnp::MallocMessageBuilder builder;
-                        auto insideMsg = builder.initRoot<riaps::ports::InsideMessage>();
-                        insideMsg.setValue(_currentValue);
-                        auto result =  SendMessageOnPort(builder, INSIDE_DATAIN_QUEUE);
-                        std::cout << "GpioDeviceThread::ReadRequest value " << _currentValue << " result: " << result << std::endl;
-                        _readRequest.store(false);
-                    }
-                }
-//                else if (_edgeTriggerEnable.load()){
-//                    _edgeTriggerEnable.store(false);
-//                }
             }
+
+
         }
 
         bool GpioDeviceThread::IsGpioAvailable() const {
             return _isAvailable.load();
         }
 
-        void GpioDeviceThread::RequestGpioRead() {
-            _readRequest.store(true);
-            std::cout << "GpioDeviceThread - read request received" << std::endl;
-        }
-
-        void GpioDeviceThread::RequestGpioWrite() {
-            _writeRequest.store(true);
-            std::cout << "GpioDeviceThread - write request received" << std::endl;
-        }
-
-        void GpioDeviceThread::RequestEdgeTrigger() {
-            std::cout << "GpioDeviceThread - edge triggering request received" << std::endl;
-        }
 
         void GpioDeviceThread::EnableGpio() {
             //std ::cout << "GpioDeviceThread setting up GPIO=%s: direction=%s resistor=%s trigger=%s ivalue=%d delay=%d [%d]", self.component.bbb_pin_name, self.component.direction, self.component.pull_up_down, self.component.trigger_edge, self.component.initial_value, self.component.setup_delay, self.pid)
@@ -86,6 +74,7 @@ namespace gpiotoggleexample {
 
         void GpioDeviceThread::DisableGpio() {
             std::cout << "GpioDeviceThread - disabled GPIO: %s" << std::endl; //,self.component.bbb_pin_name)
+            _isAvailable.store(false);
         }
 
 

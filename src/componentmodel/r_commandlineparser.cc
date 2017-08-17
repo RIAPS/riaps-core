@@ -15,7 +15,17 @@ bool CommandLineParser::CommandOptionExists(char **begin, char **end, const std:
     return std::find(begin, end, option) != end;
 }
 
-int CommandLineParser::Parse(std::map<std::string, std::string> &actualParams,
+int CommandLineParser::ParseActorParams(std::map<std::string, std::string> &actualParams, std::string &actorName,
+                                        std::string &modelFile, nlohmann::json &jsonConfig) {
+    return Parse(actualParams, actorName, modelFile, jsonConfig);
+}
+
+int CommandLineParser::ParseDeviceParams(std::map<std::string, std::string> &actualParams,
+                                         std::string &deviceName, std::string &modelFile, nlohmann::json &jsonConfig) {
+    return Parse(actualParams,deviceName, modelFile, jsonConfig);
+}
+
+int CommandLineParser::Parse(std::map<std::string, std::string>& actualParams,
                              std::string& actorName,
                              std::string& modelFile,
                              nlohmann::json &jsonConfig) {

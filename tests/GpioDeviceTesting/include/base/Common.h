@@ -1,0 +1,11 @@
+//
+// Created by istvan on 6/27/17.
+//
+
+#ifndef RIAPS_CORE_COMMON_H
+#define RIAPS_CORE_COMMON_H
+
+#define CMD_WRITE_REQUEST "$WRITEREQUEST"
+#define CMD_READ_REQUEST  "$READREQUEST"
+
+#endif //RIAPS_CORE_COMMON_H

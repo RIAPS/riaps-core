@@ -24,6 +24,10 @@ namespace testing {
             }
         }
 
+		void TemperatureSensorBase::DispatchInsideMessage(zmsg_t*, riaps::ports::PortBase*)
+		{
+		}
+
         TemperatureSensorBase::~TemperatureSensorBase() {
 
         }
