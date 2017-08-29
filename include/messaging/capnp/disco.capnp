@@ -112,10 +112,11 @@ struct ProviderListGet {
     results      @2 : List(Text);
 }
 
-struct ProviderListPush {
+struct DhtUpdate {
     union {
         providerUpdate @0: ProviderListUpdate;
         providerGet    @1: ProviderListGet;
+        zombieList     @2: List(Text);
     }
 }
 

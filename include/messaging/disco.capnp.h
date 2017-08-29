@@ -54,7 +54,7 @@ CAPNP_DECLARE_SCHEMA(c5c00415475f9f91);
 CAPNP_DECLARE_SCHEMA(bb3e73b2a350ce4e);
 CAPNP_DECLARE_SCHEMA(df60e0f885b07faa);
 CAPNP_DECLARE_SCHEMA(eaf54029bfb3e6dc);
-CAPNP_DECLARE_SCHEMA(f438def63208f58b);
+CAPNP_DECLARE_SCHEMA(fb2dbb7b7e32fd8e);
 
 }  // namespace schemas
 }  // namespace capnp
@@ -320,8 +320,8 @@ struct ProviderListGet {
   };
 };
 
-struct ProviderListPush {
-  ProviderListPush() = delete;
+struct DhtUpdate {
+  DhtUpdate() = delete;
 
   class Reader;
   class Builder;
@@ -329,10 +329,11 @@ struct ProviderListPush {
   enum Which: uint16_t {
     PROVIDER_UPDATE,
     PROVIDER_GET,
+    ZOMBIE_LIST,
   };
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(f438def63208f58b, 1, 1)
+    CAPNP_DECLARE_STRUCT_HEADER(fb2dbb7b7e32fd8e, 1, 1)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
     #endif  // !CAPNP_LITE
@@ -1907,9 +1908,9 @@ private:
 };
 #endif  // !CAPNP_LITE
 
-class ProviderListPush::Reader {
+class DhtUpdate::Reader {
 public:
-  typedef ProviderListPush Reads;
+  typedef DhtUpdate Reads;
 
   Reader() = default;
   inline explicit Reader(::capnp::_::StructReader base): _reader(base) {}
@@ -1933,6 +1934,10 @@ public:
   inline bool hasProviderGet() const;
   inline  ::riaps::discovery::ProviderListGet::Reader getProviderGet() const;
 
+  inline bool isZombieList() const;
+  inline bool hasZombieList() const;
+  inline  ::capnp::List< ::capnp::Text>::Reader getZombieList() const;
+
 private:
   ::capnp::_::StructReader _reader;
   template <typename, ::capnp::Kind>
@@ -1945,9 +1950,9 @@ private:
   friend class ::capnp::Orphanage;
 };
 
-class ProviderListPush::Builder {
+class DhtUpdate::Builder {
 public:
-  typedef ProviderListPush Builds;
+  typedef DhtUpdate Builds;
 
   Builder() = delete;  // Deleted to discourage incorrect usage.
                        // You can explicitly initialize to nullptr instead.
@@ -1978,6 +1983,15 @@ public:
   inline void adoptProviderGet(::capnp::Orphan< ::riaps::discovery::ProviderListGet>&& value);
   inline ::capnp::Orphan< ::riaps::discovery::ProviderListGet> disownProviderGet();
 
+  inline bool isZombieList();
+  inline bool hasZombieList();
+  inline  ::capnp::List< ::capnp::Text>::Builder getZombieList();
+  inline void setZombieList( ::capnp::List< ::capnp::Text>::Reader value);
+  inline void setZombieList(::kj::ArrayPtr<const  ::capnp::Text::Reader> value);
+  inline  ::capnp::List< ::capnp::Text>::Builder initZombieList(unsigned int size);
+  inline void adoptZombieList(::capnp::Orphan< ::capnp::List< ::capnp::Text>>&& value);
+  inline ::capnp::Orphan< ::capnp::List< ::capnp::Text>> disownZombieList();
+
 private:
   ::capnp::_::StructBuilder _builder;
   template <typename, ::capnp::Kind>
@@ -1988,9 +2002,9 @@ private:
 };
 
 #if !CAPNP_LITE
-class ProviderListPush::Pipeline {
+class DhtUpdate::Pipeline {
 public:
-  typedef ProviderListPush Pipelines;
+  typedef DhtUpdate Pipelines;
 
   inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
   inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
@@ -3484,114 +3498,172 @@ inline ::capnp::Orphan< ::capnp::List< ::capnp::Text>> ProviderListGet::Builder:
       _builder.getPointerField(2 * ::capnp::POINTERS));
 }
 
-inline  ::riaps::discovery::ProviderListPush::Which ProviderListPush::Reader::which() const {
+inline  ::riaps::discovery::DhtUpdate::Which DhtUpdate::Reader::which() const {
   return _reader.getDataField<Which>(0 * ::capnp::ELEMENTS);
 }
-inline  ::riaps::discovery::ProviderListPush::Which ProviderListPush::Builder::which() {
+inline  ::riaps::discovery::DhtUpdate::Which DhtUpdate::Builder::which() {
   return _builder.getDataField<Which>(0 * ::capnp::ELEMENTS);
 }
 
-inline bool ProviderListPush::Reader::isProviderUpdate() const {
-  return which() == ProviderListPush::PROVIDER_UPDATE;
+inline bool DhtUpdate::Reader::isProviderUpdate() const {
+  return which() == DhtUpdate::PROVIDER_UPDATE;
 }
-inline bool ProviderListPush::Builder::isProviderUpdate() {
-  return which() == ProviderListPush::PROVIDER_UPDATE;
+inline bool DhtUpdate::Builder::isProviderUpdate() {
+  return which() == DhtUpdate::PROVIDER_UPDATE;
 }
-inline bool ProviderListPush::Reader::hasProviderUpdate() const {
-  if (which() != ProviderListPush::PROVIDER_UPDATE) return false;
+inline bool DhtUpdate::Reader::hasProviderUpdate() const {
+  if (which() != DhtUpdate::PROVIDER_UPDATE) return false;
   return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline bool ProviderListPush::Builder::hasProviderUpdate() {
-  if (which() != ProviderListPush::PROVIDER_UPDATE) return false;
+inline bool DhtUpdate::Builder::hasProviderUpdate() {
+  if (which() != DhtUpdate::PROVIDER_UPDATE) return false;
   return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline  ::riaps::discovery::ProviderListUpdate::Reader ProviderListPush::Reader::getProviderUpdate() const {
-  KJ_IREQUIRE(which() == ProviderListPush::PROVIDER_UPDATE,
+inline  ::riaps::discovery::ProviderListUpdate::Reader DhtUpdate::Reader::getProviderUpdate() const {
+  KJ_IREQUIRE(which() == DhtUpdate::PROVIDER_UPDATE,
               "Must check which() before get()ing a union member.");
   return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListUpdate>::get(
       _reader.getPointerField(0 * ::capnp::POINTERS));
 }
-inline  ::riaps::discovery::ProviderListUpdate::Builder ProviderListPush::Builder::getProviderUpdate() {
-  KJ_IREQUIRE(which() == ProviderListPush::PROVIDER_UPDATE,
+inline  ::riaps::discovery::ProviderListUpdate::Builder DhtUpdate::Builder::getProviderUpdate() {
+  KJ_IREQUIRE(which() == DhtUpdate::PROVIDER_UPDATE,
               "Must check which() before get()ing a union member.");
   return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListUpdate>::get(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
-inline void ProviderListPush::Builder::setProviderUpdate( ::riaps::discovery::ProviderListUpdate::Reader value) {
-  _builder.setDataField<ProviderListPush::Which>(
-      0 * ::capnp::ELEMENTS, ProviderListPush::PROVIDER_UPDATE);
+inline void DhtUpdate::Builder::setProviderUpdate( ::riaps::discovery::ProviderListUpdate::Reader value) {
+  _builder.setDataField<DhtUpdate::Which>(
+      0 * ::capnp::ELEMENTS, DhtUpdate::PROVIDER_UPDATE);
   ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListUpdate>::set(
       _builder.getPointerField(0 * ::capnp::POINTERS), value);
 }
-inline  ::riaps::discovery::ProviderListUpdate::Builder ProviderListPush::Builder::initProviderUpdate() {
-  _builder.setDataField<ProviderListPush::Which>(
-      0 * ::capnp::ELEMENTS, ProviderListPush::PROVIDER_UPDATE);
+inline  ::riaps::discovery::ProviderListUpdate::Builder DhtUpdate::Builder::initProviderUpdate() {
+  _builder.setDataField<DhtUpdate::Which>(
+      0 * ::capnp::ELEMENTS, DhtUpdate::PROVIDER_UPDATE);
   return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListUpdate>::init(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
-inline void ProviderListPush::Builder::adoptProviderUpdate(
+inline void DhtUpdate::Builder::adoptProviderUpdate(
     ::capnp::Orphan< ::riaps::discovery::ProviderListUpdate>&& value) {
-  _builder.setDataField<ProviderListPush::Which>(
-      0 * ::capnp::ELEMENTS, ProviderListPush::PROVIDER_UPDATE);
+  _builder.setDataField<DhtUpdate::Which>(
+      0 * ::capnp::ELEMENTS, DhtUpdate::PROVIDER_UPDATE);
   ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListUpdate>::adopt(
       _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::riaps::discovery::ProviderListUpdate> ProviderListPush::Builder::disownProviderUpdate() {
-  KJ_IREQUIRE(which() == ProviderListPush::PROVIDER_UPDATE,
+inline ::capnp::Orphan< ::riaps::discovery::ProviderListUpdate> DhtUpdate::Builder::disownProviderUpdate() {
+  KJ_IREQUIRE(which() == DhtUpdate::PROVIDER_UPDATE,
               "Must check which() before get()ing a union member.");
   return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListUpdate>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
-inline bool ProviderListPush::Reader::isProviderGet() const {
-  return which() == ProviderListPush::PROVIDER_GET;
+inline bool DhtUpdate::Reader::isProviderGet() const {
+  return which() == DhtUpdate::PROVIDER_GET;
 }
-inline bool ProviderListPush::Builder::isProviderGet() {
-  return which() == ProviderListPush::PROVIDER_GET;
+inline bool DhtUpdate::Builder::isProviderGet() {
+  return which() == DhtUpdate::PROVIDER_GET;
 }
-inline bool ProviderListPush::Reader::hasProviderGet() const {
-  if (which() != ProviderListPush::PROVIDER_GET) return false;
+inline bool DhtUpdate::Reader::hasProviderGet() const {
+  if (which() != DhtUpdate::PROVIDER_GET) return false;
   return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline bool ProviderListPush::Builder::hasProviderGet() {
-  if (which() != ProviderListPush::PROVIDER_GET) return false;
+inline bool DhtUpdate::Builder::hasProviderGet() {
+  if (which() != DhtUpdate::PROVIDER_GET) return false;
   return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline  ::riaps::discovery::ProviderListGet::Reader ProviderListPush::Reader::getProviderGet() const {
-  KJ_IREQUIRE(which() == ProviderListPush::PROVIDER_GET,
+inline  ::riaps::discovery::ProviderListGet::Reader DhtUpdate::Reader::getProviderGet() const {
+  KJ_IREQUIRE(which() == DhtUpdate::PROVIDER_GET,
               "Must check which() before get()ing a union member.");
   return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListGet>::get(
       _reader.getPointerField(0 * ::capnp::POINTERS));
 }
-inline  ::riaps::discovery::ProviderListGet::Builder ProviderListPush::Builder::getProviderGet() {
-  KJ_IREQUIRE(which() == ProviderListPush::PROVIDER_GET,
+inline  ::riaps::discovery::ProviderListGet::Builder DhtUpdate::Builder::getProviderGet() {
+  KJ_IREQUIRE(which() == DhtUpdate::PROVIDER_GET,
               "Must check which() before get()ing a union member.");
   return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListGet>::get(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
-inline void ProviderListPush::Builder::setProviderGet( ::riaps::discovery::ProviderListGet::Reader value) {
-  _builder.setDataField<ProviderListPush::Which>(
-      0 * ::capnp::ELEMENTS, ProviderListPush::PROVIDER_GET);
+inline void DhtUpdate::Builder::setProviderGet( ::riaps::discovery::ProviderListGet::Reader value) {
+  _builder.setDataField<DhtUpdate::Which>(
+      0 * ::capnp::ELEMENTS, DhtUpdate::PROVIDER_GET);
   ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListGet>::set(
       _builder.getPointerField(0 * ::capnp::POINTERS), value);
 }
-inline  ::riaps::discovery::ProviderListGet::Builder ProviderListPush::Builder::initProviderGet() {
-  _builder.setDataField<ProviderListPush::Which>(
-      0 * ::capnp::ELEMENTS, ProviderListPush::PROVIDER_GET);
+inline  ::riaps::discovery::ProviderListGet::Builder DhtUpdate::Builder::initProviderGet() {
+  _builder.setDataField<DhtUpdate::Which>(
+      0 * ::capnp::ELEMENTS, DhtUpdate::PROVIDER_GET);
   return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListGet>::init(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
-inline void ProviderListPush::Builder::adoptProviderGet(
+inline void DhtUpdate::Builder::adoptProviderGet(
     ::capnp::Orphan< ::riaps::discovery::ProviderListGet>&& value) {
-  _builder.setDataField<ProviderListPush::Which>(
-      0 * ::capnp::ELEMENTS, ProviderListPush::PROVIDER_GET);
+  _builder.setDataField<DhtUpdate::Which>(
+      0 * ::capnp::ELEMENTS, DhtUpdate::PROVIDER_GET);
   ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListGet>::adopt(
       _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::riaps::discovery::ProviderListGet> ProviderListPush::Builder::disownProviderGet() {
-  KJ_IREQUIRE(which() == ProviderListPush::PROVIDER_GET,
+inline ::capnp::Orphan< ::riaps::discovery::ProviderListGet> DhtUpdate::Builder::disownProviderGet() {
+  KJ_IREQUIRE(which() == DhtUpdate::PROVIDER_GET,
               "Must check which() before get()ing a union member.");
   return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListGet>::disown(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+
+inline bool DhtUpdate::Reader::isZombieList() const {
+  return which() == DhtUpdate::ZOMBIE_LIST;
+}
+inline bool DhtUpdate::Builder::isZombieList() {
+  return which() == DhtUpdate::ZOMBIE_LIST;
+}
+inline bool DhtUpdate::Reader::hasZombieList() const {
+  if (which() != DhtUpdate::ZOMBIE_LIST) return false;
+  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline bool DhtUpdate::Builder::hasZombieList() {
+  if (which() != DhtUpdate::ZOMBIE_LIST) return false;
+  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::List< ::capnp::Text>::Reader DhtUpdate::Reader::getZombieList() const {
+  KJ_IREQUIRE(which() == DhtUpdate::ZOMBIE_LIST,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::get(
+      _reader.getPointerField(0 * ::capnp::POINTERS));
+}
+inline  ::capnp::List< ::capnp::Text>::Builder DhtUpdate::Builder::getZombieList() {
+  KJ_IREQUIRE(which() == DhtUpdate::ZOMBIE_LIST,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::get(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void DhtUpdate::Builder::setZombieList( ::capnp::List< ::capnp::Text>::Reader value) {
+  _builder.setDataField<DhtUpdate::Which>(
+      0 * ::capnp::ELEMENTS, DhtUpdate::ZOMBIE_LIST);
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::set(
+      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+}
+inline void DhtUpdate::Builder::setZombieList(::kj::ArrayPtr<const  ::capnp::Text::Reader> value) {
+  _builder.setDataField<DhtUpdate::Which>(
+      0 * ::capnp::ELEMENTS, DhtUpdate::ZOMBIE_LIST);
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::set(
+      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+}
+inline  ::capnp::List< ::capnp::Text>::Builder DhtUpdate::Builder::initZombieList(unsigned int size) {
+  _builder.setDataField<DhtUpdate::Which>(
+      0 * ::capnp::ELEMENTS, DhtUpdate::ZOMBIE_LIST);
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::init(
+      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+}
+inline void DhtUpdate::Builder::adoptZombieList(
+    ::capnp::Orphan< ::capnp::List< ::capnp::Text>>&& value) {
+  _builder.setDataField<DhtUpdate::Which>(
+      0 * ::capnp::ELEMENTS, DhtUpdate::ZOMBIE_LIST);
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::adopt(
+      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::List< ::capnp::Text>> DhtUpdate::Builder::disownZombieList() {
+  KJ_IREQUIRE(which() == DhtUpdate::ZOMBIE_LIST,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
