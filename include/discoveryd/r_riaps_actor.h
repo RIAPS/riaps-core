@@ -22,6 +22,10 @@ int deregisterActor(const std::string& appName,
 
 void maintainRenewal(std::map<pid_t, std::vector<std::unique_ptr<service_checkins_t>>>& serviceCheckins, dht::DhtRunner& dhtNode);
 
+bool handleZombieUpdate(const std::vector<std::shared_ptr<dht::Value>> &values);
+
+void maintainZombieList(std::map<std::string, int64_t>& zombieList);
+
 
 
 #endif

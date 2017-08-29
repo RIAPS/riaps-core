@@ -1,5 +1,4 @@
 #include <discoveryd/r_riaps_actor.h>
-//#include <componentmodel/delete_r_network_interfaces.h>
 #include <discoveryd/r_discoveryd_commands.h>
 #include <discoveryd/r_odht.h>
 #include <framework/rfw_configuration.h>
@@ -40,8 +39,8 @@ riaps_actor (zsock_t *pipe, void *args)
 
     std::srand(std::time(0));
 
-    zsock_t* dht_router_socket = zsock_new_pull(DHT_ROUTER_CHANNEL);
-    assert(dht_router_socket);
+    zsock_t* dhtUpdateSocket = zsock_new_pull(DHT_ROUTER_CHANNEL);
+    assert(dhtUpdateSocket);
 
     // Response socket for incoming messages from RIAPS Components
     zsock_t * riaps_socket = zsock_new_rep (riaps::framework::Configuration::GetDiscoveryServiceIpc().c_str());
@@ -52,7 +51,7 @@ riaps_actor (zsock_t *pipe, void *args)
     zmq_setsockopt(riaps_socket, ZMQ_SNDTIMEO, &sendtimeout, sizeof(int));
 
     // Socket for OpenDHT communication.
-    zpoller_t* poller = zpoller_new(pipe, riaps_socket, dht_router_socket, NULL);
+    zpoller_t* poller = zpoller_new(pipe, riaps_socket, dhtUpdateSocket, NULL);
     assert(poller);
 
     bool terminated = false;
@@ -65,6 +64,11 @@ riaps_actor (zsock_t *pipe, void *args)
     // Stores pair sockets for actor communication
     std::map<std::string, std::unique_ptr<actor_details_t>> clients;
 
+    // Stores addresses of zombie services
+    // A service is zombie, if the related socket is not able to respond, but it is still in the DHT
+    // The int64 argument is a timestamp. Old zombies are removed from the set after 10 minutes.
+    std::map<std::string, int64_t> zombieServices;
+
     // Client subscriptions to messageTypes
     std::map<std::string, std::vector<std::unique_ptr<client_details_t>>> clientSubscriptions;
 
@@ -75,24 +79,39 @@ riaps_actor (zsock_t *pipe, void *args)
     // Checking the registered services in every 20th seconds.
     std::map<pid_t, std::vector<std::unique_ptr<service_checkins_t>>> serviceCheckins;
     int64_t lastServiceCheckin = zclock_mono();
-    const uint16_t serviceCheckPeriod = 20000; // In msec.
+    const uint16_t serviceCheckPeriod = 20000;  // 20 sec in in msec.
+    int64_t  lastZombieCheck  = zclock_mono();
+    const uint16_t zombieCheckPeriod  = 600000; // 10 min in msec
+
+    // Get current zombies, and listen to new zombies
+    const std::string zombieKey = "/zombies";
+    dhtNode.get(zombieKey, handleZombieUpdate);
+
+    // Subscribe for further zombies in the future
+    dhtNode.listen(zombieKey, handleZombieUpdate);
 
     while (!terminated){
         void *which = zpoller_wait(poller, REGULAR_MAINTAIN_PERIOD);
 
         // Check services whether they are still alive.
         // Reregister the too old services (OpenDHT ValueType settings, it is 10 minutes by default)
-        if ((zclock_mono()-lastServiceCheckin) > serviceCheckPeriod){
+        int64_t loopStartTime = zclock_mono();
+        if ((loopStartTime-lastServiceCheckin) > serviceCheckPeriod){
             maintainRenewal(serviceCheckins, dhtNode);
+        }
+
+        // Check outdated zombies
+        if ((loopStartTime-lastZombieCheck) > zombieCheckPeriod) {
+            maintainZombieList(zombieServices);
         }
 
         // Handling messages from the caller (e.g.: $TERM$)
         if (which == pipe) {
             terminated = handlePipeMessage((zsock_t*)which, dhtNode);
         }
-        else if (which == dht_router_socket){
+        else if (which == dhtUpdateSocket){
             // Process the updated nodes
-            zmsg_t* msgResponse = zmsg_recv(dht_router_socket);
+            zmsg_t* msgResponse = zmsg_recv(dhtUpdateSocket);
 
             zframe_t* capnpMsgBody = zmsg_pop(msgResponse);
             size_t    size = zframe_size(capnpMsgBody);
@@ -103,16 +122,22 @@ riaps_actor (zsock_t *pipe, void *args)
                 auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word *>(data), size / sizeof(capnp::word));
 
                 capnp::FlatArrayMessageReader reader(capnp_data);
-                auto msgProviderlistPush = reader.getRoot<riaps::discovery::ProviderListPush>();
+                auto msgDhtUpdate = reader.getRoot<riaps::discovery::DhtUpdate>();
 
                 // If update
-                if (msgProviderlistPush.isProviderUpdate()) {
-                    riaps::discovery::ProviderListUpdate::Reader msgProviderUpdate = msgProviderlistPush.getProviderUpdate();
+                if (msgDhtUpdate.isProviderUpdate()) {
+                    riaps::discovery::ProviderListUpdate::Reader msgProviderUpdate = msgDhtUpdate.getProviderUpdate();
                     handleUpdate(msgProviderUpdate, clientSubscriptions, clients);
 
-                } else if (msgProviderlistPush.isProviderGet()) {
-                    riaps::discovery::ProviderListGet::Reader msgProviderGet = msgProviderlistPush.getProviderGet();
+                } else if (msgDhtUpdate.isProviderGet()) {
+                    riaps::discovery::ProviderListGet::Reader msgProviderGet = msgDhtUpdate.getProviderGet();
                     handleGet(msgProviderGet, clients);
+                } else if (msgDhtUpdate.isZombieList()) {
+                    auto zombieList = msgDhtUpdate.getZombieList();
+                    for (int i =0; i< zombieList.size(); i++){
+                        auto currentZombie = zombieList[i];
+                        zombieServices[currentZombie] = zclock_mono();
+                    }
                 }
 
                 zframe_destroy(&capnpMsgBody);
@@ -134,7 +159,9 @@ riaps_actor (zsock_t *pipe, void *args)
                                              clientSubscriptions,
                                              registeredListeners,
                                              host_address,
-                                             mac_address,dhtNode);
+                                             mac_address,
+                                             zombieServices,
+                                             dhtNode);
         }
         else {
             //std::cout << "Regular maintain, cannot stop: " << terminated <<std::endl;
@@ -170,7 +197,7 @@ riaps_actor (zsock_t *pipe, void *args)
     zpoller_destroy(&poller);
     //zactor_destroy(&async_service_poller);
     zsock_destroy(&riaps_socket);
-    zsock_destroy(&dht_router_socket);
+    zsock_destroy(&dhtUpdateSocket);
 
     sleep(1);
 }
@@ -244,4 +271,43 @@ void maintainRenewal(std::map<pid_t, std::vector<std::unique_ptr<service_checkin
     }
 }
 
+bool handleZombieUpdate(const std::vector<std::shared_ptr<dht::Value>> &values){
+    std::vector<std::string> dhtResults;
 
+    for (const auto &value :values) {
+        std::string result = std::string(value->data.begin(), value->data.end());
+        dhtResults.push_back(result);
+    }
+
+    if (dhtResults.size() > 0) {
+        zsock_t *dhtNotification = zsock_new_push(DHT_ROUTER_CHANNEL);
+        capnp::MallocMessageBuilder message;
+
+        auto msgDhtUpdate = message.initRoot<riaps::discovery::DhtUpdate>();
+        auto msgZombieList = msgDhtUpdate.initZombieList(dhtResults.size());
+
+        for (int i=0; i<dhtResults.size(); i++){
+            msgZombieList[i] = capnp::Text::Builder((char*)dhtResults[i].c_str());
+        }
+
+        auto serializedMessage = capnp::messageToFlatArray(message);
+
+        zmsg_t *msg = zmsg_new();
+        zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
+
+        zmsg_send(&msg, dhtNotification);
+
+        zsock_destroy(&dhtNotification);
+    }
+    return true;
+}
+
+void maintainZombieList(std::map<std::string, int64_t>& zombieList){
+    int64_t currentTime = zclock_mono();
+
+    for (auto it = zombieList.begin(); it!=zombieList.end(); it++){
+        if ((currentTime - it->second) > 600000) {
+            it = zombieList.erase(it);
+        }
+    }
+}

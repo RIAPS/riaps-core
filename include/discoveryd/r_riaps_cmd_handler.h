@@ -59,6 +59,7 @@ bool handleRiapsMessages(zsock_t*                                               
                          std::map<std::string, std::future<size_t>>&                            registeredListeners,
                          const std::string&                                                     hostAddress,
                          const std::string&                                                     macAddress,
+                         const std::map<std::string, int64_t>&                                  zombieList,
                          dht::DhtRunner&                                                        dhtNode
 );
 

@@ -129,6 +129,7 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
                          std::map<std::string, std::future<size_t>>& registeredListeners,
                          const std::string& hostAddress,
                          const std::string& macAddress,
+                         const std::map<std::string, int64_t>& zombieList,
                          dht::DhtRunner& dhtNode
                          ) {
     zmsg_t *riapsMessage = zmsg_recv(riapsSocket);
@@ -364,21 +365,30 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
 
 
             dhtNode.get(lookupkey.first,
-                        [currentClientTmp, lookupkey](const std::vector<std::shared_ptr<dht::Value>> &values) {
+                        [currentClientTmp, lookupkey, &zombieList]
+                        (const std::vector<std::shared_ptr<dht::Value>> &values) {
                             // Done Callback
 
-                            std::vector<std::string> dht_lookup_results;
+                            std::vector<std::string> dhtGetResults;
                             for (const auto &value :values) {
                                 std::string result = std::string(value->data.begin(), value->data.end());
-                                dht_lookup_results.push_back(result);
+                                dhtGetResults.push_back(result);
                             }
 
-                            if (dht_lookup_results.size() > 0) {
+                            // Remove elements if they considered as zombie
+                            std::remove_if(dhtGetResults.begin(),
+                                           dhtGetResults.end(),
+                                           [&zombieList](const std::string& s){
+                                               return zombieList.find(s)!=zombieList.end();
+                                           });
+
+                            // IF there are still some results.
+                            if (dhtGetResults.size() > 0) {
 
                                 zsock_t *notify_ractor_socket = zsock_new_push(DHT_ROUTER_CHANNEL);
 
                                 capnp::MallocMessageBuilder message;
-                                auto msg_providerlistpush = message.initRoot<riaps::discovery::ProviderListPush>();
+                                auto msg_providerlistpush = message.initRoot<riaps::discovery::DhtUpdate>();
                                 auto msg_providerget = msg_providerlistpush.initProviderGet();
 
                                 auto msg_path = msg_providerget.initPath();
@@ -396,12 +406,12 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
                                 msg_client.setActorHost(currentClientTmp.actor_host);
                                 msg_client.setInstanceName(currentClientTmp.instance_name);
 
-                                auto number_of_results = dht_lookup_results.size();
+                                auto number_of_results = dhtGetResults.size();
                                 ::capnp::List<::capnp::Text>::Builder get_results = msg_providerget.initResults(
                                         number_of_results);
 
                                 int provider_index = 0;
-                                for (std::string provider : dht_lookup_results) {
+                                for (std::string provider : dhtGetResults) {
                                     char *c = (char *) provider.c_str();
                                     ::capnp::Text::Builder B(c, provider.length());
                                     get_results.set(provider_index++, B.asString());
@@ -477,7 +487,7 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
                                                                                    capnp::MallocMessageBuilder message;
 
 
-                                                                                   auto msg_providerlist_push = message.initRoot<riaps::discovery::ProviderListPush>();
+                                                                                   auto msg_providerlist_push = message.initRoot<riaps::discovery::DhtUpdate>();
                                                                                    auto msg_provider_update = msg_providerlist_push.initProviderUpdate();
                                                                                    msg_provider_update.setProviderpath(
                                                                                            lookupkey.first);
