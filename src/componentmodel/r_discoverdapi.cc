@@ -30,6 +30,7 @@ bool register_service(const std::string&              app_name     ,
     sreqpath.setMsgType(message_type);
     sreqpath.setKind(kind);
     sreqpath.setScope(scope);
+    sreqBuilder.setPid(::getpid());
 
     sreqsocket.setHost(ip_address);
     sreqsocket.setPort(port);
