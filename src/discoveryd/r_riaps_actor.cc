@@ -93,13 +93,6 @@ riaps_actor (zsock_t *pipe, void *args)
     while (!terminated){
         void *which = zpoller_wait(poller, REGULAR_MAINTAIN_PERIOD);
 
-//        if (zombieServices.size()>0){
-//            std::cout << "Stored zombies: " << std::endl;
-//            for (auto& z : zombieServices){
-//                std::cout << z.first << std::endl;
-//            }
-//        }
-
         // Check services whether they are still alive.
         // Reregister the too old services (OpenDHT ValueType settings, it is 10 minutes by default)
         int64_t loopStartTime = zclock_mono();
@@ -176,25 +169,14 @@ riaps_actor (zsock_t *pipe, void *args)
                                              dhtNode);
         }
         else {
-            //std::cout << "Regular maintain, cannot stop: " << terminated <<std::endl;
 
-            //zmsg_t* msg = zmsg_recv(which);
-            //if (msg){
-            //    std::cout << "HEYY MSG!" << std::endl;
-            //    break;
-            //}
 
             //auto outdateds = maintain_servicecache(service_checkins);
 
-            //for (auto outdated : outdateds){
-            //    std::cout << outdated << ";" ;
-            //}
 
-            //std::cout << std::endl;
         }
     }
 
-    //dht_node.setOnStatusChanged()
 
     dhtNode.join();
 

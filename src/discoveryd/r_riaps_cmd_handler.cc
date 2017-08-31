@@ -142,14 +142,14 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
         size_t size = zframe_size(capnp_msgbody);
         byte *data = zframe_data(capnp_msgbody);
 
-        riaps::discovery::DiscoReq::Reader msg_discoreq;
+        riaps::discovery::DiscoReq::Reader msgDiscoReq;
 
        // try {
 
-            auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word *>(data), size / sizeof(capnp::word));
+        auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word *>(data), size / sizeof(capnp::word));
 
-            capnp::FlatArrayMessageReader reader(capnp_data);
-            msg_discoreq = reader.getRoot<riaps::discovery::DiscoReq>();
+        capnp::FlatArrayMessageReader reader(capnp_data);
+        msgDiscoReq = reader.getRoot<riaps::discovery::DiscoReq>();
 
 
             //zmsg_destroy(&riapsMessage);
@@ -159,14 +159,14 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
         //zsys_info("Message arrived: %s (%s)", "DiscoReq", msg_discoreq.which());
 
         // Register actor
-        if (msg_discoreq.isActorReg()) {
-            auto msg_actorreq = msg_discoreq.getActorReg();
-            std::string actorname = std::string(msg_actorreq.getActorName());
-            std::string appname = std::string(msg_actorreq.getAppName());
+        if (msgDiscoReq.isActorReg()) {
+            auto msgActorReq = msgDiscoReq.getActorReg();
+            std::string actorname = std::string(msgActorReq.getActorName());
+            std::string appname = std::string(msgActorReq.getAppName());
 
             std::string clientKeyBase = "/" + appname + '/' + actorname + "/";
 
-            std::cout << "Register actor with PID - " << msg_actorreq.getPid() << " : " << clientKeyBase << std::endl;
+            std::cout << "Register actor with PID - " << msgActorReq.getPid() << " : " << clientKeyBase << std::endl;
 
             auto registeredActorIt = clients.find(clientKeyBase);
             bool isRegistered =  registeredActorIt!= clients.end();
@@ -197,10 +197,11 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
 
                 // Purge the old instance
                 if (isRegistered && !isRunning) {
+                    int servicePid = registeredActorIt->second->pid;
                     deregisterActor(appname, actorname, macAddress, hostAddress, clients);
 
                     // Marks services as zombie
-                    //int servicePid = registeredActorIt->second->pid;
+                    //
                 }
 
                 // Open a new PAIR socket for actor communication
@@ -210,7 +211,7 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
                 clients[clientKeyBase] = std::unique_ptr<actor_details_t>(new actor_details_t());
                 clients[clientKeyBase]->socket = actor_socket;
                 clients[clientKeyBase]->port = port;
-                clients[clientKeyBase]->pid = msg_actorreq.getPid();
+                clients[clientKeyBase]->pid = msgActorReq.getPid();
 
                 // Create and send the Response
                 capnp::MallocMessageBuilder message;
@@ -230,17 +231,27 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
                 std::string clientKeyLocal = clientKeyBase + macAddress;
                 clients[clientKeyLocal] = std::unique_ptr<actor_details_t>(new actor_details_t());
                 clients[clientKeyLocal]->port = port;
-                clients[clientKeyLocal]->pid = msg_actorreq.getPid();
+                clients[clientKeyLocal]->pid = msgActorReq.getPid();
 
                 std::string clientKeyGlobal = clientKeyBase + hostAddress;
                 clients[clientKeyGlobal] = std::unique_ptr<actor_details_t>(new actor_details_t());
                 clients[clientKeyGlobal]->port = port;
-                clients[clientKeyGlobal]->pid = msg_actorreq.getPid();
+                clients[clientKeyGlobal]->pid = msgActorReq.getPid();
             }
-        } else if (msg_discoreq.isActorUnreg()) {
-            auto msg_actorunreq = msg_discoreq.getActorUnreg();
-            std::string actorname = std::string(msg_actorunreq.getActorName());
-            std::string appname = std::string(msg_actorunreq.getAppName());
+        } else if (msgDiscoReq.isActorUnreg()) {
+            auto msgActorUnreq = msgDiscoReq.getActorUnreg();
+            std::string actorname = std::string(msgActorUnreq.getActorName());
+            std::string appname = std::string(msgActorUnreq.getAppName());
+            int servicePid = msgActorUnreq.getPid();
+
+            // Mark services as zombie
+            if (serviceCheckins.find(servicePid)!=serviceCheckins.end()){
+                for (auto& service : serviceCheckins[servicePid]){
+                    std::string serviceAddress = service->value;
+                    std::vector<uint8_t> opendht_data(serviceAddress.begin(), serviceAddress.end());
+                    dhtNode.put(zombieKey, dht::Value(opendht_data));
+                }
+            }
 
             int port = deregisterActor(appname, actorname, macAddress, hostAddress, clients);
 
@@ -264,11 +275,11 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
 
             zmsg_send(&msg, riapsSocket);
 
-        } else if (msg_discoreq.isServiceReg()) {
-            auto msg_servicereg_req = msg_discoreq.getServiceReg();
-            auto msg_path = msg_servicereg_req.getPath();
-            auto msg_sock = msg_servicereg_req.getSocket();
-            auto servicePid = msg_servicereg_req.getPid();
+        } else if (msgDiscoReq.isServiceReg()) {
+            auto msg_servicereg_req = msgDiscoReq.getServiceReg();
+            auto msg_path           = msg_servicereg_req.getPath();
+            auto msg_sock           = msg_servicereg_req.getSocket();
+            auto servicePid         = msg_servicereg_req.getPid();
 
 
             auto kv_pair = buildInsertKeyValuePair(msg_path.getAppName(),
@@ -315,8 +326,8 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
 
             zmsg_send(&msg, riapsSocket);
 
-        } else if (msg_discoreq.isServiceLookup()) {
-            auto msg_servicelookup = msg_discoreq.getServiceLookup();
+        } else if (msgDiscoReq.isServiceLookup()) {
+            auto msg_servicelookup = msgDiscoReq.getServiceLookup();
 
             auto client = msg_servicelookup.getClient();
             auto path = msg_servicelookup.getPath();
