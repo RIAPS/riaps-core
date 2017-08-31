@@ -64,6 +64,7 @@ riaps_actor (zsock_t *pipe, void *args)
     // Stores pair sockets for actor communication
     std::map<std::string, std::unique_ptr<actor_details_t>> clients;
 
+    // TODO: zombieServices is not thread safe, todo implement a threadsafe wrapper
     // Stores addresses of zombie services
     // A service is zombie, if the related socket is not able to respond, but it is still in the DHT
     // The int64 argument is a timestamp. Old zombies are removed from the set after 10 minutes.
@@ -84,10 +85,9 @@ riaps_actor (zsock_t *pipe, void *args)
     const uint16_t zombieCheckPeriod  = 600000; // 10 min in msec
 
     // Get current zombies, and listen to new zombies
-
     dhtNode.get(zombieKey, handleZombieUpdate);
 
-    // Subscribe for further zombies in the future
+    // Subscribe for further zombies
     dhtNode.listen(zombieKey, handleZombieUpdate);
 
     while (!terminated){
@@ -138,10 +138,6 @@ riaps_actor (zsock_t *pipe, void *args)
                     for (int i =0; i< zombieList.size(); i++){
                         std::string currentZombie = zombieList[i];
                         zombieServices[currentZombie] = zclock_mono();
-                        std::cout << "Stored zombies: " << std::endl;
-                        for (auto& z : zombieServices){
-                            std::cout << z.first << std::endl;
-                        }
                     }
                 }
 
@@ -235,7 +231,7 @@ void maintainRenewal(std::map<pid_t, std::vector<std::unique_ptr<service_checkin
     std::vector<pid_t> toBeRemoved;
     for (auto it= serviceCheckins.begin(); it!=serviceCheckins.end(); it++){
         // Check pid, mark the removable pids
-        std::cout << "checking PID " << it->first << std::endl;
+        // std::cout << "checking PID " << it->first << std::endl;
         if (!kill(it->first,0)==0){
             toBeRemoved.push_back(it->first);
         }
@@ -315,9 +311,10 @@ void maintainZombieList(std::map<std::string, int64_t>& zombieList){
     int64_t currentTime = zclock_mono();
 
     for (auto it = zombieList.begin(); it!=zombieList.end(); it++){
-        if ((currentTime - it->second) > 600000) {
-            // TODO: put it back
-            //it = zombieList.erase(it);
+        // 10 min timeout
+        if ((currentTime - it->second) > 60*10*1000) {
+            std::cout << "Purge zombie from cache: " << it->first << std::endl;
+            it = zombieList.erase(it);
         }
     }
 }
