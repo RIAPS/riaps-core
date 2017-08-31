@@ -34,7 +34,7 @@ namespace riaps {
             const _component_port_req_j* current_config = GetConfig();
 
             auto results =
-                    subscribe_to_service(_parent_component->GetActor()->GetApplicationName(),
+                    subscribeToService(_parent_component->GetActor()->GetApplicationName(),
                                          _parent_component->GetConfig().component_name,
                                          _parent_component->GetActor()->GetActorName(),
                                          riaps::discovery::Kind::REQ,

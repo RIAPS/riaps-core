@@ -37,7 +37,7 @@ namespace riaps{
             std::cout << "Publisher is created on : " << _host << ":" << _port << std::endl;
 
 
-            if (!register_service(parent_component->GetActor()->GetApplicationName(),
+            if (!registerService(parent_component->GetActor()->GetApplicationName(),
                                   config.messageType,
                                   _host,
                                   _port,

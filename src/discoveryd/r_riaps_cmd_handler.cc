@@ -197,11 +197,7 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
 
                 // Purge the old instance
                 if (isRegistered && !isRunning) {
-                    int servicePid = registeredActorIt->second->pid;
                     deregisterActor(appname, actorname, macAddress, hostAddress, clients);
-
-                    // Marks services as zombie
-                    //
                 }
 
                 // Open a new PAIR socket for actor communication
@@ -244,7 +240,7 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
             std::string appname = std::string(msgActorUnreq.getAppName());
             int servicePid = msgActorUnreq.getPid();
 
-            // Mark services as zombie
+            // Mark actor's services as zombie
             if (serviceCheckins.find(servicePid)!=serviceCheckins.end()){
                 for (auto& service : serviceCheckins[servicePid]){
                     std::string serviceAddress = service->value;

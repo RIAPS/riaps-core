@@ -3,7 +3,7 @@
 
 
 
-bool register_service(const std::string&              app_name     ,
+bool registerService(const std::string&              app_name     ,
                       const std::string&              message_type ,
                       const std::string&              ip_address   ,
                       const uint16_t&                 port         ,
@@ -122,7 +122,7 @@ bool register_service(const std::string&              app_name     ,
 
 
 std::vector<service_lookup_result>
-subscribe_to_service(const std::string&      app_name  ,
+subscribeToService(const std::string&      app_name  ,
                      const std::string&      part_name , // instance_name
                      const std::string&      actor_name,
                      riaps::discovery::Kind  kind      ,
@@ -217,7 +217,7 @@ subscribe_to_service(const std::string&      app_name  ,
 
 
 zsock_t*
-register_actor(const std::string& appname, const std::string& actorname){
+registerActor(const std::string& appname, const std::string& actorname){
 
     /////
     /// Request
@@ -284,4 +284,42 @@ register_actor(const std::string& appname, const std::string& actorname){
     zsock_destroy(&client);
 
     return discovery_port;
+}
+
+// Sends ActorUnreg message to the discovery service.
+void deregisterActor(const std::string& actorName, const std::string& appName){
+    capnp::MallocMessageBuilder message;
+    auto msgDiscoReq   = message.initRoot<riaps::discovery::DiscoReq>();
+    auto msgActorUnreg = msgDiscoReq.initActorUnreg();
+
+    msgActorUnreg.setActorName(actorName);
+    msgActorUnreg.setPid(::getpid());
+    msgActorUnreg.setAppName(appName);
+
+    auto serializedMessage = capnp::messageToFlatArray(message);
+
+    zmsg_t* msgReq = zmsg_new();
+    zmsg_pushmem(msgReq, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
+
+    std::string ipcAddress = riaps::framework::Configuration::GetDiscoveryServiceIpc();
+    zsock_t * client = zsock_new_req (ipcAddress.c_str());
+    assert(client);
+    zmsg_send(&msgReq, client);
+
+    zmsg_t* msgRep = zmsg_recv(client);
+
+    zframe_t* capnpBody = zmsg_pop(msgRep);
+    size_t    size = zframe_size(capnpBody);
+    byte*     data = zframe_data(capnpBody);
+
+    auto capnpBuffer = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
+
+    capnp::FlatArrayMessageReader reader(capnpBuffer);
+    auto msgDiscoRep= reader.getRoot<riaps::discovery::DiscoRep>();
+    if (msgDiscoRep.isActorUnreg()){
+        assert(msgDiscoRep.getActorUnreg().getStatus() == riaps::discovery::Status::OK);
+    }
+
+    zsock_destroy(&client);
+    zclock_sleep(100);
 }

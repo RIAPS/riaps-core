@@ -31,7 +31,7 @@ struct _service_lookup_result {
 typedef struct _service_lookup_result service_lookup_result;
 
 extern std::vector<service_lookup_result>
-subscribe_to_service(const std::string&      app_name   ,
+subscribeToService(const std::string&      app_name   ,
                      const std::string&      part_name  , // instance_name
                      const std::string&      actor_name ,
                      riaps::discovery::Kind  kind       ,
@@ -40,17 +40,20 @@ subscribe_to_service(const std::string&      app_name   ,
                      const std::string&      msg_type     // PortType
                      );
 extern bool
-register_service(const std::string&              app_name     ,
-                 const std::string&              message_type ,
-                 const std::string&              ip_address   ,
-                 const uint16_t&                 port         ,
-                 riaps::discovery::Kind          kind         ,
-                 riaps::discovery::Scope         scope        ,
-                 const std::vector<std::string>& tags
+registerService(const std::string&              app_name     ,
+                const std::string&              message_type ,
+                const std::string&              ip_address   ,
+                const uint16_t&                 port         ,
+                riaps::discovery::Kind          kind         ,
+                riaps::discovery::Scope         scope        ,
+                const std::vector<std::string>& tags
 );
 
 
 extern zsock_t*
-register_actor(const std::string& appname, const std::string& actorname);
+registerActor(const std::string& appname, const std::string& actorname);
+
+extern void
+deregisterActor(const std::string& actorName, const std::string& appName);
 
 #endif

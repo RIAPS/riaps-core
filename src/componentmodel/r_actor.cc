@@ -309,8 +309,8 @@ namespace riaps {
         assert(_poller);
 
         // Register the actor in the discovery service
-        _discovery_socket = _startDevice? register_actor(_applicationName, _deviceName)
-                                        : register_actor(_applicationName, _actorName);
+        _discovery_socket = _startDevice? registerActor(_applicationName, _deviceName)
+                                        : registerActor(_applicationName, _actorName);
 
 
         if (_discovery_socket == NULL) {
@@ -359,7 +359,7 @@ namespace riaps {
                 // It is not a device, start the component
                 if (!component_config.isDevice || (component_config.isDevice && _startDevice)) {
                     
-                    // Note: Temporary hack, to make devices work
+                    // Note: For devices
                     if (_startDevice){
                         _actorName = component_config.component_name;
                     }
@@ -486,6 +486,8 @@ namespace riaps {
 
     riaps::Actor::~Actor() {
         //deregister_actor(GetActorId());
+
+        deregisterActor(GetActorName(), GetApplicationName());
 
         for (riaps::ComponentBase* component : _components){
             std::cout << "Stop component: " << component->GetConfig().component_name <<std::endl;

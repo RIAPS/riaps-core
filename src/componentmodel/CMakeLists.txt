@@ -27,6 +27,7 @@ set(FRAMEWORK_LIB_FILES r_discoverdapi.cc
                         r_peripheral.cc
                         r_devmapi.cc
                         r_devicethread.cc
+                        ../../include/componentmodel/r_discoverdapi.h
         )
 
 add_library(riaps SHARED ${FRAMEWORK_LIB_FILES})

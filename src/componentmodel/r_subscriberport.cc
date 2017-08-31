@@ -39,7 +39,7 @@ namespace riaps{
             _component_port_sub_j* currentConfig = (_component_port_sub_j*)GetConfig();
 
             auto results =
-                    subscribe_to_service(_parent_component->GetActor()->GetApplicationName(),
+                    subscribeToService(_parent_component->GetActor()->GetApplicationName(),
                                          _parent_component->GetConfig().component_name,
                                          _parent_component->GetActor()->GetActorName(),
                                          riaps::discovery::Kind::SUB,
