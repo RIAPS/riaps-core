@@ -170,11 +170,10 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
 
             auto registeredActorIt = clients.find(clientKeyBase);
             bool isRegistered =  registeredActorIt!= clients.end();
-            
-            // TODO: figure out if we allow this or now.
-            // TODO: start_device is another actor... see?
-            //bool isRunning = isRegistered && kill(registeredActorIt->second->pid, 0) == 0;
-            bool isRunning = false;
+
+            // If the name of the actor is registered previously and it still run => Error
+            bool isRunning = isRegistered && kill(registeredActorIt->second->pid, 0) == 0;
+            //bool isRunning = false;
 
             // If the actor already registered and running
             if (isRunning) {
@@ -199,6 +198,9 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
                 // Purge the old instance
                 if (isRegistered && !isRunning) {
                     deregisterActor(appname, actorname, macAddress, hostAddress, clients);
+
+                    // Marks services as zombie
+                    //int servicePid = registeredActorIt->second->pid;
                 }
 
                 // Open a new PAIR socket for actor communication
@@ -288,15 +290,14 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
             // Add PID - Service Details
             std::unique_ptr<service_checkins_t> newItem = std::unique_ptr<service_checkins_t>(new service_checkins_t());
             newItem->createdTime = zclock_mono();
-            newItem->key = kv_pair.first;
-            newItem->value = kv_pair.second;
-            newItem->pid = servicePid;
+            newItem->key         = kv_pair.first;
+            newItem->value       = kv_pair.second;
+            newItem->pid         = servicePid;
             serviceCheckins[servicePid].push_back(std::move(newItem));
 
             // Convert the value to bytes
             std::vector<uint8_t> opendht_data(kv_pair.second.begin(), kv_pair.second.end());
             auto keyhash = dht::InfoHash::get(kv_pair.first);
-
 
             dhtNode.put(keyhash, dht::Value(opendht_data));
 
@@ -376,11 +377,14 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
                             }
 
                             // Remove elements if they considered as zombie
+                            dhtGetResults.erase(
                             std::remove_if(dhtGetResults.begin(),
                                            dhtGetResults.end(),
-                                           [&zombieList](const std::string& s){
-                                               return zombieList.find(s)!=zombieList.end();
-                                           });
+                                           [&zombieList](const std::string& s) {
+                                               auto z = zombieList;
+                                               auto b = zombieList.find(s)!=zombieList.end();
+                                               return b;
+                                           }), dhtGetResults.end());
 
                             // IF there are still some results.
                             if (dhtGetResults.size() > 0) {
@@ -456,12 +460,8 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
 
             msg_service_lookup_rep.setStatus(riaps::discovery::Status::OK);
 
-            //auto number_of_clients =dht_lookup_results.size();
-
             auto number_of_clients = 0;
             auto sockets = msg_service_lookup_rep.initSockets(number_of_clients);
-
-
 
             auto serializedMessage = capnp::messageToFlatArray(message);
 
@@ -475,22 +475,9 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
 
                 // Add listener to the added key
                 registeredListeners[lookupkeyhash.toString()] = dhtNode.listen(lookupkeyhash,
-                                                                               [lookupkey](
+                                                                               [lookupkey, &zombieList](
                                                                                        const std::vector<std::shared_ptr<dht::Value>> &values) {
 
-
-                                                                                   //std::cout << "Value changed, send back the changes to the discovery service"<< std::endl;
-
-                                                                                   zsock_t *notify_ractor_socket = zsock_new_push(
-                                                                                           DHT_ROUTER_CHANNEL);
-
-                                                                                   capnp::MallocMessageBuilder message;
-
-
-                                                                                   auto msg_providerlist_push = message.initRoot<riaps::discovery::DhtUpdate>();
-                                                                                   auto msg_provider_update = msg_providerlist_push.initProviderUpdate();
-                                                                                   msg_provider_update.setProviderpath(
-                                                                                           lookupkey.first);
 
                                                                                    std::vector<std::string> update_results;
                                                                                    for (const auto &value :values) {
@@ -500,38 +487,64 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
                                                                                        update_results.push_back(result);
                                                                                    }
 
-                                                                                   auto number_of_providers = update_results.size();
-                                                                                   ::capnp::List<::capnp::Text>::Builder msg_providers = msg_provider_update.initNewvalues(
-                                                                                           number_of_providers);
+                                                                                   // Remove elements if they considered as zombie
+                                                                                   update_results.erase(
+                                                                                           std::remove_if(update_results.begin(),
+                                                                                                          update_results.end(),
+                                                                                                          [&zombieList](const std::string& s) {
+                                                                                                              auto z = zombieList;
+                                                                                                              auto b = zombieList.find(s)!=zombieList.end();
+                                                                                                              return b;
+                                                                                                          }), update_results.end());
 
-                                                                                   int provider_index = 0;
-                                                                                   for (std::string provider : update_results) {
-                                                                                       ::capnp::Text::Builder b(
-                                                                                               (char *) provider.c_str());
-                                                                                       msg_providers.set(
-                                                                                               provider_index++,
-                                                                                               b.asString());
+                                                                                   if (update_results.size()>0) {
+
+                                                                                       zsock_t *notify_ractor_socket = zsock_new_push(
+                                                                                               DHT_ROUTER_CHANNEL);
+
+                                                                                       capnp::MallocMessageBuilder message;
+
+
+                                                                                       auto msg_providerlist_push = message.initRoot<riaps::discovery::DhtUpdate>();
+                                                                                       auto msg_provider_update = msg_providerlist_push.initProviderUpdate();
+                                                                                       msg_provider_update.setProviderpath(
+                                                                                               lookupkey.first);
+
+
+                                                                                       auto number_of_providers = update_results.size();
+                                                                                       ::capnp::List<::capnp::Text>::Builder msg_providers = msg_provider_update.initNewvalues(
+                                                                                               number_of_providers);
+
+                                                                                       int provider_index = 0;
+                                                                                       for (std::string provider : update_results) {
+                                                                                           ::capnp::Text::Builder b(
+                                                                                                   (char *) provider.c_str());
+                                                                                           msg_providers.set(
+                                                                                                   provider_index++,
+                                                                                                   b.asString());
+                                                                                       }
+
+                                                                                       auto serializedMessage = capnp::messageToFlatArray(
+                                                                                               message);
+
+                                                                                       zmsg_t *msg = zmsg_new();
+                                                                                       zmsg_pushmem(msg,
+                                                                                                    serializedMessage.asBytes().begin(),
+                                                                                                    serializedMessage.asBytes().size());
+
+                                                                                       zmsg_send(&msg,
+                                                                                                 notify_ractor_socket);
+
+                                                                                       std::cout
+                                                                                               << "Changes sent to discovery service: "
+                                                                                               << lookupkey.first
+                                                                                               << std::endl;
+
+                                                                                       sleep(1);
+                                                                                       zsock_destroy(
+                                                                                               &notify_ractor_socket);
+                                                                                       sleep(1);
                                                                                    }
-
-                                                                                   auto serializedMessage = capnp::messageToFlatArray(
-                                                                                           message);
-
-                                                                                   zmsg_t *msg = zmsg_new();
-                                                                                   zmsg_pushmem(msg,
-                                                                                                serializedMessage.asBytes().begin(),
-                                                                                                serializedMessage.asBytes().size());
-
-                                                                                   zmsg_send(&msg,
-                                                                                             notify_ractor_socket);
-
-                                                                                   std::cout
-                                                                                           << "Changes sent to discovery service: "
-                                                                                           << lookupkey.first
-                                                                                           << std::endl;
-
-                                                                                   sleep(1);
-                                                                                   zsock_destroy(&notify_ractor_socket);
-                                                                                   sleep(1);
 
                                                                                    return true; // keep listening
                                                                                }

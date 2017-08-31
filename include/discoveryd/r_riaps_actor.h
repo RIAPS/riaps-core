@@ -9,8 +9,8 @@
 
 #include <czmq.h>
 
-
-
+// Key where the DHT stores zombie nodes
+const std::string zombieKey = "/zombies";
 
 
 void riaps_actor (zsock_t *pipe, void *args);

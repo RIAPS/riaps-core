@@ -84,7 +84,7 @@ riaps_actor (zsock_t *pipe, void *args)
     const uint16_t zombieCheckPeriod  = 600000; // 10 min in msec
 
     // Get current zombies, and listen to new zombies
-    const std::string zombieKey = "/zombies";
+
     dhtNode.get(zombieKey, handleZombieUpdate);
 
     // Subscribe for further zombies in the future
@@ -92,6 +92,13 @@ riaps_actor (zsock_t *pipe, void *args)
 
     while (!terminated){
         void *which = zpoller_wait(poller, REGULAR_MAINTAIN_PERIOD);
+
+//        if (zombieServices.size()>0){
+//            std::cout << "Stored zombies: " << std::endl;
+//            for (auto& z : zombieServices){
+//                std::cout << z.first << std::endl;
+//            }
+//        }
 
         // Check services whether they are still alive.
         // Reregister the too old services (OpenDHT ValueType settings, it is 10 minutes by default)
@@ -134,9 +141,14 @@ riaps_actor (zsock_t *pipe, void *args)
                     handleGet(msgProviderGet, clients);
                 } else if (msgDhtUpdate.isZombieList()) {
                     auto zombieList = msgDhtUpdate.getZombieList();
+                    int s = zombieList.size();
                     for (int i =0; i< zombieList.size(); i++){
-                        auto currentZombie = zombieList[i];
+                        std::string currentZombie = zombieList[i];
                         zombieServices[currentZombie] = zclock_mono();
+                        std::cout << "Stored zombies: " << std::endl;
+                        for (auto& z : zombieServices){
+                            std::cout << z.first << std::endl;
+                        }
                     }
                 }
 
@@ -241,6 +253,7 @@ void maintainRenewal(std::map<pid_t, std::vector<std::unique_ptr<service_checkin
     std::vector<pid_t> toBeRemoved;
     for (auto it= serviceCheckins.begin(); it!=serviceCheckins.end(); it++){
         // Check pid, mark the removable pids
+        std::cout << "checking PID " << it->first << std::endl;
         if (!kill(it->first,0)==0){
             toBeRemoved.push_back(it->first);
         }
@@ -249,6 +262,18 @@ void maintainRenewal(std::map<pid_t, std::vector<std::unique_ptr<service_checkin
     // Remove killed PIDs
     for (auto it = toBeRemoved.begin(); it!=toBeRemoved.end(); it++){
         std::cout << "Remove services with PID: " << *it << std::endl;
+
+        // Put the service address into the zombies list in DHT
+        for (auto serviceIt  = serviceCheckins[*it].begin();
+                  serviceIt != serviceCheckins[*it].end();
+                  serviceIt++) {
+
+            // host:port
+            std::string serviceAddress = (*serviceIt)->value;
+            std::vector<uint8_t> opendht_data(serviceAddress.begin(), serviceAddress.end());
+            dhtNode.put(zombieKey, dht::Value(opendht_data));
+        }
+
         serviceCheckins.erase(*it);
     }
 
@@ -287,7 +312,9 @@ bool handleZombieUpdate(const std::vector<std::shared_ptr<dht::Value>> &values){
         auto msgZombieList = msgDhtUpdate.initZombieList(dhtResults.size());
 
         for (int i=0; i<dhtResults.size(); i++){
-            msgZombieList[i] = capnp::Text::Builder((char*)dhtResults[i].c_str());
+            char* cres = (char*)dhtResults[i].c_str();
+            msgZombieList.set(i, capnp::Text::Builder(cres));
+            std::cout << "Service is considered as zombie: " << dhtResults[i].c_str() << std::endl;
         }
 
         auto serializedMessage = capnp::messageToFlatArray(message);
@@ -296,7 +323,7 @@ bool handleZombieUpdate(const std::vector<std::shared_ptr<dht::Value>> &values){
         zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
 
         zmsg_send(&msg, dhtNotification);
-
+        zclock_sleep(500);
         zsock_destroy(&dhtNotification);
     }
     return true;
@@ -307,7 +334,8 @@ void maintainZombieList(std::map<std::string, int64_t>& zombieList){
 
     for (auto it = zombieList.begin(); it!=zombieList.end(); it++){
         if ((currentTime - it->second) > 600000) {
-            it = zombieList.erase(it);
+            // TODO: put it back
+            //it = zombieList.erase(it);
         }
     }
 }
