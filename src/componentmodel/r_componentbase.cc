@@ -23,7 +23,11 @@ namespace riaps{
 
         zpoller_t* poller = zpoller_new(pipe, NULL);
         assert(poller);
-        zpoller_ignore_interrupts (poller);
+
+        // New api is czmq, ignore_interrupts is obsolote
+        zpoller_set_nonstop(poller, true);
+
+        //zpoller_ignore_interrupts (poller);
 
         zsock_signal (pipe, 0);
 

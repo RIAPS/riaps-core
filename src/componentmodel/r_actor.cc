@@ -305,7 +305,12 @@ namespace riaps {
         _actor_zsock = zsock_new_rep("tcp://*:!");
         assert(_actor_zsock);
         _poller = zpoller_new(_actor_zsock, NULL);
-        zpoller_ignore_interrupts(_poller);
+
+        // New api is czmq, ignore_interrupts is obsolote
+        zpoller_set_nonstop(_poller, true);
+
+        // Obsolote signal handling
+        //zpoller_ignore_interrupts(_poller);
         assert(_poller);
 
         // Register the actor in the discovery service
