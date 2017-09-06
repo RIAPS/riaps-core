@@ -13,6 +13,6 @@ set(RDISCOVERYD_SOURCE r_discoveryd.cc
         )
 
 add_executable(rdiscoveryd ${RDISCOVERYD_SOURCE})
-target_link_libraries(rdiscoveryd czmq zmq opendht gnutls riaps capnp nettle hogweed gmp)
+target_link_libraries(rdiscoveryd czmq zmq opendht gnutls riaps capnp nettle hogweed gmp glog)
 
 install(TARGETS rdiscoveryd DESTINATION bin)
