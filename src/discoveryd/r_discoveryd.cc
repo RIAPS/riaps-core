@@ -16,14 +16,16 @@
 
 #include <discoveryd/r_riaps_actor.h>
 #include <discoveryd/r_discoveryd_commands.h>
+#include <framework/rfw_network_interfaces.h>
 #include <utils/r_utils.h>
-#include <version/versions.h>
+
+#include <glog/logging.h>
 
 #include <iostream>
 #include <string>
 #include <map>
 #include <vector>
-#include <framework/rfw_network_interfaces.h>
+
 
 // Frequency of sending UDP packets.
 // Starting with higher rate and then switch to lower rate.
@@ -40,9 +42,20 @@
 //#define NO_UDP_BEACON
 
 
-int main()
+int main(int argc, char* argv[])
 {
-    std::cout << "Starting RIAPS DISCOVERY SERVICE " << RIAPS_DISCOVERY_PRINTABLE_VERSION << std::endl;
+    // Initialize Google's logging library.
+    google::InitGoogleLogging(argv[0]);
+    FLAGS_logtostderr = 1;
+
+    std::cout << "Starting RIAPS DISCOVERY SERVICE " << std::endl;
+
+    // Random generator for beacon interval
+    std::random_device rd;
+    std::mt19937 gen(rd());
+
+    // UDP packet interval is between 2-5sec
+    std::uniform_int_distribution<> dis(2, 5);
 
     // Use all available interfaces
     //zsys_set_interface ("*");
@@ -105,7 +118,8 @@ int main()
     // We will broadcast the magic value 0xCAFE
     byte announcement [2] = { 0xCA, 0xFE };
 
-    zsock_send (speaker, "sbi", "PUBLISH", announcement, 2, HIGH_BEACON_FREQ);
+    // PUBLISHING only when we have to. (when no package from the others)
+    //zsock_send (speaker, "sbi", "PUBLISH", announcement, 2, HIGH_BEACON_FREQ);
 
     zsock_send (listener, "sb", "SUBSCRIBE", "", 0);
 #endif
@@ -121,10 +135,35 @@ int main()
 
     zpoller_t* poller = zpoller_new(control, NULL);
 
+    int nextDiff = dis(gen)*1000;
+    //LOG(INFO) << "Next announcement in " << nextDiff << "s";
+    int64_t nextAnnouncement = zclock_mono() + nextDiff;
+
     while (!zsys_interrupted) {
 #ifndef NO_UDP_BEACON
         // Wait for at most UDP_READ_TIMEOUT millisecond for UDP package
         zsock_set_rcvtimeo (listener, UDP_READ_TIMEOUT);
+
+        // If no announcement, start sending beacons
+        if (zclock_mono()>nextAnnouncement){
+
+            LOG(INFO) << "Send UDP beacon";
+
+            zsock_send (speaker, "sbi", "PUBLISH", announcement, 2, HIGH_BEACON_FREQ);
+
+            // wait for sending out the packet
+            zclock_sleep(100);
+
+            // Stop sending beacons
+            //LOG(INFO) << "Beacon sent, stopping";
+            zsock_send(speaker, "s", "SILENCE");
+
+            // Calulate the next announcment
+            int nextDiff = dis(gen)*1000;
+            //LOG(INFO) << "Next announcement in " << nextDiff << "s";
+            nextAnnouncement = zclock_mono() + nextDiff;
+        }
+
 #endif
         void *which = zpoller_wait(poller, 1);
 
@@ -187,7 +226,16 @@ int main()
         // Source of the incoming UDP package
 #ifndef NO_UDP_BEACON
         char *ipaddress = zstr_recv (listener);
+
+        // If UDP package was received
         if (ipaddress) {
+
+            LOG(INFO) << "Beacon arrived";//, recalculate the next announcment";
+            int nextDiff = dis(gen)*1000;
+            //LOG(INFO) << "Next announcement in " << nextDiff << "s";
+
+            // Calculate the next announcment
+            nextAnnouncement = zclock_mono() + nextDiff;
             
             // Check if the item already in the map
             bool is_newitem = ipcache.find(std::string(ipaddress)) == ipcache.end();
