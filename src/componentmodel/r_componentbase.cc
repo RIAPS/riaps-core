@@ -12,31 +12,26 @@ namespace riaps{
 
     void component_actor(zsock_t* pipe, void* args){
         ComponentBase* comp = (ComponentBase*)args;
-        //comp->_execute.store(true);
 
         zsock_t* timerport = zsock_new_pull(comp->GetTimerChannel().c_str());
         assert(timerport);
 
-
-        zsock_t* timerportOneShot = zsock_new_pull(comp->GetOneShotTimerChannel().c_str());
-        assert(timerportOneShot);
+//        Note: Disable one shot timers, we need more tests.
+//        zsock_t* timerportOneShot = zsock_new_pull(comp->GetOneShotTimerChannel().c_str());
+//        assert(timerportOneShot);
 
         zpoller_t* poller = zpoller_new(pipe, NULL);
         assert(poller);
 
         // New api is czmq, ignore_interrupts is obsolote
         zpoller_set_nonstop(poller, true);
-
-        //zpoller_ignore_interrupts (poller);
-
         zsock_signal (pipe, 0);
 
         int rc = zpoller_add(poller, timerport);
         assert(rc==0);
 
-        rc = zpoller_add(poller, timerportOneShot);
-        assert(rc==0);
-
+//        rc = zpoller_add(poller, timerportOneShot);
+//        assert(rc==0);
 
         bool terminated = false;
         bool firstrun = true;
@@ -46,9 +41,9 @@ namespace riaps{
         // Register ZMQ Socket - riapsPort pairs. For the quick retrieve.
         std::map<const zsock_t*, const ports::PortBase*>   portSockets;
 
+        // ZMQ Socket - Inside port pairs
         std::map<const zsock_t*, const ports::InsidePort*> insidePorts;
 
-        //while (comp->_execute.load()) {
         while (!terminated) {
             void *which = zpoller_wait(poller, 500);
 
@@ -183,25 +178,25 @@ namespace riaps{
                 }
             }
             // One shot timer fired somewhere
-            else if (which == timerportOneShot){
-                zmsg_t *msg = zmsg_recv(which);
+//            else if (which == timerportOneShot){
+//                zmsg_t *msg = zmsg_recv(which);
 
-                if (msg) {
-                    char *timerId = zmsg_popstr(msg);
-                    if (timerId){
-                        std::string tid = std::string(timerId);
-                        comp->OnOneShotTimer(tid);
-                        zstr_free(&timerId);
-                    }
-                    zmsg_destroy(&msg);
-                }
-
-                if (comp->_oneShotTimer!=NULL){
-                    comp->_oneShotTimer->stop();
-                    delete comp->_oneShotTimer;
-                    comp->_oneShotTimer = NULL;
-                }
-            }
+//                if (msg) {
+//                    char *timerId = zmsg_popstr(msg);
+//                    if (timerId){
+//                        std::string tid = std::string(timerId);
+//                        comp->OnOneShotTimer(tid);
+//                        zstr_free(&timerId);
+//                    }
+//                    zmsg_destroy(&msg);
+//                }
+//
+//                if (comp->_oneShotTimer!=NULL){
+//                    comp->_oneShotTimer->stop();
+//                    delete comp->_oneShotTimer;
+//                    comp->_oneShotTimer = NULL;
+//                }
+//            }
             else if(which){
                 // Message test with more than one field
                 zmsg_t *msg = zmsg_recv(which);
@@ -245,14 +240,14 @@ namespace riaps{
             }
         }
 
-        if (comp->_oneShotTimer!=NULL){
-            comp->_oneShotTimer->stop();
-            delete comp->_oneShotTimer;
-            comp->_oneShotTimer = NULL;
-        }
+//        if (comp->_oneShotTimer!=NULL){
+//            comp->_oneShotTimer->stop();
+//            delete comp->_oneShotTimer;
+//            comp->_oneShotTimer = NULL;
+//        }
 
         zpoller_destroy(&poller);
-        zsock_destroy(&timerportOneShot);
+//        zsock_destroy(&timerportOneShot);
         zsock_destroy(&timerport);
     };
 
@@ -275,7 +270,8 @@ namespace riaps{
         zuuid_destroy(&_component_uuid);
     }
 
-    ComponentBase::ComponentBase(component_conf_j& config, Actor& actor) : _actor(&actor), _oneShotTimer(NULL) {
+    ComponentBase::ComponentBase(component_conf_j& config, Actor& actor) : _actor(&actor)//, _oneShotTimer(NULL)
+    {
         _configuration = config;
 
         //uuid to the component instance
@@ -375,16 +371,16 @@ namespace riaps{
         return portBase->AsResponsePort();
     }
 
-    bool ComponentBase::CreateOneShotTimer(const std::string &timerid, timespec &wakeuptime) {
-        if (_oneShotTimer!=NULL) return false;
-
-        _oneShotTimer = new timers::OneShotTimer(GetOneShotTimerChannel(),
-                                                 timerid,
-                                                 wakeuptime);
-
-        _oneShotTimer->start();
-        return true;
-    }
+//    bool ComponentBase::CreateOneShotTimer(const std::string &timerid, timespec &wakeuptime) {
+//        if (_oneShotTimer!=NULL) return false;
+//
+//        _oneShotTimer = new timers::OneShotTimer(GetOneShotTimerChannel(),
+//                                                 timerid,
+//                                                 wakeuptime);
+//
+//        _oneShotTimer->start();
+//        return true;
+//    }
 
 
 
@@ -414,16 +410,16 @@ namespace riaps{
 //        return port->Send(msg);
 //    }
 
-    bool ComponentBase::SendMessageOnPort(std::string message, const std::string& portName){
-        ports::PortBase* port = GetPortByName(portName);
-
-        if (port->AsSubscribePort() == NULL && port->AsTimerPort() == NULL){
-            return port->Send(message);
-        }
-
-        return false;
-
-    }
+//    bool ComponentBase::SendMessageOnPort(std::string message, const std::string& portName){
+//        ports::PortBase* port = GetPortByName(portName);
+//
+//        if (port->AsSubscribePort() == NULL && port->AsTimerPort() == NULL){
+//            return port->Send(message);
+//        }
+//
+//        return false;
+//
+//    }
 
     bool ComponentBase::SendMessageOnPort(zmsg_t **message, const std::string &portName) {
         ports::PortBase* port = GetPortByName(portName);
@@ -435,24 +431,22 @@ namespace riaps{
         return false;
     }
 
-    bool ComponentBase::SendMessageOnPort(msgpack::sbuffer &message, const std::string &portName) {
-        zmsg_t* msg = zmsg_new();
-        zmsg_pushmem(msg, message.data(), message.size());
-        return SendMessageOnPort(&msg, portName);
-
-    }
-
-    bool ComponentBase::SendMessageOnPort(MessageBase* message, const std::string &portName) {
-        zmsg_t* msg = message->AsZmqMessage();
-        return SendMessageOnPort(&msg, portName);
-    }
-
+//    bool ComponentBase::SendMessageOnPort(msgpack::sbuffer &message, const std::string &portName) {
+//        zmsg_t* msg = zmsg_new();
+//        zmsg_pushmem(msg, message.data(), message.size());
+//        return SendMessageOnPort(&msg, portName);
+//
+//    }
+//
+//    bool ComponentBase::SendMessageOnPort(MessageBase* message, const std::string &portName) {
+//        zmsg_t* msg = message->AsZmqMessage();
+//        return SendMessageOnPort(&msg, portName);
+//    }
+//
     bool ComponentBase::SendMessageOnPort(capnp::MallocMessageBuilder& message, const std::string &portName) {
         auto serializedMessage = capnp::messageToFlatArray(message);
         zmsg_t* msg = zmsg_new();
         auto bytes = serializedMessage.asBytes();
-        //auto size = serializedMessage.asBytes().size();
-        //auto bytes = serializedMessage.asBytes().begin();
         zmsg_pushmem(msg, bytes.begin(), bytes.size());
         return SendMessageOnPort(&msg, portName);
     }
@@ -472,10 +466,10 @@ namespace riaps{
         return prefix + GetCompUuid();
     }
 
-    std::string ComponentBase::GetOneShotTimerChannel() {
-        std::string prefix= "inproc://oneshottimer";
-        return prefix + GetCompUuid();
-    }
+//    std::string ComponentBase::GetOneShotTimerChannel() {
+//        std::string prefix= "inproc://oneshottimer";
+//        return prefix + GetCompUuid();
+//    }
 
     std::string ComponentBase::GetCompUuid(){
         const char* uuid_str = zuuid_str(_component_uuid);
@@ -507,17 +501,6 @@ namespace riaps{
         for (auto it = parameters.begin(); it!=parameters.end(); it++){
             std::cout << *it << " : " << _configuration.component_parameters.GetParam(*it)->GetValueAsString() << std::endl;
         }
-    }
-
-    void ComponentBase::RegisterHandler(const std::string &portName, riaps_handler handler) {
-        _handlers.insert(std::make_pair(portName, handler));
-    }
-
-    riaps_handler ComponentBase::GetHandler(std::string portName) {
-        if (_handlers.find(portName) == _handlers.end()){
-            return NULL;
-        }
-        return _handlers[portName];
     }
 
     ComponentBase::~ComponentBase() {
