@@ -1,3 +1,10 @@
+/*!
+ * Helper functions to maintain and debug the stored IP addresses from UDP beacons.
+ *
+ * \author Istvan Madari
+ */
+
+
 #ifndef R_UTILS
 #define R_UTILS 
 

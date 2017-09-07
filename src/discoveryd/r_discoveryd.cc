@@ -27,20 +27,17 @@
 #include <map>
 #include <vector>
 
-
 // Frequency of sending UDP packets (msec)
 #define BEACON_FREQ 5000
 
 // Timeout of port polling for UDP packages
 #define UDP_READ_TIMEOUT 500
 
+// Port to be used for sending/receiving UDP beacon packages
 #define UDP_PACKET_PORT 9999
 
-
-
+// IPC socket address for sending control messages to the discovery service
 #define CONTROL_SOCKET "ipc:///tmp/discoverycontrol"
-
-
 
 int main(int argc, char* argv[])
 {
