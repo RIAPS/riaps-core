@@ -16,7 +16,7 @@ bool maintain_cache(std::map<std::string, int64_t>& ipcache){
     // Maintain the list, if somebody didn't respond in the past 10 seconds => remove from the list
     std::vector<std::string> marked_for_delete;
     for (auto it=ipcache.begin(); it!=ipcache.end(); it++){
-        if ((time-it->second)>20000)
+        if ((time-it->second)>IPCACHE_TIMEOUT)
             marked_for_delete.push_back(it->first);
     }
 

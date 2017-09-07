@@ -6,10 +6,9 @@
  *   - Maintain an ip address cache about the discovered RIAPS nodes
  *   - Control the local Discovery Service client (currently OpenDHT)
  *
- * CZMQ zbeacon  used to discover other riaps nodes in the local network. Each riaps node send a UDP packet periodically,
+ * CZMQ zbeacon  used to discover other riaps nodes in the local network. Each riaps node send a UDP packet periodically.
  *
  * \author Istvan Madari
- * \return
  */
 
 
@@ -19,6 +18,8 @@
 #include <framework/rfw_network_interfaces.h>
 #include <utils/r_utils.h>
 
+//Filter info and warning logs for now
+#define GOOGLE_STRIP_LOG 1
 #include <glog/logging.h>
 
 #include <iostream>
@@ -27,19 +28,18 @@
 #include <vector>
 
 
-// Frequency of sending UDP packets.
-// Starting with higher rate and then switch to lower rate.
-#define HIGH_BEACON_FREQ 5000
-#define LOW_BEACON_FREQ 10000
+// Frequency of sending UDP packets (msec)
+#define BEACON_FREQ 5000
 
 // Timeout of port polling for UDP packages
 #define UDP_READ_TIMEOUT 500
 
 #define UDP_PACKET_PORT 9999
 
+
+
 #define CONTROL_SOCKET "ipc:///tmp/discoverycontrol"
 
-//#define NO_UDP_BEACON
 
 
 int main(int argc, char* argv[])
@@ -57,9 +57,6 @@ int main(int argc, char* argv[])
     // UDP packet interval is between 2-5sec
     std::uniform_int_distribution<> dis(2, 5);
 
-    // Use all available interfaces
-    //zsys_set_interface ("*");
-
     std::string iface = riaps::framework::Network::GetConfiguredIface();
     if (iface != "")
         zsys_set_interface(iface.c_str());
@@ -73,15 +70,11 @@ int main(int argc, char* argv[])
     zactor_t *r_actor = zactor_new(riaps_actor, NULL);
     zsock_t * control = zsock_new_router(CONTROL_SOCKET);
 
-#ifndef NO_UDP_BEACON
-    // CZMQ zbeacons are used to discover the local network
-    // New zbeacon for publishing IP
+    // zbeacon for sending UDP beacons
     zactor_t *speaker = zactor_new (zbeacon, NULL);
 
     // listen for UDP packages
     zactor_t *listener  = zactor_new (zbeacon, NULL);
-
-
 
     #ifdef _DEBUG_
         zstr_sendx (speaker, "VERBOSE", NULL);
@@ -115,14 +108,13 @@ int main(int argc, char* argv[])
     }
     free (hostname);
 
-    // We will broadcast the magic value 0xCAFE
+    // Broadcast the magic value 0xCAFE
     byte announcement [2] = { 0xCA, 0xFE };
 
     // PUBLISHING only when we have to. (when no package from the others)
     //zsock_send (speaker, "sbi", "PUBLISH", announcement, 2, HIGH_BEACON_FREQ);
 
     zsock_send (listener, "sb", "SUBSCRIBE", "", 0);
-#endif
 
     // Store the ip addresses and timestamps here
     std::map<std::string, int64_t> ipcache;
@@ -135,12 +127,11 @@ int main(int argc, char* argv[])
 
     zpoller_t* poller = zpoller_new(control, NULL);
 
+    // Generate the time of the next announcement.
     int nextDiff = dis(gen)*1000;
-    //LOG(INFO) << "Next announcement in " << nextDiff << "s";
     int64_t nextAnnouncement = zclock_mono() + nextDiff;
 
     while (!zsys_interrupted) {
-#ifndef NO_UDP_BEACON
         // Wait for at most UDP_READ_TIMEOUT millisecond for UDP package
         zsock_set_rcvtimeo (listener, UDP_READ_TIMEOUT);
 
@@ -149,22 +140,19 @@ int main(int argc, char* argv[])
 
             LOG(INFO) << "Send UDP beacon";
 
-            zsock_send (speaker, "sbi", "PUBLISH", announcement, 2, HIGH_BEACON_FREQ);
+            zsock_send (speaker, "sbi", "PUBLISH", announcement, 2, BEACON_FREQ);
 
             // wait for sending out the packet
             zclock_sleep(100);
 
             // Stop sending beacons
-            //LOG(INFO) << "Beacon sent, stopping";
             zsock_send(speaker, "s", "SILENCE");
 
-            // Calulate the next announcment
+            // Calculate the next announcment
             int nextDiff = dis(gen)*1000;
-            //LOG(INFO) << "Next announcement in " << nextDiff << "s";
             nextAnnouncement = zclock_mono() + nextDiff;
         }
 
-#endif
         void *which = zpoller_wait(poller, 1);
 
         // Command arrived from external scripts
@@ -224,15 +212,15 @@ int main(int argc, char* argv[])
         }
 
         // Source of the incoming UDP package
-#ifndef NO_UDP_BEACON
         char *ipaddress = zstr_recv (listener);
 
         // If UDP package was received
         if (ipaddress) {
 
-            LOG(INFO) << "Beacon arrived";//, recalculate the next announcment";
+            LOG(INFO) << "Beacon arrived";
+
+            // Recalculate (delay) the next announcement
             int nextDiff = dis(gen)*1000;
-            //LOG(INFO) << "Next announcement in " << nextDiff << "s";
 
             // Calculate the next announcment
             nextAnnouncement = zclock_mono() + nextDiff;
@@ -259,14 +247,12 @@ int main(int argc, char* argv[])
             assert (zframe_data (content) [1] == 0xFE);
             zframe_destroy (&content);
             zstr_free (&ipaddress);
-            //zstr_sendx (speaker, "SILENCE", NULL);
         } else{
             bool is_maintained = maintain_cache(ipcache);
             if (is_maintained){
                 print_cacheips(ipcache);
             }
         }
-#endif
     }
 
 
@@ -274,12 +260,11 @@ int main(int argc, char* argv[])
     zsock_destroy(&control);
     zactor_destroy(&r_actor);
 
-#ifndef NO_UDP_BEACON
 
     zactor_destroy(&listener);
     zactor_destroy(&speaker);
-#endif
 
+    // Wait for the threads to stop for sure.
     sleep(2);
     
     return 0;

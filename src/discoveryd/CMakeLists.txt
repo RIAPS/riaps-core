@@ -10,6 +10,7 @@ set(RDISCOVERYD_SOURCE r_discoveryd.cc
                        ../../include/discoveryd/r_odht.h
                        ../../include/framework/rfw_configuration.h
                        ../../include/framework/rfw_network_interfaces.h
+                       ../../include/utils/r_utils.h
         )
 
 add_executable(rdiscoveryd ${RDISCOVERYD_SOURCE})
