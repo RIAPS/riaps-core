@@ -13,7 +13,7 @@ bool maintain_cache(std::map<std::string, int64_t>& ipcache){
     bool is_maintained = false;
     int64_t time = zclock_mono();
 
-    // Maintain the list, if somebody didn't respond in the past 10 seconds => remove from the list
+    // Maintain the list, if somebody didn't respond in the past IPCACHE_TIMEOUT seconds => remove from the list
     std::vector<std::string> marked_for_delete;
     for (auto it=ipcache.begin(); it!=ipcache.end(); it++){
         if ((time-it->second)>IPCACHE_TIMEOUT)

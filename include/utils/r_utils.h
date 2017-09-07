@@ -18,7 +18,7 @@ void print_cacheips(std::map<std::string, int64_t>& ipcache);
 
 /// \brief Removes entries if no package from the node for IPCACHE_TIMEOUT
 /// \param ipcache IP address - timestamp pairs
-/// \return
+/// \return true if entries are removed from the cache
 bool maintain_cache(std::map<std::string, int64_t>& ipcache);
 
 /// \deprecated
