@@ -15,23 +15,38 @@ bool CommandLineParser::CommandOptionExists(char **begin, char **end, const std:
     return std::find(begin, end, option) != end;
 }
 
-int CommandLineParser::ParseActorParams(std::map<std::string, std::string> &actualParams, std::string &actorName,
-                                        std::string &modelFile, nlohmann::json &jsonConfig) {
-    return Parse(actualParams, actorName, modelFile, jsonConfig);
+int CommandLineParser::ParseActorParams(std::map<std::string, std::string> &actualParams,
+                                        std::string &appName,
+                                        std::string &actorName,
+                                        std::string &modelFile,
+                                        nlohmann::json &jsonConfig) {
+    return Parse(actualParams, appName, actorName, modelFile, jsonConfig);
 }
 
 int CommandLineParser::ParseDeviceParams(std::map<std::string, std::string> &actualParams,
-                                         std::string &deviceName, std::string &modelFile, nlohmann::json &jsonConfig) {
-    return Parse(actualParams,deviceName, modelFile, jsonConfig);
+                                         std::string &appName,
+                                         std::string &deviceName,
+                                         std::string &modelFile,
+                                         nlohmann::json &jsonConfig) {
+    return Parse(actualParams, appName, deviceName, modelFile, jsonConfig);
 }
 
 int CommandLineParser::Parse(std::map<std::string, std::string>& actualParams,
+                             std::string& appName,
                              std::string& actorName,
                              std::string& modelFile,
                              nlohmann::json &jsonConfig) {
 
     // First param: <model>
     modelFile = std::string(_argv[1]);
+
+    // RIAPSAPPS folder
+    char* riapsapps = std::getenv(ENV_RIAPSAPPS);
+
+    // Configured, try the configured folder
+    if ()
+
+    // Check the json file in the apps folder
     std::ifstream ifs(modelFile);
 
     if (!ifs.good()){

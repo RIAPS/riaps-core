@@ -41,6 +41,12 @@ set(FRAMEWORK_LIB_FILES r_discoverdapi.cc
                         ../../include/componentmodel/r_oneshottimer.h
         )
 
+set(ACTOR_FILES r_actor_main.cc
+                ../../include/componentmodel/r_actor.h
+                ../../include/const/r_jsonmodel.h
+                ../../include/boost/filesystem
+                ../../include/componentmodel/r_argumentparser.h)
+
 add_library(riaps SHARED ${FRAMEWORK_LIB_FILES})
 target_link_libraries(riaps czmq zmq dl capnp kj)
 
