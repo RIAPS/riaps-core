@@ -1,20 +1,12 @@
-//
-// Created by istvan on 11/7/16.
-//
 
+
+#include <componentmodel/r_commandlineparser.h>
 #include "componentmodel/r_actor_main.h"
 #include <regex>
-
 #include <sched.h>
-#include <componentmodel/r_commandlineparser.h>
 
-
-// TODO: Move to another directory (e.g.: actor?)
 int main(int argc, char* argv[]) {
-
-    // Logger experiment
-    //zsock_t* logger_socket = initLogger();
-    //sendLogMessage(logger_socket, "Actor started...");
+    //Note: Uncomment for RT-FIFO
     //sched_param x;
     //x.__sched_priority = 99;
     //auto ret = sched_setscheduler(0, SCHED_FIFO, &x);
