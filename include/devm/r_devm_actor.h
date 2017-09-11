@@ -5,7 +5,7 @@
 #ifndef RIAPS_CORE_R_DEVM_ACTOR_H
 #define RIAPS_CORE_R_DEVM_ACTOR_H
 
-#include <const/r_endpointconfigs.h>
+#include <const/r_const.h>
 #include <czmq.h>
 
 

@@ -8,6 +8,8 @@
 #ifndef R_UTILS
 #define R_UTILS 
 
+#include "../const/r_const.h"
+
 #include <iostream>
 #include <string>
 #include <map>
@@ -18,17 +20,35 @@
 // The ip addresses are obtained from the UDP beacons
 #define IPCACHE_TIMEOUT 30000 // msec
 
-/// \brief Prints the stored IP addresses to the standard output
-/// \param ipcache
+/**
+ * Prints the cached IP addresses to the standard output
+ * 
+ * @param ipcache <IP address, timestamp> pairs
+ */
 void print_cacheips(std::map<std::string, int64_t>& ipcache);
 
 
-/// \brief Removes entries if no package from the node for IPCACHE_TIMEOUT
-/// \param ipcache IP address - timestamp pairs
-/// \return true if entries are removed from the cache
+/**
+ * Removes entries from the IP CACHE if no package from the node for IPCACHE_TIMEOUT.
+ * 
+ * @param ipcache <IP address, timestamp> pairs
+ * @return true if entries are removed from the cache
+ */
+
 bool maintain_cache(std::map<std::string, int64_t>& ipcache);
 
-/// \deprecated
+/**
+ * @deprecated
+ */
 std::vector<std::string> maintain_servicecache(std::map<std::string, int64_t >& servicecache);
+
+/**
+ * Returns the full path of the given RIAPS application. The full path is the concatenated string of RIAPSHOME env.
+ * variable and appName, without '/' at the end. The function does NOT check whether the path is valid.
+ *
+ * @param appName Name of the RIAPS application.
+ * @return The full path or empty string if the RIAPSHOME is not set.
+ */
+const std::string GetAppPath(const std::string& appName);
 
 #endif

@@ -56,3 +56,16 @@ std::vector<std::string> maintain_servicecache(std::map<std::string, int64_t >& 
     return outdated_services;
 }
 
+const std::string GetAppPath(const std::string& appName){
+    char* riapsAppsPath = std::getenv(ENV_RIAPSAPPS);
+    
+    if (riapsAppsPath == nullptr) return "";
+    
+    std::string p = riapsAppsPath;
+    if (p.back() == '/')
+        p.pop_back();
+    p+= "/" + appName;
+    
+    return p;
+}
+

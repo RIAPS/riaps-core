@@ -37,24 +37,32 @@ int CommandLineParser::Parse(std::map<std::string, std::string>& actualParams,
                              std::string& modelFile,
                              nlohmann::json &jsonConfig) {
 
-    // First param: <model>
-    modelFile = std::string(_argv[1]);
+    // First param: <app>
+    appName = std::string(_argv[ARG_IDX_APP]);
+
+    // Second param: <model>
+    modelFile = std::string(_argv[ARG_IDX_MODEL]);
+    std::string modelFilePath;
 
     // RIAPSAPPS folder
-    char* riapsapps = std::getenv(ENV_RIAPSAPPS);
+    std::string appFolder = GetAppPath(appName);
 
     // Configured, try the configured folder
-    if ()
+    if (appFolder!="") {
+        modelFilePath = appFolder + "/" + modelFile;
+    } else {
+        modelFilePath = modelFile;
+    }
 
     // Check the json file in the apps folder
-    std::ifstream ifs(modelFile);
+    std::ifstream ifs(modelFilePath);
 
     if (!ifs.good()){
         std::cerr << "Cannot open modelfile: " << modelFile << std::endl;
         return -1;
     }
 
-    actorName = std::string(_argv[2]);
+    actorName = std::string(_argv[ARG_IDX_ACTOR]);
     if (actorName.empty()){
         std::cerr << "Actorname cannot be empty string" << std::endl;
         return -1;
@@ -71,7 +79,7 @@ int CommandLineParser::Parse(std::map<std::string, std::string>& actualParams,
     }
 
 
-    for (int i = 3; i<_argc; i++){
+    for (int i = ARG_IDX_ACTOR+1; i<_argc; i++){
         std::string currentParam = std::string(_argv[i]);
         std::regex paramRegex("--(.+)=(.+)");
 

@@ -13,7 +13,7 @@ int main(int argc, char* argv[]) {
 
     //assert(ret==0);
 
-    if (CommandLineParser::CommandOptionExists(argv, argv+argc, "-h") || argc < 3){
+    if (CommandLineParser::CommandOptionExists(argv, argv+argc, "-h") || argc < 4){
         std::cout << "Usage: start_actor <model> <actor> [-h]" << std::endl;
         std::cout << std::endl;
         std::cout << std::setw(15) << "app" << std::endl << "\t\tApplication name" << std::endl;

@@ -10,9 +10,10 @@
 
 int main(int argc, char* argv[]) {
 
-    if (CommandLineParser::CommandOptionExists(argv, argv+argc, "-h") || argc < 3){
+    if (CommandLineParser::CommandOptionExists(argv, argv+argc, "-h") || argc < 4){
         std::cout << "Usage: start_device <model> <device> [-h]" << std::endl;
         std::cout << std::endl;
+        std::cout << std::setw(15) << "app" << std::endl << "\t\tApplication name" << std::endl;
         std::cout << std::setw(15) << "model" << std::endl << "\t\tModel file argument (.json)" << std::endl;
         std::cout << std::setw(15) << "device" << std::endl << "\t\tThe device to be instantiated" << std::endl;
         return 0;
@@ -24,10 +25,11 @@ int main(int argc, char* argv[]) {
         std::map<std::string, std::string> actualParams;
         std::string deviceName;
         std::string modelName;
+        std::string appName;
         nlohmann::json configJson;
 
         CommandLineParser cmdLineParser(argv, argc);
-        if (cmdLineParser.ParseDeviceParams(actualParams, deviceName,modelName, configJson) == -1){
+        if (cmdLineParser.ParseDeviceParams(actualParams, appName, deviceName,modelName, configJson) == -1){
             std::cerr << "Couldn't parse commandline parameters" << std::endl;
             return -1;
         }

@@ -39,11 +39,14 @@ set(FRAMEWORK_LIB_FILES r_discoverdapi.cc
                         ../../include/componentmodel/r_messagebase.h
                         ../../include/componentmodel/r_insiderport.h
                         ../../include/componentmodel/r_oneshottimer.h
+                        ../../include/componentmodel/r_commandlineparser.h
+                        ../../include/const/r_const.h
         )
 
 set(ACTOR_FILES r_actor_main.cc
                 ../../include/componentmodel/r_actor.h
                 ../../include/const/r_jsonmodel.h
+                ../../include/const/r_const.h
                 ../../include/boost/filesystem
                 ../../include/componentmodel/r_argumentparser.h)
 

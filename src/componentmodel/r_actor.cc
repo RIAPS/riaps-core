@@ -1,6 +1,5 @@
 #include <componentmodel/r_argumentparser.h>
 #include <componentmodel/r_actor.h>
-#include <const/r_jsonmodel.h>
 
 namespace riaps {
 
@@ -343,31 +342,26 @@ namespace riaps {
                 lowercaselibname+=std::tolower(ch,loc);
 
 
-            std::string componentLibraryName = "lib" + lowercaselibname + ".so";
-            char* riapsAppsPath = std::getenv(ENV_RIAPSAPPS);
+            const std::string componentLibraryName = "lib" + lowercaselibname + ".so";
+            const std::string appPath = GetAppPath(GetApplicationName());
 
-            void* dlOpenHandle = NULL;
+            void* dlOpenHandle = nullptr;
 
             // No environment variable set, let dlopen() find the component library
-            if (riapsAppsPath == NULL){
+            if (appPath == ""){
                 dlOpenHandle = dlopen(componentLibraryName.c_str(), RTLD_NOW);
-                if (dlOpenHandle == NULL) {
+                if (dlOpenHandle == nullptr) {
                     throw std::runtime_error("Cannot open library: " + componentLibraryName + " (" + dlerror() + ")");
                 }
             } else {
-                std::string p = riapsAppsPath;
-                if (p.back() == '/')
-                    p.pop_back();
-                p+= "/" + GetApplicationName() + "/" + componentLibraryName;
-
-                std::string fullPath = p;
-                dlOpenHandle = dlopen(componentLibraryName.c_str(), RTLD_NOW);
-                if (dlOpenHandle == NULL) {
+                const std::string fullPath = appPath + "/" + componentLibraryName;
+                dlOpenHandle = dlopen(fullPath.c_str(), RTLD_NOW);
+                if (dlOpenHandle == nullptr) {
                     throw std::runtime_error("Cannot open library: " + fullPath + " (" + dlerror() + ")");
                 }
             }
 
-            if (dlOpenHandle != NULL) {
+            if (dlOpenHandle != nullptr) {
 
                 // It is not a device, start the component
                 if (!component_config.isDevice || (component_config.isDevice && _startDevice)) {

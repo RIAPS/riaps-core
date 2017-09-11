@@ -6,7 +6,7 @@
 #define RIAPS_CORE_RFW_CONFIGURATION_H
 
 
-#include <const/r_endpointconfigs.h>
+#include <const/r_const.h>
 #include <string>
 
 namespace riaps {
