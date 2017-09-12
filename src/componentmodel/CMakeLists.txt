@@ -12,7 +12,6 @@ set(FRAMEWORK_LIB_FILES r_discoverdapi.cc
                         r_periodictimer.cc
                         r_debugcomponent.cc
                         r_messagebase.cc
-        #delete_r_network_interfaces.cc
                         r_responseport.cc
                         r_requestport.cc
                         r_parameter.cc
@@ -28,7 +27,28 @@ set(FRAMEWORK_LIB_FILES r_discoverdapi.cc
                         r_devmapi.cc
                         r_devicethread.cc
                         ../../include/componentmodel/r_discoverdapi.h
+                        ../../include/componentmodel/r_componentbase.h
+                        ../../include/componentmodel/r_publisherport.h
+                        ../../include/componentmodel/r_subscriberport.h
+                        ../../include/componentmodel/r_discoverdapi.h
+                        ../../include/componentmodel/r_configuration.h
+                        ../../include/componentmodel/r_periodictimer.h
+                        ../../include/componentmodel/r_responseport.h
+                        ../../include/componentmodel/r_requestport.h
+                        ../../include/componentmodel/r_actor.h
+                        ../../include/componentmodel/r_messagebase.h
+                        ../../include/componentmodel/r_insiderport.h
+                        ../../include/componentmodel/r_oneshottimer.h
+                        ../../include/componentmodel/r_commandlineparser.h
+                        ../../include/const/r_const.h
         )
+
+set(ACTOR_FILES r_actor_main.cc
+                ../../include/componentmodel/r_actor.h
+                ../../include/const/r_jsonmodel.h
+                ../../include/const/r_const.h
+                ../../include/boost/filesystem
+                ../../include/componentmodel/r_argumentparser.h)
 
 add_library(riaps SHARED ${FRAMEWORK_LIB_FILES})
 target_link_libraries(riaps czmq zmq dl capnp kj)

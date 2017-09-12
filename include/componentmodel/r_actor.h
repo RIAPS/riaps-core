@@ -9,6 +9,8 @@
 #include <componentmodel/r_componentbase.h>
 #include <componentmodel/r_peripheral.h>
 #include <componentmodel/r_devmapi.h>
+#include <const/r_const.h>
+#include <utils/r_utils.h>
 
 #include <json.h>
 

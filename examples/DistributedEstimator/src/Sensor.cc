@@ -10,7 +10,7 @@ namespace distributedestimator {
     namespace components {
 
         comp_sensor::comp_sensor(_component_conf_j &config, riaps::Actor &actor) : comp_sensorbase(config, actor) {
-            PrintParameters();
+            //PrintParameters();
         }
 
         void comp_sensor::OnClock(riaps::ports::PortBase *port) {
@@ -27,8 +27,6 @@ namespace distributedestimator {
         void comp_sensor::OnRequest(const messages::SensorQuery::Reader &message,
                                     riaps::ports::PortBase *port) {
             //PrintMessageOnPort(port);
-
-            //std::cout << "Sensor::OnRequest() " << message.getMsg().cStr() << std::endl;
 
             std::cout << "Sensor::OnRequest(): " << message.getMsg().cStr() <<std::endl;
 

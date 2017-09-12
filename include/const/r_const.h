@@ -1,10 +1,7 @@
-//
-// Created by istvan on 5/11/17.
-//
+#ifndef RIAPS_CORE_R_CONST_H
+#define RIAPS_CORE_R_CONST_H
 
-#ifndef RIAPS_CORE_R_ENDPOINTCONFIGS_H
-#define RIAPS_CORE_R_ENDPOINTCONFIGS_H
-
+#define ENV_RIAPSAPPS "RIAPSAPPS"
 
 #define DISCOVERY_SERVICE_IPC "ipc:///tmp/riaps-disco"
 
@@ -15,5 +12,11 @@
 #define DEVM_ENDPOINTRECVTIMEOUT 1000
 #define DEVM_ENDPOINTSENDTIMEOUT 3000
 
+/**
+ * Actor argument index
+ */
+#define ARG_IDX_APP   1
+#define ARG_IDX_MODEL 2
+#define ARG_IDX_ACTOR 3
 
-#endif //RIAPS_CORE_R_ENDPOINTCONFIGS_H
+#endif //RIAPS_CORE_R_CONST_H

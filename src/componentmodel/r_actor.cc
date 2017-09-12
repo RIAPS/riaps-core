@@ -1,18 +1,7 @@
-//
-// Created by parallels on 9/6/16.
-//
-
-
-#include <componentmodel/r_actor.h>
-#include <const/r_jsonmodel.h>
-
-#include <set>
 #include <componentmodel/r_argumentparser.h>
-
+#include <componentmodel/r_actor.h>
 
 namespace riaps {
-
-
 
     Actor* riaps::Actor::CreateActor(nlohmann::json&    configJson,
                                      const std::string& actorName ,
@@ -353,13 +342,26 @@ namespace riaps {
                 lowercaselibname+=std::tolower(ch,loc);
 
 
-            std::string component_library_name = "lib" + lowercaselibname + ".so";
+            const std::string componentLibraryName = "lib" + lowercaselibname + ".so";
+            const std::string appPath = GetAppPath(GetApplicationName());
 
-            void *handle = dlopen(component_library_name.c_str(), RTLD_NOW);
-            if (handle == NULL) {
-                throw std::runtime_error("Cannot open library: " + component_library_name + " (" + dlerror() + ")");
+            void* dlOpenHandle = nullptr;
+
+            // No environment variable set, let dlopen() find the component library
+            if (appPath == ""){
+                dlOpenHandle = dlopen(componentLibraryName.c_str(), RTLD_NOW);
+                if (dlOpenHandle == nullptr) {
+                    throw std::runtime_error("Cannot open library: " + componentLibraryName + " (" + dlerror() + ")");
+                }
+            } else {
+                const std::string fullPath = appPath + "/" + componentLibraryName;
+                dlOpenHandle = dlopen(fullPath.c_str(), RTLD_NOW);
+                if (dlOpenHandle == nullptr) {
+                    throw std::runtime_error("Cannot open library: " + fullPath + " (" + dlerror() + ")");
+                }
             }
-            else {
+
+            if (dlOpenHandle != nullptr) {
 
                 // It is not a device, start the component
                 if (!component_config.isDevice || (component_config.isDevice && _startDevice)) {
@@ -368,10 +370,9 @@ namespace riaps {
                     if (_startDevice){
                         _actorName = component_config.component_name;
                     }
-                    
-                    _component_dll_handles.push_back(handle);
+                    _component_dll_handles.push_back(dlOpenHandle);
                     riaps::ComponentBase *(*create)(component_conf_j &, Actor &);
-                    create = (riaps::ComponentBase *(*)(component_conf_j &, Actor &)) dlsym(handle, "create_component");
+                    create = (riaps::ComponentBase *(*)(component_conf_j &, Actor &)) dlsym(dlOpenHandle, "create_component");
                     riaps::ComponentBase *component_instance = (riaps::ComponentBase *) create(component_config, *this);
                     _components.push_back(component_instance);
                 }
@@ -379,7 +380,6 @@ namespace riaps {
                 // If it is a device, but start the pheripheral first
                 else if (component_config.isDevice && !_startDevice){
                     auto peripheral = new Peripheral(this);
-
                     peripheral->Setup(_applicationName, _jsonFile, component_config.component_name, _commandLineParams);
                     _peripherals.push_back(peripheral);
                 }
