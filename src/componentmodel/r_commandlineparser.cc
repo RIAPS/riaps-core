@@ -47,11 +47,17 @@ int CommandLineParser::Parse(std::map<std::string, std::string>& actualParams,
     // RIAPSAPPS folder
     std::string appFolder = GetAppPath(appName);
 
-    // Configured, try the configured folder
-    if (appFolder!="") {
-        modelFilePath = appFolder + "/" + modelFile;
-    } else {
+    // If the environment variable is not set, or the model path is absolute
+    if (appFolder == "" || modelFile[0]=='/') {
         modelFilePath = modelFile;
+
+        // Is absolute path?
+        // Note: below c++ 14 there is no corresponding api call, thus just check string[0]=='/'
+        // Note: from c++ 14 use <filesystem> for that
+
+    } else {
+        // The modelFile is just the filename and the env variable is set
+        modelFilePath = appFolder + "/" + modelFile;
     }
 
     // Check the json file in the apps folder

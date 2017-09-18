@@ -64,7 +64,7 @@ endif()
 
 SET(MAJOR_VERSION "0")
 SET(MINOR_VERSION "5")
-SET(PATCH_VERSION "7")
+SET(PATCH_VERSION "8")
 
 IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
     INCLUDE(InstallRequiredSystemLibraries)
