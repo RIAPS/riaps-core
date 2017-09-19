@@ -86,18 +86,21 @@ int CommandLineParser::Parse(std::map<std::string, std::string>& actualParams,
 
 
     for (int i = ARG_IDX_ACTOR+1; i<_argc; i++){
-        std::string currentParam = std::string(_argv[i]);
-        std::regex paramRegex("--(.+)=(.+)");
+        std::string currentParamName = std::string(_argv[i++]);
+        if (i>=_argc) break;
+        std::string currentParamValue = std::string(_argv[i]);
+        std::string currentParam = currentParamName + "=" + currentParamValue;
 
+        std::regex paramRegex("--(.+)=(.+)");
         std::smatch paramMatch;
 
         if (!std::regex_search(currentParam, paramMatch, paramRegex)) {
-            std::cerr << "Wrong parameter: " << _argv[i] << std::endl;
+            std::cerr << "Wrong parameter: " << currentParamName << std::endl;
             return -1;
         }
 
         if (paramMatch.size()<3){
-            std::cerr << "Wrong parameter: " << _argv[i] << std::endl;
+            std::cerr << "Wrong parameter: " << currentParamName << std::endl;
             return -1;
         }
 
