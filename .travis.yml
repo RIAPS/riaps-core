@@ -15,7 +15,7 @@ before_script:
 - ./fetch_linux_amd64 --repo="https://github.com/RIAPS/riaps-externals/" --tag=$externalsversion
   --release-asset="riaps-externals-amd64.deb" .
 - sudo dpkg -i riaps-externals-amd64.deb
-- sudo add-apt-repository 'deb http://fr.archive.ubuntu.com/ubuntu/ wily main'
+- sudo add-apt-repository 'deb http://archive.ubuntu.com/ubuntu/ wily main'
 - sudo apt-get update
 - sudo apt-get install g++-5-arm-linux-gnueabihf g++-5 fakeroot
 - sudo rm -f /usr/bin/arm-linux-gnueabihf-gcc
