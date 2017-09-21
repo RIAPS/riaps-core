@@ -50,7 +50,7 @@ namespace riaps{
             if (firstrun) {
                 firstrun = false;
 
-                const component_conf_j& comp_conf = comp->GetConfig();
+                const component_conf& comp_conf = comp->GetConfig();
 
                 // Add insider ports
                 for (auto it_insconf = comp_conf.component_ports.inss.begin();
@@ -270,7 +270,7 @@ namespace riaps{
         zuuid_destroy(&_component_uuid);
     }
 
-    ComponentBase::ComponentBase(component_conf_j& config, Actor& actor) : _actor(&actor)//, _oneShotTimer(NULL)
+    ComponentBase::ComponentBase(component_conf& config, Actor& actor) : _actor(&actor)//, _oneShotTimer(NULL)
     {
         _configuration = config;
 
@@ -294,14 +294,14 @@ namespace riaps{
     //}
 
 
-    const ports::PublisherPort* ComponentBase::InitPublisherPort(const _component_port_pub_j& config) {
+    const ports::PublisherPort* ComponentBase::InitPublisherPort(const _component_port_pub& config) {
         auto result = new ports::PublisherPort(config, this);
         std::unique_ptr<ports::PortBase> newport(result);
         _ports[config.portName] = std::move(newport);
         return result;
     }
 
-    const ports::SubscriberPort* ComponentBase::InitSubscriberPort(const _component_port_sub_j& config) {
+    const ports::SubscriberPort* ComponentBase::InitSubscriberPort(const _component_port_sub& config) {
         std::unique_ptr<ports::SubscriberPort> newport(new ports::SubscriberPort(config, this));
         auto result = newport.get();
         newport->Init();
@@ -309,14 +309,14 @@ namespace riaps{
         return result;
     }
 
-    const ports::ResponsePort* ComponentBase::InitResponsePort(const _component_port_rep_j & config) {
+    const ports::ResponsePort* ComponentBase::InitResponsePort(const _component_port_rep & config) {
         auto result = new ports::ResponsePort(config, this);
         std::unique_ptr<ports::PortBase> newport(result);
         _ports[config.portName] = std::move(newport);
         return result;
     }
 
-    const ports::RequestPort*   ComponentBase::InitRequestPort(const _component_port_req_j& config){
+    const ports::RequestPort*   ComponentBase::InitRequestPort(const _component_port_req& config){
         std::unique_ptr<ports::RequestPort> newport(new ports::RequestPort(config, this));
         auto result = newport.get();
         newport->Init();
@@ -324,7 +324,7 @@ namespace riaps{
         return result;
     }
 
-    const ports::InsidePort* ComponentBase::InitInsiderPort(const _component_port_ins_j& config) {
+    const ports::InsidePort* ComponentBase::InitInsiderPort(const _component_port_ins& config) {
         auto result = new ports::InsidePort(config, riaps::ports::InsidePortMode::BIND, this);
         std::unique_ptr<ports::PortBase> newport(result);
         _ports[config.portName] = std::move(newport);
@@ -342,7 +342,7 @@ namespace riaps{
 //        return result;
 //    }
 
-    const ports::PeriodicTimer* ComponentBase::InitTimerPort(const _component_port_tim_j& config) {
+    const ports::PeriodicTimer* ComponentBase::InitTimerPort(const _component_port_tim& config) {
         std::string timerchannel = GetTimerChannel();
         std::unique_ptr<ports::PeriodicTimer> newtimer(new ports::PeriodicTimer(timerchannel, config));
         newtimer->start();
@@ -395,7 +395,7 @@ namespace riaps{
     }
 
 
-    const component_conf_j& ComponentBase::GetConfig() const {
+    const component_conf& ComponentBase::GetConfig() const {
         return _configuration;
     }
 

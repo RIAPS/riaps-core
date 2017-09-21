@@ -4,7 +4,7 @@ set(FRAMEWORK_LIB_FILES r_discoverdapi.cc
                         ../utils/r_message.cc
                         ../utils/r_capnp_helper.cc
                         #../loggerd/r_logger_utilities.cc
-                        r_insiderport.cc
+        r_insideport.cc
                         r_subscriberport.cc
                         r_publisherport.cc
                         r_actor.cc
@@ -37,7 +37,7 @@ set(FRAMEWORK_LIB_FILES r_discoverdapi.cc
                         ../../include/componentmodel/r_requestport.h
                         ../../include/componentmodel/r_actor.h
                         ../../include/componentmodel/r_messagebase.h
-                        ../../include/componentmodel/r_insiderport.h
+                        ../../include/componentmodel/r_insideport.h
                         ../../include/componentmodel/r_oneshottimer.h
                         ../../include/componentmodel/r_commandlineparser.h
                         ../../include/const/r_const.h

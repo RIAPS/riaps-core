@@ -4,7 +4,7 @@
 
 #include "componentmodel/r_debugcomponent.h"
 
-DebugComponent::DebugComponent(_component_conf_j &config, riaps::Actor &actor):ComponentBase(config, actor) {
+DebugComponent::DebugComponent(_component_conf &config, riaps::Actor &actor):ComponentBase(config, actor) {
 
 }
 

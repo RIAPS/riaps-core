@@ -26,8 +26,8 @@ namespace riaps {
         public:
             using PortBase::Send;
 
-            ResponsePort(const _component_port_rep_j &config, ComponentBase *parent_component);
-            virtual const _component_port_rep_j* GetConfig() const;
+            ResponsePort(const _component_port_rep &config, ComponentBase *parent_component);
+            virtual const _component_port_rep* GetConfig() const;
 
 
             //virtual bool Send(std::string& message) const;

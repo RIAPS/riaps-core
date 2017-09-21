@@ -10,7 +10,7 @@ namespace riaps{
 
     namespace ports {
 
-        PublisherPort::PublisherPort(const _component_port_pub_j &config, ComponentBase *parent_component)
+        PublisherPort::PublisherPort(const _component_port_pub &config, ComponentBase *parent_component)
             : PortBase(PortTypes::Publisher, (component_port_config*)&config)
 
         {
@@ -49,8 +49,8 @@ namespace riaps{
 
         }
 
-        const _component_port_pub_j* PublisherPort::GetConfig() const {
-            return (_component_port_pub_j*)GetPortBaseConfig();
+        const _component_port_pub* PublisherPort::GetConfig() const {
+            return (_component_port_pub*)GetPortBaseConfig();
         }
 
         std::string PublisherPort::GetEndpoint() {

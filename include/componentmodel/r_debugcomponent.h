@@ -12,7 +12,7 @@
 // Ports definitions come from the json file.
 class DebugComponent : public riaps::ComponentBase {
 public:
-    DebugComponent(_component_conf_j& config, riaps::Actor& actor);
+    DebugComponent(_component_conf& config, riaps::Actor& actor);
 
     virtual void OnMessageArrived(const std::string& messagetype, zmsg_t* msg_body, riaps::ports::PortBase* port);
 

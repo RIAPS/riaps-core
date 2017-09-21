@@ -22,7 +22,7 @@ namespace riaps {
         public:
             using PortBase::Send;
 
-            RequestPort(const _component_port_req_j &config, const ComponentBase *component);
+            RequestPort(const _component_port_req &config, const ComponentBase *component);
             virtual void Init();
 
             // Returns false, if the request port couldn't connect
@@ -32,7 +32,7 @@ namespace riaps {
 
             virtual RequestPort* AsRequestPort() ;
 
-            virtual const _component_port_req_j* GetConfig() const;
+            virtual const _component_port_req* GetConfig() const;
 
             ~RequestPort() noexcept ;
         protected:

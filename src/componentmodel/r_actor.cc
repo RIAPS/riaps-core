@@ -117,7 +117,7 @@ namespace riaps {
             }
 
             // Store the componentname - componenttype pair
-            _component_conf_j new_component_config;
+            _component_conf new_component_config;
 
             new_component_config.component_name = componentName;
             new_component_config.component_type = componentType;
@@ -141,7 +141,7 @@ namespace riaps {
 
 
 
-                    _component_port_pub_j newpubconfig;
+                    _component_port_pub newpubconfig;
                     newpubconfig.portName = pubportname;
                     newpubconfig.messageType = pubporttype;
 
@@ -166,7 +166,7 @@ namespace riaps {
                     auto subportname = it_subport.key();
                     auto subporttype = it_subport.value()[J_TYPE];
 
-                    _component_port_sub_j newsubconfig;
+                    _component_port_sub newsubconfig;
                     newsubconfig.portName = subportname;
                     newsubconfig.messageType = subporttype;
 
@@ -193,7 +193,7 @@ namespace riaps {
                     std::string reptype = it_reqport.value()[J_PORT_REPTYPE];
                     std::string messagetype = reqtype + "#" + reptype;
 
-                    _component_port_req_j newreqconfig;
+                    _component_port_req newreqconfig;
                     newreqconfig.portName = reqportname;
                     //newreqconfig.messageType = subporttype;
                     newreqconfig.req_type = reqtype;
@@ -223,7 +223,7 @@ namespace riaps {
                     std::string reptype = it_repport.value()[J_PORT_REPTYPE];
                     std::string messagetype = reqtype + "#" + reptype;
 
-                    _component_port_rep_j newrepconfig;
+                    _component_port_rep newrepconfig;
                     newrepconfig.portName = repportname;
                     newrepconfig.req_type = reqtype;
                     newrepconfig.rep_type = reptype;
@@ -250,7 +250,7 @@ namespace riaps {
                     auto timname = it_tim.key();
                     auto timperiod = it_tim.value()["period"];
 
-                    _component_port_tim_j newtimconfig;
+                    _component_port_tim newtimconfig;
                     newtimconfig.portName = timname;
                     newtimconfig.period   = timperiod;
 
@@ -268,7 +268,7 @@ namespace riaps {
                     auto insname = it_ins.key();
                     //auto timperiod = it_tim.value()["period"];
 
-                    _component_port_ins_j newinsconfig;
+                    _component_port_ins newinsconfig;
                     newinsconfig.portName = insname;
 
                     new_component_config.component_ports.inss.push_back(newinsconfig);
@@ -371,8 +371,8 @@ namespace riaps {
                         _actorName = component_config.component_name;
                     }
                     _component_dll_handles.push_back(dlOpenHandle);
-                    riaps::ComponentBase *(*create)(component_conf_j &, Actor &);
-                    create = (riaps::ComponentBase *(*)(component_conf_j &, Actor &)) dlsym(dlOpenHandle, "create_component");
+                    riaps::ComponentBase *(*create)(component_conf &, Actor &);
+                    create = (riaps::ComponentBase *(*)(component_conf &, Actor &)) dlsym(dlOpenHandle, "create_component");
                     riaps::ComponentBase *component_instance = (riaps::ComponentBase *) create(component_config, *this);
                     _components.push_back(component_instance);
                 }

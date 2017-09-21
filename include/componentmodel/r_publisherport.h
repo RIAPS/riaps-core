@@ -23,11 +23,11 @@ namespace riaps {
        public:
            using PortBase::Send;
 
-           PublisherPort(const _component_port_pub_j &config, ComponentBase *parent_component);
+           PublisherPort(const _component_port_pub &config, ComponentBase *parent_component);
 
            std::string GetEndpoint();
 
-           virtual const _component_port_pub_j* GetConfig() const;
+           virtual const _component_port_pub* GetConfig() const;
 
 
            //virtual bool Send(std::string& message) const;

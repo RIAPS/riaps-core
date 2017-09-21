@@ -18,7 +18,7 @@ namespace riaps {
         class SubscriberPort : public PortBase {
         public:
 
-            SubscriberPort(const _component_port_sub_j &config, const ComponentBase *component);
+            SubscriberPort(const _component_port_sub &config, const ComponentBase *component);
 
             virtual void Init();
 
@@ -27,7 +27,7 @@ namespace riaps {
 
             virtual SubscriberPort* AsSubscribePort() ;
 
-            virtual const _component_port_sub_j* GetConfig() const;
+            virtual const _component_port_sub* GetConfig() const;
 
             //static std::unique_ptr<SubscriberPort> InitFromServiceDetails(service_details& target_service);
 

@@ -19,7 +19,7 @@
 #include "r_requestport.h"
 #include "r_actor.h"
 #include "r_messagebase.h"
-#include "r_insiderport.h"
+#include "r_insideport.h"
 #include "r_oneshottimer.h"
 
 #include <msgpack.hpp>
@@ -64,7 +64,7 @@ namespace riaps {
 
         /// @param config Configuration, parsed from the model file.
         /// @param actor Parent actor, the owner the component.
-        ComponentBase(component_conf_j& config, Actor& actor);
+        ComponentBase(component_conf& config, Actor& actor);
 
         /// @return The owner actor.
         const Actor* GetActor() const;
@@ -101,7 +101,7 @@ namespace riaps {
          *
          * @return The component configuration.
          */
-        const component_conf_j& GetConfig() const;
+        const component_conf& GetConfig() const;
 
         /**
          * @brief Debug function. Prints the details of the given port to the standard output.
@@ -228,12 +228,12 @@ namespace riaps {
         zactor_t*         _zactor_component;
 
     private:
-        const ports::PublisherPort*  InitPublisherPort(const _component_port_pub_j&);
-        const ports::SubscriberPort* InitSubscriberPort(const _component_port_sub_j&);
-        const ports::ResponsePort*   InitResponsePort(const _component_port_rep_j&);
-        const ports::RequestPort*    InitRequestPort(const _component_port_req_j&);
-        const ports::PeriodicTimer*  InitTimerPort(const _component_port_tim_j&);
-        const ports::InsidePort*     InitInsiderPort(const _component_port_ins_j&);
+        const ports::PublisherPort*  InitPublisherPort(const _component_port_pub&);
+        const ports::SubscriberPort* InitSubscriberPort(const _component_port_sub&);
+        const ports::ResponsePort*   InitResponsePort(const _component_port_rep&);
+        const ports::RequestPort*    InitRequestPort(const _component_port_req&);
+        const ports::PeriodicTimer*  InitTimerPort(const _component_port_tim&);
+        const ports::InsidePort*     InitInsiderPort(const _component_port_ins&);
 
         std::string             GetTimerChannel();
         std::string             GetCompUuid();
@@ -245,7 +245,7 @@ namespace riaps {
         // Note: disable for now, we need more tests.
         //timers::OneShotTimer*   _oneShotTimer;
 
-        component_conf_j _configuration;
+        component_conf _configuration;
 
         // All the component ports
         std::map<std::string, std::unique_ptr<ports::PortBase>> _ports;

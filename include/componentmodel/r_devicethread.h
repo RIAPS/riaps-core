@@ -6,7 +6,7 @@
 #define RIAPS_CORE_R_DEVICETHREAD_H
 
 #include <componentmodel/r_configuration.h>
-#include <componentmodel/r_insiderport.h>
+#include <componentmodel/r_insideport.h>
 #include <czmq.h>
 #include <string>
 #include <thread>
@@ -15,16 +15,13 @@
 namespace riaps {
     namespace components {
 
-        /// \brief Base class for all device threads
-        ///
-        ///
-
+        /**
+         * Base class for all device threads
+         */
         class DeviceThread {
         public:
 
-            DeviceThread(const _component_conf_j& deviceConfig);
-
-            //friend void devThreadActor(zsock_t *pipe, void *args);
+            DeviceThread(const _component_conf& deviceConfig);
 
             riaps::ports::InsidePort* GetInsidePortByName(const std::string& portName);
 
@@ -44,9 +41,11 @@ namespace riaps {
             //void InitInsides(zpoller_t* poller= NULL);
             void InitInsides();
 
-            /// \brief Polls the registered inside ports for input data.
-            /// \param timeout Poller timeout in msec.
-            /// \return ZMQ socket, where the input data is waiting for recv() call.
+            /**
+             * Polls the registered inside ports for input data.
+             * @param timeout Poller timeout in msec.
+             * @return ZMQ socket, where the input data is waiting for recv() call.
+             */
             void* PollDeviceThreadPorts(int timeout);
 
             void AddSocketToPoller(const zsock_t* socket);
@@ -57,16 +56,13 @@ namespace riaps {
             bool SendMessageOnPort(zmsg_t **message, const std::string &portName);
 
         private:
-            //zactor_t *_deviceThread;
-            std::thread           _deviceThread;
-            const _component_conf_j&    _deviceConfig;
+            std::thread                 _deviceThread;
+            const _component_conf&    _deviceConfig;
             std::map<std::string, std::unique_ptr<ports::PortBase>> _insidePorts;
             std::atomic<bool> _isTerminated;
 
             zpoller_t* _poller;
         };
-
-        //void devThreadActor(zsock_t *pipe, void *args);
     }
 }
 

@@ -98,7 +98,7 @@ namespace riaps {
         ////
 
 
-        std::vector<component_conf_j> _component_configurations;
+        std::vector<component_conf> _component_configurations;
     private:
         zpoller_t*                  _poller;
    
