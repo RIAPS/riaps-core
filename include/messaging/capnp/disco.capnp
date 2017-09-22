@@ -83,23 +83,38 @@ struct DiscoUpd {
 
 struct DiscoReq {
    union {
-      actorReg @0 : ActorRegReq;
-      serviceReg @1 : ServiceRegReq;
+      actorReg      @0 : ActorRegReq;
+      serviceReg    @1 : ServiceRegReq;
       serviceLookup @2 : ServiceLookupReq;
-      actorUnreg @3 : ActorRegReq;
+      actorUnreg    @3 : ActorRegReq;
+      groupJoin     @4 : GroupJoinReq;
    }
 }
 
 struct DiscoRep {
    union {
-      actorReg @0 : ActorRegRep;
-      serviceReg @1 : ServiceRegRep;
+      actorReg      @0 : ActorRegRep;
+      serviceReg    @1 : ServiceRegRep;
       serviceLookup @2 : ServiceLookupRep;
-      actorUnreg @3 : ActorUnregRep;
+      actorUnreg    @3 : ActorUnregRep;
+      groupJoin     @4 : GroupJoinRep;
    }
 }
 
+# Groups
+struct GroupJoinReq {
+    appName     @0 : Text;
+    groupType   @1 : Text;
+    groupName   @2 : Text;
+    messageType @3 : Text;
+    address     @4 : Text; # <IPaddress:port>
+}
 
+struct GroupJoinRep {
+    status @0  : Status;
+}
+
+# Messages between OpenDHT - rdiscoveryd threads
 
 struct ProviderListUpdate {
         providerpath @0 : Text;

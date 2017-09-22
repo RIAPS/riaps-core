@@ -52,6 +52,8 @@ CAPNP_DECLARE_SCHEMA(cbc342ab58d149c5);
 CAPNP_DECLARE_SCHEMA(e0b61d43b0aaea51);
 CAPNP_DECLARE_SCHEMA(c5c00415475f9f91);
 CAPNP_DECLARE_SCHEMA(bb3e73b2a350ce4e);
+CAPNP_DECLARE_SCHEMA(8cf2e8426e6996b1);
+CAPNP_DECLARE_SCHEMA(ceed43cf9a251472);
 CAPNP_DECLARE_SCHEMA(df60e0f885b07faa);
 CAPNP_DECLARE_SCHEMA(eaf54029bfb3e6dc);
 CAPNP_DECLARE_SCHEMA(fb2dbb7b7e32fd8e);
@@ -259,6 +261,7 @@ struct DiscoReq {
     SERVICE_REG,
     SERVICE_LOOKUP,
     ACTOR_UNREG,
+    GROUP_JOIN,
   };
 
   struct _capnpPrivate {
@@ -280,10 +283,41 @@ struct DiscoRep {
     SERVICE_REG,
     SERVICE_LOOKUP,
     ACTOR_UNREG,
+    GROUP_JOIN,
   };
 
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(bb3e73b2a350ce4e, 1, 1)
+    #if !CAPNP_LITE
+    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    #endif  // !CAPNP_LITE
+  };
+};
+
+struct GroupJoinReq {
+  GroupJoinReq() = delete;
+
+  class Reader;
+  class Builder;
+  class Pipeline;
+
+  struct _capnpPrivate {
+    CAPNP_DECLARE_STRUCT_HEADER(8cf2e8426e6996b1, 0, 5)
+    #if !CAPNP_LITE
+    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    #endif  // !CAPNP_LITE
+  };
+};
+
+struct GroupJoinRep {
+  GroupJoinRep() = delete;
+
+  class Reader;
+  class Builder;
+  class Pipeline;
+
+  struct _capnpPrivate {
+    CAPNP_DECLARE_STRUCT_HEADER(ceed43cf9a251472, 1, 0)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
     #endif  // !CAPNP_LITE
@@ -1504,6 +1538,10 @@ public:
   inline bool hasActorUnreg() const;
   inline  ::riaps::discovery::ActorRegReq::Reader getActorUnreg() const;
 
+  inline bool isGroupJoin() const;
+  inline bool hasGroupJoin() const;
+  inline  ::riaps::discovery::GroupJoinReq::Reader getGroupJoin() const;
+
 private:
   ::capnp::_::StructReader _reader;
   template <typename, ::capnp::Kind>
@@ -1565,6 +1603,14 @@ public:
   inline void adoptActorUnreg(::capnp::Orphan< ::riaps::discovery::ActorRegReq>&& value);
   inline ::capnp::Orphan< ::riaps::discovery::ActorRegReq> disownActorUnreg();
 
+  inline bool isGroupJoin();
+  inline bool hasGroupJoin();
+  inline  ::riaps::discovery::GroupJoinReq::Builder getGroupJoin();
+  inline void setGroupJoin( ::riaps::discovery::GroupJoinReq::Reader value);
+  inline  ::riaps::discovery::GroupJoinReq::Builder initGroupJoin();
+  inline void adoptGroupJoin(::capnp::Orphan< ::riaps::discovery::GroupJoinReq>&& value);
+  inline ::capnp::Orphan< ::riaps::discovery::GroupJoinReq> disownGroupJoin();
+
 private:
   ::capnp::_::StructBuilder _builder;
   template <typename, ::capnp::Kind>
@@ -1624,6 +1670,10 @@ public:
   inline bool isActorUnreg() const;
   inline bool hasActorUnreg() const;
   inline  ::riaps::discovery::ActorUnregRep::Reader getActorUnreg() const;
+
+  inline bool isGroupJoin() const;
+  inline bool hasGroupJoin() const;
+  inline  ::riaps::discovery::GroupJoinRep::Reader getGroupJoin() const;
 
 private:
   ::capnp::_::StructReader _reader;
@@ -1686,6 +1736,14 @@ public:
   inline void adoptActorUnreg(::capnp::Orphan< ::riaps::discovery::ActorUnregRep>&& value);
   inline ::capnp::Orphan< ::riaps::discovery::ActorUnregRep> disownActorUnreg();
 
+  inline bool isGroupJoin();
+  inline bool hasGroupJoin();
+  inline  ::riaps::discovery::GroupJoinRep::Builder getGroupJoin();
+  inline void setGroupJoin( ::riaps::discovery::GroupJoinRep::Reader value);
+  inline  ::riaps::discovery::GroupJoinRep::Builder initGroupJoin();
+  inline void adoptGroupJoin(::capnp::Orphan< ::riaps::discovery::GroupJoinRep>&& value);
+  inline ::capnp::Orphan< ::riaps::discovery::GroupJoinRep> disownGroupJoin();
+
 private:
   ::capnp::_::StructBuilder _builder;
   template <typename, ::capnp::Kind>
@@ -1699,6 +1757,203 @@ private:
 class DiscoRep::Pipeline {
 public:
   typedef DiscoRep Pipelines;
+
+  inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
+  inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
+      : _typeless(kj::mv(typeless)) {}
+
+private:
+  ::capnp::AnyPointer::Pipeline _typeless;
+  friend class ::capnp::PipelineHook;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+};
+#endif  // !CAPNP_LITE
+
+class GroupJoinReq::Reader {
+public:
+  typedef GroupJoinReq Reads;
+
+  Reader() = default;
+  inline explicit Reader(::capnp::_::StructReader base): _reader(base) {}
+
+  inline ::capnp::MessageSize totalSize() const {
+    return _reader.totalSize().asPublic();
+  }
+
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const {
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+  }
+#endif  // !CAPNP_LITE
+
+  inline bool hasAppName() const;
+  inline  ::capnp::Text::Reader getAppName() const;
+
+  inline bool hasGroupType() const;
+  inline  ::capnp::Text::Reader getGroupType() const;
+
+  inline bool hasGroupName() const;
+  inline  ::capnp::Text::Reader getGroupName() const;
+
+  inline bool hasMessageType() const;
+  inline  ::capnp::Text::Reader getMessageType() const;
+
+  inline bool hasAddress() const;
+  inline  ::capnp::Text::Reader getAddress() const;
+
+private:
+  ::capnp::_::StructReader _reader;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::List;
+  friend class ::capnp::MessageBuilder;
+  friend class ::capnp::Orphanage;
+};
+
+class GroupJoinReq::Builder {
+public:
+  typedef GroupJoinReq Builds;
+
+  Builder() = delete;  // Deleted to discourage incorrect usage.
+                       // You can explicitly initialize to nullptr instead.
+  inline Builder(decltype(nullptr)) {}
+  inline explicit Builder(::capnp::_::StructBuilder base): _builder(base) {}
+  inline operator Reader() const { return Reader(_builder.asReader()); }
+  inline Reader asReader() const { return *this; }
+
+  inline ::capnp::MessageSize totalSize() const { return asReader().totalSize(); }
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const { return asReader().toString(); }
+#endif  // !CAPNP_LITE
+
+  inline bool hasAppName();
+  inline  ::capnp::Text::Builder getAppName();
+  inline void setAppName( ::capnp::Text::Reader value);
+  inline  ::capnp::Text::Builder initAppName(unsigned int size);
+  inline void adoptAppName(::capnp::Orphan< ::capnp::Text>&& value);
+  inline ::capnp::Orphan< ::capnp::Text> disownAppName();
+
+  inline bool hasGroupType();
+  inline  ::capnp::Text::Builder getGroupType();
+  inline void setGroupType( ::capnp::Text::Reader value);
+  inline  ::capnp::Text::Builder initGroupType(unsigned int size);
+  inline void adoptGroupType(::capnp::Orphan< ::capnp::Text>&& value);
+  inline ::capnp::Orphan< ::capnp::Text> disownGroupType();
+
+  inline bool hasGroupName();
+  inline  ::capnp::Text::Builder getGroupName();
+  inline void setGroupName( ::capnp::Text::Reader value);
+  inline  ::capnp::Text::Builder initGroupName(unsigned int size);
+  inline void adoptGroupName(::capnp::Orphan< ::capnp::Text>&& value);
+  inline ::capnp::Orphan< ::capnp::Text> disownGroupName();
+
+  inline bool hasMessageType();
+  inline  ::capnp::Text::Builder getMessageType();
+  inline void setMessageType( ::capnp::Text::Reader value);
+  inline  ::capnp::Text::Builder initMessageType(unsigned int size);
+  inline void adoptMessageType(::capnp::Orphan< ::capnp::Text>&& value);
+  inline ::capnp::Orphan< ::capnp::Text> disownMessageType();
+
+  inline bool hasAddress();
+  inline  ::capnp::Text::Builder getAddress();
+  inline void setAddress( ::capnp::Text::Reader value);
+  inline  ::capnp::Text::Builder initAddress(unsigned int size);
+  inline void adoptAddress(::capnp::Orphan< ::capnp::Text>&& value);
+  inline ::capnp::Orphan< ::capnp::Text> disownAddress();
+
+private:
+  ::capnp::_::StructBuilder _builder;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  friend class ::capnp::Orphanage;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+};
+
+#if !CAPNP_LITE
+class GroupJoinReq::Pipeline {
+public:
+  typedef GroupJoinReq Pipelines;
+
+  inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
+  inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
+      : _typeless(kj::mv(typeless)) {}
+
+private:
+  ::capnp::AnyPointer::Pipeline _typeless;
+  friend class ::capnp::PipelineHook;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+};
+#endif  // !CAPNP_LITE
+
+class GroupJoinRep::Reader {
+public:
+  typedef GroupJoinRep Reads;
+
+  Reader() = default;
+  inline explicit Reader(::capnp::_::StructReader base): _reader(base) {}
+
+  inline ::capnp::MessageSize totalSize() const {
+    return _reader.totalSize().asPublic();
+  }
+
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const {
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+  }
+#endif  // !CAPNP_LITE
+
+  inline  ::riaps::discovery::Status getStatus() const;
+
+private:
+  ::capnp::_::StructReader _reader;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::List;
+  friend class ::capnp::MessageBuilder;
+  friend class ::capnp::Orphanage;
+};
+
+class GroupJoinRep::Builder {
+public:
+  typedef GroupJoinRep Builds;
+
+  Builder() = delete;  // Deleted to discourage incorrect usage.
+                       // You can explicitly initialize to nullptr instead.
+  inline Builder(decltype(nullptr)) {}
+  inline explicit Builder(::capnp::_::StructBuilder base): _builder(base) {}
+  inline operator Reader() const { return Reader(_builder.asReader()); }
+  inline Reader asReader() const { return *this; }
+
+  inline ::capnp::MessageSize totalSize() const { return asReader().totalSize(); }
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const { return asReader().toString(); }
+#endif  // !CAPNP_LITE
+
+  inline  ::riaps::discovery::Status getStatus();
+  inline void setStatus( ::riaps::discovery::Status value);
+
+private:
+  ::capnp::_::StructBuilder _builder;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  friend class ::capnp::Orphanage;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+};
+
+#if !CAPNP_LITE
+class GroupJoinRep::Pipeline {
+public:
+  typedef GroupJoinRep Pipelines;
 
   inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
   inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
@@ -3105,6 +3360,58 @@ inline ::capnp::Orphan< ::riaps::discovery::ActorRegReq> DiscoReq::Builder::diso
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
+inline bool DiscoReq::Reader::isGroupJoin() const {
+  return which() == DiscoReq::GROUP_JOIN;
+}
+inline bool DiscoReq::Builder::isGroupJoin() {
+  return which() == DiscoReq::GROUP_JOIN;
+}
+inline bool DiscoReq::Reader::hasGroupJoin() const {
+  if (which() != DiscoReq::GROUP_JOIN) return false;
+  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline bool DiscoReq::Builder::hasGroupJoin() {
+  if (which() != DiscoReq::GROUP_JOIN) return false;
+  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline  ::riaps::discovery::GroupJoinReq::Reader DiscoReq::Reader::getGroupJoin() const {
+  KJ_IREQUIRE(which() == DiscoReq::GROUP_JOIN,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinReq>::get(
+      _reader.getPointerField(0 * ::capnp::POINTERS));
+}
+inline  ::riaps::discovery::GroupJoinReq::Builder DiscoReq::Builder::getGroupJoin() {
+  KJ_IREQUIRE(which() == DiscoReq::GROUP_JOIN,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinReq>::get(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void DiscoReq::Builder::setGroupJoin( ::riaps::discovery::GroupJoinReq::Reader value) {
+  _builder.setDataField<DiscoReq::Which>(
+      0 * ::capnp::ELEMENTS, DiscoReq::GROUP_JOIN);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinReq>::set(
+      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+}
+inline  ::riaps::discovery::GroupJoinReq::Builder DiscoReq::Builder::initGroupJoin() {
+  _builder.setDataField<DiscoReq::Which>(
+      0 * ::capnp::ELEMENTS, DiscoReq::GROUP_JOIN);
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinReq>::init(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void DiscoReq::Builder::adoptGroupJoin(
+    ::capnp::Orphan< ::riaps::discovery::GroupJoinReq>&& value) {
+  _builder.setDataField<DiscoReq::Which>(
+      0 * ::capnp::ELEMENTS, DiscoReq::GROUP_JOIN);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinReq>::adopt(
+      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::riaps::discovery::GroupJoinReq> DiscoReq::Builder::disownGroupJoin() {
+  KJ_IREQUIRE(which() == DiscoReq::GROUP_JOIN,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinReq>::disown(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+
 inline  ::riaps::discovery::DiscoRep::Which DiscoRep::Reader::which() const {
   return _reader.getDataField<Which>(0 * ::capnp::ELEMENTS);
 }
@@ -3318,6 +3625,232 @@ inline ::capnp::Orphan< ::riaps::discovery::ActorUnregRep> DiscoRep::Builder::di
               "Must check which() before get()ing a union member.");
   return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregRep>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+
+inline bool DiscoRep::Reader::isGroupJoin() const {
+  return which() == DiscoRep::GROUP_JOIN;
+}
+inline bool DiscoRep::Builder::isGroupJoin() {
+  return which() == DiscoRep::GROUP_JOIN;
+}
+inline bool DiscoRep::Reader::hasGroupJoin() const {
+  if (which() != DiscoRep::GROUP_JOIN) return false;
+  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline bool DiscoRep::Builder::hasGroupJoin() {
+  if (which() != DiscoRep::GROUP_JOIN) return false;
+  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline  ::riaps::discovery::GroupJoinRep::Reader DiscoRep::Reader::getGroupJoin() const {
+  KJ_IREQUIRE(which() == DiscoRep::GROUP_JOIN,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinRep>::get(
+      _reader.getPointerField(0 * ::capnp::POINTERS));
+}
+inline  ::riaps::discovery::GroupJoinRep::Builder DiscoRep::Builder::getGroupJoin() {
+  KJ_IREQUIRE(which() == DiscoRep::GROUP_JOIN,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinRep>::get(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void DiscoRep::Builder::setGroupJoin( ::riaps::discovery::GroupJoinRep::Reader value) {
+  _builder.setDataField<DiscoRep::Which>(
+      0 * ::capnp::ELEMENTS, DiscoRep::GROUP_JOIN);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinRep>::set(
+      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+}
+inline  ::riaps::discovery::GroupJoinRep::Builder DiscoRep::Builder::initGroupJoin() {
+  _builder.setDataField<DiscoRep::Which>(
+      0 * ::capnp::ELEMENTS, DiscoRep::GROUP_JOIN);
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinRep>::init(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void DiscoRep::Builder::adoptGroupJoin(
+    ::capnp::Orphan< ::riaps::discovery::GroupJoinRep>&& value) {
+  _builder.setDataField<DiscoRep::Which>(
+      0 * ::capnp::ELEMENTS, DiscoRep::GROUP_JOIN);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinRep>::adopt(
+      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::riaps::discovery::GroupJoinRep> DiscoRep::Builder::disownGroupJoin() {
+  KJ_IREQUIRE(which() == DiscoRep::GROUP_JOIN,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinRep>::disown(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+
+inline bool GroupJoinReq::Reader::hasAppName() const {
+  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline bool GroupJoinReq::Builder::hasAppName() {
+  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::Text::Reader GroupJoinReq::Reader::getAppName() const {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _reader.getPointerField(0 * ::capnp::POINTERS));
+}
+inline  ::capnp::Text::Builder GroupJoinReq::Builder::getAppName() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void GroupJoinReq::Builder::setAppName( ::capnp::Text::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
+      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+}
+inline  ::capnp::Text::Builder GroupJoinReq::Builder::initAppName(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
+      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+}
+inline void GroupJoinReq::Builder::adoptAppName(
+    ::capnp::Orphan< ::capnp::Text>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
+      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::Text> GroupJoinReq::Builder::disownAppName() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+
+inline bool GroupJoinReq::Reader::hasGroupType() const {
+  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
+}
+inline bool GroupJoinReq::Builder::hasGroupType() {
+  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::Text::Reader GroupJoinReq::Reader::getGroupType() const {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _reader.getPointerField(1 * ::capnp::POINTERS));
+}
+inline  ::capnp::Text::Builder GroupJoinReq::Builder::getGroupType() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _builder.getPointerField(1 * ::capnp::POINTERS));
+}
+inline void GroupJoinReq::Builder::setGroupType( ::capnp::Text::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
+      _builder.getPointerField(1 * ::capnp::POINTERS), value);
+}
+inline  ::capnp::Text::Builder GroupJoinReq::Builder::initGroupType(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
+      _builder.getPointerField(1 * ::capnp::POINTERS), size);
+}
+inline void GroupJoinReq::Builder::adoptGroupType(
+    ::capnp::Orphan< ::capnp::Text>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
+      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::Text> GroupJoinReq::Builder::disownGroupType() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
+      _builder.getPointerField(1 * ::capnp::POINTERS));
+}
+
+inline bool GroupJoinReq::Reader::hasGroupName() const {
+  return !_reader.getPointerField(2 * ::capnp::POINTERS).isNull();
+}
+inline bool GroupJoinReq::Builder::hasGroupName() {
+  return !_builder.getPointerField(2 * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::Text::Reader GroupJoinReq::Reader::getGroupName() const {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _reader.getPointerField(2 * ::capnp::POINTERS));
+}
+inline  ::capnp::Text::Builder GroupJoinReq::Builder::getGroupName() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _builder.getPointerField(2 * ::capnp::POINTERS));
+}
+inline void GroupJoinReq::Builder::setGroupName( ::capnp::Text::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
+      _builder.getPointerField(2 * ::capnp::POINTERS), value);
+}
+inline  ::capnp::Text::Builder GroupJoinReq::Builder::initGroupName(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
+      _builder.getPointerField(2 * ::capnp::POINTERS), size);
+}
+inline void GroupJoinReq::Builder::adoptGroupName(
+    ::capnp::Orphan< ::capnp::Text>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
+      _builder.getPointerField(2 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::Text> GroupJoinReq::Builder::disownGroupName() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
+      _builder.getPointerField(2 * ::capnp::POINTERS));
+}
+
+inline bool GroupJoinReq::Reader::hasMessageType() const {
+  return !_reader.getPointerField(3 * ::capnp::POINTERS).isNull();
+}
+inline bool GroupJoinReq::Builder::hasMessageType() {
+  return !_builder.getPointerField(3 * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::Text::Reader GroupJoinReq::Reader::getMessageType() const {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _reader.getPointerField(3 * ::capnp::POINTERS));
+}
+inline  ::capnp::Text::Builder GroupJoinReq::Builder::getMessageType() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _builder.getPointerField(3 * ::capnp::POINTERS));
+}
+inline void GroupJoinReq::Builder::setMessageType( ::capnp::Text::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
+      _builder.getPointerField(3 * ::capnp::POINTERS), value);
+}
+inline  ::capnp::Text::Builder GroupJoinReq::Builder::initMessageType(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
+      _builder.getPointerField(3 * ::capnp::POINTERS), size);
+}
+inline void GroupJoinReq::Builder::adoptMessageType(
+    ::capnp::Orphan< ::capnp::Text>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
+      _builder.getPointerField(3 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::Text> GroupJoinReq::Builder::disownMessageType() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
+      _builder.getPointerField(3 * ::capnp::POINTERS));
+}
+
+inline bool GroupJoinReq::Reader::hasAddress() const {
+  return !_reader.getPointerField(4 * ::capnp::POINTERS).isNull();
+}
+inline bool GroupJoinReq::Builder::hasAddress() {
+  return !_builder.getPointerField(4 * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::Text::Reader GroupJoinReq::Reader::getAddress() const {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _reader.getPointerField(4 * ::capnp::POINTERS));
+}
+inline  ::capnp::Text::Builder GroupJoinReq::Builder::getAddress() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _builder.getPointerField(4 * ::capnp::POINTERS));
+}
+inline void GroupJoinReq::Builder::setAddress( ::capnp::Text::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
+      _builder.getPointerField(4 * ::capnp::POINTERS), value);
+}
+inline  ::capnp::Text::Builder GroupJoinReq::Builder::initAddress(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
+      _builder.getPointerField(4 * ::capnp::POINTERS), size);
+}
+inline void GroupJoinReq::Builder::adoptAddress(
+    ::capnp::Orphan< ::capnp::Text>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
+      _builder.getPointerField(4 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::Text> GroupJoinReq::Builder::disownAddress() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
+      _builder.getPointerField(4 * ::capnp::POINTERS));
+}
+
+inline  ::riaps::discovery::Status GroupJoinRep::Reader::getStatus() const {
+  return _reader.getDataField< ::riaps::discovery::Status>(
+      0 * ::capnp::ELEMENTS);
+}
+
+inline  ::riaps::discovery::Status GroupJoinRep::Builder::getStatus() {
+  return _builder.getDataField< ::riaps::discovery::Status>(
+      0 * ::capnp::ELEMENTS);
+}
+inline void GroupJoinRep::Builder::setStatus( ::riaps::discovery::Status value) {
+  _builder.setDataField< ::riaps::discovery::Status>(
+      0 * ::capnp::ELEMENTS, value);
 }
 
 inline bool ProviderListUpdate::Reader::hasProviderpath() const {
