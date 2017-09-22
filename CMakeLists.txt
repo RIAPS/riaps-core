@@ -41,10 +41,10 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_HOME_DIRECTORY}/bin)
 
 #add includes
 include_directories(include)
-add_subdirectory(src/componentmodel)
-add_subdirectory(src/discoveryd)
-add_subdirectory(src/devm)
-add_subdirectory(src/device)
+#add_subdirectory(src/componentmodel)
+#add_subdirectory(src/discoveryd)
+#add_subdirectory(src/devm)
+#add_subdirectory(src/device)
 
 if (BUILD_TESTS)
     include(CTest)
@@ -56,6 +56,68 @@ if (BUILD_TESTS)
     #add_subdirectory(tests/testPubSub/test_1_1/test_1_1)
     #add_subdirectory(tests/EchoIO)
 endif()
+
+# Component model sources
+list (APPEND component_SOURCES
+        src/componentmodel/r_discoverdapi.cc
+        src/componentmodel/r_componentbase.cc
+        src/componentmodel/r_insideport.cc
+        src/componentmodel/r_subscriberport.cc
+        src/componentmodel/r_publisherport.cc
+        src/componentmodel/r_actor.cc
+        src/componentmodel/r_portbase.cc
+        src/componentmodel/r_periodictimer.cc
+        #src/componentmodel/r_debugcomponent.cc
+        src/componentmodel/r_messagebase.cc
+        src/componentmodel/r_responseport.cc
+        src/componentmodel/r_requestport.cc
+        src/componentmodel/r_parameter.cc
+        #src/componentmodel/r_oneshottimer.cc
+        src/componentmodel/r_commandlineparser.cc
+        src/componentmodel/r_argumentparser.cc
+        src/componentmodel/r_peripheral.cc
+        src/componentmodel/r_devmapi.cc
+        src/componentmodel/r_devicethread.cc
+        src/componentmodel/r_groupbase.cc
+        src/componentmodel/r_portregister.cc
+        src/utils/r_utils.cc
+        src/utils/r_message.cc
+        src/utils/r_capnp_helper.cc
+        src/framework/rfw_network_interfaces.cc
+        src/framework/rfw_configuration.cc
+        src/messaging/r_message.cc
+
+        include/messaging/disco.capnp.c++
+
+        )
+
+# Component model headers
+list (APPEND component_HEADERS
+        include/componentmodel/r_groupbase.h
+        include/componentmodel/r_discoverdapi.h
+        include/componentmodel/r_componentbase.h
+        include/componentmodel/r_publisherport.h
+        include/componentmodel/r_subscriberport.h
+        include/componentmodel/r_discoverdapi.h
+        include/componentmodel/r_configuration.h
+        include/componentmodel/r_periodictimer.h
+        include/componentmodel/r_responseport.h
+        include/componentmodel/r_requestport.h
+        include/componentmodel/r_actor.h
+        include/componentmodel/r_messagebase.h
+        include/componentmodel/r_insideport.h
+        include/componentmodel/r_portregister.h
+        #include/componentmodel/r_oneshottimer.h
+        include/componentmodel/r_commandlineparser.h
+        include/const/r_const.h
+        include/messaging/disco.capnp.h
+        )
+
+add_library(riaps SHARED
+        ${component_SOURCES}
+        ${component_HEADERS}
+        )
+target_link_libraries(riaps czmq zmq dl capnp kj)
 
 
 
