@@ -323,3 +323,47 @@ void deregisterActor(const std::string& actorName, const std::string& appName){
     zsock_destroy(&client);
     zclock_sleep(100);
 }
+
+bool
+joinGroup(const std::string& appName,
+          const std::string& groupType,
+          const std::string& groupName,
+          const std::string& messageType,
+          const std::string& address) {
+    capnp::MallocMessageBuilder message;
+    auto msgDiscoReq = message.initRoot<riaps::discovery::DiscoReq>();
+    auto msgGroupJoin = msgDiscoReq.initGroupJoin();
+    msgGroupJoin.setAppName(appName);
+    msgGroupJoin.setGroupName(groupName);
+    msgGroupJoin.setGroupType(groupType);
+    msgGroupJoin.setAddress(address);
+    msgGroupJoin.setMessageType(messageType);
+
+    auto serializedMessage = capnp::messageToFlatArray(message);
+
+    zmsg_t* msg = zmsg_new();
+    zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
+
+    std::string ipcAddress = riaps::framework::Configuration::GetDiscoveryServiceIpc();
+    zsock_t * client = zsock_new_req (ipcAddress.c_str());
+    assert(client);
+
+    zmsg_send(&msg, client);
+
+    /////
+    /// Response
+    /////
+    zmsg_t* msgResponse = zmsg_recv(client);
+
+    zframe_t* capnpBody = zmsg_pop(msgResponse);
+    size_t    size = zframe_size(capnpBody);
+    byte*     data = zframe_data(capnpBody);
+
+    auto capnpData = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
+
+    capnp::FlatArrayMessageReader reader(capnpData);
+    auto msgRep= reader.getRoot<riaps::discovery::DiscoRep>();
+
+    // If the response OK, return true
+    return msgRep.isGroupJoin() && msgRep.getGroupJoin().getStatus() == riaps::discovery::Status::OK;
+}

@@ -25,7 +25,6 @@ struct _service_lookup_result {
     std::string port_name;
     std::string host_name;
     uint16_t    port;
-
 };
 
 typedef struct _service_lookup_result service_lookup_result;
@@ -47,6 +46,14 @@ registerService(const std::string&              app_name     ,
                 riaps::discovery::Kind          kind         ,
                 riaps::discovery::Scope         scope        ,
                 const std::vector<std::string>& tags
+);
+
+extern bool
+joinGroup(const std::string& appName,
+          const std::string& groupType,
+          const std::string& groupName,
+          const std::string& messageType,
+          const std::string& address
 );
 
 
