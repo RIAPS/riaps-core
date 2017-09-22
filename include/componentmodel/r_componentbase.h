@@ -10,17 +10,14 @@
 #ifndef RIAPS_R_COMPONENTBASE_H
 #define RIAPS_R_COMPONENTBASE_H
 
-#include "r_publisherport.h"
-#include "r_subscriberport.h"
 #include "r_discoverdapi.h"
 #include "r_configuration.h"
 #include "r_periodictimer.h"
-#include "r_responseport.h"
-#include "r_requestport.h"
 #include "r_actor.h"
 #include "r_messagebase.h"
-#include "r_insideport.h"
 #include "r_oneshottimer.h"
+#include "r_groupbase.h"
+#include "r_portregister.h"
 
 #include <msgpack.hpp>
 #include <capnp/message.h>
@@ -38,9 +35,8 @@
 
 namespace riaps {
 
-
-
     class Actor;
+    class PortRegister;
 
     namespace ports {
         class PublisherPort;
@@ -59,7 +55,7 @@ namespace riaps {
 
     typedef void (riaps::ComponentBase::*riaps_handler)(const std::string&, msgpack::sbuffer*, riaps::ports::PortBase*);
 
-    class ComponentBase {
+    class ComponentBase : private PortRegister {
     public:
 
         /// @param config Configuration, parsed from the model file.
@@ -103,6 +99,8 @@ namespace riaps {
          */
         const component_conf& GetConfig() const;
 
+
+
         /**
          * @brief Debug function. Prints the details of the given port to the standard output.
          *
@@ -120,6 +118,12 @@ namespace riaps {
 
     protected:
         const ports::PortBase* GetPort(std::string portName) const;
+
+        /**
+         * @return Returns the details of the group types.
+         */
+        const groupt_conf& GetGroupTypeConfig() const;
+
 
         //
         //virtual void RegisterHandler(const std::string& portName, riaps_handler);
@@ -227,13 +231,15 @@ namespace riaps {
          */
         zactor_t*         _zactor_component;
 
+        /**
+         *
+         * @param groupType
+         * @param groupName
+         */
+        void JoinToGroup(const std::string& groupType, const std::string& groupName);
+
     private:
-        const ports::PublisherPort*  InitPublisherPort(const _component_port_pub&);
-        const ports::SubscriberPort* InitSubscriberPort(const _component_port_sub&);
-        const ports::ResponsePort*   InitResponsePort(const _component_port_rep&);
-        const ports::RequestPort*    InitRequestPort(const _component_port_req&);
-        const ports::PeriodicTimer*  InitTimerPort(const _component_port_tim&);
-        const ports::InsidePort*     InitInsiderPort(const _component_port_ins&);
+
 
         std::string             GetTimerChannel();
         std::string             GetCompUuid();
@@ -247,8 +253,9 @@ namespace riaps {
 
         component_conf _configuration;
 
-        // All the component ports
-        std::map<std::string, std::unique_ptr<ports::PortBase>> _ports;
+
+
+        //riaps::groups::Groups _groups;
     };
 }
 
