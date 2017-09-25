@@ -4,6 +4,7 @@
 
 #include <componentmodel/r_publisherport.h>
 #include <framework/rfw_network_interfaces.h>
+#include <componentmodel/r_discoverdapi.h>
 
 
 namespace riaps{

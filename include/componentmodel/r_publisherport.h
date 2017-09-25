@@ -5,7 +5,7 @@
 #ifndef RIAPS_R_PUBLISHERPORT_H
 #define RIAPS_R_PUBLISHERPORT_H
 
-#include "r_componentbase.h"
+
 #include "r_configuration.h"
 #include "r_portbase.h"
 

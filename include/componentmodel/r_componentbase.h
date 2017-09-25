@@ -17,7 +17,8 @@
 #include "r_messagebase.h"
 #include "r_oneshottimer.h"
 #include "r_groupbase.h"
-#include "r_portregister.h"
+
+
 
 #include <msgpack.hpp>
 #include <capnp/message.h>
@@ -32,19 +33,17 @@
 #include <ctime>
 
 
+#include "r_subscriberport.h"
+#include "r_responseport.h"
+#include "r_requestport.h"
+#include "r_insideport.h"
+#include "r_portregister.h"
 
 namespace riaps {
 
     class Actor;
-    class PortRegister;
 
-    namespace ports {
-        class PublisherPort;
-        class SubscriberPort;
-        class ResponsePort;
-        class RequestPort;
-        class Plug;
-    }
+
 
     /**
      * @brief Declare the component thread fn.
@@ -117,6 +116,14 @@ namespace riaps {
         virtual ~ComponentBase();
 
     protected:
+
+        const ports::PublisherPort*  InitPublisherPort(const _component_port_pub&);
+        const ports::SubscriberPort* InitSubscriberPort(const _component_port_sub&);
+        const ports::ResponsePort*   InitResponsePort(const _component_port_rep&);
+        const ports::RequestPort*    InitRequestPort(const _component_port_req&);
+        const ports::PeriodicTimer*  InitTimerPort(const _component_port_tim&);
+        const ports::InsidePort*     InitInsiderPort(const _component_port_ins&);
+
         const ports::PortBase* GetPort(std::string portName) const;
 
         /**
@@ -237,6 +244,9 @@ namespace riaps {
          * @param groupName
          */
         void JoinToGroup(const std::string& groupType, const std::string& groupName);
+
+
+
 
     private:
 

@@ -381,6 +381,54 @@ namespace riaps{
 //
 //    }
 
+    const ports::PublisherPort* ComponentBase::InitPublisherPort(const _component_port_pub& config) {
+        auto result = new ports::PublisherPort(config, this);
+        std::unique_ptr<ports::PortBase> newport(result);
+        _ports[config.portName] = std::move(newport);
+        return result;
+    }
+
+    const ports::SubscriberPort* ComponentBase::InitSubscriberPort(const _component_port_sub& config) {
+        std::unique_ptr<ports::SubscriberPort> newport(new ports::SubscriberPort(config, this));
+        auto result = newport.get();
+        newport->Init();
+        _ports[config.portName] = std::move(newport);
+        return result;
+    }
+
+    const ports::ResponsePort* ComponentBase::InitResponsePort(const _component_port_rep & config) {
+        auto result = new ports::ResponsePort(config, this);
+        std::unique_ptr<ports::PortBase> newport(result);
+        _ports[config.portName] = std::move(newport);
+        return result;
+    }
+
+    const ports::RequestPort*   ComponentBase::InitRequestPort(const _component_port_req& config){
+        std::unique_ptr<ports::RequestPort> newport(new ports::RequestPort(config, this));
+        auto result = newport.get();
+        newport->Init();
+        _ports[config.portName] = std::move(newport);
+        return result;
+    }
+
+    const ports::InsidePort* ComponentBase::InitInsiderPort(const _component_port_ins& config) {
+        auto result = new ports::InsidePort(config, riaps::ports::InsidePortMode::BIND, this);
+        std::unique_ptr<ports::PortBase> newport(result);
+        _ports[config.portName] = std::move(newport);
+        return result;
+    }
+
+    const ports::PeriodicTimer* ComponentBase::InitTimerPort(const _component_port_tim& config) {
+        std::string timerchannel = GetTimerChannel();
+        std::unique_ptr<ports::PeriodicTimer> newtimer(new ports::PeriodicTimer(timerchannel, config));
+        newtimer->start();
+
+        auto result = newtimer.get();
+
+        _ports[config.portName] = std::move(newtimer);
+        return result;
+    }
+
     bool ComponentBase::SendMessageOnPort(zmsg_t **message, const std::string &portName) {
         ports::PortBase* port = GetPortByName(portName);
         if (port == NULL) return false;
