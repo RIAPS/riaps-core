@@ -117,12 +117,12 @@ namespace riaps {
 
     protected:
 
-        const ports::PublisherPort*  InitPublisherPort(const _component_port_pub&);
-        const ports::SubscriberPort* InitSubscriberPort(const _component_port_sub&);
-        const ports::ResponsePort*   InitResponsePort(const _component_port_rep&);
-        const ports::RequestPort*    InitRequestPort(const _component_port_req&);
-        const ports::PeriodicTimer*  InitTimerPort(const _component_port_tim&);
-        const ports::InsidePort*     InitInsiderPort(const _component_port_ins&);
+
+        const ports::SubscriberPort* InitSubscriberPort (const _component_port_sub&);
+        const ports::ResponsePort*   InitResponsePort   (const _component_port_rep&);
+        const ports::RequestPort*    InitRequestPort    (const _component_port_req&);
+        const ports::PeriodicTimer*  InitTimerPort      (const _component_port_tim&);
+        const ports::InsidePort*     InitInsiderPort    (const _component_port_ins&);
 
         const ports::PortBase* GetPort(std::string portName) const;
 

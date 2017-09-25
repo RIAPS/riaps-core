@@ -22,6 +22,9 @@ namespace riaps{
         PortRegister();
         virtual ~PortRegister();
     protected:
+
+        const ports::PublisherPort*  InitPublisherPort(const _component_port_pub&);
+
         // All the component and group ports
         std::map<std::string, std::unique_ptr<ports::PortBase>> _ports;
 

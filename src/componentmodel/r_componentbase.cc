@@ -381,12 +381,7 @@ namespace riaps{
 //
 //    }
 
-    const ports::PublisherPort* ComponentBase::InitPublisherPort(const _component_port_pub& config) {
-        auto result = new ports::PublisherPort(config, this);
-        std::unique_ptr<ports::PortBase> newport(result);
-        _ports[config.portName] = std::move(newport);
-        return result;
-    }
+
 
     const ports::SubscriberPort* ComponentBase::InitSubscriberPort(const _component_port_sub& config) {
         std::unique_ptr<ports::SubscriberPort> newport(new ports::SubscriberPort(config, this));
