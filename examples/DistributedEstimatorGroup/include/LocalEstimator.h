@@ -20,8 +20,6 @@ namespace distributedestimator {
             virtual void OnReady(const messages::SensorReady::Reader &message,
                                  riaps::ports::PortBase *port);
 
-            virtual void OnOneShotTimer(const std::string& timerid);
-
             virtual void OnGroupMessage(riaps::groups::GroupId& groupId,
                                         capnp::FlatArrayMessageReader* capnpreader);
 
