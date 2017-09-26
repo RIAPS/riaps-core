@@ -7,8 +7,8 @@
 namespace distributedestimator {
     namespace components {
 
-        LocalEstimatorBase::LocalEstimatorBase(_component_conf_j &config, riaps::Actor &actor) : ComponentBase(config,
-                                                                                                               actor) {
+        LocalEstimatorBase::LocalEstimatorBase(_component_conf &config, riaps::Actor &actor) : ComponentBase(config,
+                                                                                                             actor) {
 
         }
 

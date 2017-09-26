@@ -8,7 +8,7 @@ namespace distributedestimator {
     namespace components {
 
 
-        LocalEstimator::LocalEstimator(_component_conf_j &config, riaps::Actor &actor) :
+        LocalEstimator::LocalEstimator(_component_conf &config, riaps::Actor &actor) :
                 LocalEstimatorBase(config, actor) {
             //PrintParameters();
         }
@@ -56,7 +56,7 @@ namespace distributedestimator {
     }
 }
 
-riaps::ComponentBase *create_component(_component_conf_j &config, riaps::Actor &actor) {
+riaps::ComponentBase *create_component(_component_conf &config, riaps::Actor &actor) {
     auto result = new distributedestimator::components::LocalEstimator(config, actor);
     return result;
 }

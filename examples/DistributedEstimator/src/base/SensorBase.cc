@@ -7,8 +7,8 @@
 namespace distributedestimator {
     namespace components {
 
-        comp_sensorbase::comp_sensorbase(_component_conf_j &config, riaps::Actor &actor) : ComponentBase(config,
-                                                                                                         actor) {
+        comp_sensorbase::comp_sensorbase(_component_conf &config, riaps::Actor &actor) : ComponentBase(config,
+                                                                                                       actor) {
 
         }
 
