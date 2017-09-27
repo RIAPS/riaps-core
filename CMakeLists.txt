@@ -114,16 +114,39 @@ list (APPEND component_HEADERS
         include/messaging/disco.capnp.h
         )
 
+# libriaps
 add_library(riaps SHARED
         ${component_SOURCES}
         ${component_HEADERS}
         )
 target_link_libraries(riaps czmq zmq dl capnp kj)
 
+# rdiscoveryd source
+list(APPEND RDISCOVERYD_SOURCE
+        src/discoveryd/r_discoveryd.cc
+        src/discoveryd/r_riaps_actor.cc
+        src/discoveryd/r_riaps_cmd_handler.cc
+        src/discoveryd/r_odht.cc
+        include/messaging/disco.capnp.c++
+        )
 
+# rdiscoveryd headers
+list(APPEND RDISCOVERYD_HEADERS
+        include/discoveryd/r_riaps_actor.h
+        include/discoveryd/r_discoveryd_commands.h
+        include/discoveryd/r_riaps_cmd_handler.h
+        include/discoveryd/r_odht.h
+        include/framework/rfw_configuration.h
+        include/framework/rfw_network_interfaces.h
+        include/utils/r_utils.h
+        include/messaging/disco.capnp.h
+        )
 
+# rdiscoveryd
+add_executable(rdiscoveryd ${RDISCOVERYD_SOURCE})
+target_link_libraries(rdiscoveryd czmq zmq opendht gnutls riaps capnp nettle hogweed gmp glog)
 
-
+install(TARGETS rdiscoveryd DESTINATION bin)
 
 SET(MAJOR_VERSION "0")
 SET(MINOR_VERSION "5")
