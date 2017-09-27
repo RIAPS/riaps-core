@@ -1,3 +1,4 @@
+#include <componentmodel/r_groupbase.h>
 #include <componentmodel/r_discoverdapi.h>
 #include <framework/rfw_configuration.h>
 
@@ -40,7 +41,6 @@ bool registerService(const std::string&              app_name     ,
     zmsg_t* msg = zmsg_new();
     zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
 
-    //zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC(mac_address));
     zsock_t * client = zsock_new_req (riaps::framework::Configuration::GetDiscoveryServiceIpc().c_str());
     assert(client);
 
@@ -326,18 +326,23 @@ void deregisterActor(const std::string& actorName, const std::string& appName){
 
 bool
 joinGroup(const std::string& appName,
-          const std::string& groupType,
-          const std::string& groupName,
-          const std::string& messageType,
-          const std::string& address) {
+          const riaps::groups::GroupId& groupId,
+          const std::vector<riaps::groups::GroupService>& groupServices) {
     capnp::MallocMessageBuilder message;
-    auto msgDiscoReq = message.initRoot<riaps::discovery::DiscoReq>();
-    auto msgGroupJoin = msgDiscoReq.initGroupJoin();
-    msgGroupJoin.setAppName(appName);
-    msgGroupJoin.setGroupName(groupName);
-    msgGroupJoin.setGroupType(groupType);
-    msgGroupJoin.setAddress(address);
-    msgGroupJoin.setMessageType(messageType);
+
+    auto msgDiscoReq      = message.initRoot<riaps::discovery::DiscoReq>();
+    auto msgGroupJoin     = msgDiscoReq.initGroupJoin();
+    auto msgGroupId       = msgGroupJoin.initGroupId();
+    auto msgGroupServices = msgGroupJoin.initServices(groupServices.size());
+
+    msgGroupId.setAppName(appName);
+    msgGroupId.setGroupType(groupId.groupType);
+    msgGroupId.setGroupName(groupId.groupName);
+
+    for (int i = 0; i< groupServices.size(); i++){
+        msgGroupServices[i].setAddress(groupServices[i].address);
+        msgGroupServices[i].setMessageType(groupServices[i].messageType);
+    }
 
     auto serializedMessage = capnp::messageToFlatArray(message);
 

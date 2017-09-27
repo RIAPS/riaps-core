@@ -11,11 +11,12 @@
 #include <capnp/serialize.h>
 #include <capnp/serialize-packed.h>
 
-#include "json.h"
-#include "utils/r_message.h"
+#include <json.h>
+#include <utils/r_message.h>
 #include "r_riaps_actor_commands.h"
-#include "messaging/disco.capnp.h"
-#include "componentmodel/r_componentbase.h"
+#include <messaging/disco.capnp.h>
+#include <componentmodel/r_componentbase.h>
+#include <componentmodel/r_groupbase.h>
 
 
 
@@ -50,10 +51,8 @@ registerService(const std::string&              app_name     ,
 
 extern bool
 joinGroup(const std::string& appName,
-          const std::string& groupType,
-          const std::string& groupName,
-          const std::string& messageType,
-          const std::string& address
+          const riaps::groups::GroupId& groupId,
+          const std::vector<riaps::groups::GroupService>& groupServices
 );
 
 
