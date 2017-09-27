@@ -102,12 +102,20 @@ struct DiscoRep {
 }
 
 # Groups
-struct GroupJoinReq {
+struct GroupId {
     appName     @0 : Text;
     groupType   @1 : Text;
     groupName   @2 : Text;
-    messageType @3 : Text;
-    address     @4 : Text; # <IPaddress:port>
+}
+
+struct GroupService {
+    messageType @0 : Text;
+    address     @1 : Text; # <IPaddress:port>
+}
+
+struct GroupJoinReq {
+    groupId  @0 : GroupId;
+    services @1 : List(GroupService);
 }
 
 struct GroupJoinRep {
