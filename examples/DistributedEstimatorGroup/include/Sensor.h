@@ -15,7 +15,9 @@ namespace distributedestimator {
         public:
 
             comp_sensor(_component_conf &config, riaps::Actor &actor);
+            virtual ~comp_sensor();
 
+        protected:
 
             virtual void OnClock(riaps::ports::PortBase *port);
 
@@ -28,11 +30,6 @@ namespace distributedestimator {
             virtual bool SendGroupMessage(riaps::groups::GroupId&      groupId,
                                           capnp::MallocMessageBuilder& messageBuilder,
                                           const std::string&           portName);
-
-
-            virtual ~comp_sensor();
-
-
         private:
             std::unique_ptr<std::uniform_real_distribution<double>> unif;
             std::default_random_engine re;

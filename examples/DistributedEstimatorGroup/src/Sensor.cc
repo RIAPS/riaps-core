@@ -39,8 +39,13 @@ namespace distributedestimator {
             }
         }
 
-        void comp_sensor::OnOneShotTimer(const std::string &timerid) {
+        void comp_sensor::OnGroupMessage(riaps::groups::GroupId &groupId, capnp::FlatArrayMessageReader *capnpreader) {
 
+        }
+
+        bool comp_sensor::SendGroupMessage(riaps::groups::GroupId &groupId, capnp::MallocMessageBuilder &messageBuilder,
+                                           const std::string &portName) {
+            return true;
         }
 
         comp_sensor::~comp_sensor() {

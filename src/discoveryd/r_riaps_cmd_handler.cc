@@ -1,13 +1,15 @@
-//
-// Created by parallels on 9/14/16.
-//
+/**
+ * Handlers of disco messages
+ *
+ * @author Istvan Madari <istvan.madari@vanderbilt.edu>
+ */
 
 #include <discoveryd/r_riaps_cmd_handler.h>
 #include <discoveryd/r_discoveryd_commands.h>
 #include <discoveryd/r_odht.h>
 #include <framework/rfw_network_interfaces.h>
 
-#include <iostream>
+#include <msgpack.hpp>
 
 
 std::pair<std::string, std::string>
@@ -121,6 +123,7 @@ bool handlePipeMessage(zsock_t* pipeSocket, dht::DhtRunner& dhtNode){
     return terminated;
 }
 
+// TODO: Refactor this monster. This is not the nice way to handle messages.
 // Hanlde ZMQ message scoming from the RIAPS actors/components
 bool handleRiapsMessages(zsock_t* riapsSocket,
                          std::map<std::string, std::unique_ptr<actor_details_t>>& clients,
@@ -144,25 +147,18 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
 
         riaps::discovery::DiscoReq::Reader msgDiscoReq;
 
-       // try {
-
+        // Convert ZMQ bytes to CAPNP buffer
         auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word *>(data), size / sizeof(capnp::word));
 
         capnp::FlatArrayMessageReader reader(capnp_data);
         msgDiscoReq = reader.getRoot<riaps::discovery::DiscoReq>();
 
 
-            //zmsg_destroy(&riapsMessage);
-            //zframe_destroy(&capnp_msgbody);
-
-
-        //zsys_info("Message arrived: %s (%s)", "DiscoReq", msg_discoreq.which());
-
         // Register actor
         if (msgDiscoReq.isActorReg()) {
             auto msgActorReq = msgDiscoReq.getActorReg();
-            std::string actorname = std::string(msgActorReq.getActorName());
-            std::string appname = std::string(msgActorReq.getAppName());
+            std::string actorname = std::string(msgActorReq.getActorName().cStr());
+            std::string appname   = std::string(msgActorReq.getAppName().cStr());
 
             std::string clientKeyBase = "/" + appname + '/' + actorname + "/";
 
@@ -561,20 +557,47 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
 
 
 
+        } else if (msgDiscoReq.isGroupJoin()) {
+            // Join to the group.
+            auto msgGroupJoin     = msgDiscoReq.getGroupJoin();
+            auto msgGroupServices = msgGroupJoin.getServices();
+            std::string appName   = msgGroupJoin.getGroupId().getAppName();
+            riaps::groups::GroupDetails groupDetails;
+            groupDetails.appName = appName;
+            groupDetails.groupId = {
+                    msgGroupJoin.getGroupId().getGroupName(),
+                    msgGroupJoin.getGroupId().getGroupType()
+            };
+
+            for (int i = 0; i<msgGroupServices.size(); i++){
+                groupDetails.groupServices.push_back({
+                                                        msgGroupServices[i].getMessageType(),
+                                                        msgGroupServices[i].getAddress()
+                                                     });
+            }
+
+            msgpack::sbuffer sbuf;
+            msgpack::pack(sbuf, groupDetails);
+            std::string key = "/groups/"+appName;
+            dht::Blob b(sbuf.data(), sbuf.data()+sbuf.size());
+            dhtNode.put(key, dht::Value(b));
+
+            //Send response
+            capnp::MallocMessageBuilder repMessage;
+            auto msgDiscoRep     = repMessage.initRoot<riaps::discovery::DiscoRep>();
+            auto msgGroupJoinRep = msgDiscoRep.initGroupJoin();
+
+            msgGroupJoinRep.setStatus(riaps::discovery::Status::OK);
+
+            auto serializedMessage = capnp::messageToFlatArray(repMessage);
+
+            zmsg_t *msg = zmsg_new();
+            zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
+
+            zmsg_send(&msg, riapsSocket);
         }
 
-//        } catch (kj::Exception& e){
-//            std::cout << "Couldn't deserialize message from riaps_socket" << std::endl;
-//            return false;
-//        }
-
-
         zmsg_destroy(&riapsMessage);
-        //zframe_destroy(&capnp_msgbody);
-
-
-
-
     }
     return terminated;
 }

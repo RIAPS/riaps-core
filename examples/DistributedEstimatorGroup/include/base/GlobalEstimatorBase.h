@@ -7,7 +7,9 @@
 
 #include "componentmodel/r_componentbase.h"
 #include "messages/distributedestimator.capnp.h"
+#include "GroupConfig.h"
 
+// TODO: Use constexpr instead of #define
 #define PORT_SUB_ESTIMATE "estimate"
 #define PORT_TIMER_WAKEUP "wakeup"
 

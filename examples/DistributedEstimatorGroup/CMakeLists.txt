@@ -6,6 +6,7 @@ add_library(globalestimator SHARED src/GlobalEstimator.cc
                                    include/messages/distributedestimator.capnp.h
                                    include/base/GlobalEstimatorBase.h
                                    include/GlobalEstimator.h
+                                   include/base/GroupConfig.h
         )
 
 add_library(localestimator SHARED src/LocalEstimator.cc
@@ -14,6 +15,7 @@ add_library(localestimator SHARED src/LocalEstimator.cc
                                   include/messages/distributedestimator.capnp.h
                                   include/base/LocalEstimatorBase.h
                                   include/LocalEstimator.h
+                                  include/base/GroupConfig.h
         )
 
 add_library(sensor SHARED src/Sensor.cc
@@ -22,6 +24,7 @@ add_library(sensor SHARED src/Sensor.cc
                           include/messages/distributedestimator.capnp.h
                           include/base/SensorBase.h
                           include/Sensor.h
+                          include/base/GroupConfig.h
         )
 
 target_link_libraries(localestimator czmq riaps dl capnp kj )

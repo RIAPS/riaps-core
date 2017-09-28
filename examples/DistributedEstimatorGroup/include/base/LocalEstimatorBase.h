@@ -7,6 +7,7 @@
 
 #include "componentmodel/r_componentbase.h"
 #include "messages/distributedestimator.capnp.h"
+#include "GroupConfig.h"
 
 // Name of the ports from the model file
 #define PORT_SUB_READY    "ready"

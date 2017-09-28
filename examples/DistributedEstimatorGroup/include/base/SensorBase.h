@@ -7,6 +7,7 @@
 
 #include "componentmodel/r_componentbase.h"
 #include "messages/distributedestimator.capnp.h"
+#include "GroupConfig.h"
 
 // Name of the ports from the model file
 #define PORT_TIMER_CLOCK "clock"
@@ -19,10 +20,10 @@ namespace distributedestimator {
         class comp_sensorbase : public riaps::ComponentBase {
 
         public:
-
             comp_sensorbase(_component_conf &config, riaps::Actor &actor);
+            virtual ~comp_sensorbase();
 
-            //virtual void RegisterHandlers();
+        protected:
 
             virtual void OnClock(riaps::ports::PortBase *port)=0;
 
@@ -42,9 +43,9 @@ namespace distributedestimator {
                                    messages::SensorReady::Builder& message);
 
 
-            virtual ~comp_sensorbase();
 
-        protected:
+
+        private:
 
             virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
                                          riaps::ports::PortBase *port);

@@ -1,4 +1,4 @@
-#include <componentmodel/r_groupbase.h>
+#include <common/r_group.h>
 #include <componentmodel/r_discoverdapi.h>
 #include <framework/rfw_configuration.h>
 

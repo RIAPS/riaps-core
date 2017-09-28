@@ -34,21 +34,12 @@ namespace distributedestimator {
                     capnp::MallocMessageBuilder builderEstimate;
                     auto estimateMsg = builderEstimate.initRoot<messages::Estimate>();
                     estimateMsg.setMsg("local_est(" + std::to_string(::getpid()) + ")");
-                    //auto valueList = estimateMsg.initValues(2);
-                    //valueList.set(0, 1.05);
-                    //valueList.set(1, 10.05);
                     SendEstimate(builderEstimate, estimateMsg);
-                    //messages::Estimate estimateMessage;
-                    //estimateMessage.GetData().push_back(1.05);
-                    //estimateMessage.GetData().push_back(10.05);
-                    //SendEstimate(estimateMessage);
                 }
             }
         }
 
-        void LocalEstimator::OnOneShotTimer(const std::string &timerid) {
 
-        }
 
         LocalEstimator::~LocalEstimator() {
 
