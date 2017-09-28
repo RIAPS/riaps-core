@@ -59,7 +59,7 @@ if (BUILD_TESTS)
 endif()
 
 # libriaps sources
-list (APPEND component_SOURCES
+list (APPEND component_SOURCE
         src/componentmodel/r_discoverdapi.cc
         src/componentmodel/r_componentbase.cc
         src/componentmodel/r_insideport.cc
@@ -79,7 +79,6 @@ list (APPEND component_SOURCES
         src/componentmodel/r_peripheral.cc
         src/componentmodel/r_devmapi.cc
         src/componentmodel/r_devicethread.cc
-        src/componentmodel/r_groupbase.cc
         src/componentmodel/r_portregister.cc
         src/utils/r_utils.cc
         src/utils/r_message.cc
@@ -94,7 +93,6 @@ list (APPEND component_SOURCES
 
 # libriaps headers
 list (APPEND component_HEADERS
-        include/componentmodel/r_groupbase.h
         include/componentmodel/r_discoverdapi.h
         include/componentmodel/r_componentbase.h
         include/componentmodel/r_publisherport.h
@@ -112,14 +110,35 @@ list (APPEND component_HEADERS
         include/componentmodel/r_commandlineparser.h
         include/const/r_const.h
         include/messaging/disco.capnp.h
+        include/common/r_group.h
         )
 
 # libriaps
 add_library(riaps SHARED
-        ${component_SOURCES}
+        ${component_SOURCE}
         ${component_HEADERS}
         )
 target_link_libraries(riaps czmq zmq dl capnp kj)
+install(TARGETS riaps DESTINATION lib)
+
+# start_actor
+set(ACTOR_SOURCE
+        src/componentmodel/r_actor_main.cc
+        )
+
+set(ACTOR_HEADERS
+        include/componentmodel/r_actor.h
+        include/const/r_jsonmodel.h
+        include/const/r_const.h
+        include/componentmodel/r_argumentparser.h
+        )
+
+add_executable(start_actor
+        ${ACTOR_SOURCE}
+        ${ACTOR_HEADERS}
+        )
+target_link_libraries(start_actor czmq zmq riaps capnp)
+install(TARGETS start_actor DESTINATION bin)
 
 # rdiscoveryd source
 list(APPEND RDISCOVERYD_SOURCE
@@ -136,14 +155,19 @@ list(APPEND RDISCOVERYD_HEADERS
         include/discoveryd/r_discoveryd_commands.h
         include/discoveryd/r_riaps_cmd_handler.h
         include/discoveryd/r_odht.h
+        include/discoveryd/r_discovery_types.h
         include/framework/rfw_configuration.h
         include/framework/rfw_network_interfaces.h
         include/utils/r_utils.h
         include/messaging/disco.capnp.h
+        include/common/r_group.h
         )
 
 # rdiscoveryd
-add_executable(rdiscoveryd ${RDISCOVERYD_SOURCE})
+add_executable(rdiscoveryd
+        ${RDISCOVERYD_SOURCE}
+        ${RDISCOVERYD_HEADERS}
+        )
 target_link_libraries(rdiscoveryd czmq zmq opendht gnutls riaps capnp nettle hogweed gmp glog)
 
 install(TARGETS rdiscoveryd DESTINATION bin)
