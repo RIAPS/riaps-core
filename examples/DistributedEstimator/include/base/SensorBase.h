@@ -16,7 +16,7 @@
 namespace distributedestimator {
     namespace components {
 
-        class comp_sensorbase : public riaps::ComponentBase {
+        class comp_sensorbase : protected riaps::ComponentBase {
 
         public:
 

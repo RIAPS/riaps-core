@@ -9,8 +9,8 @@ namespace distributedestimator {
     namespace components {
 
 
-        GlobalEstimator::GlobalEstimator(_component_conf &config, riaps::Actor &actor) : GlobalEstimatorBase(config,
-                                                                                                             actor) {
+        GlobalEstimator::GlobalEstimator(_component_conf &config, riaps::Actor &actor)
+                : GlobalEstimatorBase(config, actor), hasJoined(false) {
             //PrintParameters();
         }
 
@@ -26,6 +26,10 @@ namespace distributedestimator {
         void GlobalEstimator::OnWakeup(riaps::ports::PortBase *port) {
             //PrintMessageOnPort(port);
             std::cout << "GlobalEstimator::OnWakeUp(): " << port->GetPortName() << std::endl;
+            if (!hasJoined){
+                hasJoined = true;
+                this->JoinToGroup({"Alma","Korte"});
+            }
         }
 
 

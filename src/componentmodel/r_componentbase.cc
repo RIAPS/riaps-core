@@ -363,6 +363,13 @@ namespace riaps{
         return _actor;
     }
 
+    const ports::PublisherPort* ComponentBase::InitPublisherPort(const _component_port_pub& config) {
+        auto result = new ports::PublisherPort(config, this);
+        std::unique_ptr<ports::PortBase> newport(result);
+        _ports[config.portName] = std::move(newport);
+        return result;
+    }
+
 //    bool ComponentBase::SendMessageOnPort(zmsg_t** msg, const std::string& portName) const {
 //        auto port = GetPort(portName);
 //        if (port == NULL) return false;
@@ -504,6 +511,11 @@ namespace riaps{
         for (auto it = parameters.begin(); it!=parameters.end(); it++){
             std::cout << *it << " : " << _configuration.component_parameters.GetParam(*it)->GetValueAsString() << std::endl;
         }
+    }
+
+    void ComponentBase::JoinToGroup(riaps::groups::GroupId &&groupId) {
+        // Todo: Get port declarations from the config.
+        // Note: Contorl port is created automatically right?
     }
 
     ComponentBase::~ComponentBase() {

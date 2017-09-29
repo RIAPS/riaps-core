@@ -16,7 +16,7 @@
 #include "r_riaps_actor_commands.h"
 #include <messaging/disco.capnp.h>
 #include <componentmodel/r_componentbase.h>
-#include <componentmodel/r_groupbase.h>
+#include <common/r_group.h>
 
 
 

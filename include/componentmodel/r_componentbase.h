@@ -16,7 +16,7 @@
 #include "r_actor.h"
 #include "r_messagebase.h"
 #include "r_oneshottimer.h"
-#include "r_groupbase.h"
+#include <common/r_group.h>
 
 
 
@@ -33,11 +33,11 @@
 #include <ctime>
 
 
+#include "r_publisherport.h"
 #include "r_subscriberport.h"
 #include "r_responseport.h"
 #include "r_requestport.h"
 #include "r_insideport.h"
-#include "r_portregister.h"
 
 namespace riaps {
 
@@ -54,7 +54,7 @@ namespace riaps {
 
     typedef void (riaps::ComponentBase::*riaps_handler)(const std::string&, msgpack::sbuffer*, riaps::ports::PortBase*);
 
-    class ComponentBase : private PortRegister {
+    class ComponentBase {
     public:
 
         /// @param config Configuration, parsed from the model file.
@@ -118,13 +118,6 @@ namespace riaps {
     protected:
 
 
-        const ports::SubscriberPort* InitSubscriberPort (const _component_port_sub&);
-        const ports::ResponsePort*   InitResponsePort   (const _component_port_rep&);
-        const ports::RequestPort*    InitRequestPort    (const _component_port_req&);
-        const ports::PeriodicTimer*  InitTimerPort      (const _component_port_tim&);
-        const ports::InsidePort*     InitInsiderPort    (const _component_port_ins&);
-
-        const ports::PortBase* GetPort(std::string portName) const;
 
         /**
          * @return Returns the details of the group types.
@@ -143,6 +136,14 @@ namespace riaps {
          * @return True if the message was sent successfully.
          */
         bool SendMessageOnPort(zmsg_t** message, const std::string& portName);
+
+        // Note: ?port? do we need for the port?
+        virtual void OnGroupMessage(riaps::groups::GroupId& groupId,
+                                    capnp::FlatArrayMessageReader* capnpreader) = 0;
+
+        virtual bool SendGroupMessage(riaps::groups::GroupId&      groupId,
+                                      capnp::MallocMessageBuilder& messageBuilder,
+                                      const std::string&           portName) = 0;
 
         /**
          * Search publisher port with portName.
@@ -243,12 +244,21 @@ namespace riaps {
          * @param groupType
          * @param groupName
          */
-        void JoinToGroup(const std::string& groupType, const std::string& groupName);
+        void JoinToGroup(riaps::groups::GroupId&& groupId);
 
 
 
 
     private:
+
+        const ports::PublisherPort*  InitPublisherPort(const _component_port_pub&);
+        const ports::SubscriberPort* InitSubscriberPort (const _component_port_sub&);
+        const ports::ResponsePort*   InitResponsePort   (const _component_port_rep&);
+        const ports::RequestPort*    InitRequestPort    (const _component_port_req&);
+        const ports::PeriodicTimer*  InitTimerPort      (const _component_port_tim&);
+        const ports::InsidePort*     InitInsiderPort    (const _component_port_ins&);
+
+        const ports::PortBase* GetPort(std::string portName) const;
 
 
         std::string             GetTimerChannel();
@@ -263,9 +273,8 @@ namespace riaps {
 
         component_conf _configuration;
 
-
-
-        //riaps::groups::Groups _groups;
+        // All the component ports
+        std::map<std::string, std::unique_ptr<ports::PortBase>> _ports;
     };
 }
 
