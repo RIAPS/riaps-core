@@ -54,7 +54,8 @@ namespace riaps {
           //_jsonActorconfig(jsonActorconfig),
           _commandLineParams(commandLineParams),
           _jsonFile(jsonFile),
-          _discovery_socket(nullptr)
+          _discovery_socket(nullptr),
+          _actor_zsock(nullptr)
     {
         _jsonActorconfig       = jsonActorconfig;
         _jsonComponentsconfig  = configJson[J_COMPONENTS];
@@ -351,15 +352,17 @@ namespace riaps {
             // No environment variable set, let dlopen() find the component library
             if (appPath == ""){
                 dlOpenHandle = dlopen(componentLibraryName.c_str(), RTLD_NOW);
+
                 if (dlOpenHandle == nullptr) {
-                    throw std::runtime_error("Cannot open library: " + componentLibraryName + " (" + dlerror() + ")");
+                    std::cerr << dlerror() << std::endl;
+                    std::string msg = "Cannot open library: " + componentLibraryName + " (" + dlerror() + ")\n" +dlerror();
+                    throw std::runtime_error(msg);
                 }
             } else {
                 const std::string fullPath = appPath + "/" + componentLibraryName;
                 dlOpenHandle = dlopen(fullPath.c_str(), RTLD_NOW);
-                if (dlOpenHandle == nullptr) {
+                if (dlOpenHandle == nullptr)
                     throw std::runtime_error("Cannot open library: " + fullPath + " (" + dlerror() + ")");
-                }
             }
 
             if (dlOpenHandle != nullptr) {
@@ -507,8 +510,10 @@ namespace riaps {
 
         zpoller_destroy(&_poller);
         zuuid_destroy(&_actor_id);
-        zsock_destroy(&_discovery_socket);
-        zsock_destroy(&_actor_zsock);
+        if (_discovery_socket != nullptr)
+            zsock_destroy(&_discovery_socket);
+        if (_actor_zsock != nullptr)
+            zsock_destroy(&_actor_zsock);
 
         for (void* handle : _component_dll_handles){
             dlclose(handle);

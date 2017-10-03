@@ -138,12 +138,12 @@ namespace riaps {
         bool SendMessageOnPort(zmsg_t** message, const std::string& portName);
 
         // Note: ?port? do we need for the port?
-        virtual void OnGroupMessage(riaps::groups::GroupId& groupId,
-                                    capnp::FlatArrayMessageReader* capnpreader) = 0;
-
-        virtual bool SendGroupMessage(riaps::groups::GroupId&      groupId,
-                                      capnp::MallocMessageBuilder& messageBuilder,
-                                      const std::string&           portName) = 0;
+//        virtual void OnGroupMessage(riaps::groups::GroupId& groupId,
+//                                    capnp::FlatArrayMessageReader* capnpreader) = 0;
+//
+//        virtual bool SendGroupMessage(riaps::groups::GroupId&      groupId,
+//                                      capnp::MallocMessageBuilder& messageBuilder,
+//                                      const std::string&           portName) = 0;
 
         /**
          * Search publisher port with portName.
