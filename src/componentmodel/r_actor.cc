@@ -53,7 +53,8 @@ namespace riaps {
           //_jsonDevicesconfig(jsonDevicesconfig),
           //_jsonActorconfig(jsonActorconfig),
           _commandLineParams(commandLineParams),
-          _jsonFile(jsonFile)
+          _jsonFile(jsonFile),
+          _discovery_socket(nullptr)
     {
         _jsonActorconfig       = jsonActorconfig;
         _jsonComponentsconfig  = configJson[J_COMPONENTS];
@@ -490,9 +491,10 @@ namespace riaps {
     }
 
     riaps::Actor::~Actor() {
-        //deregister_actor(GetActorId());
 
-        deregisterActor(GetActorName(), GetApplicationName());
+        // Deregister only, if the registration was successful
+        if (_discovery_socket!= nullptr)
+            deregisterActor(GetActorName(), GetApplicationName());
 
         for (riaps::ComponentBase* component : _components){
             std::cout << "Stop component: " << component->GetConfig().component_name <<std::endl;
