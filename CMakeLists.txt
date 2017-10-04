@@ -80,13 +80,15 @@ list (APPEND component_SOURCE
         src/componentmodel/r_devmapi.cc
         src/componentmodel/r_devicethread.cc
         src/componentmodel/r_portregister.cc
+        src/componentmodel/r_pubportbase.cc
+        src/componentmodel/r_pubportgroup.cc
         src/utils/r_utils.cc
         src/utils/r_message.cc
         src/utils/r_capnp_helper.cc
         src/framework/rfw_network_interfaces.cc
         src/framework/rfw_configuration.cc
         src/messaging/r_message.cc
-
+        src/groups/r_group.cc
         include/messaging/disco.capnp.c++
 
         )
@@ -106,11 +108,14 @@ list (APPEND component_HEADERS
         include/componentmodel/r_messagebase.h
         include/componentmodel/r_insideport.h
         include/componentmodel/r_portregister.h
+        include/componentmodel/r_portbase.h
+        include/componentmodel/r_pubportbase.h
+        include/componentmodel/r_pubportgroup.h
         #include/componentmodel/r_oneshottimer.h
         include/componentmodel/r_commandlineparser.h
         include/const/r_const.h
         include/messaging/disco.capnp.h
-        include/common/r_group.h
+        include/groups/r_group.h
         )
 
 # libriaps
@@ -128,9 +133,10 @@ set(ACTOR_SOURCE
 
 set(ACTOR_HEADERS
         include/componentmodel/r_actor.h
+        include/componentmodel/r_argumentparser.h
+        include/groups/r_group.h
         include/const/r_jsonmodel.h
         include/const/r_const.h
-        include/componentmodel/r_argumentparser.h
         )
 
 add_executable(start_actor
@@ -160,7 +166,7 @@ list(APPEND RDISCOVERYD_HEADERS
         include/framework/rfw_network_interfaces.h
         include/utils/r_utils.h
         include/messaging/disco.capnp.h
-        include/common/r_group.h
+        include/groups/r_group.h
         )
 
 # rdiscoveryd
