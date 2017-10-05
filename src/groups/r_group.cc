@@ -12,6 +12,13 @@ namespace riaps{
 
         using namespace riaps;
 
+        bool GroupId::operator<(const GroupId &other) const {
+            if (groupTypeId == other.groupTypeId){
+                return groupName < other.groupName;
+            }
+            return groupTypeId<other.groupTypeId;
+        }
+
         Group::Group(const GroupId &groupId) :
                 _groupId(groupId),
                 _groupPubPort(nullptr),

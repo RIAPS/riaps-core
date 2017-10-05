@@ -26,8 +26,16 @@ namespace riaps {
          * The instance name of the group and the group type id (form the config) are the GroupId
          */
         struct GroupId {
-            std::string groupName;
             std::string groupTypeId;
+            std::string groupName;
+
+
+            /**
+             * To use GroupId in std::map as key
+             * @param other
+             * @return
+             */
+            bool operator<(const GroupId& other) const;
 
             MSGPACK_DEFINE(groupName, groupTypeId);
         };
@@ -70,7 +78,7 @@ namespace riaps {
 
             /**
              * Creates the communication ports and registers the group in the discovery service.
-             * @return
+             * @return true if the ports were succesfully created and registered False otherwise.
              */
             bool InitGroup();
 
