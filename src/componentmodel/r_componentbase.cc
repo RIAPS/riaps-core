@@ -338,8 +338,6 @@ namespace riaps{
 //        return true;
 //    }
 
-
-
     /// \param portName
     /// \return Pointer to the RIAPS port with the given name. NULL if the port was not found.
     ports::PortBase* ComponentBase::GetPortByName(const std::string & portName) {
@@ -350,13 +348,8 @@ namespace riaps{
         return NULL;
     }
 
-
     const component_conf& ComponentBase::GetConfig() const {
         return _configuration;
-    }
-
-    const groupt_conf& ComponentBase::GetGroupTypeConfig() const{
-        return _configuration.group_types;
     }
 
     const Actor* ComponentBase::GetActor() const{
@@ -364,7 +357,7 @@ namespace riaps{
     }
 
     const ports::PublisherPort* ComponentBase::InitPublisherPort(const _component_port_pub& config) {
-        auto result = new ports::PublisherPort(config, this);
+        auto result = new ports::PublisherPort(config);
         std::unique_ptr<ports::PortBase> newport(result);
         _ports[config.portName] = std::move(newport);
         return result;
@@ -513,9 +506,17 @@ namespace riaps{
         }
     }
 
-    void ComponentBase::JoinToGroup(riaps::groups::GroupId &&groupId) {
-        // Todo: Get port declarations from the config.
-        // Note: Contorl port is created automatically right?
+    bool ComponentBase::JoinToGroup(riaps::groups::GroupId &&groupId) {
+        if (_groups.find(groupId)!=_groups.end())
+            return false;
+
+        std::unique_ptr<riaps::groups::Group> newGroup = std::unique_ptr<riaps::groups::Group>(new riaps::groups::Group(groupId));
+        if (newGroup->InitGroup()) {
+            _groups[groupId] = std::move(newGroup);
+            return true;
+        }
+
+        return false;
     }
 
     ComponentBase::~ComponentBase() {

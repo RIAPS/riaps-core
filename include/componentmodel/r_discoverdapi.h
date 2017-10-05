@@ -2,22 +2,23 @@
 #define R_DISCOVERD_API
 
 
-#include <string>
-#include <vector>
-#include <czmq.h>
-#include <iostream>
+#include <utils/r_message.h>
+#include <componentmodel/r_riaps_actor_commands.h>
+#include <componentmodel/r_componentbase.h>
+#include <groups/r_group.h>
+#include <messaging/disco.capnp.h>
 
 #include <capnp/message.h>
 #include <capnp/serialize.h>
 #include <capnp/serialize-packed.h>
 
 #include <json.h>
-#include <utils/r_message.h>
-#include "r_riaps_actor_commands.h"
-#include <messaging/disco.capnp.h>
-#include <componentmodel/r_componentbase.h>
-#include <common/r_group.h>
 
+
+#include <string>
+#include <vector>
+#include <czmq.h>
+#include <iostream>
 
 
 
@@ -48,6 +49,13 @@ registerService(const std::string&              app_name     ,
                 riaps::discovery::Scope         scope        ,
                 const std::vector<std::string>& tags
 );
+
+namespace riaps{
+    namespace groups{
+        struct GroupId;
+        struct GroupService;
+    }
+}
 
 extern bool
 joinGroup(const std::string& appName,

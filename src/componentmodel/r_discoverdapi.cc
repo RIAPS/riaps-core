@@ -1,4 +1,4 @@
-#include <common/r_group.h>
+#include <groups/r_group.h>
 #include <componentmodel/r_discoverdapi.h>
 #include <framework/rfw_configuration.h>
 
@@ -336,7 +336,7 @@ joinGroup(const std::string& appName,
     auto msgGroupServices = msgGroupJoin.initServices(groupServices.size());
 
     msgGroupId.setAppName(appName);
-    msgGroupId.setGroupType(groupId.groupType);
+    msgGroupId.setGroupType(groupId.groupTypeId);
     msgGroupId.setGroupName(groupId.groupName);
 
     for (int i = 0; i< groupServices.size(); i++){

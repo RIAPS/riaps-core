@@ -16,9 +16,7 @@
 #include "r_actor.h"
 #include "r_messagebase.h"
 #include "r_oneshottimer.h"
-#include <common/r_group.h>
-
-
+#include <groups/r_group.h>
 
 #include <msgpack.hpp>
 #include <capnp/message.h>
@@ -42,6 +40,11 @@
 namespace riaps {
 
     class Actor;
+
+    namespace groups{
+        class Group;
+        struct GroupId;
+    }
 
 
 
@@ -116,18 +119,6 @@ namespace riaps {
         virtual ~ComponentBase();
 
     protected:
-
-
-
-        /**
-         * @return Returns the details of the group types.
-         */
-        const groupt_conf& GetGroupTypeConfig() const;
-
-
-        //
-        //virtual void RegisterHandler(const std::string& portName, riaps_handler);
-
         /**
          * Sends a ZMQ message on the given port.
          *
@@ -244,14 +235,14 @@ namespace riaps {
          * @param groupType
          * @param groupName
          */
-        void JoinToGroup(riaps::groups::GroupId&& groupId);
+        bool JoinToGroup(riaps::groups::GroupId&& groupId);
 
 
 
 
     private:
 
-        const ports::PublisherPort*  InitPublisherPort(const _component_port_pub&);
+        const ports::PublisherPort*  InitPublisherPort  (const _component_port_pub&);
         const ports::SubscriberPort* InitSubscriberPort (const _component_port_sub&);
         const ports::ResponsePort*   InitResponsePort   (const _component_port_rep&);
         const ports::RequestPort*    InitRequestPort    (const _component_port_req&);
@@ -275,6 +266,8 @@ namespace riaps {
 
         // All the component ports
         std::map<std::string, std::unique_ptr<ports::PortBase>> _ports;
+
+        std::map<riaps::groups::GroupId, std::unique_ptr<riaps::groups::Group>> _groups;
     };
 }
 
