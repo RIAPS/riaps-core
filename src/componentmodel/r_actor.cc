@@ -3,33 +3,42 @@
 
 namespace riaps {
 
+    const Actor& riaps::Actor::GetRunningActor() {
+        return *_currentActor;
+    }
+
     Actor* riaps::Actor::CreateActor(nlohmann::json&    configJson,
                                      const std::string& actorName ,
                                      const std::string& jsonFile  ,
                                      std::map<std::string, std::string>& actualParams) {
-        std::string applicationName    = configJson[J_NAME];
-        nlohmann::json jsonActors      = configJson[J_ACTORS];
+        if (_currentActor == nullptr){
+            std::string applicationName    = configJson[J_NAME];
+            nlohmann::json jsonActors      = configJson[J_ACTORS];
 
 
-        // Find the actor
-        if (jsonActors.find(actorName)==jsonActors.end()){
-            std::cerr << "Didn't find actor in the model file: " << actorName << std::endl;
-            return NULL;
+            // Find the actor
+            if (jsonActors.find(actorName)==jsonActors.end()){
+                std::cerr << "Didn't find actor in the model file: " << actorName << std::endl;
+                return NULL;
+            }
+
+            auto jsonCurrentActor = jsonActors[actorName];
+
+            _currentActor = new riaps::Actor(
+                    applicationName,
+                    actorName,
+                    jsonFile,
+                    jsonCurrentActor,
+                    configJson,
+                    //jsonComponents,
+                    //jsonDevices,
+                    //jsonMessages,
+                    actualParams
+            );
         }
 
-        auto jsonCurrentActor = jsonActors[actorName];
+        return _currentActor;
 
-        return new riaps::Actor(
-                            applicationName,
-                            actorName,
-                            jsonFile,
-                            jsonCurrentActor,
-                            configJson,
-                            //jsonComponents,
-                            //jsonDevices,
-                            //jsonMessages,
-                            actualParams
-                    );
     }
 
     std::set<std::string> riaps::Actor::GetLocalMessageTypes(nlohmann::json &jsonLocals) {
@@ -57,6 +66,25 @@ namespace riaps {
           _discovery_socket(nullptr),
           _actor_zsock(nullptr)
     {
+
+        // TODO: Remove this
+        // Note: Group testing
+        //////////////////////////
+        _grouptype_configurations.push_back(
+                groupt_conf{
+                        "TestGroupId", //GroupId
+                        {}
+                }
+        );
+
+        _group_port_pub p;
+        p.portName="TestPortName";
+        p.messageType="TestPortType";
+        _grouptype_configurations.back().groupTypePorts.pubs.push_back(p);
+        /////////////////////////
+        //TODO: REMOVE LINES ABOVE AFTER TESTING
+
+
         _jsonActorconfig       = jsonActorconfig;
         _jsonComponentsconfig  = configJson[J_COMPONENTS];
         _jsonDevicesconfig     = configJson[J_DEVICES];
@@ -394,6 +422,29 @@ namespace riaps {
             }
         }
     }
+    
+    const std::vector<groupt_conf>& riaps::Actor::GetGroupTypes() const {
+        return _grouptype_configurations;
+    }
+
+    const groupt_conf* riaps::Actor::GetGroupType(const std::string &groupTypeId) const {
+        std::vector<std::string> g{groupTypeId};
+
+        auto result =
+        std::find_first_of(_grouptype_configurations.begin(),
+                           _grouptype_configurations.end(),
+                           g.begin(),
+                           g.end(),
+                           [](const groupt_conf& g, const std::string& id){
+                               if (g.groupTypeId == id) return true;
+                               return false;
+                           });
+
+        if (result == _grouptype_configurations.end()) return nullptr;
+        return &(*result);
+    }
+
+
 
     riaps::devm::DevmApi* riaps::Actor::GetDeviceManager() const {
         return _devm.get();
@@ -519,6 +570,8 @@ namespace riaps {
             dlclose(handle);
         }
     }
+
+    riaps::Actor* riaps::Actor::_currentActor = nullptr;
 }
 
 
