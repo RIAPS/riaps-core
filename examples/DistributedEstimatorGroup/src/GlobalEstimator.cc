@@ -28,7 +28,9 @@ namespace distributedestimator {
             std::cout << "GlobalEstimator::OnWakeUp(): " << port->GetPortName() << std::endl;
             if (!hasJoined){
                 hasJoined = true;
-                this->JoinToGroup({"Alma","Korte"});
+                if (this->JoinToGroup({"TestGroupId","Korte"})){
+                    std::cout << "Joind to group TestGroupId::Korte" << std::endl;
+                }
             }
         }
 
