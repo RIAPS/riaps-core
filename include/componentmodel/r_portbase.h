@@ -28,6 +28,7 @@ namespace ports {
     class SubscriberPort;
     class PeriodicTimer;
     class InsidePort;
+    class GroupPublisherPort;
 
     enum PortTypes {Publisher, Subscriber, Request, Response, Timer, Inside};
 
@@ -59,12 +60,13 @@ namespace ports {
         virtual const std::string GetPortName() const;
 
         // Return NULL if the called conversion is unavailable or invalid
-        virtual RequestPort*    AsRequestPort()    ;
-        virtual PublisherPort*  AsPublishPort()    ;
-        virtual ResponsePort*   AsResponsePort()   ;
-        virtual SubscriberPort* AsSubscribePort()  ;
-        virtual PeriodicTimer*  AsTimerPort()      ;
-        virtual InsidePort*     AsInsidePort()     ;
+        virtual RequestPort*        AsRequestPort()     ;
+        virtual PublisherPort*      AsPublishPort()     ;
+        virtual GroupPublisherPort* AsGroupPublishPort();
+        virtual ResponsePort*       AsResponsePort()    ;
+        virtual SubscriberPort*     AsSubscribePort()   ;
+        virtual PeriodicTimer*      AsTimerPort()       ;
+        virtual InsidePort*         AsInsidePort()      ;
 
 
         virtual ~PortBase() noexcept ;

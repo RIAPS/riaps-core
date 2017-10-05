@@ -13,18 +13,18 @@ namespace riaps{
 
 
 
-        PublisherPort::PublisherPort(const _component_port_pub &config, ComponentBase *parent_component)
+        PublisherPort::PublisherPort(const _component_port_pub &config)
             : PublisherPortBase((component_port_config*)&config)
 
         {
             InitSocket();
-            if (!registerService(parent_component->GetActor()->GetApplicationName(),
-                                  config.messageType,
-                                  _host,
-                                  _port,
-                                  riaps::discovery::Kind::PUB,
-                                  (config.isLocal?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
-                                  {})) {
+            if (!registerService(riaps::Actor::GetRunningActor().GetApplicationName(),
+                                 config.messageType,
+                                 _host,
+                                 _port,
+                                 riaps::discovery::Kind::PUB,
+                                 (config.isLocal?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
+                                 {})) {
                 throw std::runtime_error("Publisher port couldn't be registered.");
             }
 

@@ -16,6 +16,10 @@ namespace riaps{
             return result;
         }
 
+        GroupPublisherPort* GroupPublisherPort::AsGroupPublishPort() {
+            return this;
+        }
+
         GroupPublisherPort::~GroupPublisherPort() {
 
         }

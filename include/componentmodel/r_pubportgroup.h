@@ -11,11 +11,17 @@
 #include <componentmodel/r_pubportbase.h>
 
 namespace riaps{
+
+    namespace groups{
+        struct GroupService;
+    }
+
     namespace ports{
         class GroupPublisherPort : public PublisherPortBase {
         public:
             GroupPublisherPort(const _group_port_pub& config);
-            riaps::groups::GroupService GetGroupService();
+            ::riaps::groups::GroupService GetGroupService();
+            GroupPublisherPort* AsGroupPublishPort();
             ~GroupPublisherPort();
         };
     }

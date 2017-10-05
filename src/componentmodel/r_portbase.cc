@@ -62,15 +62,19 @@ namespace riaps {
             return NULL;
         }
 
-        ResponsePort * PortBase::AsResponsePort()  {
+        GroupPublisherPort* PortBase::AsGroupPublishPort() {
             return NULL;
         }
 
-        SubscriberPort * PortBase::AsSubscribePort()  {
+        ResponsePort* PortBase::AsResponsePort()  {
             return NULL;
         }
 
-        PeriodicTimer * PortBase::AsTimerPort()  {
+        SubscriberPort* PortBase::AsSubscribePort()  {
+            return NULL;
+        }
+
+        PeriodicTimer* PortBase::AsTimerPort()  {
             return NULL;
         }
 
