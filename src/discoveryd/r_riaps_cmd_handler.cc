@@ -581,6 +581,16 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
             std::string key = "/groups/"+appName;
             dht::Blob b(sbuf.data(), sbuf.data()+sbuf.size());
             dhtNode.put(key, dht::Value(b));
+            
+            // Debug
+            std::cout << "Component joined to group: "
+                      << appName << "::"
+                      << groupDetails.groupId.groupTypeId << "::"
+                      << groupDetails.groupId.groupName   << std::endl;
+            std::cout << "Group services: " << std::endl;
+            for (auto& g : groupDetails.groupServices){
+                    std::cout << "\t- " << g.address << " " << g.messageType << std::endl; 
+            }
 
             //Send response
             capnp::MallocMessageBuilder repMessage;
