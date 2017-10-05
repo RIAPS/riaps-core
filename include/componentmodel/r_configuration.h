@@ -97,12 +97,11 @@ struct _groupt_conf {
 
 
 struct _component_conf {
-    std::string        component_name;
-    std::string        component_type;
-    _component_ports   component_ports;
-    Parameters         component_parameters;
-    bool               isDevice;
-    _groupt_conf       group_types;
+    std::string               component_name;
+    std::string               component_type;
+    _component_ports          component_ports;
+    Parameters                component_parameters;
+    bool                      isDevice;
 };
 
 typedef struct _component_conf component_conf;
