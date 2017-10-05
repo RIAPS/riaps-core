@@ -6,7 +6,7 @@
 #define RIAPS_CORE_R_GROUP_H_H
 
 #include <componentmodel/r_configuration.h>
-#include <componentmodel/r_publisherport.h>
+#include <componentmodel/r_pubportgroup.h>
 #include <componentmodel/r_subscriberport.h>
 
 #include <msgpack.hpp>
@@ -16,25 +16,34 @@
 #include <vector>
 #include <map>
 
+#define INTERNAL_PUB_NAME "$PUB#"
+#define INTERNAL_MESSAGETYPE "InternalGroupMessage"
+
 namespace riaps {
     namespace groups {
 
+        /**
+         * The instance name of the group and the group type id (form the config) are the GroupId
+         */
         struct GroupId {
-            //GroupId();
-            //~GroupId();
-
             std::string groupName;
             std::string groupTypeId;
 
             MSGPACK_DEFINE(groupName, groupTypeId);
         };
 
+        /**
+         * Description of one port in the group.
+         */
         struct GroupService {
             std::string messageType;
             std::string address;
             MSGPACK_DEFINE(messageType, address);
         };
 
+        /**
+         * All the details of the group in one structure.
+         */
         struct GroupDetails {
             std::string               appName;
             GroupId                   groupId;
@@ -52,20 +61,32 @@ namespace riaps {
          */
         class Group {
         public:
-            Group(const GroupId& groupId);
-            void InitGroup(const groupt_conf& groupTypeConf);
 
-            const groupt_conf& GetConfig() const;
+            /**
+             * Initializes a group, by the given groupId
+             * @param groupId Must have valid configuration entry with the matching id.
+             */
+            Group(const GroupId& groupId);
+
+            /**
+             * Creates the communication ports and registers the group in the discovery service.
+             * @return
+             */
+            bool InitGroup();
+
             virtual ~Group();
 
         protected:
-            const GroupId     _groupId;
-            const groupt_conf _groupTypeConf;
+            const GroupId _groupId;
+            groupt_conf   _groupTypeConf;
 
-            std::unique_ptr<riaps::ports::PublisherPort>  _groupPubPort;
-            std::unique_ptr<riaps::ports::SubscriberPort> _groupSubPort;
+            /**
+             * Always store the communication ports in unique_ptr (self-defense)
+             */
+            std::unique_ptr<riaps::ports::GroupPublisherPort>    _groupPubPort;
+            std::unique_ptr<riaps::ports::SubscriberPort>        _groupSubPort;
 
-            std::map<std::string, riaps::ports::PortBase*> _groupPorts;
+            std::vector<std::unique_ptr<riaps::ports::PortBase>> _groupPorts;
         };
 
     }
