@@ -49,7 +49,7 @@ namespace riaps{
             // Initialize user defined ports
             for(auto& portDeclaration : _groupTypeConf.groupTypePorts.pubs){
                 auto newPort = std::unique_ptr<ports::GroupPublisherPort>(new ports::GroupPublisherPort(portDeclaration));
-                initializedServices.push_back(_groupPubPort->GetGroupService());
+                initializedServices.push_back(newPort->GetGroupService());
                 _groupPorts.push_back(std::move(newPort));
             }
 
