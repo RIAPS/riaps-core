@@ -150,7 +150,6 @@ install(TARGETS start_actor DESTINATION bin)
 list(APPEND RDISCOVERYD_SOURCE
         src/discoveryd/r_discoveryd.cc
         src/discoveryd/r_riaps_actor.cc
-        src/discoveryd/r_riaps_cmd_handler.cc
         src/discoveryd/r_msghandler.cc
         src/discoveryd/r_odht.cc
         include/messaging/disco.capnp.c++
@@ -159,8 +158,6 @@ list(APPEND RDISCOVERYD_SOURCE
 # rdiscoveryd headers
 list(APPEND RDISCOVERYD_HEADERS
         include/discoveryd/r_riaps_actor.h
-        include/discoveryd/r_discoveryd_commands.h
-        include/discoveryd/r_riaps_cmd_handler.h
         include/discoveryd/r_odht.h
         include/discoveryd/r_discovery_types.h
         include/discoveryd/r_msghandler.h
