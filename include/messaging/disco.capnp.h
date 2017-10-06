@@ -110,7 +110,7 @@ struct ActorUnregReq {
   class Pipeline;
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(f0ada0a8407a1dfc, 0, 3)
+    CAPNP_DECLARE_STRUCT_HEADER(f0ada0a8407a1dfc, 1, 3)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
     #endif  // !CAPNP_LITE
@@ -621,6 +621,8 @@ public:
   inline bool hasActorName() const;
   inline  ::capnp::Text::Reader getActorName() const;
 
+  inline  ::int32_t getPid() const;
+
 private:
   ::capnp::_::StructReader _reader;
   template <typename, ::capnp::Kind>
@@ -669,6 +671,9 @@ public:
   inline  ::capnp::Text::Builder initActorName(unsigned int size);
   inline void adoptActorName(::capnp::Orphan< ::capnp::Text>&& value);
   inline ::capnp::Orphan< ::capnp::Text> disownActorName();
+
+  inline  ::int32_t getPid();
+  inline void setPid( ::int32_t value);
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -1701,7 +1706,7 @@ public:
 
   inline bool isActorUnreg() const;
   inline bool hasActorUnreg() const;
-  inline  ::riaps::discovery::ActorUnregRep::Reader getActorUnreg() const;
+  inline  ::riaps::discovery::ActorUnregReq::Reader getActorUnreg() const;
 
   inline bool isGroupJoin() const;
   inline bool hasGroupJoin() const;
@@ -1762,11 +1767,11 @@ public:
 
   inline bool isActorUnreg();
   inline bool hasActorUnreg();
-  inline  ::riaps::discovery::ActorUnregRep::Builder getActorUnreg();
-  inline void setActorUnreg( ::riaps::discovery::ActorUnregRep::Reader value);
-  inline  ::riaps::discovery::ActorUnregRep::Builder initActorUnreg();
-  inline void adoptActorUnreg(::capnp::Orphan< ::riaps::discovery::ActorUnregRep>&& value);
-  inline ::capnp::Orphan< ::riaps::discovery::ActorUnregRep> disownActorUnreg();
+  inline  ::riaps::discovery::ActorUnregReq::Builder getActorUnreg();
+  inline void setActorUnreg( ::riaps::discovery::ActorUnregReq::Reader value);
+  inline  ::riaps::discovery::ActorUnregReq::Builder initActorUnreg();
+  inline void adoptActorUnreg(::capnp::Orphan< ::riaps::discovery::ActorUnregReq>&& value);
+  inline ::capnp::Orphan< ::riaps::discovery::ActorUnregReq> disownActorUnreg();
 
   inline bool isGroupJoin();
   inline bool hasGroupJoin();
@@ -2702,6 +2707,20 @@ inline void ActorUnregReq::Builder::adoptActorName(
 inline ::capnp::Orphan< ::capnp::Text> ActorUnregReq::Builder::disownActorName() {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
       _builder.getPointerField(2 * ::capnp::POINTERS));
+}
+
+inline  ::int32_t ActorUnregReq::Reader::getPid() const {
+  return _reader.getDataField< ::int32_t>(
+      0 * ::capnp::ELEMENTS);
+}
+
+inline  ::int32_t ActorUnregReq::Builder::getPid() {
+  return _builder.getDataField< ::int32_t>(
+      0 * ::capnp::ELEMENTS);
+}
+inline void ActorUnregReq::Builder::setPid( ::int32_t value) {
+  _builder.setDataField< ::int32_t>(
+      0 * ::capnp::ELEMENTS, value);
 }
 
 inline  ::riaps::discovery::Status ActorUnregRep::Reader::getStatus() const {
@@ -3784,41 +3803,41 @@ inline bool DiscoRep::Builder::hasActorUnreg() {
   if (which() != DiscoRep::ACTOR_UNREG) return false;
   return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline  ::riaps::discovery::ActorUnregRep::Reader DiscoRep::Reader::getActorUnreg() const {
+inline  ::riaps::discovery::ActorUnregReq::Reader DiscoRep::Reader::getActorUnreg() const {
   KJ_IREQUIRE(which() == DiscoRep::ACTOR_UNREG,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregRep>::get(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregReq>::get(
       _reader.getPointerField(0 * ::capnp::POINTERS));
 }
-inline  ::riaps::discovery::ActorUnregRep::Builder DiscoRep::Builder::getActorUnreg() {
+inline  ::riaps::discovery::ActorUnregReq::Builder DiscoRep::Builder::getActorUnreg() {
   KJ_IREQUIRE(which() == DiscoRep::ACTOR_UNREG,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregRep>::get(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregReq>::get(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
-inline void DiscoRep::Builder::setActorUnreg( ::riaps::discovery::ActorUnregRep::Reader value) {
+inline void DiscoRep::Builder::setActorUnreg( ::riaps::discovery::ActorUnregReq::Reader value) {
   _builder.setDataField<DiscoRep::Which>(
       0 * ::capnp::ELEMENTS, DiscoRep::ACTOR_UNREG);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregRep>::set(
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregReq>::set(
       _builder.getPointerField(0 * ::capnp::POINTERS), value);
 }
-inline  ::riaps::discovery::ActorUnregRep::Builder DiscoRep::Builder::initActorUnreg() {
+inline  ::riaps::discovery::ActorUnregReq::Builder DiscoRep::Builder::initActorUnreg() {
   _builder.setDataField<DiscoRep::Which>(
       0 * ::capnp::ELEMENTS, DiscoRep::ACTOR_UNREG);
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregRep>::init(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregReq>::init(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 inline void DiscoRep::Builder::adoptActorUnreg(
-    ::capnp::Orphan< ::riaps::discovery::ActorUnregRep>&& value) {
+    ::capnp::Orphan< ::riaps::discovery::ActorUnregReq>&& value) {
   _builder.setDataField<DiscoRep::Which>(
       0 * ::capnp::ELEMENTS, DiscoRep::ACTOR_UNREG);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregRep>::adopt(
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregReq>::adopt(
       _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::riaps::discovery::ActorUnregRep> DiscoRep::Builder::disownActorUnreg() {
+inline ::capnp::Orphan< ::riaps::discovery::ActorUnregReq> DiscoRep::Builder::disownActorUnreg() {
   KJ_IREQUIRE(which() == DiscoRep::ACTOR_UNREG,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregRep>::disown(
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregReq>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 

@@ -97,7 +97,7 @@ struct DiscoRep {
       actorReg      @0 : ActorRegRep;
       serviceReg    @1 : ServiceRegRep;
       serviceLookup @2 : ServiceLookupRep;
-      actorUnreg    @3 : ActorUnregRep;
+      actorUnreg    @3 : ActorUnregReq;
       groupJoin     @4 : GroupJoinRep;
    }
 }
