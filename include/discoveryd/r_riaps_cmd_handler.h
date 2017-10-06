@@ -49,8 +49,8 @@ buildLookupKey(std::string appName            ,
 
 // Message handlers
 
-bool handlePipeMessage(zsock_t*        pipeSocket,
-                       dht::DhtRunner& dhtNode);
+//bool handlePipeMessage(zsock_t*        pipeSocket,
+//                       dht::DhtRunner& dhtNode);
 
 bool handleRiapsMessages(zsock_t*                                                               riapsSocket,
                          std::map<std::string, std::unique_ptr<actor_details_t>>&               clients,

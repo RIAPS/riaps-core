@@ -82,46 +82,7 @@ buildLookupKey(std::string appName,
     return {key, client};
 }
 
-// Handle ZMQ messages, arriving on the zactor PIPE
-// Returns true, if TERMINATE arrived
-bool handlePipeMessage(zsock_t* pipeSocket, dht::DhtRunner& dhtNode){
-    bool terminated=false;
-    zmsg_t* msg = zmsg_recv(pipeSocket);
-    if (!msg){
-        std::cout << "No msg => interrupted" << std::endl;
-        terminated = true;
-    }
-    else {
 
-        char *command = zmsg_popstr(msg);
-
-        if (streq(command, "$TERM")) {
-            std::cout << std::endl << "$TERMINATE arrived, discovery service is stopping..." << std::endl;
-            terminated = true;
-        } else if (streq(command, CMD_JOIN)) {
-            std::cout << "New peer on the network. Join()" << std::endl;
-            bool has_more_msg = true;
-
-            while (has_more_msg) {
-                char *newhost = zmsg_popstr(msg);
-                if (newhost) {
-                    std::cout << "Join to: " << newhost << std::endl;
-                    std::string str_newhost(newhost);
-                    dhtJoinToCluster(str_newhost, RIAPS_DHT_NODE_PORT, dhtNode);
-                    zstr_free(&newhost);
-                } else {
-                    has_more_msg = false;
-                }
-            }
-        }
-
-        if (command) {
-            zstr_free(&command);
-        }
-        zmsg_destroy(&msg);
-    }
-    return terminated;
-}
 
 // TODO: Refactor this monster. This is not the nice way to handle messages.
 // Hanlde ZMQ message scoming from the RIAPS actors/components
@@ -581,7 +542,7 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
             std::string key = "/groups/"+appName;
             dht::Blob b(sbuf.data(), sbuf.data()+sbuf.size());
             dhtNode.put(key, dht::Value(b));
-            
+
             // Debug
             std::cout << "Component joined to group: "
                       << appName << "::"
@@ -589,7 +550,7 @@ bool handleRiapsMessages(zsock_t* riapsSocket,
                       << groupDetails.groupId.groupName   << std::endl;
             std::cout << "Group services: " << std::endl;
             for (auto& g : groupDetails.groupServices){
-                    std::cout << "\t- " << g.address << " " << g.messageType << std::endl; 
+                    std::cout << "\t- " << g.address << " " << g.messageType << std::endl;
             }
 
             //Send response

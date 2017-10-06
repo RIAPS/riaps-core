@@ -151,6 +151,7 @@ list(APPEND RDISCOVERYD_SOURCE
         src/discoveryd/r_discoveryd.cc
         src/discoveryd/r_riaps_actor.cc
         src/discoveryd/r_riaps_cmd_handler.cc
+        src/discoveryd/r_msghandler.cc
         src/discoveryd/r_odht.cc
         include/messaging/disco.capnp.c++
         )
@@ -162,6 +163,7 @@ list(APPEND RDISCOVERYD_HEADERS
         include/discoveryd/r_riaps_cmd_handler.h
         include/discoveryd/r_odht.h
         include/discoveryd/r_discovery_types.h
+        include/discoveryd/r_msghandler.h
         include/framework/rfw_configuration.h
         include/framework/rfw_network_interfaces.h
         include/utils/r_utils.h
