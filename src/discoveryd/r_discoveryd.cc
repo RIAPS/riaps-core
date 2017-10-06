@@ -14,7 +14,6 @@
 
 
 #include <discoveryd/r_riaps_actor.h>
-#include <discoveryd/r_discoveryd_commands.h>
 #include <framework/rfw_network_interfaces.h>
 #include <utils/r_utils.h>
 
@@ -38,6 +37,8 @@
 
 // IPC socket address for sending control messages to the discovery service
 #define CONTROL_SOCKET "ipc:///tmp/discoverycontrol"
+
+#define CMD_JOIN "JOIN"
 
 int main(int argc, char* argv[])
 {

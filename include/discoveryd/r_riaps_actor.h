@@ -3,7 +3,6 @@
 
 
 #include "discoveryd/r_discovery_types.h"
-#include "discoveryd/r_riaps_cmd_handler.h"
 #include "discoveryd/r_odht.h"
 #include "componentmodel/r_discoverdapi.h"
 

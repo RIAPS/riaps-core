@@ -12,6 +12,19 @@
 #include <czmq.h>
 
 #define REGULAR_MAINTAIN_PERIOD 3000 //msec
+#define CMD_JOIN "JOIN"
+#define RIAPS_DHT_NODE_PORT 4222
+
+#define DHT_ROUTER_CHANNEL "ipc:///tmp/dhtrouterchannel"
+
+static std::map<riaps::discovery::Kind, std::string> kindMap =
+        {{riaps::discovery::Kind::PUB, "pub"},
+         {riaps::discovery::Kind::SUB, "sub"},
+         {riaps::discovery::Kind::CLT, "clt"},
+         {riaps::discovery::Kind::SRV, "srv"},
+         {riaps::discovery::Kind::REQ, "req"},
+         {riaps::discovery::Kind::REP, "rep"}};
+
 
 namespace riaps{
     class DiscoveryMessageHandler{
@@ -23,8 +36,47 @@ namespace riaps{
     private:
         bool handleZombieUpdate(const std::vector<std::shared_ptr<dht::Value>> &values);
         void handlePipeMessage();
+        void handleRiapsMessage();
+        void handleActorReg     (riaps::discovery::ActorRegReq::Reader  & msgActorReq);
+        void handleActorUnreg   (riaps::discovery::ActorUnregReq::Reader& msgActorUnreg);
+        void handleServiceReg   (riaps::discovery::ServiceRegReq::Reader& msgServiceReg);
+        void handleServiceLookup(riaps::discovery::ServiceLookupReq::Reader& msgServiceLookup);
+        void handleGroupJoin    (riaps::discovery::GroupJoinReq::Reader&     msgGroupJoin);
+
+        void handleDhtGet(const riaps::discovery::ProviderListGet::Reader& msgProviderGet,
+                          const std::map<std::string, std::unique_ptr<actor_details_t>>& clients);
+
+        void handleDhtUpdate(const riaps::discovery::ProviderListUpdate::Reader&                          msgProviderUpdate,
+                          const std::map<std::string, std::vector<std::unique_ptr<client_details_t>>>& clientSubscriptions,
+                          const std::map<std::string, std::unique_ptr<actor_details_t>>&               clients);
+
+        std::pair<std::string, std::string> buildInsertKeyValuePair(
+                const std::string&             appName,
+                const std::string&             msgType,
+                const riaps::discovery::Kind&  kind,
+                const riaps::discovery::Scope& scope,
+                const std::string&             host,
+                const uint16_t                 port);
+
+        std::pair<std::string, std::string> buildLookupKey(
+                const std::string&             appName,
+                const std::string&             msgType,
+                const riaps::discovery::Kind&  kind,
+                const riaps::discovery::Scope& scope,
+                const std::string&             clientActorHost,
+                const std::string& clientActorName,
+                const std::string& clientInstanceName,
+                const std::string& clientPortName);
+
+
+
         void maintainRenewal();
         void maintainZombieList();
+        int deregisterActor(const std::string& appName,
+                            const std::string& actorName);
+
+        std::string _macAddress;
+        std::string _hostAddress;
 
 
         int64_t _lastServiceCheckin;
