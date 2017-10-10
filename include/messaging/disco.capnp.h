@@ -58,6 +58,7 @@ CAPNP_DECLARE_SCHEMA(8cf2e8426e6996b1);
 CAPNP_DECLARE_SCHEMA(ceed43cf9a251472);
 CAPNP_DECLARE_SCHEMA(df60e0f885b07faa);
 CAPNP_DECLARE_SCHEMA(eaf54029bfb3e6dc);
+CAPNP_DECLARE_SCHEMA(e52b3a5f7242a4f5);
 CAPNP_DECLARE_SCHEMA(fb2dbb7b7e32fd8e);
 
 }  // namespace schemas
@@ -386,6 +387,21 @@ struct ProviderListGet {
   };
 };
 
+struct GroupUpdate {
+  GroupUpdate() = delete;
+
+  class Reader;
+  class Builder;
+  class Pipeline;
+
+  struct _capnpPrivate {
+    CAPNP_DECLARE_STRUCT_HEADER(e52b3a5f7242a4f5, 0, 2)
+    #if !CAPNP_LITE
+    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    #endif  // !CAPNP_LITE
+  };
+};
+
 struct DhtUpdate {
   DhtUpdate() = delete;
 
@@ -396,6 +412,7 @@ struct DhtUpdate {
     PROVIDER_UPDATE,
     PROVIDER_GET,
     ZOMBIE_LIST,
+    GROUP_UPDATE,
   };
 
   struct _capnpPrivate {
@@ -2363,6 +2380,98 @@ private:
 };
 #endif  // !CAPNP_LITE
 
+class GroupUpdate::Reader {
+public:
+  typedef GroupUpdate Reads;
+
+  Reader() = default;
+  inline explicit Reader(::capnp::_::StructReader base): _reader(base) {}
+
+  inline ::capnp::MessageSize totalSize() const {
+    return _reader.totalSize().asPublic();
+  }
+
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const {
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+  }
+#endif  // !CAPNP_LITE
+
+  inline bool hasGroupId() const;
+  inline  ::riaps::discovery::GroupId::Reader getGroupId() const;
+
+  inline bool hasServices() const;
+  inline  ::capnp::List< ::riaps::discovery::GroupService>::Reader getServices() const;
+
+private:
+  ::capnp::_::StructReader _reader;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::List;
+  friend class ::capnp::MessageBuilder;
+  friend class ::capnp::Orphanage;
+};
+
+class GroupUpdate::Builder {
+public:
+  typedef GroupUpdate Builds;
+
+  Builder() = delete;  // Deleted to discourage incorrect usage.
+                       // You can explicitly initialize to nullptr instead.
+  inline Builder(decltype(nullptr)) {}
+  inline explicit Builder(::capnp::_::StructBuilder base): _builder(base) {}
+  inline operator Reader() const { return Reader(_builder.asReader()); }
+  inline Reader asReader() const { return *this; }
+
+  inline ::capnp::MessageSize totalSize() const { return asReader().totalSize(); }
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const { return asReader().toString(); }
+#endif  // !CAPNP_LITE
+
+  inline bool hasGroupId();
+  inline  ::riaps::discovery::GroupId::Builder getGroupId();
+  inline void setGroupId( ::riaps::discovery::GroupId::Reader value);
+  inline  ::riaps::discovery::GroupId::Builder initGroupId();
+  inline void adoptGroupId(::capnp::Orphan< ::riaps::discovery::GroupId>&& value);
+  inline ::capnp::Orphan< ::riaps::discovery::GroupId> disownGroupId();
+
+  inline bool hasServices();
+  inline  ::capnp::List< ::riaps::discovery::GroupService>::Builder getServices();
+  inline void setServices( ::capnp::List< ::riaps::discovery::GroupService>::Reader value);
+  inline  ::capnp::List< ::riaps::discovery::GroupService>::Builder initServices(unsigned int size);
+  inline void adoptServices(::capnp::Orphan< ::capnp::List< ::riaps::discovery::GroupService>>&& value);
+  inline ::capnp::Orphan< ::capnp::List< ::riaps::discovery::GroupService>> disownServices();
+
+private:
+  ::capnp::_::StructBuilder _builder;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  friend class ::capnp::Orphanage;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+};
+
+#if !CAPNP_LITE
+class GroupUpdate::Pipeline {
+public:
+  typedef GroupUpdate Pipelines;
+
+  inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
+  inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
+      : _typeless(kj::mv(typeless)) {}
+
+  inline  ::riaps::discovery::GroupId::Pipeline getGroupId();
+private:
+  ::capnp::AnyPointer::Pipeline _typeless;
+  friend class ::capnp::PipelineHook;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+};
+#endif  // !CAPNP_LITE
+
 class DhtUpdate::Reader {
 public:
   typedef DhtUpdate Reads;
@@ -2392,6 +2501,10 @@ public:
   inline bool isZombieList() const;
   inline bool hasZombieList() const;
   inline  ::capnp::List< ::capnp::Text>::Reader getZombieList() const;
+
+  inline bool isGroupUpdate() const;
+  inline bool hasGroupUpdate() const;
+  inline  ::riaps::discovery::GroupUpdate::Reader getGroupUpdate() const;
 
 private:
   ::capnp::_::StructReader _reader;
@@ -2446,6 +2559,14 @@ public:
   inline  ::capnp::List< ::capnp::Text>::Builder initZombieList(unsigned int size);
   inline void adoptZombieList(::capnp::Orphan< ::capnp::List< ::capnp::Text>>&& value);
   inline ::capnp::Orphan< ::capnp::List< ::capnp::Text>> disownZombieList();
+
+  inline bool isGroupUpdate();
+  inline bool hasGroupUpdate();
+  inline  ::riaps::discovery::GroupUpdate::Builder getGroupUpdate();
+  inline void setGroupUpdate( ::riaps::discovery::GroupUpdate::Reader value);
+  inline  ::riaps::discovery::GroupUpdate::Builder initGroupUpdate();
+  inline void adoptGroupUpdate(::capnp::Orphan< ::riaps::discovery::GroupUpdate>&& value);
+  inline ::capnp::Orphan< ::riaps::discovery::GroupUpdate> disownGroupUpdate();
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -4314,6 +4435,75 @@ inline ::capnp::Orphan< ::capnp::List< ::capnp::Text>> ProviderListGet::Builder:
       _builder.getPointerField(2 * ::capnp::POINTERS));
 }
 
+inline bool GroupUpdate::Reader::hasGroupId() const {
+  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline bool GroupUpdate::Builder::hasGroupId() {
+  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline  ::riaps::discovery::GroupId::Reader GroupUpdate::Reader::getGroupId() const {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::get(
+      _reader.getPointerField(0 * ::capnp::POINTERS));
+}
+inline  ::riaps::discovery::GroupId::Builder GroupUpdate::Builder::getGroupId() {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::get(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+#if !CAPNP_LITE
+inline  ::riaps::discovery::GroupId::Pipeline GroupUpdate::Pipeline::getGroupId() {
+  return  ::riaps::discovery::GroupId::Pipeline(_typeless.getPointerField(0));
+}
+#endif  // !CAPNP_LITE
+inline void GroupUpdate::Builder::setGroupId( ::riaps::discovery::GroupId::Reader value) {
+  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::set(
+      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+}
+inline  ::riaps::discovery::GroupId::Builder GroupUpdate::Builder::initGroupId() {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::init(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void GroupUpdate::Builder::adoptGroupId(
+    ::capnp::Orphan< ::riaps::discovery::GroupId>&& value) {
+  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::adopt(
+      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::riaps::discovery::GroupId> GroupUpdate::Builder::disownGroupId() {
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::disown(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+
+inline bool GroupUpdate::Reader::hasServices() const {
+  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
+}
+inline bool GroupUpdate::Builder::hasServices() {
+  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::List< ::riaps::discovery::GroupService>::Reader GroupUpdate::Reader::getServices() const {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::get(
+      _reader.getPointerField(1 * ::capnp::POINTERS));
+}
+inline  ::capnp::List< ::riaps::discovery::GroupService>::Builder GroupUpdate::Builder::getServices() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::get(
+      _builder.getPointerField(1 * ::capnp::POINTERS));
+}
+inline void GroupUpdate::Builder::setServices( ::capnp::List< ::riaps::discovery::GroupService>::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::set(
+      _builder.getPointerField(1 * ::capnp::POINTERS), value);
+}
+inline  ::capnp::List< ::riaps::discovery::GroupService>::Builder GroupUpdate::Builder::initServices(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::init(
+      _builder.getPointerField(1 * ::capnp::POINTERS), size);
+}
+inline void GroupUpdate::Builder::adoptServices(
+    ::capnp::Orphan< ::capnp::List< ::riaps::discovery::GroupService>>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::adopt(
+      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::List< ::riaps::discovery::GroupService>> GroupUpdate::Builder::disownServices() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::disown(
+      _builder.getPointerField(1 * ::capnp::POINTERS));
+}
+
 inline  ::riaps::discovery::DhtUpdate::Which DhtUpdate::Reader::which() const {
   return _reader.getDataField<Which>(0 * ::capnp::ELEMENTS);
 }
@@ -4480,6 +4670,58 @@ inline ::capnp::Orphan< ::capnp::List< ::capnp::Text>> DhtUpdate::Builder::disow
   KJ_IREQUIRE(which() == DhtUpdate::ZOMBIE_LIST,
               "Must check which() before get()ing a union member.");
   return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::disown(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+
+inline bool DhtUpdate::Reader::isGroupUpdate() const {
+  return which() == DhtUpdate::GROUP_UPDATE;
+}
+inline bool DhtUpdate::Builder::isGroupUpdate() {
+  return which() == DhtUpdate::GROUP_UPDATE;
+}
+inline bool DhtUpdate::Reader::hasGroupUpdate() const {
+  if (which() != DhtUpdate::GROUP_UPDATE) return false;
+  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline bool DhtUpdate::Builder::hasGroupUpdate() {
+  if (which() != DhtUpdate::GROUP_UPDATE) return false;
+  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline  ::riaps::discovery::GroupUpdate::Reader DhtUpdate::Reader::getGroupUpdate() const {
+  KJ_IREQUIRE(which() == DhtUpdate::GROUP_UPDATE,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::get(
+      _reader.getPointerField(0 * ::capnp::POINTERS));
+}
+inline  ::riaps::discovery::GroupUpdate::Builder DhtUpdate::Builder::getGroupUpdate() {
+  KJ_IREQUIRE(which() == DhtUpdate::GROUP_UPDATE,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::get(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void DhtUpdate::Builder::setGroupUpdate( ::riaps::discovery::GroupUpdate::Reader value) {
+  _builder.setDataField<DhtUpdate::Which>(
+      0 * ::capnp::ELEMENTS, DhtUpdate::GROUP_UPDATE);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::set(
+      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+}
+inline  ::riaps::discovery::GroupUpdate::Builder DhtUpdate::Builder::initGroupUpdate() {
+  _builder.setDataField<DhtUpdate::Which>(
+      0 * ::capnp::ELEMENTS, DhtUpdate::GROUP_UPDATE);
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::init(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void DhtUpdate::Builder::adoptGroupUpdate(
+    ::capnp::Orphan< ::riaps::discovery::GroupUpdate>&& value) {
+  _builder.setDataField<DhtUpdate::Which>(
+      0 * ::capnp::ELEMENTS, DhtUpdate::GROUP_UPDATE);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::adopt(
+      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::riaps::discovery::GroupUpdate> DhtUpdate::Builder::disownGroupUpdate() {
+  KJ_IREQUIRE(which() == DhtUpdate::GROUP_UPDATE,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 

@@ -136,11 +136,17 @@ struct ProviderListGet {
     results      @2 : List(Text);
 }
 
+struct GroupUpdate {
+    groupId  @0 : GroupId;
+    services @1 : List(GroupService);
+}
+
 struct DhtUpdate {
     union {
         providerUpdate @0: ProviderListUpdate;
         providerGet    @1: ProviderListGet;
         zombieList     @2: List(Text);
+        groupUpdate    @3: GroupUpdate;
     }
 }
 
