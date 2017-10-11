@@ -49,6 +49,7 @@ CAPNP_DECLARE_SCHEMA(ded1e5c2e92062b0);
 CAPNP_DECLARE_SCHEMA(8976e48f2d7f8f36);
 CAPNP_DECLARE_SCHEMA(dd7d98d2d2d81406);
 CAPNP_DECLARE_SCHEMA(cbc342ab58d149c5);
+CAPNP_DECLARE_SCHEMA(84a7e0e5c34ca2b8);
 CAPNP_DECLARE_SCHEMA(e0b61d43b0aaea51);
 CAPNP_DECLARE_SCHEMA(c5c00415475f9f91);
 CAPNP_DECLARE_SCHEMA(bb3e73b2a350ce4e);
@@ -238,15 +239,34 @@ struct ServiceLookupRep {
   };
 };
 
-struct DiscoUpd {
-  DiscoUpd() = delete;
+struct PortUpd {
+  PortUpd() = delete;
 
   class Reader;
   class Builder;
   class Pipeline;
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(e0b61d43b0aaea51, 1, 2)
+    CAPNP_DECLARE_STRUCT_HEADER(84a7e0e5c34ca2b8, 1, 2)
+    #if !CAPNP_LITE
+    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    #endif  // !CAPNP_LITE
+  };
+};
+
+struct DiscoUpd {
+  DiscoUpd() = delete;
+
+  class Reader;
+  class Builder;
+  class Pipeline;
+  enum Which: uint16_t {
+    PORT_UPDATE,
+    GROUP_UPDATE,
+  };
+
+  struct _capnpPrivate {
+    CAPNP_DECLARE_STRUCT_HEADER(e0b61d43b0aaea51, 1, 1)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
     #endif  // !CAPNP_LITE
@@ -1460,9 +1480,9 @@ private:
 };
 #endif  // !CAPNP_LITE
 
-class DiscoUpd::Reader {
+class PortUpd::Reader {
 public:
-  typedef DiscoUpd Reads;
+  typedef PortUpd Reads;
 
   Reader() = default;
   inline explicit Reader(::capnp::_::StructReader base): _reader(base) {}
@@ -1497,9 +1517,9 @@ private:
   friend class ::capnp::Orphanage;
 };
 
-class DiscoUpd::Builder {
+class PortUpd::Builder {
 public:
-  typedef DiscoUpd Builds;
+  typedef PortUpd Builds;
 
   Builder() = delete;  // Deleted to discourage incorrect usage.
                        // You can explicitly initialize to nullptr instead.
@@ -1540,6 +1560,105 @@ private:
 };
 
 #if !CAPNP_LITE
+class PortUpd::Pipeline {
+public:
+  typedef PortUpd Pipelines;
+
+  inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
+  inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
+      : _typeless(kj::mv(typeless)) {}
+
+  inline  ::riaps::discovery::Client::Pipeline getClient();
+  inline  ::riaps::discovery::Socket::Pipeline getSocket();
+private:
+  ::capnp::AnyPointer::Pipeline _typeless;
+  friend class ::capnp::PipelineHook;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+};
+#endif  // !CAPNP_LITE
+
+class DiscoUpd::Reader {
+public:
+  typedef DiscoUpd Reads;
+
+  Reader() = default;
+  inline explicit Reader(::capnp::_::StructReader base): _reader(base) {}
+
+  inline ::capnp::MessageSize totalSize() const {
+    return _reader.totalSize().asPublic();
+  }
+
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const {
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+  }
+#endif  // !CAPNP_LITE
+
+  inline Which which() const;
+  inline bool isPortUpdate() const;
+  inline bool hasPortUpdate() const;
+  inline  ::riaps::discovery::PortUpd::Reader getPortUpdate() const;
+
+  inline bool isGroupUpdate() const;
+  inline bool hasGroupUpdate() const;
+  inline  ::riaps::discovery::GroupUpdate::Reader getGroupUpdate() const;
+
+private:
+  ::capnp::_::StructReader _reader;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::List;
+  friend class ::capnp::MessageBuilder;
+  friend class ::capnp::Orphanage;
+};
+
+class DiscoUpd::Builder {
+public:
+  typedef DiscoUpd Builds;
+
+  Builder() = delete;  // Deleted to discourage incorrect usage.
+                       // You can explicitly initialize to nullptr instead.
+  inline Builder(decltype(nullptr)) {}
+  inline explicit Builder(::capnp::_::StructBuilder base): _builder(base) {}
+  inline operator Reader() const { return Reader(_builder.asReader()); }
+  inline Reader asReader() const { return *this; }
+
+  inline ::capnp::MessageSize totalSize() const { return asReader().totalSize(); }
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const { return asReader().toString(); }
+#endif  // !CAPNP_LITE
+
+  inline Which which();
+  inline bool isPortUpdate();
+  inline bool hasPortUpdate();
+  inline  ::riaps::discovery::PortUpd::Builder getPortUpdate();
+  inline void setPortUpdate( ::riaps::discovery::PortUpd::Reader value);
+  inline  ::riaps::discovery::PortUpd::Builder initPortUpdate();
+  inline void adoptPortUpdate(::capnp::Orphan< ::riaps::discovery::PortUpd>&& value);
+  inline ::capnp::Orphan< ::riaps::discovery::PortUpd> disownPortUpdate();
+
+  inline bool isGroupUpdate();
+  inline bool hasGroupUpdate();
+  inline  ::riaps::discovery::GroupUpdate::Builder getGroupUpdate();
+  inline void setGroupUpdate( ::riaps::discovery::GroupUpdate::Reader value);
+  inline  ::riaps::discovery::GroupUpdate::Builder initGroupUpdate();
+  inline void adoptGroupUpdate(::capnp::Orphan< ::riaps::discovery::GroupUpdate>&& value);
+  inline ::capnp::Orphan< ::riaps::discovery::GroupUpdate> disownGroupUpdate();
+
+private:
+  ::capnp::_::StructBuilder _builder;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  friend class ::capnp::Orphanage;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+};
+
+#if !CAPNP_LITE
 class DiscoUpd::Pipeline {
 public:
   typedef DiscoUpd Pipelines;
@@ -1548,8 +1667,6 @@ public:
   inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
       : _typeless(kj::mv(typeless)) {}
 
-  inline  ::riaps::discovery::Client::Pipeline getClient();
-  inline  ::riaps::discovery::Socket::Pipeline getSocket();
 private:
   ::capnp::AnyPointer::Pipeline _typeless;
   friend class ::capnp::PipelineHook;
@@ -3392,92 +3509,203 @@ inline ::capnp::Orphan< ::capnp::List< ::riaps::discovery::Socket>> ServiceLooku
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
-inline bool DiscoUpd::Reader::hasClient() const {
+inline bool PortUpd::Reader::hasClient() const {
   return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline bool DiscoUpd::Builder::hasClient() {
+inline bool PortUpd::Builder::hasClient() {
   return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline  ::riaps::discovery::Client::Reader DiscoUpd::Reader::getClient() const {
+inline  ::riaps::discovery::Client::Reader PortUpd::Reader::getClient() const {
   return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::get(
       _reader.getPointerField(0 * ::capnp::POINTERS));
 }
-inline  ::riaps::discovery::Client::Builder DiscoUpd::Builder::getClient() {
+inline  ::riaps::discovery::Client::Builder PortUpd::Builder::getClient() {
   return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::get(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
-inline  ::riaps::discovery::Client::Pipeline DiscoUpd::Pipeline::getClient() {
+inline  ::riaps::discovery::Client::Pipeline PortUpd::Pipeline::getClient() {
   return  ::riaps::discovery::Client::Pipeline(_typeless.getPointerField(0));
 }
 #endif  // !CAPNP_LITE
-inline void DiscoUpd::Builder::setClient( ::riaps::discovery::Client::Reader value) {
+inline void PortUpd::Builder::setClient( ::riaps::discovery::Client::Reader value) {
   ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::set(
       _builder.getPointerField(0 * ::capnp::POINTERS), value);
 }
-inline  ::riaps::discovery::Client::Builder DiscoUpd::Builder::initClient() {
+inline  ::riaps::discovery::Client::Builder PortUpd::Builder::initClient() {
   return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::init(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
-inline void DiscoUpd::Builder::adoptClient(
+inline void PortUpd::Builder::adoptClient(
     ::capnp::Orphan< ::riaps::discovery::Client>&& value) {
   ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::adopt(
       _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::riaps::discovery::Client> DiscoUpd::Builder::disownClient() {
+inline ::capnp::Orphan< ::riaps::discovery::Client> PortUpd::Builder::disownClient() {
   return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
-inline  ::riaps::discovery::Scope DiscoUpd::Reader::getScope() const {
+inline  ::riaps::discovery::Scope PortUpd::Reader::getScope() const {
   return _reader.getDataField< ::riaps::discovery::Scope>(
       0 * ::capnp::ELEMENTS);
 }
 
-inline  ::riaps::discovery::Scope DiscoUpd::Builder::getScope() {
+inline  ::riaps::discovery::Scope PortUpd::Builder::getScope() {
   return _builder.getDataField< ::riaps::discovery::Scope>(
       0 * ::capnp::ELEMENTS);
 }
-inline void DiscoUpd::Builder::setScope( ::riaps::discovery::Scope value) {
+inline void PortUpd::Builder::setScope( ::riaps::discovery::Scope value) {
   _builder.setDataField< ::riaps::discovery::Scope>(
       0 * ::capnp::ELEMENTS, value);
 }
 
-inline bool DiscoUpd::Reader::hasSocket() const {
+inline bool PortUpd::Reader::hasSocket() const {
   return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
 }
-inline bool DiscoUpd::Builder::hasSocket() {
+inline bool PortUpd::Builder::hasSocket() {
   return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
 }
-inline  ::riaps::discovery::Socket::Reader DiscoUpd::Reader::getSocket() const {
+inline  ::riaps::discovery::Socket::Reader PortUpd::Reader::getSocket() const {
   return ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::get(
       _reader.getPointerField(1 * ::capnp::POINTERS));
 }
-inline  ::riaps::discovery::Socket::Builder DiscoUpd::Builder::getSocket() {
+inline  ::riaps::discovery::Socket::Builder PortUpd::Builder::getSocket() {
   return ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::get(
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
-inline  ::riaps::discovery::Socket::Pipeline DiscoUpd::Pipeline::getSocket() {
+inline  ::riaps::discovery::Socket::Pipeline PortUpd::Pipeline::getSocket() {
   return  ::riaps::discovery::Socket::Pipeline(_typeless.getPointerField(1));
 }
 #endif  // !CAPNP_LITE
-inline void DiscoUpd::Builder::setSocket( ::riaps::discovery::Socket::Reader value) {
+inline void PortUpd::Builder::setSocket( ::riaps::discovery::Socket::Reader value) {
   ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::set(
       _builder.getPointerField(1 * ::capnp::POINTERS), value);
 }
-inline  ::riaps::discovery::Socket::Builder DiscoUpd::Builder::initSocket() {
+inline  ::riaps::discovery::Socket::Builder PortUpd::Builder::initSocket() {
   return ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::init(
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }
-inline void DiscoUpd::Builder::adoptSocket(
+inline void PortUpd::Builder::adoptSocket(
     ::capnp::Orphan< ::riaps::discovery::Socket>&& value) {
   ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::adopt(
       _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::riaps::discovery::Socket> DiscoUpd::Builder::disownSocket() {
+inline ::capnp::Orphan< ::riaps::discovery::Socket> PortUpd::Builder::disownSocket() {
   return ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::disown(
       _builder.getPointerField(1 * ::capnp::POINTERS));
+}
+
+inline  ::riaps::discovery::DiscoUpd::Which DiscoUpd::Reader::which() const {
+  return _reader.getDataField<Which>(0 * ::capnp::ELEMENTS);
+}
+inline  ::riaps::discovery::DiscoUpd::Which DiscoUpd::Builder::which() {
+  return _builder.getDataField<Which>(0 * ::capnp::ELEMENTS);
+}
+
+inline bool DiscoUpd::Reader::isPortUpdate() const {
+  return which() == DiscoUpd::PORT_UPDATE;
+}
+inline bool DiscoUpd::Builder::isPortUpdate() {
+  return which() == DiscoUpd::PORT_UPDATE;
+}
+inline bool DiscoUpd::Reader::hasPortUpdate() const {
+  if (which() != DiscoUpd::PORT_UPDATE) return false;
+  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline bool DiscoUpd::Builder::hasPortUpdate() {
+  if (which() != DiscoUpd::PORT_UPDATE) return false;
+  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline  ::riaps::discovery::PortUpd::Reader DiscoUpd::Reader::getPortUpdate() const {
+  KJ_IREQUIRE(which() == DiscoUpd::PORT_UPDATE,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::PortUpd>::get(
+      _reader.getPointerField(0 * ::capnp::POINTERS));
+}
+inline  ::riaps::discovery::PortUpd::Builder DiscoUpd::Builder::getPortUpdate() {
+  KJ_IREQUIRE(which() == DiscoUpd::PORT_UPDATE,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::PortUpd>::get(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void DiscoUpd::Builder::setPortUpdate( ::riaps::discovery::PortUpd::Reader value) {
+  _builder.setDataField<DiscoUpd::Which>(
+      0 * ::capnp::ELEMENTS, DiscoUpd::PORT_UPDATE);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::PortUpd>::set(
+      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+}
+inline  ::riaps::discovery::PortUpd::Builder DiscoUpd::Builder::initPortUpdate() {
+  _builder.setDataField<DiscoUpd::Which>(
+      0 * ::capnp::ELEMENTS, DiscoUpd::PORT_UPDATE);
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::PortUpd>::init(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void DiscoUpd::Builder::adoptPortUpdate(
+    ::capnp::Orphan< ::riaps::discovery::PortUpd>&& value) {
+  _builder.setDataField<DiscoUpd::Which>(
+      0 * ::capnp::ELEMENTS, DiscoUpd::PORT_UPDATE);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::PortUpd>::adopt(
+      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::riaps::discovery::PortUpd> DiscoUpd::Builder::disownPortUpdate() {
+  KJ_IREQUIRE(which() == DiscoUpd::PORT_UPDATE,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::PortUpd>::disown(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+
+inline bool DiscoUpd::Reader::isGroupUpdate() const {
+  return which() == DiscoUpd::GROUP_UPDATE;
+}
+inline bool DiscoUpd::Builder::isGroupUpdate() {
+  return which() == DiscoUpd::GROUP_UPDATE;
+}
+inline bool DiscoUpd::Reader::hasGroupUpdate() const {
+  if (which() != DiscoUpd::GROUP_UPDATE) return false;
+  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline bool DiscoUpd::Builder::hasGroupUpdate() {
+  if (which() != DiscoUpd::GROUP_UPDATE) return false;
+  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline  ::riaps::discovery::GroupUpdate::Reader DiscoUpd::Reader::getGroupUpdate() const {
+  KJ_IREQUIRE(which() == DiscoUpd::GROUP_UPDATE,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::get(
+      _reader.getPointerField(0 * ::capnp::POINTERS));
+}
+inline  ::riaps::discovery::GroupUpdate::Builder DiscoUpd::Builder::getGroupUpdate() {
+  KJ_IREQUIRE(which() == DiscoUpd::GROUP_UPDATE,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::get(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void DiscoUpd::Builder::setGroupUpdate( ::riaps::discovery::GroupUpdate::Reader value) {
+  _builder.setDataField<DiscoUpd::Which>(
+      0 * ::capnp::ELEMENTS, DiscoUpd::GROUP_UPDATE);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::set(
+      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+}
+inline  ::riaps::discovery::GroupUpdate::Builder DiscoUpd::Builder::initGroupUpdate() {
+  _builder.setDataField<DiscoUpd::Which>(
+      0 * ::capnp::ELEMENTS, DiscoUpd::GROUP_UPDATE);
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::init(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void DiscoUpd::Builder::adoptGroupUpdate(
+    ::capnp::Orphan< ::riaps::discovery::GroupUpdate>&& value) {
+  _builder.setDataField<DiscoUpd::Which>(
+      0 * ::capnp::ELEMENTS, DiscoUpd::GROUP_UPDATE);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::adopt(
+      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::riaps::discovery::GroupUpdate> DiscoUpd::Builder::disownGroupUpdate() {
+  KJ_IREQUIRE(which() == DiscoUpd::GROUP_UPDATE,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::disown(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
 inline  ::riaps::discovery::DiscoReq::Which DiscoReq::Reader::which() const {

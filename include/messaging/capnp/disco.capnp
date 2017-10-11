@@ -76,11 +76,20 @@ struct ServiceLookupRep {
   sockets @1 : List(Socket);
 }
 
-struct DiscoUpd {
+struct PortUpd {
   client @0 : Client;
   scope @1 : Scope;
   socket @2 : Socket;
 }
+
+struct DiscoUpd {
+    union {
+        portUpdate  @0 : PortUpd;
+        groupUpdate @1 : GroupUpdate;
+    }
+}
+
+
 
 struct DiscoReq {
    union {
