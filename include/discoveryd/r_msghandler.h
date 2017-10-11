@@ -44,11 +44,12 @@ namespace riaps{
         void handleGroupJoin    (riaps::discovery::GroupJoinReq::Reader&     msgGroupJoin);
 
         void handleDhtGet(const riaps::discovery::ProviderListGet::Reader& msgProviderGet,
-                          const std::map<std::string, std::unique_ptr<actor_details_t>>& clients);
+                          const std::map<std::string, std::shared_ptr<actor_details_t>>& clients);
 
         void handleDhtUpdate(const riaps::discovery::ProviderListUpdate::Reader&                          msgProviderUpdate,
-                          const std::map<std::string, std::vector<std::unique_ptr<client_details_t>>>& clientSubscriptions,
-                          const std::map<std::string, std::unique_ptr<actor_details_t>>&               clients);
+                          const std::map<std::string, std::vector<std::unique_ptr<client_details_t>>>& clientSubscriptions);
+
+        void handleDhtGroupUpdate(const riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
 
         std::pair<std::string, std::string> buildInsertKeyValuePair(
                 const std::string&             appName,
@@ -105,7 +106,8 @@ namespace riaps{
         bool _terminated;
 
         // Stores pair sockets for actor communication
-        std::map<std::string, std::unique_ptr<actor_details_t>> _clients;
+        //std::map<std::string, std::unique_ptr<actor_details_t>> _clients;
+        std::map<std::string, std::shared_ptr<actor_details_t>> _clients;
 
         // TODO: zombieServices is not thread safe, todo implement a threadsafe wrapper
         // Stores addresses of zombie services
@@ -116,8 +118,9 @@ namespace riaps{
         // Client subscriptions to messageTypes
         std::map<std::string, std::vector<std::unique_ptr<client_details_t>>> _clientSubscriptions;
 
-        // Group subscriptions
-        std::map<riaps::groups::GroupId, std::vector<std::unique_ptr<client_details_t>>> _groupSubscriptions;
+        // Subscribe for group changes
+        // AppName - future<>
+        std::map<std::string, std::future<size_t>> _groupListeners;
 
         // Registered OpenDHT listeners. Every key can be registered only once.
         std::map<std::string, std::future<size_t>> _registeredListeners;

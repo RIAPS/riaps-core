@@ -508,18 +508,36 @@ namespace riaps {
                 auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
 
                 capnp::FlatArrayMessageReader reader(capnp_data);
-                auto msg_discoupd = reader.getRoot<riaps::discovery::DiscoUpd>();
-                auto msg_client   = msg_discoupd.getClient();
-                auto msg_socket   = msg_discoupd.getSocket();
-                auto msg_scope    = msg_discoupd.getScope();
+                auto msgDiscoUpd  = reader.getRoot<riaps::discovery::DiscoUpd>();
 
-                std::string instance_name = msg_client.getInstanceName();
-                std::string port_name     = msg_client.getPortName();
-                std::string host          = msg_socket.getHost();
-                int         port          = msg_socket.getPort();
+                if (msgDiscoUpd.isPortUpdate()) {
+                    auto msgPortUpd = msgDiscoUpd.getPortUpdate();
+                    auto msgClient = msgPortUpd.getClient();
+                    auto msgSocket = msgPortUpd.getSocket();
+                    auto msgScope = msgPortUpd.getScope();
 
-                UpdatePort(instance_name, port_name, host, port);
+                    std::string instance_name = msgClient.getInstanceName();
+                    std::string port_name = msgClient.getPortName();
+                    std::string host = msgSocket.getHost();
+                    int port = msgSocket.getPort();
 
+                    UpdatePort(instance_name, port_name, host, port);
+
+
+                } else if (msgDiscoUpd.isGroupUpdate()){
+                    auto msgGroupUpd = msgDiscoUpd.getGroupUpdate();
+
+                    std::cout << "Group update arrived in actor "
+                              << msgGroupUpd.getGroupId().getGroupType().cStr()
+                              << "::"
+                              << msgGroupUpd.getGroupId().getGroupName().cStr()
+                              <<std::endl;
+
+                    for (int i = 0; i<msgGroupUpd.getServices().size(); i++){
+                        auto v = msgGroupUpd.getServices()[i];
+                        std::cout << " -" << v.getAddress().cStr() << "#" << v.getMessageType().cStr() << std::endl;
+                    }
+                }
                 zmsg_destroy(&msg);
             }
             else if (_devm->GetSocket()!=NULL && which == _devm->GetSocket()){

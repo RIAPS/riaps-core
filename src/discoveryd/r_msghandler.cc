@@ -29,7 +29,7 @@ namespace riaps{
         zmq_setsockopt(_riapsSocket, ZMQ_LINGER, &lingerValue, sizeof(int));
         zmq_setsockopt(_riapsSocket, ZMQ_SNDTIMEO, &sendtimeout, sizeof(int));
 
-        zpoller_new(_pipe, _riapsSocket, _dhtUpdateSocket, NULL);
+        _poller = zpoller_new(_pipe, _riapsSocket, _dhtUpdateSocket, NULL);
 
         zsock_signal (_pipe, 0);
 
@@ -87,7 +87,7 @@ namespace riaps{
                     // If update
                     if (msgDhtUpdate.isProviderUpdate()) {
                         riaps::discovery::ProviderListUpdate::Reader msgProviderUpdate = msgDhtUpdate.getProviderUpdate();
-                        handleDhtUpdate(msgProviderUpdate, _clientSubscriptions, _clients);
+                        handleDhtUpdate(msgProviderUpdate, _clientSubscriptions);
 
                     } else if (msgDhtUpdate.isProviderGet()) {
                         riaps::discovery::ProviderListGet::Reader msgProviderGet = msgDhtUpdate.getProviderGet();
@@ -99,6 +99,9 @@ namespace riaps{
                             std::string currentZombie = zombieList[i];
                             _zombieServices[currentZombie] = zclock_mono();
                         }
+                    } else if (msgDhtUpdate.isGroupUpdate()){
+                        riaps::discovery::GroupUpdate::Reader msgGroupUpdate = msgDhtUpdate.getGroupUpdate();
+                        handleDhtGroupUpdate(msgGroupUpdate);
                     }
 
                     zframe_destroy(&capnpMsgBody);
@@ -176,9 +179,9 @@ namespace riaps{
     void DiscoveryMessageHandler::handleActorReg(riaps::discovery::ActorRegReq::Reader& msgActorReq) {
 
         std::string actorname = std::string(msgActorReq.getActorName().cStr());
-        std::string appname   = std::string(msgActorReq.getAppName().cStr());
+        std::string appName   = std::string(msgActorReq.getAppName().cStr());
 
-        std::string clientKeyBase = "/" + appname + '/' + actorname + "/";
+        std::string clientKeyBase = "/" + appName + '/' + actorname + "/";
 
         std::cout << "Register actor with PID - " << msgActorReq.getPid() << " : " << clientKeyBase << std::endl;
 
@@ -211,17 +214,64 @@ namespace riaps{
 
             // Purge the old instance
             if (isRegistered && !isRunning) {
-                deregisterActor(appname, actorname);
+                deregisterActor(appName, actorname);
             }
 
             // Open a new PAIR socket for actor communication
             zsock_t *actor_socket = zsock_new (ZMQ_PAIR);
             auto port = zsock_bind(actor_socket, "tcp://*:!");
 
-            _clients[clientKeyBase] = std::unique_ptr<actor_details_t>(new actor_details_t());
-            _clients[clientKeyBase]->socket = actor_socket;
-            _clients[clientKeyBase]->port = port;
-            _clients[clientKeyBase]->pid = msgActorReq.getPid();
+            //_clients[clientKeyBase] = std::unique_ptr<actor_details_t>(new actor_details_t());
+            _clients[clientKeyBase] =  std::make_shared<actor_details_t>();
+            _clients[clientKeyBase] -> socket  = actor_socket;
+            _clients[clientKeyBase] -> port    = port;
+            _clients[clientKeyBase] -> pid     = msgActorReq.getPid();
+            _clients[clientKeyBase] -> appName = appName;
+
+            // Subscribe to groups
+            if (_groupListeners.find(appName) == _groupListeners.end()) {
+                std::string key = "/groups/"+appName;
+                _groupListeners[appName] =
+                        _dhtNode.listen(key, [](const std::vector<std::shared_ptr<dht::Value>> &values){
+                            if (values.size() == 0) return true;
+
+                            zsock_t *dhtNotificationSocket = zsock_new_push(DHT_ROUTER_CHANNEL);
+
+                            // Let's unpack the data
+                            for (auto& value : values) {
+                                riaps::groups::GroupDetails v = value->unpack<riaps::groups::GroupDetails>();
+
+                                capnp::MallocMessageBuilder dhtMessage;
+                                auto msgDhtUpdate = dhtMessage.initRoot<riaps::discovery::DhtUpdate>();
+                                auto msgGroupUpdate = msgDhtUpdate.initGroupUpdate();
+                                auto groupId = msgGroupUpdate.initGroupId();
+                                groupId.setAppName(v.appName);
+                                groupId.setGroupName(v.groupId.groupName);
+                                groupId.setGroupType(v.groupId.groupTypeId);
+
+                                auto groupServices = msgGroupUpdate.initServices(v.groupServices.size());
+                                for (int i = 0; i<v.groupServices.size(); i++){
+                                    groupServices[i].setAddress(v.groupServices[i].address);
+                                    groupServices[i].setMessageType(v.groupServices[i].messageType);
+                                }
+
+                                auto serializedMessage = capnp::messageToFlatArray(dhtMessage);
+
+                                zmsg_t *msg = zmsg_new();
+                                auto bytes = serializedMessage.asBytes();
+                                zmsg_pushmem(msg, bytes.begin(), bytes.size());
+                                zmsg_send(&msg, dhtNotificationSocket);
+                                std::cout << "[DHT] Group notifications sent to discovery service" << std::endl;
+                            }
+
+                            sleep(1);
+                            zsock_destroy(&dhtNotificationSocket);
+                            sleep(1);
+
+
+                            return true;
+                        });
+            }
 
             // Create and send the Response
             capnp::MallocMessageBuilder message;
@@ -238,15 +288,18 @@ namespace riaps{
 
             zmsg_send(&msg, _riapsSocket);
 
+            // Use the same object, do not create another copy of actor_details;
             std::string clientKeyLocal = clientKeyBase + _macAddress;
-            _clients[clientKeyLocal] = std::unique_ptr<actor_details_t>(new actor_details_t());
-            _clients[clientKeyLocal]->port = port;
-            _clients[clientKeyLocal]->pid = msgActorReq.getPid();
+            _clients[clientKeyLocal] = _clients[clientKeyBase];
+            //_clients[clientKeyLocal] = std::unique_ptr<actor_details_t>(new actor_details_t());
+            //_clients[clientKeyLocal]->port = port;
+            //_clients[clientKeyLocal]->pid = msgActorReq.getPid();
 
             std::string clientKeyGlobal = clientKeyBase + _hostAddress;
-            _clients[clientKeyGlobal] = std::unique_ptr<actor_details_t>(new actor_details_t());
-            _clients[clientKeyGlobal]->port = port;
-            _clients[clientKeyGlobal]->pid = msgActorReq.getPid();
+            _clients[clientKeyGlobal] = _clients[clientKeyBase];
+            //_clients[clientKeyGlobal] = std::unique_ptr<actor_details_t>(new actor_details_t());
+            //_clients[clientKeyGlobal]->port = port;
+            //_clients[clientKeyGlobal]->pid = msgActorReq.getPid();
         }
     }
 
@@ -594,11 +647,13 @@ namespace riaps{
                                                  });
         }
 
-        msgpack::sbuffer sbuf;
-        msgpack::pack(sbuf, groupDetails);
+//        msgpack::sbuffer sbuf;
+//        msgpack::pack(sbuf, groupDetails);
         std::string key = "/groups/"+appName;
-        dht::Blob b(sbuf.data(), sbuf.data()+sbuf.size());
-        _dhtNode.put(key, dht::Value(b));
+//        dht::Blob b(sbuf.data(), sbuf.data()+sbuf.size());
+//        _dhtNode.put(key, dht::Value(b));
+
+        _dhtNode.put(key, dht::Value::pack(groupDetails));
 
         // Debug
         std::cout << "Component joined to group: "
@@ -699,7 +754,7 @@ namespace riaps{
 
     void DiscoveryMessageHandler::handleDhtGet(
                    const riaps::discovery::ProviderListGet::Reader& msgProviderGet,
-                   const std::map<std::string, std::unique_ptr<actor_details_t>>& clients)
+                   const std::map<std::string, std::shared_ptr<actor_details_t>>& clients)
     {
         auto msgGetResults = msgProviderGet.getResults();
 
@@ -729,20 +784,21 @@ namespace riaps{
             }
 
             capnp::MallocMessageBuilder message;
-            auto msg_discoupd = message.initRoot<riaps::discovery::DiscoUpd>();
-            auto msg_client = msg_discoupd.initClient();
-            auto msg_socket = msg_discoupd.initSocket();
+            auto msgDiscoUpd = message.initRoot<riaps::discovery::DiscoUpd>();
+            auto msgPortUpd  = msgDiscoUpd.initPortUpdate();
+            auto msgClient = msgPortUpd.initClient();
+            auto msgSocket = msgPortUpd.initSocket();
 
             // Set up client
-            msg_client.setActorHost(msgProviderGet.getClient().getActorHost());
-            msg_client.setActorName(msgProviderGet.getClient().getActorName());
-            msg_client.setInstanceName(msgProviderGet.getClient().getInstanceName());
-            msg_client.setPortName(msgProviderGet.getClient().getPortName());
+            msgClient.setActorHost(msgProviderGet.getClient().getActorHost());
+            msgClient.setActorName(msgProviderGet.getClient().getActorName());
+            msgClient.setInstanceName(msgProviderGet.getClient().getInstanceName());
+            msgClient.setPortName(msgProviderGet.getClient().getPortName());
 
-            msg_discoupd.setScope(msgProviderGet.getPath().getScope());
+            msgPortUpd.setScope(msgProviderGet.getPath().getScope());
 
-            msg_socket.setHost(host);
-            msg_socket.setPort(portNum);
+            msgSocket.setHost(host);
+            msgSocket.setPort(portNum);
 
             auto serializedMessage = capnp::messageToFlatArray(message);
 
@@ -750,8 +806,8 @@ namespace riaps{
             zmsg_pushmem(msg, serializedMessage.asBytes().begin(),
                          serializedMessage.asBytes().size());
 
-            std::string clientKeyBase =  "/" + std::string(msgProviderGet.getPath().getAppName())
-                                         + "/" + std::string(msgProviderGet.getClient().getActorName())
+            std::string clientKeyBase =    "/" + std::string(msgProviderGet.getPath().getAppName().cStr())
+                                         + "/" + std::string(msgProviderGet.getClient().getActorName().cStr())
                                          + "/";
 
             // Client might gone while the DHT was looking for the values
@@ -773,8 +829,7 @@ namespace riaps{
 /// \param clientSubscriptions List of current key subscribtions.
 /// \param clients  Holds the ZMQ sockets of the client actors.
     void DiscoveryMessageHandler::handleDhtUpdate(const riaps::discovery::ProviderListUpdate::Reader& msgProviderUpdate,
-                      const std::map<std::string, std::vector<std::unique_ptr<client_details_t>>>& clientSubscriptions,
-                      const std::map<std::string, std::unique_ptr<actor_details_t>>& clients){
+                      const std::map<std::string, std::vector<std::unique_ptr<client_details_t>>>& clientSubscriptions){
 
         std::string provider_key = std::string(msgProviderUpdate.getProviderpath().cStr());
 
@@ -820,25 +875,26 @@ namespace riaps{
                     //continue
 
                     // If the client port saved before
-                    if (clients.find(clientKeyBase) != clients.end()) {
-                        const actor_details_t *clientSocket = clients.at(clientKeyBase).get();
+                    if (_clients.find(clientKeyBase) != _clients.end()) {
+                        const actor_details_t *clientSocket = _clients.at(clientKeyBase).get();
 
                         if (clientSocket->socket != NULL) {
                             capnp::MallocMessageBuilder message;
-                            auto msg_discoupd = message.initRoot<riaps::discovery::DiscoUpd>();
-                            auto msg_client = msg_discoupd.initClient();
-                            auto msg_socket = msg_discoupd.initSocket();
+                            auto msgDiscoUpd = message.initRoot<riaps::discovery::DiscoUpd>();
+                            auto msgPortUpd  = msgDiscoUpd.initPortUpdate();
+                            auto msgClient = msgPortUpd.initClient();
+                            auto msgSocket = msgPortUpd.initSocket();
 
                             // Set up client
-                            msg_client.setActorHost(subscribedClient->actor_host);
-                            msg_client.setActorName(subscribedClient->actor_name);
-                            msg_client.setInstanceName(subscribedClient->instance_name);
-                            msg_client.setPortName(subscribedClient->portname);
+                            msgClient.setActorHost(subscribedClient->actor_host);
+                            msgClient.setActorName(subscribedClient->actor_name);
+                            msgClient.setInstanceName(subscribedClient->instance_name);
+                            msgClient.setPortName(subscribedClient->portname);
 
-                            msg_discoupd.setScope(subscribedClient->isLocal ? riaps::discovery::Scope::LOCAL : riaps::discovery::Scope::GLOBAL);
+                            msgPortUpd.setScope(subscribedClient->isLocal ? riaps::discovery::Scope::LOCAL : riaps::discovery::Scope::GLOBAL);
 
-                            msg_socket.setHost(host);
-                            msg_socket.setPort(portNum);
+                            msgSocket.setHost(host);
+                            msgSocket.setPort(portNum);
 
                             auto serializedMessage = capnp::messageToFlatArray(message);
 
@@ -853,6 +909,34 @@ namespace riaps{
                     }
                 }
             }
+        }
+    }
+
+    void DiscoveryMessageHandler::handleDhtGroupUpdate(const riaps::discovery::GroupUpdate::Reader &msgGroupUpdate) {
+        // Look for the affected actors
+        std::string appName = msgGroupUpdate.getGroupId().getAppName().cStr();
+        bool actorFound = false;
+
+        for (auto& client : _clients){
+            if (client.second->appName == appName){
+                actorFound == true;
+
+                capnp::MallocMessageBuilder builder;
+                auto msgDiscoUpdate = builder.initRoot<riaps::discovery::DiscoUpd>();
+                msgDiscoUpdate.setGroupUpdate(msgGroupUpdate);
+
+                auto serializedMessage = capnp::messageToFlatArray(builder);
+
+                zmsg_t *msg = zmsg_new();
+                zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
+
+                zmsg_send(&msg, client.second.get()->socket);
+            }
+        }
+
+        // No active actor for this app, purge this listener
+        if (!actorFound) {
+
         }
     }
 
