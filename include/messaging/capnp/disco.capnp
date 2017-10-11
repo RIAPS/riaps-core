@@ -124,8 +124,9 @@ struct GroupService {
 }
 
 struct GroupJoinReq {
-    groupId  @0 : GroupId;
-    services @1 : List(GroupService);
+    groupId     @0 : GroupId;
+    services    @1 : List(GroupService);
+    componentId @2 : Text;
 }
 
 struct GroupJoinRep {

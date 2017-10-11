@@ -355,7 +355,7 @@ struct GroupJoinReq {
   class Pipeline;
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(8cf2e8426e6996b1, 0, 2)
+    CAPNP_DECLARE_STRUCT_HEADER(8cf2e8426e6996b1, 0, 3)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
     #endif  // !CAPNP_LITE
@@ -2156,6 +2156,9 @@ public:
   inline bool hasServices() const;
   inline  ::capnp::List< ::riaps::discovery::GroupService>::Reader getServices() const;
 
+  inline bool hasComponentId() const;
+  inline  ::capnp::Text::Reader getComponentId() const;
+
 private:
   ::capnp::_::StructReader _reader;
   template <typename, ::capnp::Kind>
@@ -2197,6 +2200,13 @@ public:
   inline  ::capnp::List< ::riaps::discovery::GroupService>::Builder initServices(unsigned int size);
   inline void adoptServices(::capnp::Orphan< ::capnp::List< ::riaps::discovery::GroupService>>&& value);
   inline ::capnp::Orphan< ::capnp::List< ::riaps::discovery::GroupService>> disownServices();
+
+  inline bool hasComponentId();
+  inline  ::capnp::Text::Builder getComponentId();
+  inline void setComponentId( ::capnp::Text::Reader value);
+  inline  ::capnp::Text::Builder initComponentId(unsigned int size);
+  inline void adoptComponentId(::capnp::Orphan< ::capnp::Text>&& value);
+  inline ::capnp::Orphan< ::capnp::Text> disownComponentId();
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -4469,6 +4479,38 @@ inline void GroupJoinReq::Builder::adoptServices(
 inline ::capnp::Orphan< ::capnp::List< ::riaps::discovery::GroupService>> GroupJoinReq::Builder::disownServices() {
   return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::disown(
       _builder.getPointerField(1 * ::capnp::POINTERS));
+}
+
+inline bool GroupJoinReq::Reader::hasComponentId() const {
+  return !_reader.getPointerField(2 * ::capnp::POINTERS).isNull();
+}
+inline bool GroupJoinReq::Builder::hasComponentId() {
+  return !_builder.getPointerField(2 * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::Text::Reader GroupJoinReq::Reader::getComponentId() const {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _reader.getPointerField(2 * ::capnp::POINTERS));
+}
+inline  ::capnp::Text::Builder GroupJoinReq::Builder::getComponentId() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _builder.getPointerField(2 * ::capnp::POINTERS));
+}
+inline void GroupJoinReq::Builder::setComponentId( ::capnp::Text::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
+      _builder.getPointerField(2 * ::capnp::POINTERS), value);
+}
+inline  ::capnp::Text::Builder GroupJoinReq::Builder::initComponentId(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
+      _builder.getPointerField(2 * ::capnp::POINTERS), size);
+}
+inline void GroupJoinReq::Builder::adoptComponentId(
+    ::capnp::Orphan< ::capnp::Text>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
+      _builder.getPointerField(2 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::Text> GroupJoinReq::Builder::disownComponentId() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
+      _builder.getPointerField(2 * ::capnp::POINTERS));
 }
 
 inline  ::riaps::discovery::Status GroupJoinRep::Reader::getStatus() const {
