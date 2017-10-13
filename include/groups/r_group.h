@@ -8,6 +8,7 @@
 #include <componentmodel/r_configuration.h>
 #include <componentmodel/r_pubportgroup.h>
 #include <componentmodel/r_subscriberport.h>
+#include <messaging/disco.capnp.h>
 
 #include <msgpack.hpp>
 #include <czmq.h>
@@ -54,9 +55,10 @@ namespace riaps {
          */
         struct GroupDetails {
             std::string               appName;
+            std::string               componentId;
             GroupId                   groupId;
             std::vector<GroupService> groupServices;
-            MSGPACK_DEFINE(appName, groupId, groupServices);
+            MSGPACK_DEFINE(appName, componentId, groupId, groupServices);
 
         };
 
@@ -74,7 +76,7 @@ namespace riaps {
              * Initializes a group, by the given groupId
              * @param groupId Must have valid configuration entry with the matching id.
              */
-            Group(const GroupId& groupId);
+            Group(const GroupId& groupId, const std::string& componentId);
 
             /**
              * Creates the communication ports and registers the group in the discovery service.
@@ -82,11 +84,14 @@ namespace riaps {
              */
             bool InitGroup();
 
+            void ConnectToNewServices(riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
+
             virtual ~Group();
 
         protected:
-            const GroupId _groupId;
-            groupt_conf   _groupTypeConf;
+            const GroupId     _groupId;
+            groupt_conf       _groupTypeConf;
+            const std::string _componentId;
 
             /**
              * Always store the communication ports in unique_ptr (self-defense)

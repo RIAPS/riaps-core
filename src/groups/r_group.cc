@@ -3,9 +3,6 @@
 //
 
 #include <groups/r_group.h>
-#include <componentmodel/r_pubportgroup.h>
-
-
 
 namespace riaps{
     namespace groups{
@@ -19,8 +16,9 @@ namespace riaps{
             return groupTypeId<other.groupTypeId;
         }
 
-        Group::Group(const GroupId &groupId) :
+        Group::Group(const GroupId &groupId, const std::string& componentId) :
                 _groupId(groupId),
+                _componentId(componentId),
                 _groupPubPort(nullptr),
                 _groupSubPort(nullptr) {
 
@@ -46,6 +44,8 @@ namespace riaps{
             _groupPubPort = std::unique_ptr<ports::GroupPublisherPort>(new ports::GroupPublisherPort(internalPubConfig));
             initializedServices.push_back(_groupPubPort->GetGroupService());
 
+
+
             // Initialize user defined ports
             for(auto& portDeclaration : _groupTypeConf.groupTypePorts.pubs){
                 auto newPort = std::unique_ptr<ports::GroupPublisherPort>(new ports::GroupPublisherPort(portDeclaration));
@@ -54,9 +54,25 @@ namespace riaps{
             }
 
             // Register all of the publishers
-            joinGroup(riaps::Actor::GetRunningActor().GetApplicationName(),
-                      _groupId,
-                      initializedServices);
+            return joinGroup(riaps::Actor::GetRunningActor().GetApplicationName(),
+                             _componentId,
+                             _groupId,
+                             initializedServices);
+        }
+
+        void Group::ConnectToNewServices(riaps::discovery::GroupUpdate::Reader &msgGroupUpdate) {
+            for (int i =0; i<msgGroupUpdate.getServices().size(); i++){
+                std::string messageType = msgGroupUpdate.getServices()[i].getMessageType().cStr();
+                for (auto& groupPort : _groupPorts){
+                    auto subscriberPort = groupPort->AsSubscribePort();
+                    if (subscriberPort == nullptr) continue;
+                    if (subscriberPort->GetConfig()->messageType == messageType){
+                        std::string address = msgGroupUpdate.getServices()[i].getAddress().cStr();
+                        address = "tcp://" + address;
+                        subscriberPort->ConnectToPublihser(address);
+                    }
+                }
+            }
         }
 
         Group::~Group() {

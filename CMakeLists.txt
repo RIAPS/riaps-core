@@ -137,6 +137,7 @@ set(ACTOR_HEADERS
         include/groups/r_group.h
         include/const/r_jsonmodel.h
         include/const/r_const.h
+        include/messaging/disco.capnp.h
         )
 
 add_executable(start_actor

@@ -537,6 +537,8 @@ namespace riaps {
                         auto v = msgGroupUpd.getServices()[i];
                         std::cout << " -" << v.getAddress().cStr() << "#" << v.getMessageType().cStr() << std::endl;
                     }
+
+                    UpdateGroup(msgGroupUpd);
                 }
                 zmsg_destroy(&msg);
             }
@@ -559,6 +561,18 @@ namespace riaps {
             }
             else {
             }
+        }
+    }
+
+    void riaps::Actor::UpdateGroup(riaps::discovery::GroupUpdate::Reader& msgGroupUpdate){
+        std::string sourceComponentId   = msgGroupUpdate.getComponentId().cStr();
+        for (ComponentBase* component : _components) {
+            std::string componentInstanceId = component->GetCompUuid();
+
+            // Do not send update to the component, because the services originates from this component.
+            if (componentInstanceId == sourceComponentId) continue;
+
+            component->UpdateGroup(msgGroupUpdate);
         }
     }
 

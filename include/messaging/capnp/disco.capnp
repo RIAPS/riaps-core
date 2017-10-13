@@ -113,9 +113,8 @@ struct DiscoRep {
 
 # Groups
 struct GroupId {
-    appName     @0 : Text;
-    groupType   @1 : Text;
-    groupName   @2 : Text;
+    groupType   @0 : Text;
+    groupName   @1 : Text;
 }
 
 struct GroupService {
@@ -124,9 +123,10 @@ struct GroupService {
 }
 
 struct GroupJoinReq {
-    groupId     @0 : GroupId;
-    services    @1 : List(GroupService);
-    componentId @2 : Text;
+    appName     @0 : Text;
+    groupId     @1 : GroupId;
+    services    @2 : List(GroupService);
+    componentId @3 : Text;
 }
 
 struct GroupJoinRep {
@@ -147,8 +147,10 @@ struct ProviderListGet {
 }
 
 struct GroupUpdate {
-    groupId  @0 : GroupId;
-    services @1 : List(GroupService);
+    appName           @0 : Text;
+    groupId           @1 : GroupId;
+    componentId       @2 : Text;
+    services          @3 : List(GroupService);
 }
 
 struct DhtUpdate {

@@ -153,6 +153,23 @@ namespace riaps{
                             zstr_free(&host);
                         }
                         zstr_free(&portname);
+                    } else if(streq(command, CMD_UPDATE_GROUP)){
+                        std::string groupTypeId = zmsg_popstr(msg);
+                        std::string groupName   = zmsg_popstr(msg);
+                        std::string address     = zmsg_popstr(msg);
+                        std::string messageType = zmsg_popstr(msg);
+
+                        // Grab the group object
+                        riaps::groups::GroupId gid;
+                        gid.groupTypeId = groupTypeId;
+                        gid.groupName   = groupName;
+
+                        auto groups = &(comp->_groups);
+
+                        if (groups->find(gid)!=groups->end()){
+
+
+                        }
                     }
                 }
 
@@ -475,9 +492,9 @@ namespace riaps{
 //    }
 
     std::string ComponentBase::GetCompUuid(){
-        const char* uuid_str = zuuid_str(_component_uuid);
-        std::string result (uuid_str);
-        return result;
+        std::string uuid_str = zuuid_str(_component_uuid);
+        //std::string result (uuid_str);
+        return uuid_str;
     }
 
     zactor_t* ComponentBase::GetZmqPipe() const {
@@ -510,13 +527,24 @@ namespace riaps{
         if (_groups.find(groupId)!=_groups.end())
             return false;
 
-        std::unique_ptr<riaps::groups::Group> newGroup = std::unique_ptr<riaps::groups::Group>(new riaps::groups::Group(groupId));
+        std::unique_ptr<riaps::groups::Group> newGroup = std::unique_ptr<riaps::groups::Group>(new riaps::groups::Group(groupId, GetCompUuid()));
         if (newGroup->InitGroup()) {
             _groups[groupId] = std::move(newGroup);
             return true;
         }
 
         return false;
+    }
+
+    void ComponentBase::UpdateGroup(riaps::discovery::GroupUpdate::Reader &msgGroupUpdate) {
+        // First, find the affected groups
+        riaps::groups::GroupId gid;
+        gid.groupName   = msgGroupUpdate.getGroupId().getGroupName().cStr();
+        gid.groupTypeId = msgGroupUpdate.getGroupId().getGroupType().cStr();
+
+        if (_groups.find(gid) == _groups.end()) return;
+
+        _groups[gid]->ConnectToNewServices(msgGroupUpdate);
     }
 
     ComponentBase::~ComponentBase() {

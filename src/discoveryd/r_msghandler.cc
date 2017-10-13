@@ -94,7 +94,6 @@ namespace riaps{
                         handleDhtGet(msgProviderGet, _clients);
                     } else if (msgDhtUpdate.isZombieList()) {
                         auto zombieList = msgDhtUpdate.getZombieList();
-                        //int s = zombieList.size();
                         for (int i =0; i< zombieList.size(); i++){
                             std::string currentZombie = zombieList[i];
                             _zombieServices[currentZombie] = zclock_mono();
@@ -244,8 +243,10 @@ namespace riaps{
                                 capnp::MallocMessageBuilder dhtMessage;
                                 auto msgDhtUpdate = dhtMessage.initRoot<riaps::discovery::DhtUpdate>();
                                 auto msgGroupUpdate = msgDhtUpdate.initGroupUpdate();
+                                msgGroupUpdate.setComponentId(v.componentId);
+                                msgGroupUpdate.setAppName(v.appName);
+
                                 auto groupId = msgGroupUpdate.initGroupId();
-                                groupId.setAppName(v.appName);
                                 groupId.setGroupName(v.groupId.groupName);
                                 groupId.setGroupType(v.groupId.groupTypeId);
 
@@ -435,9 +436,9 @@ namespace riaps{
 
         std::cout << "Get: " + lookupkey.first << std::endl;
 
-        auto zombieServicesCopy = _zombieServices;
+        //auto zombieServicesCopy = _zombieServices;
         _dhtNode.get(lookupkey.first,
-                    [currentClientTmp, lookupkey, &zombieServicesCopy]
+                    [currentClientTmp, lookupkey]
                             (const std::vector<std::shared_ptr<dht::Value>> &values) {
                         // Done Callback
 
@@ -448,14 +449,14 @@ namespace riaps{
                         }
 
                         // Remove elements if they considered as zombie
-                        dhtGetResults.erase(
-                                std::remove_if(dhtGetResults.begin(),
-                                               dhtGetResults.end(),
-                                               [&zombieServicesCopy](const std::string& s) {
-                                                   auto z = zombieServicesCopy;
-                                                   auto b = zombieServicesCopy.find(s)!=zombieServicesCopy.end();
-                                                   return b;
-                                               }), dhtGetResults.end());
+//                        dhtGetResults.erase(
+//                                std::remove_if(dhtGetResults.begin(),
+//                                               dhtGetResults.end(),
+//                                               [&zombieServicesCopy](const std::string& s) {
+//                                                   auto z = zombieServicesCopy;
+//                                                   auto b = zombieServicesCopy.find(s)!=zombieServicesCopy.end();
+//                                                   return b;
+//                                               }), dhtGetResults.end());
 
                         // IF there are still some results.
                         if (dhtGetResults.size() > 0) {
@@ -545,9 +546,8 @@ namespace riaps{
         if (_registeredListeners.find(lookupkeyhash.toString()) == _registeredListeners.end()) {
 
             // Add listener to the added key
-            auto zombieServicesCopy = _zombieServices;
             _registeredListeners[lookupkeyhash.toString()] = _dhtNode.listen(lookupkeyhash,
-                                                                           [lookupkey, &zombieServicesCopy](
+                                                                           [lookupkey](
                                                                                    const std::vector<std::shared_ptr<dht::Value>> &values) {
 
 
@@ -560,14 +560,14 @@ namespace riaps{
                                                                                }
 
                                                                                // Remove elements if they considered as zombie
-                                                                               update_results.erase(
-                                                                                       std::remove_if(update_results.begin(),
-                                                                                                      update_results.end(),
-                                                                                                      [&zombieServicesCopy](const std::string& s) {
-                                                                                                          auto z = zombieServicesCopy;
-                                                                                                          auto b = zombieServicesCopy.find(s)!=zombieServicesCopy.end();
-                                                                                                          return b;
-                                                                                                      }), update_results.end());
+//                                                                               update_results.erase(
+//                                                                                       std::remove_if(update_results.begin(),
+//                                                                                                      update_results.end(),
+//                                                                                                      [&zombieServicesCopy](const std::string& s) {
+//                                                                                                          auto z = zombieServicesCopy;
+//                                                                                                          auto b = zombieServicesCopy.find(s)!=zombieServicesCopy.end();
+//                                                                                                          return b;
+//                                                                                                      }), update_results.end());
 
                                                                                if (update_results.size()>0) {
 
@@ -631,13 +631,16 @@ namespace riaps{
 
     void DiscoveryMessageHandler:: handleGroupJoin(riaps::discovery::GroupJoinReq::Reader& msgGroupJoin){
         // Join to the group.
-        auto msgGroupServices = msgGroupJoin.getServices();
-        std::string appName   = msgGroupJoin.getGroupId().getAppName();
+        auto msgGroupServices   = msgGroupJoin.getServices();
+        std::string appName     = msgGroupJoin.getAppName();
+        std::string componentId = msgGroupJoin.getComponentId();
+
         riaps::groups::GroupDetails groupDetails;
-        groupDetails.appName = appName;
+        groupDetails.appName     = appName;
+        groupDetails.componentId = componentId;
         groupDetails.groupId = {
-                msgGroupJoin.getGroupId().getGroupName(),
-                msgGroupJoin.getGroupId().getGroupType()
+                msgGroupJoin.getGroupId().getGroupType(),
+                msgGroupJoin.getGroupId().getGroupName()
         };
 
         for (int i = 0; i<msgGroupServices.size(); i++){
@@ -761,6 +764,8 @@ namespace riaps{
         for (int idx = 0; idx < msgGetResults.size(); idx++) {
             std::string resultEndpoint = std::string(msgGetResults[idx].cStr());
 
+            if (_zombieServices.find(resultEndpoint)!=_zombieServices.end()) continue;
+
             auto pos = resultEndpoint.find(':');
             if (pos == std::string::npos) {
                 continue;
@@ -841,6 +846,9 @@ namespace riaps{
                 for (int idx = 0; idx < msg_newproviders.size(); idx++) {
                     std::string new_provider_endpoint = std::string(msg_newproviders[idx].cStr());
 
+                    // If the service marked as zombie
+                    if (_zombieServices.find(new_provider_endpoint)!=_zombieServices.end()) continue;
+
                     auto pos = new_provider_endpoint.find(':');
                     if (pos == std::string::npos) {
                         continue;
@@ -914,11 +922,17 @@ namespace riaps{
 
     void DiscoveryMessageHandler::handleDhtGroupUpdate(const riaps::discovery::GroupUpdate::Reader &msgGroupUpdate) {
         // Look for the affected actors
-        std::string appName = msgGroupUpdate.getGroupId().getAppName().cStr();
+        std::string appName = msgGroupUpdate.getAppName().cStr();
         bool actorFound = false;
+
+        std::set<zsock_t*> sentCache;
 
         for (auto& client : _clients){
             if (client.second->appName == appName){
+                if (sentCache.find(client.second->socket) != sentCache.end()) continue;
+
+                // Store the socket pointer to avoid multiple sending of the same update.
+                sentCache.insert(client.second->socket);
                 actorFound == true;
 
                 capnp::MallocMessageBuilder builder;

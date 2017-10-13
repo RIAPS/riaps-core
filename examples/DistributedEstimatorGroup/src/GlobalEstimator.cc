@@ -29,7 +29,7 @@ namespace distributedestimator {
             if (!hasJoined){
                 hasJoined = true;
                 if (this->JoinToGroup({"TestGroupId","Korte"})){
-                    std::cout << "Joind to group TestGroupId::Korte" << std::endl;
+                    std::cout << "Successfully joined to group TestGroupId::Korte" << std::endl;
                 }
             }
         }

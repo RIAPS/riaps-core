@@ -9,6 +9,7 @@
 #include <componentmodel/r_componentbase.h>
 #include <componentmodel/r_peripheral.h>
 #include <componentmodel/r_devmapi.h>
+#include <messaging/disco.capnp.h>
 #include <const/r_const.h>
 #include <utils/r_utils.h>
 
@@ -56,6 +57,7 @@ namespace riaps {
 
         virtual ~Actor();
         void UpdatePort(std::string& instancename, std::string& portname, std::string& host, int port);
+        void UpdateGroup(riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
 
     protected:
 

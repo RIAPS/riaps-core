@@ -326,8 +326,10 @@ void deregisterActor(const std::string& actorName, const std::string& appName){
 
 bool
 joinGroup(const std::string& appName,
+          const std::string& componentId,
           const riaps::groups::GroupId& groupId,
           const std::vector<riaps::groups::GroupService>& groupServices) {
+
     capnp::MallocMessageBuilder message;
 
     auto msgDiscoReq      = message.initRoot<riaps::discovery::DiscoReq>();
@@ -335,7 +337,8 @@ joinGroup(const std::string& appName,
     auto msgGroupId       = msgGroupJoin.initGroupId();
     auto msgGroupServices = msgGroupJoin.initServices(groupServices.size());
 
-    msgGroupId.setAppName(appName);
+    msgGroupJoin.setComponentId(componentId);
+    msgGroupJoin.setAppName(appName);
     msgGroupId.setGroupType(groupId.groupTypeId);
     msgGroupId.setGroupName(groupId.groupName);
 

@@ -59,6 +59,7 @@ namespace riaps{
 
 extern bool
 joinGroup(const std::string& appName,
+          const std::string& componentId,
           const riaps::groups::GroupId& groupId,
           const std::vector<riaps::groups::GroupService>& groupServices
 );

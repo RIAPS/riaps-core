@@ -95,12 +95,19 @@ namespace riaps {
          */
         void StopComponent();
 
+        void UpdateGroup(riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
+
         /**
          *
          * @return The component configuration.
          */
         const component_conf& GetConfig() const;
 
+        /**
+         *
+         * @return The component unique ID.
+         */
+        std::string             GetCompUuid();
 
 
         /**
@@ -253,7 +260,7 @@ namespace riaps {
 
 
         std::string             GetTimerChannel();
-        std::string             GetCompUuid();
+
 
         // Note: disable for now, we need more tests.
         //std::string             GetOneShotTimerChannel();

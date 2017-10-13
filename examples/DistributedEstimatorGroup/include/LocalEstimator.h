@@ -20,12 +20,12 @@ namespace distributedestimator {
             virtual void OnReady(const messages::SensorReady::Reader &message,
                                  riaps::ports::PortBase *port);
 
-            virtual void OnGroupMessage(riaps::groups::GroupId& groupId,
-                                        capnp::FlatArrayMessageReader* capnpreader);
-
-            virtual bool SendGroupMessage(riaps::groups::GroupId&      groupId,
-                                          capnp::MallocMessageBuilder& messageBuilder,
-                                          const std::string&           portName);
+//            virtual void OnGroupMessage(riaps::groups::GroupId& groupId,
+//                                        capnp::FlatArrayMessageReader* capnpreader);
+//
+//            virtual bool SendGroupMessage(riaps::groups::GroupId&      groupId,
+//                                          capnp::MallocMessageBuilder& messageBuilder,
+//                                          const std::string&           portName);
 
 
             virtual ~LocalEstimator();
@@ -33,6 +33,7 @@ namespace distributedestimator {
         private:
             std::unique_ptr<std::uniform_real_distribution<double>> unif;
             std::default_random_engine re;
+            bool hasJoined;
         };
     }
 }

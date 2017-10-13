@@ -11,6 +11,7 @@ namespace distributedestimator {
         LocalEstimator::LocalEstimator(_component_conf &config, riaps::Actor &actor) :
                 LocalEstimatorBase(config, actor) {
             //PrintParameters();
+            hasJoined = false;
         }
 
         void LocalEstimator::OnReady(const messages::SensorReady::Reader &message,
@@ -20,6 +21,13 @@ namespace distributedestimator {
 
             std::cout << "LocalEstimator::OnReady(): " << message.getMsg().cStr() << " " << ::getpid() << std::endl;
 
+            if (!hasJoined){
+                hasJoined = true;
+                if (this->JoinToGroup({"TestGroupId","Korte"})){
+                    std::cout << "Joined to group TestGroupId::Korte" << std::endl;
+                }
+            }
+            
             capnp::MallocMessageBuilder builderSensorQuery;
 
             messages::SensorQuery::Builder queryMsg = builderSensorQuery.initRoot<messages::SensorQuery>();
