@@ -23,6 +23,11 @@ namespace riaps{
             ::riaps::groups::GroupService GetGroupService();
             GroupPublisherPort* AsGroupPublishPort();
             ~GroupPublisherPort();
+
+        private:
+            // The group configurations may dynamic (not from the model file)
+            // GroupPorts store the original config.
+            const _component_port_pub _groupPortConfig;
         };
     }
 }

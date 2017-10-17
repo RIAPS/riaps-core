@@ -38,7 +38,7 @@ namespace ports {
     public:
         //PortBase(const ComponentBase* parentComponent);
 
-        PortBase(PortTypes portType, component_port_config* config);
+        PortBase(PortTypes portType, const component_port_config* config);
 
         /// \return The ip addres of the specified interface. (e.g.: "eth0")
         //virtual std::string GetInterfaceAddress(std::string ifacename);

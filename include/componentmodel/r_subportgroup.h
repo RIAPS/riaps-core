@@ -16,6 +16,11 @@ namespace riaps{
             GroupSubscriberPort* AsGroupSubscriberPort();
 
             virtual ~GroupSubscriberPort();
+
+        private:
+            // The group configurations may dynamic (not from the model file)
+            // GroupPorts store the original config.
+            const _component_port_sub _groupPortConfig;
         };
     }
 }

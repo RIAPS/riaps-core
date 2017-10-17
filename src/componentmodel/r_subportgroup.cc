@@ -8,8 +8,7 @@ namespace riaps{
     namespace ports{
 
         GroupSubscriberPort::GroupSubscriberPort(const _component_port_sub &config)
-            : SubscriberPortBase((component_port_config*)&config){
-
+            : _groupPortConfig(config), SubscriberPortBase(&_groupPortConfig) {
         }
 
         GroupSubscriberPort* GroupSubscriberPort::AsGroupSubscriberPort() {

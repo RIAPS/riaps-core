@@ -8,7 +8,7 @@
 namespace riaps{
     namespace ports{
 
-        PublisherPortBase::PublisherPortBase(component_port_config* config) : PortBase(PortTypes::Publisher, config)  {
+        PublisherPortBase::PublisherPortBase(const component_port_config* config) : PortBase(PortTypes::Publisher, config)  {
 
         }
 

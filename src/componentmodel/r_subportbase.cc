@@ -6,8 +6,8 @@
 
 namespace riaps {
     namespace ports{
-        SubscriberPortBase::SubscriberPortBase(component_port_config *config)
-                : PortBase(PortTypes::Subscriber, (component_port_config*)(&config)) {
+        SubscriberPortBase::SubscriberPortBase(const component_port_config *config)
+                : PortBase(PortTypes::Subscriber, config) {
            InitSocket();
         }
 

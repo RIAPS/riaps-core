@@ -9,7 +9,7 @@ namespace riaps {
 
     namespace ports {
 
-        PortBase::PortBase(PortTypes portType, component_port_config* config) {
+        PortBase::PortBase(PortTypes portType, const component_port_config* config) {
             _port_type = portType;
             _config = config;
             _port_socket = nullptr;
