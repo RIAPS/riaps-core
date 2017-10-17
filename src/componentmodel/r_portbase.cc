@@ -12,7 +12,7 @@ namespace riaps {
         PortBase::PortBase(PortTypes portType, component_port_config* config) {
             _port_type = portType;
             _config = config;
-            _port_socket = NULL;
+            _port_socket = nullptr;
         }
 
         bool PortBase::Send(zmsg_t** zmessage) const {
@@ -55,31 +55,35 @@ namespace riaps {
         }
 
         RequestPort* PortBase::AsRequestPort()  {
-            return NULL;
+            return nullptr;
         }
 
         PublisherPort* PortBase::AsPublishPort()  {
-            return NULL;
+            return nullptr;
         }
 
         GroupPublisherPort* PortBase::AsGroupPublishPort() {
-            return NULL;
+            return nullptr;
+        }
+
+        GroupSubscriberPort* PortBase::AsGroupSubscriberPort() {
+            return nullptr;
         }
 
         ResponsePort* PortBase::AsResponsePort()  {
-            return NULL;
+            return nullptr;
         }
 
         SubscriberPort* PortBase::AsSubscribePort()  {
-            return NULL;
+            return nullptr;
         }
 
         PeriodicTimer* PortBase::AsTimerPort()  {
-            return NULL;
+            return nullptr;
         }
 
         InsidePort* PortBase::AsInsidePort()  {
-            return NULL;
+            return nullptr;
         }
 
         PortBase::~PortBase() {

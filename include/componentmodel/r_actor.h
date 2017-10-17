@@ -9,9 +9,11 @@
 #include <componentmodel/r_componentbase.h>
 #include <componentmodel/r_peripheral.h>
 #include <componentmodel/r_devmapi.h>
+#include <componentmodel/r_configuration.h>
 #include <messaging/disco.capnp.h>
 #include <const/r_const.h>
 #include <utils/r_utils.h>
+#include <groups/r_group.h>
 
 #include <json.h>
 

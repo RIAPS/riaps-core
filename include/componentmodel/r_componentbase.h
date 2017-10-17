@@ -17,6 +17,7 @@
 #include "r_messagebase.h"
 #include "r_oneshottimer.h"
 #include <groups/r_group.h>
+#include <messaging/disco.capnp.h>
 
 #include <msgpack.hpp>
 #include <capnp/message.h>

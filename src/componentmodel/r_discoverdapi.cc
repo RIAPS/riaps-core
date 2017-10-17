@@ -123,17 +123,13 @@ bool registerService(const std::string&              app_name     ,
 
 std::vector<service_lookup_result>
 subscribeToService(const std::string&      app_name  ,
-                     const std::string&      part_name , // instance_name
-                     const std::string&      actor_name,
-                     riaps::discovery::Kind  kind      ,
-                     riaps::discovery::Scope scope     ,
-                     const std::string&      port_name ,
-                     const std::string&      msg_type  // PortType
+                   const std::string&      part_name , // instance_name
+                   const std::string&      actor_name,
+                   riaps::discovery::Kind  kind      ,
+                   riaps::discovery::Scope scope     ,
+                   const std::string&      port_name ,
+                   const std::string&      msg_type  // PortType
         ){
-
-    // TODO: Ask only once
-    //std::string mac_address = GetMacAddressStripped();
-
     std::vector<service_lookup_result> result;
 
     /////

@@ -5,7 +5,7 @@
 #ifndef RIAPS_R_PORTBASE_H
 #define RIAPS_R_PORTBASE_H
 
-#include "r_configuration.h"
+#include <componentmodel/r_configuration.h>
 
 #include <czmq.h>
 #include <string>
@@ -29,6 +29,7 @@ namespace ports {
     class PeriodicTimer;
     class InsidePort;
     class GroupPublisherPort;
+    class GroupSubscriberPort;
 
     enum PortTypes {Publisher, Subscriber, Request, Response, Timer, Inside};
 
@@ -60,13 +61,14 @@ namespace ports {
         virtual const std::string GetPortName() const;
 
         // Return NULL if the called conversion is unavailable or invalid
-        virtual RequestPort*        AsRequestPort()     ;
-        virtual PublisherPort*      AsPublishPort()     ;
-        virtual GroupPublisherPort* AsGroupPublishPort();
-        virtual ResponsePort*       AsResponsePort()    ;
-        virtual SubscriberPort*     AsSubscribePort()   ;
-        virtual PeriodicTimer*      AsTimerPort()       ;
-        virtual InsidePort*         AsInsidePort()      ;
+        virtual RequestPort*         AsRequestPort()        ;
+        virtual PublisherPort*       AsPublishPort()        ;
+        virtual GroupPublisherPort*  AsGroupPublishPort()   ;
+        virtual GroupSubscriberPort* AsGroupSubscriberPort();
+        virtual ResponsePort*        AsResponsePort()       ;
+        virtual SubscriberPort*      AsSubscribePort()      ;
+        virtual PeriodicTimer*       AsTimerPort()          ;
+        virtual InsidePort*          AsInsidePort()         ;
 
 
         virtual ~PortBase() noexcept ;

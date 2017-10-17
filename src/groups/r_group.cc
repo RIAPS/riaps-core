@@ -27,7 +27,7 @@ namespace riaps{
         bool Group::InitGroup() {
 
             // If the groupid doesn't exist, just skip the initialization and return false
-            auto groupTypeConf = Actor::GetRunningActor().GetGroupType(_groupId.groupTypeId);
+            auto groupTypeConf = ::riaps::Actor::GetRunningActor().GetGroupType(_groupId.groupTypeId);
             if (groupTypeConf == nullptr)
                 return false;
 
@@ -43,6 +43,14 @@ namespace riaps{
 
             _groupPubPort = std::unique_ptr<ports::GroupPublisherPort>(new ports::GroupPublisherPort(internalPubConfig));
             initializedServices.push_back(_groupPubPort->GetGroupService());
+
+
+            _group_port_sub internalSubConfig;
+            internalSubConfig.messageType = INTERNAL_MESSAGETYPE;
+            internalSubConfig.isLocal     = false;
+            internalSubConfig.portName    = INTERNAL_SUB_NAME;
+
+            _groupSubPort = std::unique_ptr<ports::GroupSubscriberPort>(new ports::GroupSubscriberPort(internalSubConfig));
 
 
 
@@ -63,8 +71,17 @@ namespace riaps{
         void Group::ConnectToNewServices(riaps::discovery::GroupUpdate::Reader &msgGroupUpdate) {
             for (int i =0; i<msgGroupUpdate.getServices().size(); i++){
                 std::string messageType = msgGroupUpdate.getServices()[i].getMessageType().cStr();
+
+                // RIAPS port
+                if (messageType == INTERNAL_MESSAGETYPE){
+                    std::string address = msgGroupUpdate.getServices()[i].getAddress().cStr();
+                    address = "tcp://" + address;
+                    _groupSubPort->ConnectToPublihser(address);
+                    continue;
+                }
+
                 for (auto& groupPort : _groupPorts){
-                    auto subscriberPort = groupPort->AsSubscribePort();
+                    auto subscriberPort = groupPort->AsGroupSubscriberPort();
                     if (subscriberPort == nullptr) continue;
                     if (subscriberPort->GetConfig()->messageType == messageType){
                         std::string address = msgGroupUpdate.getServices()[i].getAddress().cStr();

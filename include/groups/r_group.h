@@ -5,9 +5,10 @@
 #ifndef RIAPS_CORE_R_GROUP_H_H
 #define RIAPS_CORE_R_GROUP_H_H
 
+#include <componentmodel/r_actor.h>
 #include <componentmodel/r_configuration.h>
 #include <componentmodel/r_pubportgroup.h>
-#include <componentmodel/r_subscriberport.h>
+#include <componentmodel/r_subportgroup.h>
 #include <messaging/disco.capnp.h>
 
 #include <msgpack.hpp>
@@ -17,6 +18,7 @@
 #include <vector>
 #include <map>
 
+#define INTERNAL_SUB_NAME "$SUB#"
 #define INTERNAL_PUB_NAME "$PUB#"
 #define INTERNAL_MESSAGETYPE "InternalGroupMessage"
 
@@ -97,7 +99,7 @@ namespace riaps {
              * Always store the communication ports in unique_ptr (self-defense)
              */
             std::unique_ptr<riaps::ports::GroupPublisherPort>    _groupPubPort;
-            std::unique_ptr<riaps::ports::SubscriberPort>        _groupSubPort;
+            std::unique_ptr<riaps::ports::GroupSubscriberPort>   _groupSubPort;
 
             std::vector<std::unique_ptr<riaps::ports::PortBase>> _groupPorts;
         };
