@@ -7,6 +7,8 @@
 
 #include <componentmodel/r_configuration.h>
 #include <componentmodel/r_insideport.h>
+#include <utils/r_utils.h>
+
 #include <czmq.h>
 #include <string>
 #include <thread>
@@ -53,7 +55,7 @@ namespace riaps {
             // TODO: Remove duplicated functions
             // TODO: move it to parent classe. componentbase also inherits this functionality.
             bool SendMessageOnPort(capnp::MallocMessageBuilder& message, const std::string& portName);
-            bool SendMessageOnPort(zmsg_t **message, const std::string &portName);
+            //bool SendMessageOnPort(zmsg_t **message, const std::string &portName);
 
         private:
             std::thread                 _deviceThread;

@@ -8,7 +8,9 @@
 namespace riaps{
     namespace ports{
 
-        PublisherPortBase::PublisherPortBase(const component_port_config* config) : PortBase(PortTypes::Publisher, config)  {
+        PublisherPortBase::PublisherPortBase(const component_port_config* config)
+                : PortBase(PortTypes::Publisher, config),
+                  SenderPort(this) {
 
         }
 
@@ -51,13 +53,13 @@ namespace riaps{
             return "";
         }
 
-        bool PublisherPortBase::Send(zmsg_t** zmessage) const {
-            //const _component_port_pub_j* currentConfig = GetConfig();
-            //std::string messageType = currentConfig->messageType;
-            //zmsg_pushstr(*zmessage, messageType.c_str());
-
-            int rc = zmsg_send(zmessage, _port_socket);
-            return rc == 0;
-        }
+//        bool PublisherPortBase::Send(zmsg_t** zmessage) const {
+//            //const _component_port_pub_j* currentConfig = GetConfig();
+//            //std::string messageType = currentConfig->messageType;
+//            //zmsg_pushstr(*zmessage, messageType.c_str());
+//
+//            int rc = zmsg_send(zmessage, _port_socket);
+//            return rc == 0;
+//        }
     }
 }

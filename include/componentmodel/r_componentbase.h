@@ -88,6 +88,11 @@ namespace riaps {
          */
         bool SendMessageOnPort(capnp::MallocMessageBuilder& message, const std::string& portName);
 
+
+        bool SendGroupMessage(const riaps::groups::GroupId& groupId,
+                              capnp::MallocMessageBuilder& message,
+                              const std::string& portName);
+
         /**
          * @brief Stops the component
          *
@@ -97,6 +102,10 @@ namespace riaps {
         void StopComponent();
 
         void UpdateGroup(riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
+
+
+
+
 
         /**
          *
@@ -134,7 +143,7 @@ namespace riaps {
          * @param portName The port, which sends the message.
          * @return True if the message was sent successfully.
          */
-        bool SendMessageOnPort(zmsg_t** message, const std::string& portName);
+        //bool SendMessageOnPort(zmsg_t** message, const std::string& portName);
 
         // Note: ?port? do we need for the port?
 //        virtual void OnGroupMessage(riaps::groups::GroupId& groupId,

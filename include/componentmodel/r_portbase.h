@@ -50,9 +50,11 @@ namespace ports {
         virtual const zsock_t* GetSocket() const;
 
 
-        bool Send(std::string message) const;
-        bool Send(std::vector<std::string>& fields) const;
-        virtual bool Send(zmsg_t** zmessage) const;
+        //bool Send(std::string message) const;
+        //bool Send(std::vector<std::string>& fields) const;
+        //virtual bool Send(zmsg_t** zmessage) const;
+
+
 
         const PortTypes& GetPortType() const;
 

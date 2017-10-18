@@ -22,9 +22,9 @@ namespace riaps {
 
         //class PortBase;
 
-        class ResponsePort : public PortBase {
+        class ResponsePort : public PortBase, public SenderPort {
         public:
-            using PortBase::Send;
+            //using PortBase::Send;
 
             ResponsePort(const _component_port_rep &config, ComponentBase *parent_component);
             virtual const _component_port_rep* GetConfig() const;
@@ -43,7 +43,7 @@ namespace riaps {
             std::string _host;
             std::string _endpoint;
 
-            virtual bool Send(zmsg_t** zmessage) const;
+            //virtual bool Send(zmsg_t** zmessage) const;
         };
     }
 }

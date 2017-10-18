@@ -54,15 +54,18 @@ namespace riaps{
 
 
 
-            // Initialize user defined ports
+            // Initialize user defined publishers
             for(auto& portDeclaration : _groupTypeConf.groupTypePorts.pubs){
+                auto newPubPort = std::unique_ptr<ports::GroupPublisherPort>(new ports::GroupPublisherPort(portDeclaration));
+                initializedServices.push_back(newPubPort->GetGroupService());
+                _groupPorts.push_back(std::move(newPubPort));
 
-                // Initialize the publisher
-                auto newPort = std::unique_ptr<ports::GroupPublisherPort>(new ports::GroupPublisherPort(portDeclaration));
-                initializedServices.push_back(newPort->GetGroupService());
-                _groupPorts.push_back(std::move(newPort));
+            }
 
-                // Initialize the subscriber
+            // Initialize user defined subscribers
+            for(auto& portDeclaration : _groupTypeConf.groupTypePorts.subs){
+                auto newSubPort = std::unique_ptr<ports::GroupSubscriberPort>(new ports::GroupSubscriberPort(portDeclaration));
+                _groupPorts.push_back(std::move(newSubPort));
             }
 
             // Register all of the publishers
@@ -70,6 +73,18 @@ namespace riaps{
                              _componentId,
                              _groupId,
                              initializedServices);
+        }
+
+        bool Group::SendMessage(capnp::MallocMessageBuilder &message, const std::string &portName) {
+
+            for (auto it = _groupPorts.begin(); it!=_groupPorts.end(); it++){
+                auto currentPort = (*it)->AsGroupPublishPort();
+                if (currentPort == nullptr) continue;
+                if (currentPort->GetConfig()->portName != portName) continue;
+                
+                currentPort->Send(message);
+
+            }
         }
 
         void Group::ConnectToNewServices(riaps::discovery::GroupUpdate::Reader &msgGroupUpdate) {

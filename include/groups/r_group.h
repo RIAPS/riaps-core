@@ -88,6 +88,8 @@ namespace riaps {
 
             void ConnectToNewServices(riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
 
+            bool SendMessage(capnp::MallocMessageBuilder& message, const std::string& portName);
+
             virtual ~Group();
 
         protected:

@@ -441,15 +441,22 @@ namespace riaps{
         return result;
     }
 
-    bool ComponentBase::SendMessageOnPort(zmsg_t **message, const std::string &portName) {
-        ports::PortBase* port = GetPortByName(portName);
-        if (port == NULL) return false;
-        if (port->AsSubscribePort() == NULL && port->AsTimerPort() == NULL){
-            return port->Send(message);
-        }
-
-        return false;
-    }
+//    bool ComponentBase::SendMessageOnPort(zmsg_t **message, const std::string &portName) {
+//        ports::PortBase* port = GetPortByName(portName);
+//        if (port == NULL) return false;
+//
+//        ports::SenderPort* senderPort = dynamic_cast<ports::SenderPort*>(port);
+//        if (senderPort == nullptr) return false;
+//        senderPort->Send()
+//
+////        if (port->AsSubscribePort() == NULL &&
+////            port->AsTimerPort() == NULL     &&
+////            port->As){
+////            return port->Send(message);
+////        }
+////
+////        return false;
+//    }
 
 //    bool ComponentBase::SendMessageOnPort(msgpack::sbuffer &message, const std::string &portName) {
 //        zmsg_t* msg = zmsg_new();
@@ -464,11 +471,29 @@ namespace riaps{
 //    }
 //
     bool ComponentBase::SendMessageOnPort(capnp::MallocMessageBuilder& message, const std::string &portName) {
-        auto serializedMessage = capnp::messageToFlatArray(message);
-        zmsg_t* msg = zmsg_new();
-        auto bytes = serializedMessage.asBytes();
-        zmsg_pushmem(msg, bytes.begin(), bytes.size());
-        return SendMessageOnPort(&msg, portName);
+        ports::PortBase* port = GetPortByName(portName);
+        if (port == NULL) return false;
+
+        ports::SenderPort* senderPort = dynamic_cast<ports::SenderPort*>(port);
+        if (senderPort == nullptr) return false;
+        return senderPort->Send(message);
+
+//        auto serializedMessage = capnp::messageToFlatArray(message);
+//        zmsg_t* msg = zmsg_new();
+//        auto bytes = serializedMessage.asBytes();
+//        zmsg_pushmem(msg, bytes.begin(), bytes.size());
+//        return SendMessageOnPort(&msg, portName);
+    }
+
+    bool ComponentBase::SendGroupMessage(const riaps::groups::GroupId &groupId,
+                                         capnp::MallocMessageBuilder &message,
+                                         const std::string& portName) {
+        // Search the group
+        if (_groups.find(groupId)==_groups.end()) return false;
+
+        riaps::groups::Group* group = _groups[groupId].get();
+        group->SendMessage(message, portName);
+
     }
 
 

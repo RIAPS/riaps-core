@@ -6,10 +6,11 @@
 #define RIAPS_CORE_R_PUBLISHERPORTBASE_H
 
 #include <componentmodel/r_portbase.h>
+#include <componentmodel/r_senderport.h>
 
 namespace riaps{
     namespace ports{
-        class PublisherPortBase : public PortBase{
+        class PublisherPortBase : public PortBase, public SenderPort {
         public:
             PublisherPortBase(const component_port_config* config);
             std::string GetEndpoint();
@@ -22,7 +23,7 @@ namespace riaps{
             std::string _host;
             std::string _endpoint;
 
-            virtual bool Send(zmsg_t** zmessage) const;
+            //virtual bool Send(zmsg_t** zmessage) const;
             virtual void InitSocket();
         };
     }

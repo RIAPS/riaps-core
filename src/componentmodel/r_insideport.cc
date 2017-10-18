@@ -8,7 +8,8 @@ namespace riaps{
     namespace ports{
 
         InsidePort::InsidePort(const _component_port_ins &config, InsidePortMode mode, ComponentBase *parent_component)
-            : PortBase(PortTypes::Inside, (component_port_config*)&config)//,
+            : PortBase(PortTypes::Inside, (component_port_config*)&config),
+              SenderPort(this)//,
               //_capnpReader(nullptr)
         {
             _endpoint = "inproc://inside_" + config.portName;
@@ -37,10 +38,10 @@ namespace riaps{
             return this;
         }
 
-        bool InsidePort::Send(zmsg_t **zmessage) const {
-            int rc = zmsg_send(zmessage, (void*)GetSocket());
-            return rc == 0;
-        }
+//        bool InsidePort::Send(zmsg_t **zmessage) const {
+//            int rc = zmsg_send(zmessage, (void*)GetSocket());
+//            return rc == 0;
+//        }
 
         bool InsidePort::Recv(zmsg_t** insideMessage) {
             *insideMessage = zmsg_recv((void*)GetSocket());

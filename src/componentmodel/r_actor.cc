@@ -78,9 +78,15 @@ namespace riaps {
         );
 
         _group_port_pub p;
-        p.portName="TestPortName";
+        p.portName="TestPubPortName";
         p.messageType="TestPortType";
         _grouptype_configurations.back().groupTypePorts.pubs.push_back(p);
+
+        _group_port_sub s;
+        s.portName = "TestSubPortName";
+        s.messageType=p.messageType;
+        _grouptype_configurations.back().groupTypePorts.subs.push_back(s);
+
         /////////////////////////
         //TODO: REMOVE LINES ABOVE AFTER TESTING
 

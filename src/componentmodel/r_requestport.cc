@@ -10,8 +10,9 @@ namespace riaps {
 
         RequestPort::RequestPort(const _component_port_req &config, const ComponentBase *component)
                 : PortBase(PortTypes::Request, (component_port_config*)(&config)),
-                    _parent_component(component),
-                    _capnpReader(capnp::FlatArrayMessageReader(nullptr)){
+                  SenderPort(this),
+                  _parent_component(component),
+                  _capnpReader(capnp::FlatArrayMessageReader(nullptr)) {
             _port_socket = zsock_new(ZMQ_REQ);
 
             auto i = zsock_rcvtimeo (_port_socket);
@@ -121,22 +122,34 @@ namespace riaps {
             return false;
         }
 
+        bool RequestPort::Send(capnp::MallocMessageBuilder &message) const {
+            if (_port_socket == nullptr || !_isConnected){
+                return false;
+            }
+
+            zmsg_t* zmsg;
+            zmsg << message;
+
+            int rc = zmsg_send(&zmsg, const_cast<zsock_t*>(GetSocket()));
+            return rc==0;
+        }
+
         RequestPort::~RequestPort() noexcept {
 
         }
 
         // Before sending the publisher sets up the message type
-        bool RequestPort::Send(zmsg_t **msg) const {
-            if (_port_socket == NULL || !_isConnected){
-                zmsg_destroy(msg);
-                return false;
-            }
-            //std::string messageType = GetConfig()->req_type;
-            //zmsg_pushstr(*msg, messageType.c_str());
-
-            int rc = zmsg_send(msg, _port_socket);
-            return rc==0;
-        }
+//        bool RequestPort::Send(zmsg_t **msg) const {
+//            if (_port_socket == NULL || !_isConnected){
+//                zmsg_destroy(msg);
+//                return false;
+//            }
+//            //std::string messageType = GetConfig()->req_type;
+//            //zmsg_pushstr(*msg, messageType.c_str());
+//
+//            int rc = zmsg_send(msg, _port_socket);
+//            return rc==0;
+//        }
 
 //        bool RequestPort::Send(std::string& message) const{
 //            zmsg_t* zmsg = zmsg_new();

@@ -63,18 +63,23 @@ namespace riaps{
         }
 
         bool DeviceThread::SendMessageOnPort(capnp::MallocMessageBuilder& message, const std::string &portName) {
-            auto serializedMessage = capnp::messageToFlatArray(message);
-            zmsg_t* msg = zmsg_new();
-            auto bytes = serializedMessage.asBytes();
-            zmsg_pushmem(msg, bytes.begin(), bytes.size());
-            return SendMessageOnPort(&msg, portName);
-        }
+//            auto serializedMessage = capnp::messageToFlatArray(message);
+//            zmsg_t* msg = zmsg_new();
+//            auto bytes = serializedMessage.asBytes();
+//            zmsg_pushmem(msg, bytes.begin(), bytes.size());
+//            return SendMessageOnPort(&msg, portName);
 
-        bool DeviceThread::SendMessageOnPort(zmsg_t **message, const std::string &portName) {
             auto port = GetInsidePortByName(portName);
             if (port == NULL) return false;
             return port->Send(message);
+
         }
+
+//        bool DeviceThread::SendMessageOnPort(zmsg_t **message, const std::string &portName) {
+//            auto port = GetInsidePortByName(portName);
+//            if (port == NULL) return false;
+//            return port->Send(message);
+//        }
 
 
 

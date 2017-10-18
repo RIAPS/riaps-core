@@ -5,11 +5,12 @@
 #ifndef RIAPS_FW_R_REQUESTPORT_H
 #define RIAPS_FW_R_REQUESTPORT_H
 
-#include "r_componentbase.h"
-#include "r_configuration.h"
-#include "r_messagebase.h"
+#include <componentmodel/r_componentbase.h>
+#include <componentmodel/r_configuration.h>
+#include <componentmodel/r_messagebase.h>
+#include <componentmodel/r_senderport.h>
 
-#include "czmq.h"
+#include <czmq.h>
 
 #include <string>
 
@@ -18,9 +19,9 @@ namespace riaps {
     class ComponentBase;
 
     namespace ports {
-        class RequestPort : public PortBase {
+        class RequestPort : public PortBase, public SenderPort {
         public:
-            using PortBase::Send;
+            //using PortBase::Send;
 
             RequestPort(const _component_port_req &config, const ComponentBase *component);
             virtual void Init();
@@ -34,6 +35,8 @@ namespace riaps {
 
             virtual const _component_port_req* GetConfig() const;
 
+
+
             ~RequestPort() noexcept ;
         protected:
             const ComponentBase *_parent_component;
@@ -41,7 +44,9 @@ namespace riaps {
 
             capnp::FlatArrayMessageReader _capnpReader;
 
-            virtual bool Send(zmsg_t** zmessage) const;
+            virtual bool Send(capnp::MallocMessageBuilder& message) const;
+
+            //virtual bool Send(zmsg_t** zmessage) const;
 
         };
     }

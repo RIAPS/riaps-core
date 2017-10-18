@@ -84,6 +84,7 @@ list (APPEND component_SOURCE
         src/componentmodel/r_pubportgroup.cc
         src/componentmodel/r_subportbase.cc
         src/componentmodel/r_subportgroup.cc
+        src/componentmodel/r_senderport.cc
         src/utils/r_utils.cc
         src/utils/r_message.cc
         src/utils/r_capnp_helper.cc
@@ -115,6 +116,8 @@ list (APPEND component_HEADERS
         include/componentmodel/r_pubportgroup.h
         include/componentmodel/r_subportbase.h
         include/componentmodel/r_subportgroup.h
+        include/componentmodel/r_senderport.h
+        include/componentmodel/r_devicethread.h
         #include/componentmodel/r_oneshottimer.h
         include/componentmodel/r_commandlineparser.h
         include/const/r_const.h
