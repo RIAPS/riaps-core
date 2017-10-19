@@ -23,6 +23,8 @@ namespace riaps{
             SenderPort(PortBase* portBase);
 
             virtual bool Send(capnp::MallocMessageBuilder& message) const;
+            virtual bool Send(zmsg_t** message) const;
+            
             virtual ~SenderPort();
 
 

@@ -22,12 +22,14 @@ namespace riaps{
             GroupPublisherPort(const _group_port_pub& config);
             ::riaps::groups::GroupService GetGroupService();
             GroupPublisherPort* AsGroupPublishPort();
+            //bool SenderPort::Send(capnp::MallocMessageBuilder &message) const;
             ~GroupPublisherPort();
 
         private:
             // The group configurations may dynamic (not from the model file)
             // GroupPorts store the original config.
             const _component_port_pub _groupPortConfig;
+            const std::string         _componentId;
         };
     }
 }

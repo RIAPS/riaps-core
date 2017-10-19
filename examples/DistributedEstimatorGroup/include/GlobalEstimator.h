@@ -21,6 +21,10 @@ namespace distributedestimator {
 
             virtual void OnWakeup(riaps::ports::PortBase *port);
 
+            void OnGroupMessage(const riaps::groups::GroupId& groupId,
+                                capnp::FlatArrayMessageReader& capnpreader,
+                                riaps::ports::PortBase* port);
+
 //            virtual void OnGroupMessage(riaps::groups::GroupId& groupId,
 //                                        capnp::FlatArrayMessageReader* capnpreader);
 //

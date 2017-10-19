@@ -229,7 +229,7 @@ namespace riaps{
 
                     // "which" port is not an inside port, dispatch CAPNP message
                     else {
-                        ports::PortBase* riapsPort = (ports::PortBase*)portSockets[(zsock_t*)which];
+                        ports::PortBase* riapsPort = const_cast<ports::PortBase*>(portSockets[static_cast<zsock_t*>(which)]);
 
                         // zmsg_op transfers the ownership, the frame is being removed from the zmsg
                         zframe_t* bodyFrame = zmsg_pop(msg);
@@ -254,6 +254,22 @@ namespace riaps{
             }
             else{
                 // just poll timeout
+            }
+
+            // The group messages
+            if (comp->_groups.size()>0){
+
+                // Handle all group messages
+                for (auto it = comp->_groups.begin(); it!=comp->_groups.end(); it++){
+                    std::unique_ptr<capnp::FlatArrayMessageReader> groupMessage(nullptr);
+                    //std::string originComponentId;
+                    ports::GroupSubscriberPort* groupRecvPort = it->second->FetchNextMessage(groupMessage);
+
+                    // The sender is the same
+                    //if (originComponentId == comp->GetCompUuid()) continue;
+
+                    comp->OnGroupMessage(it->first, *groupMessage, groupRecvPort);
+                }
             }
         }
 
@@ -492,7 +508,14 @@ namespace riaps{
         if (_groups.find(groupId)==_groups.end()) return false;
 
         riaps::groups::Group* group = _groups[groupId].get();
-        group->SendMessage(message, portName);
+        return group->SendMessage(message, portName);
+
+    }
+
+    bool ComponentBase::SendGroupMessage(const riaps::groups::GroupId&& groupId,
+                                         capnp::MallocMessageBuilder &message,
+                                         const std::string& portName) {
+        return SendGroupMessage(groupId, message, portName);
 
     }
 
@@ -502,7 +525,7 @@ namespace riaps{
         if (port_it!=_ports.end()){
             return port_it->second.get();
         }
-        return NULL;
+        return nullptr;
     }
 
 
@@ -549,6 +572,21 @@ namespace riaps{
     }
 
     bool ComponentBase::JoinToGroup(riaps::groups::GroupId &&groupId) {
+//        if (_groups.find(groupId)!=_groups.end())
+//            return false;
+//
+//        std::unique_ptr<riaps::groups::Group> newGroup = std::unique_ptr<riaps::groups::Group>(new riaps::groups::Group(groupId, GetCompUuid()));
+//        if (newGroup->InitGroup()) {
+//            _groups[groupId] = std::move(newGroup);
+//            return true;
+//        }
+//
+//        return false;
+
+        return JoinToGroup(groupId);
+    }
+
+    bool ComponentBase::JoinToGroup(riaps::groups::GroupId &groupId) {
         if (_groups.find(groupId)!=_groups.end())
             return false;
 

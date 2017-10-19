@@ -71,14 +71,14 @@ namespace riaps {
          *  - Receives messages
          *  - Sends messages
          */
-        class Group {
+        class Group final {
         public:
 
             /**
              * Initializes a group, by the given groupId
              * @param groupId Must have valid configuration entry with the matching id.
              */
-            Group(const GroupId& groupId, const std::string& componentId);
+            Group(const GroupId& groupId, const std::string _componentId);
 
             /**
              * Creates the communication ports and registers the group in the discovery service.
@@ -90,20 +90,28 @@ namespace riaps {
 
             bool SendMessage(capnp::MallocMessageBuilder& message, const std::string& portName);
 
-            virtual ~Group();
+            ports::GroupSubscriberPort* FetchNextMessage(std::unique_ptr<capnp::FlatArrayMessageReader>& messageReader);
+
+            ~Group();
 
         protected:
             const GroupId     _groupId;
             groupt_conf       _groupTypeConf;
-            const std::string _componentId;
 
             /**
              * Always store the communication ports in unique_ptr (self-defense)
              */
-            std::unique_ptr<riaps::ports::GroupPublisherPort>    _groupPubPort;
-            std::unique_ptr<riaps::ports::GroupSubscriberPort>   _groupSubPort;
+            std::shared_ptr<riaps::ports::GroupPublisherPort>    _groupPubPort;
+            std::shared_ptr<riaps::ports::GroupSubscriberPort>   _groupSubPort;
 
-            std::vector<std::unique_ptr<riaps::ports::PortBase>> _groupPorts;
+            std::map<const zsock_t*, std::shared_ptr<riaps::ports::PortBase>> _groupPorts;
+
+
+        private:
+            zframe_t*  _lastFrame;
+            zpoller_t* _groupPoller;
+
+            std::string _componentId;
         };
 
     }

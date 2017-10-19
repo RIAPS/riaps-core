@@ -141,6 +141,7 @@ set(ACTOR_SOURCE
 set(ACTOR_HEADERS
         include/componentmodel/r_actor.h
         include/componentmodel/r_argumentparser.h
+        include/componentmodel/r_actor_main.h
         include/groups/r_group.h
         include/const/r_jsonmodel.h
         include/const/r_const.h

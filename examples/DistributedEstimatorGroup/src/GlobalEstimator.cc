@@ -31,9 +31,26 @@ namespace distributedestimator {
                 if (this->JoinToGroup({"TestGroupId","Korte"})){
                     std::cout << "Successfully joined to group TestGroupId::Korte" << std::endl;
                 }
+
+            } else{
+                capnp::MallocMessageBuilder builder;
+                auto msgEstimate = builder.initRoot<distributedestimator::messages::Estimate>();
+                msgEstimate.setMsg("From group");
+
+                if (SendGroupMessage({"TestGroupId", "Korte"}, builder, "TestPubPortName")){
+                    std::cout << "[GE] Groupmessage sent"<<std::endl;
+                } else
+                    std::cout << "[GE] Groupmessage sending has been failed" << std::endl;
             }
         }
 
+        void GlobalEstimator::OnGroupMessage(const riaps::groups::GroupId &groupId,
+                                             capnp::FlatArrayMessageReader &capnpreader,
+                                             riaps::ports::PortBase *port) {
+
+            std::cout << "[GE] Group message arrived!" << std::endl;
+
+        }
 
 
 

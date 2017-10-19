@@ -3,7 +3,8 @@
 namespace riaps{
     namespace ports{
         GroupPublisherPort::GroupPublisherPort(const _group_port_pub &config)
-                : _groupPortConfig(config), PublisherPortBase(&_groupPortConfig) {
+                : _groupPortConfig(config),
+                  PublisherPortBase(&_groupPortConfig) {
             InitSocket();
         }
 
@@ -15,6 +16,16 @@ namespace riaps{
 
             return result;
         }
+
+//        bool GroupPublisherPort::Send(capnp::MallocMessageBuilder &message) const {
+//            zmsg_t* msg = nullptr;
+//            msg << message;
+//
+//            // Add the componentId as the first frame of the message
+//            zmsg_pushstr(msg, _componentId.c_str());
+//
+//            return Send(&msg);
+//        }
 
         GroupPublisherPort* GroupPublisherPort::AsGroupPublishPort() {
             return this;

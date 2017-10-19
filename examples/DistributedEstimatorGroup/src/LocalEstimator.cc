@@ -47,6 +47,11 @@ namespace distributedestimator {
             }
         }
 
+        void LocalEstimator::OnGroupMessage(const riaps::groups::GroupId &groupId,
+                                            capnp::FlatArrayMessageReader &capnpreader, riaps::ports::PortBase *port) {
+            std::cout << "[LE] Group message arrived!" << std::endl;
+        }
+
 
 
         LocalEstimator::~LocalEstimator() {

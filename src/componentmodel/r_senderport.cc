@@ -19,7 +19,11 @@ namespace riaps{
             zmsg_t* msg = nullptr;
             msg << message;
 
-            int rc = zmsg_send(&msg, const_cast<zsock_t*>(_port->GetSocket()));
+            return Send(&msg);
+        }
+        
+        bool SenderPort::Send(zmsg_t **message) const {
+            int rc = zmsg_send(message, const_cast<zsock_t*>(_port->GetSocket()));
             return rc == 0;
         }
 
