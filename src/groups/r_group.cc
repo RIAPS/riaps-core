@@ -73,7 +73,9 @@ namespace riaps{
             // Initialize user defined subscribers
             for(auto& portDeclaration : _groupTypeConf.groupTypePorts.subs){
                 auto newSubPort = std::shared_ptr<ports::GroupSubscriberPort>(new ports::GroupSubscriberPort(portDeclaration));
+                zpoller_add(_groupPoller, const_cast<zsock_t*>(newSubPort->GetSocket()));
                 _groupPorts[newSubPort->GetSocket()] = std::move(newSubPort);
+
             }
 
             // Register all of the publishers
@@ -90,9 +92,11 @@ namespace riaps{
                 if (currentPort == nullptr) continue;
                 if (currentPort->GetConfig()->portName != portName) continue;
 
-                currentPort->Send(message);
+                return currentPort->Send(message);
 
             }
+
+            return false;
         }
 
         void Group::ConnectToNewServices(riaps::discovery::GroupUpdate::Reader &msgGroupUpdate) {
@@ -120,7 +124,7 @@ namespace riaps{
         }
 
         ports::GroupSubscriberPort* Group::FetchNextMessage(std::unique_ptr<capnp::FlatArrayMessageReader>& messageReader) {
-            void* which = zpoller_wait(_groupPoller, 0);
+            void* which = zpoller_wait(_groupPoller, 10);
             if (which == nullptr) return nullptr;
 
             // Look for the port

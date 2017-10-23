@@ -265,10 +265,8 @@ namespace riaps{
                     //std::string originComponentId;
                     ports::GroupSubscriberPort* groupRecvPort = it->second->FetchNextMessage(groupMessage);
 
-                    // The sender is the same
-                    //if (originComponentId == comp->GetCompUuid()) continue;
-
-                    comp->OnGroupMessage(it->first, *groupMessage, groupRecvPort);
+                    if (groupRecvPort != nullptr)
+                        comp->OnGroupMessage(it->first, *groupMessage, groupRecvPort);
                 }
             }
         }
