@@ -60,69 +60,67 @@ endif()
 
 # libriaps sources
 list (APPEND component_SOURCE
-        src/componentmodel/r_discoverdapi.cc
-        src/componentmodel/r_componentbase.cc
-        src/componentmodel/r_insideport.cc
-        src/componentmodel/r_subscriberport.cc
-        src/componentmodel/r_publisherport.cc
+        include/messaging/disco.capnp.c++
         src/componentmodel/r_actor.cc
-        src/componentmodel/r_portbase.cc
-        src/componentmodel/r_periodictimer.cc
-        #src/componentmodel/r_debugcomponent.cc
-        src/componentmodel/r_messagebase.cc
-        src/componentmodel/r_responseport.cc
-        src/componentmodel/r_requestport.cc
-        src/componentmodel/r_parameter.cc
-        #src/componentmodel/r_oneshottimer.cc
-        src/componentmodel/r_commandlineparser.cc
         src/componentmodel/r_argumentparser.cc
-        src/componentmodel/r_peripheral.cc
-        src/componentmodel/r_devmapi.cc
+        src/componentmodel/r_commandlineparser.cc
+        src/componentmodel/r_componentbase.cc
         src/componentmodel/r_devicethread.cc
+        src/componentmodel/r_devmapi.cc
+        src/componentmodel/r_discoverdapi.cc
+        src/componentmodel/r_insideport.cc
+        src/componentmodel/r_messagebase.cc
+        src/componentmodel/r_parameter.cc
+        src/componentmodel/r_periodictimer.cc
+        src/componentmodel/r_peripheral.cc
+        src/componentmodel/r_portbase.cc
         src/componentmodel/r_portregister.cc
+        src/componentmodel/r_publisherport.cc
         src/componentmodel/r_pubportbase.cc
         src/componentmodel/r_pubportgroup.cc
+        src/componentmodel/r_requestport.cc
+        src/componentmodel/r_responseport.cc
+        src/componentmodel/r_senderport.cc
         src/componentmodel/r_subportbase.cc
         src/componentmodel/r_subportgroup.cc
-        src/componentmodel/r_senderport.cc
-        src/utils/r_utils.cc
-        src/utils/r_message.cc
-        src/utils/r_capnp_helper.cc
-        src/framework/rfw_network_interfaces.cc
+        src/componentmodel/r_subscriberport.cc
         src/framework/rfw_configuration.cc
-        src/messaging/r_message.cc
+        src/framework/rfw_network_interfaces.cc
         src/groups/r_group.cc
-        include/messaging/disco.capnp.c++
+        src/messaging/r_message.cc
+        src/utils/r_capnp_helper.cc
+        src/utils/r_message.cc
+        src/utils/r_utils.cc
 
         )
 
 # libriaps headers
 list (APPEND component_HEADERS
-        include/componentmodel/r_discoverdapi.h
-        include/componentmodel/r_componentbase.h
-        include/componentmodel/r_publisherport.h
-        include/componentmodel/r_subscriberport.h
-        include/componentmodel/r_discoverdapi.h
-        include/componentmodel/r_configuration.h
-        include/componentmodel/r_periodictimer.h
-        include/componentmodel/r_responseport.h
-        include/componentmodel/r_requestport.h
         include/componentmodel/r_actor.h
-        include/componentmodel/r_messagebase.h
+        include/componentmodel/r_commandlineparser.h
+        include/componentmodel/r_componentbase.h
+        include/componentmodel/r_configuration.h
+        include/componentmodel/r_devicethread.h
+        include/componentmodel/r_discoverdapi.h
+        include/componentmodel/r_discoverdapi.h
         include/componentmodel/r_insideport.h
-        include/componentmodel/r_portregister.h
+        include/componentmodel/r_messagebase.h
+        include/componentmodel/r_parameter.h
+        include/componentmodel/r_periodictimer.h
         include/componentmodel/r_portbase.h
+        include/componentmodel/r_portregister.h
+        include/componentmodel/r_publisherport.h
         include/componentmodel/r_pubportbase.h
         include/componentmodel/r_pubportgroup.h
+        include/componentmodel/r_requestport.h
+        include/componentmodel/r_responseport.h
+        include/componentmodel/r_senderport.h
         include/componentmodel/r_subportbase.h
         include/componentmodel/r_subportgroup.h
-        include/componentmodel/r_senderport.h
-        include/componentmodel/r_devicethread.h
-        #include/componentmodel/r_oneshottimer.h
-        include/componentmodel/r_commandlineparser.h
+        include/componentmodel/r_subscriberport.h
         include/const/r_const.h
-        include/messaging/disco.capnp.h
         include/groups/r_group.h
+        include/messaging/disco.capnp.h
         )
 
 # libriaps

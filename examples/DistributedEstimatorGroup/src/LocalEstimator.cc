@@ -7,7 +7,6 @@
 namespace distributedestimator {
     namespace components {
 
-
         LocalEstimator::LocalEstimator(_component_conf &config, riaps::Actor &actor) :
                 LocalEstimatorBase(config, actor) {
             //PrintParameters();
@@ -29,7 +28,6 @@ namespace distributedestimator {
             }
             
             capnp::MallocMessageBuilder builderSensorQuery;
-
             messages::SensorQuery::Builder queryMsg = builderSensorQuery.initRoot<messages::SensorQuery>();
 
             queryMsg.setMsg("sensor_query");
@@ -51,8 +49,6 @@ namespace distributedestimator {
                                             capnp::FlatArrayMessageReader &capnpreader, riaps::ports::PortBase *port) {
             std::cout << "[LE] Group message arrived!" << std::endl;
         }
-
-
 
         LocalEstimator::~LocalEstimator() {
 

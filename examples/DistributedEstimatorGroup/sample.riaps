@@ -37,9 +37,15 @@ app DistributedEstimator {
        }
        }
 
-    actor Aggregator (posArg,optArg="optString") {
+    actor AggregatorGroup (posArg,optArg="optString") {
        {  // Global estimator, subscribes to 'Estimate' messages
           aggr : GlobalEstimator(iArg=posArg,sArg=optArg,bArg=true);	
        }
     }
+
+    actor AggregatorNoGroup (posArg,optArg="optString") {
+           {  // Global estimator, subscribes to 'Estimate' messages
+              aggr : GlobalEstimator(iArg=posArg,sArg=optArg,bArg=true);
+           }
+        }
 }

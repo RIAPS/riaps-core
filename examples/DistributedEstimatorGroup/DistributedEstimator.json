@@ -1,6 +1,39 @@
 {
     "actors":{
-        "Aggregator":{
+        "AggregatorGroup":{
+            "formals":[
+                {
+                    "name":"posArg"
+                },
+                {
+                    "default":"optString",
+                    "name":"optArg"
+                }
+            ],
+            "instances":{
+                "aggr":{
+                    "actuals":[
+                        {
+                            "name":"iArg",
+                            "param":"posArg"
+                        },
+                        {
+                            "name":"sArg",
+                            "param":"optArg"
+                        },
+                        {
+                            "name":"bArg",
+                            "value":true
+                        }
+                    ],
+                    "type":"GlobalEstimator"
+                }
+            },
+            "internals":[],
+            "locals":[],
+            "wires":[]
+        },
+        "AggregatorNoGroup":{
             "formals":[
                 {
                     "name":"posArg"

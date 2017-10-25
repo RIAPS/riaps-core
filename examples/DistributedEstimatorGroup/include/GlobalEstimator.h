@@ -37,7 +37,8 @@ namespace distributedestimator {
         private:
             std::unique_ptr<std::uniform_real_distribution<double>> unif;
             std::default_random_engine re;
-            bool hasJoined;
+            bool _hasJoined;
+            bool _hasGroup;
         };
     }
 }
