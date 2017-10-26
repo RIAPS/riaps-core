@@ -169,6 +169,7 @@ list(APPEND RDISCOVERYD_HEADERS
         include/discoveryd/r_odht.h
         include/discoveryd/r_discovery_types.h
         include/discoveryd/r_msghandler.h
+        include/discoveryd/r_registration.h
         include/framework/rfw_configuration.h
         include/framework/rfw_network_interfaces.h
         include/utils/r_utils.h

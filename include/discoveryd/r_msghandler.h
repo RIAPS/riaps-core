@@ -7,6 +7,7 @@
 
 #include <groups/r_group.h>
 #include <discoveryd/r_discovery_types.h>
+#include <discoveryd/r_registration.h>
 
 #include <opendht.h>
 #include <czmq.h>
@@ -82,6 +83,7 @@ namespace riaps{
 
         int64_t _lastServiceCheckin;
         int64_t _lastZombieCheck;
+
         const uint16_t _serviceCheckPeriod;
         const uint16_t _zombieCheckPeriod;
 
