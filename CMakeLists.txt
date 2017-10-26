@@ -91,7 +91,6 @@ list (APPEND component_SOURCE
         src/utils/r_capnp_helper.cc
         src/utils/r_message.cc
         src/utils/r_utils.cc
-
         )
 
 # libriaps headers
@@ -121,6 +120,8 @@ list (APPEND component_HEADERS
         include/const/r_const.h
         include/groups/r_group.h
         include/messaging/disco.capnp.h
+        include/utils/r_expirable.h
+        include/utils/r_expirablelist.h
         )
 
 # libriaps
