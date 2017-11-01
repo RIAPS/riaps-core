@@ -23,8 +23,9 @@ namespace riaps{
                 _componentId(componentId),
                 _groupPubPort(nullptr),
                 _groupSubPort(nullptr),
-                _lastFrame(nullptr){
-
+                _lastFrame(nullptr),
+                _lastPing(0),
+                _pingPeriod(10*1000) {
 
 
         }
@@ -57,7 +58,9 @@ namespace riaps{
             internalSubConfig.portName    = INTERNAL_SUB_NAME;
 
             _groupSubPort = std::shared_ptr<ports::GroupSubscriberPort>(new ports::GroupSubscriberPort(internalSubConfig));
-            _groupPorts[_groupSubPort->GetSocket()] = _groupPubPort;
+            _groupPorts[_groupSubPort->GetSocket()] = _groupSubPort;
+
+
 
             // Initialize the zpoller and add the group sub port
             _groupPoller = zpoller_new(const_cast<zsock_t*>(_groupSubPort->GetSocket()), nullptr);
@@ -99,6 +102,19 @@ namespace riaps{
             return false;
         }
 
+        std::shared_ptr<std::vector<std::string>> Group::GetKnownComponents() {
+            std::shared_ptr<std::vector<std::string>> result(new std::vector<std::string>());
+
+            std::transform(_knownNodes.begin(),
+                           _knownNodes.end(),
+                           std::back_inserter(*result),
+                           [](const std::pair<std::string, int64_t >& p) -> std::string {
+                               return p.first;
+                           });
+
+            return result;
+        }
+
         void Group::ConnectToNewServices(riaps::discovery::GroupUpdate::Reader &msgGroupUpdate) {
             for (int i =0; i<msgGroupUpdate.getServices().size(); i++){
                 std::string messageType = msgGroupUpdate.getServices()[i].getMessageType().cStr();
@@ -123,6 +139,41 @@ namespace riaps{
             }
         }
 
+        void Group::SendHeartBeat(riaps::distrcoord::HeartBeatType type) {
+            int64_t currentTime = zclock_mono();
+
+            if (_lastPing == 0)
+                _lastPing = currentTime;
+
+            // If outdated, send ping
+            if ((currentTime - _lastPing) > _pingPeriod){
+                capnp::MallocMessageBuilder builder;
+                auto heartbeat = builder.initRoot<riaps::distrcoord::GroupHeartBeat>();
+
+                heartbeat.setHeartBeatType(type);
+                heartbeat.setSourceComponentId(this->_componentId);
+
+                if (_groupPubPort->Send(builder)) {
+                    _lastPing = currentTime;
+                    std::cout << ">>PING>>" << std::endl;
+                }
+                else std::cout << "PING failed" << std::endl;
+            }
+        }
+
+        uint16_t Group::GetMemberCount(uint16_t timeout) const {
+            auto result =0;
+
+            int64_t now  = zclock_mono();
+            int64_t from = now - timeout;
+
+            for (auto& pair : _knownNodes) {
+                if (pair.second >= from) result++;
+            }
+
+            return result;
+        }
+
         ports::GroupSubscriberPort* Group::FetchNextMessage(std::unique_ptr<capnp::FlatArrayMessageReader>& messageReader) {
             void* which = zpoller_wait(_groupPoller, 10);
             if (which == nullptr) return nullptr;
@@ -136,7 +187,7 @@ namespace riaps{
                 return nullptr;
             }
 
-            auto subscriberPort = currentPort->AsGroupSubscriberPort();
+            riaps::ports::GroupSubscriberPort* subscriberPort = currentPort->AsGroupSubscriberPort();
 
             // If the port is not a subscriber port (in theory this is impossible)
             if (subscriberPort == nullptr)  return nullptr;
@@ -159,9 +210,25 @@ namespace riaps{
                 kj::ArrayPtr<const capnp::word> capnp_data(reinterpret_cast<const capnp::word *>(data), size / sizeof(capnp::word));
 
                 messageReader.reset(new capnp::FlatArrayMessageReader(capnp_data));
+
+                // Internal port, handle it here and don't send any notifications to the caller
+                if (subscriberPort == _groupSubPort.get()){
+                    capnp::FlatArrayMessageReader reader(capnp_data);
+                    auto groupHeartBeat = reader.getRoot<riaps::distrcoord::GroupHeartBeat>();
+                    if (groupHeartBeat.getHeartBeatType() == riaps::distrcoord::HeartBeatType::PING){
+                        std::cout << "<<PING<<" << std::endl;
+                        SendHeartBeat(riaps::distrcoord::HeartBeatType::PONG);
+                        std::cout << ">>PONG>>" << std::endl;
+                        _knownNodes[groupHeartBeat.getSourceComponentId()] = zclock_mono();
+                    } else if (groupHeartBeat.getHeartBeatType() == riaps::distrcoord::HeartBeatType::PONG){
+                        std::cout << "<<PONG<<" <<std::endl;
+                        _knownNodes[groupHeartBeat.getSourceComponentId()] = zclock_mono();
+                    }
+                }
             }
 
             zmsg_destroy(&msg);
+            return subscriberPort;
         }
 
         Group::~Group() {

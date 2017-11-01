@@ -61,6 +61,7 @@ endif()
 # libriaps sources
 list (APPEND component_SOURCE
         include/messaging/disco.capnp.c++
+        include/messaging/distcoord.capnp.c++
         src/componentmodel/r_actor.cc
         src/componentmodel/r_argumentparser.cc
         src/componentmodel/r_commandlineparser.cc
@@ -120,6 +121,7 @@ list (APPEND component_HEADERS
         include/const/r_const.h
         include/groups/r_group.h
         include/messaging/disco.capnp.h
+        include/messaging/distcoord.capnp.h
         include/utils/r_expirable.h
         include/utils/r_expirablelist.h
         )

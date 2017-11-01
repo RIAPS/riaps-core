@@ -10,6 +10,7 @@
 #include <componentmodel/r_pubportgroup.h>
 #include <componentmodel/r_subportgroup.h>
 #include <messaging/disco.capnp.h>
+#include <messaging/distcoord.capnp.h>
 
 #include <msgpack.hpp>
 #include <czmq.h>
@@ -39,6 +40,7 @@ namespace riaps {
              * @return
              */
             bool operator<(const GroupId& other) const;
+
 
             MSGPACK_DEFINE(groupName, groupTypeId);
         };
@@ -92,9 +94,15 @@ namespace riaps {
 
             ports::GroupSubscriberPort* FetchNextMessage(std::unique_ptr<capnp::FlatArrayMessageReader>& messageReader);
 
+            void SendHeartBeat(riaps::distrcoord::HeartBeatType type);
+            
+            std::shared_ptr<std::vector<std::string>> GetKnownComponents();
+
+            uint16_t GetMemberCount(uint16_t timeout /*msec*/) const;
+
             ~Group();
 
-        protected:
+        private:
             const GroupId     _groupId;
             groupt_conf       _groupTypeConf;
 
@@ -105,13 +113,15 @@ namespace riaps {
             std::shared_ptr<riaps::ports::GroupSubscriberPort>   _groupSubPort;
 
             std::map<const zsock_t*, std::shared_ptr<riaps::ports::PortBase>> _groupPorts;
+            std::unordered_map<std::string, int64_t> _knownNodes;
 
-
-        private:
             zframe_t*  _lastFrame;
             zpoller_t* _groupPoller;
 
             std::string _componentId;
+
+            int64_t _lastPing;
+            const uint16_t _pingPeriod;
         };
 
     }
