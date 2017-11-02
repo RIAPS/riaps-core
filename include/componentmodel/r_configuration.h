@@ -54,7 +54,7 @@ struct _component_port_rep : public component_port_config{
 };
 struct _component_port_srv : public component_port_config{};
 struct _component_port_sub : public component_port_config{
-    std::string messageType;
+    //std::string messageType;
 };
 struct _component_port_tim : public component_port_config {
     ulong       period;
