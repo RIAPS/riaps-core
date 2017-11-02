@@ -51,7 +51,7 @@ if (BUILD_TESTS)
     enable_testing()
     # Tests
     # add_subdirectory(examples/DistributedEstimator)
-    add_subdirectory(examples/DistributedEstimatorGroup)
+    # add_subdirectory(examples/DistributedEstimatorGroup)
     #add_subdirectory(tests/test_timer)
     #add_subdirectory(tests/GpioDeviceTesting)
     #add_subdirectory(tests/testPubSub/test_1_1/test_1_1)
@@ -147,6 +147,7 @@ set(ACTOR_HEADERS
         include/const/r_jsonmodel.h
         include/const/r_const.h
         include/messaging/disco.capnp.h
+        include/json.h
         )
 
 add_executable(start_actor
