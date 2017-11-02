@@ -18,14 +18,23 @@ namespace distributedestimator {
 
             //PrintMessageOnPort(port, message.getMsg().cStr());
 
-            std::cout << "LocalEstimator::OnReady(): " << message.getMsg().cStr() << " " << ::getpid() << std::endl;
+            //std::cout << "LocalEstimator::OnReady(): " << message.getMsg().cStr() << " " << ::getpid() << std::endl;
 
             if (!hasJoined){
                 hasJoined = true;
                 if (this->JoinToGroup({"TestGroupId","Korte"})){
                     std::cout << "Joined to group TestGroupId::Korte" << std::endl;
                 }
+
+
             }
+
+            riaps::groups::GroupId gid;
+            gid.groupTypeId = "TestGroupId";
+            gid.groupName = "Korte";
+
+            std::cout << "[LE] Count: " << GetGroupMemberCount(gid) << std::endl;
+
             
             capnp::MallocMessageBuilder builderSensorQuery;
             messages::SensorQuery::Builder queryMsg = builderSensorQuery.initRoot<messages::SensorQuery>();
@@ -35,7 +44,7 @@ namespace distributedestimator {
             if (result) {
                 messages::SensorValue::Reader sensorValue;
                 if (RecvQuery(sensorValue)) {
-                    std::cout << "LocalEstimator::OnQuery(): " << sensorValue.getMsg().cStr() << std::endl;
+                    //std::cout << "LocalEstimator::OnQuery(): " << sensorValue.getMsg().cStr() << std::endl;
                     //std::cout << sensorValue.getMsg().cStr() << std::endl;
                     capnp::MallocMessageBuilder builderEstimate;
                     auto estimateMsg = builderEstimate.initRoot<messages::Estimate>();

@@ -22,8 +22,7 @@ namespace distributedestimator {
         void GlobalEstimator::OnEstimate(messages::Estimate::Reader &message,
                                          riaps::ports::PortBase *port) {
             //PrintMessageOnPort(port);
-            std::cout << "GlobalEstimator::OnEstimate(): " << message.getMsg().cStr() << std::endl;
-            //std::cout << " " << message.getValues()[0] << " " << message.getValues()[1] << std::endl;
+            //std::cout << "GlobalEstimator::OnEstimate(): " << message.getMsg().cStr() << std::endl;
         }
 
         void GlobalEstimator::OnWakeup(riaps::ports::PortBase *port) {
@@ -38,14 +37,14 @@ namespace distributedestimator {
                     }
 
                 } else {
-                    capnp::MallocMessageBuilder builder;
-                    auto msgEstimate = builder.initRoot<distributedestimator::messages::Estimate>();
-                    msgEstimate.setMsg("From group");
-
-                    if (SendGroupMessage({"TestGroupId", "Korte"}, builder, "TestPubPortName")) {
-                        std::cout << "[GE] Groupmessage sent" << std::endl;
-                    } else
-                        std::cout << "[GE] Groupmessage sending has been failed" << std::endl;
+//                    capnp::MallocMessageBuilder builder;
+//                    auto msgEstimate = builder.initRoot<distributedestimator::messages::Estimate>();
+//                    msgEstimate.setMsg("From group");
+//
+//                    if (SendGroupMessage({"TestGroupId", "Korte"}, builder, "TestPubPortName")) {
+//                        std::cout << "[GE] Groupmessage sent" << std::endl;
+//                    } else
+//                        std::cout << "[GE] Groupmessage sending has been failed" << std::endl;
                 }
             }
         }

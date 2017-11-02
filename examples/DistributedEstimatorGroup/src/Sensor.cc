@@ -15,7 +15,7 @@ namespace distributedestimator {
 
         void comp_sensor::OnClock(riaps::ports::PortBase *port) {
             int64_t time = zclock_mono();
-            std::cout << "Sensor::OnClock(): " << time << std::endl;
+            //std::cout << "Sensor::OnClock(): " << time << std::endl;
 
             capnp::MallocMessageBuilder messageBuilder;
             auto msgSensorReady = messageBuilder.initRoot<messages::SensorReady>();
@@ -28,7 +28,7 @@ namespace distributedestimator {
                                     riaps::ports::PortBase *port) {
             //PrintMessageOnPort(port);
 
-            std::cout << "Sensor::OnRequest(): " << message.getMsg().cStr() <<std::endl;
+            //std::cout << "Sensor::OnRequest(): " << message.getMsg().cStr() <<std::endl;
 
             capnp::MallocMessageBuilder messageBuilder;
             messages::SensorValue::Builder msgSensorValue = messageBuilder.initRoot<messages::SensorValue>();
