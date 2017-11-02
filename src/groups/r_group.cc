@@ -217,9 +217,10 @@ namespace riaps{
                     auto groupHeartBeat = reader.getRoot<riaps::distrcoord::GroupHeartBeat>();
                     if (groupHeartBeat.getHeartBeatType() == riaps::distrcoord::HeartBeatType::PING){
                         std::cout << "<<PING<<" << std::endl;
+                        _lastPing = zclock_mono();
                         SendHeartBeat(riaps::distrcoord::HeartBeatType::PONG);
                         std::cout << ">>PONG>>" << std::endl;
-                        _knownNodes[groupHeartBeat.getSourceComponentId()] = zclock_mono();
+                        _knownNodes[groupHeartBeat.getSourceComponentId()] = _lastPing;
                     } else if (groupHeartBeat.getHeartBeatType() == riaps::distrcoord::HeartBeatType::PONG){
                         std::cout << "<<PONG<<" <<std::endl;
                         _knownNodes[groupHeartBeat.getSourceComponentId()] = zclock_mono();

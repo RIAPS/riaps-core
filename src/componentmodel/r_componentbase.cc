@@ -261,6 +261,8 @@ namespace riaps{
 
                 // Handle all group messages
                 for (auto it = comp->_groups.begin(); it!=comp->_groups.end(); it++){
+                    it->second->SendHeartBeat(riaps::distrcoord::HeartBeatType::PING);
+
                     std::unique_ptr<capnp::FlatArrayMessageReader> groupMessage(nullptr);
                     //std::string originComponentId;
                     ports::GroupSubscriberPort* groupRecvPort = it->second->FetchNextMessage(groupMessage);
@@ -567,6 +569,13 @@ namespace riaps{
         for (auto it = parameters.begin(); it!=parameters.end(); it++){
             std::cout << *it << " : " << _configuration.component_parameters.GetParam(*it)->GetValueAsString() << std::endl;
         }
+    }
+
+    uint16_t ComponentBase::GetGroupMemberCount(const riaps::groups::GroupId &groupId, const int64_t timeout) {
+        if (_groups.find(groupId)==_groups.end())
+            return 0;
+
+        return _groups[groupId]->GetMemberCount(timeout);
     }
 
     bool ComponentBase::JoinToGroup(riaps::groups::GroupId &&groupId) {

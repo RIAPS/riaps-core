@@ -100,8 +100,10 @@ namespace riaps {
         /**
          * @brief Stops the component
          *
-         * Stops the component in the following order: 1) Stops the timers 2) Destroys the component thread
-         * 3) Deletes ports
+         * Stops the component in the following order:
+         *   1) Stops the timers
+         *   2) Destroys the component thread
+         *   3) Deletes ports
          */
         void StopComponent();
 
@@ -153,6 +155,10 @@ namespace riaps {
         virtual void OnGroupMessage(const riaps::groups::GroupId& groupId,
                                     capnp::FlatArrayMessageReader& capnpreader,
                                     riaps::ports::PortBase* port) = 0;
+        
+
+        uint16_t GetGroupMemberCount(const riaps::groups::GroupId& groupId,
+                                     const int64_t timeout = 1000*60 /*1 minute in msec*/);
 //
 //        virtual bool SendGroupMessage(riaps::groups::GroupId&      groupId,
 //                                      capnp::MallocMessageBuilder& messageBuilder,
@@ -290,7 +296,8 @@ namespace riaps {
         // All the component ports
         std::map<std::string, std::unique_ptr<ports::PortBase>> _ports;
 
-        std::map<riaps::groups::GroupId, std::unique_ptr<riaps::groups::Group>> _groups;
+        std::map<riaps::groups::GroupId,
+                 std::unique_ptr<riaps::groups::Group>> _groups;
     };
 }
 
