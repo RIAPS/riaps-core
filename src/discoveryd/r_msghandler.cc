@@ -656,7 +656,52 @@ namespace riaps{
 //        dht::Blob b(sbuf.data(), sbuf.data()+sbuf.size());
 //        _dhtNode.put(key, dht::Value(b));
 
+
+
+
         _dhtNode.put(key, dht::Value::pack(groupDetails));
+        _dhtNode.get(key, [](const std::vector<std::shared_ptr<dht::Value>> &values){
+            if (values.size() == 0) return true;
+
+            zsock_t *dhtNotificationSocket = zsock_new_push(DHT_ROUTER_CHANNEL);
+
+            // Let's unpack the data
+            for (auto& value : values) {
+                riaps::groups::GroupDetails v = value->unpack<riaps::groups::GroupDetails>();
+
+                capnp::MallocMessageBuilder dhtMessage;
+                auto msgDhtUpdate = dhtMessage.initRoot<riaps::discovery::DhtUpdate>();
+                auto msgGroupUpdate = msgDhtUpdate.initGroupUpdate();
+                msgGroupUpdate.setComponentId(v.componentId);
+                msgGroupUpdate.setAppName(v.appName);
+
+                auto groupId = msgGroupUpdate.initGroupId();
+                groupId.setGroupName(v.groupId.groupName);
+                groupId.setGroupType(v.groupId.groupTypeId);
+
+                auto groupServices = msgGroupUpdate.initServices(v.groupServices.size());
+                for (int i = 0; i<v.groupServices.size(); i++){
+                    groupServices[i].setAddress(v.groupServices[i].address);
+                    groupServices[i].setMessageType(v.groupServices[i].messageType);
+                }
+
+                auto serializedMessage = capnp::messageToFlatArray(dhtMessage);
+
+                zmsg_t *msg = zmsg_new();
+                auto bytes = serializedMessage.asBytes();
+                zmsg_pushmem(msg, bytes.begin(), bytes.size());
+                zmsg_send(&msg, dhtNotificationSocket);
+                std::cout << "[DHT] Group notifications sent to discovery service" << std::endl;
+            }
+
+            sleep(1);
+            zsock_destroy(&dhtNotificationSocket);
+            sleep(1);
+
+
+            return true;
+        });
+
 
         // Debug
         std::cout << "Component joined to group: "

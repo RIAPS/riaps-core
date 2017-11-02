@@ -1,6 +1,8 @@
 #include <componentmodel/r_argumentparser.h>
 #include <componentmodel/r_actor.h>
 
+#define NO_GROUP_TEST
+
 namespace riaps {
 
     const Actor& riaps::Actor::GetRunningActor() {
@@ -67,6 +69,7 @@ namespace riaps {
           _actor_zsock(nullptr)
     {
 
+#ifndef NO_GROUP_TEST
         // TODO: Remove this
         // Note: Group testing
         //////////////////////////
@@ -89,6 +92,7 @@ namespace riaps {
 
         /////////////////////////
         //TODO: REMOVE LINES ABOVE AFTER TESTING
+#endif
 
 
         _jsonActorconfig       = jsonActorconfig;
