@@ -1,17 +1,7 @@
 #include <discoveryd/r_riaps_actor.h>
-#include <discoveryd/r_odht.h>
 #include <discoveryd/r_msghandler.h>
 #include <framework/rfw_configuration.h>
 #include <framework/rfw_network_interfaces.h>
-
-#include <vector>
-#include <map>
-
-
-
-//extern "C" std::string riaps::framework::Network::GetIPAddress(const std::string& ifacename);
-
-
 
 void
 riaps_actor (zsock_t *pipe, void *args)

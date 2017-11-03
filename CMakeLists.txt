@@ -162,14 +162,12 @@ list(APPEND RDISCOVERYD_SOURCE
         src/discoveryd/r_discoveryd.cc
         src/discoveryd/r_riaps_actor.cc
         src/discoveryd/r_msghandler.cc
-        src/discoveryd/r_odht.cc
         include/messaging/disco.capnp.c++
         )
 
 # rdiscoveryd headers
 list(APPEND RDISCOVERYD_HEADERS
         include/discoveryd/r_riaps_actor.h
-        include/discoveryd/r_odht.h
         include/discoveryd/r_discovery_types.h
         include/discoveryd/r_msghandler.h
         include/discoveryd/r_registration.h
@@ -178,6 +176,7 @@ list(APPEND RDISCOVERYD_HEADERS
         include/utils/r_utils.h
         include/messaging/disco.capnp.h
         include/groups/r_group.h
+        include/spdlog/spdlog.h
         )
 
 # rdiscoveryd
@@ -185,7 +184,7 @@ add_executable(rdiscoveryd
         ${RDISCOVERYD_SOURCE}
         ${RDISCOVERYD_HEADERS}
         )
-target_link_libraries(rdiscoveryd czmq zmq opendht gnutls riaps capnp nettle hogweed gmp glog)
+target_link_libraries(rdiscoveryd czmq zmq opendht gnutls riaps capnp nettle hogweed gmp pthread)
 
 install(TARGETS rdiscoveryd DESTINATION bin)
 
