@@ -35,14 +35,14 @@ namespace riaps{
         void Run();
         ~DiscoveryMessageHandler();
     private:
-        bool handleZombieUpdate(const std::vector<std::shared_ptr<dht::Value>> &values);
-        void handlePipeMessage();
-        void handleRiapsMessage();
-        void handleActorReg     (riaps::discovery::ActorRegReq::Reader  & msgActorReq);
-        void handleActorUnreg   (riaps::discovery::ActorUnregReq::Reader& msgActorUnreg);
-        void handleServiceReg   (riaps::discovery::ServiceRegReq::Reader& msgServiceReg);
+        bool handleZombieUpdate (const std::vector<std::shared_ptr<dht::Value>> &values);
+        void handlePipeMessage  ();
+        void handleRiapsMessage ();
+        void handleActorReg     (riaps::discovery::ActorRegReq::Reader     & msgActorReq);
+        void handleActorUnreg   (riaps::discovery::ActorUnregReq::Reader   & msgActorUnreg);
+        void handleServiceReg   (riaps::discovery::ServiceRegReq::Reader   & msgServiceReg);
         void handleServiceLookup(riaps::discovery::ServiceLookupReq::Reader& msgServiceLookup);
-        void handleGroupJoin    (riaps::discovery::GroupJoinReq::Reader&     msgGroupJoin);
+        void handleGroupJoin    (riaps::discovery::GroupJoinReq::Reader    & msgGroupJoin);
 
         void handleDhtGet(const riaps::discovery::ProviderListGet::Reader& msgProviderGet,
                           const std::map<std::string, std::shared_ptr<actor_details_t>>& clients);
@@ -52,7 +52,7 @@ namespace riaps{
 
         void handleDhtGroupUpdate(const riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
 
-        std::pair<std::string, std::string> buildInsertKeyValuePair(
+        std::tuple<std::string, std::string> buildInsertKeyValuePair(
                 const std::string&             appName,
                 const std::string&             msgType,
                 const riaps::discovery::Kind&  kind,

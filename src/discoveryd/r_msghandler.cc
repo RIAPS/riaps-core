@@ -354,7 +354,7 @@ namespace riaps{
                                                msgSock.getHost(),
                                                msgSock.getPort());
 
-        std::cout << "Register service: " + kv_pair.first << std::endl;
+        std::cout << "Register service: " + std::get<0>(kv_pair) << std::endl;
 
         // New pid
         if (_serviceCheckins.find(servicePid) == _serviceCheckins.end()) {
@@ -364,14 +364,14 @@ namespace riaps{
         // Add PID - Service Details
         std::unique_ptr<service_checkins_t> newItem = std::unique_ptr<service_checkins_t>(new service_checkins_t());
         newItem->createdTime = zclock_mono();
-        newItem->key         = kv_pair.first;
-        newItem->value       = kv_pair.second;
+        newItem->key         = std::get<0>(kv_pair);
+        newItem->value       = std::get<1>(kv_pair);
         newItem->pid         = servicePid;
         _serviceCheckins[servicePid].push_back(std::move(newItem));
 
         // Convert the value to bytes
-        std::vector<uint8_t> opendht_data(kv_pair.second.begin(), kv_pair.second.end());
-        auto keyhash = dht::InfoHash::get(kv_pair.first);
+        std::vector<uint8_t> opendht_data(std::get<1>(kv_pair).begin(), std::get<1>(kv_pair).end());
+        auto keyhash = dht::InfoHash::get(std::get<0>(kv_pair));
 
         _dhtNode.put(keyhash, dht::Value(opendht_data));
 
@@ -1104,7 +1104,7 @@ namespace riaps{
         sleep(1);
     }
 
-    std::pair<std::string, std::string> DiscoveryMessageHandler::buildInsertKeyValuePair(
+    std::tuple<std::string, std::string> DiscoveryMessageHandler::buildInsertKeyValuePair(
             const std::string&             appName,
             const std::string&             msgType,
             const riaps::discovery::Kind&  kind,
@@ -1128,7 +1128,8 @@ namespace riaps{
 
         std::string value = host + ":" + std::to_string(port);
 
-        return std::pair<std::string, std::string>(key, value);
+        return std::make_tuple(key, value);
+        //return std::pair<std::string, std::string>(key, value);
     }
 
     std::pair<std::string, std::string> DiscoveryMessageHandler::buildLookupKey(
