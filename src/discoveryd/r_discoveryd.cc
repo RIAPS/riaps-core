@@ -19,10 +19,6 @@
 
 #include <spdlog/spdlog.h>
 
-//Filter info and warning logs for now
-//#define GOOGLE_STRIP_LOG 1
-//#include <glog/logging.h>
-
 #include <iostream>
 #include <string>
 #include <map>
@@ -46,11 +42,8 @@ namespace spd = spdlog;
 
 int main(int argc, char* argv[])
 {
-    // Initialize Google's logging library.
-    //google::InitGoogleLogging(argv[0]);
-    //FLAGS_logtostderr = 1;
 
-    auto console = spd::stdout_color_mt("console");
+    auto console = spd::stdout_color_mt("rbeacon");
     console->info("Starting RIAPS DISCOVERY SERVICE ");
 
     // Random generator for beacon interval
