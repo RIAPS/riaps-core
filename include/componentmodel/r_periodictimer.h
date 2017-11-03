@@ -22,7 +22,7 @@ namespace riaps {
 
         class PeriodicTimer : public PortBase {
         public:
-            PeriodicTimer(std::string &timerresponsechannel, const _component_port_tim_j& config);
+            PeriodicTimer(std::string &timerresponsechannel, const _component_port_tim& config);
 
             ~PeriodicTimer();
 

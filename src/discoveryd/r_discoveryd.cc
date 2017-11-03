@@ -14,13 +14,12 @@
 
 
 #include <discoveryd/r_riaps_actor.h>
-#include <discoveryd/r_discoveryd_commands.h>
 #include <framework/rfw_network_interfaces.h>
 #include <utils/r_utils.h>
 
 //Filter info and warning logs for now
-#define GOOGLE_STRIP_LOG 1
-#include <glog/logging.h>
+//#define GOOGLE_STRIP_LOG 1
+//#include <glog/logging.h>
 
 #include <iostream>
 #include <string>
@@ -39,11 +38,13 @@
 // IPC socket address for sending control messages to the discovery service
 #define CONTROL_SOCKET "ipc:///tmp/discoverycontrol"
 
+#define CMD_JOIN "JOIN"
+
 int main(int argc, char* argv[])
 {
     // Initialize Google's logging library.
-    google::InitGoogleLogging(argv[0]);
-    FLAGS_logtostderr = 1;
+    //google::InitGoogleLogging(argv[0]);
+    //FLAGS_logtostderr = 1;
 
     std::cout << "Starting RIAPS DISCOVERY SERVICE " << std::endl;
 
@@ -135,7 +136,7 @@ int main(int argc, char* argv[])
         // If no announcement, start sending beacons
         if (zclock_mono()>nextAnnouncement){
 
-            LOG(INFO) << "Send UDP beacon";
+            //LOG(INFO) << "Send UDP beacon";
 
             zsock_send (speaker, "sbi", "PUBLISH", announcement, 2, BEACON_FREQ);
 
@@ -214,7 +215,7 @@ int main(int argc, char* argv[])
         // If UDP package was received
         if (ipaddress) {
 
-            LOG(INFO) << "Beacon arrived";
+            //LOG(INFO) << "Beacon arrived";
 
             // Recalculate (delay) the next announcement
             int nextDiff = dis(gen)*1000;
@@ -251,13 +252,9 @@ int main(int argc, char* argv[])
             }
         }
     }
-
-
     zpoller_destroy(&poller);
     zsock_destroy(&control);
     zactor_destroy(&r_actor);
-
-
     zactor_destroy(&listener);
     zactor_destroy(&speaker);
 

@@ -9,8 +9,11 @@
 #include <componentmodel/r_componentbase.h>
 #include <componentmodel/r_peripheral.h>
 #include <componentmodel/r_devmapi.h>
+#include <componentmodel/r_configuration.h>
+#include <messaging/disco.capnp.h>
 #include <const/r_const.h>
 #include <utils/r_utils.h>
+#include <groups/r_group.h>
 
 #include <json.h>
 
@@ -37,15 +40,26 @@ namespace riaps {
                                   const std::string& jsonFile  ,
                                   std::map<std::string, std::string>& actualParams);
 
+        static const Actor& GetRunningActor();
+
         void Init();
         virtual void start();
         std::string  GetActorId();
+
+        // Todo: Can they be static?
+        // Todo: Actually a better question: can the whole actor be static?
         const std::string& GetActorName() const;
         const std::string& GetApplicationName() const;
         riaps::devm::DevmApi* GetDeviceManager() const;
 
+        // Note: Group configs can be static
+        // Todo: Thinking on to make them static... I'm not sure it is good.
+        const std::vector<groupt_conf>& GetGroupTypes() const;
+        const groupt_conf* GetGroupType(const std::string& groupTypeId) const;
+
         virtual ~Actor();
         void UpdatePort(std::string& instancename, std::string& portname, std::string& host, int port);
+        void UpdateGroup(riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
 
     protected:
 
@@ -98,10 +112,11 @@ namespace riaps {
         ////
 
 
-        std::vector<component_conf_j> _component_configurations;
+        std::vector<component_conf> _component_configurations;
+        std::vector<groupt_conf>    _grouptype_configurations;
     private:
-        zpoller_t*                  _poller;
-   
+        zpoller_t*    _poller;
+        static Actor* _currentActor;
     };
 }
 

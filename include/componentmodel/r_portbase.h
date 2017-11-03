@@ -5,7 +5,7 @@
 #ifndef RIAPS_R_PORTBASE_H
 #define RIAPS_R_PORTBASE_H
 
-#include "r_configuration.h"
+#include <componentmodel/r_configuration.h>
 
 #include <czmq.h>
 #include <string>
@@ -28,6 +28,8 @@ namespace ports {
     class SubscriberPort;
     class PeriodicTimer;
     class InsidePort;
+    class GroupPublisherPort;
+    class GroupSubscriberPort;
 
     enum PortTypes {Publisher, Subscriber, Request, Response, Timer, Inside};
 
@@ -36,7 +38,7 @@ namespace ports {
     public:
         //PortBase(const ComponentBase* parentComponent);
 
-        PortBase(PortTypes portType, component_port_config* config);
+        PortBase(PortTypes portType, const component_port_config* config);
 
         /// \return The ip addres of the specified interface. (e.g.: "eth0")
         //virtual std::string GetInterfaceAddress(std::string ifacename);
@@ -48,9 +50,11 @@ namespace ports {
         virtual const zsock_t* GetSocket() const;
 
 
-        bool Send(std::string message) const;
-        bool Send(std::vector<std::string>& fields) const;
-        virtual bool Send(zmsg_t** zmessage) const;
+        //bool Send(std::string message) const;
+        //bool Send(std::vector<std::string>& fields) const;
+        //virtual bool Send(zmsg_t** zmessage) const;
+
+
 
         const PortTypes& GetPortType() const;
 
@@ -59,12 +63,14 @@ namespace ports {
         virtual const std::string GetPortName() const;
 
         // Return NULL if the called conversion is unavailable or invalid
-        virtual RequestPort*    AsRequestPort()    ;
-        virtual PublisherPort*  AsPublishPort()    ;
-        virtual ResponsePort*   AsResponsePort()   ;
-        virtual SubscriberPort* AsSubscribePort()  ;
-        virtual PeriodicTimer*  AsTimerPort()      ;
-        virtual InsidePort*     AsInsidePort()     ;
+        virtual RequestPort*         AsRequestPort()        ;
+        virtual PublisherPort*       AsPublishPort()        ;
+        virtual GroupPublisherPort*  AsGroupPublishPort()   ;
+        virtual GroupSubscriberPort* AsGroupSubscriberPort();
+        virtual ResponsePort*        AsResponsePort()       ;
+        virtual SubscriberPort*      AsSubscribePort()      ;
+        virtual PeriodicTimer*       AsTimerPort()          ;
+        virtual InsidePort*          AsInsidePort()         ;
 
 
         virtual ~PortBase() noexcept ;

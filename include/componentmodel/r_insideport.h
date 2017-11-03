@@ -5,7 +5,8 @@
 #ifndef RIAPS_CORE_R_INSIDER_H
 #define RIAPS_CORE_R_INSIDER_H
 
-#include "r_portbase.h"
+#include <componentmodel/r_portbase.h>
+#include <componentmodel/r_senderport.h>
 //#include <messaging/insideport.capnp.h>
 #include <capnp/serialize.h>
 #include <capnp/message.h>
@@ -19,19 +20,19 @@ namespace riaps {
 
         enum InsidePortMode {CONNECT, BIND};
 
-        class InsidePort : public PortBase {
+        class InsidePort : public PortBase, public SenderPort {
         public:
-            using PortBase::Send;
+            //using PortBase::Send;
 
-            InsidePort(const _component_port_ins_j &config, InsidePortMode mode, ComponentBase *parent_component);
+            InsidePort(const _component_port_ins &config, InsidePortMode mode, ComponentBase *parent_component);
 
             std::string GetEndpoint();
 
-            virtual const _component_port_ins_j* GetConfig() const;
+            virtual const _component_port_ins* GetConfig() const;
 
             virtual InsidePort*  AsInsidePort() ;
 
-            virtual bool Send(zmsg_t** zmessage) const;
+            //virtual bool Send(zmsg_t** zmessage) const;
             //virtual bool Recv(riaps::ports::InsideMessage::Reader** insideMessage);
             virtual bool Recv(zmsg_t** insideMessage);
 

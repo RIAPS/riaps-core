@@ -9,7 +9,7 @@
 namespace distributedestimator {
     namespace components {
 
-        comp_sensor::comp_sensor(_component_conf_j &config, riaps::Actor &actor) : comp_sensorbase(config, actor) {
+        comp_sensor::comp_sensor(_component_conf &config, riaps::Actor &actor) : comp_sensorbase(config, actor) {
             //PrintParameters();
         }
 
@@ -49,7 +49,7 @@ namespace distributedestimator {
     }
 }
 
-riaps::ComponentBase* create_component(_component_conf_j& config, riaps::Actor& actor){
+riaps::ComponentBase* create_component(_component_conf& config, riaps::Actor& actor){
     auto result = new distributedestimator::components::comp_sensor(config, actor);
     return result;
 }

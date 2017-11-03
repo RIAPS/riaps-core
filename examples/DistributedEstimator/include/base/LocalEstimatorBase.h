@@ -20,7 +20,7 @@ namespace distributedestimator {
 
         public:
 
-            LocalEstimatorBase(_component_conf_j &config, riaps::Actor &actor);
+            LocalEstimatorBase(_component_conf &config, riaps::Actor &actor);
 
             //virtual void RegisterHandlers();
 

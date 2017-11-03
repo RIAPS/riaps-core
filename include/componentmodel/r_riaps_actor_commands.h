@@ -27,6 +27,7 @@
 #define CMD_DISC_PING                            "$PING$"
 
 #define CMD_UPDATE_PORT                          "portUpdate"
+#define CMD_UPDATE_GROUP                         "groupUpdate"
 
 //#define MSG_SERVICE_LIST_HEADER                  "$SERVICES$"
 

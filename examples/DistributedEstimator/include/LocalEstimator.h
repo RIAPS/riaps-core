@@ -15,12 +15,19 @@ namespace distributedestimator {
 
         public:
 
-            LocalEstimator(_component_conf_j &config, riaps::Actor &actor);
+            LocalEstimator(_component_conf &config, riaps::Actor &actor);
 
             virtual void OnReady(const messages::SensorReady::Reader &message,
                                  riaps::ports::PortBase *port);
 
             virtual void OnOneShotTimer(const std::string& timerid);
+
+            virtual void OnGroupMessage(riaps::groups::GroupId& groupId,
+                                        capnp::FlatArrayMessageReader* capnpreader);
+
+            virtual bool SendGroupMessage(riaps::groups::GroupId&      groupId,
+                                          capnp::MallocMessageBuilder& messageBuilder,
+                                          const std::string&           portName);
 
 
             virtual ~LocalEstimator();
@@ -32,7 +39,7 @@ namespace distributedestimator {
     }
 }
 
-extern "C" riaps::ComponentBase* create_component(_component_conf_j&, riaps::Actor& actor);
+extern "C" riaps::ComponentBase* create_component(_component_conf&, riaps::Actor& actor);
 extern "C" void destroy_component(riaps::ComponentBase*);
 
 

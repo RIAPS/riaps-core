@@ -23,7 +23,7 @@ namespace riaps {
             void AddParam(const Parameter& param);
             void AddParam(std::string name, std::string value, bool isOptional, std::string defaultValue = "");
             const Parameter* SetParamValue(std::string name, std::string value);
-            const Parameter* GetParam(std::string name) const;
+            const Parameter* GetParam(const std::string& name) const;
 
             std::vector<std::string>      GetParameterNames();
 

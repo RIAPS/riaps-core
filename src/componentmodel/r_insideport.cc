@@ -2,13 +2,14 @@
 // Created by istvan on 5/17/17.
 //
 
-#include <componentmodel/r_insiderport.h>
+#include <componentmodel/r_insideport.h>
 
 namespace riaps{
     namespace ports{
 
-        InsidePort::InsidePort(const _component_port_ins_j &config, InsidePortMode mode, ComponentBase *parent_component)
-            : PortBase(PortTypes::Inside, (component_port_config*)&config)//,
+        InsidePort::InsidePort(const _component_port_ins &config, InsidePortMode mode, ComponentBase *parent_component)
+            : PortBase(PortTypes::Inside, (component_port_config*)&config),
+              SenderPort(this)//,
               //_capnpReader(nullptr)
         {
             _endpoint = "inproc://inside_" + config.portName;
@@ -24,8 +25,8 @@ namespace riaps{
             zsock_set_rcvtimeo(_port_socket, 500);
         }
 
-        const _component_port_ins_j* InsidePort::GetConfig() const {
-            return (_component_port_ins_j*)GetPortBaseConfig();
+        const _component_port_ins* InsidePort::GetConfig() const {
+            return (_component_port_ins*)GetPortBaseConfig();
         }
 
         std::string InsidePort::GetEndpoint() {
@@ -37,10 +38,10 @@ namespace riaps{
             return this;
         }
 
-        bool InsidePort::Send(zmsg_t **zmessage) const {
-            int rc = zmsg_send(zmessage, (void*)GetSocket());
-            return rc == 0;
-        }
+//        bool InsidePort::Send(zmsg_t **zmessage) const {
+//            int rc = zmsg_send(zmessage, (void*)GetSocket());
+//            return rc == 0;
+//        }
 
         bool InsidePort::Recv(zmsg_t** insideMessage) {
             *insideMessage = zmsg_recv((void*)GetSocket());

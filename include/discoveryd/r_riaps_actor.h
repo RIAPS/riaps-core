@@ -3,14 +3,12 @@
 
 
 #include "discoveryd/r_discovery_types.h"
-#include "discoveryd/r_riaps_cmd_handler.h"
 #include "discoveryd/r_odht.h"
 #include "componentmodel/r_discoverdapi.h"
 
 #include <czmq.h>
 
-// Key where the DHT stores zombie nodes
-const std::string zombieKey = "/zombies";
+
 
 
 void riaps_actor (zsock_t *pipe, void *args);
@@ -20,11 +18,11 @@ int deregisterActor(const std::string& appName,
                     const std::string& hostAddress,
                     std::map<std::string, std::unique_ptr<actor_details_t>>& clients);
 
-void maintainRenewal(std::map<pid_t, std::vector<std::unique_ptr<service_checkins_t>>>& serviceCheckins, dht::DhtRunner& dhtNode);
+//void maintainRenewal(std::map<pid_t, std::vector<std::unique_ptr<service_checkins_t>>>& serviceCheckins, dht::DhtRunner& dhtNode);
 
-bool handleZombieUpdate(const std::vector<std::shared_ptr<dht::Value>> &values);
 
-void maintainZombieList(std::map<std::string, int64_t>& zombieList);
+
+//void maintainZombieList(std::map<std::string, int64_t>& zombieList);
 
 
 

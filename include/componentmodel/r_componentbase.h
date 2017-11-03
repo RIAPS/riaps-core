@@ -10,17 +10,14 @@
 #ifndef RIAPS_R_COMPONENTBASE_H
 #define RIAPS_R_COMPONENTBASE_H
 
-#include "r_publisherport.h"
-#include "r_subscriberport.h"
 #include "r_discoverdapi.h"
 #include "r_configuration.h"
 #include "r_periodictimer.h"
-#include "r_responseport.h"
-#include "r_requestport.h"
 #include "r_actor.h"
 #include "r_messagebase.h"
-#include "r_insiderport.h"
 #include "r_oneshottimer.h"
+#include <groups/r_group.h>
+#include <messaging/disco.capnp.h>
 
 #include <msgpack.hpp>
 #include <capnp/message.h>
@@ -35,20 +32,22 @@
 #include <ctime>
 
 
+#include "r_publisherport.h"
+#include "r_subscriberport.h"
+#include "r_responseport.h"
+#include "r_requestport.h"
+#include "r_insideport.h"
 
 namespace riaps {
 
-
-
     class Actor;
 
-    namespace ports {
-        class PublisherPort;
-        class SubscriberPort;
-        class ResponsePort;
-        class RequestPort;
-        class Plug;
+    namespace groups{
+        class Group;
+        struct GroupId;
     }
+
+
 
     /**
      * @brief Declare the component thread fn.
@@ -64,7 +63,7 @@ namespace riaps {
 
         /// @param config Configuration, parsed from the model file.
         /// @param actor Parent actor, the owner the component.
-        ComponentBase(component_conf_j& config, Actor& actor);
+        ComponentBase(component_conf& config, Actor& actor);
 
         /// @return The owner actor.
         const Actor* GetActor() const;
@@ -89,19 +88,43 @@ namespace riaps {
          */
         bool SendMessageOnPort(capnp::MallocMessageBuilder& message, const std::string& portName);
 
+
+        bool SendGroupMessage(const riaps::groups::GroupId& groupId,
+                              capnp::MallocMessageBuilder& message,
+                              const std::string& portName);
+
+        bool SendGroupMessage(const riaps::groups::GroupId&& groupId,
+                              capnp::MallocMessageBuilder& message,
+                              const std::string& portName);
+
         /**
          * @brief Stops the component
          *
-         * Stops the component in the following order: 1) Stops the timers 2) Destroys the component thread
-         * 3) Deletes ports
+         * Stops the component in the following order:
+         *   1) Stops the timers
+         *   2) Destroys the component thread
+         *   3) Deletes ports
          */
         void StopComponent();
+
+        void UpdateGroup(riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
+
+
+
+
 
         /**
          *
          * @return The component configuration.
          */
-        const component_conf_j& GetConfig() const;
+        const component_conf& GetConfig() const;
+
+        /**
+         *
+         * @return The component unique ID.
+         */
+        std::string             GetCompUuid();
+
 
         /**
          * @brief Debug function. Prints the details of the given port to the standard output.
@@ -119,11 +142,6 @@ namespace riaps {
         virtual ~ComponentBase();
 
     protected:
-        const ports::PortBase* GetPort(std::string portName) const;
-
-        //
-        //virtual void RegisterHandler(const std::string& portName, riaps_handler);
-
         /**
          * Sends a ZMQ message on the given port.
          *
@@ -131,7 +149,20 @@ namespace riaps {
          * @param portName The port, which sends the message.
          * @return True if the message was sent successfully.
          */
-        bool SendMessageOnPort(zmsg_t** message, const std::string& portName);
+        //bool SendMessageOnPort(zmsg_t** message, const std::string& portName);
+
+        // Note: ?port? do we need for the port?
+        virtual void OnGroupMessage(const riaps::groups::GroupId& groupId,
+                                    capnp::FlatArrayMessageReader& capnpreader,
+                                    riaps::ports::PortBase* port) = 0;
+        
+
+        uint16_t GetGroupMemberCount(const riaps::groups::GroupId& groupId,
+                                     const int64_t timeout = 1000*60 /*1 minute in msec*/);
+//
+//        virtual bool SendGroupMessage(riaps::groups::GroupId&      groupId,
+//                                      capnp::MallocMessageBuilder& messageBuilder,
+//                                      const std::string&           portName) = 0;
 
         /**
          * Search publisher port with portName.
@@ -227,16 +258,31 @@ namespace riaps {
          */
         zactor_t*         _zactor_component;
 
+        /**
+         *
+         * @param groupType
+         * @param groupName
+         */
+        bool JoinToGroup(riaps::groups::GroupId&& groupId);
+        bool JoinToGroup(riaps::groups::GroupId&  groupId);
+
+
+
+
     private:
-        const ports::PublisherPort*  InitPublisherPort(const _component_port_pub_j&);
-        const ports::SubscriberPort* InitSubscriberPort(const _component_port_sub_j&);
-        const ports::ResponsePort*   InitResponsePort(const _component_port_rep_j&);
-        const ports::RequestPort*    InitRequestPort(const _component_port_req_j&);
-        const ports::PeriodicTimer*  InitTimerPort(const _component_port_tim_j&);
-        const ports::InsidePort*     InitInsiderPort(const _component_port_ins_j&);
+
+        const ports::PublisherPort*  InitPublisherPort  (const _component_port_pub&);
+        const ports::SubscriberPort* InitSubscriberPort (const _component_port_sub&);
+        const ports::ResponsePort*   InitResponsePort   (const _component_port_rep&);
+        const ports::RequestPort*    InitRequestPort    (const _component_port_req&);
+        const ports::PeriodicTimer*  InitTimerPort      (const _component_port_tim&);
+        const ports::InsidePort*     InitInsiderPort    (const _component_port_ins&);
+
+        const ports::PortBase* GetPort(std::string portName) const;
+
 
         std::string             GetTimerChannel();
-        std::string             GetCompUuid();
+
 
         // Note: disable for now, we need more tests.
         //std::string             GetOneShotTimerChannel();
@@ -245,10 +291,13 @@ namespace riaps {
         // Note: disable for now, we need more tests.
         //timers::OneShotTimer*   _oneShotTimer;
 
-        component_conf_j _configuration;
+        component_conf _configuration;
 
         // All the component ports
         std::map<std::string, std::unique_ptr<ports::PortBase>> _ports;
+
+        std::map<riaps::groups::GroupId,
+                 std::unique_ptr<riaps::groups::Group>> _groups;
     };
 }
 

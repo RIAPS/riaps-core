@@ -20,7 +20,7 @@ typedef struct _service_checkins_t service_checkins_t;
 
 struct _actor_details_t {
     _actor_details_t(){
-        socket=NULL;
+        socket=nullptr;
     }
 
     // PAIR socket for sending messages to the actor
@@ -33,10 +33,13 @@ struct _actor_details_t {
     // The actor's PID, so we can detect if the porcess died.
     int pid;
 
+    // Application name
+    std::string appName;
+
     ~_actor_details_t(){
-        if (socket!=NULL) {
+        if (socket!=nullptr) {
             zsock_destroy(&socket);
-            socket=NULL;
+            socket=nullptr;
         }
     }
 };

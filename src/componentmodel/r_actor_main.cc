@@ -39,6 +39,8 @@ int main(int argc, char* argv[]) {
 
         try {
             riaps::Actor* aptr = riaps::Actor::CreateActor(configJson, actorName, modelName, actualParams);
+
+            // Note: Something is wrong here, it calls the deregister... shit... todo: debug
             std::unique_ptr<riaps::Actor> actor = std::unique_ptr<riaps::Actor>(aptr);
             actor->Init();
             actor->start();

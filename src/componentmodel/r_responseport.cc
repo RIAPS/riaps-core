@@ -8,8 +8,9 @@
 namespace riaps{
     namespace ports{
 
-        ResponsePort::ResponsePort(const _component_port_rep_j &config, ComponentBase *parent_component) :
-            PortBase(PortTypes::Response, (component_port_config*)&config)
+        ResponsePort::ResponsePort(const _component_port_rep &config, ComponentBase *parent_component) :
+            PortBase(PortTypes::Response, (component_port_config*)&config),
+            SenderPort(this)
         {
             _port_socket = zsock_new(ZMQ_REP);
             _host = riaps::framework::Network::GetIPAddress();
@@ -40,16 +41,16 @@ namespace riaps{
             }
         }
 
-        const _component_port_rep_j* ResponsePort::GetConfig() const{
-            return (_component_port_rep_j*)GetPortBaseConfig();
+        const _component_port_rep* ResponsePort::GetConfig() const{
+            return (_component_port_rep*)GetPortBaseConfig();
         }
 
-        bool ResponsePort::Send(zmsg_t** msg) const {
-            //zmsg_pushstr(*msg, GetConfig()->rep_type.c_str());
-
-            int rc = zmsg_send(msg, _port_socket);
-            return rc == 0;
-        }
+//        bool ResponsePort::Send(zmsg_t** msg) const {
+//            //zmsg_pushstr(*msg, GetConfig()->rep_type.c_str());
+//
+//            int rc = zmsg_send(msg, _port_socket);
+//            return rc == 0;
+//        }
 
         ResponsePort* ResponsePort::AsResponsePort() {
             return this;

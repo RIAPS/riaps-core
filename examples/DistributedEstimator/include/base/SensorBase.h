@@ -16,11 +16,11 @@
 namespace distributedestimator {
     namespace components {
 
-        class comp_sensorbase : public riaps::ComponentBase {
+        class comp_sensorbase : protected riaps::ComponentBase {
 
         public:
 
-            comp_sensorbase(_component_conf_j &config, riaps::Actor &actor);
+            comp_sensorbase(_component_conf &config, riaps::Actor &actor);
 
             //virtual void RegisterHandlers();
 
