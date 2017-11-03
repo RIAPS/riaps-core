@@ -30,7 +30,7 @@ static std::map<riaps::discovery::Kind, std::string> kindMap =
 namespace riaps{
     class DiscoveryMessageHandler{
     public:
-        DiscoveryMessageHandler(dht::DhtRunner& dhtNode, zsock_t* pipe);
+        DiscoveryMessageHandler(dht::DhtRunner& dhtNode, zsock_t** pipe);
         bool Init();
         void Run();
         ~DiscoveryMessageHandler();

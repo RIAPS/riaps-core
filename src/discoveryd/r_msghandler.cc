@@ -7,9 +7,9 @@
 #include <framework/rfw_network_interfaces.h>
 
 namespace riaps{
-    DiscoveryMessageHandler::DiscoveryMessageHandler(dht::DhtRunner &dhtNode, zsock_t* pipe)
+    DiscoveryMessageHandler::DiscoveryMessageHandler(dht::DhtRunner &dhtNode, zsock_t** pipe)
         : _dhtNode(dhtNode),
-          _pipe(pipe),
+          _pipe(*pipe),
           _serviceCheckPeriod(20000), // 20 sec in in msec.
           _zombieCheckPeriod(600000), // 10 min in msec
           _zombieKey("/zombies"),
@@ -66,7 +66,7 @@ namespace riaps{
             }
 
             // Handling messages from the caller (e.g.: $TERM$)
-            if (which == pipe) {
+            if (which == _pipe) {
                 handlePipeMessage();
             }
             else if (which == _dhtUpdateSocket){
