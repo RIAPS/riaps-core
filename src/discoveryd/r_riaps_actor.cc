@@ -16,7 +16,7 @@ riaps_actor (zsock_t *pipe, void *args)
     std::string host_address = riaps::framework::Network::GetIPAddress();
 
 
-    
+
 //    std::cout //<< "Discovery service is starting, network interface: " << std::endl
 //              << " * " << host_address << std::endl
 //              << " * " << mac_address  << std::endl;
@@ -38,7 +38,7 @@ riaps_actor (zsock_t *pipe, void *args)
 
     std::srand(std::time(0));
 
-    riaps::DiscoveryMessageHandler msgHandler(dhtNode, &pipe);
+    riaps::DiscoveryMessageHandler msgHandler(dhtNode, &pipe, console);
     msgHandler.Init();
     msgHandler.Run();
 

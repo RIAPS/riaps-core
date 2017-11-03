@@ -11,6 +11,7 @@
 
 #include <opendht.h>
 #include <czmq.h>
+#include <spdlog/spdlog.h>
 
 #define REGULAR_MAINTAIN_PERIOD 3000 //msec
 #define CMD_JOIN "JOIN"
@@ -26,11 +27,12 @@ static std::map<riaps::discovery::Kind, std::string> kindMap =
          {riaps::discovery::Kind::REQ, "req"},
          {riaps::discovery::Kind::REP, "rep"}};
 
+namespace spd = spdlog;
 
 namespace riaps{
     class DiscoveryMessageHandler{
     public:
-        DiscoveryMessageHandler(dht::DhtRunner& dhtNode, zsock_t** pipe);
+        DiscoveryMessageHandler(dht::DhtRunner& dhtNode, zsock_t** pipe, std::shared_ptr<spdlog::logger> logger = nullptr);
         bool Init();
         void Run();
         ~DiscoveryMessageHandler();
@@ -91,6 +93,8 @@ namespace riaps{
         const std::string _zombieKey;// = "/zombies";
 
         dht::DhtRunner& _dhtNode;
+
+        std::shared_ptr<spdlog::logger> _logger;
 
         /**
          * ZMQ socket for DHT communication

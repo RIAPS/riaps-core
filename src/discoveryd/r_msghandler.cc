@@ -7,13 +7,14 @@
 #include <framework/rfw_network_interfaces.h>
 
 namespace riaps{
-    DiscoveryMessageHandler::DiscoveryMessageHandler(dht::DhtRunner &dhtNode, zsock_t** pipe)
+    DiscoveryMessageHandler::DiscoveryMessageHandler(dht::DhtRunner &dhtNode, zsock_t** pipe, std::shared_ptr<spdlog::logger> logger)
         : _dhtNode(dhtNode),
           _pipe(*pipe),
           _serviceCheckPeriod(20000), // 20 sec in in msec.
           _zombieCheckPeriod(600000), // 10 min in msec
           _zombieKey("/zombies"),
-          _terminated(false){
+          _terminated(false),
+          _logger(logger) {
 
         _macAddress  = riaps::framework::Network::GetMacAddressStripped();
         _hostAddress = riaps::framework::Network::GetIPAddress();
@@ -29,12 +30,11 @@ namespace riaps{
         zmq_setsockopt(_riapsSocket, ZMQ_LINGER, &lingerValue, sizeof(int));
         zmq_setsockopt(_riapsSocket, ZMQ_SNDTIMEO, &sendtimeout, sizeof(int));
 
-        _poller = zpoller_new(_pipe, _riapsSocket, _dhtUpdateSocket, NULL);
+        _poller = zpoller_new(_pipe, _riapsSocket, _dhtUpdateSocket, nullptr);
 
         zsock_signal (_pipe, 0);
 
-        _lastServiceCheckin = zclock_mono();
-        _lastZombieCheck  = zclock_mono();
+        _lastServiceCheckin = _lastZombieCheck = zclock_mono();
 
         // Get current zombies, and listen to new zombies
         _dhtNode.get(_zombieKey, [this](const std::vector<std::shared_ptr<dht::Value>> &values){
@@ -107,7 +107,9 @@ namespace riaps{
                     zmsg_destroy(&msgResponse);
                 }
                 catch(kj::Exception& e){
-                    std::cout << "Couldn't deserialize message from DHT_ROUTER_SOCKET" << std::endl;
+                    //std::cout << "Couldn't deserialize message from DHT_ROUTER_SOCKET" << std::endl;
+                    _logger->error("Couldn't deserialize message from DHT_ROUTER_SOCKET");
+
                     continue;
 
                 }
@@ -140,7 +142,8 @@ namespace riaps{
     void DiscoveryMessageHandler::handleRiapsMessage() {
         zmsg_t *riapsMessage = zmsg_recv(_riapsSocket);
         if (!riapsMessage) {
-            std::cout << "No msg => interrupted" << std::endl;
+            _logger->critical("Empty message arrived => interrupted");
+            //std::cout << "No msg => interrupted" << std::endl;
             _terminated = true;
         } else {
             zframe_t *capnp_msgbody = zmsg_pop(riapsMessage);
@@ -182,7 +185,9 @@ namespace riaps{
 
         std::string clientKeyBase = "/" + appName + '/' + actorname + "/";
 
-        std::cout << "Register actor with PID - " << msgActorReq.getPid() << " : " << clientKeyBase << std::endl;
+        //std::cout << "Register actor with PID - " << msgActorReq.getPid() << " : " << clientKeyBase << std::endl;
+
+        _logger->info("Register actor with PID - {} : {}", msgActorReq.getPid(), clientKeyBase);
 
         auto registeredActorIt = _clients.find(clientKeyBase);
         bool isRegistered =  registeredActorIt!= _clients.end();
@@ -193,8 +198,9 @@ namespace riaps{
 
         // If the actor already registered and running
         if (isRunning) {
-            std::cout << "Cannot register actor. This actor already registered (" << clientKeyBase << ")"
-                      << std::endl;
+            _logger->error("Cannot register actor. This actor already registered ({})", clientKeyBase);
+//            std::cout << "Cannot register actor. This actor already registered (" << clientKeyBase << ")"
+//                      << std::endl;
 
             capnp::MallocMessageBuilder message;
             auto drepmsg = message.initRoot<riaps::discovery::DiscoRep>();
@@ -262,7 +268,7 @@ namespace riaps{
                                 auto bytes = serializedMessage.asBytes();
                                 zmsg_pushmem(msg, bytes.begin(), bytes.size());
                                 zmsg_send(&msg, dhtNotificationSocket);
-                                std::cout << "[DHT] Group notifications sent to discovery service" << std::endl;
+                                //std::cout << "[DHT] Group notifications sent to discovery service" << std::endl;
                             }
 
                             sleep(1);
@@ -354,7 +360,8 @@ namespace riaps{
                                                msgSock.getHost(),
                                                msgSock.getPort());
 
-        std::cout << "Register service: " + std::get<0>(kv_pair) << std::endl;
+        //std::cout << "Register service: " + std::get<0>(kv_pair) << std::endl;
+        _logger->info("Register service: {}", std::get<0>(kv_pair));
 
         // New pid
         if (_serviceCheckins.find(servicePid) == _serviceCheckins.end()) {
@@ -434,7 +441,8 @@ namespace riaps{
 
         dht::InfoHash lookupkeyhash = dht::InfoHash::get(lookupkey.first);
 
-        std::cout << "Get: " + lookupkey.first << std::endl;
+        //std::cout << "Get: " + lookupkey.first << std::endl;
+        _logger->info("Get: {}", lookupkey.first);
 
         //auto zombieServicesCopy = _zombieServices;
         _dhtNode.get(lookupkey.first,
@@ -499,13 +507,14 @@ namespace riaps{
                             auto bytes = serializedMessage.asBytes();
                             zmsg_pushmem(msg, bytes.begin(), bytes.size());
                             zmsg_send(&msg, notify_ractor_socket);
-                            std::cout << "Get results sent to discovery service" << std::endl;
+                            //std::cout << "Get results sent to discovery service" << std::endl;
+
 
                             sleep(1);
                             zsock_destroy(&notify_ractor_socket);
                             sleep(1);
                         } else {
-                            std::cout << "Get has no results for query: " << lookupkey.first << std::endl;
+                            //std::cout << "Get has no results for query: " << lookupkey.first << std::endl;
                         }
 
                         return true;
@@ -607,10 +616,10 @@ namespace riaps{
                                                                                    zmsg_send(&msg,
                                                                                              notify_ractor_socket);
 
-                                                                                   std::cout
-                                                                                           << "Changes sent to discovery service: "
-                                                                                           << lookupkey.first
-                                                                                           << std::endl;
+//                                                                                   std::cout
+//                                                                                           << "Changes sent to discovery service: "
+//                                                                                           << lookupkey.first
+//                                                                                           << std::endl;
 
                                                                                    sleep(1);
                                                                                    zsock_destroy(
@@ -691,7 +700,7 @@ namespace riaps{
                 auto bytes = serializedMessage.asBytes();
                 zmsg_pushmem(msg, bytes.begin(), bytes.size());
                 zmsg_send(&msg, dhtNotificationSocket);
-                std::cout << "[DHT] Group notifications sent to discovery service" << std::endl;
+                //std::cout << "[DHT] Group notifications sent to discovery service" << std::endl;
             }
 
             sleep(1);
@@ -740,16 +749,19 @@ namespace riaps{
             char *command = zmsg_popstr(msg);
 
             if (streq(command, "$TERM")) {
-                std::cout << std::endl << "$TERMINATE arrived, discovery service is stopping..." << std::endl;
+                //std::cout << std::endl << "$TERMINATE arrived, discovery service is stopping..." << std::endl;
+                _logger->info("$TERMINATE arrived, discovery service is stopping.");
                 _terminated = true;
             } else if (streq(command, CMD_JOIN)) {
-                std::cout << "New peer on the network. Join()" << std::endl;
+                //std::cout << "New peer on the network. Join()" << std::endl;
+
                 bool has_more_msg = true;
 
                 while (has_more_msg) {
                     char *newhost = zmsg_popstr(msg);
                     if (newhost) {
-                        std::cout << "Join to: " << newhost << std::endl;
+                        //std::cout << "Join to: " << newhost << std::endl;
+                        _logger->info("Join to: {}", newhost);
                         std::string str_newhost(newhost);
                         //dhtJoinToCluster(str_newhost, RIAPS_DHT_NODE_PORT, dhtNode);
                         _dhtNode.bootstrap(str_newhost, std::to_string(RIAPS_DHT_NODE_PORT));
@@ -785,7 +797,8 @@ namespace riaps{
             for (int i=0; i<dhtResults.size(); i++){
                 char* cres = (char*)dhtResults[i].c_str();
                 msgZombieList.set(i, capnp::Text::Builder(cres));
-                std::cout << "Service is considered as zombie: " << dhtResults[i].c_str() << std::endl;
+                //std::cout << "Service is considered as zombie: " << dhtResults[i].c_str() << std::endl;
+                _logger->info("Service is considered as zombie: {}", dhtResults[i].c_str());
             }
 
             auto serializedMessage = capnp::messageToFlatArray(message);
@@ -863,10 +876,12 @@ namespace riaps{
             // Client might gone while the DHT was looking for the values
             if (clients.find(clientKeyBase) != clients.end()) {
                 zmsg_send(&msg, clients.at(clientKeyBase)->socket);
-                std::cout << "Get results were sent to the client: " << clientKeyBase << std::endl;
+                //std::cout << "Get results were sent to the client: " << clientKeyBase << std::endl;
+                _logger->info("Get results were sent to the client: {}", clientKeyBase);
             } else {
                 zmsg_destroy(&msg);
-                std::cout << "Get returned with values, but client has gone. " << std::endl;
+                _logger->warn("Get returned with values, but client has gone.");
+                //std::cout << "Get returned with values, but client has gone. " << std::endl;
             }
 
 
@@ -920,7 +935,9 @@ namespace riaps{
                                                 "/" + subscribedClient->actor_name +
                                                 "/";
 
-                    std::cout << "Search for registered actor: " + clientKeyBase << std::endl;
+                    //std::cout << "Search for registered actor: " + clientKeyBase << std::endl;
+
+                    _logger->info("Search for registered actor: {}", clientKeyBase);
 
                     // Python reference:
                     // TODO: Figure out, de we really need for this. I don't think so...
@@ -957,7 +974,8 @@ namespace riaps{
 
                             zmsg_send(&msg, clientSocket->socket);
 
-                            std::cout << "Port update sent to the client: " << clientKeyBase << std::endl;
+                            //std::cout << "Port update sent to the client: " << clientKeyBase << std::endl;
+                            _logger->info("Port update sent to the client: {}", clientKeyBase);
                         }
                     }
                 }
@@ -1012,7 +1030,8 @@ namespace riaps{
 
         // Remove killed PIDs
         for (auto it = toBeRemoved.begin(); it!=toBeRemoved.end(); it++){
-            std::cout << "Remove services with PID: " << *it << std::endl;
+            //std::cout << "Remove services with PID: " << *it << std::endl;
+            _logger->info("Remove services with PID: {}", *it);
 
             // Put the service address into the zombies list in DHT
             for (auto serviceIt  = _serviceCheckins[*it].begin();
@@ -1053,7 +1072,8 @@ namespace riaps{
         for (auto it = _zombieServices.begin(); it!=_zombieServices.end(); it++){
             // 10 min timeout
             if ((currentTime - it->second) > 60*10*1000) {
-                std::cout << "Purge zombie from cache: " << it->first << std::endl;
+                //std::cout << "Purge zombie from cache: " << it->first << std::endl;
+                _logger->info("Purge zombie from cache: {}", it->first);
                 it = _zombieServices.erase(it);
             }
         }
@@ -1068,7 +1088,9 @@ namespace riaps{
 
         std::vector<std::string> keysToBeErased{clientKeyBase, clientKeyLocal, clientKeyGlobal};
 
-        std::cout << "Unregister actor: " << clientKeyBase << std::endl;
+        //std::cout << "Unregister actor: " << clientKeyBase << std::endl;
+
+        _logger->info("Unregister actor: ", clientKeyBase);
 
         int port = -1;
         if (_clients.find(clientKeyBase)!=_clients.end()){
@@ -1081,7 +1103,8 @@ namespace riaps{
                 // erased elements
                 int erased = _clients.erase(*it);
                 if (erased == 0) {
-                    std::cout << "Couldn't find actor to unregister: " << *it << std::endl;
+                    //std::cout << "Couldn't find actor to unregister: " << *it << std::endl;
+                    _logger->error("Couldn't find actor to unregister: {}", *it);
                 }
             }
         }
@@ -1163,7 +1186,7 @@ namespace riaps{
             key += hostid;
         }
 
-        std::string client = '/' + appName
+        std::string client =   '/' + appName
                              + '/' + clientActorName
                              + '/' + clientActorHost
                              + '/' + clientInstanceName
