@@ -7,8 +7,8 @@
 
 #include <componentmodel/r_actor.h>
 #include <componentmodel/r_configuration.h>
-#include <componentmodel/r_pubportgroup.h>
-#include <componentmodel/r_subportgroup.h>
+#include <componentmodel/ports/r_pubportgroup.h>
+#include <componentmodel/ports/r_subportgroup.h>
 #include <messaging/disco.capnp.h>
 #include <messaging/distcoord.capnp.h>
 

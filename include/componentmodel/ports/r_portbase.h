@@ -30,6 +30,8 @@ namespace ports {
     class InsidePort;
     class GroupPublisherPort;
     class GroupSubscriberPort;
+    class AsyncRequestPort;
+    class AsyncResponsePort;
 
     enum PortTypes {Publisher, Subscriber, Request, Response, Timer, Inside};
 
@@ -64,10 +66,12 @@ namespace ports {
 
         // Return NULL if the called conversion is unavailable or invalid
         virtual RequestPort*         AsRequestPort()        ;
+        virtual AsyncRequestPort*    AsAsyncRequestPort()   ;
         virtual PublisherPort*       AsPublishPort()        ;
         virtual GroupPublisherPort*  AsGroupPublishPort()   ;
         virtual GroupSubscriberPort* AsGroupSubscriberPort();
         virtual ResponsePort*        AsResponsePort()       ;
+        virtual AsyncResponsePort*   AsAsyncResponsePort()  ;
         virtual SubscriberPort*      AsSubscribePort()      ;
         virtual PeriodicTimer*       AsTimerPort()          ;
         virtual InsidePort*          AsInsidePort()         ;

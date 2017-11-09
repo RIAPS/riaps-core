@@ -93,6 +93,14 @@ namespace riaps {
             return nullptr;
         }
 
+        AsyncRequestPort* PortBase::AsAsyncRequestPort() {
+            return nullptr;
+        }
+
+        AsyncResponsePort* PortBase::AsAsyncResponsePort() {
+            return nullptr;
+        }
+
         PortBase::~PortBase() {
             if (_port_socket) {
                 // std::cout << "Destroy port socket : " << GetPortName() << std::endl;
