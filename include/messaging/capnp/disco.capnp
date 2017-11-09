@@ -8,7 +8,7 @@ $Cxx.namespace("riaps::discovery");
 # RIAPS disco messages
 
 enum Status { ok @0; err @1; }
-enum Kind { none @0; pub @1; sub @2; clt @3; srv @4; req @5; rep @6; }
+enum Kind { none @0; pub @1; sub @2; clt @3; srv @4; req @5; rep @6; areq @7; arep @8; }
 enum Scope { none @0; global @1; local @2; }
 
 struct ActorRegReq {
