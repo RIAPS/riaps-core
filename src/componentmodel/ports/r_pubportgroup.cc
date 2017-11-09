@@ -1,4 +1,4 @@
-#include <componentmodel/r_pubportgroup.h>
+#include <componentmodel/ports/r_pubportgroup.h>
 
 namespace riaps{
     namespace ports{

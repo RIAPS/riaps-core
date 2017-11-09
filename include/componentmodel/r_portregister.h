@@ -5,7 +5,7 @@
 #ifndef RIAPS_CORE_R_PORTREGISTER_H
 #define RIAPS_CORE_R_PORTREGISTER_H
 
-#include "r_publisherport.h"
+#include <componentmodel/ports/r_publisherport.h>
 
 namespace riaps{
 

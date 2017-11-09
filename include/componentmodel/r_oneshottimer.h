@@ -5,7 +5,7 @@
 #ifndef RIAPS_CORE_R_ONESHOTTIMER_H
 #define RIAPS_CORE_R_ONESHOTTIMER_H
 
-#include "r_portbase.h"
+#include <componentmodel/ports/r_portbase.h>
 
 #include <string>
 #include <thread>

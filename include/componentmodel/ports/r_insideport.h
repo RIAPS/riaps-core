@@ -5,8 +5,8 @@
 #ifndef RIAPS_CORE_R_INSIDER_H
 #define RIAPS_CORE_R_INSIDER_H
 
-#include <componentmodel/r_portbase.h>
-#include <componentmodel/r_senderport.h>
+#include <componentmodel/ports/r_portbase.h>
+#include <componentmodel/ports/r_senderport.h>
 //#include <messaging/insideport.capnp.h>
 #include <capnp/serialize.h>
 #include <capnp/message.h>

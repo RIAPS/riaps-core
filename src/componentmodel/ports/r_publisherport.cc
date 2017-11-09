@@ -2,7 +2,7 @@
 // Created by parallels on 9/6/16.
 //
 
-#include <componentmodel/r_publisherport.h>
+#include <componentmodel/ports/r_publisherport.h>
 #include <framework/rfw_network_interfaces.h>
 #include <componentmodel/r_discoverdapi.h>
 

@@ -2,8 +2,8 @@
 // Created by istvan on 10/18/17.
 //
 
-#include <componentmodel/r_senderport.h>
-#include <componentmodel/r_requestport.h>
+#include <componentmodel/ports/r_senderport.h>
+#include <componentmodel/ports/r_requestport.h>
 #include <utils/r_utils.h>
 #include <czmq.h>
 

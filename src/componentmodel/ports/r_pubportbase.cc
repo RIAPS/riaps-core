@@ -2,7 +2,7 @@
 // Created by istvan on 10/4/17.
 //
 
-#include <componentmodel/r_pubportbase.h>
+#include <componentmodel/ports/r_pubportbase.h>
 #include <framework/rfw_network_interfaces.h>
 
 namespace riaps{

@@ -5,7 +5,7 @@
 #ifndef RIAPS_CORE_R_SUBPORTBASE_H
 #define RIAPS_CORE_R_SUBPORTBASE_H
 
-#include <componentmodel/r_portbase.h>
+#include <componentmodel/ports/r_portbase.h>
 
 #include <string>
 

@@ -69,22 +69,22 @@ list (APPEND component_SOURCE
         src/componentmodel/r_devicethread.cc
         src/componentmodel/r_devmapi.cc
         src/componentmodel/r_discoverdapi.cc
-        src/componentmodel/r_insideport.cc
+        src/componentmodel/ports/r_insideport.cc
         src/componentmodel/r_messagebase.cc
         src/componentmodel/r_parameter.cc
         src/componentmodel/r_periodictimer.cc
         src/componentmodel/r_peripheral.cc
-        src/componentmodel/r_portbase.cc
+        src/componentmodel/ports/r_portbase.cc
         src/componentmodel/r_portregister.cc
-        src/componentmodel/r_publisherport.cc
-        src/componentmodel/r_pubportbase.cc
-        src/componentmodel/r_pubportgroup.cc
-        src/componentmodel/r_requestport.cc
-        src/componentmodel/r_responseport.cc
-        src/componentmodel/r_senderport.cc
-        src/componentmodel/r_subportbase.cc
-        src/componentmodel/r_subportgroup.cc
-        src/componentmodel/r_subscriberport.cc
+        src/componentmodel/ports/r_publisherport.cc
+        src/componentmodel/ports/r_pubportbase.cc
+        src/componentmodel/ports/r_pubportgroup.cc
+        src/componentmodel/ports/r_requestport.cc
+        src/componentmodel/ports/r_responseport.cc
+        src/componentmodel/ports/r_senderport.cc
+        src/componentmodel/ports/r_subportbase.cc
+        src/componentmodel/ports/r_subportgroup.cc
+        src/componentmodel/ports/r_subscriberport.cc
         src/framework/rfw_configuration.cc
         src/framework/rfw_network_interfaces.cc
         src/groups/r_group.cc
@@ -103,21 +103,21 @@ list (APPEND component_HEADERS
         include/componentmodel/r_devicethread.h
         include/componentmodel/r_discoverdapi.h
         include/componentmodel/r_discoverdapi.h
-        include/componentmodel/r_insideport.h
+        include/componentmodel/ports/r_insideport.h
         include/componentmodel/r_messagebase.h
         include/componentmodel/r_parameter.h
         include/componentmodel/r_periodictimer.h
-        include/componentmodel/r_portbase.h
+        include/componentmodel/ports/r_portbase.h
         include/componentmodel/r_portregister.h
-        include/componentmodel/r_publisherport.h
-        include/componentmodel/r_pubportbase.h
-        include/componentmodel/r_pubportgroup.h
-        include/componentmodel/r_requestport.h
-        include/componentmodel/r_responseport.h
-        include/componentmodel/r_senderport.h
-        include/componentmodel/r_subportbase.h
-        include/componentmodel/r_subportgroup.h
-        include/componentmodel/r_subscriberport.h
+        include/componentmodel/ports/r_publisherport.h
+        include/componentmodel/ports/r_pubportbase.h
+        include/componentmodel/ports/r_pubportgroup.h
+        include/componentmodel/ports/r_requestport.h
+        include/componentmodel/ports/r_responseport.h
+        include/componentmodel/ports/r_senderport.h
+        include/componentmodel/ports/r_subportbase.h
+        include/componentmodel/ports/r_subportgroup.h
+        include/componentmodel/ports/r_subscriberport.h
         include/const/r_const.h
         include/groups/r_group.h
         include/messaging/disco.capnp.h

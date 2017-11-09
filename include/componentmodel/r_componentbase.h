@@ -32,11 +32,11 @@
 #include <ctime>
 
 
-#include "r_publisherport.h"
-#include "r_subscriberport.h"
-#include "r_responseport.h"
-#include "r_requestport.h"
-#include "r_insideport.h"
+#include <componentmodel/ports/r_publisherport.h>
+#include <componentmodel/ports/r_subscriberport.h>
+#include <componentmodel/ports/r_responseport.h>
+#include <componentmodel/ports/r_requestport.h>
+#include <componentmodel/ports/r_insideport.h>
 
 namespace riaps {
 

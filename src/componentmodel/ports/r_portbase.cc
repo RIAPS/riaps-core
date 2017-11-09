@@ -3,7 +3,7 @@
 //
 
 #include <componentmodel/r_configuration.h>
-#include <componentmodel/r_portbase.h>
+#include <componentmodel/ports/r_portbase.h>
 
 #include <capnp/message.h>
 

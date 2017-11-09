@@ -3,7 +3,7 @@
 //
 
 #include <framework/rfw_network_interfaces.h>
-#include <componentmodel/r_responseport.h>
+#include <componentmodel/ports/r_responseport.h>
 
 namespace riaps{
     namespace ports{

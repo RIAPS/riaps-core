@@ -5,7 +5,7 @@
 #ifndef RIAPS_CORE_R_SENDERPORT_H
 #define RIAPS_CORE_R_SENDERPORT_H
 
-#include <componentmodel/r_portbase.h>
+#include <componentmodel/ports/r_portbase.h>
 
 #include <capnp/message.h>
 #include <capnp/serialize.h>

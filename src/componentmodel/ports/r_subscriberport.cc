@@ -2,7 +2,7 @@
 // Created by parallels on 9/6/16.
 //
 
-#include <componentmodel/r_subscriberport.h>
+#include <componentmodel/ports/r_subscriberport.h>
 
 namespace riaps{
 

@@ -2,7 +2,7 @@
 // Created by istvan on 5/17/17.
 //
 
-#include <componentmodel/r_insideport.h>
+#include <componentmodel/ports/r_insideport.h>
 
 namespace riaps{
     namespace ports{

@@ -8,7 +8,7 @@
 
 #include <groups/r_group.h>
 #include <componentmodel/r_configuration.h>
-#include <componentmodel/r_pubportbase.h>
+#include <componentmodel/ports/r_pubportbase.h>
 
 namespace riaps{
 

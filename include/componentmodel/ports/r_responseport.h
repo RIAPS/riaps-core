@@ -5,9 +5,9 @@
 #ifndef RIAPS_FW_R_RESPONSEPORT_H
 #define RIAPS_FW_R_RESPONSEPORT_H
 
-#include "r_portbase.h"
-#include "r_componentbase.h"
-#include "r_configuration.h"
+#include <componentmodel/ports/r_portbase.h>
+#include <componentmodel/r_componentbase.h>
+#include <componentmodel/r_configuration.h>
 
 #include "czmq.h"
 

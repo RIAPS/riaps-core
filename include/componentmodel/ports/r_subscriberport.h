@@ -8,7 +8,7 @@
 #include <memory>
 #include <componentmodel/r_componentbase.h>
 #include <componentmodel/r_configuration.h>
-#include <componentmodel/r_subportbase.h>
+#include <componentmodel/ports/r_subportbase.h>
 
 namespace riaps {
 

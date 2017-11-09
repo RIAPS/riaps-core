@@ -8,7 +8,7 @@
 #include <componentmodel/r_componentbase.h>
 #include <componentmodel/r_configuration.h>
 #include <componentmodel/r_messagebase.h>
-#include <componentmodel/r_senderport.h>
+#include <componentmodel/ports/r_senderport.h>
 
 #include <czmq.h>
 

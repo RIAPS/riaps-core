@@ -2,7 +2,7 @@
 // Created by istvan on 9/30/16.
 //
 
-#include <componentmodel/r_requestport.h>
+#include <componentmodel/ports/r_requestport.h>
 
 
 namespace riaps {

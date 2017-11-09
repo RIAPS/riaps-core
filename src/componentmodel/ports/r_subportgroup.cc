@@ -2,7 +2,7 @@
 // Created by istvan on 10/17/17.
 //
 
-#include <componentmodel/r_subportgroup.h>
+#include <componentmodel/ports/r_subportgroup.h>
 
 namespace riaps{
     namespace ports{

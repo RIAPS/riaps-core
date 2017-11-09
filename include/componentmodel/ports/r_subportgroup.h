@@ -5,7 +5,7 @@
 #ifndef RIAPS_CORE_R_SUBPORTGROUP_H
 #define RIAPS_CORE_R_SUBPORTGROUP_H
 
-#include <componentmodel/r_subportbase.h>
+#include <componentmodel/ports/r_subportbase.h>
 
 namespace riaps{
     namespace ports{

@@ -6,7 +6,7 @@
 #define RIAPS_CORE_R_DEVICETHREAD_H
 
 #include <componentmodel/r_configuration.h>
-#include <componentmodel/r_insideport.h>
+#include <componentmodel/ports/r_insideport.h>
 #include <utils/r_utils.h>
 
 #include <czmq.h>
