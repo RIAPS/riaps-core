@@ -22,6 +22,7 @@
 #include <msgpack.hpp>
 #include <capnp/message.h>
 #include <capnp/serialize.h>
+#include <spdlog/spdlog.h>
 
 #include <iostream>
 #include <fstream>
@@ -37,6 +38,10 @@
 #include <componentmodel/ports/r_responseport.h>
 #include <componentmodel/ports/r_requestport.h>
 #include <componentmodel/ports/r_insideport.h>
+
+
+namespace spd = spdlog;
+
 
 namespace riaps {
 
@@ -292,6 +297,7 @@ namespace riaps {
         //timers::OneShotTimer*   _oneShotTimer;
 
         component_conf _configuration;
+        spd::stdout_color_mt&& _logger;
 
         // All the component ports
         std::map<std::string, std::unique_ptr<ports::PortBase>> _ports;

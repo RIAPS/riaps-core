@@ -8,6 +8,8 @@
 // TODO: Move this somewhere else
 #define ASYNC_CHANNEL "ipc://asyncresponsepublisher"
 
+
+
 namespace riaps{
 
     void component_actor(zsock_t* pipe, void* args){
@@ -309,6 +311,10 @@ namespace riaps{
 
         //uuid to the component instance
         _component_uuid = zuuid_new();
+
+        size_t q_size = 2048; //queue size must be power of 2
+        spd::set_async_mode(q_size);
+        _logger = std::move(spd::stdout_color_mt(_configuration.componentName));
 
         _zactor_component = zactor_new(component_actor, this);
     }
