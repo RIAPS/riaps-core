@@ -274,7 +274,7 @@ registerActor(const std::string& appname, const std::string& actorname){
     /////
     /// Clean up
     /////
-    zsock_disconnect(client, ipcAddress.c_str());
+    zsock_disconnect(client, "%s", ipcAddress.c_str());
     zframe_destroy(&capnp_msgbody);
     zmsg_destroy(&msg_response);
     zsock_destroy(&client);

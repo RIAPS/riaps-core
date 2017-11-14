@@ -50,7 +50,7 @@ namespace riaps {
         }
 
         bool RequestPort::ConnectToResponse(const std::string &rep_endpoint) {
-            int rc = zsock_connect(_port_socket, rep_endpoint.c_str());
+            int rc = zsock_connect(_port_socket, "%s", rep_endpoint.c_str());
 
             if (rc != 0) {
                 std::cout << "Request '" + GetConfig()->portName + "' couldn't connect to " + rep_endpoint

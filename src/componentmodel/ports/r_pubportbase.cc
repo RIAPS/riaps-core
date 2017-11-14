@@ -32,7 +32,7 @@ namespace riaps{
             }
 
             std::string pub_endpoint = "tcp://" + _host + ":!";
-            _port = zsock_bind(_port_socket, pub_endpoint.c_str());
+            _port = zsock_bind(_port_socket, "%s", pub_endpoint.c_str());
 
 
             if (_port == -1) {

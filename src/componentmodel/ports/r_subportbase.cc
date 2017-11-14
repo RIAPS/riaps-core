@@ -20,7 +20,7 @@ namespace riaps {
         /// \param pub_endpoint The endpoint, INCLUDING the transport layer. e.g.: tcp://192.168.1.1:4245
         /// \return True if the connection successful. False otherwise.
         bool SubscriberPortBase::ConnectToPublihser(const std::string &pubEndpoint) {
-            int rc = zsock_connect(_port_socket, pubEndpoint.c_str());
+            int rc = zsock_connect(_port_socket, "%s", pubEndpoint.c_str());
 
             if (rc != 0) {
                 std::cout << "Subscriber '" + GetPortBaseConfig()->portName + "' couldn't connect to " + pubEndpoint

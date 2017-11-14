@@ -18,7 +18,7 @@ namespace riaps{
                 _port_socket = zsock_new_pair(_endpoint.c_str());
             } else {
                 _port_socket = zsock_new(ZMQ_PAIR);
-                zsock_bind(_port_socket, _endpoint.c_str());
+                zsock_bind(_port_socket, "%s", _endpoint.c_str());
             }
 
 
