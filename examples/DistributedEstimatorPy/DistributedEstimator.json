@@ -26,7 +26,7 @@
                             "value":true
                         }
                     ],
-                    "type":"GlobalEstimator"
+                    "type":"GlobalEstimatorPy"
                 }
             },
             "internals":[],
@@ -55,9 +55,9 @@
                             "value":false
                         }
                     ],
-                    "type":"LocalEstimator"
+                    "type":"LocalEstimatorPy"
                 },
-                "sensor":{
+                "sensorpy":{
                     "actuals":[],
                     "type":"Sensor"
                 }
@@ -68,7 +68,7 @@
         }
     },
     "components":{
-        "GlobalEstimator":{
+        "GlobalEstimatorPy":{
             "formals":[
                 {
                     "default":123,
@@ -87,7 +87,7 @@
                     "name":"bArg"
                 }
             ],
-            "name":"GlobalEstimator",
+            "name":"GlobalEstimatorPy",
             "ports":{
                 "clts":{},
                 "inss":{},
@@ -107,7 +107,7 @@
                 }
             }
         },
-        "LocalEstimator":{
+        "LocalEstimatorPy":{
             "formals":[
                 {
                     "name":"iArg"
@@ -122,7 +122,7 @@
                     "name":"bArg"
                 }
             ],
-            "name":"LocalEstimator",
+            "name":"LocalEstimatorPy",
             "ports":{
                 "clts":{},
                 "inss":{},
@@ -147,9 +147,9 @@
                 "tims":{}
             }
         },
-        "Sensor":{
+        "SensorPy":{
             "formals":[],
-            "name":"Sensor",
+            "name":"SensorPy",
             "ports":{
                 "clts":{},
                 "inss":{},

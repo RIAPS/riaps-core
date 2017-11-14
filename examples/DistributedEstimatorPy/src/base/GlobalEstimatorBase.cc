@@ -4,6 +4,8 @@
 
 #include <base/GlobalEstimatorBase.h>
 
+
+
 namespace distributedestimator {
     namespace components {
 
@@ -22,6 +24,7 @@ namespace distributedestimator {
                 OnEstimate(estimate, port);
             }
         }
+
 
         void GlobalEstimatorBase::DispatchInsideMessage(zmsg_t *zmsg, riaps::ports::PortBase *port) {
 

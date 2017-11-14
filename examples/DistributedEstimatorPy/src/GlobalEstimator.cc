@@ -4,6 +4,10 @@
 
 
 #include <GlobalEstimator.h>
+#include <pybind11/embed.h>
+
+namespace py = pybind11;
+
 
 namespace distributedestimator {
     namespace components {
@@ -18,6 +22,13 @@ namespace distributedestimator {
                                          riaps::ports::PortBase *port) {
             //PrintMessageOnPort(port);
 
+            py::scoped_interpreter _guard;
+            py::exec(R"(
+                kwargs = dict(name="World", number=42)
+                message = "Hello, {name}! The answer is {number}".format(**kwargs)
+                print(message)
+            )");
+
             std::cout << "GlobalEstimator::OnEstimate(): " << message.getMsg().cStr() << std::endl;
 
             //std::cout << " " << message.getValues()[0] << " " << message.getValues()[1] << std::endl;
@@ -29,6 +40,11 @@ namespace distributedestimator {
         }
 
         void GlobalEstimator::OnOneShotTimer(const std::string& timerid){
+
+        }
+
+        void GlobalEstimator::OnGroupMessage(const riaps::groups::GroupId &, capnp::FlatArrayMessageReader &,
+                                             riaps::ports::PortBase *) {
 
         }
 

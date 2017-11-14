@@ -2,8 +2,8 @@
 // Created by istvan on 11/11/16.
 //
 
-#ifndef RIAPS_FW_LOCALESTIMATOR_H
-#define RIAPS_FW_LOCALESTIMATOR_H
+#ifndef RIAPS_FW_LOCALESTIMATORPY_H
+#define RIAPS_FW_LOCALESTIMATORPY_H
 
 
 #include "base/LocalEstimatorBase.h"
@@ -22,8 +22,9 @@ namespace distributedestimator {
 
             virtual void OnOneShotTimer(const std::string& timerid);
 
-            virtual void OnGroupMessage(riaps::groups::GroupId& groupId,
-                                        capnp::FlatArrayMessageReader* capnpreader);
+            virtual void OnGroupMessage(const riaps::groups::GroupId&,
+                                        capnp::FlatArrayMessageReader&,
+                                        riaps::ports::PortBase*);
 
             virtual bool SendGroupMessage(riaps::groups::GroupId&      groupId,
                                           capnp::MallocMessageBuilder& messageBuilder,
@@ -43,4 +44,4 @@ extern "C" riaps::ComponentBase* create_component(_component_conf&, riaps::Actor
 extern "C" void destroy_component(riaps::ComponentBase*);
 
 
-#endif //RIAPS_FW_LOCALESTIMATOR_H
+#endif //RIAPS_FW_LOCALESTIMATORPY_H

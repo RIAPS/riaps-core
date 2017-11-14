@@ -10,12 +10,12 @@
 #ifndef RIAPS_R_COMPONENTBASE_H
 #define RIAPS_R_COMPONENTBASE_H
 
-#include "r_discoverdapi.h"
-#include "r_configuration.h"
-#include "r_periodictimer.h"
-#include "r_actor.h"
-#include "r_messagebase.h"
-#include "r_oneshottimer.h"
+#include <componentmodel/r_discoverdapi.h>
+#include <componentmodel/r_configuration.h>
+#include <componentmodel/r_periodictimer.h>
+#include <componentmodel/r_actor.h>
+#include <componentmodel/r_messagebase.h>
+#include <componentmodel/r_oneshottimer.h>
 #include <groups/r_group.h>
 #include <messaging/disco.capnp.h>
 

@@ -25,6 +25,7 @@ else()
  set (CMAKE_C_FLAGS "-std=c99")
 endif()
 
+#set(pybind11_DIR ${CMAKE_HOME_DIRECTORY})
 
 set(CMAKE_INSTALL_PREFIX ${riaps_prefix}/${arch})
 
@@ -33,6 +34,8 @@ set (LIBALLPATH_INCLUDE ${DEPENDENCIES}/${arch}/include)
 set (LIBALLPATH_LIB ${DEPENDENCIES}/${arch}/lib)
 include_directories(${LIBALLPATH_INCLUDE})
 link_directories(${LIBALLPATH_LIB})
+
+#set(PYTHON_EXECUTABLE /usr/bin/python3)
 
 
 # Debug binaries are to be copied into "./bin" directory
@@ -46,10 +49,15 @@ include_directories(include)
 #add_subdirectory(src/devm)
 #add_subdirectory(src/device)
 
+
+#include_directories(/usr/local/include/python3.5)
+#include_directories(/usr/include/python3.5)
+
 if (BUILD_TESTS)
     include(CTest)
     enable_testing()
     # Tests
+    # add_subdirectory(examples/DistributedEstimatorPy)
     # add_subdirectory(examples/DistributedEstimator)
     # add_subdirectory(examples/DistributedEstimatorGroup)
     #add_subdirectory(tests/test_timer)

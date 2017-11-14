@@ -1,9 +1,5 @@
-//
-// Created by istvan on 3/10/17.
-//
-
-#ifndef RIAPS_CORE_LOCALESTIMATORBASE_H
-#define RIAPS_CORE_LOCALESTIMATORBASE_H
+#ifndef RIAPS_CORE_LOCALESTIMATORBASEPY_H
+#define RIAPS_CORE_LOCALESTIMATORBASEPY_H
 
 #include "componentmodel/r_componentbase.h"
 #include "messages/distributedestimator.capnp.h"
@@ -44,6 +40,8 @@ namespace distributedestimator {
                               messages::Estimate::Builder& message);
 
 
+
+
             virtual ~LocalEstimatorBase();
 
         protected:
@@ -57,4 +55,4 @@ namespace distributedestimator {
     }
 }
 
-#endif //RIAPS_CORE_LOCALESTIMATORBASE_H
+#endif //RIAPS_CORE_LOCALESTIMATORBASEPY_H

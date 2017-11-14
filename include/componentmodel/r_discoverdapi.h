@@ -2,7 +2,7 @@
 #define R_DISCOVERD_API
 
 
-#include <utils/r_message.h>
+//#include <utils/r_message.h>
 #include <componentmodel/r_riaps_actor_commands.h>
 #include <componentmodel/r_componentbase.h>
 #include <groups/r_group.h>

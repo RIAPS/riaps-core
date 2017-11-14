@@ -2,14 +2,17 @@
 // Created by istvan on 3/10/17.
 //
 
-#ifndef RIAPS_CORE_GLOBALESTIMATORBASE_H
-#define RIAPS_CORE_GLOBALESTIMATORBASE_H
+#ifndef RIAPS_CORE_GLOBALESTIMATORBASEPY_H
+#define RIAPS_CORE_GLOBALESTIMATORBASEPY_H
 
-#include "componentmodel/r_componentbase.h"
+
+#include <componentmodel/r_componentbase.h>
 #include "messages/distributedestimator.capnp.h"
 
 #define PORT_SUB_ESTIMATE "estimate"
 #define PORT_TIMER_WAKEUP "wakeup"
+
+
 
 namespace distributedestimator{
     namespace components{
@@ -27,6 +30,8 @@ namespace distributedestimator{
             virtual ~GlobalEstimatorBase();
 
         protected:
+            
+
             virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
                                          riaps::ports::PortBase*   port);
 
@@ -42,4 +47,4 @@ namespace distributedestimator{
 }
 
 
-#endif //RIAPS_CORE_GLOBALESTIMATORBASE_H
+#endif //RIAPS_CORE_GLOBALESTIMATORBASEPY_H

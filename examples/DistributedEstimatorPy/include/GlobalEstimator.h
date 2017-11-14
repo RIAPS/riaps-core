@@ -2,8 +2,9 @@
 // Created by istvan on 11/11/16.
 //
 
-#ifndef RIAPS_FW_GLOBALESTIMATOR_H
-#define RIAPS_FW_GLOBALESTIMATOR_H
+#ifndef RIAPS_FW_GLOBALESTIMATORPY_H
+#define RIAPS_FW_GLOBALESTIMATORPY_H
+
 
 #include "base/GlobalEstimatorBase.h"
 
@@ -23,12 +24,13 @@ namespace distributedestimator {
 
             virtual void OnOneShotTimer(const std::string& timerid);
 
-            virtual void OnGroupMessage(riaps::groups::GroupId& groupId,
-                                        capnp::FlatArrayMessageReader* capnpreader);
+            virtual void OnGroupMessage(const riaps::groups::GroupId&,
+                                        capnp::FlatArrayMessageReader&,
+                                        riaps::ports::PortBase*);
 
-            virtual bool SendGroupMessage(riaps::groups::GroupId&      groupId,
-                                          capnp::MallocMessageBuilder& messageBuilder,
-                                          const std::string&           portName);
+//            virtual bool SendGroupMessage(riaps::groups::GroupId&      groupId,
+//                                          capnp::MallocMessageBuilder& messageBuilder,
+//                                          const std::string&           portName);
 
             virtual ~GlobalEstimator();
 
@@ -43,4 +45,4 @@ extern "C" riaps::ComponentBase* create_component(_component_conf&, riaps::Actor
 extern "C" void destroy_component(riaps::ComponentBase*);
 
 
-#endif //RIAPS_FW_GLOBALESTIMATOR_H
+#endif //RIAPS_FW_GLOBALESTIMATORPY_H

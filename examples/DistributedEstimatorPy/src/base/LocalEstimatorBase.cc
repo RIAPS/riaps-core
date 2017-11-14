@@ -4,6 +4,7 @@
 
 #include <base/LocalEstimatorBase.h>
 
+
 namespace distributedestimator {
     namespace components {
 

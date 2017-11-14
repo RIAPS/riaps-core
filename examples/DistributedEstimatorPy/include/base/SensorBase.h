@@ -1,9 +1,5 @@
-//
-// Created by istvan on 3/10/17.
-//
-
-#ifndef RIAPS_CORE_SENSORBASE_H
-#define RIAPS_CORE_SENSORBASE_H
+#ifndef RIAPS_CORE_SENSORBASEPY_H
+#define RIAPS_CORE_SENSORBASEPY_H
 
 #include "componentmodel/r_componentbase.h"
 #include "messages/distributedestimator.capnp.h"
@@ -16,7 +12,7 @@
 namespace distributedestimator {
     namespace components {
 
-        class comp_sensorbase : protected riaps::ComponentBase {
+        class comp_sensorbase : public riaps::ComponentBase {
 
         public:
 
@@ -57,4 +53,4 @@ namespace distributedestimator {
     }
 }
 
-#endif //RIAPS_CORE_SENSORBASE_H
+#endif //RIAPS_CORE_SENSORBASEPY_H
