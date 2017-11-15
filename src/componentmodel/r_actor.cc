@@ -1,7 +1,7 @@
 #include <componentmodel/r_argumentparser.h>
 #include <componentmodel/r_actor.h>
 
-#define NO_GROUP_TEST
+//#define NO_GROUP_TEST
 
 namespace riaps {
 
@@ -548,8 +548,10 @@ namespace riaps {
                         std::cout << " -" << v.getAddress().cStr() << "#" << v.getMessageType().cStr() << std::endl;
                     }
 
-                    UpdateGroup(msgGroupUpd);
+                    std::string sourceComponentId = msgGroupUpd.getComponentId().cStr();
+                    UpdateGroup(capnp_msgbody, sourceComponentId);
                 }
+                zframe_destroy(&capnp_msgbody);
                 zmsg_destroy(&msg);
             }
             else if (_devm->GetSocket()!=NULL && which == _devm->GetSocket()){
@@ -574,15 +576,18 @@ namespace riaps {
         }
     }
 
-    void riaps::Actor::UpdateGroup(riaps::discovery::GroupUpdate::Reader& msgGroupUpdate){
-        std::string sourceComponentId   = msgGroupUpdate.getComponentId().cStr();
+    void riaps::Actor::UpdateGroup(zframe_t* capnpMessageBody, const std::string& sourceComponentId){
         for (ComponentBase* component : _components) {
             std::string componentInstanceId = component->GetCompUuid();
 
             // Do not send update to the component, because the services originates from this component.
             if (componentInstanceId == sourceComponentId) continue;
 
-            component->UpdateGroup(msgGroupUpdate);
+            // Doesn't change the ownership, in other words: the pointers are not released
+            zsock_send(component->GetZmqPipe(), "sf", CMD_UPDATE_GROUP, capnpMessageBody);
+
+
+            //component->UpdateGroup(msgGroupUpdate);
         }
     }
 

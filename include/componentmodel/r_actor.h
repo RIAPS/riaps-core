@@ -59,7 +59,7 @@ namespace riaps {
 
         virtual ~Actor();
         void UpdatePort(std::string& instancename, std::string& portname, std::string& host, int port);
-        void UpdateGroup(riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
+        void UpdateGroup(zframe_t* capnpMessageBody, const std::string& sourceComponentId);
 
     protected:
 

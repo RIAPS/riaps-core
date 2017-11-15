@@ -1,9 +1,9 @@
-/*!
+/**
  * RIAPS ComponentBase
  *
- * \brief Parent class of all RIAPS components. Controls the communication ports, messaging and timers.
+ * @brief Parent class of all RIAPS components. Controls the communication ports, messaging, timers, groups.
  *
- * \author Istvan Madari
+ * @author Istvan Madari
  */
 
 
@@ -147,6 +147,9 @@ namespace riaps {
         virtual ~ComponentBase();
 
     protected:
+        std::shared_ptr<spd::logger> _logger;
+
+
         /**
          * Sends a ZMQ message on the given port.
          *
@@ -207,6 +210,10 @@ namespace riaps {
          * @return NULL if there is no port with the given name.
          */
         ports::PortBase* GetPortByName(const std::string&);
+
+        //std::shared_ptr<spd::logger> GetConsoleLogger();
+
+        void SetDebugLevel(std::shared_ptr<spd::logger> logger, spd::level::level_enum level);
 
         // Note: disable for now, we need more tests.
         //bool CreateOneShotTimer(const std::string& timerid, timespec& wakeuptime);
@@ -297,7 +304,7 @@ namespace riaps {
         //timers::OneShotTimer*   _oneShotTimer;
 
         component_conf _configuration;
-        spd::stdout_color_mt&& _logger;
+
 
         // All the component ports
         std::map<std::string, std::unique_ptr<ports::PortBase>> _ports;

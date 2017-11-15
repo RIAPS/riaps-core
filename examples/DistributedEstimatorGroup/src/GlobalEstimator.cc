@@ -11,6 +11,9 @@ namespace distributedestimator {
         GlobalEstimator::GlobalEstimator(_component_conf &config, riaps::Actor &actor)
                 : GlobalEstimatorBase(config, actor), _hasJoined(false) {
             //PrintParameters();
+
+            SetDebugLevel(_logger, spdlog::level::level_enum::debug);
+
             auto param = GetConfig().component_parameters.GetParam("iArg");
             if (param!= nullptr){
                 if (param->GetValueAsString() == "group"){

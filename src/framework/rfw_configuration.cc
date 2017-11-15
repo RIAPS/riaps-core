@@ -5,7 +5,6 @@
 #include <framework/rfw_configuration.h>
 #include <framework/rfw_network_interfaces.h>
 
-#include <boost/format.hpp>
 
 namespace riaps{
     namespace framework{

@@ -38,7 +38,8 @@ namespace riaps{
         bool terminated = false;
         bool firstrun = true;
 
-        std::cout << "Component poller starts" << std::endl;
+        auto consoleLogger = comp->_logger;
+        consoleLogger->info("Component started");
 
         // Register ZMQ Socket - riapsPort pairs. For the quick retrieve.
         std::map<const zsock_t*, const ports::PortBase*>   portSockets;
@@ -121,14 +122,14 @@ namespace riaps{
             if (which == pipe) {
                 zmsg_t *msg = zmsg_recv(which);
                 if (!msg) {
-                    std::cout << "No msg => interrupted" << std::endl;
+                    consoleLogger->warn("No msg => interrupted");
                     break;
                 }
 
                 char *command = zmsg_popstr(msg);
 
                 if (streq(command, "$TERM")) {
-                    std::cout << "$TERM arrived in component" << std::endl;
+                    consoleLogger->debug("$TERM arrived in component");
                     terminated = true;
                 } else if(streq(command, CMD_UPDATE_PORT)){
                     char* portname = zmsg_popstr(msg);
@@ -156,22 +157,33 @@ namespace riaps{
                         }
                         zstr_free(&portname);
                     } else if(streq(command, CMD_UPDATE_GROUP)){
-                        std::string groupTypeId = zmsg_popstr(msg);
-                        std::string groupName   = zmsg_popstr(msg);
-                        std::string address     = zmsg_popstr(msg);
-                        std::string messageType = zmsg_popstr(msg);
+                        zframe_t* capnp_msgbody = zmsg_pop(msg);
+                        size_t    size = zframe_size(capnp_msgbody);
+                        byte*     data = zframe_data(capnp_msgbody);
 
-                        // Grab the group object
-                        riaps::groups::GroupId gid;
-                        gid.groupTypeId = groupTypeId;
-                        gid.groupName   = groupName;
+                        auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
 
-                        auto groups = &(comp->_groups);
+                        capnp::FlatArrayMessageReader reader(capnp_data);
+                        auto msgDiscoUpd  = reader.getRoot<riaps::discovery::DiscoUpd>();
+                        auto msgGroupUpd  = msgDiscoUpd.getGroupUpdate();
+                        comp->UpdateGroup(msgGroupUpd);
 
-                        if (groups->find(gid)!=groups->end()){
-
-
-                        }
+                        zframe_destroy(&capnp_msgbody);
+//                        std::string groupTypeId = zmsg_popstr(msg);
+//                        std::string groupName   = zmsg_popstr(msg);
+//                        std::string address     = zmsg_popstr(msg);
+//                        std::string messageType = zmsg_popstr(msg);
+//
+//                        // Grab the group object
+//                        riaps::groups::GroupId gid;
+//                        gid.groupTypeId = groupTypeId;
+//                        gid.groupName   = groupName;
+//
+//                        auto groups = &(comp->_groups);
+//
+//                        if (groups->find(gid)!=groups->end()){
+//                            //groups[gid]->ConnectToNewServices()
+//                        }
                     }
                 }
 
@@ -305,6 +317,14 @@ namespace riaps{
         zuuid_destroy(&_component_uuid);
     }
 
+//    std::shared_ptr<spd::logger> ComponentBase::GetConsoleLogger(){
+//        return _logger;
+//    }
+
+    void ComponentBase::SetDebugLevel(std::shared_ptr<spd::logger> logger, spd::level::level_enum level){
+        logger->set_level(level);
+    }
+
     ComponentBase::ComponentBase(component_conf& config, Actor& actor) : _actor(&actor)//, _oneShotTimer(NULL)
     {
         _configuration = config;
@@ -314,7 +334,7 @@ namespace riaps{
 
         size_t q_size = 2048; //queue size must be power of 2
         spd::set_async_mode(q_size);
-        _logger = std::move(spd::stdout_color_mt(_configuration.componentName));
+        _logger = spd::stdout_color_mt(_configuration.component_name);
 
         _zactor_component = zactor_new(component_actor, this);
     }
