@@ -166,7 +166,7 @@ namespace riaps {
         
 
         uint16_t GetGroupMemberCount(const riaps::groups::GroupId& groupId,
-                                     const int64_t timeout = 1000*60 /*1 minute in msec*/);
+                                     const int64_t timeout = 1000*15 /*15 sec in msec*/);
 //
 //        virtual bool SendGroupMessage(riaps::groups::GroupId&      groupId,
 //                                      capnp::MallocMessageBuilder& messageBuilder,

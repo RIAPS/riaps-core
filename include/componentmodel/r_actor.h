@@ -15,6 +15,7 @@
 #include <utils/r_utils.h>
 #include <groups/r_group.h>
 
+#include <spdlog/spdlog.h>
 #include <json.h>
 
 #include <czmq.h>
@@ -25,6 +26,7 @@
 #include <fstream>
 #include <set>
 
+namespace spd = spdlog;
 
 namespace riaps {
 
@@ -117,6 +119,7 @@ namespace riaps {
     private:
         zpoller_t*    _poller;
         static Actor* _currentActor;
+        std::shared_ptr<spd::logger> _logger;
     };
 }
 

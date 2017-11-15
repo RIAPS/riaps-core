@@ -156,19 +156,21 @@ namespace riaps{
                             zstr_free(&host);
                         }
                         zstr_free(&portname);
-                    } else if(streq(command, CMD_UPDATE_GROUP)){
-                        zframe_t* capnp_msgbody = zmsg_pop(msg);
-                        size_t    size = zframe_size(capnp_msgbody);
-                        byte*     data = zframe_data(capnp_msgbody);
+                    }
+                }
+                else if(streq(command, CMD_UPDATE_GROUP)){
+                    zframe_t* capnp_msgbody = zmsg_pop(msg);
+                    size_t    size = zframe_size(capnp_msgbody);
+                    byte*     data = zframe_data(capnp_msgbody);
 
-                        auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
+                    auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
 
-                        capnp::FlatArrayMessageReader reader(capnp_data);
-                        auto msgDiscoUpd  = reader.getRoot<riaps::discovery::DiscoUpd>();
-                        auto msgGroupUpd  = msgDiscoUpd.getGroupUpdate();
-                        comp->UpdateGroup(msgGroupUpd);
+                    capnp::FlatArrayMessageReader reader(capnp_data);
+                    auto msgDiscoUpd  = reader.getRoot<riaps::discovery::DiscoUpd>();
+                    auto msgGroupUpd  = msgDiscoUpd.getGroupUpdate();
+                    comp->UpdateGroup(msgGroupUpd);
 
-                        zframe_destroy(&capnp_msgbody);
+                    zframe_destroy(&capnp_msgbody);
 //                        std::string groupTypeId = zmsg_popstr(msg);
 //                        std::string groupName   = zmsg_popstr(msg);
 //                        std::string address     = zmsg_popstr(msg);
@@ -184,7 +186,6 @@ namespace riaps{
 //                        if (groups->find(gid)!=groups->end()){
 //                            //groups[gid]->ConnectToNewServices()
 //                        }
-                    }
                 }
 
                 zstr_free(&command);
@@ -623,7 +624,13 @@ namespace riaps{
         if (_groups.find(groupId)!=_groups.end())
             return false;
 
-        std::unique_ptr<riaps::groups::Group> newGroup = std::unique_ptr<riaps::groups::Group>(new riaps::groups::Group(groupId, GetCompUuid()));
+        auto newGroup = std::unique_ptr<riaps::groups::Group>(
+                new riaps::groups::Group(groupId,
+                                         GetCompUuid(),
+                                         GetConfig().component_name
+                )
+        );
+
         if (newGroup->InitGroup()) {
             _groups[groupId] = std::move(newGroup);
             return true;

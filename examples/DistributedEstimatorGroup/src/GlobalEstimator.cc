@@ -30,14 +30,13 @@ namespace distributedestimator {
 
         void GlobalEstimator::OnWakeup(riaps::ports::PortBase *port) {
             //PrintMessageOnPort(port);
-            std::cout << "GlobalEstimator::OnWakeUp(): " << port->GetPortName() << std::endl;
+            _logger->debug("OnWakeUp()");
 
             if (_hasGroup) {
                 if (!_hasJoined) {
                     _hasJoined = true;
-                    if (this->JoinToGroup({"TestGroupId", "Korte"})) {
-                        std::cout << "Successfully joined to group TestGroupId::Korte" << std::endl;
-                    }
+                    bool rc = this->JoinToGroup({"TestGroupId", "Korte"});
+                    _logger->debug_if(rc, "Successfully joined to group TestGroupId::Korte");
 
                 } else {
 //                    capnp::MallocMessageBuilder builder;

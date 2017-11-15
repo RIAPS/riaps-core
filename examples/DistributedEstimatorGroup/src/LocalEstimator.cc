@@ -10,6 +10,7 @@ namespace distributedestimator {
         LocalEstimator::LocalEstimator(_component_conf &config, riaps::Actor &actor) :
                 LocalEstimatorBase(config, actor) {
             //PrintParameters();
+            SetDebugLevel(_logger, spdlog::level::level_enum::debug);
             hasJoined = false;
         }
 
@@ -18,24 +19,24 @@ namespace distributedestimator {
 
             //PrintMessageOnPort(port, message.getMsg().cStr());
 
-            //std::cout << "LocalEstimator::OnReady(): " << message.getMsg().cStr() << " " << ::getpid() << std::endl;
+            riaps::groups::GroupId gid;
+            gid.groupTypeId = "TestGroupId";
+            gid.groupName = "Korte";
+
 
             if (!hasJoined){
                 hasJoined = true;
-                if (this->JoinToGroup({"TestGroupId","Korte"})){
-                    std::cout << "Joined to group TestGroupId::Korte" << std::endl;
+                if (this->JoinToGroup(gid)){
+                    _logger->debug("Joined to group {}::{}", gid.groupTypeId, gid.groupName);
                 }
 
 
             }
 
-            riaps::groups::GroupId gid;
-            gid.groupTypeId = "TestGroupId";
-            gid.groupName = "Korte";
 
-            std::cout << "[LE] Count: " << GetGroupMemberCount(gid) << std::endl;
 
-            
+            _logger->info("Group.Members.Count() == {}", GetGroupMemberCount(gid));
+
             capnp::MallocMessageBuilder builderSensorQuery;
             messages::SensorQuery::Builder queryMsg = builderSensorQuery.initRoot<messages::SensorQuery>();
 
@@ -44,8 +45,6 @@ namespace distributedestimator {
             if (result) {
                 messages::SensorValue::Reader sensorValue;
                 if (RecvQuery(sensorValue)) {
-                    //std::cout << "LocalEstimator::OnQuery(): " << sensorValue.getMsg().cStr() << std::endl;
-                    //std::cout << sensorValue.getMsg().cStr() << std::endl;
                     capnp::MallocMessageBuilder builderEstimate;
                     auto estimateMsg = builderEstimate.initRoot<messages::Estimate>();
                     estimateMsg.setMsg("local_est(" + std::to_string(::getpid()) + ")");
@@ -56,7 +55,8 @@ namespace distributedestimator {
 
         void LocalEstimator::OnGroupMessage(const riaps::groups::GroupId &groupId,
                                             capnp::FlatArrayMessageReader &capnpreader, riaps::ports::PortBase *port) {
-            std::cout << "[LE] Group message arrived!" << std::endl;
+
+            _logger->info("Group message arrived");
         }
 
         LocalEstimator::~LocalEstimator() {

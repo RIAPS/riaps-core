@@ -69,6 +69,8 @@ namespace riaps {
           _actor_zsock(nullptr)
     {
 
+
+
 #ifndef NO_GROUP_TEST
         // TODO: Remove this
         // Note: Group testing
@@ -109,6 +111,8 @@ namespace riaps {
         _jsonLocals    = jsonActorconfig[J_LOCALS];
         _jsonFormals   = jsonActorconfig[J_FORMALS];
         _startDevice   = false;
+
+        _logger = spd::get(_actorName);
     }
 
     void riaps::Actor::ParseConfig() {
@@ -392,7 +396,7 @@ namespace riaps {
                 dlOpenHandle = dlopen(componentLibraryName.c_str(), RTLD_NOW);
 
                 if (dlOpenHandle == nullptr) {
-                    std::cerr << dlerror() << std::endl;
+                    _logger->error(dlerror());
                     std::string msg = "Cannot open library: " + componentLibraryName + " (" + dlerror() + ")\n" +dlerror();
                     throw std::runtime_error(msg);
                 }
@@ -537,16 +541,16 @@ namespace riaps {
                 } else if (msgDiscoUpd.isGroupUpdate()){
                     auto msgGroupUpd = msgDiscoUpd.getGroupUpdate();
 
-                    std::cout << "Group update arrived in actor "
-                              << msgGroupUpd.getGroupId().getGroupType().cStr()
-                              << "::"
-                              << msgGroupUpd.getGroupId().getGroupName().cStr()
-                              <<std::endl;
+//                    std::cout << "Group update arrived in actor "
+//                              << msgGroupUpd.getGroupId().getGroupType().cStr()
+//                              << "::"
+//                              << msgGroupUpd.getGroupId().getGroupName().cStr()
+//                              <<std::endl;
 
-                    for (int i = 0; i<msgGroupUpd.getServices().size(); i++){
-                        auto v = msgGroupUpd.getServices()[i];
-                        std::cout << " -" << v.getAddress().cStr() << "#" << v.getMessageType().cStr() << std::endl;
-                    }
+//                    for (int i = 0; i<msgGroupUpd.getServices().size(); i++){
+//                        auto v = msgGroupUpd.getServices()[i];
+//                        std::cout << " -" << v.getAddress().cStr() << "#" << v.getMessageType().cStr() << std::endl;
+//                    }
 
                     std::string sourceComponentId = msgGroupUpd.getComponentId().cStr();
                     UpdateGroup(capnp_msgbody, sourceComponentId);
@@ -598,7 +602,7 @@ namespace riaps {
             deregisterActor(GetActorName(), GetApplicationName());
 
         for (riaps::ComponentBase* component : _components){
-            std::cout << "Stop component: " << component->GetConfig().component_name <<std::endl;
+            _logger->info("Stop component: {}", component->GetConfig().component_name);
             component->StopComponent();
         }
 

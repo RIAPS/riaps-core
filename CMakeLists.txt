@@ -166,7 +166,7 @@ add_executable(start_actor
         ${ACTOR_SOURCE}
         ${ACTOR_HEADERS}
         )
-target_link_libraries(start_actor czmq zmq riaps capnp)
+target_link_libraries(start_actor czmq zmq riaps capnp pthread)
 install(TARGETS start_actor DESTINATION bin)
 
 # rdiscoveryd source

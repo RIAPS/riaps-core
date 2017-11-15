@@ -12,6 +12,7 @@
 #include <messaging/disco.capnp.h>
 #include <messaging/distcoord.capnp.h>
 
+#include <spdlog/spdlog.h>
 #include <msgpack.hpp>
 #include <czmq.h>
 
@@ -22,6 +23,8 @@
 #define INTERNAL_SUB_NAME "$SUB#"
 #define INTERNAL_PUB_NAME "$PUB#"
 #define INTERNAL_MESSAGETYPE "InternalGroupMessage"
+
+namespace spd = spdlog;
 
 namespace riaps {
     namespace groups {
@@ -80,7 +83,7 @@ namespace riaps {
              * Initializes a group, by the given groupId
              * @param groupId Must have valid configuration entry with the matching id.
              */
-            Group(const GroupId& groupId, const std::string _componentId);
+            Group(const GroupId& groupId, const std::string& componentId, const std::string& componentName);
 
             /**
              * Creates the communication ports and registers the group in the discovery service.
@@ -113,14 +116,23 @@ namespace riaps {
             std::shared_ptr<riaps::ports::GroupSubscriberPort>   _groupSubPort;
 
             std::map<const zsock_t*, std::shared_ptr<riaps::ports::PortBase>> _groupPorts;
+
+            /**
+             * List of nodes who was a sender with timestamp (last known timepoint).
+             *  key   - component id (uuid, generated runtime, when the component starts
+             *  value - timepoint
+             */
             std::unordered_map<std::string, int64_t> _knownNodes;
 
             zframe_t*  _lastFrame;
             zpoller_t* _groupPoller;
 
             std::string _componentId;
+            std::string _componentName;
 
-            int64_t _lastPing;
+            std::shared_ptr<spd::logger> _logger;
+
+            int64_t        _lastPingSent;
             const uint16_t _pingPeriod;
         };
 

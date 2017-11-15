@@ -18,16 +18,17 @@ namespace riaps{
             return groupTypeId<other.groupTypeId;
         }
 
-        Group::Group(const GroupId &groupId, const std::string componentId) :
+        Group::Group(const GroupId &groupId, const std::string& componentId, const std::string& componentName) :
                 _groupId(groupId),
                 _componentId(componentId),
+                _componentName(componentName),
                 _groupPubPort(nullptr),
                 _groupSubPort(nullptr),
                 _lastFrame(nullptr),
-                _lastPing(0),
+                _lastPingSent(0),
                 _pingPeriod(10*1000) {
 
-
+            _logger = spd::get(componentName);
         }
 
         bool Group::InitGroup() {
@@ -142,11 +143,11 @@ namespace riaps{
         void Group::SendHeartBeat(riaps::distrcoord::HeartBeatType type) {
             int64_t currentTime = zclock_mono();
 
-            if (_lastPing == 0)
-                _lastPing = currentTime;
+            if (_lastPingSent == 0)
+                _lastPingSent = currentTime;
 
             // If outdated, send ping
-            if ((currentTime - _lastPing) > _pingPeriod){
+            if ((currentTime - _lastPingSent) > _pingPeriod){
                 capnp::MallocMessageBuilder builder;
                 auto heartbeat = builder.initRoot<riaps::distrcoord::GroupHeartBeat>();
 
@@ -154,15 +155,17 @@ namespace riaps{
                 heartbeat.setSourceComponentId(this->_componentId);
 
                 if (_groupPubPort->Send(builder)) {
-                    _lastPing = currentTime;
-                    std::cout << ">>PING>>" << std::endl;
+                    _lastPingSent = currentTime;
+                    _logger->debug(">>PING>>");
                 }
-                else std::cout << "PING failed" << std::endl;
+                else _logger->debug("PING failed");
             }
         }
 
         uint16_t Group::GetMemberCount(uint16_t timeout) const {
             auto result =0;
+
+            _logger->warn_if(timeout<_pingPeriod,"Timeout of group members in count() are less then the ping period.");
 
             int64_t now  = zclock_mono();
             int64_t from = now - timeout;
@@ -216,14 +219,20 @@ namespace riaps{
                     capnp::FlatArrayMessageReader reader(capnp_data);
                     auto groupHeartBeat = reader.getRoot<riaps::distrcoord::GroupHeartBeat>();
                     if (groupHeartBeat.getHeartBeatType() == riaps::distrcoord::HeartBeatType::PING){
-                        std::cout << "<<PING<<" << std::endl;
-                        _lastPing = zclock_mono();
+                        _logger->debug("<<PING<<");
+                        _lastPingSent = zclock_mono();
                         SendHeartBeat(riaps::distrcoord::HeartBeatType::PONG);
-                        std::cout << ">>PONG>>" << std::endl;
-                        _knownNodes[groupHeartBeat.getSourceComponentId()] = _lastPing;
+                        _logger->debug(">>PONG>>");
+                        _knownNodes[groupHeartBeat.getSourceComponentId()] = _lastPingSent;
+
+                        // Return null, no handler for the inherited class.
+                        return nullptr;
                     } else if (groupHeartBeat.getHeartBeatType() == riaps::distrcoord::HeartBeatType::PONG){
-                        std::cout << "<<PONG<<" <<std::endl;
+                        _logger->debug("<<PONG<<");
                         _knownNodes[groupHeartBeat.getSourceComponentId()] = zclock_mono();
+
+                        // Return nullptr, no handler will be called for the developer
+                        return nullptr;
                     }
                 }
             }
@@ -233,7 +242,10 @@ namespace riaps{
         }
 
         Group::~Group() {
-
+            if (_lastFrame!= nullptr){
+                zframe_destroy(&_lastFrame);
+                _lastFrame=nullptr;
+            }
         }
     }
 }
