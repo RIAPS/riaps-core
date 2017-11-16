@@ -48,7 +48,7 @@ namespace riaps{
         std::map<const zsock_t*, const ports::InsidePort*> insidePorts;
 
         while (!terminated) {
-            void *which = zpoller_wait(poller, 500);
+            void *which = zpoller_wait(poller, 1);
 
             if (firstrun) {
                 firstrun = false;
@@ -278,7 +278,7 @@ namespace riaps{
                 for (auto it = comp->_groups.begin(); it!=comp->_groups.end(); it++){
                     it->second->SendHeartBeat(riaps::distrcoord::HeartBeatType::PING);
 
-                    std::unique_ptr<capnp::FlatArrayMessageReader> groupMessage(nullptr);
+                    std::shared_ptr<capnp::FlatArrayMessageReader> groupMessage(nullptr);
                     //std::string originComponentId;
                     ports::GroupSubscriberPort* groupRecvPort = it->second->FetchNextMessage(groupMessage);
 
@@ -417,7 +417,7 @@ namespace riaps{
     }
 
     const ports::PublisherPort* ComponentBase::InitPublisherPort(const _component_port_pub& config) {
-        auto result = new ports::PublisherPort(config);
+        auto result = new ports::PublisherPort(config, this);
         std::unique_ptr<ports::PortBase> newport(result);
         _ports[config.portName] = std::move(newport);
         return result;
@@ -475,7 +475,7 @@ namespace riaps{
 
     const ports::PeriodicTimer* ComponentBase::InitTimerPort(const _component_port_tim& config) {
         std::string timerchannel = GetTimerChannel();
-        std::unique_ptr<ports::PeriodicTimer> newtimer(new ports::PeriodicTimer(timerchannel, config));
+        std::unique_ptr<ports::PeriodicTimer> newtimer(new ports::PeriodicTimer(timerchannel, config, this));
         newtimer->start();
 
         auto result = newtimer.get();
@@ -566,7 +566,7 @@ namespace riaps{
 //        return prefix + GetCompUuid();
 //    }
 
-    std::string ComponentBase::GetCompUuid(){
+    const std::string ComponentBase::GetCompUuid() const{
         std::string uuid_str = zuuid_str(_component_uuid);
         //std::string result (uuid_str);
         return uuid_str;
@@ -625,10 +625,7 @@ namespace riaps{
             return false;
 
         auto newGroup = std::unique_ptr<riaps::groups::Group>(
-                new riaps::groups::Group(groupId,
-                                         GetCompUuid(),
-                                         GetConfig().component_name
-                )
+                new riaps::groups::Group(groupId, this)
         );
 
         if (newGroup->InitGroup()) {

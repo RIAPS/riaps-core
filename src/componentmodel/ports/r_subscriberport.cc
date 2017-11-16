@@ -9,8 +9,8 @@ namespace riaps{
     namespace ports {
 
 
-        SubscriberPort::SubscriberPort(const _component_port_sub &config, const ComponentBase *component)
-                : SubscriberPortBase((component_port_config*)&config), _parent_component(component) {
+        SubscriberPort::SubscriberPort(const _component_port_sub &config, const ComponentBase *parentComponent)
+                : SubscriberPortBase((component_port_config*)&config, parentComponent) {
 
 
         }
@@ -23,9 +23,9 @@ namespace riaps{
             _component_port_sub* currentConfig = (_component_port_sub*)GetConfig();
 
             auto results =
-                    subscribeToService(_parent_component->GetActor()->GetApplicationName(),
-                                         _parent_component->GetConfig().component_name,
-                                         _parent_component->GetActor()->GetActorName(),
+                    subscribeToService(GetParentComponent()->GetActor()->GetApplicationName(),
+                                         GetParentComponent()->GetConfig().component_name,
+                                         GetParentComponent()->GetActor()->GetActorName(),
                                          riaps::discovery::Kind::SUB,
                                          (currentConfig->isLocal?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
                                           currentConfig->portName, // Subscriber name

@@ -2,9 +2,9 @@
 
 namespace riaps{
     namespace ports{
-        GroupPublisherPort::GroupPublisherPort(const _group_port_pub &config)
+        GroupPublisherPort::GroupPublisherPort(const _group_port_pub &config, const ComponentBase* parentComponent)
                 : _groupPortConfig(config),
-                  PublisherPortBase(&_groupPortConfig) {
+                  PublisherPortBase(&_groupPortConfig, parentComponent) {
             InitSocket();
         }
 

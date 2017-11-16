@@ -7,8 +7,10 @@
 namespace riaps{
     namespace ports{
 
-        InsidePort::InsidePort(const _component_port_ins &config, InsidePortMode mode, ComponentBase *parent_component)
-            : PortBase(PortTypes::Inside, (component_port_config*)&config),
+        InsidePort::InsidePort(const _component_port_ins &config, InsidePortMode mode, const ComponentBase *parent_component)
+            : PortBase(PortTypes::Inside,
+                       (component_port_config*)&config,
+                       parent_component),
               SenderPort(this)//,
               //_capnpReader(nullptr)
         {

@@ -8,8 +8,8 @@
 namespace riaps{
     namespace ports{
 
-        PublisherPortBase::PublisherPortBase(const component_port_config* config)
-                : PortBase(PortTypes::Publisher, config),
+        PublisherPortBase::PublisherPortBase(const component_port_config* config, const ComponentBase* parentComponent)
+                : PortBase(PortTypes::Publisher, config, parentComponent),
                   SenderPort(this) {
 
         }
@@ -40,6 +40,7 @@ namespace riaps{
             }
 
             std::cout << "Publisher is created on : " << _host << ":" << _port << std::endl;
+
         }
 
         const _component_port_pub* PublisherPortBase::GetConfig() const {

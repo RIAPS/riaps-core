@@ -8,8 +8,8 @@
 namespace riaps{
     namespace ports{
 
-        ResponsePort::ResponsePort(const _component_port_rep &config, ComponentBase *parent_component) :
-            PortBase(PortTypes::Response, (component_port_config*)&config),
+        ResponsePort::ResponsePort(const _component_port_rep &config, const ComponentBase *parentComponent) :
+            PortBase(PortTypes::Response, (component_port_config*)&config, parentComponent),
             SenderPort(this)
         {
             _port_socket = zsock_new(ZMQ_REP);
@@ -30,7 +30,7 @@ namespace riaps{
             std::cout << "Response is created on : " << _host << ":" << _port << std::endl;
 
 
-            if (!registerService(parent_component->GetActor()->GetApplicationName(),
+            if (!registerService(GetParentComponent()->GetActor()->GetApplicationName(),
                                   config.messageType,
                                   _host,
                                   _port,

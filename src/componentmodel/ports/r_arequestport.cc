@@ -9,9 +9,10 @@ namespace riaps {
     namespace ports {
 
         AsyncRequestPort::AsyncRequestPort(const _component_port_req &config, const ComponentBase *component)
-                : PortBase(PortTypes::Request, (component_port_config*)(&config)),
+                : PortBase(PortTypes::Request,
+                           (component_port_config*)(&config),
+                           component),
                   SenderPort(this),
-                  _parent_component(component),
                   _capnpReader(capnp::FlatArrayMessageReader(nullptr)) {
             _port_socket = zsock_new(ZMQ_DEALER);
             _socketId = zuuid_new();
@@ -37,13 +38,13 @@ namespace riaps {
             const _component_port_req* current_config = GetConfig();
 
             auto results =
-                    subscribeToService(_parent_component->GetActor()->GetApplicationName(),
-                                         _parent_component->GetConfig().component_name,
-                                         _parent_component->GetActor()->GetActorName(),
-                                         riaps::discovery::Kind::REQ,
-                                         (current_config->isLocal?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
-                                         current_config->portName, // Subscriber name
-                                         current_config->messageType);
+                    subscribeToService(GetParentComponent()->GetActor()->GetApplicationName(),
+                                       GetParentComponent()->GetConfig().component_name,
+                                       GetParentComponent()->GetActor()->GetActorName(),
+                                       riaps::discovery::Kind::REQ,
+                                       (current_config->isLocal?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
+                                       current_config->portName, // Subscriber name
+                                       current_config->messageType);
 
             for (auto result : results) {
                 std::string endpoint = "tcp://" + result.host_name + ":" + std::to_string(result.port);

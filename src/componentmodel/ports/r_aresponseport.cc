@@ -8,8 +8,8 @@
 namespace riaps{
     namespace ports{
 
-        AsyncResponsePort::AsyncResponsePort(const _component_port_rep &config, ComponentBase *parent_component) :
-            PortBase(PortTypes::Response, (component_port_config*)&config),
+        AsyncResponsePort::AsyncResponsePort(const _component_port_rep &config, const ComponentBase *parent_component) :
+            PortBase(PortTypes::Response, (component_port_config*)&config, parent_component),
             SenderPort(this)
         {
             _port_socket = zsock_new(ZMQ_ROUTER);

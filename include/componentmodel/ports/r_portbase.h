@@ -5,6 +5,7 @@
 #ifndef RIAPS_R_PORTBASE_H
 #define RIAPS_R_PORTBASE_H
 
+
 #include <componentmodel/r_configuration.h>
 
 #include <czmq.h>
@@ -20,7 +21,10 @@
 #define SERVICE_POLLING_INTERVAL 2000
 
 namespace riaps {
-namespace ports {
+
+    class ComponentBase;
+
+    namespace ports {
 
     class RequestPort;
     class ResponsePort;
@@ -33,6 +37,7 @@ namespace ports {
     class AsyncRequestPort;
     class AsyncResponsePort;
 
+
     enum PortTypes {Publisher, Subscriber, Request, Response, Timer, Inside};
 
     class PortBase {
@@ -40,7 +45,9 @@ namespace ports {
     public:
         //PortBase(const ComponentBase* parentComponent);
 
-        PortBase(PortTypes portType, const component_port_config* config);
+        PortBase(PortTypes portType,
+                 const component_port_config* config,
+                 const ComponentBase* parentComponent);
 
         /// \return The ip addres of the specified interface. (e.g.: "eth0")
         //virtual std::string GetInterfaceAddress(std::string ifacename);
@@ -56,6 +63,7 @@ namespace ports {
         //bool Send(std::vector<std::string>& fields) const;
         //virtual bool Send(zmsg_t** zmessage) const;
 
+        const ComponentBase* GetParentComponent();
 
 
         const PortTypes& GetPortType() const;
@@ -86,6 +94,7 @@ namespace ports {
 
     private:
         const component_port_config* _config;
+        const ComponentBase* _parentComponent;
     };
 }
 }

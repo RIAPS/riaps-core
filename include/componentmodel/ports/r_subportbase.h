@@ -13,7 +13,7 @@ namespace riaps{
     namespace ports{
         class SubscriberPortBase : public PortBase{
         public:
-            SubscriberPortBase(const component_port_config* config);
+            SubscriberPortBase(const component_port_config* config, const ComponentBase* parentComponent);
 
             virtual const _component_port_sub* GetConfig() const;
 

@@ -26,7 +26,7 @@ namespace riaps {
         public:
             //using PortBase::Send;
 
-            AsyncResponsePort(const _component_port_rep &config, ComponentBase *parent_component);
+            AsyncResponsePort(const _component_port_rep &config, const ComponentBase *parent_component);
             virtual const _component_port_rep* GetConfig() const;
 
 

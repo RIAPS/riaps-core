@@ -13,8 +13,8 @@ namespace riaps{
 
 
 
-        PublisherPort::PublisherPort(const _component_port_pub &config)
-            : PublisherPortBase((component_port_config*)&config)
+        PublisherPort::PublisherPort(const _component_port_pub &config, const ComponentBase* parentComponent)
+            : PublisherPortBase((component_port_config*)&config, parentComponent)
 
         {
             InitSocket();

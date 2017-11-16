@@ -128,7 +128,7 @@ namespace riaps {
          *
          * @return The component unique ID.
          */
-        std::string             GetCompUuid();
+        const std::string GetCompUuid() const;
 
 
         /**
