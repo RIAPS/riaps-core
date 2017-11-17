@@ -33,39 +33,6 @@
             "locals":[],
             "wires":[]
         },
-        "AggregatorNoGroup":{
-            "formals":[
-                {
-                    "name":"posArg"
-                },
-                {
-                    "default":"optString",
-                    "name":"optArg"
-                }
-            ],
-            "instances":{
-                "aggr":{
-                    "actuals":[
-                        {
-                            "name":"iArg",
-                            "param":"posArg"
-                        },
-                        {
-                            "name":"sArg",
-                            "param":"optArg"
-                        },
-                        {
-                            "name":"bArg",
-                            "value":true
-                        }
-                    ],
-                    "type":"GlobalEstimator"
-                }
-            },
-            "internals":[],
-            "locals":[],
-            "wires":[]
-        },
         "Estimator":{
             "formals":[],
             "instances":{
@@ -89,7 +56,15 @@
                         }
                     ],
                     "type":"LocalEstimator"
-                },
+                }
+            },
+            "internals":[],
+            "locals":[],
+            "wires":[]
+        },
+        "Sensor":{
+            "formals":[],
+            "instances":{
                 "sensor":{
                     "actuals":[],
                     "type":"Sensor"
@@ -224,5 +199,5 @@
             "name":"Estimate"
         }
     ],
-    "name":"DistributedEstimator"
+    "name":"ActiveReplica"
 }
