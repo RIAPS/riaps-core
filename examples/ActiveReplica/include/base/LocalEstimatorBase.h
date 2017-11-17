@@ -14,6 +14,13 @@
 #define PORT_REQ_QUERY    "query"
 #define PORT_PUB_ESTIMATE "estimate"
 
+// GroupType Ids
+#define GROUPTYPE_BACKUPGROUP "BackupGroup"
+#define GROUPPORT_BACKUPGROUP_QUERYOUT     "QueryOut"
+#define GROUPPORT_BACKUPGROUP_QUERYIN      "QueryIn"
+#define GROUPPORT_BACKUPGROUP_RESPONSE_OUT "ResponseOut"
+#define GROUPPORT_BACKUPGROUP_RESPONSE_OUT "ResponseIn"
+
 namespace distributedestimator {
     namespace components {
 

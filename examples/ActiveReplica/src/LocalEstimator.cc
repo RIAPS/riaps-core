@@ -9,7 +9,6 @@ namespace distributedestimator {
 
         LocalEstimator::LocalEstimator(_component_conf &config, riaps::Actor &actor) :
                 LocalEstimatorBase(config, actor) {
-            //PrintParameters();
             SetDebugLevel(_logger, spdlog::level::level_enum::debug);
             hasJoined = false;
         }
@@ -17,11 +16,9 @@ namespace distributedestimator {
         void LocalEstimator::OnReady(const messages::SensorReady::Reader &message,
                                      riaps::ports::PortBase *port) {
 
-            //PrintMessageOnPort(port, message.getMsg().cStr());
-
             riaps::groups::GroupId gid;
-            gid.groupTypeId = "TestGroupId";
-            gid.groupName = "Korte";
+            gid.groupTypeId = "BackupGroup";
+            gid.groupName = "Group1";
 
 
             if (!hasJoined){
@@ -32,8 +29,6 @@ namespace distributedestimator {
 
 
             }
-
-
 
             _logger->info("Group.Members.Count() == {}", GetGroupMemberCount(gid));
 
@@ -55,8 +50,11 @@ namespace distributedestimator {
 
         void LocalEstimator::OnGroupMessage(const riaps::groups::GroupId &groupId,
                                             capnp::FlatArrayMessageReader &capnpreader, riaps::ports::PortBase *port) {
+            if (groupId.groupTypeId == GROUPTYPE_BACKUPGROUP && groupId.groupName == "Group1") {
+                if (port->GetPortName() == GROUPPORT_BACKUPGROUP_QUERYIN){
 
-            //_logger->info("Group message arrived");
+                }
+            }
         }
 
         LocalEstimator::~LocalEstimator() {

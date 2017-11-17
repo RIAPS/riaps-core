@@ -75,22 +75,48 @@ namespace riaps {
         // TODO: Remove this
         // Note: Group testing
         //////////////////////////
+
+        _group_port_pub p;
+        _group_port_sub s;
+
+//        _grouptype_configurations.push_back(
+//                groupt_conf{
+//                        "TestGroupId", //GroupId
+//                        {}
+//                }
+//        );
+//
+//        p.portName="TestPubPortName";
+//        p.messageType="TestPortType";
+//        _grouptype_configurations.back().groupTypePorts.pubs.push_back(p);
+//
+//        s.portName = "TestSubPortName";
+//        s.messageType=p.messageType;
+//        _grouptype_configurations.back().groupTypePorts.subs.push_back(s);
+
         _grouptype_configurations.push_back(
                 groupt_conf{
-                        "TestGroupId", //GroupId
+                        "BackupGroup", //GroupId
                         {}
                 }
         );
 
-        _group_port_pub p;
-        p.portName="TestPubPortName";
-        p.messageType="TestPortType";
+        p.portName="QueryOut";
+        p.messageType="QueryRequest";
         _grouptype_configurations.back().groupTypePorts.pubs.push_back(p);
 
-        _group_port_sub s;
-        s.portName = "TestSubPortName";
+        s.portName = "QueryIn";
         s.messageType=p.messageType;
         _grouptype_configurations.back().groupTypePorts.subs.push_back(s);
+
+        p.portName="ResponseOut";
+        p.messageType="Estimate";
+        _grouptype_configurations.back().groupTypePorts.pubs.push_back(p);
+
+        s.portName = "ResponseIn";
+        s.messageType=p.messageType;
+        _grouptype_configurations.back().groupTypePorts.subs.push_back(s);
+
 
         /////////////////////////
         //TODO: REMOVE LINES ABOVE AFTER TESTING

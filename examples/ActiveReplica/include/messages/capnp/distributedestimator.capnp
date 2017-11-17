@@ -1,4 +1,5 @@
-@0xbfb633a11018ca1c;
+@0xcda54ca269a5ad1a;
+
 
 using Cxx = import "/capnp/c++.capnp";
 $Cxx.namespace("distributedestimator::messages");
@@ -8,7 +9,7 @@ struct SensorReady {
  }
 
 struct SensorValue {
-   msg @0 : Text;
+   value @0 : Float64;
  }
 
  struct SensorQuery {
@@ -16,6 +17,10 @@ struct SensorValue {
  }
 
  struct Estimate {
-    msg    @0    : Text;
+    id     @0    : UInt32;
     values @1    : List(Float64);
+ }
+
+ struct QueryRequest {
+    id @0 : UInt32;
  }
