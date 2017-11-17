@@ -1,24 +1,19 @@
-//
-// Created by parallels on 9/6/16.
-//
 
 #ifndef RIAPS_R_PORTBASE_H
 #define RIAPS_R_PORTBASE_H
 
-
 #include <componentmodel/r_configuration.h>
 
+
+#include <spdlog/spdlog.h>
 #include <czmq.h>
 #include <string>
 #include <iostream>
 
-//#include <boost/format.hpp>
-//#include <componentmodel/r_responseport.h>
-//#include <componentmodel/r_publisherport.h>
-//#include <componentmodel/r_subscriberport.h>
-//#include <componentmodel/r_requestport.h>
 
 #define SERVICE_POLLING_INTERVAL 2000
+
+namespace spd = spdlog;
 
 namespace riaps {
 
@@ -91,6 +86,8 @@ namespace riaps {
 
         PortTypes                    _port_type;
         zsock_t*                     _port_socket;
+        std::shared_ptr<spd::logger> _logger;
+
 
     private:
         const component_port_config* _config;

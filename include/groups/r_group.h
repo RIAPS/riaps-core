@@ -19,6 +19,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <random>
 
 #define INTERNAL_SUB_NAME "$SUB#"
 #define INTERNAL_PUB_NAME "$PUB#"
@@ -83,7 +84,7 @@ namespace riaps {
              * Initializes a group, by the given groupId
              * @param groupId Must have valid configuration entry with the matching id.
              */
-            Group(const GroupId& groupId, const std::string& componentId, const std::string& componentName);
+            Group(const GroupId& groupId, const ComponentBase* parentComponent);
 
             /**
              * Creates the communication ports and registers the group in the discovery service.
@@ -95,9 +96,13 @@ namespace riaps {
 
             bool SendMessage(capnp::MallocMessageBuilder& message, const std::string& portName);
 
-            ports::GroupSubscriberPort* FetchNextMessage(std::unique_ptr<capnp::FlatArrayMessageReader>& messageReader);
+            ports::GroupSubscriberPort* FetchNextMessage(std::shared_ptr<capnp::FlatArrayMessageReader> messageReader);
 
-            void SendHeartBeat(riaps::distrcoord::HeartBeatType type);
+
+
+            bool SendPingWithPeriod();
+            bool SendPing();
+            bool SendPong();
             
             std::shared_ptr<std::vector<std::string>> GetKnownComponents();
 
@@ -106,6 +111,8 @@ namespace riaps {
             ~Group();
 
         private:
+            bool SendHeartBeat(riaps::distrcoord::HeartBeatType type);
+
             const GroupId     _groupId;
             groupt_conf       _groupTypeConf;
 
@@ -127,13 +134,18 @@ namespace riaps {
             zframe_t*  _lastFrame;
             zpoller_t* _groupPoller;
 
-            std::string _componentId;
-            std::string _componentName;
-
             std::shared_ptr<spd::logger> _logger;
 
-            int64_t        _lastPingSent;
-            const uint16_t _pingPeriod;
+            int64_t  _lastPingSent;
+            float    _pingPeriod;
+
+            std::default_random_engine         rndGenerator;
+            std::uniform_int_distribution<int> rndDistribution;
+
+            const ComponentBase* _parentComponent;
+
+            // debug
+            uint16_t _pingCounter;
         };
 
     }

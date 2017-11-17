@@ -436,6 +436,14 @@ namespace riaps {
             }
         }
     }
+
+    ComponentBase* riaps::Actor::GetComponentByName(const std::string &componentName) const {
+        for (auto it = _components.begin(); it != _components.end(); it++) {
+            if ((*it)->GetConfig().component_name == componentName)
+                return *it;
+        }
+        return nullptr;
+    }
     
     const std::vector<groupt_conf>& riaps::Actor::GetGroupTypes() const {
         return _grouptype_configurations;

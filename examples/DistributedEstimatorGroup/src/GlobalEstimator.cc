@@ -30,7 +30,7 @@ namespace distributedestimator {
 
         void GlobalEstimator::OnWakeup(riaps::ports::PortBase *port) {
             //PrintMessageOnPort(port);
-            _logger->debug("OnWakeUp()");
+            //_logger->debug("OnWakeUp()");
 
             if (_hasGroup) {
                 if (!_hasJoined) {
@@ -54,7 +54,7 @@ namespace distributedestimator {
         void GlobalEstimator::OnGroupMessage(const riaps::groups::GroupId &groupId,
                                              capnp::FlatArrayMessageReader &capnpreader,
                                              riaps::ports::PortBase *port) {
-            std::cout << "[GE] Group message arrived!" << std::endl;
+            //std::cout << "[GE] Group message arrived!" << std::endl;
 
         }
 

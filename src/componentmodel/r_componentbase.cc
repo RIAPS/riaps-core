@@ -276,7 +276,7 @@ namespace riaps{
 
                 // Handle all group messages
                 for (auto it = comp->_groups.begin(); it!=comp->_groups.end(); it++){
-                    it->second->SendHeartBeat(riaps::distrcoord::HeartBeatType::PING);
+                    it->second->SendPingWithPeriod();
 
                     std::shared_ptr<capnp::FlatArrayMessageReader> groupMessage(nullptr);
                     //std::string originComponentId;

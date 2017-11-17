@@ -58,6 +58,7 @@ namespace riaps {
         // Todo: Thinking on to make them static... I'm not sure it is good.
         const std::vector<groupt_conf>& GetGroupTypes() const;
         const groupt_conf* GetGroupType(const std::string& groupTypeId) const;
+        ComponentBase* GetComponentByName(const std::string& componentName) const;
 
         virtual ~Actor();
         void UpdatePort(std::string& instancename, std::string& portname, std::string& host, int port);

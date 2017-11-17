@@ -4,12 +4,15 @@
 
 #include <componentmodel/r_configuration.h>
 #include <componentmodel/ports/r_portbase.h>
+#include <componentmodel/r_componentbase.h>
 
 #include <capnp/message.h>
 
 namespace riaps {
 
+
     namespace ports {
+
 
         PortBase::PortBase(PortTypes portType,
                            const component_port_config* config,
@@ -18,6 +21,7 @@ namespace riaps {
             _port_type = portType;
             _config = config;
             _port_socket = nullptr;
+            _logger = spd::get(_parentComponent->GetConfig().component_name);
         }
 
 //        bool PortBase::Send(capnp::MallocMessageBuilder &message) const {

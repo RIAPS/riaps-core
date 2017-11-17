@@ -39,8 +39,7 @@ namespace riaps{
                 throw std::runtime_error("Couldn't bind publisher port.");
             }
 
-            std::cout << "Publisher is created on : " << _host << ":" << _port << std::endl;
-
+            _logger->debug("Publisher is created on {}:{} [{}]", _host, _port, GetConfig()->messageType);
         }
 
         const _component_port_pub* PublisherPortBase::GetConfig() const {
