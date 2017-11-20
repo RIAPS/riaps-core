@@ -5,7 +5,7 @@
 
 #include <GlobalEstimator.h>
 
-namespace distributedestimator {
+namespace activereplica {
     namespace components {
 
         GlobalEstimator::GlobalEstimator(_component_conf &config, riaps::Actor &actor)
@@ -39,14 +39,14 @@ namespace distributedestimator {
                     _logger->debug_if(rc, "Successfully joined to group TestGroupId::Korte");
 
                 } else {
-//                    capnp::MallocMessageBuilder builder;
-//                    auto msgEstimate = builder.initRoot<distributedestimator::messages::Estimate>();
-//                    msgEstimate.setMsg("From group");
-//
-//                    if (SendGroupMessage({"TestGroupId", "Korte"}, builder, "TestPubPortName")) {
-//                        std::cout << "[GE] Groupmessage sent" << std::endl;
-//                    } else
-//                        std::cout << "[GE] Groupmessage sending has been failed" << std::endl;
+                    capnp::MallocMessageBuilder builder;
+                    auto msgEstimate = builder.initRoot<activereplica::messages::QueryRequest>();
+                    msgEstimate.setId()
+
+                    if (SendGroupMessage({"TestGroupId", "Korte"}, builder, "TestPubPortName")) {
+                        std::cout << "[GE] Groupmessage sent" << std::endl;
+                    } else
+                        std::cout << "[GE] Groupmessage sending has been failed" << std::endl;
                 }
             }
         }
@@ -65,7 +65,7 @@ namespace distributedestimator {
 }
 
 riaps::ComponentBase *create_component(_component_conf &config, riaps::Actor &actor) {
-    auto result = new distributedestimator::components::GlobalEstimator(config, actor);
+    auto result = new activereplica::components::GlobalEstimator(config, actor);
     return result;
 }
 

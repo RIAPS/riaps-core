@@ -6,22 +6,17 @@
 #define RIAPS_CORE_LOCALESTIMATORBASE_H
 
 #include "componentmodel/r_componentbase.h"
-#include "messages/distributedestimator.capnp.h"
-#include "GroupConfig.h"
+#include "messages/activereplica.capnp.h"
+#include "GroupTypes.h"
 
 // Name of the ports from the model file
 #define PORT_SUB_READY    "ready"
 #define PORT_REQ_QUERY    "query"
 #define PORT_PUB_ESTIMATE "estimate"
 
-// GroupType Ids
-#define GROUPTYPE_BACKUPGROUP "BackupGroup"
-#define GROUPPORT_BACKUPGROUP_QUERYOUT     "QueryOut"
-#define GROUPPORT_BACKUPGROUP_QUERYIN      "QueryIn"
-#define GROUPPORT_BACKUPGROUP_RESPONSE_OUT "ResponseOut"
-#define GROUPPORT_BACKUPGROUP_RESPONSE_OUT "ResponseIn"
 
-namespace distributedestimator {
+
+namespace activereplica {
     namespace components {
 
         class LocalEstimatorBase : public riaps::ComponentBase {

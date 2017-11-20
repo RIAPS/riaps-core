@@ -79,7 +79,7 @@ struct Estimate {
   class Pipeline;
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(cb225cd542edaf7e, 1, 1)
+    CAPNP_DECLARE_STRUCT_HEADER(cb225cd542edaf7e, 2, 0)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
     #endif  // !CAPNP_LITE
@@ -360,8 +360,7 @@ public:
 
   inline  ::uint32_t getId() const;
 
-  inline bool hasValues() const;
-  inline  ::capnp::List<double>::Reader getValues() const;
+  inline double getValue() const;
 
 private:
   ::capnp::_::StructReader _reader;
@@ -394,13 +393,8 @@ public:
   inline  ::uint32_t getId();
   inline void setId( ::uint32_t value);
 
-  inline bool hasValues();
-  inline  ::capnp::List<double>::Builder getValues();
-  inline void setValues( ::capnp::List<double>::Reader value);
-  inline void setValues(::kj::ArrayPtr<const double> value);
-  inline  ::capnp::List<double>::Builder initValues(unsigned int size);
-  inline void adoptValues(::capnp::Orphan< ::capnp::List<double>>&& value);
-  inline ::capnp::Orphan< ::capnp::List<double>> disownValues();
+  inline double getValue();
+  inline void setValue(double value);
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -598,40 +592,18 @@ inline void Estimate::Builder::setId( ::uint32_t value) {
       0 * ::capnp::ELEMENTS, value);
 }
 
-inline bool Estimate::Reader::hasValues() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+inline double Estimate::Reader::getValue() const {
+  return _reader.getDataField<double>(
+      1 * ::capnp::ELEMENTS);
 }
-inline bool Estimate::Builder::hasValues() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+
+inline double Estimate::Builder::getValue() {
+  return _builder.getDataField<double>(
+      1 * ::capnp::ELEMENTS);
 }
-inline  ::capnp::List<double>::Reader Estimate::Reader::getValues() const {
-  return ::capnp::_::PointerHelpers< ::capnp::List<double>>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
-}
-inline  ::capnp::List<double>::Builder Estimate::Builder::getValues() {
-  return ::capnp::_::PointerHelpers< ::capnp::List<double>>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
-}
-inline void Estimate::Builder::setValues( ::capnp::List<double>::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::List<double>>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
-}
-inline void Estimate::Builder::setValues(::kj::ArrayPtr<const double> value) {
-  ::capnp::_::PointerHelpers< ::capnp::List<double>>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
-}
-inline  ::capnp::List<double>::Builder Estimate::Builder::initValues(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::List<double>>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS), size);
-}
-inline void Estimate::Builder::adoptValues(
-    ::capnp::Orphan< ::capnp::List<double>>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::List<double>>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
-}
-inline ::capnp::Orphan< ::capnp::List<double>> Estimate::Builder::disownValues() {
-  return ::capnp::_::PointerHelpers< ::capnp::List<double>>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+inline void Estimate::Builder::setValue(double value) {
+  _builder.setDataField<double>(
+      1 * ::capnp::ELEMENTS, value);
 }
 
 inline  ::uint32_t QueryRequest::Reader::getId() const {

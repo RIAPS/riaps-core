@@ -6,16 +6,16 @@
 #include <capnp/serialize.h>
 #include <capnp/message.h>
 
-namespace distributedestimator {
+namespace activereplica {
     namespace components {
 
-        comp_sensor::comp_sensor(_component_conf &config, riaps::Actor &actor) : comp_sensorbase(config, actor) {
-            //PrintParameters();
+        Sensor::Sensor(_component_conf &config, riaps::Actor &actor) : SensorBase(config, actor) {
+            _rndDistr = std::uniform_real_distribution<double>(-100.0, 100.0);  //(min, max)
+            _rndEngine.seed(std::random_device{}());
         }
 
-        void comp_sensor::OnClock(riaps::ports::PortBase *port) {
-            int64_t time = zclock_mono();
-            //std::cout << "Sensor::OnClock(): " << time << std::endl;
+        void Sensor::OnClock(riaps::ports::PortBase *port) {
+            _logger->info("OnClock()");
 
             capnp::MallocMessageBuilder messageBuilder;
             auto msgSensorReady = messageBuilder.initRoot<messages::SensorReady>();
@@ -24,40 +24,40 @@ namespace distributedestimator {
             SendReady(messageBuilder, msgSensorReady);
         }
 
-        void comp_sensor::OnRequest(const messages::SensorQuery::Reader &message,
+        void Sensor::OnRequest(const messages::SensorQuery::Reader &message,
                                     riaps::ports::PortBase *port) {
-            //PrintMessageOnPort(port);
-
-            //std::cout << "Sensor::OnRequest(): " << message.getMsg().cStr() <<std::endl;
-
             capnp::MallocMessageBuilder messageBuilder;
             messages::SensorValue::Builder msgSensorValue = messageBuilder.initRoot<messages::SensorValue>();
-            msgSensorValue.setMsg("sensor_rep");
+            auto value = _rndDistr(_rndEngine);
+            msgSensorValue.setValue(value);
 
             if (!SendRequest(messageBuilder, msgSensorValue)){
                 // Couldn't send the response
+                _logger->warn("Couldn't send message");
+            } else{
+                _logger->info("Sent: {}", value);
             }
         }
 
-        void comp_sensor::OnGroupMessage(const riaps::groups::GroupId &groupId,
+        void Sensor::OnGroupMessage(const riaps::groups::GroupId &groupId,
                                          capnp::FlatArrayMessageReader &capnpreader, riaps::ports::PortBase *port) {
 
         }
 
 
-        bool comp_sensor::SendGroupMessage(riaps::groups::GroupId &groupId, capnp::MallocMessageBuilder &messageBuilder,
+        bool Sensor::SendGroupMessage(riaps::groups::GroupId &groupId, capnp::MallocMessageBuilder &messageBuilder,
                                            const std::string &portName) {
             return true;
         }
 
-        comp_sensor::~comp_sensor() {
+        Sensor::~Sensor() {
 
         }
     }
 }
 
 riaps::ComponentBase* create_component(_component_conf& config, riaps::Actor& actor){
-    auto result = new distributedestimator::components::comp_sensor(config, actor);
+    auto result = new activereplica::components::Sensor(config, actor);
     return result;
 }
 

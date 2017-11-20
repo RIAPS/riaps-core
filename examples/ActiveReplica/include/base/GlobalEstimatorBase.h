@@ -6,14 +6,13 @@
 #define RIAPS_CORE_GLOBALESTIMATORBASE_H
 
 #include "componentmodel/r_componentbase.h"
-#include "messages/distributedestimator.capnp.h"
-#include "GroupConfig.h"
+#include "messages/activereplica.capnp.h"
+#include "GroupTypes.h"
 
-// TODO: Use constexpr instead of #define
 #define PORT_SUB_ESTIMATE "estimate"
 #define PORT_TIMER_WAKEUP "wakeup"
 
-namespace distributedestimator{
+namespace activereplica{
     namespace components{
         class GlobalEstimatorBase : public riaps::ComponentBase {
 

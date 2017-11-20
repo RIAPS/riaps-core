@@ -4,25 +4,26 @@
 
 #include "LocalEstimator.h"
 
-namespace distributedestimator {
+namespace activereplica {
     namespace components {
 
         LocalEstimator::LocalEstimator(_component_conf &config, riaps::Actor &actor) :
                 LocalEstimatorBase(config, actor) {
             SetDebugLevel(_logger, spdlog::level::level_enum::debug);
-            hasJoined = false;
+            _hasJoined = false;
+            _lastValue = nullptr;
         }
 
         void LocalEstimator::OnReady(const messages::SensorReady::Reader &message,
                                      riaps::ports::PortBase *port) {
 
             riaps::groups::GroupId gid;
-            gid.groupTypeId = "BackupGroup";
+            gid.groupTypeId = GROUPTYPE_BACKUPGROUP;
             gid.groupName = "Group1";
 
 
-            if (!hasJoined){
-                hasJoined = true;
+            if (!_hasJoined){
+                _hasJoined = true;
                 if (this->JoinToGroup(gid)){
                     _logger->debug("Joined to group {}::{}", gid.groupTypeId, gid.groupName);
                 }
@@ -30,7 +31,7 @@ namespace distributedestimator {
 
             }
 
-            _logger->info("Group.Members.Count() == {}", GetGroupMemberCount(gid));
+            //_logger->info("Group.Members.Count() == {}", GetGroupMemberCount(gid));
 
             capnp::MallocMessageBuilder builderSensorQuery;
             messages::SensorQuery::Builder queryMsg = builderSensorQuery.initRoot<messages::SensorQuery>();
@@ -40,10 +41,7 @@ namespace distributedestimator {
             if (result) {
                 messages::SensorValue::Reader sensorValue;
                 if (RecvQuery(sensorValue)) {
-                    capnp::MallocMessageBuilder builderEstimate;
-                    auto estimateMsg = builderEstimate.initRoot<messages::Estimate>();
-                    estimateMsg.setMsg("local_est(" + std::to_string(::getpid()) + ")");
-                    SendEstimate(builderEstimate, estimateMsg);
+                    _lastValue.reset(new double(sensorValue.getValue()));
                 }
             }
         }
@@ -51,8 +49,23 @@ namespace distributedestimator {
         void LocalEstimator::OnGroupMessage(const riaps::groups::GroupId &groupId,
                                             capnp::FlatArrayMessageReader &capnpreader, riaps::ports::PortBase *port) {
             if (groupId.groupTypeId == GROUPTYPE_BACKUPGROUP && groupId.groupName == "Group1") {
-                if (port->GetPortName() == GROUPPORT_BACKUPGROUP_QUERYIN){
+                if (port->GetPortName() == GROUPPORT_BACKUPGROUP_QUERY_IN){
 
+                    // If no value from the sensor, don't send reply
+                    if (_lastValue == nullptr) return;
+
+                    auto msgRequest = capnpreader.getRoot<messages::QueryRequest>();
+
+                    capnp::MallocMessageBuilder builder;
+                    auto msgEstimate = builder.initRoot<messages::Estimate>();
+                    msgEstimate.setId(msgRequest.getId());
+                    msgEstimate.setValue(*_lastValue);
+
+                    riaps::groups::GroupId gid;
+                    gid.groupTypeId = GROUPTYPE_BACKUPGROUP;
+                    gid.groupName = "Group1";
+
+                    SendGroupMessage(gid, builder, GROUPPORT_BACKUPGROUP_RESPONSE_OUT);
                 }
             }
         }
@@ -64,7 +77,7 @@ namespace distributedestimator {
 }
 
 riaps::ComponentBase *create_component(_component_conf &config, riaps::Actor &actor) {
-    auto result = new distributedestimator::components::LocalEstimator(config, actor);
+    auto result = new activereplica::components::LocalEstimator(config, actor);
     return result;
 }
 

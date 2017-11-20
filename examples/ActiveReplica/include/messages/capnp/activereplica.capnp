@@ -18,7 +18,8 @@ struct SensorValue {
 
  struct Estimate {
     id     @0    : UInt32;
-    values @1    : List(Float64);
+    # values @1    : List(Float64);
+    value  @1    : Float64;
  }
 
  struct QueryRequest {

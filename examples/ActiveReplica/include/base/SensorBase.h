@@ -6,22 +6,22 @@
 #define RIAPS_CORE_SENSORBASE_H
 
 #include "componentmodel/r_componentbase.h"
-#include "messages/distributedestimator.capnp.h"
-#include "GroupConfig.h"
+#include "messages/activereplica.capnp.h"
+#include "GroupTypes.h"
 
 // Name of the ports from the model file
 #define PORT_TIMER_CLOCK "clock"
 #define PORT_PUB_READY   "ready"
 #define PORT_REP_REQUEST "request"
 
-namespace distributedestimator {
+namespace activereplica {
     namespace components {
 
-        class comp_sensorbase : public riaps::ComponentBase {
+        class SensorBase : public riaps::ComponentBase {
 
         public:
-            comp_sensorbase(_component_conf &config, riaps::Actor &actor);
-            virtual ~comp_sensorbase();
+            SensorBase(_component_conf &config, riaps::Actor &actor);
+            virtual ~SensorBase();
 
         protected:
 

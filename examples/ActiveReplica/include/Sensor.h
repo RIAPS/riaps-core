@@ -7,15 +7,15 @@
 
 #include "base/SensorBase.h"
 
-namespace distributedestimator {
+namespace activereplica {
     namespace components {
 
-        class comp_sensor : public comp_sensorbase {
+        class Sensor : public SensorBase {
 
         public:
 
-            comp_sensor(_component_conf &config, riaps::Actor &actor);
-            virtual ~comp_sensor();
+            Sensor(_component_conf &config, riaps::Actor &actor);
+            virtual ~Sensor();
 
         protected:
 
@@ -32,8 +32,8 @@ namespace distributedestimator {
                                           capnp::MallocMessageBuilder& messageBuilder,
                                           const std::string&           portName);
         private:
-            std::unique_ptr<std::uniform_real_distribution<double>> unif;
-            std::default_random_engine re;
+            std::uniform_real_distribution<double> _rndDistr;
+            std::default_random_engine             _rndEngine;
         };
     }
 }

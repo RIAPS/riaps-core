@@ -7,7 +7,7 @@
 
 #include "base/GlobalEstimatorBase.h"
 
-namespace distributedestimator {
+namespace activereplica {
     namespace components {
 
         class GlobalEstimator : public GlobalEstimatorBase {
@@ -25,18 +25,9 @@ namespace distributedestimator {
                                 capnp::FlatArrayMessageReader& capnpreader,
                                 riaps::ports::PortBase* port);
 
-//            virtual void OnGroupMessage(riaps::groups::GroupId& groupId,
-//                                        capnp::FlatArrayMessageReader* capnpreader);
-//
-//            virtual bool SendGroupMessage(riaps::groups::GroupId&      groupId,
-//                                          capnp::MallocMessageBuilder& messageBuilder,
-//                                          const std::string&           portName);
-
             virtual ~GlobalEstimator();
 
         private:
-            std::unique_ptr<std::uniform_real_distribution<double>> unif;
-            std::default_random_engine re;
             bool _hasJoined;
             bool _hasGroup;
         };

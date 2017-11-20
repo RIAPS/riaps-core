@@ -4,7 +4,7 @@
 
 #include <base/LocalEstimatorBase.h>
 
-namespace distributedestimator {
+namespace activereplica {
     namespace components {
 
         LocalEstimatorBase::LocalEstimatorBase(_component_conf &config, riaps::Actor &actor) : ComponentBase(config,

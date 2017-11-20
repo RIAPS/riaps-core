@@ -8,7 +8,7 @@
 
 #include "base/LocalEstimatorBase.h"
 
-namespace distributedestimator {
+namespace activereplica {
     namespace components {
 
         class LocalEstimator : public LocalEstimatorBase {
@@ -24,20 +24,11 @@ namespace distributedestimator {
                                 capnp::FlatArrayMessageReader& capnpreader,
                                 riaps::ports::PortBase* port);
 
-//            virtual void OnGroupMessage(riaps::groups::GroupId& groupId,
-//                                        capnp::FlatArrayMessageReader* capnpreader);
-//
-//            virtual bool SendGroupMessage(riaps::groups::GroupId&      groupId,
-//                                          capnp::MallocMessageBuilder& messageBuilder,
-//                                          const std::string&           portName);
-
-
             virtual ~LocalEstimator();
 
         private:
-            std::unique_ptr<std::uniform_real_distribution<double>> unif;
-            std::default_random_engine re;
-            bool hasJoined;
+            std::unique_ptr<double> _lastValue;
+            bool                    _hasJoined;
         };
     }
 }

@@ -4,7 +4,7 @@
 
 #include <base/GlobalEstimatorBase.h>
 
-namespace distributedestimator {
+namespace activereplica {
     namespace components {
 
         GlobalEstimatorBase::GlobalEstimatorBase(_component_conf &config, riaps::Actor &actor) : ComponentBase(config,
