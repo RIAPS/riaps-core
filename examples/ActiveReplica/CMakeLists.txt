@@ -2,29 +2,29 @@ include_directories(include)
 
 add_library(globalestimator SHARED src/GlobalEstimator.cc
                                    src/base/GlobalEstimatorBase.cc
-                                   include/messages/distributedestimator.capnp.c++
-                                   include/messages/distributedestimator.capnp.h
+                                   include/messages/activereplica.capnp.c++
+                                   include/messages/activereplica.capnp.h
                                    include/base/GlobalEstimatorBase.h
                                    include/GlobalEstimator.h
-                                   include/base/GroupConfig.h
+        include/base/GroupTypes.h
         )
 
 add_library(localestimator SHARED src/LocalEstimator.cc
                                   src/base/LocalEstimatorBase.cc
-                                  include/messages/distributedestimator.capnp.c++
-                                  include/messages/distributedestimator.capnp.h
+                                  include/messages/activereplica.capnp.c++
+                                  include/messages/activereplica.capnp.h
                                   include/base/LocalEstimatorBase.h
                                   include/LocalEstimator.h
-                                  include/base/GroupConfig.h
+        include/base/GroupTypes.h
         )
 
 add_library(sensor SHARED src/Sensor.cc
                           src/base/SensorBase.cc
-                          include/messages/distributedestimator.capnp.c++
-                          include/messages/distributedestimator.capnp.h
+                          include/messages/activereplica.capnp.c++
+                          include/messages/activereplica.capnp.h
                           include/base/SensorBase.h
                           include/Sensor.h
-                          include/base/GroupConfig.h
+        include/base/GroupTypes.h
         )
 
 target_link_libraries(localestimator czmq riaps dl capnp kj )

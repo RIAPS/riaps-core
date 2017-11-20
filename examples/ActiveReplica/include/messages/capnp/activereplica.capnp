@@ -2,7 +2,7 @@
 
 
 using Cxx = import "/capnp/c++.capnp";
-$Cxx.namespace("distributedestimator::messages");
+$Cxx.namespace("activereplica::messages");
 
 struct SensorReady {
   msg @0 : Text;
