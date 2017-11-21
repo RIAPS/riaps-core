@@ -54,7 +54,7 @@ namespace activereplica {
                     // If no value from the sensor, don't send reply
                     if (_lastValue == nullptr) return;
 
-                    auto msgRequest = capnpreader.getRoot<messages::QueryRequest>();
+                    auto msgRequest = capnpreader.getRoot<activereplica::messages::QueryRequest>();
 
                     capnp::MallocMessageBuilder builder;
                     auto msgEstimate = builder.initRoot<messages::Estimate>();
@@ -65,7 +65,9 @@ namespace activereplica {
                     gid.groupTypeId = GROUPTYPE_BACKUPGROUP;
                     gid.groupName = "Group1";
 
-                    SendGroupMessage(gid, builder, GROUPPORT_BACKUPGROUP_RESPONSE_OUT);
+                    bool rc =SendGroupMessage(gid, builder, GROUPPORT_BACKUPGROUP_RESPONSE_OUT);
+                    _logger->info_if(rc, "Message sent Id:{} Value:{}", msgEstimate.getId(), msgEstimate.getValue());
+                    _logger->warn_if(!rc, "Couldn't send message");
                 }
             }
         }

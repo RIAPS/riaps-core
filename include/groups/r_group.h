@@ -96,7 +96,7 @@ namespace riaps {
 
             bool SendMessage(capnp::MallocMessageBuilder& message, const std::string& portName);
 
-            ports::GroupSubscriberPort* FetchNextMessage(std::shared_ptr<capnp::FlatArrayMessageReader> messageReader);
+            ports::GroupSubscriberPort* FetchNextMessage(std::shared_ptr<capnp::FlatArrayMessageReader>& messageReader);
 
 
 
@@ -133,6 +133,7 @@ namespace riaps {
 
             zframe_t*  _lastFrame;
             zpoller_t* _groupPoller;
+            std::shared_ptr<capnp::FlatArrayMessageReader> _lastReader;
 
             std::shared_ptr<spd::logger> _logger;
 

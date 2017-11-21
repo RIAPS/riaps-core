@@ -198,7 +198,7 @@ namespace riaps{
             return result;
         }
 
-        ports::GroupSubscriberPort* Group::FetchNextMessage(std::shared_ptr<capnp::FlatArrayMessageReader> messageReader) {
+        ports::GroupSubscriberPort* Group::FetchNextMessage(std::shared_ptr<capnp::FlatArrayMessageReader>& messageReader) {
             void* which = zpoller_wait(_groupPoller, 10);
             if (which == nullptr) return nullptr;
 
@@ -232,6 +232,7 @@ namespace riaps{
                 byte *data  = zframe_data(_lastFrame);
 
                 kj::ArrayPtr<const capnp::word> capnp_data(reinterpret_cast<const capnp::word *>(data), size / sizeof(capnp::word));
+
 
                 messageReader.reset(new capnp::FlatArrayMessageReader(capnp_data));
 

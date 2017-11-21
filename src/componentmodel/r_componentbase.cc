@@ -279,6 +279,7 @@ namespace riaps{
                     it->second->SendPingWithPeriod();
 
                     std::shared_ptr<capnp::FlatArrayMessageReader> groupMessage(nullptr);
+
                     //std::string originComponentId;
                     ports::GroupSubscriberPort* groupRecvPort = it->second->FetchNextMessage(groupMessage);
 

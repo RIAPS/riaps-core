@@ -6,6 +6,9 @@
 #define RIAPS_FW_GLOBALESTIMATOR_H
 
 #include "base/GlobalEstimatorBase.h"
+#include <bitset>
+
+#define QUERYID_LENGTH 32
 
 namespace activereplica {
     namespace components {
@@ -28,8 +31,9 @@ namespace activereplica {
             virtual ~GlobalEstimator();
 
         private:
-            bool _hasJoined;
-            bool _hasGroup;
+            std::bitset<QUERYID_LENGTH> _pending;
+            std::bitset<QUERYID_LENGTH> _idIndex;
+            bool                        _hasJoined;
         };
     }
 }
