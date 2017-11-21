@@ -3,13 +3,13 @@
 //
 
 
-#include <GlobalEstimator.h>
+#include <Client.h>
 
 namespace activereplica {
     namespace components {
 
-        GlobalEstimator::GlobalEstimator(_component_conf &config, riaps::Actor &actor)
-                : GlobalEstimatorBase(config, actor), _hasJoined(false) {
+        Client::Client(_component_conf &config, riaps::Actor &actor)
+                : ClientBase(config, actor), _hasJoined(false) {
             //PrintParameters();
 
             SetDebugLevel(_logger, spdlog::level::level_enum::debug);
@@ -18,13 +18,13 @@ namespace activereplica {
             _idIndex = 1;
         }
 
-        void GlobalEstimator::OnEstimate(messages::Estimate::Reader &message,
+        void Client::OnEstimate(messages::Estimate::Reader &message,
                                          riaps::ports::PortBase *port) {
             //PrintMessageOnPort(port);
             //std::cout << "GlobalEstimator::OnEstimate(): " << message.getMsg().cStr() << std::endl;
         }
 
-        void GlobalEstimator::OnWakeup(riaps::ports::PortBase *port) {
+        void Client::OnWakeup(riaps::ports::PortBase *port) {
             //PrintMessageOnPort(port);
             //_logger->debug("OnWakeUp()");
 
@@ -61,7 +61,7 @@ namespace activereplica {
 
         }
 
-        void GlobalEstimator::OnGroupMessage(const riaps::groups::GroupId &groupId,
+        void Client::OnGroupMessage(const riaps::groups::GroupId &groupId,
                                              capnp::FlatArrayMessageReader &capnpreader,
                                              riaps::ports::PortBase *port) {
             if (groupId.groupTypeId == GROUPTYPE_BACKUPGROUP && groupId.groupName == "Group1") {
@@ -88,14 +88,14 @@ namespace activereplica {
 
         }
 
-        GlobalEstimator::~GlobalEstimator() {
+        Client::~Client() {
 
         }
     }
 }
 
 riaps::ComponentBase *create_component(_component_conf &config, riaps::Actor &actor) {
-    auto result = new activereplica::components::GlobalEstimator(config, actor);
+    auto result = new activereplica::components::Client(config, actor);
     return result;
 }
 

@@ -6,16 +6,16 @@
 #define RIAPS_FW_LOCALESTIMATOR_H
 
 
-#include "base/LocalEstimatorBase.h"
+#include "base/ServerBase.h"
 
 namespace activereplica {
     namespace components {
 
-        class LocalEstimator : public LocalEstimatorBase {
+        class Server : public ServerBase {
 
         public:
 
-            LocalEstimator(_component_conf &config, riaps::Actor &actor);
+            Server(_component_conf &config, riaps::Actor &actor);
 
             virtual void OnReady(const messages::SensorReady::Reader &message,
                                  riaps::ports::PortBase *port);
@@ -24,7 +24,7 @@ namespace activereplica {
                                 capnp::FlatArrayMessageReader& capnpreader,
                                 riaps::ports::PortBase* port);
 
-            virtual ~LocalEstimator();
+            virtual ~Server();
 
         private:
             std::unique_ptr<double> _lastValue;

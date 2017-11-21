@@ -5,7 +5,7 @@
 #ifndef RIAPS_FW_GLOBALESTIMATOR_H
 #define RIAPS_FW_GLOBALESTIMATOR_H
 
-#include "base/GlobalEstimatorBase.h"
+#include "base/ClientBase.h"
 #include <bitset>
 
 #define QUERYID_LENGTH 32
@@ -13,11 +13,11 @@
 namespace activereplica {
     namespace components {
 
-        class GlobalEstimator : public GlobalEstimatorBase {
+        class Client : public ClientBase {
 
         public:
 
-            GlobalEstimator(_component_conf &config, riaps::Actor &actor);
+            Client(_component_conf &config, riaps::Actor &actor);
 
             virtual void OnEstimate(messages::Estimate::Reader &message,
                                     riaps::ports::PortBase *port);
@@ -28,7 +28,7 @@ namespace activereplica {
                                 capnp::FlatArrayMessageReader& capnpreader,
                                 riaps::ports::PortBase* port);
 
-            virtual ~GlobalEstimator();
+            virtual ~Client();
 
         private:
             std::bitset<QUERYID_LENGTH> _pending;

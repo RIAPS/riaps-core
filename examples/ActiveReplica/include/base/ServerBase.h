@@ -19,11 +19,11 @@
 namespace activereplica {
     namespace components {
 
-        class LocalEstimatorBase : public riaps::ComponentBase {
+        class ServerBase : public riaps::ComponentBase {
 
         public:
 
-            LocalEstimatorBase(_component_conf &config, riaps::Actor &actor);
+            ServerBase(_component_conf &config, riaps::Actor &actor);
 
             //virtual void RegisterHandlers();
 
@@ -47,7 +47,7 @@ namespace activereplica {
                               messages::Estimate::Builder& message);
 
 
-            virtual ~LocalEstimatorBase();
+            virtual ~ServerBase();
 
         protected:
             virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,

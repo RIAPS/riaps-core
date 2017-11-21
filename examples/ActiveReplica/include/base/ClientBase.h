@@ -14,18 +14,18 @@
 
 namespace activereplica{
     namespace components{
-        class GlobalEstimatorBase : public riaps::ComponentBase {
+        class ClientBase : public riaps::ComponentBase {
 
         public:
 
-            GlobalEstimatorBase(_component_conf& config, riaps::Actor& actor);
+            ClientBase(_component_conf& config, riaps::Actor& actor);
 
             virtual void OnEstimate(messages::Estimate::Reader& message,
                                     riaps::ports::PortBase* port)=0;
 
             virtual void OnWakeup(riaps::ports::PortBase* port)=0;
 
-            virtual ~GlobalEstimatorBase();
+            virtual ~ClientBase();
 
         protected:
             virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,

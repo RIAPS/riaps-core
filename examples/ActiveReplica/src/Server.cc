@@ -2,19 +2,19 @@
 // Created by istvan on 11/11/16.
 //
 
-#include "LocalEstimator.h"
+#include "Server.h"
 
 namespace activereplica {
     namespace components {
 
-        LocalEstimator::LocalEstimator(_component_conf &config, riaps::Actor &actor) :
-                LocalEstimatorBase(config, actor) {
+        Server::Server(_component_conf &config, riaps::Actor &actor) :
+                ServerBase(config, actor) {
             SetDebugLevel(_logger, spdlog::level::level_enum::debug);
             _hasJoined = false;
             _lastValue = nullptr;
         }
 
-        void LocalEstimator::OnReady(const messages::SensorReady::Reader &message,
+        void Server::OnReady(const messages::SensorReady::Reader &message,
                                      riaps::ports::PortBase *port) {
 
             riaps::groups::GroupId gid;
@@ -46,7 +46,7 @@ namespace activereplica {
             }
         }
 
-        void LocalEstimator::OnGroupMessage(const riaps::groups::GroupId &groupId,
+        void Server::OnGroupMessage(const riaps::groups::GroupId &groupId,
                                             capnp::FlatArrayMessageReader &capnpreader, riaps::ports::PortBase *port) {
             if (groupId.groupTypeId == GROUPTYPE_BACKUPGROUP && groupId.groupName == "Group1") {
                 if (port->GetPortName() == GROUPPORT_BACKUPGROUP_QUERY_IN){
@@ -72,14 +72,14 @@ namespace activereplica {
             }
         }
 
-        LocalEstimator::~LocalEstimator() {
+        Server::~Server() {
 
         }
     }
 }
 
 riaps::ComponentBase *create_component(_component_conf &config, riaps::Actor &actor) {
-    auto result = new activereplica::components::LocalEstimator(config, actor);
+    auto result = new activereplica::components::Server(config, actor);
     return result;
 }
 
