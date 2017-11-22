@@ -25,8 +25,12 @@ namespace riaps{
         _dhtUpdateSocket = zsock_new_pull(DHT_ROUTER_CHANNEL);
 
         _riapsSocket = zsock_new(ZMQ_REP);
-        zsock_set_linger(_riapsSocket, 0);
-        zsock_set_sndtimeo(_riapsSocket, 0);
+        //zsock_set_linger(_riapsSocket, 0);
+        //zsock_set_sndtimeo(_riapsSocket, 0);
+        int lingerValue = 0;
+        int sendtimeout = 0; // 0 - returns immediately with EAGAIN if the message cannot be sent
+        zmq_setsockopt(_riapsSocket, ZMQ_LINGER, &lingerValue, sizeof(int));
+        zmq_setsockopt(_riapsSocket, ZMQ_SNDTIMEO, &sendtimeout, sizeof(int));
 
         zsock_bind(_riapsSocket, "%s", riaps::framework::Configuration::GetDiscoveryServiceIpc().c_str());
 

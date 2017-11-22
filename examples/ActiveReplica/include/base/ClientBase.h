@@ -1,9 +1,7 @@
-//
-// Created by istvan on 3/10/17.
-//
 
-#ifndef RIAPS_CORE_GLOBALESTIMATORBASE_H
-#define RIAPS_CORE_GLOBALESTIMATORBASE_H
+
+#ifndef RIAPSAPP_CLIENT_H
+#define RIAPSAPP_CLIENT_H
 
 #include "componentmodel/r_componentbase.h"
 #include "messages/activereplica.capnp.h"
@@ -34,13 +32,9 @@ namespace activereplica{
             virtual void DispatchInsideMessage(zmsg_t* zmsg,
                                                riaps::ports::PortBase* port);
 
-
-        private:
-            std::unique_ptr<std::uniform_real_distribution<double>> unif;
-            std::default_random_engine                              re;
         };
     }
 }
 
 
-#endif //RIAPS_CORE_GLOBALESTIMATORBASE_H
+#endif //RIAPSAPP_CLIENT_H

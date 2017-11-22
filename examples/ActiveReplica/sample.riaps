@@ -1,5 +1,3 @@
-// RIAPS Sample
-
 app ActiveReplica {
 	// Message types used in the app
     message SensorReady; 
@@ -14,16 +12,14 @@ app ActiveReplica {
       rep request : ( SensorQuery , SensorValue ) ;	// Reply port to query the sensor and retrieve its value
     }
     
-    // Local estimator component
-    component LocalEstimator (iArg,fArg,sArg,bArg) {
+    // The server component
+    component Server {
       sub ready : SensorReady ;						// Subscriber port to trigger component with SensorReady messages
       req query : (SensorQuery , SensorValue ) ;	// Request port to query the sensor and retrieve its value
-      pub estimate : Estimate ;						// Publish port to publish estimated value messages
     }
     
     // Global estimator
-    component GlobalEstimator (iArg=123,fArg=4.56,sArg="string",bArg=true) {
-      sub estimate : Estimate ;						// Subscriber port to receive the local estimates
+    component Client {
       timer wakeup 3000; 							// Periodic timer to wake up estimator every 3 sec
     }
 
@@ -32,18 +28,16 @@ app ActiveReplica {
             sensor: Sensor;
         }
     }
-    
-    // Estimator
-    actor Estimator {
+
+    actor Server {
        {
-          // Local estimator, publishes global message 'Estimate'
-		  filter : LocalEstimator(iArg=789,fArg=0.12,sArg="text",bArg=false);
+		  server : Server;
        }
     }
 
-    actor AggregatorGroup (posArg,optArg="optString") {
+    actor Client {
        {
-          aggr : GlobalEstimator(iArg=posArg,sArg=optArg,bArg=true);	
+          client : Client;
        }
     }
 }
