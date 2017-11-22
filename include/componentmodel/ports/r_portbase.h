@@ -1,26 +1,25 @@
-//
-// Created by parallels on 9/6/16.
-//
 
 #ifndef RIAPS_R_PORTBASE_H
 #define RIAPS_R_PORTBASE_H
 
 #include <componentmodel/r_configuration.h>
 
+
+#include <spdlog/spdlog.h>
 #include <czmq.h>
 #include <string>
 #include <iostream>
 
-//#include <boost/format.hpp>
-//#include <componentmodel/r_responseport.h>
-//#include <componentmodel/r_publisherport.h>
-//#include <componentmodel/r_subscriberport.h>
-//#include <componentmodel/r_requestport.h>
 
 #define SERVICE_POLLING_INTERVAL 2000
 
+namespace spd = spdlog;
+
 namespace riaps {
-namespace ports {
+
+    class ComponentBase;
+
+    namespace ports {
 
     class RequestPort;
     class ResponsePort;
@@ -33,6 +32,7 @@ namespace ports {
     class AsyncRequestPort;
     class AsyncResponsePort;
 
+
     enum PortTypes {Publisher, Subscriber, Request, Response, Timer, Inside};
 
     class PortBase {
@@ -40,7 +40,9 @@ namespace ports {
     public:
         //PortBase(const ComponentBase* parentComponent);
 
-        PortBase(PortTypes portType, const component_port_config* config);
+        PortBase(PortTypes portType,
+                 const component_port_config* config,
+                 const ComponentBase* parentComponent);
 
         /// \return The ip addres of the specified interface. (e.g.: "eth0")
         //virtual std::string GetInterfaceAddress(std::string ifacename);
@@ -56,6 +58,7 @@ namespace ports {
         //bool Send(std::vector<std::string>& fields) const;
         //virtual bool Send(zmsg_t** zmessage) const;
 
+        const ComponentBase* GetParentComponent();
 
 
         const PortTypes& GetPortType() const;
@@ -83,9 +86,12 @@ namespace ports {
 
         PortTypes                    _port_type;
         zsock_t*                     _port_socket;
+        std::shared_ptr<spd::logger> _logger;
+
 
     private:
         const component_port_config* _config;
+        const ComponentBase* _parentComponent;
     };
 }
 }

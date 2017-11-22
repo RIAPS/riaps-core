@@ -8,6 +8,8 @@
 // TODO: Move this somewhere else
 #define ASYNC_CHANNEL "ipc://asyncresponsepublisher"
 
+
+
 namespace riaps{
 
     void component_actor(zsock_t* pipe, void* args){
@@ -36,7 +38,8 @@ namespace riaps{
         bool terminated = false;
         bool firstrun = true;
 
-        std::cout << "Component poller starts" << std::endl;
+        auto consoleLogger = comp->_logger;
+        consoleLogger->info("Component started");
 
         // Register ZMQ Socket - riapsPort pairs. For the quick retrieve.
         std::map<const zsock_t*, const ports::PortBase*>   portSockets;
@@ -45,7 +48,7 @@ namespace riaps{
         std::map<const zsock_t*, const ports::InsidePort*> insidePorts;
 
         while (!terminated) {
-            void *which = zpoller_wait(poller, 500);
+            void *which = zpoller_wait(poller, 1);
 
             if (firstrun) {
                 firstrun = false;
@@ -119,14 +122,14 @@ namespace riaps{
             if (which == pipe) {
                 zmsg_t *msg = zmsg_recv(which);
                 if (!msg) {
-                    std::cout << "No msg => interrupted" << std::endl;
+                    consoleLogger->warn("No msg => interrupted");
                     break;
                 }
 
                 char *command = zmsg_popstr(msg);
 
                 if (streq(command, "$TERM")) {
-                    std::cout << "$TERM arrived in component" << std::endl;
+                    consoleLogger->debug("$TERM arrived in component");
                     terminated = true;
                 } else if(streq(command, CMD_UPDATE_PORT)){
                     char* portname = zmsg_popstr(msg);
@@ -153,24 +156,36 @@ namespace riaps{
                             zstr_free(&host);
                         }
                         zstr_free(&portname);
-                    } else if(streq(command, CMD_UPDATE_GROUP)){
-                        std::string groupTypeId = zmsg_popstr(msg);
-                        std::string groupName   = zmsg_popstr(msg);
-                        std::string address     = zmsg_popstr(msg);
-                        std::string messageType = zmsg_popstr(msg);
-
-                        // Grab the group object
-                        riaps::groups::GroupId gid;
-                        gid.groupTypeId = groupTypeId;
-                        gid.groupName   = groupName;
-
-                        auto groups = &(comp->_groups);
-
-                        if (groups->find(gid)!=groups->end()){
-
-
-                        }
                     }
+                }
+                else if(streq(command, CMD_UPDATE_GROUP)){
+                    zframe_t* capnp_msgbody = zmsg_pop(msg);
+                    size_t    size = zframe_size(capnp_msgbody);
+                    byte*     data = zframe_data(capnp_msgbody);
+
+                    auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
+
+                    capnp::FlatArrayMessageReader reader(capnp_data);
+                    auto msgDiscoUpd  = reader.getRoot<riaps::discovery::DiscoUpd>();
+                    auto msgGroupUpd  = msgDiscoUpd.getGroupUpdate();
+                    comp->UpdateGroup(msgGroupUpd);
+
+                    zframe_destroy(&capnp_msgbody);
+//                        std::string groupTypeId = zmsg_popstr(msg);
+//                        std::string groupName   = zmsg_popstr(msg);
+//                        std::string address     = zmsg_popstr(msg);
+//                        std::string messageType = zmsg_popstr(msg);
+//
+//                        // Grab the group object
+//                        riaps::groups::GroupId gid;
+//                        gid.groupTypeId = groupTypeId;
+//                        gid.groupName   = groupName;
+//
+//                        auto groups = &(comp->_groups);
+//
+//                        if (groups->find(gid)!=groups->end()){
+//                            //groups[gid]->ConnectToNewServices()
+//                        }
                 }
 
                 zstr_free(&command);
@@ -261,9 +276,10 @@ namespace riaps{
 
                 // Handle all group messages
                 for (auto it = comp->_groups.begin(); it!=comp->_groups.end(); it++){
-                    it->second->SendHeartBeat(riaps::distrcoord::HeartBeatType::PING);
+                    it->second->SendPingWithPeriod();
 
-                    std::unique_ptr<capnp::FlatArrayMessageReader> groupMessage(nullptr);
+                    std::shared_ptr<capnp::FlatArrayMessageReader> groupMessage(nullptr);
+
                     //std::string originComponentId;
                     ports::GroupSubscriberPort* groupRecvPort = it->second->FetchNextMessage(groupMessage);
 
@@ -303,12 +319,24 @@ namespace riaps{
         zuuid_destroy(&_component_uuid);
     }
 
+//    std::shared_ptr<spd::logger> ComponentBase::GetConsoleLogger(){
+//        return _logger;
+//    }
+
+    void ComponentBase::SetDebugLevel(std::shared_ptr<spd::logger> logger, spd::level::level_enum level){
+        logger->set_level(level);
+    }
+
     ComponentBase::ComponentBase(component_conf& config, Actor& actor) : _actor(&actor)//, _oneShotTimer(NULL)
     {
         _configuration = config;
 
         //uuid to the component instance
         _component_uuid = zuuid_new();
+
+        size_t q_size = 2048; //queue size must be power of 2
+        spd::set_async_mode(q_size);
+        _logger = spd::stdout_color_mt(_configuration.component_name);
 
         _zactor_component = zactor_new(component_actor, this);
     }
@@ -390,7 +418,7 @@ namespace riaps{
     }
 
     const ports::PublisherPort* ComponentBase::InitPublisherPort(const _component_port_pub& config) {
-        auto result = new ports::PublisherPort(config);
+        auto result = new ports::PublisherPort(config, this);
         std::unique_ptr<ports::PortBase> newport(result);
         _ports[config.portName] = std::move(newport);
         return result;
@@ -448,7 +476,7 @@ namespace riaps{
 
     const ports::PeriodicTimer* ComponentBase::InitTimerPort(const _component_port_tim& config) {
         std::string timerchannel = GetTimerChannel();
-        std::unique_ptr<ports::PeriodicTimer> newtimer(new ports::PeriodicTimer(timerchannel, config));
+        std::unique_ptr<ports::PeriodicTimer> newtimer(new ports::PeriodicTimer(timerchannel, config, this));
         newtimer->start();
 
         auto result = newtimer.get();
@@ -539,7 +567,7 @@ namespace riaps{
 //        return prefix + GetCompUuid();
 //    }
 
-    std::string ComponentBase::GetCompUuid(){
+    const std::string ComponentBase::GetCompUuid() const{
         std::string uuid_str = zuuid_str(_component_uuid);
         //std::string result (uuid_str);
         return uuid_str;
@@ -597,7 +625,10 @@ namespace riaps{
         if (_groups.find(groupId)!=_groups.end())
             return false;
 
-        std::unique_ptr<riaps::groups::Group> newGroup = std::unique_ptr<riaps::groups::Group>(new riaps::groups::Group(groupId, GetCompUuid()));
+        auto newGroup = std::unique_ptr<riaps::groups::Group>(
+                new riaps::groups::Group(groupId, this)
+        );
+
         if (newGroup->InitGroup()) {
             _groups[groupId] = std::move(newGroup);
             return true;

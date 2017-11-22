@@ -23,7 +23,7 @@ namespace riaps {
         public:
             //using PortBase::Send;
 
-            RequestPort(const _component_port_req &config, const ComponentBase *component);
+            RequestPort(const _component_port_req &config, const ComponentBase *parentComponent);
             virtual void Init();
 
             // Returns false, if the request port couldn't connect
@@ -39,7 +39,6 @@ namespace riaps {
 
             ~RequestPort() noexcept ;
         protected:
-            const ComponentBase *_parent_component;
             bool _isConnected;
 
             capnp::FlatArrayMessageReader _capnpReader;

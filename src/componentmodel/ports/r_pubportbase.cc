@@ -8,8 +8,8 @@
 namespace riaps{
     namespace ports{
 
-        PublisherPortBase::PublisherPortBase(const component_port_config* config)
-                : PortBase(PortTypes::Publisher, config),
+        PublisherPortBase::PublisherPortBase(const component_port_config* config, const ComponentBase* parentComponent)
+                : PortBase(PortTypes::Publisher, config, parentComponent),
                   SenderPort(this) {
 
         }
@@ -32,14 +32,14 @@ namespace riaps{
             }
 
             std::string pub_endpoint = "tcp://" + _host + ":!";
-            _port = zsock_bind(_port_socket, pub_endpoint.c_str());
+            _port = zsock_bind(_port_socket, "%s", pub_endpoint.c_str());
 
 
             if (_port == -1) {
                 throw std::runtime_error("Couldn't bind publisher port.");
             }
 
-            std::cout << "Publisher is created on : " << _host << ":" << _port << std::endl;
+            _logger->debug("Publisher is created on {}:{} [{}]", _host, _port, GetConfig()->messageType);
         }
 
         const _component_port_pub* PublisherPortBase::GetConfig() const {

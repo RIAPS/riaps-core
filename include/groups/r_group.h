@@ -12,16 +12,20 @@
 #include <messaging/disco.capnp.h>
 #include <messaging/distcoord.capnp.h>
 
+#include <spdlog/spdlog.h>
 #include <msgpack.hpp>
 #include <czmq.h>
 
 #include <string>
 #include <vector>
 #include <map>
+#include <random>
 
 #define INTERNAL_SUB_NAME "$SUB#"
 #define INTERNAL_PUB_NAME "$PUB#"
 #define INTERNAL_MESSAGETYPE "InternalGroupMessage"
+
+namespace spd = spdlog;
 
 namespace riaps {
     namespace groups {
@@ -80,7 +84,7 @@ namespace riaps {
              * Initializes a group, by the given groupId
              * @param groupId Must have valid configuration entry with the matching id.
              */
-            Group(const GroupId& groupId, const std::string _componentId);
+            Group(const GroupId& groupId, const ComponentBase* parentComponent);
 
             /**
              * Creates the communication ports and registers the group in the discovery service.
@@ -92,9 +96,13 @@ namespace riaps {
 
             bool SendMessage(capnp::MallocMessageBuilder& message, const std::string& portName);
 
-            ports::GroupSubscriberPort* FetchNextMessage(std::unique_ptr<capnp::FlatArrayMessageReader>& messageReader);
+            ports::GroupSubscriberPort* FetchNextMessage(std::shared_ptr<capnp::FlatArrayMessageReader>& messageReader);
 
-            void SendHeartBeat(riaps::distrcoord::HeartBeatType type);
+
+
+            bool SendPingWithPeriod();
+            bool SendPing();
+            bool SendPong();
             
             std::shared_ptr<std::vector<std::string>> GetKnownComponents();
 
@@ -103,6 +111,8 @@ namespace riaps {
             ~Group();
 
         private:
+            bool SendHeartBeat(riaps::distrcoord::HeartBeatType type);
+
             const GroupId     _groupId;
             groupt_conf       _groupTypeConf;
 
@@ -113,15 +123,30 @@ namespace riaps {
             std::shared_ptr<riaps::ports::GroupSubscriberPort>   _groupSubPort;
 
             std::map<const zsock_t*, std::shared_ptr<riaps::ports::PortBase>> _groupPorts;
+
+            /**
+             * List of nodes who was a sender with timestamp (last known timepoint).
+             *  key   - component id (uuid, generated runtime, when the component starts
+             *  value - timepoint
+             */
             std::unordered_map<std::string, int64_t> _knownNodes;
 
             zframe_t*  _lastFrame;
             zpoller_t* _groupPoller;
+            std::shared_ptr<capnp::FlatArrayMessageReader> _lastReader;
 
-            std::string _componentId;
+            std::shared_ptr<spd::logger> _logger;
 
-            int64_t _lastPing;
-            const uint16_t _pingPeriod;
+            int64_t  _lastPingSent;
+            float    _pingPeriod;
+
+            std::default_random_engine         rndGenerator;
+            std::uniform_int_distribution<int> rndDistribution;
+
+            const ComponentBase* _parentComponent;
+
+            // debug
+            uint16_t _pingCounter;
         };
 
     }

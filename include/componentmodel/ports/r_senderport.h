@@ -5,17 +5,18 @@
 #ifndef RIAPS_CORE_R_SENDERPORT_H
 #define RIAPS_CORE_R_SENDERPORT_H
 
-#include <componentmodel/ports/r_portbase.h>
+//#include <componentmodel/ports/r_portbase.h>
 
 #include <capnp/message.h>
 #include <capnp/serialize.h>
+#include <czmq.h>
 
 #include <type_traits>
 
 namespace riaps{
     namespace ports{
 
-        //class PortBase;
+        class PortBase;
 
         class SenderPort{
             //static_assert(std::is_base_of<PortBase, T>::value, "T must extend PortBase");

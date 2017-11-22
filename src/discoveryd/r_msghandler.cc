@@ -10,8 +10,8 @@ namespace riaps{
     DiscoveryMessageHandler::DiscoveryMessageHandler(dht::DhtRunner &dhtNode, zsock_t** pipe, std::shared_ptr<spdlog::logger> logger)
         : _dhtNode(dhtNode),
           _pipe(*pipe),
-          _serviceCheckPeriod(20000), // 20 sec in in msec.
-          _zombieCheckPeriod(600000), // 10 min in msec
+          _serviceCheckPeriod((uint16_t)20000), // 20 sec in in msec.
+          _zombieCheckPeriod((uint16_t)600000), // 10 min in msec
           _zombieKey("/zombies"),
           _terminated(false),
           _logger(logger) {
@@ -24,11 +24,21 @@ namespace riaps{
     bool DiscoveryMessageHandler::Init() {
         _dhtUpdateSocket = zsock_new_pull(DHT_ROUTER_CHANNEL);
 
-        _riapsSocket = zsock_new_rep (riaps::framework::Configuration::GetDiscoveryServiceIpc().c_str());
+        _riapsSocket = zsock_new(ZMQ_REP);
+        //zsock_set_linger(_riapsSocket, 0);
+        //zsock_set_sndtimeo(_riapsSocket, 0);
         int lingerValue = 0;
         int sendtimeout = 0; // 0 - returns immediately with EAGAIN if the message cannot be sent
         zmq_setsockopt(_riapsSocket, ZMQ_LINGER, &lingerValue, sizeof(int));
         zmq_setsockopt(_riapsSocket, ZMQ_SNDTIMEO, &sendtimeout, sizeof(int));
+
+        zsock_bind(_riapsSocket, "%s", riaps::framework::Configuration::GetDiscoveryServiceIpc().c_str());
+
+        //_riapsSocket = zsock_new_rep (riaps::framework::Configuration::GetDiscoveryServiceIpc().c_str());
+        //int lingerValue = 0;
+        //int sendtimeout = 0; // 0 - returns immediately with EAGAIN if the message cannot be sent
+        //zmq_setsockopt(_riapsSocket, ZMQ_LINGER, &lingerValue, sizeof(int));
+        //zmq_setsockopt(_riapsSocket, ZMQ_SNDTIMEO, &sendtimeout, sizeof(int));
 
         _poller = zpoller_new(_pipe, _riapsSocket, _dhtUpdateSocket, nullptr);
 

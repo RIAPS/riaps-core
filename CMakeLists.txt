@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(riaps_core VERSION 0.6.0)
+project(riaps_core VERSION 0.6.1)
 option(arch "amd64/armhf" "amd64")
 option(BUILD_TESTS  "Build tests" ON)
 set(CMAKE_SYSTEM_NAME Linux)
@@ -60,6 +60,7 @@ if (BUILD_TESTS)
     # add_subdirectory(examples/DistributedEstimatorPy)
     # add_subdirectory(examples/DistributedEstimator)
     # add_subdirectory(examples/DistributedEstimatorGroup)
+    # add_subdirectory(examples/ActiveReplica)
     #add_subdirectory(tests/test_timer)
     #add_subdirectory(tests/GpioDeviceTesting)
     #add_subdirectory(tests/testPubSub/test_1_1/test_1_1)
@@ -166,7 +167,7 @@ add_executable(start_actor
         ${ACTOR_SOURCE}
         ${ACTOR_HEADERS}
         )
-target_link_libraries(start_actor czmq zmq riaps capnp)
+target_link_libraries(start_actor czmq zmq riaps capnp pthread)
 install(TARGETS start_actor DESTINATION bin)
 
 # rdiscoveryd source
@@ -227,5 +228,5 @@ IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
 
 ENDIF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
 
-install(DIRECTORY include/ DESTINATION include
-        PATTERN "boost" EXCLUDE)
+install(DIRECTORY include/ DESTINATION include)
+        #PATTERN "boost" EXCLUDE)

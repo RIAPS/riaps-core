@@ -24,7 +24,7 @@ namespace riaps {
         public:
             //using PortBase::Send;
 
-            InsidePort(const _component_port_ins &config, InsidePortMode mode, ComponentBase *parent_component);
+            InsidePort(const _component_port_ins &config, InsidePortMode mode, const ComponentBase *parent_component);
 
             std::string GetEndpoint();
 

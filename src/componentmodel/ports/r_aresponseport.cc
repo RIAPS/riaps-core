@@ -8,8 +8,8 @@
 namespace riaps{
     namespace ports{
 
-        AsyncResponsePort::AsyncResponsePort(const _component_port_rep &config, ComponentBase *parent_component) :
-            PortBase(PortTypes::Response, (component_port_config*)&config),
+        AsyncResponsePort::AsyncResponsePort(const _component_port_rep &config, const ComponentBase *parent_component) :
+            PortBase(PortTypes::Response, (component_port_config*)&config, parent_component),
             SenderPort(this)
         {
             _port_socket = zsock_new(ZMQ_ROUTER);
@@ -20,7 +20,7 @@ namespace riaps{
             }
 
             std::string rep_endpoint = "tcp://" + _host + ":!";
-            _port = zsock_bind(_port_socket, rep_endpoint.c_str());
+            _port = zsock_bind(_port_socket, "%s", rep_endpoint.c_str());
 
 
             if (_port == -1) {

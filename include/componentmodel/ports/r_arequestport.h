@@ -37,7 +37,6 @@ namespace riaps {
 
             ~AsyncRequestPort() noexcept ;
         protected:
-            const ComponentBase *_parent_component;
             bool _isConnected;
 
             capnp::FlatArrayMessageReader _capnpReader;

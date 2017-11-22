@@ -1,9 +1,9 @@
-/*!
+/**
  * RIAPS ComponentBase
  *
- * \brief Parent class of all RIAPS components. Controls the communication ports, messaging and timers.
+ * @brief Parent class of all RIAPS components. Controls the communication ports, messaging, timers, groups.
  *
- * \author Istvan Madari
+ * @author Istvan Madari
  */
 
 
@@ -22,6 +22,7 @@
 #include <msgpack.hpp>
 #include <capnp/message.h>
 #include <capnp/serialize.h>
+#include <spdlog/spdlog.h>
 
 #include <iostream>
 #include <fstream>
@@ -37,6 +38,10 @@
 #include <componentmodel/ports/r_responseport.h>
 #include <componentmodel/ports/r_requestport.h>
 #include <componentmodel/ports/r_insideport.h>
+
+
+namespace spd = spdlog;
+
 
 namespace riaps {
 
@@ -123,7 +128,7 @@ namespace riaps {
          *
          * @return The component unique ID.
          */
-        std::string             GetCompUuid();
+        const std::string GetCompUuid() const;
 
 
         /**
@@ -142,6 +147,9 @@ namespace riaps {
         virtual ~ComponentBase();
 
     protected:
+        std::shared_ptr<spd::logger> _logger;
+
+
         /**
          * Sends a ZMQ message on the given port.
          *
@@ -158,7 +166,7 @@ namespace riaps {
         
 
         uint16_t GetGroupMemberCount(const riaps::groups::GroupId& groupId,
-                                     const int64_t timeout = 1000*60 /*1 minute in msec*/);
+                                     const int64_t timeout = 1000*15 /*15 sec in msec*/);
 //
 //        virtual bool SendGroupMessage(riaps::groups::GroupId&      groupId,
 //                                      capnp::MallocMessageBuilder& messageBuilder,
@@ -202,6 +210,10 @@ namespace riaps {
          * @return NULL if there is no port with the given name.
          */
         ports::PortBase* GetPortByName(const std::string&);
+
+        //std::shared_ptr<spd::logger> GetConsoleLogger();
+
+        void SetDebugLevel(std::shared_ptr<spd::logger> logger, spd::level::level_enum level);
 
         // Note: disable for now, we need more tests.
         //bool CreateOneShotTimer(const std::string& timerid, timespec& wakeuptime);
@@ -292,6 +304,7 @@ namespace riaps {
         //timers::OneShotTimer*   _oneShotTimer;
 
         component_conf _configuration;
+
 
         // All the component ports
         std::map<std::string, std::unique_ptr<ports::PortBase>> _ports;

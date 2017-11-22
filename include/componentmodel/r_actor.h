@@ -15,6 +15,7 @@
 #include <utils/r_utils.h>
 #include <groups/r_group.h>
 
+#include <spdlog/spdlog.h>
 #include <json.h>
 
 #include <czmq.h>
@@ -25,6 +26,7 @@
 #include <fstream>
 #include <set>
 
+namespace spd = spdlog;
 
 namespace riaps {
 
@@ -56,10 +58,11 @@ namespace riaps {
         // Todo: Thinking on to make them static... I'm not sure it is good.
         const std::vector<groupt_conf>& GetGroupTypes() const;
         const groupt_conf* GetGroupType(const std::string& groupTypeId) const;
+        ComponentBase* GetComponentByName(const std::string& componentName) const;
 
         virtual ~Actor();
         void UpdatePort(std::string& instancename, std::string& portname, std::string& host, int port);
-        void UpdateGroup(riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
+        void UpdateGroup(zframe_t* capnpMessageBody, const std::string& sourceComponentId);
 
     protected:
 
@@ -117,6 +120,7 @@ namespace riaps {
     private:
         zpoller_t*    _poller;
         static Actor* _currentActor;
+        std::shared_ptr<spd::logger> _logger;
     };
 }
 

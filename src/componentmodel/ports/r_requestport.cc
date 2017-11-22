@@ -8,10 +8,9 @@
 namespace riaps {
     namespace ports {
 
-        RequestPort::RequestPort(const _component_port_req &config, const ComponentBase *component)
-                : PortBase(PortTypes::Request, (component_port_config*)(&config)),
+        RequestPort::RequestPort(const _component_port_req &config, const ComponentBase *parentComponent)
+                : PortBase(PortTypes::Request, (component_port_config*)(&config), parentComponent),
                   SenderPort(this),
-                  _parent_component(component),
                   _capnpReader(capnp::FlatArrayMessageReader(nullptr)) {
             _port_socket = zsock_new(ZMQ_REQ);
 
@@ -35,9 +34,9 @@ namespace riaps {
             const _component_port_req* current_config = GetConfig();
 
             auto results =
-                    subscribeToService(_parent_component->GetActor()->GetApplicationName(),
-                                         _parent_component->GetConfig().component_name,
-                                         _parent_component->GetActor()->GetActorName(),
+                    subscribeToService(GetParentComponent()->GetActor()->GetApplicationName(),
+                                         GetParentComponent()->GetConfig().component_name,
+                                         GetParentComponent()->GetActor()->GetActorName(),
                                          riaps::discovery::Kind::REQ,
                                          (current_config->isLocal?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
                                          current_config->portName, // Subscriber name
@@ -50,7 +49,7 @@ namespace riaps {
         }
 
         bool RequestPort::ConnectToResponse(const std::string &rep_endpoint) {
-            int rc = zsock_connect(_port_socket, rep_endpoint.c_str());
+            int rc = zsock_connect(_port_socket, "%s", rep_endpoint.c_str());
 
             if (rc != 0) {
                 std::cout << "Request '" + GetConfig()->portName + "' couldn't connect to " + rep_endpoint

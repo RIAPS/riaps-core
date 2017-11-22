@@ -1,7 +1,7 @@
 #include <componentmodel/r_argumentparser.h>
 #include <componentmodel/r_actor.h>
 
-#define NO_GROUP_TEST
+//#define NO_GROUP_TEST
 
 namespace riaps {
 
@@ -69,26 +69,54 @@ namespace riaps {
           _actor_zsock(nullptr)
     {
 
+
+
 #ifndef NO_GROUP_TEST
         // TODO: Remove this
         // Note: Group testing
         //////////////////////////
+
+        _group_port_pub p;
+        _group_port_sub s;
+
+//        _grouptype_configurations.push_back(
+//                groupt_conf{
+//                        "TestGroupId", //GroupId
+//                        {}
+//                }
+//        );
+//
+//        p.portName="TestPubPortName";
+//        p.messageType="TestPortType";
+//        _grouptype_configurations.back().groupTypePorts.pubs.push_back(p);
+//
+//        s.portName = "TestSubPortName";
+//        s.messageType=p.messageType;
+//        _grouptype_configurations.back().groupTypePorts.subs.push_back(s);
+
         _grouptype_configurations.push_back(
                 groupt_conf{
-                        "TestGroupId", //GroupId
+                        "BackupGroup", //GroupId
                         {}
                 }
         );
 
-        _group_port_pub p;
-        p.portName="TestPubPortName";
-        p.messageType="TestPortType";
+        p.portName="QueryOut";
+        p.messageType="QueryRequest";
         _grouptype_configurations.back().groupTypePorts.pubs.push_back(p);
 
-        _group_port_sub s;
-        s.portName = "TestSubPortName";
+        s.portName = "QueryIn";
         s.messageType=p.messageType;
         _grouptype_configurations.back().groupTypePorts.subs.push_back(s);
+
+        p.portName="ResponseOut";
+        p.messageType="Estimate";
+        _grouptype_configurations.back().groupTypePorts.pubs.push_back(p);
+
+        s.portName = "ResponseIn";
+        s.messageType=p.messageType;
+        _grouptype_configurations.back().groupTypePorts.subs.push_back(s);
+
 
         /////////////////////////
         //TODO: REMOVE LINES ABOVE AFTER TESTING
@@ -109,6 +137,8 @@ namespace riaps {
         _jsonLocals    = jsonActorconfig[J_LOCALS];
         _jsonFormals   = jsonActorconfig[J_FORMALS];
         _startDevice   = false;
+
+        _logger = spd::get(_actorName);
     }
 
     void riaps::Actor::ParseConfig() {
@@ -392,7 +422,7 @@ namespace riaps {
                 dlOpenHandle = dlopen(componentLibraryName.c_str(), RTLD_NOW);
 
                 if (dlOpenHandle == nullptr) {
-                    std::cerr << dlerror() << std::endl;
+                    _logger->error(dlerror());
                     std::string msg = "Cannot open library: " + componentLibraryName + " (" + dlerror() + ")\n" +dlerror();
                     throw std::runtime_error(msg);
                 }
@@ -431,6 +461,14 @@ namespace riaps {
                 }
             }
         }
+    }
+
+    ComponentBase* riaps::Actor::GetComponentByName(const std::string &componentName) const {
+        for (auto it = _components.begin(); it != _components.end(); it++) {
+            if ((*it)->GetConfig().component_name == componentName)
+                return *it;
+        }
+        return nullptr;
     }
     
     const std::vector<groupt_conf>& riaps::Actor::GetGroupTypes() const {
@@ -537,19 +575,21 @@ namespace riaps {
                 } else if (msgDiscoUpd.isGroupUpdate()){
                     auto msgGroupUpd = msgDiscoUpd.getGroupUpdate();
 
-                    std::cout << "Group update arrived in actor "
-                              << msgGroupUpd.getGroupId().getGroupType().cStr()
-                              << "::"
-                              << msgGroupUpd.getGroupId().getGroupName().cStr()
-                              <<std::endl;
+//                    std::cout << "Group update arrived in actor "
+//                              << msgGroupUpd.getGroupId().getGroupType().cStr()
+//                              << "::"
+//                              << msgGroupUpd.getGroupId().getGroupName().cStr()
+//                              <<std::endl;
 
-                    for (int i = 0; i<msgGroupUpd.getServices().size(); i++){
-                        auto v = msgGroupUpd.getServices()[i];
-                        std::cout << " -" << v.getAddress().cStr() << "#" << v.getMessageType().cStr() << std::endl;
-                    }
+//                    for (int i = 0; i<msgGroupUpd.getServices().size(); i++){
+//                        auto v = msgGroupUpd.getServices()[i];
+//                        std::cout << " -" << v.getAddress().cStr() << "#" << v.getMessageType().cStr() << std::endl;
+//                    }
 
-                    UpdateGroup(msgGroupUpd);
+                    std::string sourceComponentId = msgGroupUpd.getComponentId().cStr();
+                    UpdateGroup(capnp_msgbody, sourceComponentId);
                 }
+                zframe_destroy(&capnp_msgbody);
                 zmsg_destroy(&msg);
             }
             else if (_devm->GetSocket()!=NULL && which == _devm->GetSocket()){
@@ -574,15 +614,18 @@ namespace riaps {
         }
     }
 
-    void riaps::Actor::UpdateGroup(riaps::discovery::GroupUpdate::Reader& msgGroupUpdate){
-        std::string sourceComponentId   = msgGroupUpdate.getComponentId().cStr();
+    void riaps::Actor::UpdateGroup(zframe_t* capnpMessageBody, const std::string& sourceComponentId){
         for (ComponentBase* component : _components) {
             std::string componentInstanceId = component->GetCompUuid();
 
             // Do not send update to the component, because the services originates from this component.
             if (componentInstanceId == sourceComponentId) continue;
 
-            component->UpdateGroup(msgGroupUpdate);
+            // Doesn't change the ownership, in other words: the pointers are not released
+            zsock_send(component->GetZmqPipe(), "sf", CMD_UPDATE_GROUP, capnpMessageBody);
+
+
+            //component->UpdateGroup(msgGroupUpdate);
         }
     }
 
@@ -593,7 +636,7 @@ namespace riaps {
             deregisterActor(GetActorName(), GetApplicationName());
 
         for (riaps::ComponentBase* component : _components){
-            std::cout << "Stop component: " << component->GetConfig().component_name <<std::endl;
+            _logger->info("Stop component: {}", component->GetConfig().component_name);
             component->StopComponent();
         }
 

@@ -11,6 +11,9 @@ namespace distributedestimator {
         GlobalEstimator::GlobalEstimator(_component_conf &config, riaps::Actor &actor)
                 : GlobalEstimatorBase(config, actor), _hasJoined(false) {
             //PrintParameters();
+
+            SetDebugLevel(_logger, spdlog::level::level_enum::debug);
+
             auto param = GetConfig().component_parameters.GetParam("iArg");
             if (param!= nullptr){
                 if (param->GetValueAsString() == "group"){
@@ -27,14 +30,13 @@ namespace distributedestimator {
 
         void GlobalEstimator::OnWakeup(riaps::ports::PortBase *port) {
             //PrintMessageOnPort(port);
-            std::cout << "GlobalEstimator::OnWakeUp(): " << port->GetPortName() << std::endl;
+            //_logger->debug("OnWakeUp()");
 
             if (_hasGroup) {
                 if (!_hasJoined) {
                     _hasJoined = true;
-                    if (this->JoinToGroup({"TestGroupId", "Korte"})) {
-                        std::cout << "Successfully joined to group TestGroupId::Korte" << std::endl;
-                    }
+                    bool rc = this->JoinToGroup({"TestGroupId", "Korte"});
+                    _logger->debug_if(rc, "Successfully joined to group TestGroupId::Korte");
 
                 } else {
 //                    capnp::MallocMessageBuilder builder;
@@ -52,7 +54,7 @@ namespace distributedestimator {
         void GlobalEstimator::OnGroupMessage(const riaps::groups::GroupId &groupId,
                                              capnp::FlatArrayMessageReader &capnpreader,
                                              riaps::ports::PortBase *port) {
-            std::cout << "[GE] Group message arrived!" << std::endl;
+            //std::cout << "[GE] Group message arrived!" << std::endl;
 
         }
 
