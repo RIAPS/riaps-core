@@ -368,6 +368,8 @@ joinGroup(const std::string& appName,
     capnp::FlatArrayMessageReader reader(capnpData);
     auto msgRep= reader.getRoot<riaps::discovery::DiscoRep>();
 
+    zsock_destroy(&client);
+
     // If the response OK, return true
     return msgRep.isGroupJoin() && msgRep.getGroupJoin().getStatus() == riaps::discovery::Status::OK;
 }

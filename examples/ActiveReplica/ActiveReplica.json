@@ -1,61 +1,11 @@
 {
     "actors":{
-        "AggregatorGroup":{
-            "formals":[
-                {
-                    "name":"posArg"
-                },
-                {
-                    "default":"optString",
-                    "name":"optArg"
-                }
-            ],
-            "instances":{
-                "aggr":{
-                    "actuals":[
-                        {
-                            "name":"iArg",
-                            "param":"posArg"
-                        },
-                        {
-                            "name":"sArg",
-                            "param":"optArg"
-                        },
-                        {
-                            "name":"bArg",
-                            "value":true
-                        }
-                    ],
-                    "type":"GlobalEstimator"
-                }
-            },
-            "internals":[],
-            "locals":[],
-            "wires":[]
-        },
-        "Estimator":{
+        "Client":{
             "formals":[],
             "instances":{
-                "filter":{
-                    "actuals":[
-                        {
-                            "name":"iArg",
-                            "value":789
-                        },
-                        {
-                            "name":"fArg",
-                            "value":0.12
-                        },
-                        {
-                            "name":"sArg",
-                            "value":"text"
-                        },
-                        {
-                            "name":"bArg",
-                            "value":false
-                        }
-                    ],
-                    "type":"LocalEstimator"
+                "client":{
+                    "actuals":[],
+                    "type":"Client"
                 }
             },
             "internals":[],
@@ -73,29 +23,24 @@
             "internals":[],
             "locals":[],
             "wires":[]
+        },
+        "Server":{
+            "formals":[],
+            "instances":{
+                "server":{
+                    "actuals":[],
+                    "type":"Server"
+                }
+            },
+            "internals":[],
+            "locals":[],
+            "wires":[]
         }
     },
     "components":{
-        "GlobalEstimator":{
-            "formals":[
-                {
-                    "default":123,
-                    "name":"iArg"
-                },
-                {
-                    "default":4.56,
-                    "name":"fArg"
-                },
-                {
-                    "default":"string",
-                    "name":"sArg"
-                },
-                {
-                    "default":true,
-                    "name":"bArg"
-                }
-            ],
-            "name":"GlobalEstimator",
+        "Client":{
+            "formals":[],
+            "name":"Client",
             "ports":{
                 "clts":{},
                 "inss":{},
@@ -103,56 +48,12 @@
                 "reps":{},
                 "reqs":{},
                 "srvs":{},
-                "subs":{
-                    "estimate":{
-                        "type":"Estimate"
-                    }
-                },
+                "subs":{},
                 "tims":{
                     "wakeup":{
                         "period":3000
                     }
                 }
-            }
-        },
-        "LocalEstimator":{
-            "formals":[
-                {
-                    "name":"iArg"
-                },
-                {
-                    "name":"fArg"
-                },
-                {
-                    "name":"sArg"
-                },
-                {
-                    "name":"bArg"
-                }
-            ],
-            "name":"LocalEstimator",
-            "ports":{
-                "clts":{},
-                "inss":{},
-                "pubs":{
-                    "estimate":{
-                        "type":"Estimate"
-                    }
-                },
-                "reps":{},
-                "reqs":{
-                    "query":{
-                        "rep_type":"SensorValue",
-                        "req_type":"SensorQuery"
-                    }
-                },
-                "srvs":{},
-                "subs":{
-                    "ready":{
-                        "type":"SensorReady"
-                    }
-                },
-                "tims":{}
             }
         },
         "Sensor":{
@@ -180,6 +81,29 @@
                         "period":1000
                     }
                 }
+            }
+        },
+        "Server":{
+            "formals":[],
+            "name":"Server",
+            "ports":{
+                "clts":{},
+                "inss":{},
+                "pubs":{},
+                "reps":{},
+                "reqs":{
+                    "query":{
+                        "rep_type":"SensorValue",
+                        "req_type":"SensorQuery"
+                    }
+                },
+                "srvs":{},
+                "subs":{
+                    "ready":{
+                        "type":"SensorReady"
+                    }
+                },
+                "tims":{}
             }
         }
     },
