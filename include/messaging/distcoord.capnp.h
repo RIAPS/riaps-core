@@ -21,6 +21,7 @@ enum class HeartBeatType_fce2365756d7b39d: uint16_t {
 };
 CAPNP_DECLARE_ENUM(HeartBeatType, fce2365756d7b39d);
 CAPNP_DECLARE_SCHEMA(c7426d39bcaf282b);
+CAPNP_DECLARE_SCHEMA(957dd94c9c9999de);
 
 }  // namespace schemas
 }  // namespace capnp
@@ -39,6 +40,21 @@ struct GroupHeartBeat {
 
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(c7426d39bcaf282b, 1, 1)
+    #if !CAPNP_LITE
+    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    #endif  // !CAPNP_LITE
+  };
+};
+
+struct RiapsTimestamp {
+  RiapsTimestamp() = delete;
+
+  class Reader;
+  class Builder;
+  class Pipeline;
+
+  struct _capnpPrivate {
+    CAPNP_DECLARE_STRUCT_HEADER(957dd94c9c9999de, 1, 0)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
     #endif  // !CAPNP_LITE
@@ -133,6 +149,82 @@ private:
 };
 #endif  // !CAPNP_LITE
 
+class RiapsTimestamp::Reader {
+public:
+  typedef RiapsTimestamp Reads;
+
+  Reader() = default;
+  inline explicit Reader(::capnp::_::StructReader base): _reader(base) {}
+
+  inline ::capnp::MessageSize totalSize() const {
+    return _reader.totalSize().asPublic();
+  }
+
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const {
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+  }
+#endif  // !CAPNP_LITE
+
+  inline  ::int64_t getValue() const;
+
+private:
+  ::capnp::_::StructReader _reader;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::List;
+  friend class ::capnp::MessageBuilder;
+  friend class ::capnp::Orphanage;
+};
+
+class RiapsTimestamp::Builder {
+public:
+  typedef RiapsTimestamp Builds;
+
+  Builder() = delete;  // Deleted to discourage incorrect usage.
+                       // You can explicitly initialize to nullptr instead.
+  inline Builder(decltype(nullptr)) {}
+  inline explicit Builder(::capnp::_::StructBuilder base): _builder(base) {}
+  inline operator Reader() const { return Reader(_builder.asReader()); }
+  inline Reader asReader() const { return *this; }
+
+  inline ::capnp::MessageSize totalSize() const { return asReader().totalSize(); }
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const { return asReader().toString(); }
+#endif  // !CAPNP_LITE
+
+  inline  ::int64_t getValue();
+  inline void setValue( ::int64_t value);
+
+private:
+  ::capnp::_::StructBuilder _builder;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  friend class ::capnp::Orphanage;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+};
+
+#if !CAPNP_LITE
+class RiapsTimestamp::Pipeline {
+public:
+  typedef RiapsTimestamp Pipelines;
+
+  inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
+  inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
+      : _typeless(kj::mv(typeless)) {}
+
+private:
+  ::capnp::AnyPointer::Pipeline _typeless;
+  friend class ::capnp::PipelineHook;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+};
+#endif  // !CAPNP_LITE
+
 // =======================================================================================
 
 inline  ::riaps::distrcoord::HeartBeatType GroupHeartBeat::Reader::getHeartBeatType() const {
@@ -179,6 +271,20 @@ inline void GroupHeartBeat::Builder::adoptSourceComponentId(
 inline ::capnp::Orphan< ::capnp::Text> GroupHeartBeat::Builder::disownSourceComponentId() {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+
+inline  ::int64_t RiapsTimestamp::Reader::getValue() const {
+  return _reader.getDataField< ::int64_t>(
+      0 * ::capnp::ELEMENTS);
+}
+
+inline  ::int64_t RiapsTimestamp::Builder::getValue() {
+  return _builder.getDataField< ::int64_t>(
+      0 * ::capnp::ELEMENTS);
+}
+inline void RiapsTimestamp::Builder::setValue( ::int64_t value) {
+  _builder.setDataField< ::int64_t>(
+      0 * ::capnp::ELEMENTS, value);
 }
 
 }  // namespace
