@@ -45,6 +45,8 @@ namespace riaps{
             return (_component_port_rep*)GetPortBaseConfig();
         }
 
+
+
 //        bool ResponsePort::Send(zmsg_t** msg) const {
 //            //zmsg_pushstr(*msg, GetConfig()->rep_type.c_str());
 //

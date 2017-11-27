@@ -56,31 +56,24 @@ namespace activereplica {
 
         }
 
-        void Client::OnGroupMessage(const riaps::groups::GroupId &groupId,
-                                             capnp::FlatArrayMessageReader &capnpreader,
-                                             riaps::ports::PortBase *port) {
+        void Client::OnGroupMessage(const riaps::groups::GroupId  &groupId,
+                                    capnp::FlatArrayMessageReader &capnpreader,
+                                    riaps::ports::PortBase        *port) {
             if (groupId.groupTypeId == GROUPTYPE_BACKUPGROUP && groupId.groupName == "Group1") {
                 if (port->GetPortName() == GROUPPORT_BACKUPGROUP_RESPONSE_IN) {
 
-                    auto msgEstimate    = capnpreader.getRoot<activereplica::messages::Estimate>();
-                    uint32_t requestId  = msgEstimate.getId();
-                    std::bitset<QUERYID_LENGTH> requestBits(requestId);
+                    auto msgEstimate = capnpreader.getRoot<activereplica::messages::Estimate>();
+                    std::bitset<QUERYID_LENGTH> messageId(msgEstimate.getId());
 
-
-                    // check if the message already arrived earlier
-                    if ((_pending&requestBits).any()){
-                        // The message is not processed before
-
+                    // Check if the message already arrived earlier
+                    // (_pending&messageId)!=0 -> New message arrived, process the new message
+                    if ((_pending&messageId).any()){
                         // delete the pending flag
-                        _pending ^=requestBits;
+                        _pending ^=messageId;
                         _logger->info("Response: {}", msgEstimate.getValue());
-
                     }
-
-
                 }
             }
-
         }
 
         Client::~Client() {

@@ -60,7 +60,7 @@ if (BUILD_TESTS)
     # add_subdirectory(examples/DistributedEstimatorPy)
     # add_subdirectory(examples/DistributedEstimator)
     # add_subdirectory(examples/DistributedEstimatorGroup)
-    # add_subdirectory(examples/ActiveReplica)
+    add_subdirectory(examples/ActiveReplica)
     #add_subdirectory(tests/test_timer)
     #add_subdirectory(tests/GpioDeviceTesting)
     #add_subdirectory(tests/testPubSub/test_1_1/test_1_1)
@@ -86,6 +86,7 @@ list (APPEND component_SOURCE
         src/componentmodel/ports/r_subscriberport.cc
         src/componentmodel/r_actor.cc
         src/componentmodel/r_argumentparser.cc
+        src/componentmodel/r_asyncinfo.cc
         src/componentmodel/r_commandlineparser.cc
         src/componentmodel/r_componentbase.cc
         src/componentmodel/r_devicethread.cc
@@ -121,6 +122,7 @@ list (APPEND component_HEADERS
         include/componentmodel/ports/r_subportgroup.h
         include/componentmodel/ports/r_subscriberport.h
         include/componentmodel/r_actor.h
+        include/componentmodel/r_asyncinfo.h
         include/componentmodel/r_commandlineparser.h
         include/componentmodel/r_componentbase.h
         include/componentmodel/r_configuration.h

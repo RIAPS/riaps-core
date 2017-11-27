@@ -11,6 +11,7 @@
 #include <const/r_const.h>
 
 #include <capnp/message.h>
+#include <capnp/serialize.h>
 #include <czmq.h>
 
 #include <iostream>
@@ -54,5 +55,9 @@ std::vector<std::string> maintain_servicecache(std::map<std::string, int64_t >& 
 const std::string GetAppPath(const std::string& appName);
 
 void operator<<(zmsg_t*& zmsg, capnp::MallocMessageBuilder& message);
+
+
+
+void operator>>(zframe_t& frame, capnp::FlatArrayMessageReader*& message);
 
 #endif

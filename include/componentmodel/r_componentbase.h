@@ -16,6 +16,7 @@
 #include <componentmodel/r_actor.h>
 #include <componentmodel/r_messagebase.h>
 #include <componentmodel/r_oneshottimer.h>
+#include <componentmodel/r_asyncinfo.h>
 #include <groups/r_group.h>
 #include <messaging/disco.capnp.h>
 
@@ -245,7 +246,8 @@ namespace riaps {
          * @param port The port where the message arrived.
          */
         virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
-                                     ports::PortBase* port) = 0;
+                                     ports::PortBase* port,
+                                     std::shared_ptr<AsyncInfo> asyncInfo = nullptr) = 0;
 
         /**
          * Forwards the given ZMQ message to the appropriate handler. Used for inside ports only in device components.

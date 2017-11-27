@@ -12,7 +12,8 @@ namespace activereplica {
         }
 
         void SensorBase::DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
-                                              riaps::ports::PortBase *port) {
+                                         riaps::ports::PortBase *port,
+                                         std::shared_ptr<riaps::AsyncInfo> asyncInfo) {
             auto portName = port->GetPortName();
             if (portName == PORT_TIMER_CLOCK) {
                 OnClock(port);

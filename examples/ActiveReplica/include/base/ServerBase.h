@@ -51,7 +51,8 @@ namespace activereplica {
 
         protected:
             virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
-                                         riaps::ports::PortBase *port);
+                                         riaps::ports::PortBase *port,
+                                         std::shared_ptr<riaps::AsyncInfo> asyncInfo = nullptr);
 
             virtual void DispatchInsideMessage(zmsg_t* zmsg,
                                                riaps::ports::PortBase* port);

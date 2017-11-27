@@ -1,4 +1,5 @@
 #include <capnp/serialize.h>
+#include <kj/common.h>
 #include "utils/r_utils.h"
 
 void operator<<(zmsg_t*& zmsg, capnp::MallocMessageBuilder& message){
@@ -6,8 +7,15 @@ void operator<<(zmsg_t*& zmsg, capnp::MallocMessageBuilder& message){
     zmsg = zmsg_new();
     auto bytes = serializedMessage.asBytes();
     zmsg_pushmem(zmsg, bytes.begin(), bytes.size());
-
 }
+
+void operator>>(zframe_t& frame, capnp::FlatArrayMessageReader*& message){
+    size_t size      = zframe_size(&frame);
+    byte* data = zframe_data(&frame);
+    kj::ArrayPtr<const capnp::word> capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
+    message = new capnp::FlatArrayMessageReader(capnp_data);
+}
+
 
 void print_cacheips(std::map<std::string, int64_t>& ipcache) {
     std::cout << "Stored ips: ";

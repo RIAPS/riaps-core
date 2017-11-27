@@ -5,6 +5,7 @@
 #include <componentmodel/ports/r_arequestport.h>
 
 
+
 namespace riaps {
     namespace ports {
 
@@ -12,7 +13,6 @@ namespace riaps {
                 : PortBase(PortTypes::Request,
                            (component_port_config*)(&config),
                            component),
-                  SenderPort(this),
                   _capnpReader(capnp::FlatArrayMessageReader(nullptr)) {
             _port_socket = zsock_new(ZMQ_DEALER);
             _socketId = zuuid_new();
@@ -74,153 +74,81 @@ namespace riaps {
             return this;
         }
 
-//        bool RequestPort::Recv(std::string& messageType, riaps::MessageBase* message) {
-//            zmsg_t* msg = zmsg_recv((void*)GetSocket());
-//
-//            if (msg){
-//                char* msgType = zmsg_popstr(msg);
-//                messageType = msgType;
-//                if (msgType!=NULL){
-//                    zframe_t* bodyFrame = zmsg_pop(msg);
-//                    size_t size = zframe_size(bodyFrame);
-//                    byte* data = zframe_data(bodyFrame);
-//
-//                    auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
-//                   _capnpReader = capnp::FlatArrayMessageReader(capnp_data);
-//                    message->InitReader(&_capnpReader);
-//
-//                    zframe_destroy(&bodyFrame);
-//                    return true;
-//                }
-//                return false;
-//            }
-//            zmsg_destroy(&msg);
-//
-//            return false;
-//        }
-
-
         bool AsyncRequestPort::Recv(capnp::FlatArrayMessageReader** messageReader) {
             zmsg_t* msg = zmsg_recv((void*)GetSocket());
 
             if (msg){
-                //char* msgType = zmsg_popstr(msg);
-                //messageType = msgType;
-                //if (msgType!=NULL){
-                    zframe_t* bodyFrame = zmsg_pop(msg);
-                    size_t size = zframe_size(bodyFrame);
-                    byte* data = zframe_data(bodyFrame);
+                zframe_t* bodyFrame = zmsg_pop(msg);
+                size_t size = zframe_size(bodyFrame);
+                byte* data = zframe_data(bodyFrame);
 
-                    auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
-                    _capnpReader = capnp::FlatArrayMessageReader(capnp_data);
-                    *messageReader = &_capnpReader;
+                auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
+                _capnpReader = capnp::FlatArrayMessageReader(capnp_data);
+                *messageReader = &_capnpReader;
 
-                    zframe_destroy(&bodyFrame);
-                    return true;
-                //}
-                //return false;
+                zframe_destroy(&bodyFrame);
+                return true;
             }
             zmsg_destroy(&msg);
 
             return false;
         }
 
-        bool AsyncRequestPort::Send(capnp::MallocMessageBuilder &message) const {
+
+        const std::string AsyncRequestPort::Send(capnp::MallocMessageBuilder &message, int64_t expiration) const {
             if (_port_socket == nullptr || !_isConnected){
-                return false;
+                return "";
             }
 
             zmsg_t* zmsg;
             zmsg << message;
 
-            int rc = zmsg_send(&zmsg, const_cast<zsock_t*>(GetSocket()));
-            return rc==0;
+            // Create the timestamp
+            capnp::MallocMessageBuilder tsBuilder;
+            auto msgTimestamp = tsBuilder.initRoot<riaps::distrcoord::RiapsTimestamp>();
+
+            // Build the timestamp
+            // TODO: ? Another kind of timestamp ? PeterTs ?
+            msgTimestamp.setValue(zclock_mono());
+            zmsg_t* zmsgTimestamp;
+            zmsgTimestamp << tsBuilder;
+
+            // Create expiration time
+            capnp::MallocMessageBuilder expBuilder;
+            auto msgExpire = expBuilder.initRoot<riaps::distrcoord::RiapsTimestamp>();
+            msgExpire.setValue(expiration);
+            zmsg_t* zmsgExpiration;
+            zmsgExpiration << expBuilder;
+
+            // Generate uniqueId
+            std::string msgId;
+            {
+                auto id = zuuid_new();
+                msgId.assign(zuuid_str(id));
+                zuuid_destroy(&id);
+            }
+
+            int rc = zsock_send(const_cast<zsock_t*>(GetSocket()),
+                                "mmsm"        ,
+                                zmsgTimestamp ,
+                                zmsgExpiration,
+                                msgId.c_str() ,
+                                zmsg)
+            ;
+
+            zmsg_destroy(&zmsgTimestamp);
+            zmsg_destroy(&zmsgExpiration);
+            zmsg_destroy(&zmsg);
+            if (rc == 0) {
+                return msgId;
+            }
+            return "";
         }
 
         AsyncRequestPort::~AsyncRequestPort() noexcept {
             zuuid_destroy(&_socketId);
         }
 
-        // Before sending the publisher sets up the message type
-//        bool RequestPort::Send(zmsg_t **msg) const {
-//            if (_port_socket == NULL || !_isConnected){
-//                zmsg_destroy(msg);
-//                return false;
-//            }
-//            //std::string messageType = GetConfig()->req_type;
-//            //zmsg_pushstr(*msg, messageType.c_str());
-//
-//            int rc = zmsg_send(msg, _port_socket);
-//            return rc==0;
-//        }
 
-//        bool RequestPort::Send(std::string& message) const{
-//            zmsg_t* zmsg = zmsg_new();
-//            zmsg_addstr(zmsg, message.c_str());
-//
-//            return Send(&zmsg);
-//        }
-//
-//        bool RequestPort::Send(std::vector<std::string>& fields) const{
-//            zmsg_t* zmsg = zmsg_new();
-//
-//            for (auto it = fields.begin(); it!=fields.end(); it++){
-//                zmsg_addstr(zmsg, it->c_str());
-//            }
-//
-//            return Send(&zmsg);
-//        }
     }
 }
-
-//namespace riaps {
-//
-//    RequestPort::RequestPort(request_conf& config) {
-//        _config = config;
-//
-//
-//        port_socket = zsock_new(ZMQ_REQ);
-//    }
-//
-//    service_details RequestPort::GetRemoteService(request_conf& config) {
-//        // Get the target service setails
-//        bool service_available = false;
-//        service_details target_service;
-//        while (!service_available) {
-//
-//            std::vector<service_details> results;
-//            get_servicebyname(config.remoteservice_name, results);
-//
-//            // Wait if the service is not available
-//            if (!results.empty()) {
-//                target_service = results.front();
-//                service_available = true;
-//            } else {
-//                zclock_sleep(SERVICE_POLLING_INTERVAL);
-//            }
-//        }
-//
-//        return target_service;
-//    }
-//
-//    // TODO: possible memory leak, return something else
-//    // TODO: destroy socket... Maybe replacing REQ/REP with REQ/ROUTER???
-//    zmsg_t* RequestPort::SendMessage(zmsg_t **msg) {
-//        //std::cout << "Request port sends message " << std::endl;
-//        service_details target_service = GetRemoteService(_config);
-//        std::string targetaddress = "tcp://" + target_service.ip_address + ":" + target_service.port;
-//        zsock_connect(port_socket, targetaddress.c_str());
-//
-//
-//        zmsg_send(msg, port_socket);
-//        //std::cout << "Request port waits for results" << std::endl;
-//        zmsg_t* result = zmsg_recv(port_socket);
-//        //std::cout << "Results arrived from response port" << std::endl;
-//
-//        zsock_disconnect(port_socket, targetaddress.c_str());
-//
-//        return result;
-//    }
-//
-//    RequestPort::~RequestPort() {}
-//}

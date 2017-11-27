@@ -13,7 +13,8 @@ namespace activereplica {
         }
 
         void ServerBase::DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
-                                                 riaps::ports::PortBase *port) {
+                                         riaps::ports::PortBase *port,
+                                         std::shared_ptr<riaps::AsyncInfo> asyncInfo) {
             if (port->GetPortName() == PORT_SUB_READY) {
                 messages::SensorReady::Reader sensorReady = capnpreader->getRoot<messages::SensorReady>();
                 OnReady(sensorReady, port);
