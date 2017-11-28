@@ -139,6 +139,7 @@ namespace riaps {
         _startDevice   = false;
 
         _logger = spd::get(_actorName);
+        _logger->set_level(spd::level::debug);
     }
 
     void riaps::Actor::ParseConfig() {
@@ -422,9 +423,10 @@ namespace riaps {
                 dlOpenHandle = dlopen(componentLibraryName.c_str(), RTLD_NOW);
 
                 if (dlOpenHandle == nullptr) {
-                    _logger->error(dlerror());
-                    std::string msg = "Cannot open library: " + componentLibraryName + " (" + dlerror() + ")\n" +dlerror();
-                    throw std::runtime_error(msg);
+                    _logger->error("Cannot open library: {}", componentLibraryName);
+                    _logger->error("dlerror(): {}", dlerror());
+
+                    throw std::runtime_error("Cannot open library");
                 }
             } else {
                 const std::string fullPath = appPath + "/" + componentLibraryName;
@@ -443,6 +445,7 @@ namespace riaps {
                         _actorName = component_config.component_name;
                     }
                     _component_dll_handles.push_back(dlOpenHandle);
+
                     riaps::ComponentBase *(*create)(component_conf &, Actor &);
                     create = (riaps::ComponentBase *(*)(component_conf &, Actor &)) dlsym(dlOpenHandle, "create_component");
                     riaps::ComponentBase *component_instance = (riaps::ComponentBase *) create(component_config, *this);
@@ -651,9 +654,10 @@ namespace riaps {
         if (_actor_zsock != nullptr)
             zsock_destroy(&_actor_zsock);
 
-        for (void* handle : _component_dll_handles){
-            dlclose(handle);
+        for (int i =0; i<_component_dll_handles.size(); i++){
+            dlclose(_component_dll_handles[i]);
         }
+        zclock_sleep(800);
     }
 
     riaps::Actor* riaps::Actor::_currentActor = nullptr;

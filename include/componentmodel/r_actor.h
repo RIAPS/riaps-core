@@ -121,6 +121,7 @@ namespace riaps {
         zpoller_t*    _poller;
         static Actor* _currentActor;
         std::shared_ptr<spd::logger> _logger;
+
     };
 }
 

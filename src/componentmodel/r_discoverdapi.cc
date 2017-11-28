@@ -1,7 +1,7 @@
 #include <groups/r_group.h>
 #include <componentmodel/r_discoverdapi.h>
 #include <framework/rfw_configuration.h>
-
+#include <spdlog/spdlog.h>
 
 
 bool registerService(const std::string&              app_name     ,
@@ -284,6 +284,7 @@ registerActor(const std::string& appname, const std::string& actorname){
 
 // Sends ActorUnreg message to the discovery service.
 void deregisterActor(const std::string& actorName, const std::string& appName){
+    auto _logger = spdlog::get(actorName);
     capnp::MallocMessageBuilder message;
     auto msgDiscoReq   = message.initRoot<riaps::discovery::DiscoReq>();
     auto msgActorUnreg = msgDiscoReq.initActorUnreg();
@@ -313,9 +314,12 @@ void deregisterActor(const std::string& actorName, const std::string& appName){
     capnp::FlatArrayMessageReader reader(capnpBuffer);
     auto msgDiscoRep= reader.getRoot<riaps::discovery::DiscoRep>();
     if (msgDiscoRep.isActorUnreg()){
-        assert(msgDiscoRep.getActorUnreg().getStatus() == riaps::discovery::Status::OK);
+        _logger->error_if(msgDiscoRep.getActorUnreg().getStatus() == riaps::discovery::Status::ERR,
+                          "Couldn't deregister actor: {} PID: {}",actorName,::getpid());
     }
 
+    zmsg_destroy(&msgRep);
+    zframe_destroy(&capnpBody);
     zsock_destroy(&client);
     zclock_sleep(100);
 }

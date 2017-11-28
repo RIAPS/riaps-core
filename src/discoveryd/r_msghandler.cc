@@ -185,7 +185,10 @@ namespace riaps{
                 handleGroupJoin(msgGroupJoin);
             }
             zmsg_destroy(&riapsMessage);
+            zframe_destroy(&capnp_msgbody);
         }
+
+
     }
 
     void DiscoveryMessageHandler::handleActorReg(riaps::discovery::ActorRegReq::Reader& msgActorReq) {
