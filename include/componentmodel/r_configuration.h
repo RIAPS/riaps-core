@@ -63,17 +63,29 @@ struct _component_port_ins : public component_port_config{
 
 };
 
+struct _component_port_qry : public component_port_config {
+    std::string qry_type;
+    std::string ans_type;
+};
+
+struct _component_port_ans : public component_port_config{
+    std::string qry_type;
+    std::string ans_type;
+};
+
 
 
 struct _component_ports {
-    std::vector<_component_port_clt> clts;
-    std::vector<_component_port_srv> srvs;
-    std::vector<_component_port_pub> pubs;
-    std::vector<_component_port_sub> subs;
-    std::vector<_component_port_req> reqs;
-    std::vector<_component_port_rep> reps;
-    std::vector<_component_port_tim> tims;
-    std::vector<_component_port_ins> inss;
+    std::vector<_component_port_clt> clts; // Client
+    std::vector<_component_port_srv> srvs; // Server
+    std::vector<_component_port_pub> pubs; // Publisher
+    std::vector<_component_port_sub> subs; // Subscribe
+    std::vector<_component_port_req> reqs; // Request
+    std::vector<_component_port_rep> reps; // Response
+    std::vector<_component_port_tim> tims; // Timer
+    std::vector<_component_port_ins> inss; // Inside
+    std::vector<_component_port_qry> qrys; // Query
+    std::vector<_component_port_ans> anss; // Answer
 };
 
 /**

@@ -2,14 +2,13 @@
 // Created by istvan on 9/30/16.
 //
 
-#include <componentmodel/ports/r_arequestport.h>
-
+#include <componentmodel/ports/r_queryport.h>
 
 
 namespace riaps {
     namespace ports {
 
-        AsyncRequestPort::AsyncRequestPort(const _component_port_req &config, const ComponentBase *component)
+        QueryPort::QueryPort(const _component_port_qry &config, const ComponentBase *component)
                 : PortBase(PortTypes::Request,
                            (component_port_config*)(&config),
                            component),
@@ -33,9 +32,9 @@ namespace riaps {
 
 
 
-        void AsyncRequestPort::Init() {
+        void QueryPort::Init() {
 
-            const _component_port_req* current_config = GetConfig();
+            const _component_port_qry* current_config = GetConfig();
 
             auto results =
                     subscribeToService(GetParentComponent()->GetActor()->GetApplicationName(),
@@ -52,29 +51,29 @@ namespace riaps {
             }
         }
 
-        bool AsyncRequestPort::ConnectToResponse(const std::string &rep_endpoint) {
-            int rc = zsock_connect(_port_socket, "%s", rep_endpoint.c_str());
+        bool QueryPort::ConnectToResponse(const std::string &ansEndpoint) {
+            int rc = zsock_connect(_port_socket, "%s", ansEndpoint.c_str());
 
             if (rc != 0) {
-                std::cout << "Request '" + GetConfig()->portName + "' couldn't connect to " + rep_endpoint
+                std::cout << "Query '" + GetConfig()->portName + "' couldn't connect to " + ansEndpoint
                           << std::endl;
                 return false;
             }
 
             _isConnected = true;
-            std::cout << "Request port connected to: " << rep_endpoint << std::endl;
+            std::cout << "Query port connected to: " << ansEndpoint << std::endl;
             return true;
         }
 
-        const _component_port_req* AsyncRequestPort::GetConfig() const{
-            return (_component_port_req*)GetPortBaseConfig();
+        const _component_port_qry* QueryPort::GetConfig() const{
+            return (_component_port_qry*)GetPortBaseConfig();
         }
 
-        AsyncRequestPort* AsyncRequestPort::AsAsyncRequestPort() {
+        QueryPort* QueryPort::AsQueryPort() {
             return this;
         }
 
-        bool AsyncRequestPort::Recv(capnp::FlatArrayMessageReader** messageReader) {
+        bool QueryPort::Recv(capnp::FlatArrayMessageReader** messageReader) {
             zmsg_t* msg = zmsg_recv((void*)GetSocket());
 
             if (msg){
@@ -95,30 +94,36 @@ namespace riaps {
         }
 
 
-        const std::string AsyncRequestPort::Send(capnp::MallocMessageBuilder &message, int64_t expiration) const {
+        const std::string QueryPort::Send(capnp::MallocMessageBuilder &message, bool addTimestamp) const {
             if (_port_socket == nullptr || !_isConnected){
                 return "";
             }
 
-            zmsg_t* zmsg;
-            zmsg << message;
+            zframe_t* userFrame;
+            userFrame << message;
+
+            zframe_t* tsFrame = nullptr;
+            if (addTimestamp){
+                int64_t ztimeStamp = zclock_time();
+                tsFrame = zframe_new(&ztimeStamp, sizeof(ztimeStamp));
+            }
+
 
             // Create the timestamp
-            capnp::MallocMessageBuilder tsBuilder;
-            auto msgTimestamp = tsBuilder.initRoot<riaps::distrcoord::RiapsTimestamp>();
+            //capnp::MallocMessageBuilder tsBuilder;
+            //auto msgTimestamp = tsBuilder.initRoot<riaps::distrcoord::RiapsTimestamp>();
 
             // Build the timestamp
-            // TODO: ? Another kind of timestamp ? PeterTs ?
-            msgTimestamp.setValue(zclock_mono());
-            zmsg_t* zmsgTimestamp;
-            zmsgTimestamp << tsBuilder;
+            //msgTimestamp.setValue(zclock_mono());
+            //zmsg_t* zmsgTimestamp;
+            //zmsgTimestamp << tsBuilder;
 
             // Create expiration time
-            capnp::MallocMessageBuilder expBuilder;
-            auto msgExpire = expBuilder.initRoot<riaps::distrcoord::RiapsTimestamp>();
-            msgExpire.setValue(expiration);
-            zmsg_t* zmsgExpiration;
-            zmsgExpiration << expBuilder;
+            //capnp::MallocMessageBuilder expBuilder;
+            //auto msgExpire = expBuilder.initRoot<riaps::distrcoord::RiapsTimestamp>();
+            //msgExpire.setValue(expiration);
+            //zmsg_t* zmsgExpiration;
+            //zmsgExpiration << expBuilder;
 
             // Generate uniqueId
             std::string msgId;
@@ -129,23 +134,22 @@ namespace riaps {
             }
 
             int rc = zsock_send(const_cast<zsock_t*>(GetSocket()),
-                                "mmsm"        ,
-                                zmsgTimestamp ,
-                                zmsgExpiration,
+                                "sff",
                                 msgId.c_str() ,
-                                zmsg)
+                                userFrame,
+                                tsFrame
+                                )
             ;
 
-            zmsg_destroy(&zmsgTimestamp);
-            zmsg_destroy(&zmsgExpiration);
-            zmsg_destroy(&zmsg);
+            zframe_destroy(&userFrame);
+            zframe_destroy(&tsFrame);
             if (rc == 0) {
                 return msgId;
             }
             return "";
         }
 
-        AsyncRequestPort::~AsyncRequestPort() noexcept {
+        QueryPort::~QueryPort() noexcept {
             zuuid_destroy(&_socketId);
         }
 

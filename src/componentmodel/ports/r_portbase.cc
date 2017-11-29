@@ -104,11 +104,11 @@ namespace riaps {
             return nullptr;
         }
 
-        AsyncRequestPort* PortBase::AsAsyncRequestPort() {
+        QueryPort* PortBase::AsQueryPort() {
             return nullptr;
         }
 
-        AsyncResponsePort* PortBase::AsAsyncResponsePort() {
+        AnswerPort* PortBase::AsAnswerPort() {
             return nullptr;
         }
 

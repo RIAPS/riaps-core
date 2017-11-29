@@ -3,12 +3,12 @@
 //
 
 #include <framework/rfw_network_interfaces.h>
-#include <componentmodel/ports/r_aresponseport.h>
+#include <componentmodel/ports/r_answerport.h>
 
 namespace riaps{
     namespace ports{
 
-        AsyncResponsePort::AsyncResponsePort(const _component_port_rep &config, const ComponentBase *parent_component) :
+        AnswerPort::AnswerPort(const _component_port_ans &config, const ComponentBase *parent_component) :
             PortBase(PortTypes::Response, (component_port_config*)&config, parent_component),
             SenderPort(this)
         {
@@ -41,8 +41,8 @@ namespace riaps{
             }
         }
 
-        const _component_port_rep* AsyncResponsePort::GetConfig() const{
-            return (_component_port_rep*)GetPortBaseConfig();
+        const _component_port_ans* AnswerPort::GetConfig() const{
+            return (_component_port_ans*)GetPortBaseConfig();
         }
 
 
@@ -54,11 +54,11 @@ namespace riaps{
 //            return rc == 0;
 //        }
 
-        AsyncResponsePort* AsyncResponsePort::AsAsyncResponsePort() {
+        AnswerPort* AnswerPort::AsAnswerPort() {
             return this;
         }
 
-        AsyncResponsePort::~AsyncResponsePort() noexcept {
+        AnswerPort::~AnswerPort() noexcept {
 
         }
 

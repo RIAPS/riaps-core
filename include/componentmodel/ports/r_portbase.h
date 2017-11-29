@@ -29,8 +29,8 @@ namespace riaps {
     class InsidePort;
     class GroupPublisherPort;
     class GroupSubscriberPort;
-    class AsyncRequestPort;
-    class AsyncResponsePort;
+    class QueryPort;
+    class AnswerPort;
 
 
     enum PortTypes {Publisher, Subscriber, Request, Response, Timer, Inside};
@@ -69,12 +69,12 @@ namespace riaps {
 
         // Return NULL if the called conversion is unavailable or invalid
         virtual RequestPort*         AsRequestPort()        ;
-        virtual AsyncRequestPort*    AsAsyncRequestPort()   ;
+        virtual QueryPort*           AsQueryPort()          ;
         virtual PublisherPort*       AsPublishPort()        ;
         virtual GroupPublisherPort*  AsGroupPublishPort()   ;
         virtual GroupSubscriberPort* AsGroupSubscriberPort();
         virtual ResponsePort*        AsResponsePort()       ;
-        virtual AsyncResponsePort*   AsAsyncResponsePort()  ;
+        virtual AnswerPort*          AsAnswerPort()  ;
         virtual SubscriberPort*      AsSubscribePort()      ;
         virtual PeriodicTimer*       AsTimerPort()          ;
         virtual InsidePort*          AsInsidePort()         ;
