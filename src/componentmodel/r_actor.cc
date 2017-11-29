@@ -311,6 +311,65 @@ namespace riaps {
                 }
             }
 
+            // Parse query ports
+            if (json_portsconfig.count(J_PORTS_QRYS)!=0){
+                auto json_qryports = json_portsconfig[J_PORTS_QRYS];
+                for (auto it_qryport = json_qryports.begin();
+                     it_qryport != json_qryports.end() ;
+                     it_qryport++){
+
+                    auto qryportname = it_qryport.key();
+                    std::string qrytype = it_qryport.value()[J_PORT_QRYTYPE];
+                    std::string anstype = it_qryport.value()[J_PORT_ANSTYPE];
+                    std::string messagetype = qrytype + "#" + anstype;
+
+                    _component_port_qry newqryconfig;
+                    newqryconfig.portName = qryportname;
+                    //newreqconfig.messageType = subporttype;
+                    newqryconfig.qry_type = qrytype;
+                    newqryconfig.ans_type = anstype;
+                    newqryconfig.messageType = messagetype;
+
+                    // If the porttype is defined in the Local list
+                    if (localMessageTypes.find(qrytype) != localMessageTypes.end()){
+                        newqryconfig.isLocal = true;
+                    } else {
+                        newqryconfig.isLocal = false;
+                    }
+
+                    new_component_config.component_ports.qrys.push_back(newqryconfig);
+                }
+            }
+
+            // Parse answer ports
+            if (json_portsconfig.count(J_PORTS_ANSS)!=0){
+                auto json_ansports = json_portsconfig[J_PORTS_ANSS];
+                for (auto it_ansport = json_ansports.begin();
+                     it_ansport != json_ansports.end() ;
+                     it_ansport++){
+
+                    auto ansportname = it_ansport.key();
+                    std::string qrytype = it_ansport.value()[J_PORT_QRYTYPE];
+                    std::string anstype = it_ansport.value()[J_PORT_ANSTYPE];
+                    std::string messagetype = qrytype + "#" + anstype;
+
+                    _component_port_ans newansconfig;
+                    newansconfig.portName = ansportname;
+                    newansconfig.qry_type = qrytype;
+                    newansconfig.ans_type = anstype;
+                    newansconfig.messageType = messagetype;
+
+                    // If the porttype is defined in the Local list
+                    if (localMessageTypes.find(qrytype) != localMessageTypes.end()){
+                        newansconfig.isLocal = true;
+                    } else {
+                        newansconfig.isLocal = false;
+                    }
+
+                    new_component_config.component_ports.anss.push_back(newansconfig);
+                }
+            }
+
             // Get the timers
             if (json_portsconfig.count(J_PORTS_TIMS)!=0){
                 auto json_tims = json_portsconfig[J_PORTS_TIMS];
