@@ -43,7 +43,7 @@ namespace riaps {
 
             const std::string& GetValueAsString() const;
 
-            int GetValueAsInt() const;
+            bool GetValueAsInt(int* intValue) const;
 
             bool GetValueAsBool() const;
 

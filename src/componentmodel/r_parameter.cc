@@ -2,6 +2,8 @@
 // Created by istvan on 3/1/17.
 //
 #include <componentmodel/r_parameter.h>
+#include <ios>
+#include <sstream>
 
 
 namespace riaps{
@@ -84,6 +86,23 @@ namespace riaps{
 
         const std::string& Parameter::GetValueAsString() const{
             return _paramValue;
+        }
+
+        bool Parameter::GetValueAsInt(int* intValue) const {
+            try{
+                *intValue = std::stoi(_paramValue);
+            }catch(std::invalid_argument& e){
+                return false;
+            } catch(std::out_of_range& e){
+                return false;
+            }
+            return true;
+        }
+
+        bool Parameter::GetValueAsBool() const {
+            bool b;
+            std::stringstream(_paramValue) >> std::boolalpha >> b;
+            return b;
         }
 
         bool Parameter::IsOptional() const {
