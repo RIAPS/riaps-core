@@ -29,8 +29,8 @@ enum class Kind_df7c62d78cc0ee2a: uint16_t {
   SRV,
   REQ,
   REP,
-  AREQ,
-  AREP,
+  QRY,
+  ANS,
 };
 CAPNP_DECLARE_ENUM(Kind, df7c62d78cc0ee2a);
 CAPNP_DECLARE_SCHEMA(92225aadb8d704a6);
