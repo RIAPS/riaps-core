@@ -8,36 +8,38 @@
 namespace riaps{
     namespace ports{
 
+        // TODO: Do not thrwo exception from the constructor
         AnswerPort::AnswerPort(const _component_port_ans &config, const ComponentBase *parent_component) :
-            PortBase(PortTypes::Response, (component_port_config*)&config, parent_component),
+            PortBase(PortTypes::Answer, (component_port_config*)&config, parent_component),
             SenderPort(this)
         {
             _port_socket = zsock_new(ZMQ_ROUTER);
             _host = riaps::framework::Network::GetIPAddress();
 
+
             if (_host == "") {
                 throw std::runtime_error("Response cannot be initiated. Cannot find  available network interface.");
             }
 
-            std::string rep_endpoint = "tcp://" + _host + ":!";
-            _port = zsock_bind(_port_socket, "%s", rep_endpoint.c_str());
+            std::string ansEndpoint = "tcp://" + _host + ":!";
+            _port = zsock_bind(_port_socket, "%s", ansEndpoint.c_str());
 
 
             if (_port == -1) {
                 throw std::runtime_error("Couldn't bind response port.");
             }
 
-            std::cout << "Response is created on : " << _host << ":" << _port << std::endl;
+            _logger->info("Answerport is created on: {}:{}", _host, _port);
 
 
             if (!registerService(parent_component->GetActor()->GetApplicationName(),
                                   config.messageType,
                                   _host,
                                   _port,
-                                  riaps::discovery::Kind::REP,
+                                  riaps::discovery::Kind::ANS,
                                   (config.isLocal?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
                                   {})) {
-                throw std::runtime_error("Response port couldn't be registered.");
+                throw std::runtime_error("Answerport couldn't be registered.");
             }
         }
 
