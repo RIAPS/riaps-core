@@ -374,6 +374,8 @@ joinGroup(const std::string& appName,
     auto msgRep= reader.getRoot<riaps::discovery::DiscoRep>();
 
     zsock_destroy(&client);
+    zmsg_destroy(&msgResponse);
+    zframe_destroy(&capnpBody);
 
     // If the response OK, return true
     return msgRep.isGroupJoin() && msgRep.getGroupJoin().getStatus() == riaps::discovery::Status::OK;

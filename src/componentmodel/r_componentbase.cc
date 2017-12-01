@@ -308,8 +308,8 @@ namespace riaps{
                             comp->DispatchMessage(capnpReader, riapsPort, params);
                         }
 
-                        if (capnpReader != nullptr)
-                            delete capnpReader;
+                        //if (capnpReader != nullptr)
+                        //    delete capnpReader;
 
                         zframe_destroy(&body);
                     }else {

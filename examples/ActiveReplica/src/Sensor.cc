@@ -11,7 +11,9 @@ namespace activereplica {
 
         Sensor::Sensor(_component_conf &config, riaps::Actor &actor) : SensorBase(config, actor) {
             _rndDistr = std::uniform_real_distribution<double>(-100.0, 100.0);  //(min, max)
-            //_rndEngine.seed(std::random_device{}());
+
+            // NOTE: causes valgrind error, comment out when inspecting with valgrind
+            _rndEngine.seed(std::random_device{}());
         }
 
         void Sensor::OnClock(riaps::ports::PortBase *port) {

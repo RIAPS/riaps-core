@@ -281,6 +281,7 @@ namespace riaps{
                 zframe_destroy(&_lastFrame);
                 _lastFrame=nullptr;
             }
+            zpoller_destroy(&_groupPoller);
         }
     }
 }

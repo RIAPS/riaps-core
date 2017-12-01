@@ -18,6 +18,12 @@ namespace activereplica {
             if (port->GetPortName() == PORT_SUB_READY) {
                 messages::SensorReady::Reader sensorReady = capnpreader->getRoot<messages::SensorReady>();
                 OnReady(sensorReady, port);
+            } else if (port->GetPortName() == PORT_QRY_QUERY){
+                auto messagePtr =
+                             std::shared_ptr<riaps::RiapsMessage<messages::SensorValue::Reader, messages::SensorValue>>(
+                               new riaps::RiapsMessage<messages::SensorValue::Reader, messages::SensorValue>(&capnpreader)
+                             );
+                OnQuery(messagePtr, port, payload);
             }
         }
 

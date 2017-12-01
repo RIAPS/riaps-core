@@ -36,7 +36,7 @@ namespace activereplica {
             bool RecvQuery(std::shared_ptr<riaps::RiapsMessage<messages::SensorValue::Reader, messages::SensorValue>>& message,
                            std::shared_ptr<riaps::MessageParams>& params);
 
-            virtual void OnQuery(std::shared_ptr<riaps::RiapsMessage<messages::SensorValue, messages::SensorValue>>& message,
+            virtual void OnQuery(std::shared_ptr<riaps::RiapsMessage<messages::SensorValue::Reader, messages::SensorValue>>& message,
                                  riaps::ports::PortBase *port,
                                  std::shared_ptr<riaps::MessageParams> params)=0;
 

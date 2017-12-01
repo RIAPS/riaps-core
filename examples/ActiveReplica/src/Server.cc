@@ -49,7 +49,7 @@ namespace activereplica {
 //            }
         }
 
-        void Server::OnQuery(std::shared_ptr<riaps::RiapsMessage<messages::SensorValue, messages::SensorValue>>& message,
+        void Server::OnQuery(std::shared_ptr<riaps::RiapsMessage<messages::SensorValue::Reader, messages::SensorValue>>& message,
                              riaps::ports::PortBase *port,
                              std::shared_ptr<riaps::MessageParams> params) {
             _logger->info("OnQuery()");
