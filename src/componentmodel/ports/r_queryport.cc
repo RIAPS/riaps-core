@@ -73,30 +73,28 @@ namespace riaps {
             return this;
         }
 
-        bool QueryPort::Recv(capnp::FlatArrayMessageReader** messageReader) {
-            zmsg_t* msg = zmsg_recv((void*)GetSocket());
-
-            if (msg){
-                zframe_t* bodyFrame = zmsg_pop(msg);
-                size_t size = zframe_size(bodyFrame);
-                byte* data = zframe_data(bodyFrame);
-
-                auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
-                _capnpReader = capnp::FlatArrayMessageReader(capnp_data);
-                *messageReader = &_capnpReader;
-
-                zframe_destroy(&bodyFrame);
-                return true;
-            }
-            zmsg_destroy(&msg);
-
-            return false;
-        }
+//        bool QueryPort::RecvQuery(std::shared_ptr<capnp::FlatArrayMessageReader>& messageReader,
+//                                  std::shared_ptr<riaps::MessageParams>& params) {
+//            /**
+//             * |RequestId|Message|Timestamp|
+//             */
+//
+//            char* cRequestId = nullptr;
+//            zframe_t *bodyFrame = nullptr, *timestampFrame = nullptr;
+//            if (zsock_recv(_port_socket, "sff", &cRequestId, &bodyFrame, &timestampFrame)==0){
+//                std::string socketId = zuuid_str(_socketId);
+//                params.reset(new riaps::MessageParams(socketId, &cRequestId, &timestampFrame));
+//            } else {
+//                _logger->error("Wrong incoming message format on port: {}", GetPortName());
+//            }
+//
+//            return false;
+//        }
 
 
-        const std::string QueryPort::Send(capnp::MallocMessageBuilder &message, bool addTimestamp) const {
+        bool QueryPort::SendQuery(capnp::MallocMessageBuilder &message,std::string& requestId, bool addTimestamp) const {
             if (_port_socket == nullptr || !_isConnected){
-                return "";
+                return false;
             }
 
             zframe_t* userFrame;
@@ -106,6 +104,8 @@ namespace riaps {
             if (addTimestamp){
                 int64_t ztimeStamp = zclock_time();
                 tsFrame = zframe_new(&ztimeStamp, sizeof(ztimeStamp));
+            } else{
+                tsFrame = zframe_new_empty();
             }
 
 
@@ -144,9 +144,10 @@ namespace riaps {
             zframe_destroy(&userFrame);
             zframe_destroy(&tsFrame);
             if (rc == 0) {
-                return msgId;
+                requestId = msgId;
+                return true;
             }
-            return "";
+            return false;
         }
 
         QueryPort::~QueryPort() noexcept {

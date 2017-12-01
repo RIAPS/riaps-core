@@ -33,7 +33,7 @@ namespace riaps {
     class AnswerPort;
 
 
-    enum PortTypes {Publisher, Subscriber, Request, Response, Timer, Inside};
+    enum PortTypes {Publisher, Subscriber, Request, Response, Timer, Inside, Query, Answer};
 
     class PortBase {
 

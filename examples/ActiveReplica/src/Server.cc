@@ -37,13 +37,22 @@ namespace activereplica {
             messages::SensorQuery::Builder queryMsg = builderSensorQuery.initRoot<messages::SensorQuery>();
 
             queryMsg.setMsg("sensor_query");
-            auto result = SendQuery(builderSensorQuery, queryMsg);
-            if (result) {
-                messages::SensorValue::Reader sensorValue;
-                if (RecvQuery(sensorValue)) {
-                    _lastValue.reset(new double(sensorValue.getValue()));
-                }
-            }
+            std::string requestId;
+            auto result = SendQuery(builderSensorQuery, queryMsg, requestId);
+            _logger->error_if(!result, "SendQuery failed");
+            _logger->info_if(result, "Query sent, requestId: {}", requestId);
+//            if (result) {
+//                messages::SensorValue::Reader sensorValue;
+//                if (RecvQuery(sensorValue)) {
+//                    _lastValue.reset(new double(sensorValue.getValue()));
+//                }
+//            }
+        }
+
+        void Server::OnQuery(std::shared_ptr<riaps::RiapsMessage<messages::SensorValue, messages::SensorValue>>& message,
+                             riaps::ports::PortBase *port,
+                             std::shared_ptr<riaps::MessageParams> params) {
+            _logger->info("OnQuery()");
         }
 
         void Server::OnGroupMessage(const riaps::groups::GroupId &groupId,

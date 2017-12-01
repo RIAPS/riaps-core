@@ -16,7 +16,7 @@
 #include <componentmodel/r_actor.h>
 #include <componentmodel/r_messagebase.h>
 #include <componentmodel/r_oneshottimer.h>
-#include <componentmodel/r_asyncinfo.h>
+#include <componentmodel/r_payload.h>
 #include <groups/r_group.h>
 #include <messaging/disco.capnp.h>
 
@@ -39,6 +39,8 @@
 #include <componentmodel/ports/r_responseport.h>
 #include <componentmodel/ports/r_requestport.h>
 #include <componentmodel/ports/r_insideport.h>
+#include <componentmodel/ports/r_answerport.h>
+#include <componentmodel/ports/r_queryport.h>
 
 
 namespace spd = spdlog;
@@ -92,7 +94,26 @@ namespace riaps {
          * @param portName The message is sent on this port. Available names are declared in the riaps model.
          * @return True if the message is sent.
          */
-        bool SendMessageOnPort(capnp::MallocMessageBuilder& message, const std::string& portName);
+        bool SendMessageOnPort(capnp::MallocMessageBuilder& message,
+                               const std::string& portName);
+
+        /**
+         * Sends message on answer port
+         *
+         * @return
+         */
+        bool SendMessageOnPort(capnp::MallocMessageBuilder& message,
+                               const std::string& portName,
+                               std::shared_ptr<riaps::MessageParams> params);
+
+        /**
+         * Sends a message on query port
+         *
+         */
+        bool SendMessageOnPort(capnp::MallocMessageBuilder& message,
+                               const std::string&           portName,
+                               std::string&                 requestId);
+
 
 
         bool SendGroupMessage(const riaps::groups::GroupId& groupId,
@@ -160,10 +181,15 @@ namespace riaps {
          */
         //bool SendMessageOnPort(zmsg_t** message, const std::string& portName);
 
-        // Note: ?port? do we need for the port?
+        /**
+         * Fired when a message arrives on one the group ports.
+         * @param groupId groupType, groupName pair (the unique identifier of the group)
+         * @param capnpreader The received message in capnp buffer
+         * @param port The port structure where the message was read form.
+         */
         virtual void OnGroupMessage(const riaps::groups::GroupId& groupId,
                                     capnp::FlatArrayMessageReader& capnpreader,
-                                    riaps::ports::PortBase* port) = 0;
+                                    riaps::ports::PortBase* port);
         
 
         uint16_t GetGroupMemberCount(const riaps::groups::GroupId& groupId,
@@ -188,6 +214,8 @@ namespace riaps {
          * @return NULL if the port with the name wasn't found or the port is not a request port.
          */
         ports::RequestPort*    GetRequestPortByName(const std::string& portName);
+
+        ports::QueryPort*      GetQueryPortByName(const std::string& portName);
 
         /**
          * Search response port with portName.
@@ -247,7 +275,7 @@ namespace riaps {
          */
         virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
                                      ports::PortBase* port,
-                                     std::shared_ptr<AsyncInfo> asyncInfo = nullptr) = 0;
+                                     std::shared_ptr<MessageParams> params = nullptr) = 0;
 
         /**
          * Forwards the given ZMQ message to the appropriate handler. Used for inside ports only in device components.
@@ -289,6 +317,8 @@ namespace riaps {
         const ports::SubscriberPort* InitSubscriberPort (const _component_port_sub&);
         const ports::ResponsePort*   InitResponsePort   (const _component_port_rep&);
         const ports::RequestPort*    InitRequestPort    (const _component_port_req&);
+        const ports::QueryPort*      InitQueryPort      (const _component_port_qry&);
+        const ports::AnswerPort*     InitAnswerPort     (const _component_port_ans&);
         const ports::PeriodicTimer*  InitTimerPort      (const _component_port_tim&);
         const ports::InsidePort*     InitInsiderPort    (const _component_port_ins&);
 

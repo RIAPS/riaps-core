@@ -150,6 +150,7 @@ subscribeToService(const std::string&      app_name  ,
     clientBuilder.setActorName(actor_name);
     clientBuilder.setInstanceName(part_name);
     clientBuilder.setPortName(port_name);
+    //clientBuilder.setActorHost()
 
     auto serializedMessage = capnp::messageToFlatArray(message);
 

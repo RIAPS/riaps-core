@@ -5,13 +5,14 @@
 #ifndef RIAPS_CORE_LOCALESTIMATORBASE_H
 #define RIAPS_CORE_LOCALESTIMATORBASE_H
 
+#include <componentmodel/r_riapsmessage.h>
 #include "componentmodel/r_componentbase.h"
 #include "messages/activereplica.capnp.h"
 #include "GroupTypes.h"
 
 // Name of the ports from the model file
 #define PORT_SUB_READY    "ready"
-#define PORT_REQ_QUERY    "query"
+#define PORT_QRY_QUERY    "query"
 #define PORT_PUB_ESTIMATE "estimate"
 
 
@@ -25,23 +26,19 @@ namespace activereplica {
 
             ServerBase(_component_conf &config, riaps::Actor &actor);
 
-            //virtual void RegisterHandlers();
-
             virtual void OnReady(const messages::SensorReady::Reader &message,
                                  riaps::ports::PortBase *port)=0;
 
-            // I think we don't need handler for the request port. Request-Response should be sync anyway.
-            // The real async is router-dealer
-            //
-            //virtual void OnQuery(const std::string& messagetype,
-            //                     std::vector<std::string>& msgFields,
-            //                     riaps::ports::PortBase* port)=0;
-
-
             bool SendQuery(capnp::MallocMessageBuilder&    messageBuilder,
-                           messages::SensorQuery::Builder& message);
+                           messages::SensorQuery::Builder& message,
+                           std::string& requestId);
 
-            bool RecvQuery(messages::SensorValue::Reader &message);
+            bool RecvQuery(std::shared_ptr<riaps::RiapsMessage<messages::SensorValue::Reader, messages::SensorValue>>& message,
+                           std::shared_ptr<riaps::MessageParams>& params);
+
+            virtual void OnQuery(std::shared_ptr<riaps::RiapsMessage<messages::SensorValue, messages::SensorValue>>& message,
+                                 riaps::ports::PortBase *port,
+                                 std::shared_ptr<riaps::MessageParams> params)=0;
 
             bool SendEstimate(capnp::MallocMessageBuilder& messageBuilder,
                               messages::Estimate::Builder& message);
@@ -52,7 +49,7 @@ namespace activereplica {
         protected:
             virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
                                          riaps::ports::PortBase *port,
-                                         std::shared_ptr<riaps::AsyncInfo> asyncInfo = nullptr);
+                                         std::shared_ptr<riaps::MessageParams> payload = nullptr);
 
             virtual void DispatchInsideMessage(zmsg_t* zmsg,
                                                riaps::ports::PortBase* port);

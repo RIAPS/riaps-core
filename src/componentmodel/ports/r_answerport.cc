@@ -47,6 +47,30 @@ namespace riaps{
             return (_component_port_ans*)GetPortBaseConfig();
         }
 
+        bool AnswerPort::SendAnswer(capnp::MallocMessageBuilder& builder, std::shared_ptr<MessageParams> params) {
+            zmsg_t* msg = zmsg_new();
+
+            // Message to query port, first frame must be the SocketId
+            zmsg_pushstr(msg, params->GetOriginId().c_str());
+
+            // Original requestId (added in qry-ans)
+            zmsg_addstr(msg, params->GetRequestId().c_str());
+
+            zframe_t* userFrame;
+            userFrame << builder;
+
+            zmsg_add(msg, userFrame);
+
+            // Has timestamp
+            int64_t ztimeStamp;
+            if (params->HasTimestamp()) {
+                ztimeStamp = zclock_time();
+                zmsg_addmem(msg, &ztimeStamp, sizeof(ztimeStamp));
+            } else {
+                zmsg_addmem(msg, nullptr, 0);
+            }
+            return Send(&msg);
+        }
 
 
 //        bool ResponsePort::Send(zmsg_t** msg) const {

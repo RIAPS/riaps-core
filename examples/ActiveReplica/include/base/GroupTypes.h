@@ -2,6 +2,8 @@
 #ifndef RIAPS_CORE_GROUPTYPES_H
 #define RIAPS_CORE_GROUPTYPES_H
 
+#include <groups/r_group.h>
+
 // GroupType Ids
 #define GROUPTYPE_BACKUPGROUP               "BackupGroup"
 #define GROUPPORT_BACKUPGROUP_QUERY_OUT     "QueryOut"

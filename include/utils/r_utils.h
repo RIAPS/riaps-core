@@ -54,7 +54,8 @@ std::vector<std::string> maintain_servicecache(std::map<std::string, int64_t >& 
  */
 const std::string GetAppPath(const std::string& appName);
 
-void operator<<(zmsg_t*& zmsg, capnp::MallocMessageBuilder& message);
+void operator<<(zmsg_t*&   zmsg, capnp::MallocMessageBuilder& message);
+void operator<<(zframe_t*& zframe, capnp::MallocMessageBuilder& message);
 
 
 

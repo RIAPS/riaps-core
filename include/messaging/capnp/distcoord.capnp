@@ -12,6 +12,3 @@ struct GroupHeartBeat {
   # sequenceNumber    @2 : UInt16;
 }
 
-struct RiapsTimestamp {
-    value @0: Int64;
-}

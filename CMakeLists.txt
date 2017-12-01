@@ -67,12 +67,13 @@ if (BUILD_TESTS)
     #add_subdirectory(tests/EchoIO)
 endif()
 
+
 # libriaps sources
 list (APPEND component_SOURCE
         include/messaging/disco.capnp.c++
         include/messaging/distcoord.capnp.c++
-        src/componentmodel/ports/r_arequestport.cc
-        src/componentmodel/ports/r_aresponseport.cc
+        src/componentmodel/ports/r_queryport.cc
+        src/componentmodel/ports/r_answerport.cc
         src/componentmodel/ports/r_insideport.cc
         src/componentmodel/ports/r_portbase.cc
         src/componentmodel/ports/r_publisherport.cc
@@ -86,7 +87,7 @@ list (APPEND component_SOURCE
         src/componentmodel/ports/r_subscriberport.cc
         src/componentmodel/r_actor.cc
         src/componentmodel/r_argumentparser.cc
-        src/componentmodel/r_asyncinfo.cc
+        src/componentmodel/r_payload.cc
         src/componentmodel/r_commandlineparser.cc
         src/componentmodel/r_componentbase.cc
         src/componentmodel/r_devicethread.cc
@@ -100,7 +101,6 @@ list (APPEND component_SOURCE
         src/framework/rfw_configuration.cc
         src/framework/rfw_network_interfaces.cc
         src/groups/r_group.cc
-        src/messaging/r_message.cc
         src/utils/r_capnp_helper.cc
         src/utils/r_message.cc
         src/utils/r_utils.cc
@@ -108,8 +108,8 @@ list (APPEND component_SOURCE
 
 # libriaps headers
 list (APPEND component_HEADERS
-        include/componentmodel/ports/r_arequestport.h
-        include/componentmodel/ports/r_aresponseport.h
+        include/componentmodel/ports/r_queryport.h
+        include/componentmodel/ports/r_answerport.h
         include/componentmodel/ports/r_insideport.h
         include/componentmodel/ports/r_portbase.h
         include/componentmodel/ports/r_publisherport.h
@@ -122,7 +122,7 @@ list (APPEND component_HEADERS
         include/componentmodel/ports/r_subportgroup.h
         include/componentmodel/ports/r_subscriberport.h
         include/componentmodel/r_actor.h
-        include/componentmodel/r_asyncinfo.h
+        include/componentmodel/r_payload.h
         include/componentmodel/r_commandlineparser.h
         include/componentmodel/r_componentbase.h
         include/componentmodel/r_configuration.h
@@ -133,6 +133,7 @@ list (APPEND component_HEADERS
         include/componentmodel/r_parameter.h
         include/componentmodel/r_periodictimer.h
         include/componentmodel/r_portregister.h
+        include/componentmodel/r_riapsmessage.h
         include/const/r_const.h
         include/groups/r_group.h
         include/messaging/disco.capnp.h
@@ -162,8 +163,7 @@ set(ACTOR_HEADERS
         include/const/r_jsonmodel.h
         include/const/r_const.h
         include/messaging/disco.capnp.h
-        include/json.h
-        )
+        include/json.h)
 
 add_executable(start_actor
         ${ACTOR_SOURCE}

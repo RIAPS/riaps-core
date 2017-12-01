@@ -9,6 +9,13 @@ void operator<<(zmsg_t*& zmsg, capnp::MallocMessageBuilder& message){
     zmsg_pushmem(zmsg, bytes.begin(), bytes.size());
 }
 
+void operator<<(zframe_t*& zframe, capnp::MallocMessageBuilder& message){
+    auto serializedMessage = capnp::messageToFlatArray(message);
+    auto bytes = serializedMessage.asBytes();
+    zframe = zframe_new(bytes.begin(), bytes.size());
+}
+
+
 void operator>>(zframe_t& frame, capnp::FlatArrayMessageReader*& message){
     size_t size      = zframe_size(&frame);
     byte* data = zframe_data(&frame);

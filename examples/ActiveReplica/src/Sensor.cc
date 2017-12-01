@@ -11,7 +11,7 @@ namespace activereplica {
 
         Sensor::Sensor(_component_conf &config, riaps::Actor &actor) : SensorBase(config, actor) {
             _rndDistr = std::uniform_real_distribution<double>(-100.0, 100.0);  //(min, max)
-            _rndEngine.seed(std::random_device{}());
+            //_rndEngine.seed(std::random_device{}());
         }
 
         void Sensor::OnClock(riaps::ports::PortBase *port) {
@@ -25,29 +25,22 @@ namespace activereplica {
         }
 
         void Sensor::OnRequest(const messages::SensorQuery::Reader &message,
-                                    riaps::ports::PortBase *port) {
+                               riaps::ports::PortBase *port,
+                               std::shared_ptr<riaps::MessageParams> params) {
+            _logger->info("Request arrived on Answer, origin: {}, requestid: {}, ts: {}",
+                          params->GetOriginId(), params->GetRequestId(), params->GetTimestamp());
+
             capnp::MallocMessageBuilder messageBuilder;
             messages::SensorValue::Builder msgSensorValue = messageBuilder.initRoot<messages::SensorValue>();
             auto value = _rndDistr(_rndEngine);
             msgSensorValue.setValue(value);
-
-            if (!SendRequest(messageBuilder, msgSensorValue)){
+//
+            if (!SendRequest(messageBuilder, msgSensorValue, params)){
                 // Couldn't send the response
                 _logger->warn("Couldn't send message");
             } else{
                 _logger->info("Sent: {}", value);
             }
-        }
-
-        void Sensor::OnGroupMessage(const riaps::groups::GroupId &groupId,
-                                         capnp::FlatArrayMessageReader &capnpreader, riaps::ports::PortBase *port) {
-
-        }
-
-
-        bool Sensor::SendGroupMessage(riaps::groups::GroupId &groupId, capnp::MallocMessageBuilder &messageBuilder,
-                                           const std::string &portName) {
-            return true;
         }
 
         Sensor::~Sensor() {

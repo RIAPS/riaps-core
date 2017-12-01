@@ -35,9 +35,14 @@
 #define J_PORTS_SUBS   "subs"
 #define J_PORTS_TIMS   "tims"
 #define J_PORTS_INSS   "inss"
+#define J_PORTS_QRYS   "qrys"
+#define J_PORTS_ANSS   "anss"
 
 #define J_PORT_REQTYPE "req_type"
 #define J_PORT_REPTYPE "rep_type"
+
+#define J_PORT_QRYTYPE "qry_type"
+#define J_PORT_ANSTYPE "ans_type"
 
 #define J_TYPE     "type"
 

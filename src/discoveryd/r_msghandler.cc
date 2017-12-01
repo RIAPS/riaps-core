@@ -1165,7 +1165,6 @@ namespace riaps{
         std::string value = host + ":" + std::to_string(port);
 
         return std::make_tuple(key, value);
-        //return std::pair<std::string, std::string>(key, value);
     }
 
     std::pair<std::string, std::string> DiscoveryMessageHandler::buildLookupKey(
@@ -1185,9 +1184,14 @@ namespace riaps{
                 {riaps::discovery::Kind::SUB, kindMap[riaps::discovery::Kind::PUB]},
                 {riaps::discovery::Kind::CLT, kindMap[riaps::discovery::Kind::SRV]},
                 {riaps::discovery::Kind::REQ, kindMap[riaps::discovery::Kind::REP]},
-                {riaps::discovery::Kind::REP, kindMap[riaps::discovery::Kind::REQ]}};
+                {riaps::discovery::Kind::REP, kindMap[riaps::discovery::Kind::REQ]},
+                {riaps::discovery::Kind::QRY, kindMap[riaps::discovery::Kind::ANS]},
+                {riaps::discovery::Kind::ANS, kindMap[riaps::discovery::Kind::QRY]}
+        };
 
-        key = "/" + appName
+
+        // TODO: Use fmt instead of the prehistoric string concat
+        key =   "/" + appName
               + "/" + msgType
               + "/" + kindPairs[kind];
 
@@ -1195,10 +1199,12 @@ namespace riaps{
 
         std::string hostid = riaps::framework::Network::GetMacAddressStripped();
 
+
         if (scope == riaps::discovery::Scope::LOCAL) {
             key += hostid;
         }
 
+        // TODO: Use fmt instead of the prehistoric string concat
         std::string client =   '/' + appName
                              + '/' + clientActorName
                              + '/' + clientActorHost

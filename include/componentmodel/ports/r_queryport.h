@@ -9,6 +9,7 @@
 #include <componentmodel/r_configuration.h>
 #include <componentmodel/r_messagebase.h>
 #include <componentmodel/ports/r_senderport.h>
+#include <componentmodel/r_riapsmessage.h>
 
 #include <czmq.h>
 #include <zuuid.h>
@@ -29,17 +30,25 @@ namespace riaps {
             // Returns false, if the request port couldn't connect
             bool ConnectToResponse(const std::string& ansEndpoint);
 
-            virtual bool Recv(capnp::FlatArrayMessageReader** messageReader);
+            template<class R, class T>
+            bool RecvQuery(std::shared_ptr<riaps::RiapsMessage<R, T>>& message,
+                           std::shared_ptr<riaps::MessageParams>& params){
+                /**
+                 * |RequestId|Message|Timestamp|
+                */
 
-            virtual QueryPort* AsQueryPort() ;
+                char* cRequestId = nullptr;
+                zframe_t *bodyFrame = nullptr, *timestampFrame = nullptr;
+                if (zsock_recv(_port_socket, "sff", &cRequestId, &bodyFrame, &timestampFrame)==0){
+                    std::string socketId = zuuid_str(_socketId);
+                    params.reset(new riaps::MessageParams(socketId, &cRequestId, &timestampFrame));
+                    message.reset(new RiapsMessage<R, T>(&bodyFrame));
+                } else {
+                    _logger->error("Wrong incoming message format on port: {}", GetPortName());
+                }
 
-            virtual const _component_port_qry* GetConfig() const;
-
-            ~QueryPort() noexcept ;
-        protected:
-            bool _isConnected;
-
-            capnp::FlatArrayMessageReader _capnpReader;
+                return false;
+            };
 
             /**
              * Converts the passed capnp message to bytes and sends the bytearray.
@@ -53,7 +62,7 @@ namespace riaps {
              * +----------+
              * | FRAME 2  | -> the message to be sent, converted to bytes
              * +----------+
-             * | FRAME 3  | -> timestamp (automatically added by riaps, if addTimestamp parameter is true)
+             * | FRAME 3  | -> timestamp (added by the framework, if addTimestamp parameter is true)
              * +----------+
              *
              * @param message The message to be sent.
@@ -62,7 +71,19 @@ namespace riaps {
              *
              */
 
-            const std::string Send(capnp::MallocMessageBuilder& message, bool addTimestamp = false) const;
+            bool SendQuery(capnp::MallocMessageBuilder& message, std::string& requestId, bool addTimestamp = false) const;
+
+            virtual QueryPort* AsQueryPort() ;
+
+            virtual const _component_port_qry* GetConfig() const;
+
+            ~QueryPort() noexcept ;
+        protected:
+            bool _isConnected;
+
+            capnp::FlatArrayMessageReader _capnpReader;
+
+
 
             zuuid_t* _socketId;
 

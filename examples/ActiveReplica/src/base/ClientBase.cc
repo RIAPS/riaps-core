@@ -15,7 +15,7 @@ namespace activereplica {
 
         void ClientBase::DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
                                          riaps::ports::PortBase *port,
-                                          std::shared_ptr<riaps::AsyncInfo> asyncInfo
+                                          std::shared_ptr<riaps::MessageParams> payload
         ) {
             auto portName = port->GetPortName();
             if (portName == PORT_TIMER_WAKEUP) {

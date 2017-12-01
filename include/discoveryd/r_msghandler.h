@@ -25,7 +25,9 @@ static std::map<riaps::discovery::Kind, std::string> kindMap =
          {riaps::discovery::Kind::CLT, "clt"},
          {riaps::discovery::Kind::SRV, "srv"},
          {riaps::discovery::Kind::REQ, "req"},
-         {riaps::discovery::Kind::REP, "rep"}};
+         {riaps::discovery::Kind::REP, "rep"},
+         {riaps::discovery::Kind::QRY, "qry"},
+         {riaps::discovery::Kind::ANS, "ans"}};
 
 namespace spd = spdlog;
 

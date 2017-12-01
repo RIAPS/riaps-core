@@ -1,127 +1,153 @@
 {
-    "actors":{
-        "Client":{
-            "formals":[],
-            "instances":{
-                "client":{
-                    "actuals":[],
-                    "type":"Client"
-                }
-            },
-            "internals":[],
-            "locals":[],
-            "wires":[]
-        },
-        "Sensor":{
-            "formals":[],
-            "instances":{
-                "sensor":{
-                    "actuals":[],
-                    "type":"Sensor"
-                }
-            },
-            "internals":[],
-            "locals":[],
-            "wires":[]
-        },
-        "Server":{
-            "formals":[],
-            "instances":{
-                "server":{
-                    "actuals":[],
-                    "type":"Server"
-                }
-            },
-            "internals":[],
-            "locals":[],
-            "wires":[]
-        }
-    },
-    "components":{
-        "Client":{
-            "formals":[],
-            "name":"Client",
-            "ports":{
-                "clts":{},
-                "inss":{},
-                "pubs":{},
-                "reps":{},
-                "reqs":{},
-                "srvs":{},
-                "subs":{},
-                "tims":{
-                    "wakeup":{
-                        "period":3000
-                    }
-                }
-            }
-        },
-        "Sensor":{
-            "formals":[],
-            "name":"Sensor",
-            "ports":{
-                "clts":{},
-                "inss":{},
-                "pubs":{
-                    "ready":{
-                        "type":"SensorReady"
+    "name": "ActiveReplica",
+    "devices": {},
+    "components": {
+        "Server": {
+            "name": "Server",
+            "formals": [],
+            "libraries": [],
+            "files": [],
+            "devices": [],
+            "exceptHandler": "",
+            "ports": {
+                "reqs": {},
+                "pubs": {},
+                "reps": {},
+                "inss": {},
+                "subs": {
+                    "ready": {
+                        "type": "SensorReady",
+                        "upperlimit": 0,
+                        "lowerlimit": 0
                     }
                 },
-                "reps":{
-                    "request":{
-                        "rep_type":"SensorValue",
-                        "req_type":"SensorQuery"
-                    }
-                },
-                "reqs":{},
-                "srvs":{},
-                "subs":{},
-                "tims":{
-                    "clock":{
-                        "period":1000
-                    }
-                }
-            }
-        },
-        "Server":{
-            "formals":[],
-            "name":"Server",
-            "ports":{
-                "clts":{},
-                "inss":{},
-                "pubs":{},
-                "reps":{},
-                "reqs":{
+                "qrys":{
                     "query":{
-                        "rep_type":"SensorValue",
-                        "req_type":"SensorQuery"
+                        "ans_type":"SensorValue",
+                        "qry_type":"SensorQuery"
                     }
                 },
-                "srvs":{},
-                "subs":{
-                    "ready":{
-                        "type":"SensorReady"
+                "anss":{},
+                "clts": {},
+                "srvs": {},
+                "tims": {}
+            }
+        },
+        "Client": {
+            "name": "Client",
+            "formals": [],
+            "libraries": [],
+            "files": [],
+            "devices": [],
+            "exceptHandler": "",
+            "ports": {
+                "reqs": {},
+                "pubs": {},
+                "reps": {},
+                "inss": {},
+                "subs": {},
+                "clts": {},
+                "srvs": {},
+                "tims": {
+                    "wakeup": {
+                        "period": 3000
+                    }
+                }
+            }
+        },
+        "Sensor": {
+            "name": "Sensor",
+            "formals": [],
+            "libraries": [],
+            "files": [],
+            "devices": [],
+            "exceptHandler": "",
+            "ports": {
+                "reqs": {},
+                "pubs": {
+                    "ready": {
+                        "type": "SensorReady",
+                        "upperlimit": 0,
+                        "lowerlimit": 0
                     }
                 },
-                "tims":{}
+                "reps": {},
+                "anss":{
+                    "request":{
+                        "ans_type":"SensorValue",
+                        "qry_type":"SensorQuery"
+                    }
+                },
+                "qrys" :{},
+                "inss": {},
+                "subs": {},
+                "clts": {},
+                "srvs": {},
+                "tims": {
+                    "clock": {
+                        "period": 1000
+                    }
+                }
             }
         }
     },
-    "devices":{},
-    "libraries":[],
-    "messages":[
-        {
-            "name":"SensorReady"
+    "actors": {
+        "Server": {
+            "internals": [],
+            "locals": [],
+            "criticals": [],
+            "formals": [],
+            "wires": [],
+            "instances": {
+                "server": {
+                    "type": "Server",
+                    "actuals": []
+                }
+            },
+            "devices": [],
+            "memory": -1,
+            "space": -1,
+            "exceptHandler": ""
         },
-        {
-            "name":"SensorQuery"
+        "Client": {
+            "internals": [],
+            "locals": [],
+            "criticals": [],
+            "formals": [],
+            "wires": [],
+            "instances": {
+                "client": {
+                    "type": "Client",
+                    "actuals": []
+                }
+            },
+            "devices": [],
+            "memory": -1,
+            "space": -1,
+            "exceptHandler": ""
         },
+        "Sensor": {
+            "internals": [],
+            "locals": [],
+            "criticals": [],
+            "formals": [],
+            "wires": [],
+            "instances": {
+                "sensor": {
+                    "type": "Sensor",
+                    "actuals": []
+                }
+            },
+            "devices": [],
+            "memory": -1,
+            "space": -1,
+            "exceptHandler": ""
+        }
+    },
+    "messages": [
         {
-            "name":"SensorValue"
-        },
-        {
-            "name":"Estimate"
+            "name": "SensorReady"
         }
     ],
-    "name":"ActiveReplica"
+    "libraries": []
 }

@@ -95,6 +95,17 @@ namespace riaps{
                     zpoller_add(poller, (void*)newPort->GetSocket());
                 }
 
+                // Add and start answer ports
+                for (auto it_ansconf = comp_conf.component_ports.anss.begin();
+                     it_ansconf != comp_conf.component_ports.anss.end();
+                     it_ansconf++){
+
+                    const ports::AnswerPort* newPort = comp->InitAnswerPort(*it_ansconf);
+                    const zsock_t* zmqSocket = newPort->GetSocket();
+                    portSockets[zmqSocket] = newPort;
+                    zpoller_add(poller, (void*)newPort->GetSocket());
+                }
+
                 // Add RequestPorts
                 // Add the request port to the poller, just to be compatible with riaps-pycom
                 // (and support the not really "async" behavior)
@@ -103,6 +114,17 @@ namespace riaps{
                           it_reqconf++) {
 
                     const ports::RequestPort* newPort = comp->InitRequestPort(*it_reqconf);
+                    const zsock_t* zmqSocket = newPort->GetSocket();
+                    portSockets[zmqSocket] = newPort;
+                    zpoller_add(poller, (void*)newPort->GetSocket());
+                }
+
+                // Add query ports
+                for (auto it_qryconf = comp_conf.component_ports.qrys.begin();
+                     it_qryconf!= comp_conf.component_ports.qrys.end();
+                     it_qryconf++) {
+
+                    const ports::QueryPort* newPort = comp->InitQueryPort(*it_qryconf);
                     const zsock_t* zmqSocket = newPort->GetSocket();
                     portSockets[zmqSocket] = newPort;
                     zpoller_add(poller, (void*)newPort->GetSocket());
@@ -148,6 +170,9 @@ namespace riaps{
                                     } else if (port_tobe_updated->GetPortType() == ports::PortTypes::Request){
                                         std::string new_rep_endpoint = "tcp://" + std::string(host) + ":" + std::string(port);
                                         ((ports::RequestPort*)port_tobe_updated)->ConnectToResponse(new_rep_endpoint);
+                                    } else if (port_tobe_updated->GetPortType() == ports::PortTypes::Query){
+                                        std::string new_ans_endpoint = "tcp://" + std::string(host) + ":" + std::string(port);
+                                        ((ports::QueryPort*)port_tobe_updated)->ConnectToResponse(new_ans_endpoint);
                                     }
                                 }
 
@@ -243,30 +268,50 @@ namespace riaps{
                     ports::PortBase *riapsPort = const_cast<ports::PortBase *>(portSockets[static_cast<zsock_t *>(which)]);
 
                     // If the port is async, the frames are different
-                    if (riapsPort->AsAsyncResponsePort() != nullptr) {
-                        char*   originId, *messageId;
-                        zmsg_t* created, *expiration, *body;
+                    if (riapsPort->AsAnswerPort() != nullptr || riapsPort->AsQueryPort() != nullptr) {
+                        char     *originId, *messageId;
+                        zframe_t *body, *timestamp;
 
-                        if (zsock_recv(which, "smmsm", &originId, &created, &expiration, &messageId, &body) == 0){
-                            std::string originIdStr = originId;
-                            std::string messageIdStr  = messageId;
+                        std::shared_ptr <riaps::MessageParams> params = nullptr;
+                        capnp::FlatArrayMessageReader *capnpReader = nullptr;
 
-                            std::shared_ptr<riaps::AsyncInfo> asyncInfo =
-                                    std::shared_ptr<riaps::AsyncInfo>(new AsyncInfo(originIdStr, messageIdStr, &created, &expiration));
+                        /**
+                         * The query port doesn't have SocketId in the first frame, while answer port has it,
+                         * thus different pattern is used for recv()
+                         *  If the port is answerport: |String  |String   |Frame  |Frame    |
+                         *                             |SocketId|RequestId|Message|Timestamp|
+                         *
+                         *  If the port is queryport:  |String   |Frame  |Frame    |
+                         *                             |RequestId|Message|Timestamp|
+                         */
+                        if (riapsPort->AsAnswerPort()) {
 
-
-                            // TODO: AsyncInfo should take the ownership
-                            zstr_free(&originId);
-                            zstr_free(&messageId);
+                            if (zsock_recv(which, "ssff", &originId, &messageId, &body, &timestamp) == 0) {
+                                // Takes the ownership, deletes originId, messageId and timestamp
+                                params = std::shared_ptr<riaps::MessageParams>(new MessageParams(&originId, &messageId, &timestamp));
+                            } else {
+                                comp->_logger->error("AnswerPort ({}) frames are incorrect.", riapsPort->GetPortName());
+                            }
+                        } else if (riapsPort->AsQueryPort()){
+                            if (zsock_recv(which, "sff", &messageId, &body, &timestamp) == 0) {
+                                params = std::shared_ptr<riaps::MessageParams>(new MessageParams(&messageId, &timestamp));
+                            } else {
+                                comp->_logger->error("QueryPort ({}) frames are incorrect.", riapsPort->GetPortName());
+                            }
                         }
 
-//                        auto deleter       = [](zmsg_t* z){zmsg_destroy(&z);};
-//                        auto ptrOriginId   = std::make_shared<char>(originId);
-//                        auto ptrCreated    = std::make_shared<zmsg_t>(created, deleter);
-//                        auto ptrExpiration = std::make_shared<zmsg_t>(expiration, deleter);
-//                        auto ptrMessageId  = std::make_shared<char>(messageId);
-//                        auto ptrBody       = std::make_shared<zmsg_t>(body, deleter);
+                        /**
+                         * Convert to capnp buffer only if the recv() was successful
+                         */
+                        if (body!=nullptr && !terminated) {
+                            (*body) >> capnpReader;
+                            comp->DispatchMessage(capnpReader, riapsPort, params);
+                        }
 
+                        if (capnpReader != nullptr)
+                            delete capnpReader;
+
+                        zframe_destroy(&body);
                     }else {
                         zmsg_t* msg = zmsg_recv(which);
                         // zmsg_op transfers the ownership, the frame is removed from the zmsg
@@ -404,6 +449,12 @@ namespace riaps{
         return portBase->AsPublishPort();
     }
 
+    ports::QueryPort* ComponentBase::GetQueryPortByName(const std::string &portName) {
+        ports::PortBase* portBase = GetPortByName(portName);
+        if (portBase == NULL) return NULL;
+        return portBase->AsQueryPort();
+    }
+
     ports::RequestPort* ComponentBase::GetRequestPortByName(const std::string &portName) {
         ports::PortBase* portBase = GetPortByName(portName);
         if (portBase == NULL) return NULL;
@@ -414,6 +465,11 @@ namespace riaps{
         ports::PortBase* portBase = GetPortByName(portName);
         if (portBase == NULL) return NULL;
         return portBase->AsResponsePort();
+    }
+
+    void ComponentBase::OnGroupMessage(const riaps::groups::GroupId &groupId,
+                                       capnp::FlatArrayMessageReader &capnpreader, riaps::ports::PortBase *port) {
+        _logger->error("Group message arrived, but no handler implemented in the component");
     }
 
 //    bool ComponentBase::CreateOneShotTimer(const std::string &timerid, timespec &wakeuptime) {
@@ -495,6 +551,21 @@ namespace riaps{
         return result;
     }
 
+    const ports::AnswerPort* ComponentBase::InitAnswerPort(const _component_port_ans & config) {
+        auto result = new ports::AnswerPort(config, this);
+        std::unique_ptr<ports::PortBase> newport(result);
+        _ports[config.portName] = std::move(newport);
+        return result;
+    }
+
+    const ports::QueryPort* ComponentBase::InitQueryPort(const _component_port_qry & config) {
+        std::unique_ptr<ports::QueryPort> newport(new ports::QueryPort(config, this));
+        auto result = newport.get();
+        newport->Init();
+        _ports[config.portName] = std::move(newport);
+        return result;
+    }
+
     const ports::InsidePort* ComponentBase::InitInsiderPort(const _component_port_ins& config) {
         auto result = new ports::InsidePort(config, riaps::ports::InsidePortMode::BIND, this);
         std::unique_ptr<ports::PortBase> newport(result);
@@ -542,19 +613,34 @@ namespace riaps{
 //        return SendMessageOnPort(&msg, portName);
 //    }
 //
-    bool ComponentBase::SendMessageOnPort(capnp::MallocMessageBuilder& message, const std::string &portName) {
+    bool ComponentBase::SendMessageOnPort(capnp::MallocMessageBuilder& message,
+                                          const std::string &portName) {
         ports::PortBase* port = GetPortByName(portName);
         if (port == NULL) return false;
 
         ports::SenderPort* senderPort = dynamic_cast<ports::SenderPort*>(port);
         if (senderPort == nullptr) return false;
         return senderPort->Send(message);
+    }
 
-//        auto serializedMessage = capnp::messageToFlatArray(message);
-//        zmsg_t* msg = zmsg_new();
-//        auto bytes = serializedMessage.asBytes();
-//        zmsg_pushmem(msg, bytes.begin(), bytes.size());
-//        return SendMessageOnPort(&msg, portName);
+    bool ComponentBase::SendMessageOnPort(capnp::MallocMessageBuilder &message, const std::string &portName,
+                                          std::shared_ptr<riaps::MessageParams> params) {
+        ports::PortBase* port = GetPortByName(portName);
+        if (port == NULL) return false;
+
+        ports::AnswerPort* answerPort = dynamic_cast<ports::AnswerPort*>(port);
+        if (answerPort == nullptr) return false;
+        return answerPort->SendAnswer(message, params);
+    }
+
+    bool ComponentBase::SendMessageOnPort(capnp::MallocMessageBuilder &message, const std::string &portName,
+                                          std::string &requestId) {
+        ports::PortBase* port = GetPortByName(portName);
+        if (port == NULL) return false;
+
+        ports::QueryPort* queryPort = port->AsQueryPort();
+        if (queryPort == nullptr) return false;
+        return queryPort->SendQuery(message, requestId);
     }
 
     bool ComponentBase::SendGroupMessage(const riaps::groups::GroupId &groupId,

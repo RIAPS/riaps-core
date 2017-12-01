@@ -13,13 +13,13 @@ namespace activereplica {
 
         void SensorBase::DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
                                          riaps::ports::PortBase *port,
-                                         std::shared_ptr<riaps::AsyncInfo> asyncInfo) {
+                                         std::shared_ptr<riaps::MessageParams> params) {
             auto portName = port->GetPortName();
             if (portName == PORT_TIMER_CLOCK) {
                 OnClock(port);
-            } else if (portName == PORT_REP_REQUEST) {
+            } else if (portName == PORT_ANS_REQUEST) {
                 auto sensorQuery = capnpreader->getRoot<messages::SensorQuery>();
-                OnRequest(sensorQuery, port);
+                OnRequest(sensorQuery, port, params);
             }
 
         }
@@ -29,8 +29,9 @@ namespace activereplica {
         }
 
         bool SensorBase::SendRequest(capnp::MallocMessageBuilder&    messageBuilder,
-                                          messages::SensorValue::Builder& message) {
-            return SendMessageOnPort(messageBuilder, PORT_REP_REQUEST);
+                                     messages::SensorValue::Builder& message,
+                                     std::shared_ptr<riaps::MessageParams> params) {
+            return SendMessageOnPort(messageBuilder, PORT_ANS_REQUEST, params);
         }
 
         bool SensorBase::SendReady(capnp::MallocMessageBuilder&    messageBuilder,
@@ -38,9 +39,6 @@ namespace activereplica {
             return SendMessageOnPort(messageBuilder, PORT_PUB_READY);
         }
 
-        SensorBase::~SensorBase() {
-
-        }
 
     }
 }

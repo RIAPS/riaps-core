@@ -20,6 +20,10 @@ namespace activereplica {
             virtual void OnReady(const messages::SensorReady::Reader &message,
                                  riaps::ports::PortBase *port);
 
+            virtual void OnQuery(std::shared_ptr<riaps::RiapsMessage<messages::SensorValue, messages::SensorValue>>& message,
+                                  riaps::ports::PortBase *port,
+                                  std::shared_ptr<riaps::MessageParams> params);
+
             void OnGroupMessage(const riaps::groups::GroupId& groupId,
                                 capnp::FlatArrayMessageReader& capnpreader,
                                 riaps::ports::PortBase* port);

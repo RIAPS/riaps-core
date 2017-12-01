@@ -12,7 +12,7 @@
 // Name of the ports from the model file
 #define PORT_TIMER_CLOCK "clock"
 #define PORT_PUB_READY   "ready"
-#define PORT_REP_REQUEST "request"
+#define PORT_ANS_REQUEST "request"
 
 namespace activereplica {
     namespace components {
@@ -21,7 +21,7 @@ namespace activereplica {
 
         public:
             SensorBase(_component_conf &config, riaps::Actor &actor);
-            virtual ~SensorBase();
+            virtual ~SensorBase() = default;
 
         protected:
 
@@ -34,27 +34,22 @@ namespace activereplica {
             //                     riaps::ports::PortBase* port)=0;
 
             virtual void OnRequest(const messages::SensorQuery::Reader &message,
-                                   riaps::ports::PortBase *port)=0;
+                                   riaps::ports::PortBase *port,
+                                   std::shared_ptr<riaps::MessageParams> params)=0;
 
             virtual bool SendRequest(capnp::MallocMessageBuilder&    messageBuilder,
-                                     messages::SensorValue::Builder& message);
+                                     messages::SensorValue::Builder& message,
+                                     std::shared_ptr<riaps::MessageParams> params);
 
             virtual bool SendReady(capnp::MallocMessageBuilder&    messageBuilder,
                                    messages::SensorReady::Builder& message);
-
-
-
-
         private:
-
             virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
                                          riaps::ports::PortBase *port,
-                                         std::shared_ptr<riaps::AsyncInfo> asyncInfo = nullptr);
+                                         std::shared_ptr<riaps::MessageParams> params = nullptr);
 
             virtual void DispatchInsideMessage(zmsg_t* zmsg,
                                                riaps::ports::PortBase* port);
-
-
         };
     }
 }

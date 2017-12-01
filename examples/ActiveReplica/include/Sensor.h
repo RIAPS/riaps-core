@@ -21,16 +21,12 @@ namespace activereplica {
 
             virtual void OnClock(riaps::ports::PortBase *port);
 
+
+
             virtual void OnRequest(const messages::SensorQuery::Reader &message,
-                                   riaps::ports::PortBase *port);
-
-            void OnGroupMessage(const riaps::groups::GroupId& groupId,
-                                capnp::FlatArrayMessageReader& capnpreader,
-                                riaps::ports::PortBase* port);
-
-            virtual bool SendGroupMessage(riaps::groups::GroupId&      groupId,
-                                          capnp::MallocMessageBuilder& messageBuilder,
-                                          const std::string&           portName);
+                                   riaps::ports::PortBase *port,
+                                   std::shared_ptr<riaps::MessageParams> params = nullptr);
+            
         private:
             std::uniform_real_distribution<double> _rndDistr;
             std::default_random_engine             _rndEngine;

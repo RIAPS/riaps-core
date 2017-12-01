@@ -14,7 +14,7 @@ namespace activereplica {
 
         void ServerBase::DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
                                          riaps::ports::PortBase *port,
-                                         std::shared_ptr<riaps::AsyncInfo> asyncInfo) {
+                                         std::shared_ptr<riaps::MessageParams> payload) {
             if (port->GetPortName() == PORT_SUB_READY) {
                 messages::SensorReady::Reader sensorReady = capnpreader->getRoot<messages::SensorReady>();
                 OnReady(sensorReady, port);
@@ -22,21 +22,18 @@ namespace activereplica {
         }
 
         bool ServerBase::SendQuery(capnp::MallocMessageBuilder &messageBuilder,
-                                           messages::SensorQuery::Builder &message) {
-            return SendMessageOnPort(messageBuilder, PORT_REQ_QUERY);
+                                           messages::SensorQuery::Builder &message,
+                                          std::string& requestId) {
+            return SendMessageOnPort(messageBuilder, PORT_QRY_QUERY, requestId);
         }
 
-        bool ServerBase::RecvQuery(messages::SensorValue::Reader &message) {
-            auto port = GetRequestPortByName(PORT_REQ_QUERY);
+        bool ServerBase::RecvQuery(std::shared_ptr<riaps::RiapsMessage<messages::SensorValue::Reader, messages::SensorValue>>& message,
+                                   std::shared_ptr<riaps::MessageParams>& params) {
+            auto port = GetQueryPortByName(PORT_QRY_QUERY);
             if (port == NULL) return false;
 
-            capnp::FlatArrayMessageReader* messageReader;
+            return port->RecvQuery<messages::SensorValue::Reader, messages::SensorValue>(message, params);
 
-            if (port->Recv(&messageReader)){
-                message = messageReader->getRoot<messages::SensorValue>();
-                return true;
-            }
-            return false;
         }
 
         void ServerBase::DispatchInsideMessage(zmsg_t *zmsg, riaps::ports::PortBase *port) {
