@@ -8,7 +8,7 @@
 #include <base/Common.h>
 #include "base/GpioDeviceComponentBase.h"
 #include <componentmodel/r_devicethread.h>
-#include <componentmodel/r_insiderport.h>
+#include <componentmodel/ports/r_insideport.h>
 #include <atomic>
 #include <thread>
 
@@ -16,7 +16,7 @@ namespace gpiotoggleexample {
     namespace components {
         class GpioDeviceThread : public riaps::components::DeviceThread {
         public:
-            GpioDeviceThread(const _component_conf_j& deviceConfig);
+            GpioDeviceThread(const _component_conf& deviceConfig);
 
             void Run();
 

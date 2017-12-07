@@ -38,11 +38,12 @@ int main(int argc, char* argv[]) {
         }
 
         std::shared_ptr<spd::logger> _logger = spd::stdout_color_st(actorName);
+        
         try {
 
             riaps::Actor* aptr = riaps::Actor::CreateActor(configJson, actorName, modelName, actualParams);
 
-
+            
 
             std::unique_ptr<riaps::Actor> actor = std::unique_ptr<riaps::Actor>(aptr);
             actor->Init();

@@ -15,7 +15,7 @@ namespace gpiotoggleexample{
         class GpioDeviceComponent : public GpioDeviceComponentBase{
         public:
 
-            GpioDeviceComponent(_component_conf_j& config, riaps::Actor& actor);
+            GpioDeviceComponent(_component_conf& config, riaps::Actor& actor);
 
             virtual void OnClock(riaps::ports::PortBase *port);
 
@@ -46,7 +46,7 @@ namespace gpiotoggleexample{
     }
 }
 
-extern "C" riaps::ComponentBase* create_component(_component_conf_j&, riaps::Actor& actor);
+extern "C" riaps::ComponentBase* create_component(_component_conf&, riaps::Actor& actor);
 extern "C" void destroy_component(riaps::ComponentBase*);
 
 #endif //RIAPS_CORE_GPIODEVICECOMPONENT_H

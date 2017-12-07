@@ -62,9 +62,9 @@ if (BUILD_TESTS)
     # add_subdirectory(examples/DistributedEstimatorGroup)
     add_subdirectory(examples/ActiveReplica)
     #add_subdirectory(tests/test_timer)
-    #add_subdirectory(tests/GpioDeviceTesting)
+    add_subdirectory(tests/GpioDeviceTesting)
     #add_subdirectory(tests/testPubSub/test_1_1/test_1_1)
-    #add_subdirectory(tests/EchoIO)
+    # add_subdirectory(examples/EchoIO)
 endif()
 
 
@@ -202,6 +202,28 @@ add_executable(rdiscoveryd
 target_link_libraries(rdiscoveryd czmq zmq opendht gnutls riaps capnp nettle hogweed gmp pthread)
 
 install(TARGETS rdiscoveryd DESTINATION bin)
+
+
+# start_device source
+list(APPEND DEVICE_SOURCE
+        src/device/r_deviceactor.cc
+        src/device/r_dmain.cc
+        )
+
+# start_device headers
+list(APPEND DEVICE_HEADERS
+        include/device/r_deviceactor.h
+        )
+
+# start_device
+add_executable(start_device
+        ${DEVICE_SOURCE}
+        ${DEVICE_HEADERS}
+        )
+target_link_libraries(start_device czmq zmq opendht gnutls riaps capnp nettle hogweed gmp pthread)
+
+install(TARGETS start_device DESTINATION bin)
+
 
 SET(MAJOR_VERSION "0")
 SET(MINOR_VERSION "6")

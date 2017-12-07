@@ -26,7 +26,7 @@ namespace riaps {
 
             InsidePort(const _component_port_ins &config, InsidePortMode mode, const ComponentBase *parent_component);
 
-            std::string GetEndpoint();
+            const std::string& GetEndpoint();
 
             virtual const _component_port_ins* GetConfig() const;
 

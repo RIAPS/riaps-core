@@ -9,7 +9,7 @@ namespace gpiotoggleexample {
 
 
 
-        GpioDeviceThread::GpioDeviceThread(const _component_conf_j& deviceConfig)
+        GpioDeviceThread::GpioDeviceThread(const _component_conf& deviceConfig)
             : riaps::components::DeviceThread(deviceConfig) {
 
             _isAvailable.store(false);

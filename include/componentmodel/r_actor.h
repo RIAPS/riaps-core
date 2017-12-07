@@ -74,7 +74,7 @@ namespace riaps {
               std::map<std::string, std::string>& commandLineParams
         );
 
-        void ParseConfig();
+        virtual void ParseConfig();
 
         std::set<std::string> GetLocalMessageTypes(nlohmann::json& jsonLocals);
 
@@ -114,9 +114,12 @@ namespace riaps {
         // Configurations
         ////
 
+        void GetPortConfigs(nlohmann::json& jsonPortsConfig, _component_conf& results);
+
 
         std::vector<component_conf> _component_configurations;
         std::vector<groupt_conf>    _grouptype_configurations;
+        std::set<std::string>       _localMessageTypes;
     private:
         zpoller_t*    _poller;
         static Actor* _currentActor;

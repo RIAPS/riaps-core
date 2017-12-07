@@ -31,7 +31,7 @@ namespace riaps{
             return (_component_port_ins*)GetPortBaseConfig();
         }
 
-        std::string InsidePort::GetEndpoint() {
+        const std::string& InsidePort::GetEndpoint() {
             return _endpoint;
         }
 

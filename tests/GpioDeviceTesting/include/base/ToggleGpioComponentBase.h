@@ -23,7 +23,7 @@ namespace gpiotoggleexample {
 
         public:
 
-            ToggleGpioComponentBase(_component_conf_j &config, riaps::Actor &actor);
+            ToggleGpioComponentBase(_component_conf &config, riaps::Actor &actor);
 
             virtual void OnToggle(riaps::ports::PortBase *port)=0;
             virtual void OnReadValue(riaps::ports::PortBase *port)=0;
@@ -45,7 +45,8 @@ namespace gpiotoggleexample {
         protected:
 
             virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
-                                         riaps::ports::PortBase *port);
+                                         riaps::ports::PortBase *port,
+                                         std::shared_ptr<riaps::MessageParams> params);
 
             virtual void DispatchInsideMessage(zmsg_t*, riaps::ports::PortBase*);
 

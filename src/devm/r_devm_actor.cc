@@ -41,6 +41,7 @@ void devm_zactor (zsock_t *pipe, void *args){
 
 
     std::string endpoint = DEVMANAGER_SERVICE_IPC + mac_address;
+    std::cout << "devm endpoint: " << endpoint << std::endl;
     zsock_t *devmServer = zsock_new_rep(endpoint.c_str());
     assert(devmServer);
 

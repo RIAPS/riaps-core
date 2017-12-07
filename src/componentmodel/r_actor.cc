@@ -139,7 +139,218 @@ namespace riaps {
         _startDevice   = false;
 
         _logger = spd::get(_actorName);
+        if (_logger == nullptr){
+            _logger = spd::stdout_color_mt(_actorName);
+        }
         _logger->set_level(spd::level::debug);
+
+        _localMessageTypes = GetLocalMessageTypes(_jsonLocals);
+    }
+
+    void riaps::Actor::GetPortConfigs(nlohmann::json& jsonPortsConfig, _component_conf& results) {
+        if (jsonPortsConfig.count(J_PORTS_PUBS)!=0){
+            auto json_pubports = jsonPortsConfig[J_PORTS_PUBS];
+            for (auto it_pubport=json_pubports.begin();
+                 it_pubport!=json_pubports.end();
+                 it_pubport++){
+
+                auto pubportname = it_pubport.key();
+                auto pubporttype = it_pubport.value()[J_TYPE];
+
+
+
+                _component_port_pub newpubconfig;
+                newpubconfig.portName = pubportname;
+                newpubconfig.messageType = pubporttype;
+
+                // If the porttype is defined in the Local list
+                if (_localMessageTypes.find(pubporttype) != _localMessageTypes.end()){
+                    newpubconfig.isLocal = true;
+                } else {
+                    newpubconfig.isLocal = false;
+                }
+
+                results.component_ports.pubs.push_back(newpubconfig);
+            }
+        }
+
+        // Parse subscribers from the config
+        if (jsonPortsConfig.count(J_PORTS_SUBS)!=0){
+            auto json_subports = jsonPortsConfig[J_PORTS_SUBS];
+            for (auto it_subport = json_subports.begin();
+                 it_subport != json_subports.end() ;
+                 it_subport++){
+
+                auto subportname = it_subport.key();
+                auto subporttype = it_subport.value()[J_TYPE];
+
+                _component_port_sub newsubconfig;
+                newsubconfig.portName = subportname;
+                newsubconfig.messageType = subporttype;
+
+                // If the porttype is defined in the Local list
+                if (_localMessageTypes.find(subporttype) != _localMessageTypes.end()){
+                    newsubconfig.isLocal = true;
+                } else {
+                    newsubconfig.isLocal = false;
+                }
+
+                results.component_ports.subs.push_back(newsubconfig);
+            }
+        }
+
+        // Parse request ports
+        if (jsonPortsConfig.count(J_PORTS_REQS)!=0){
+            auto json_reqports = jsonPortsConfig[J_PORTS_REQS];
+            for (auto it_reqport = json_reqports.begin();
+                 it_reqport != json_reqports.end() ;
+                 it_reqport++){
+
+                auto reqportname = it_reqport.key();
+                std::string reqtype = it_reqport.value()[J_PORT_REQTYPE];
+                std::string reptype = it_reqport.value()[J_PORT_REPTYPE];
+                std::string messagetype = reqtype + "#" + reptype;
+
+                _component_port_req newreqconfig;
+                newreqconfig.portName = reqportname;
+                //newreqconfig.messageType = subporttype;
+                newreqconfig.req_type = reqtype;
+                newreqconfig.rep_type = reptype;
+                newreqconfig.messageType = messagetype;
+
+                // If the porttype is defined in the Local list
+                if (_localMessageTypes.find(reqtype) != _localMessageTypes.end()){
+                    newreqconfig.isLocal = true;
+                } else {
+                    newreqconfig.isLocal = false;
+                }
+
+                results.component_ports.reqs.push_back(newreqconfig);
+            }
+        }
+
+        // Parse response ports
+        if (jsonPortsConfig.count(J_PORTS_REPS)!=0){
+            auto json_repports = jsonPortsConfig[J_PORTS_REPS];
+            for (auto it_repport = json_repports.begin();
+                 it_repport != json_repports.end() ;
+                 it_repport++){
+
+                auto repportname = it_repport.key();
+                std::string reqtype = it_repport.value()[J_PORT_REQTYPE];
+                std::string reptype = it_repport.value()[J_PORT_REPTYPE];
+                std::string messagetype = reqtype + "#" + reptype;
+
+                _component_port_rep newrepconfig;
+                newrepconfig.portName = repportname;
+                newrepconfig.req_type = reqtype;
+                newrepconfig.rep_type = reptype;
+                newrepconfig.messageType = messagetype;
+
+                // If the porttype is defined in the Local list
+                if (_localMessageTypes.find(reqtype) != _localMessageTypes.end()){
+                    newrepconfig.isLocal = true;
+                } else {
+                    newrepconfig.isLocal = false;
+                }
+
+                results.component_ports.reps.push_back(newrepconfig);
+            }
+        }
+
+        // Parse query ports
+        if (jsonPortsConfig.count(J_PORTS_QRYS)!=0){
+            auto json_qryports = jsonPortsConfig[J_PORTS_QRYS];
+            for (auto it_qryport = json_qryports.begin();
+                 it_qryport != json_qryports.end() ;
+                 it_qryport++){
+
+                auto qryportname = it_qryport.key();
+                std::string qrytype = it_qryport.value()[J_PORT_QRYTYPE];
+                std::string anstype = it_qryport.value()[J_PORT_ANSTYPE];
+                std::string messagetype = qrytype + "#" + anstype;
+
+                _component_port_qry newqryconfig;
+                newqryconfig.portName = qryportname;
+                //newreqconfig.messageType = subporttype;
+                newqryconfig.qry_type = qrytype;
+                newqryconfig.ans_type = anstype;
+                newqryconfig.messageType = messagetype;
+
+                // If the porttype is defined in the Local list
+                if (_localMessageTypes.find(qrytype) != _localMessageTypes.end()){
+                    newqryconfig.isLocal = true;
+                } else {
+                    newqryconfig.isLocal = false;
+                }
+
+                results.component_ports.qrys.push_back(newqryconfig);
+            }
+        }
+
+        // Parse answer ports
+        if (jsonPortsConfig.count(J_PORTS_ANSS)!=0){
+            auto json_ansports = jsonPortsConfig[J_PORTS_ANSS];
+            for (auto it_ansport = json_ansports.begin();
+                 it_ansport != json_ansports.end() ;
+                 it_ansport++){
+
+                auto ansportname = it_ansport.key();
+                std::string qrytype = it_ansport.value()[J_PORT_QRYTYPE];
+                std::string anstype = it_ansport.value()[J_PORT_ANSTYPE];
+                std::string messagetype = qrytype + "#" + anstype;
+
+                _component_port_ans newansconfig;
+                newansconfig.portName = ansportname;
+                newansconfig.qry_type = qrytype;
+                newansconfig.ans_type = anstype;
+                newansconfig.messageType = messagetype;
+
+                // If the porttype is defined in the Local list
+                if (_localMessageTypes.find(qrytype) != _localMessageTypes.end()){
+                    newansconfig.isLocal = true;
+                } else {
+                    newansconfig.isLocal = false;
+                }
+
+                results.component_ports.anss.push_back(newansconfig);
+            }
+        }
+
+        // Get the timers
+        if (jsonPortsConfig.count(J_PORTS_TIMS)!=0){
+            auto json_tims = jsonPortsConfig[J_PORTS_TIMS];
+            for (auto it_tim = json_tims.begin();
+                 it_tim != json_tims.end() ;
+                 it_tim++){
+
+                auto timname = it_tim.key();
+                auto timperiod = it_tim.value()["period"];
+
+                _component_port_tim newtimconfig;
+                newtimconfig.portName = timname;
+                newtimconfig.period   = timperiod;
+
+                results.component_ports.tims.push_back(newtimconfig);
+            }
+        }
+
+        // Get the inside ports
+        if (jsonPortsConfig.count(J_PORTS_INSS)!=0){
+            auto json_inss = jsonPortsConfig[J_PORTS_INSS];
+            for (auto it_ins = json_inss.begin();
+                 it_ins != json_inss.end() ;
+                 it_ins++){
+
+                auto insname = it_ins.key();
+                //auto timperiod = it_tim.value()["period"];
+
+                _component_port_ins newinsconfig;
+                newinsconfig.portName = insname;
+
+                results.component_ports.inss.push_back(newinsconfig);
+            }
+        }
     }
 
     void riaps::Actor::ParseConfig() {
@@ -147,8 +358,6 @@ namespace riaps {
         if(_jsonInstances.size()==0) {
             throw std::invalid_argument("No component instances defined for the actor. Check the configuration file!");
         }
-
-        auto localMessageTypes = GetLocalMessageTypes(_jsonLocals);
 
         // Get the components and devices
         for (auto it_currentconfig =  _jsonInstances.begin();
@@ -200,210 +409,7 @@ namespace riaps {
             // Get the ports
             auto json_portsconfig = jsonComponentConfig[J_PORTS];
 
-            // Get the publishers
-            if (json_portsconfig.count(J_PORTS_PUBS)!=0){
-                auto json_pubports = json_portsconfig[J_PORTS_PUBS];
-                for (auto it_pubport=json_pubports.begin();
-                     it_pubport!=json_pubports.end();
-                     it_pubport++){
-
-                    auto pubportname = it_pubport.key();
-                    auto pubporttype = it_pubport.value()[J_TYPE];
-
-
-
-                    _component_port_pub newpubconfig;
-                    newpubconfig.portName = pubportname;
-                    newpubconfig.messageType = pubporttype;
-
-                    // If the porttype is defined in the Local list
-                    if (localMessageTypes.find(pubporttype) != localMessageTypes.end()){
-                        newpubconfig.isLocal = true;
-                    } else {
-                        newpubconfig.isLocal = false;
-                    }
-
-                    new_component_config.component_ports.pubs.push_back(newpubconfig);
-                }
-            }
-
-            // Parse subscribers from the config
-            if (json_portsconfig.count(J_PORTS_SUBS)!=0){
-                auto json_subports = json_portsconfig[J_PORTS_SUBS];
-                for (auto it_subport = json_subports.begin();
-                     it_subport != json_subports.end() ;
-                     it_subport++){
-
-                    auto subportname = it_subport.key();
-                    auto subporttype = it_subport.value()[J_TYPE];
-
-                    _component_port_sub newsubconfig;
-                    newsubconfig.portName = subportname;
-                    newsubconfig.messageType = subporttype;
-
-                    // If the porttype is defined in the Local list
-                    if (localMessageTypes.find(subporttype) != localMessageTypes.end()){
-                        newsubconfig.isLocal = true;
-                    } else {
-                        newsubconfig.isLocal = false;
-                    }
-
-                    new_component_config.component_ports.subs.push_back(newsubconfig);
-                }
-            }
-
-            // Parse request ports
-            if (json_portsconfig.count(J_PORTS_REQS)!=0){
-                auto json_reqports = json_portsconfig[J_PORTS_REQS];
-                for (auto it_reqport = json_reqports.begin();
-                     it_reqport != json_reqports.end() ;
-                     it_reqport++){
-
-                    auto reqportname = it_reqport.key();
-                    std::string reqtype = it_reqport.value()[J_PORT_REQTYPE];
-                    std::string reptype = it_reqport.value()[J_PORT_REPTYPE];
-                    std::string messagetype = reqtype + "#" + reptype;
-
-                    _component_port_req newreqconfig;
-                    newreqconfig.portName = reqportname;
-                    //newreqconfig.messageType = subporttype;
-                    newreqconfig.req_type = reqtype;
-                    newreqconfig.rep_type = reptype;
-                    newreqconfig.messageType = messagetype;
-
-                    // If the porttype is defined in the Local list
-                    if (localMessageTypes.find(reqtype) != localMessageTypes.end()){
-                        newreqconfig.isLocal = true;
-                    } else {
-                        newreqconfig.isLocal = false;
-                    }
-
-                    new_component_config.component_ports.reqs.push_back(newreqconfig);
-                }
-            }
-
-            // Parse response ports
-            if (json_portsconfig.count(J_PORTS_REPS)!=0){
-                auto json_repports = json_portsconfig[J_PORTS_REPS];
-                for (auto it_repport = json_repports.begin();
-                     it_repport != json_repports.end() ;
-                     it_repport++){
-
-                    auto repportname = it_repport.key();
-                    std::string reqtype = it_repport.value()[J_PORT_REQTYPE];
-                    std::string reptype = it_repport.value()[J_PORT_REPTYPE];
-                    std::string messagetype = reqtype + "#" + reptype;
-
-                    _component_port_rep newrepconfig;
-                    newrepconfig.portName = repportname;
-                    newrepconfig.req_type = reqtype;
-                    newrepconfig.rep_type = reptype;
-                    newrepconfig.messageType = messagetype;
-
-                    // If the porttype is defined in the Local list
-                    if (localMessageTypes.find(reqtype) != localMessageTypes.end()){
-                        newrepconfig.isLocal = true;
-                    } else {
-                        newrepconfig.isLocal = false;
-                    }
-
-                    new_component_config.component_ports.reps.push_back(newrepconfig);
-                }
-            }
-
-            // Parse query ports
-            if (json_portsconfig.count(J_PORTS_QRYS)!=0){
-                auto json_qryports = json_portsconfig[J_PORTS_QRYS];
-                for (auto it_qryport = json_qryports.begin();
-                     it_qryport != json_qryports.end() ;
-                     it_qryport++){
-
-                    auto qryportname = it_qryport.key();
-                    std::string qrytype = it_qryport.value()[J_PORT_QRYTYPE];
-                    std::string anstype = it_qryport.value()[J_PORT_ANSTYPE];
-                    std::string messagetype = qrytype + "#" + anstype;
-
-                    _component_port_qry newqryconfig;
-                    newqryconfig.portName = qryportname;
-                    //newreqconfig.messageType = subporttype;
-                    newqryconfig.qry_type = qrytype;
-                    newqryconfig.ans_type = anstype;
-                    newqryconfig.messageType = messagetype;
-
-                    // If the porttype is defined in the Local list
-                    if (localMessageTypes.find(qrytype) != localMessageTypes.end()){
-                        newqryconfig.isLocal = true;
-                    } else {
-                        newqryconfig.isLocal = false;
-                    }
-
-                    new_component_config.component_ports.qrys.push_back(newqryconfig);
-                }
-            }
-
-            // Parse answer ports
-            if (json_portsconfig.count(J_PORTS_ANSS)!=0){
-                auto json_ansports = json_portsconfig[J_PORTS_ANSS];
-                for (auto it_ansport = json_ansports.begin();
-                     it_ansport != json_ansports.end() ;
-                     it_ansport++){
-
-                    auto ansportname = it_ansport.key();
-                    std::string qrytype = it_ansport.value()[J_PORT_QRYTYPE];
-                    std::string anstype = it_ansport.value()[J_PORT_ANSTYPE];
-                    std::string messagetype = qrytype + "#" + anstype;
-
-                    _component_port_ans newansconfig;
-                    newansconfig.portName = ansportname;
-                    newansconfig.qry_type = qrytype;
-                    newansconfig.ans_type = anstype;
-                    newansconfig.messageType = messagetype;
-
-                    // If the porttype is defined in the Local list
-                    if (localMessageTypes.find(qrytype) != localMessageTypes.end()){
-                        newansconfig.isLocal = true;
-                    } else {
-                        newansconfig.isLocal = false;
-                    }
-
-                    new_component_config.component_ports.anss.push_back(newansconfig);
-                }
-            }
-
-            // Get the timers
-            if (json_portsconfig.count(J_PORTS_TIMS)!=0){
-                auto json_tims = json_portsconfig[J_PORTS_TIMS];
-                for (auto it_tim = json_tims.begin();
-                     it_tim != json_tims.end() ;
-                     it_tim++){
-
-                    auto timname = it_tim.key();
-                    auto timperiod = it_tim.value()["period"];
-
-                    _component_port_tim newtimconfig;
-                    newtimconfig.portName = timname;
-                    newtimconfig.period   = timperiod;
-
-                    new_component_config.component_ports.tims.push_back(newtimconfig);
-                }
-            }
-
-            // Get the inside ports
-            if (json_portsconfig.count(J_PORTS_INSS)!=0){
-                auto json_inss = json_portsconfig[J_PORTS_INSS];
-                for (auto it_ins = json_inss.begin();
-                     it_ins != json_inss.end() ;
-                     it_ins++){
-
-                    auto insname = it_ins.key();
-                    //auto timperiod = it_tim.value()["period"];
-
-                    _component_port_ins newinsconfig;
-                    newinsconfig.portName = insname;
-
-                    new_component_config.component_ports.inss.push_back(newinsconfig);
-                }
-            }
+            GetPortConfigs(json_portsconfig, new_component_config);
 
             _component_configurations.push_back(new_component_config);
         }
@@ -444,10 +450,11 @@ namespace riaps {
         zpoller_add(_poller, _discovery_socket);
 
         // If there is a device, start the device manager client
-        for (auto& component_config : _component_configurations) {
+        //for (auto& component_config : _component_configurations) {
 
+        for(auto itConf = _component_configurations.begin(); itConf!=_component_configurations.end(); itConf++) {
             // If current component is a device, and the actor started from the DeviceActor, then register
-            if (component_config.isDevice && _startDevice) {
+            if (itConf->isDevice && _startDevice) {
 
                 _devm->RegisterActor(_actorName, _applicationName, "0");
                 zpoller_add(_poller, _devm->GetSocket());
@@ -456,19 +463,19 @@ namespace riaps {
         }
 
         // If no component in the actor => Stop, Error
-        if (_component_configurations.empty()){
-            throw std::invalid_argument("No components are defined in the configuration file.");
-        }
+        //if (_component_configurations.empty()){
+        //    throw std::invalid_argument("No components are defined in the configuration file.");
+       // }
 
 
 
-        for (auto& component_config : _component_configurations){
+        //for (auto& component_config : _component_configurations){
             // Load the component library
-
+        for(auto itConf = _component_configurations.begin(); itConf!=_component_configurations.end(); itConf++) {
             std::locale loc;
             std::string lowercaselibname;
 
-            for(auto ch : component_config.component_type)
+            for(auto ch : itConf->component_type)
                 lowercaselibname+=std::tolower(ch,loc);
 
 
@@ -497,24 +504,24 @@ namespace riaps {
             if (dlOpenHandle != nullptr) {
 
                 // It is not a device, start the component
-                if (!component_config.isDevice || (component_config.isDevice && _startDevice)) {
+                if (!itConf->isDevice || (itConf->isDevice && _startDevice)) {
                     
                     // Note: For devices
                     if (_startDevice){
-                        _actorName = component_config.component_name;
+                        _actorName = itConf->component_name;
                     }
                     _component_dll_handles.push_back(dlOpenHandle);
 
                     riaps::ComponentBase *(*create)(component_conf &, Actor &);
                     create = (riaps::ComponentBase *(*)(component_conf &, Actor &)) dlsym(dlOpenHandle, "create_component");
-                    riaps::ComponentBase *component_instance = (riaps::ComponentBase *) create(component_config, *this);
+                    riaps::ComponentBase *component_instance = (riaps::ComponentBase *) create(*itConf, *this);
                     _components.push_back(component_instance);
                 }
 
                 // If it is a device, but start the pheripheral first
-                else if (component_config.isDevice && !_startDevice){
+                else if (itConf->isDevice && !_startDevice){
                     auto peripheral = new Peripheral(this);
-                    peripheral->Setup(_applicationName, _jsonFile, component_config.component_name, _commandLineParams);
+                    peripheral->Setup(_applicationName, _jsonFile, itConf->component_type, _commandLineParams);
                     _peripherals.push_back(peripheral);
                 }
 

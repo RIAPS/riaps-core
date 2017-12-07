@@ -7,7 +7,7 @@
 namespace gpiotoggleexample {
     namespace components {
 
-        ToggleGpioComponentBase::ToggleGpioComponentBase(_component_conf_j &config, riaps::Actor &actor)
+        ToggleGpioComponentBase::ToggleGpioComponentBase(_component_conf &config, riaps::Actor &actor)
             : ComponentBase(config, actor){
 
         }
@@ -23,7 +23,8 @@ namespace gpiotoggleexample {
         }
 
         void ToggleGpioComponentBase::DispatchMessage(capnp::FlatArrayMessageReader *capnpreader,
-                                                      riaps::ports::PortBase *port) {
+                                                      riaps::ports::PortBase *port,
+                                                      std::shared_ptr<riaps::MessageParams> params) {
             auto portName = port->GetPortName();
             if (portName == PORT_SUB_CURRENTGPIOVALUE) {
                 auto dataValue = capnpreader->getRoot<messages::DataValue>();

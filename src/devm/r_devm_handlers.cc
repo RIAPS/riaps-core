@@ -77,7 +77,7 @@ namespace riaps{
             }
 
             std::string pub_endpoint = "tcp://" + host + ":!";
-            auto port = zsock_bind(pairSocket, pub_endpoint.c_str());
+            auto port = zsock_bind(pairSocket, "%s", pub_endpoint.c_str());
             auto actorDetail = new actor_details_t;
             actorDetail->port = port;
             actorDetail->socket = pairSocket;
@@ -146,7 +146,7 @@ namespace riaps{
             // TODO: do not hardcode the path, worst solution ever, but helps to test.
             std::string command = "/home/istvan/work/riaps-core/bin/start_device";
 
-            // Add model - skip appName, we don't need for that
+            command += " " + appName;
             command += " " + modelName; // model.json
             command += " " + deviceName;
             command += " " + cmdArgs;

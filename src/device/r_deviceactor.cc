@@ -25,6 +25,16 @@ namespace riaps{
         _deviceName  = deviceName;
     }
 
+    void DeviceActor::ParseConfig() {
+        // Get devices
+
+        for (auto itDeviceConfig =  _jsonDevicesconfig.begin();
+             itDeviceConfig     != _jsonDevicesconfig.end();
+             itDeviceConfig++) {
+
+        }
+    }
+
     DeviceActor* DeviceActor::CreateDeviceActor(nlohmann::json& configJson  ,
                                                 const std::string& deviceName,
                                                 const std::string& jsonFile ,
@@ -32,7 +42,7 @@ namespace riaps{
 
         std::string applicationName    = configJson[J_NAME];
         nlohmann::json jsonActors      = configJson[J_ACTORS];
-        std::string actorName          = "";
+        std::string actorName          = deviceName;
 
         // Find the actor
 //        if (jsonActors.find(actorName)==jsonActors.end()){
@@ -40,28 +50,28 @@ namespace riaps{
 //            return NULL;
 //        }
 
-        for (auto it = jsonActors.begin(); it!=jsonActors.end(); it++){
+//        for (auto it = jsonActors.begin(); it!=jsonActors.end(); it++){
+//
+//            //auto instances = (*it)[J_INSTANCES];
+//            // No device with deviceName in this actor
+//            //if (instances.find(deviceName)==instances.end()) continue;
+//
+//            actorName = it.key();
+//        }
 
-            auto instances = (*it)[J_INSTANCES];
-            // No device with deviceName in this actor
-            if (instances.find(deviceName)==instances.end()) continue;
-
-            actorName = it.key();
-        }
-
-        if (actorName == ""){
-            std::cerr << "Didn't find actor of the device: " << deviceName << std::endl;
-            return NULL;
-        }
-
-        auto jsonCurrentActor = jsonActors[actorName];
+//        if (actorName == ""){
+//            std::cerr << "Didn't find actor of the device: " << deviceName << std::endl;
+//            return NULL;
+//        }
+//
+        //auto jsonCurrentActor = jsonActors.at(0);
 
         return new ::riaps::DeviceActor(
                 applicationName,
                 actorName,
                 deviceName,
                 jsonFile,
-                jsonCurrentActor,
+                jsonActors,
                 configJson,
                 actualParams
         );

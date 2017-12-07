@@ -6,13 +6,14 @@
 
 namespace gpiotoggleexample{
     namespace components{
-        GpioDeviceComponentBase::GpioDeviceComponentBase(_component_conf_j &config, riaps::Actor &actor)
+        GpioDeviceComponentBase::GpioDeviceComponentBase(_component_conf &config, riaps::Actor &actor)
             : ComponentBase(config, actor){
 
         }
 
         void GpioDeviceComponentBase::DispatchMessage(capnp::FlatArrayMessageReader *capnpreader,
-                                                      riaps::ports::PortBase *port) {
+                                                      riaps::ports::PortBase *port,
+                                                      std::shared_ptr<riaps::MessageParams> params) {
             auto portName = port->GetPortName();
             if (portName == TIMER_CLOCK) {
                 OnClock(port);

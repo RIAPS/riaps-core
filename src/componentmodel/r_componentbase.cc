@@ -508,12 +508,14 @@ namespace riaps{
         return result;
     }
 
-//    bool ComponentBase::SendMessageOnPort(zmsg_t** msg, const std::string& portName) const {
-//        auto port = GetPort(portName);
-//        if (port == NULL) return false;
-//
-//        return port->Send(msg);
-//    }
+    bool ComponentBase::SendMessageOnPort(zmsg_t** message, const std::string& portName) {
+        auto port = GetPortByName(portName);
+        if (port == NULL) return false;
+
+        auto insidePort = port->AsInsidePort();
+
+        return insidePort->Send(message);
+    }
 
 //    bool ComponentBase::SendMessageOnPort(std::string message, const std::string& portName){
 //        ports::PortBase* port = GetPortByName(portName);
@@ -662,13 +664,13 @@ namespace riaps{
     }
 
 
-    const ports::PortBase* ComponentBase::GetPort(std::string portName) const {
-        auto port_it = _ports.find(portName);
-        if (port_it!=_ports.end()){
-            return port_it->second.get();
-        }
-        return nullptr;
-    }
+//    const ports::PortBase* ComponentBase::GetPort(std::string portName) const {
+//        auto port_it = _ports.find(portName);
+//        if (port_it!=_ports.end()){
+//            return port_it->second.get();
+//        }
+//        return nullptr;
+//    }
 
 
     std::string ComponentBase::GetTimerChannel() {

@@ -7,11 +7,11 @@
 namespace gpiotoggleexample {
     namespace components {
 
-        ToggleGpioComponent::ToggleGpioComponent(_component_conf_j &config, riaps::Actor &actor)
+        ToggleGpioComponent::ToggleGpioComponent(_component_conf &config, riaps::Actor &actor)
             : ToggleGpioComponentBase(config, actor){
             _currentPid = getpid();
             _value = "0";
-            std::cout << "ToggleGpioComponent: " << _currentPid << " starting" << std::endl;
+            _logger->info("ToggleGpioComponent {} is starting", _currentPid);
         }
 
         void ToggleGpioComponent::OnToggle(riaps::ports::PortBase *port) {
@@ -49,7 +49,7 @@ namespace gpiotoggleexample {
     }
 }
 
-riaps::ComponentBase* create_component(_component_conf_j& config, riaps::Actor& actor){
+riaps::ComponentBase* create_component(_component_conf& config, riaps::Actor& actor){
     auto result = new gpiotoggleexample::components::ToggleGpioComponent(config, actor);
     return result;
 }

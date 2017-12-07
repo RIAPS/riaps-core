@@ -19,10 +19,10 @@ ArgumentParser::ArgumentParser(std::map<std::string, std::string> &commandLinePa
 riaps::componentmodel::Parameters ArgumentParser::Parse(const std::string& componentName) {
 
 
-    auto json_instances = _json_actorconfig[J_INSTANCES];
-    auto json_internals = _json_actorconfig[J_INTERNALS];
-    auto json_locals    = _json_actorconfig[J_LOCALS];
-    auto json_actor_formals   = _json_actorconfig[J_FORMALS];
+    auto json_instances     = _json_actorconfig[J_INSTANCES];
+    auto json_internals     = _json_actorconfig[J_INTERNALS];
+    auto json_locals        = _json_actorconfig[J_LOCALS];
+    auto json_actor_formals = _json_actorconfig[J_FORMALS];
 
 
     riaps::componentmodel::Parameters actorParams;

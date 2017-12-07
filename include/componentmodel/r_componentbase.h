@@ -173,13 +173,13 @@ namespace riaps {
 
 
         /**
-         * Sends a ZMQ message on the given port.
+         * Sends a ZMQ message on the given inside port. This Send() is just for InsidePorts
          *
          * @param message ZMQ message structure to be sent
          * @param portName The port, which sends the message.
          * @return True if the message was sent successfully.
          */
-        //bool SendMessageOnPort(zmsg_t** message, const std::string& portName);
+        bool SendMessageOnPort(zmsg_t** message, const std::string& portName);
 
         /**
          * Fired when a message arrives on one the group ports.
@@ -321,8 +321,6 @@ namespace riaps {
         const ports::AnswerPort*     InitAnswerPort     (const _component_port_ans&);
         const ports::PeriodicTimer*  InitTimerPort      (const _component_port_tim&);
         const ports::InsidePort*     InitInsiderPort    (const _component_port_ins&);
-
-        const ports::PortBase* GetPort(std::string portName) const;
 
 
         std::string             GetTimerChannel();

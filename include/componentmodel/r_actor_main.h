@@ -6,7 +6,6 @@
 #define RIAPS_FW_R_ACTOR_MAIN_H
 
 #include <componentmodel/r_actor.h>
-#include <loggerd/r_logger_utilities.h>
 #include <framework/rfw_network_interfaces.h>
 
 //nlohmann json
