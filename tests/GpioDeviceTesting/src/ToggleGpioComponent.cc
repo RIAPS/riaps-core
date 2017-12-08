@@ -15,32 +15,31 @@ namespace gpiotoggleexample {
         }
 
         void ToggleGpioComponent::OnToggle(riaps::ports::PortBase *port) {
-            std::cout << "OnToggle()[" << _currentPid << "]"<< std::endl;
+            //std::cout << "OnToggle()[" << _currentPid << "]"<< std::endl;
             _value = _value=="0"?"1":"0";
 
             capnp::MallocMessageBuilder messageBuilder;
             auto msgWriteRequest = messageBuilder.initRoot<messages::WriteRequest>();
             msgWriteRequest.setValue(_value);
             auto result = SendWriteGpioValue(messageBuilder, msgWriteRequest);
-            std::cout << "OnToggle()[" << _currentPid << "]: send write request, setValue=" << _value << "Result " << result<< std::endl;
+            //std::cout << "OnToggle()[" << _currentPid << "]: send write request, setValue=" << _value << "Result " << result<< std::endl;
+            _logger->info("Send WriteRequest({})", _value);
         }
 
         void ToggleGpioComponent::OnReadValue(riaps::ports::PortBase *port) {
-            std::cout << "OnReadValue()[" << _currentPid << "]" << std::endl;
+            //std::cout << "OnReadValue()[" << _currentPid << "]" << std::endl;
             capnp::MallocMessageBuilder messageBuilder;
             auto msgReadRequest = messageBuilder.initRoot<messages::ReadRequest>();
             msgReadRequest.setMsg("Read");
             SendPollGpioValue(messageBuilder, msgReadRequest);
-            std::cout << "OnReadValue()[" << _currentPid << "]: send read request" << std::endl;
+            //std::cout << "OnReadValue()[" << _currentPid << "]: send read request" << std::endl;
+            _logger->info("Send ReadRequest()");
         }
 
         void ToggleGpioComponent::OnCurrentGpioValue(const messages::DataValue::Reader &message,
                                                      riaps::ports::PortBase *port) {
-            std::cout << "OnCurrentGpioValue()[" << _currentPid << "]: " << message.getValue().cStr() << std::endl;
-        }
-
-        void ToggleGpioComponent::OnOneShotTimer(const std::string &timerid) {
-
+            //std::cout << "OnCurrentGpioValue()[" << _currentPid << "]: " << message.getValue().cStr() << std::endl;
+            _logger->info("CurrentValue = {}", message.getValue().cStr());
         }
 
         ToggleGpioComponent::~ToggleGpioComponent() {

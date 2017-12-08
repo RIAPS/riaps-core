@@ -38,8 +38,6 @@ namespace gpiotoggleexample {
                                             messages::WriteRequest::Builder& message);
 
 
-
-
             virtual ~ToggleGpioComponentBase();
 
         protected:

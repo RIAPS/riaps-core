@@ -20,8 +20,6 @@ namespace gpiotoggleexample{
             void OnCurrentGpioValue(const messages::DataValue::Reader &message,
                                             riaps::ports::PortBase *port);
 
-            void OnOneShotTimer(const std::string &timerid);
-
             ~ToggleGpioComponent();
 
         private:
