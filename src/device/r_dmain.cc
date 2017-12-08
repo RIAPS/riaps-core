@@ -28,10 +28,19 @@ int main(int argc, char* argv[]) {
         std::string appName;
         nlohmann::json configJson;
 
+
+
         CommandLineParser cmdLineParser(argv, argc);
         if (cmdLineParser.ParseDeviceParams(actualParams, appName, deviceName,modelName, configJson) == -1){
             std::cerr << "Couldn't parse commandline parameters" << std::endl;
             return -1;
+        }
+
+        std::shared_ptr<spd::logger> _logger = spd::stdout_color_st(deviceName);
+
+        if (appName == ""){
+            _logger->critical("Application name is empty");
+            std::exit(-1);
         }
 
         try {

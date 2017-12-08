@@ -17,6 +17,12 @@ namespace riaps{
                     configJson,
                     args) {
 
+        if (_logger == nullptr)
+            _logger = spd::get(devicename);
+        if (_logger == nullptr)
+            _logger = spd::stdout_color_mt(devicename);
+        _logger->info("Creating device {} for application {}", devicename, applicationname);
+
     }
 
     DeviceActor* DeviceActor::CreateDeviceActor(nlohmann::json& configJson  ,
@@ -24,11 +30,13 @@ namespace riaps{
                                                 const std::string& jsonFile ,
                                                 std::map<std::string, std::string>& actualParams) {
 
-        std::string applicationName    = configJson[J_NAME];
-        nlohmann::json jsonActors      = configJson[J_ACTORS];
-        std::string actorName          = deviceName;
+        if (_currentActor == nullptr) {
 
-        // Find the actor
+            std::string applicationName = configJson[J_NAME];
+            nlohmann::json jsonActors = configJson[J_ACTORS];
+            std::string actorName = deviceName;
+
+            // Find the actor
 //        if (jsonActors.find(actorName)==jsonActors.end()){
 //            std::cerr << "Didn't find actor in the model file: " << actorName << std::endl;
 //            return NULL;
@@ -48,15 +56,16 @@ namespace riaps{
 //            return NULL;
 //        }
 //
-        //auto jsonCurrentActor = jsonActors.at(0);
+            //auto jsonCurrentActor = jsonActors.at(0);
 
-        return new ::riaps::DeviceActor(
-                applicationName,
-                deviceName,
-                configJson,
-                actualParams
-        );
-
+            _currentActor = new ::riaps::DeviceActor(
+                    applicationName,
+                    deviceName,
+                    configJson,
+                    actualParams
+            );
+        }
+        return dynamic_cast<DeviceActor*>(_currentActor);
 
 
     }
