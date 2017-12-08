@@ -67,6 +67,7 @@ namespace riaps {
         _deviceProperties->_configJson        = configJson;
         _deviceProperties->_jsonDevicesconfig = configJson[J_DEVICES];
 
+        _applicationName = applicationname;
     }
 
     riaps::Actor::Actor(const std::string&     applicationname,
