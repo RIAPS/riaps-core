@@ -98,10 +98,7 @@
             "ports":{
                 "clts":{},
                 "inss":{
-                    "dataIn_queue":{
-                        "spec":null
-                    },
-                    "dataOut_queue":{
+                    "dataQueue":{
                         "spec":null
                     }
                 },
