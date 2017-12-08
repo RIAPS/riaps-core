@@ -409,7 +409,10 @@ namespace riaps{
 
         size_t q_size = 2048; //queue size must be power of 2
         spd::set_async_mode(q_size);
-        _logger = spd::stdout_color_mt(_configuration.component_name);
+        
+        _logger = spd::get(_configuration.component_name);
+        if (_logger == nullptr)
+            _logger = spd::stdout_color_mt(_configuration.component_name);
 
         _zactor_component = zactor_new(component_actor, this);
     }
