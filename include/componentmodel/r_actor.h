@@ -44,7 +44,7 @@ namespace riaps {
 
         static const Actor& GetRunningActor();
 
-        void Init();
+        bool Init();
         virtual void start();
         std::string  GetActorId();
 
@@ -66,6 +66,34 @@ namespace riaps {
 
     protected:
 
+        struct ActorProperties {
+            std::string    _actorName;
+            std::string    _jsonFile;
+            nlohmann::json _jsonActorConfig;
+            nlohmann::json _jsonInstances;
+            nlohmann::json _jsonDevicesconfig;
+            nlohmann::json _jsonComponentsconfig;
+        };
+
+        struct DeviceProperties {
+            std::string    _actorName;
+            std::string    _deviceName;
+            nlohmann::json _configJson;
+            nlohmann::json _jsonDevicesconfig;
+        };
+
+        std::unique_ptr<ActorProperties>  _actorProperties;
+        std::unique_ptr<DeviceProperties> _deviceProperties;
+
+        /**
+         * Starting a regular actor, NOT a device component
+         * @param applicationname RIAPS application name
+         * @param actorname The actor to be started
+         * @param jsonFile  JSON file name
+         * @param jsonActorconfig
+         * @param configJson
+         * @param commandLineParams Actor arguments
+         */
         Actor(const std::string&     applicationname       ,
               const std::string&     actorname             ,
               const std::string&     jsonFile              ,
@@ -74,7 +102,23 @@ namespace riaps {
               std::map<std::string, std::string>& commandLineParams
         );
 
-        virtual void ParseConfig();
+        /**
+         * Starting device component
+         * @param applicationname RIAPS application name
+         * @param deviceName The device to be started (componentType)
+         * @param configJson JSON representation of the config file
+         * @param commandLineParams Actor arguments
+         */
+        Actor(const std::string&     applicationname       ,
+              const std::string&     deviceName            ,
+              nlohmann::json&        configJson            ,
+              std::map<std::string, std::string>& commandLineParams
+        );
+
+        template<class T>
+        bool ParseConfig(){
+
+        }
 
         std::set<std::string> GetLocalMessageTypes(nlohmann::json& jsonLocals);
 
@@ -87,26 +131,25 @@ namespace riaps {
 
 
         int                         _actor_port;
-        std::string                 _jsonFile;
+        //std::string                 _jsonFile;
         std::string                 _actor_endpoint;
         zuuid_t*                    _actor_id;
-        std::string                 _actorName;
+        //std::string                 _actorName;
         std::string                 _applicationName;
         std::vector<ComponentBase*> _components;
         std::vector<Peripheral*>    _peripherals;
         std::vector<void*>          _component_dll_handles;
-        bool                        _startDevice; // The actor doesn;t start the device. The DeviceActor starts it only
-        std::string                 _deviceName;  // If the DeviceActor starts the device, the device name is set here
+        //bool                        _startDevice; // The actor doesn;t start the device. The DeviceActor starts it only
+        //std::string                 _deviceName;  // If the DeviceActor starts the device, the device name is set here
                                                   // and not passed in parameters. Only the actorname comes from parameters.
 
 
         std::map<std::string, std::string>&   _commandLineParams;
         std::unique_ptr<riaps::devm::DevmApi> _devm;
 
-        nlohmann::json  _jsonComponentsconfig;
-        nlohmann::json  _jsonDevicesconfig;
-        nlohmann::json  _jsonActorconfig;
-        nlohmann::json  _jsonInstances;
+        //nlohmann::json  _jsonComponentsconfig;
+        //nlohmann::json  _jsonDevicesconfig;
+        //nlohmann::json  _jsonActorconfig;
         nlohmann::json  _jsonInternals;
         nlohmann::json  _jsonLocals;
         nlohmann::json  _jsonFormals;
@@ -124,6 +167,10 @@ namespace riaps {
         zpoller_t*    _poller;
         static Actor* _currentActor;
         std::shared_ptr<spd::logger> _logger;
+
+        bool IsDeviceActor() const;
+        bool IsComponentActor() const;
+
 
     };
 }

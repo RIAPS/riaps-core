@@ -41,9 +41,9 @@ int main(int argc, char* argv[]) {
                                                           modelName   ,
                                                           actualParams);
             std::unique_ptr<riaps::DeviceActor> device = std::unique_ptr<riaps::DeviceActor>(dptr);
-            dptr->Init();
-            dptr->start();
-            delete dptr;
+            if (dptr->Init())
+                dptr->start();
+            //delete dptr;
         }
         catch(std::domain_error& e){
             std::cerr << "Configuration file error (probably missing property from the json file)" << std::endl;

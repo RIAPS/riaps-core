@@ -46,8 +46,8 @@ int main(int argc, char* argv[]) {
             
 
             std::unique_ptr<riaps::Actor> actor = std::unique_ptr<riaps::Actor>(aptr);
-            actor->Init();
-            actor->start();
+            if (actor->Init())
+                actor->start();
         }
         catch(std::domain_error& e){
             _logger->error("Configuration file error (probably missing property from the json file)");

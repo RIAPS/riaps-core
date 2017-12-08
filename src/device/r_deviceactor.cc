@@ -8,31 +8,15 @@
 
 namespace riaps{
 
-    DeviceActor::DeviceActor(const std::string&     applicationname,
-                             const std::string&     actorName,
-                             const std::string&     deviceName,
-                             const std::string&     jsonFile       ,
-                             nlohmann::json         jsonActorconfig,
-                             nlohmann::json&        configJson     ,
-                             std::map<std::string, std::string>& commandLineParams)
+    DeviceActor::DeviceActor(const std::string&     applicationname ,
+                             const std::string&     devicename      ,
+                             nlohmann::json&        configJson      ,
+                             std::map<std::string, std::string>& args)
             : Actor(applicationname,
-                    actorName,
-                    jsonFile,
-                    jsonActorconfig,
+                    devicename,
                     configJson,
-                    commandLineParams) {
-        _startDevice = true;
-        _deviceName  = deviceName;
-    }
+                    args) {
 
-    void DeviceActor::ParseConfig() {
-        // Get devices
-
-        for (auto itDeviceConfig =  _jsonDevicesconfig.begin();
-             itDeviceConfig     != _jsonDevicesconfig.end();
-             itDeviceConfig++) {
-
-        }
     }
 
     DeviceActor* DeviceActor::CreateDeviceActor(nlohmann::json& configJson  ,
@@ -68,10 +52,7 @@ namespace riaps{
 
         return new ::riaps::DeviceActor(
                 applicationName,
-                actorName,
                 deviceName,
-                jsonFile,
-                jsonActors,
                 configJson,
                 actualParams
         );
