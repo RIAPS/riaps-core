@@ -7,6 +7,7 @@
 #include <componentmodel/r_componentbase.h>
 
 #include <capnp/message.h>
+#include <fmt/format.h>
 
 namespace riaps {
 
@@ -21,7 +22,18 @@ namespace riaps {
             _port_type = portType;
             _config = config;
             _port_socket = nullptr;
-            _logger = spd::get(_parentComponent->GetConfig().component_name);
+
+            // InsidePorts have no parent components
+            if (parentComponent == nullptr) {
+                std::string loggerPrefix = portType == PortTypes::Inside?"InsidePort":"NullParent";
+                std::string loggerName = fmt::format("{}::{}", loggerPrefix, config->portName);
+                _logger = spd::stdout_color_mt(loggerName);
+            } else {
+                _logger = spd::get(_parentComponent->GetConfig().component_name);
+            }
+
+
+
         }
 
 //        bool PortBase::Send(capnp::MallocMessageBuilder &message) const {

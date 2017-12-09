@@ -613,12 +613,12 @@ namespace riaps {
                 else {
 
                 }
-
-                return true;
             }
 
-            return false;
+            
         }
+        
+        return true;
     }
 
     ComponentBase* riaps::Actor::GetComponentByName(const std::string &componentName) const {

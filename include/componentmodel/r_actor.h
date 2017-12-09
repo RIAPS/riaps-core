@@ -163,10 +163,13 @@ namespace riaps {
         std::vector<component_conf> _component_configurations;
         std::vector<groupt_conf>    _grouptype_configurations;
         std::set<std::string>       _localMessageTypes;
-    private:
-        zpoller_t*    _poller;
+
         static Actor* _currentActor;
         std::shared_ptr<spd::logger> _logger;
+    private:
+        zpoller_t*    _poller;
+
+
 
         bool IsDeviceActor() const;
         bool IsComponentActor() const;

@@ -32,6 +32,7 @@ namespace gpiotoggleexample{
                 std::cout << "on_writeGpio() write " << message.getValue().cStr() << std::endl;
                 zmsg_t* msg = zmsg_new();
                 zmsg_addstr(msg, CMD_WRITE_REQUEST);
+                zmsg_addstr(msg, message.getValue().cStr());
                 SendDataQueue(&msg);
             }
             else{
@@ -40,23 +41,20 @@ namespace gpiotoggleexample{
         }
 
         void GpioDeviceComponent::OnDataQueue(zmsg_t *zmsg, riaps::ports::PortBase *port) {
+            _logger->debug("OnDataQueue()");
             char* value = zmsg_popstr(zmsg);
-            std::cout << "GpioDeviceComponent::OnDataInQueue()[" << getpid() << "]: " << value << std::endl;
-
             capnp::MallocMessageBuilder builder;
             auto dataValue = builder.initRoot<gpiotoggleexample::messages::DataValue>();
             dataValue.setValue(value);
             SendReportedData(builder, dataValue);
-
-            std::cout << "GpioDeviceComponent::OnDataInQueue(): published GPIO value = " << value << std::endl;
+            zstr_free(&value);
         }
 
         void GpioDeviceComponent::OnClock(riaps::ports::PortBase *port) {
-            std::cout << "GpioDeviceComponent::OnClock()[" << getpid() <<"]" <<std::endl;
-
             if (_deviceThread == nullptr){
                 _deviceThread = std::unique_ptr<GpioDeviceThread>(new GpioDeviceThread(GetConfig()));
                 _deviceThread->StartThread();
+                //port->AsTimerPort()->stop();
             }
         }
 

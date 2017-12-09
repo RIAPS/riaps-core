@@ -39,6 +39,7 @@ namespace gpiotoggleexample{
         }
 
         bool GpioDeviceComponentBase::SendDataQueue(zmsg_t **message) {
+            _logger->debug("Send data to devicethread");
             return SendMessageOnPort(message, INSIDE_DATAQUEUE);
         }
 

@@ -13,10 +13,12 @@ namespace gpiotoggleexample {
             : riaps::components::DeviceThread(deviceConfig) {
 
             _isAvailable.store(false);
+
         }
 
 
         void GpioDeviceThread::Run() {
+            _logger->debug("DeviceThread started.");
 
 
             // Inside ports are put in a poller automatically
@@ -36,24 +38,36 @@ namespace gpiotoggleexample {
 
                 if (port == dataSocket){
                     zmsg_t* msg = zmsg_recv(port);
-
                     char* command = zmsg_popstr(msg);
 
                     if (streq(command, CMD_WRITE_REQUEST)){
-                        std::cout << "GPIO write request received." << std::endl;
+                        _logger->debug("GPIO write request received.");
                         char* value = zmsg_popstr(msg);
-                        _currentValue = std::string(value);
+                        _currentValue.assign(value);
                         zstr_free(&value);
                     } else if (streq(command, CMD_READ_REQUEST)){
-                        std::cout << "GPIO read request received." << std::endl;
-                        zmsg_t* response = zmsg_new();
-                        zmsg_addstr(response, _currentValue.c_str());
-
-                        std::cout << "GpioDeviceThread::ReadRequest value " << _currentValue << std::endl;
+                        _logger->debug("GPIO read request received.");
+                        zsock_send(dataPort, "s", _currentValue.c_str());
+                        //_logger->debug("GPIO data sent");
                     }
+//
+//                    if (streq(command, CMD_WRITE_REQUEST)){
+//                        _logger->debug("GPIO write request received.");
+//                        char* value = zmsg_popstr(msg);
+//                        _currentValue = std::string(value);
+//                        zstr_free(&value);
+//                    } else if (streq(command, CMD_READ_REQUEST)){
+//                        _logger->debug("GPIO read request received.");
+//                        //zmsg_t* response = zmsg_new();
+//                        //zmsg_addstr(response, _currentValue.c_str());
+//
+//                        zsock_send(dataPort, "s", _currentValue.c_str());
+//                        _logger->debug("data sent");
+//                        //std::cout << "GpioDeviceThread::ReadRequest value " << _currentValue << std::endl;
+//                    }
 
                     zstr_free(&command);
-
+                    zmsg_destroy(&msg);
                 }
             }
 

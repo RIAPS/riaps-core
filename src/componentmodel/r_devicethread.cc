@@ -14,11 +14,14 @@ namespace riaps{
                 : _deviceConfig(deviceConfig){
             _isTerminated.store(false);
             _poller = NULL;
+            _logger = spd::stdout_color_mt("DeviceThread");
+            spd::set_level(spdlog::level::debug);
         }
 
         // Starts the zactor
         // Inside ports are initialized by the actor
         void DeviceThread::StartThread() {
+            _logger->debug("Starting device thread");
             _deviceThread = std::thread(&DeviceThread::Run, this);
         }
 
@@ -36,7 +39,7 @@ namespace riaps{
         void DeviceThread::InitInsides() {
 
             // Add insider ports
-            for (auto&& it_insconf = _deviceConfig.component_ports.inss.begin();
+            for (auto it_insconf = _deviceConfig.component_ports.inss.begin();
                  it_insconf != _deviceConfig.component_ports.inss.end();
                  it_insconf++){
 
@@ -58,7 +61,7 @@ namespace riaps{
                 zpoller_add(_poller, (void *) socket);
             }
             else{
-                _poller = zpoller_new((void*)socket);
+                _poller = zpoller_new((void*)socket, nullptr);
             }
         }
 

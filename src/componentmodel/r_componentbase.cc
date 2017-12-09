@@ -45,7 +45,7 @@ namespace riaps{
         std::map<const zsock_t*, const ports::PortBase*>   portSockets;
 
         // ZMQ Socket - Inside port pairs
-        std::map<const zsock_t*, const ports::InsidePort*> insidePorts;
+        //std::map<const zsock_t*, const ports::InsidePort*> insidePorts;
 
         while (!terminated) {
             void *which = zpoller_wait(poller, 1);
@@ -60,8 +60,8 @@ namespace riaps{
                      it_insconf != comp_conf.component_ports.inss.end();
                      it_insconf++){
                     const ports::InsidePort* newPort = comp->InitInsiderPort(*it_insconf);
-                    const zsock_t* zmqSocket = newPort->GetSocket();
-                    insidePorts[zmqSocket] = newPort;
+                    //const zsock_t* zmqSocket = newPort->GetSocket();
+                    //insidePorts[zmqSocket] = newPort;
                     zpoller_add(poller, (void*)newPort->GetSocket());
                 }
 
@@ -257,14 +257,19 @@ namespace riaps{
             else if(which){
 
                 // "which" port is an inside port, dispatch ZMQ message
-                if (insidePorts.find((zsock_t*)which)!=insidePorts.end()){
-                    ports::InsidePort* insidePort = (ports::InsidePort*)insidePorts[(zsock_t*)which];
-                    zmsg_t* msg = zmsg_recv(which);
-                    if (!terminated && msg) {
-                        comp->DispatchInsideMessage(msg, insidePort);
-                        zmsg_destroy(&msg);
-                    }
-                }else {
+                //if (insidePorts.find((zsock_t*)which)!=insidePorts.end()){
+//                    comp->_logger->debug("Inside message arrived");
+//                    ports::InsidePort* insidePort = (ports::InsidePort*)insidePorts[(zsock_t*)which];
+//                    zmsg_t* msg = zmsg_recv(which);
+//                    if (!terminated && msg) {
+//                        comp->DispatchInsideMessage(msg, insidePort);
+//
+//                    }
+//                    if (msg){
+//                        zmsg_destroy(&msg);
+//                    }
+//                }else
+//{
                     ports::PortBase *riapsPort = const_cast<ports::PortBase *>(portSockets[static_cast<zsock_t *>(which)]);
 
                     // If the port is async, the frames are different
@@ -312,7 +317,17 @@ namespace riaps{
                         //    delete capnpReader;
 
                         zframe_destroy(&body);
-                    }else {
+                    } else if(riapsPort->AsInsidePort() != nullptr){
+                        zmsg_t* msg = zmsg_recv(which);
+                        auto insidePort = riapsPort->AsInsidePort();
+                        if (!terminated && msg) {
+                            comp->DispatchInsideMessage(msg, insidePort);
+
+                        }
+                        if (msg){
+                            zmsg_destroy(&msg);
+                        }
+                    } else {
                         zmsg_t* msg = zmsg_recv(which);
                         // zmsg_op transfers the ownership, the frame is removed from the zmsg
                         zframe_t* bodyFrame = zmsg_pop(msg);
@@ -338,7 +353,7 @@ namespace riaps{
                         if (capnpReader!=nullptr)
                             delete capnpReader;
                     }
-                }
+                //}
             }
             else{
                 // just poll timeout
@@ -409,7 +424,7 @@ namespace riaps{
 
         size_t q_size = 2048; //queue size must be power of 2
         spd::set_async_mode(q_size);
-        
+
         _logger = spd::get(_configuration.component_name);
         if (_logger == nullptr)
             _logger = spd::stdout_color_mt(_configuration.component_name);

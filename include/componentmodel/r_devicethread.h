@@ -57,6 +57,8 @@ namespace riaps {
             bool SendMessageOnPort(capnp::MallocMessageBuilder& message, const std::string& portName);
             //bool SendMessageOnPort(zmsg_t **message, const std::string &portName);
 
+            std::shared_ptr<spdlog::logger> _logger;
+
         private:
             std::thread                 _deviceThread;
             const _component_conf&    _deviceConfig;

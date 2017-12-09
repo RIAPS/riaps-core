@@ -9,8 +9,11 @@
 #include "base/GpioDeviceComponentBase.h"
 #include <componentmodel/r_devicethread.h>
 #include <componentmodel/ports/r_insideport.h>
+#include <spdlog/spdlog.h>
 #include <atomic>
 #include <thread>
+
+namespace spd = spdlog;
 
 namespace gpiotoggleexample {
     namespace components {
@@ -30,6 +33,8 @@ namespace gpiotoggleexample {
             std::atomic<bool> _isAvailable;
 
             std::string _currentValue;
+
+
         };
     }
 }
