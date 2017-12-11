@@ -2,8 +2,8 @@
 // Created by istvan on 5/17/17.
 //
 
-#ifndef RIAPS_CORE_R_INSIDER_H
-#define RIAPS_CORE_R_INSIDER_H
+#ifndef RIAPS_CORE_R_INSIDE_H
+#define RIAPS_CORE_R_INSIDE_H
 
 #include <componentmodel/ports/r_portbase.h>
 #include <componentmodel/ports/r_senderport.h>
@@ -47,4 +47,4 @@ namespace riaps {
     }
 }
 
-#endif //RIAPS_CORE_R_INSIDER_H
+#endif //RIAPS_CORE_R_INSIDE_H

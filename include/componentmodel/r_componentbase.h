@@ -320,7 +320,7 @@ namespace riaps {
         const ports::QueryPort*      InitQueryPort      (const _component_port_qry&);
         const ports::AnswerPort*     InitAnswerPort     (const _component_port_ans&);
         const ports::PeriodicTimer*  InitTimerPort      (const _component_port_tim&);
-        const ports::InsidePort*     InitInsiderPort    (const _component_port_ins&);
+        const ports::InsidePort*     InitInsidePort     (const _component_port_ins&);
 
 
         std::string             GetTimerChannel();

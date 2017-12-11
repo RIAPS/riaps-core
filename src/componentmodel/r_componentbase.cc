@@ -42,7 +42,7 @@ namespace riaps{
         consoleLogger->info("Component started");
 
         // Register ZMQ Socket - riapsPort pairs. For the quick retrieve.
-        std::map<const zsock_t*, const ports::PortBase*>   portSockets;
+        std::unordered_map<const zsock_t*, const ports::PortBase*>   portSockets;
 
         // ZMQ Socket - Inside port pairs
         //std::map<const zsock_t*, const ports::InsidePort*> insidePorts;
@@ -59,9 +59,10 @@ namespace riaps{
                 for (auto it_insconf = comp_conf.component_ports.inss.begin();
                      it_insconf != comp_conf.component_ports.inss.end();
                      it_insconf++){
-                    const ports::InsidePort* newPort = comp->InitInsiderPort(*it_insconf);
-                    //const zsock_t* zmqSocket = newPort->GetSocket();
+                    const ports::InsidePort* newPort = comp->InitInsidePort(*it_insconf);
+                    const zsock_t* zmqSocket = newPort->GetSocket();
                     //insidePorts[zmqSocket] = newPort;
+                    portSockets[zmqSocket] = newPort;
                     zpoller_add(poller, (void*)newPort->GetSocket());
                 }
 
@@ -196,21 +197,6 @@ namespace riaps{
                     comp->UpdateGroup(msgGroupUpd);
 
                     zframe_destroy(&capnp_msgbody);
-//                        std::string groupTypeId = zmsg_popstr(msg);
-//                        std::string groupName   = zmsg_popstr(msg);
-//                        std::string address     = zmsg_popstr(msg);
-//                        std::string messageType = zmsg_popstr(msg);
-//
-//                        // Grab the group object
-//                        riaps::groups::GroupId gid;
-//                        gid.groupTypeId = groupTypeId;
-//                        gid.groupName   = groupName;
-//
-//                        auto groups = &(comp->_groups);
-//
-//                        if (groups->find(gid)!=groups->end()){
-//                            //groups[gid]->ConnectToNewServices()
-//                        }
                 }
 
                 zstr_free(&command);
@@ -224,7 +210,6 @@ namespace riaps{
                     ports::PeriodicTimer* timerPort = (ports::PeriodicTimer*)comp->GetPortByName(portName);
                     std::vector<std::string> fields;
 
-                    // comp->DispatchMessage(timerPort->GetPortName(), NULL, timerPort);
                     if (!terminated)
                         comp->DispatchMessage(NULL, timerPort);
 
@@ -586,7 +571,7 @@ namespace riaps{
         return result;
     }
 
-    const ports::InsidePort* ComponentBase::InitInsiderPort(const _component_port_ins& config) {
+    const ports::InsidePort* ComponentBase::InitInsidePort(const _component_port_ins& config) {
         auto result = new ports::InsidePort(config, riaps::ports::InsidePortMode::BIND, this);
         std::unique_ptr<ports::PortBase> newport(result);
         _ports[config.portName] = std::move(newport);

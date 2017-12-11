@@ -74,7 +74,7 @@ namespace riaps {
         virtual GroupPublisherPort*  AsGroupPublishPort()   ;
         virtual GroupSubscriberPort* AsGroupSubscriberPort();
         virtual ResponsePort*        AsResponsePort()       ;
-        virtual AnswerPort*          AsAnswerPort()  ;
+        virtual AnswerPort*          AsAnswerPort()         ;
         virtual SubscriberPort*      AsSubscribePort()      ;
         virtual PeriodicTimer*       AsTimerPort()          ;
         virtual InsidePort*          AsInsidePort()         ;

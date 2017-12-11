@@ -23,7 +23,6 @@ namespace riaps{
                 zsock_bind(_port_socket, "%s", _endpoint.c_str());
             }
 
-
             zsock_set_rcvtimeo(_port_socket, 500);
         }
 
