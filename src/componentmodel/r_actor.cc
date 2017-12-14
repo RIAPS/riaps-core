@@ -183,7 +183,7 @@ namespace riaps {
                 newpubconfig.messageType = pubporttype;
 
                 // If the porttype is defined in the Local list
-                if (_localMessageTypes.find(pubporttype) != _localMessageTypes.end()){
+                if (_localMessageTypes.find(pubporttype) != _localMessageTypes.end() || results.isDevice){
                     newpubconfig.isLocal = true;
                 } else {
                     newpubconfig.isLocal = false;
@@ -208,7 +208,7 @@ namespace riaps {
                 newsubconfig.messageType = subporttype;
 
                 // If the porttype is defined in the Local list
-                if (_localMessageTypes.find(subporttype) != _localMessageTypes.end()){
+                if (_localMessageTypes.find(subporttype) != _localMessageTypes.end() || results.isDevice){
                     newsubconfig.isLocal = true;
                 } else {
                     newsubconfig.isLocal = false;
@@ -238,7 +238,7 @@ namespace riaps {
                 newreqconfig.messageType = messagetype;
 
                 // If the porttype is defined in the Local list
-                if (_localMessageTypes.find(reqtype) != _localMessageTypes.end()){
+                if (_localMessageTypes.find(reqtype) != _localMessageTypes.end() || results.isDevice){
                     newreqconfig.isLocal = true;
                 } else {
                     newreqconfig.isLocal = false;
@@ -267,7 +267,7 @@ namespace riaps {
                 newrepconfig.messageType = messagetype;
 
                 // If the porttype is defined in the Local list
-                if (_localMessageTypes.find(reqtype) != _localMessageTypes.end()){
+                if (_localMessageTypes.find(reqtype) != _localMessageTypes.end() || results.isDevice){
                     newrepconfig.isLocal = true;
                 } else {
                     newrepconfig.isLocal = false;
@@ -297,7 +297,7 @@ namespace riaps {
                 newqryconfig.messageType = messagetype;
 
                 // If the porttype is defined in the Local list
-                if (_localMessageTypes.find(qrytype) != _localMessageTypes.end()){
+                if (_localMessageTypes.find(qrytype) != _localMessageTypes.end() || results.isDevice){
                     newqryconfig.isLocal = true;
                 } else {
                     newqryconfig.isLocal = false;
@@ -326,7 +326,7 @@ namespace riaps {
                 newansconfig.messageType = messagetype;
 
                 // If the porttype is defined in the Local list
-                if (_localMessageTypes.find(qrytype) != _localMessageTypes.end()){
+                if (_localMessageTypes.find(qrytype) != _localMessageTypes.end() || results.isDevice){
                     newansconfig.isLocal = true;
                 } else {
                     newansconfig.isLocal = false;

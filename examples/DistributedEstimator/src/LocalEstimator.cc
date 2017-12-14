@@ -18,7 +18,7 @@ namespace distributedestimator {
 
             //PrintMessageOnPort(port, message.getMsg().cStr());
 
-            std::cout << "LocalEstimator::OnReady(): " << message.getMsg().cStr() << " " << ::getpid() << std::endl;
+            _logger->info("LocalEstimator::OnReady(): {} {}", message.getMsg().cStr(), ::getpid());
 
             capnp::MallocMessageBuilder builderSensorQuery;
 
@@ -29,7 +29,7 @@ namespace distributedestimator {
             if (result) {
                 messages::SensorValue::Reader sensorValue;
                 if (RecvQuery(sensorValue)) {
-                    std::cout << "LocalEstimator::OnQuery(): " << sensorValue.getMsg().cStr() << std::endl;
+                    _logger->info("LocalEstimator::OnQuery(): {}", sensorValue.getMsg().cStr());
                     //std::cout << sensorValue.getMsg().cStr() << std::endl;
                     capnp::MallocMessageBuilder builderEstimate;
                     auto estimateMsg = builderEstimate.initRoot<messages::Estimate>();
@@ -46,9 +46,7 @@ namespace distributedestimator {
             }
         }
 
-        void LocalEstimator::OnOneShotTimer(const std::string &timerid) {
 
-        }
 
         LocalEstimator::~LocalEstimator() {
 

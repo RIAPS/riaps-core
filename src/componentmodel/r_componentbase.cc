@@ -5,10 +5,6 @@
 #include <componentmodel/r_componentbase.h>
 #include <utils/r_utils.h>
 
-// TODO: Move this somewhere else
-#define ASYNC_CHANNEL "ipc://asyncresponsepublisher"
-
-
 
 namespace riaps{
 
@@ -241,20 +237,6 @@ namespace riaps{
 //            }
             else if(which){
 
-                // "which" port is an inside port, dispatch ZMQ message
-                //if (insidePorts.find((zsock_t*)which)!=insidePorts.end()){
-//                    comp->_logger->debug("Inside message arrived");
-//                    ports::InsidePort* insidePort = (ports::InsidePort*)insidePorts[(zsock_t*)which];
-//                    zmsg_t* msg = zmsg_recv(which);
-//                    if (!terminated && msg) {
-//                        comp->DispatchInsideMessage(msg, insidePort);
-//
-//                    }
-//                    if (msg){
-//                        zmsg_destroy(&msg);
-//                    }
-//                }else
-//{
                     ports::PortBase *riapsPort = const_cast<ports::PortBase *>(portSockets[static_cast<zsock_t *>(which)]);
 
                     // If the port is async, the frames are different
@@ -314,31 +296,23 @@ namespace riaps{
                         }
                     } else {
                         zmsg_t* msg = zmsg_recv(which);
-                        // zmsg_op transfers the ownership, the frame is removed from the zmsg
                         zframe_t* bodyFrame = zmsg_pop(msg);
-                        //size_t size = zframe_size(bodyFrame);
-                        //byte* data = zframe_data(bodyFrame);
 
-                        //kj::ArrayPtr<const capnp::word> capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
+                        auto msgPtr = new std::shared_ptr<zmsg_t>(msg, [](zmsg_t* z){zmsg_destroy(&z);});
+                        auto framePtr = new std::shared_ptr<zframe_t>(bodyFrame, [](zframe_t* z){zframe_destroy(&z);});
 
-                        //capnp::FlatArrayMessageReader capnpReader(capnp_data);
-
-                        // TODO: put into unique_ptr
-                        capnp::FlatArrayMessageReader* capnpReader = nullptr;
-                        //*capnpReader << 1;
+                        // zmsg_pop transfers the ownership, the frame is removed from the zmsg.
+                        // Both of them must be explicitly deleted.
+                        auto capnpReader = std::unique_ptr<capnp::FlatArrayMessageReader>(new capnp::FlatArrayMessageReader(nullptr));
 
                         (*bodyFrame) >> capnpReader;
 
                         if (!terminated)
-                            comp->DispatchMessage(capnpReader, riapsPort);
+                            comp->DispatchMessage(capnpReader.get(), riapsPort);
 
                         zframe_destroy(&bodyFrame);
                         zmsg_destroy(&msg);
-
-                        if (capnpReader!=nullptr)
-                            delete capnpReader;
                     }
-                //}
             }
             else{
                 // just poll timeout
@@ -423,13 +397,6 @@ namespace riaps{
 //        auto handler = GetHandler(port->GetPortName());
 //        (this->*handler)(messagetype, message, port);
 //    }
-
-    //void ComponentBase::DispatchMessage(const std::string &messagetype, MessageBase* message,
-    //                                    ports::PortBase *port) {
-    //    auto handler = GetHandler(port->GetPortName());
-    //    (this->*handler)(messagetype, message, port);
-    //}
-
 
 
 

@@ -16,7 +16,7 @@
 namespace distributedestimator {
     namespace components {
 
-        class comp_sensorbase : protected riaps::ComponentBase {
+        class comp_sensorbase : public riaps::ComponentBase {
 
         public:
 
@@ -47,7 +47,8 @@ namespace distributedestimator {
         protected:
 
             virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
-                                         riaps::ports::PortBase *port);
+                                         riaps::ports::PortBase *port,
+                                         std::shared_ptr<riaps::MessageParams> params);
 
             virtual void DispatchInsideMessage(zmsg_t* zmsg,
                                                riaps::ports::PortBase* port);

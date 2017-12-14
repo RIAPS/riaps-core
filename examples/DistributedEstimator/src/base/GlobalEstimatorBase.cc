@@ -13,7 +13,8 @@ namespace distributedestimator {
         }
 
         void GlobalEstimatorBase::DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
-                                                  riaps::ports::PortBase *port) {
+                                                  riaps::ports::PortBase *port,
+                                                  std::shared_ptr<riaps::MessageParams> params) {
             auto portName = port->GetPortName();
             if (portName == PORT_TIMER_WAKEUP) {
                 OnWakeup(port);

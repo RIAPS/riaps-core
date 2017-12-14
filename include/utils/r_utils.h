@@ -15,6 +15,7 @@
 #include <czmq.h>
 
 #include <iostream>
+#include <memory>
 #include <string>
 #include <map>
 #include <vector>
@@ -60,5 +61,6 @@ void operator<<(zframe_t*& zframe, capnp::MallocMessageBuilder& message);
 
 
 void operator>>(zframe_t& frame, capnp::FlatArrayMessageReader*& message);
+void operator>>(zframe_t& frame, std::unique_ptr<capnp::FlatArrayMessageReader>& message);
 
 #endif

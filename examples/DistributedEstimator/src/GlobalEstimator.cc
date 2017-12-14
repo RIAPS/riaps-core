@@ -17,19 +17,12 @@ namespace distributedestimator {
         void GlobalEstimator::OnEstimate(messages::Estimate::Reader &message,
                                          riaps::ports::PortBase *port) {
             //PrintMessageOnPort(port);
-
-            std::cout << "GlobalEstimator::OnEstimate(): " << message.getMsg().cStr() << std::endl;
-
-            //std::cout << " " << message.getValues()[0] << " " << message.getValues()[1] << std::endl;
+            _logger->info("GlobalEstimator::OnEstimate(): {}", message.getMsg().cStr());
         }
 
         void GlobalEstimator::OnWakeup(riaps::ports::PortBase *port) {
             //PrintMessageOnPort(port);
-            std::cout << "GlobalEstimator::OnWakeUp(): " << port->GetPortName() << std::endl;
-        }
-
-        void GlobalEstimator::OnOneShotTimer(const std::string& timerid){
-
+            _logger->info("GlobalEstimator::OnWakeUp(): {}", port->GetPortName());
         }
 
 
