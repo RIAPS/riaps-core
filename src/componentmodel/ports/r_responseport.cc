@@ -13,7 +13,12 @@ namespace riaps{
             SenderPort(this)
         {
             _port_socket = zsock_new(ZMQ_REP);
-            _host = riaps::framework::Network::GetIPAddress();
+
+            if (GetConfig()->isLocal){
+                _host = "127.0.0.1";
+            } else {
+                _host = riaps::framework::Network::GetIPAddress();
+            }
 
             if (_host == "") {
                 throw std::runtime_error("Response cannot be initiated. Cannot find  available network interface.");
