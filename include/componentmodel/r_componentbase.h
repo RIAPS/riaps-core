@@ -192,6 +192,12 @@ namespace riaps {
                                     riaps::ports::PortBase* port);
         
 
+        /**
+         * Gives a snapshot about the members of a group, considering a timeout.
+         * @param groupId The group id where the members are counted.
+         * @param timeout A member is counted if heartbeat was recevied from it in the last "timeout" msec
+         * @return
+         */
         uint16_t GetGroupMemberCount(const riaps::groups::GroupId& groupId,
                                      const int64_t timeout = 1000*15 /*15 sec in msec*/);
 //

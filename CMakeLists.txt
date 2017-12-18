@@ -101,6 +101,7 @@ list (APPEND component_SOURCE
         src/framework/rfw_configuration.cc
         src/framework/rfw_network_interfaces.cc
         src/groups/r_group.cc
+        src/groups/r_grouplead.cc
         src/utils/r_capnp_helper.cc
         src/utils/r_message.cc
         src/utils/r_utils.cc
@@ -136,6 +137,7 @@ list (APPEND component_HEADERS
         include/componentmodel/r_riapsmessage.h
         include/const/r_const.h
         include/groups/r_group.h
+        include/groups/r_grouplead.h
         include/messaging/disco.capnp.h
         include/messaging/distcoord.capnp.h
         include/utils/r_expirable.h
