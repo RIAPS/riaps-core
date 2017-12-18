@@ -30,8 +30,8 @@ namespace riaps{
             ~GroupLead();
         private:
 
-            void ResetTimer(time_point& start, time_point& end, const duration<int, std::milli>& period);
-            bool IsInPeriod(const time_point& start, const time_point& end, const time_point& sample) const;
+            void ResetTimer(steady_clock::time_point& start, steady_clock::time_point& end, const duration<int, std::milli>& period);
+            bool IsInPeriod(const steady_clock::time_point& start, const steady_clock::time_point& end, const steady_clock::time_point& sample) const;
 
             NodeState _currentState;
 
@@ -39,10 +39,9 @@ namespace riaps{
             duration<int, std::milli> _waitPeriod;
             steady_clock::time_point  _waitTimeEnd;
 
-            std::function<void,
-                          steady_clock::time_point&,
-                          steady_clock::time_point&,
-                          const duration<int, std::milli>&> _resetWaitTime;
+            std::function<void()> _resetWaitTime;
+
+            std::function<void()> _resetVoteTime;
 
 
             steady_clock::time_point _lastMessageFromLeader;

@@ -18,7 +18,8 @@ GroupLead::GroupLead() {
      * Set up the reset functions
      */
 
-    _resetWaitTime = std::bind(GroupLead::ResetTimer)
+    _resetWaitTime = std::bind(&GroupLead::ResetTimer, this, _waitTimeStart, _waitTimeEnd, _waitPeriod);
+    _resetVoteTime = std::bind(&GroupLead::ResetTimer, this, _voteStart, _voteEnd, _votePeriod);
 
     /**
      * Wait period is 300ms
@@ -32,7 +33,7 @@ GroupLead::GroupLead() {
     /**
     * Initialize the wait time interval and the last message from the leader with the current timestamp
     */
-    ResetTimer(_waitTimeStart, _waitTimeEnd, _waitPeriod);
+    _resetWaitTime();
     _lastMessageFromLeader = _waitTimeStart;
 }
 
@@ -58,7 +59,7 @@ void GroupLead::Step() {
          * The number of nodes are saved since the MAJORITY of votes is needed
          */
         _currentState = GroupLead::NodeState::CANDIDATE;
-        _voteStart = steady_clock::now();
+        _resetVoteTime();
 
         // TODO: Get the number of nodes in the group
         // _numberOfNodesInVote = ?
@@ -69,11 +70,15 @@ void GroupLead::Step() {
 }
 
 
-bool GroupLead::IsInPeriod(const time_point& start, const time_point& end, const time_point& sample) const {
+bool GroupLead::IsInPeriod(const steady_clock::time_point& start,
+                           const steady_clock::time_point& end,
+                           const steady_clock::time_point& sample) const {
     return sample>=start && sample<=end;
 }
 
-void GroupLead::ResetTimer(time_point& start, time_point& end, const duration<int, std::milli>& period) {
+void GroupLead::ResetTimer(steady_clock::time_point& start,
+                           steady_clock::time_point& end,
+                           const duration<int, std::milli>& period) {
     start = steady_clock::now();
     end   = start + period;
 }
