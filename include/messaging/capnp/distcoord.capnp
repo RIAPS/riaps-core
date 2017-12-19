@@ -21,14 +21,22 @@ struct RequestForVoteReq {
 }
 
 struct RequestForVoteRep {
+    # Component ID of the sender
     sourceComponentId @0 : Text;
+
+    # Component ID of the candidate
+    voteForId         @1 : Text;
+}
+
+struct LeaderElection {
+        leaderHeartBeat   @0 : LeaderHeartBeat;
+        requestForVoteReq @1 : RequestForVoteReq;
+        requestForVoteRep @2 : RequestForVoteRep;
 }
 
 struct GroupInternals {
     union{
         groupHeartBeat    @0 : GroupHeartBeat;
-        leaderHeartBeat   @1 : LeaderHeartBeat;
-        requestForVoteReq @2 : RequestForVoteReq;
-        requestForVoteRep @3 : RequestForVoteRep;
+        leaderElection    @1 : LeaderElection;
     }
 }

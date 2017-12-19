@@ -5,14 +5,17 @@
 #ifndef RIAPS_CORE_R_GROUPLEAD_H
 #define RIAPS_CORE_R_GROUPLEAD_H
 
+#include <messaging/distcoord.capnp.h>
 #include <groups/r_group.h>
-
+#include <functional>
 #include <chrono>
 
 using namespace std::chrono;
 
 namespace riaps{
     namespace groups{
+
+        class Group;
 
         class GroupLead{
         public:
@@ -24,9 +27,19 @@ namespace riaps{
              *
              */
             enum NodeState{FOLLOWER, CANDIDATE, LEADER};
-            GroupLead();
+            GroupLead(riaps::groups::Group* parentGroup);
             const NodeState GetNodeState() const;
-            void Step();
+
+            /**
+             * Maintain the state whan no incoming message.
+             */
+            void Update();
+
+            /**
+             * Incoming message arrived, lets update the state
+             * @param internalMessage
+             */
+            void Update(riaps::distrcoord::LeaderElection::Reader& internalMessage);
             ~GroupLead();
         private:
 
@@ -35,6 +48,7 @@ namespace riaps{
 
             NodeState _currentState;
 
+            // Last time when the group heard about the leader
             steady_clock::time_point  _waitTimeStart;
             duration<int, std::milli> _waitPeriod;
             steady_clock::time_point  _waitTimeEnd;
@@ -44,14 +58,13 @@ namespace riaps{
             std::function<void()> _resetVoteTime;
 
 
-            steady_clock::time_point _lastMessageFromLeader;
-
 
             uint32_t                  _numberOfNodesInVote;
             steady_clock::time_point  _voteStart;
             steady_clock::time_point  _voteEnd;
             duration<int, std::milli> _votePeriod;
 
+            riaps::groups::Group* _parentGroup;
         };
     }
 }

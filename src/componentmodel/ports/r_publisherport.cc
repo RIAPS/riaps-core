@@ -19,6 +19,7 @@ namespace riaps{
         {
             InitSocket();
             if (!registerService(riaps::Actor::GetRunningActor().GetApplicationName(),
+                                 riaps::Actor::GetRunningActor().GetActorName(),
                                  config.messageType,
                                  _host,
                                  _port,

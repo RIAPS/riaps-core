@@ -35,7 +35,8 @@ namespace riaps{
             std::cout << "Response is created on : " << _host << ":" << _port << std::endl;
 
 
-            if (!registerService(GetParentComponent()->GetActor()->GetApplicationName(),
+            if (!registerService(riaps::Actor::GetRunningActor().GetApplicationName(),
+                                 riaps::Actor::GetRunningActor().GetActorName(),
                                   config.messageType,
                                   _host,
                                   _port,

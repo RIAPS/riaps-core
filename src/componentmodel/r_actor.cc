@@ -1,7 +1,7 @@
 #include <componentmodel/r_argumentparser.h>
 #include <componentmodel/r_actor.h>
 
-//#define NO_GROUP_TEST
+#define NO_GROUP_TEST
 
 namespace riaps {
 
@@ -117,7 +117,8 @@ namespace riaps {
         _grouptype_configurations.push_back(
                 groupt_conf{
                         "BackupGroup", //GroupId
-                        {}
+                        {},
+                        false // leader election enabled/disabled
                 }
         );
 

@@ -4,13 +4,14 @@
 #include <spdlog/spdlog.h>
 
 
-bool registerService(const std::string&              app_name     ,
-                      const std::string&              message_type ,
-                      const std::string&              ip_address   ,
-                      const uint16_t&                 port         ,
-                      riaps::discovery::Kind          kind         ,
-                      riaps::discovery::Scope         scope        ,
-                      const std::vector<std::string>& tags
+bool registerService(const std::string&              appName     ,
+                     const std::string&              actorName   ,
+                     const std::string&              messageType ,
+                     const std::string&              ipAddress   ,
+                     const uint16_t&                 port        ,
+                     riaps::discovery::Kind          kind        ,
+                     riaps::discovery::Scope         scope       ,
+                     const std::vector<std::string>& tags
                       ) {
 
     bool result = false;
@@ -27,13 +28,14 @@ bool registerService(const std::string&              app_name     ,
     auto sreqpath   = sreqBuilder.initPath();
     auto sreqsocket = sreqBuilder.initSocket();
 
-    sreqpath.setAppName(app_name);
-    sreqpath.setMsgType(message_type);
+    sreqpath.setAppName(appName);
+    sreqpath.setMsgType(messageType);
+    sreqpath.setActorName(actorName);
     sreqpath.setKind(kind);
     sreqpath.setScope(scope);
     sreqBuilder.setPid(::getpid());
 
-    sreqsocket.setHost(ip_address);
+    sreqsocket.setHost(ipAddress);
     sreqsocket.setPort(port);
 
     auto serializedMessage = capnp::messageToFlatArray(message);

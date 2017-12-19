@@ -7,6 +7,7 @@
 
 #include <componentmodel/r_actor.h>
 #include <componentmodel/r_configuration.h>
+#include <groups/r_grouplead.h>
 #include <componentmodel/ports/r_pubportgroup.h>
 #include <componentmodel/ports/r_subportgroup.h>
 #include <messaging/disco.capnp.h>
@@ -29,6 +30,9 @@ namespace spd = spdlog;
 
 namespace riaps {
     namespace groups {
+
+        class GroupLead;
+
 
         /**
          * The instance name of the group and the group type id (form the config) are the GroupId
@@ -95,6 +99,7 @@ namespace riaps {
             void ConnectToNewServices(riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
 
             bool SendMessage(capnp::MallocMessageBuilder& message, const std::string& portName);
+            bool SendInternalMessage(capnp::MallocMessageBuilder& message);
 
             ports::GroupSubscriberPort* FetchNextMessage(std::shared_ptr<capnp::FlatArrayMessageReader>& messageReader);
 
@@ -103,7 +108,9 @@ namespace riaps {
             bool SendPingWithPeriod();
             bool SendPing();
             bool SendPong();
-            
+
+
+            const ComponentBase* GetParentComponent();
             std::shared_ptr<std::vector<std::string>> GetKnownComponents();
 
             uint16_t GetMemberCount(uint16_t timeout /*msec*/) const;
@@ -145,8 +152,12 @@ namespace riaps {
 
             const ComponentBase* _parentComponent;
 
+            std::unique_ptr<riaps::groups::GroupLead> _groupLeader;
+
             // debug
             uint16_t _pingCounter;
+
+
         };
 
     }

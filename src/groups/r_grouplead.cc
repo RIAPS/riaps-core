@@ -8,7 +8,9 @@
 using namespace riaps::groups;
 using namespace std::chrono;
 
-GroupLead::GroupLead() {
+GroupLead::GroupLead(Group* parentGroup)
+    : _parentGroup(parentGroup)
+{
     /**
      * In RAFT everybody starts in the FOLLOWER state
      */
@@ -31,13 +33,12 @@ GroupLead::GroupLead() {
     _votePeriod = milliseconds(300);
 
     /**
-    * Initialize the wait time interval and the last message from the leader with the current timestamp
+    * Initialize the wait time interval
     */
     _resetWaitTime();
-    _lastMessageFromLeader = _waitTimeStart;
 }
 
-void GroupLead::Step() {
+void GroupLead::Update() {
     std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
 
     /**
@@ -51,8 +52,8 @@ void GroupLead::Step() {
      * The node is a FOLLOWER but the wait time is expired without hearing from the leader
      * FOLLOWER --> CANDIDATE
      */
-    else if (_currentState == GroupLead::NodeState::FOLLOWER && _lastMessageFromLeader>_waitTimeEnd) {
-        // TODO: what ha[[ens with the wait time? Maybe doesn't matter when the node is candidate
+    else if (_currentState == GroupLead::NodeState::FOLLOWER && now>_waitTimeEnd) {
+        // TODO: what happens with the wait time? Maybe doesn't matter when the node is candidate
 
         /**
          * Step into the next state and send REQUEST_VOTE message to everybody in the group
@@ -61,11 +62,21 @@ void GroupLead::Step() {
         _currentState = GroupLead::NodeState::CANDIDATE;
         _resetVoteTime();
 
-        // TODO: Get the number of nodes in the group
-        // _numberOfNodesInVote = ?
+        _numberOfNodesInVote = _parentGroup->GetMemberCount(15000 /*msec*/);
 
-        // TODO: SendMessage()
+        // Note: What to do whan only one node in the group??? This is not trivial.
+
+        capnp::MallocMessageBuilder requestForVoteBuilder;
+        auto msgInternals = requestForVoteBuilder.initRoot<riaps::distrcoord::GroupInternals>();
+        auto msgLeader    = msgInternals.getLeaderElection();
+        auto msgReqForVote = msgLeader.initRequestForVoteReq();
+        msgReqForVote.setSourceComponentId(_parentGroup->GetParentComponent()->GetCompUuid());
+
+        _parentGroup->SendInternalMessage(requestForVoteBuilder);
     }
+}
+
+void GroupLead::Update(riaps::distrcoord::LeaderElection::Reader &internalMessage) {
 
 }
 

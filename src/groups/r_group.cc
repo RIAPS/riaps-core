@@ -33,7 +33,8 @@ namespace riaps{
                 _groupSubPort(nullptr),
                 _lastFrame(nullptr),
                 _lastPingSent(0),
-                _pingPeriod(PING_BASE_PERIOD) {
+                _pingPeriod(PING_BASE_PERIOD),
+                _groupLeader(nullptr){
             _pingCounter = 0;
             _logger = spd::get(parentComponent->GetConfig().component_name);
             rndDistribution = std::uniform_int_distribution<int>(1000, 5000);
@@ -47,6 +48,7 @@ namespace riaps{
                 return false;
 
             _groupTypeConf = *groupTypeConf;
+
 
             // Default port for the group. Reserved for RIAPS internal communication protocols
             _group_port_pub internalPubConfig;
@@ -90,6 +92,9 @@ namespace riaps{
 
             }
 
+            // Setup leader election
+            if (_groupTypeConf.hasLeader)
+
             // Register all of the publishers
             return joinGroup(riaps::Actor::GetRunningActor().GetApplicationName(),
                              _parentComponent->GetCompUuid(),
@@ -109,6 +114,10 @@ namespace riaps{
             }
 
             return false;
+        }
+
+        bool Group::SendInternalMessage(capnp::MallocMessageBuilder &message) {
+            return SendMessage(message, INTERNAL_PUB_NAME);
         }
 
         std::shared_ptr<std::vector<std::string>> Group::GetKnownComponents() {
@@ -175,12 +184,17 @@ namespace riaps{
 
         bool Group::SendHeartBeat(riaps::distrcoord::HeartBeatType type) {
             capnp::MallocMessageBuilder builder;
-            auto heartbeat = builder.initRoot<riaps::distrcoord::GroupHeartBeat>();
+            auto internal = builder.initRoot<riaps::distrcoord::GroupInternals>();
+            auto heartbeat = internal.initGroupHeartBeat();
 
             heartbeat.setHeartBeatType(type);
             heartbeat.setSourceComponentId(this->_parentComponent->GetCompUuid());
 
             return _groupPubPort->Send(builder);
+        }
+
+        const ComponentBase* Group::GetParentComponent() {
+            return _parentComponent;
         }
 
         uint16_t Group::GetMemberCount(uint16_t timeout) const {
@@ -239,36 +253,22 @@ namespace riaps{
                 // Internal port, handle it here and don't send any notifications to the caller
                 if (subscriberPort == _groupSubPort.get()){
                     capnp::FlatArrayMessageReader reader(capnp_data);
-                    auto groupHeartBeat = reader.getRoot<riaps::distrcoord::GroupHeartBeat>();
-                    if (groupHeartBeat.getHeartBeatType() == riaps::distrcoord::HeartBeatType::PING){
-                        _logger->debug("<<PING<<");
-                        SendPong();
-                        //SendHeartBeat(riaps::distrcoord::HeartBeatType::PONG, groupHeartBeat.getSequenceNumber());
-                        //_logger->debug(">>PONG>>");
-                        return nullptr;
-                    } else if (groupHeartBeat.getHeartBeatType() == riaps::distrcoord::HeartBeatType::PONG){
-                        _logger->debug("<<PONG<<");
-                        _knownNodes[groupHeartBeat.getSourceComponentId()] = zclock_mono();
-                        return nullptr;
-                    }
 
-//                    _logger->debug("[In] Internal message: {}", (uint16_t)groupHeartBeat.getHeartBeatType());
-//                    if (groupHeartBeat.getHeartBeatType() == riaps::distrcoord::HeartBeatType::PING){
-//                        //_logger->debug("<<PING<<");
-//                        _lastPingSent = zclock_mono();
-//                        SendHeartBeat(riaps::distrcoord::HeartBeatType::PONG);
-//                        //_logger->debug(">>PONG>>");
-//                        _knownNodes[groupHeartBeat.getSourceComponentId()] = _lastPingSent;
-//                        _logger->debug("[Out] Internal message: {}", "PONG");
-//                        // Return null, no handler for the inherited class.
-//                        return nullptr;
-//                    } else if (groupHeartBeat.getHeartBeatType() == riaps::distrcoord::HeartBeatType::PONG){
-//                        //_logger->debug("<<PONG<<");
-//                        _knownNodes[groupHeartBeat.getSourceComponentId()] = zclock_mono();
-//
-//                        // Return nullptr, no handler will be called for the developer
-//                        return nullptr;
-//                    }
+                    auto internal = reader.getRoot<riaps::distrcoord::GroupInternals>();
+                    if (internal.hasGroupHeartBeat()) {
+                        auto groupHeartBeat = internal.getGroupHeartBeat();
+                        if (groupHeartBeat.getHeartBeatType() == riaps::distrcoord::HeartBeatType::PING) {
+                            _logger->debug("<<PING<<");
+                            SendPong();
+                            //SendHeartBeat(riaps::distrcoord::HeartBeatType::PONG, groupHeartBeat.getSequenceNumber());
+                            //_logger->debug(">>PONG>>");
+                            return nullptr;
+                        } else if (groupHeartBeat.getHeartBeatType() == riaps::distrcoord::HeartBeatType::PONG) {
+                            _logger->debug("<<PONG<<");
+                            _knownNodes[groupHeartBeat.getSourceComponentId()] = zclock_mono();
+                            return nullptr;
+                        }
+                    }
                 }
             }
 
