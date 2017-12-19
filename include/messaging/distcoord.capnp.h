@@ -21,6 +21,10 @@ enum class HeartBeatType_fce2365756d7b39d: uint16_t {
 };
 CAPNP_DECLARE_ENUM(HeartBeatType, fce2365756d7b39d);
 CAPNP_DECLARE_SCHEMA(c7426d39bcaf282b);
+CAPNP_DECLARE_SCHEMA(d8629c14bc7a91fa);
+CAPNP_DECLARE_SCHEMA(8d54747aa35f644c);
+CAPNP_DECLARE_SCHEMA(f94e1231cc4b13d6);
+CAPNP_DECLARE_SCHEMA(8a25ecc657bf2ed3);
 
 }  // namespace schemas
 }  // namespace capnp
@@ -39,6 +43,72 @@ struct GroupHeartBeat {
 
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(c7426d39bcaf282b, 1, 1)
+    #if !CAPNP_LITE
+    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    #endif  // !CAPNP_LITE
+  };
+};
+
+struct LeaderHeartBeat {
+  LeaderHeartBeat() = delete;
+
+  class Reader;
+  class Builder;
+  class Pipeline;
+
+  struct _capnpPrivate {
+    CAPNP_DECLARE_STRUCT_HEADER(d8629c14bc7a91fa, 0, 1)
+    #if !CAPNP_LITE
+    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    #endif  // !CAPNP_LITE
+  };
+};
+
+struct RequestForVoteReq {
+  RequestForVoteReq() = delete;
+
+  class Reader;
+  class Builder;
+  class Pipeline;
+
+  struct _capnpPrivate {
+    CAPNP_DECLARE_STRUCT_HEADER(8d54747aa35f644c, 0, 1)
+    #if !CAPNP_LITE
+    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    #endif  // !CAPNP_LITE
+  };
+};
+
+struct RequestForVoteRep {
+  RequestForVoteRep() = delete;
+
+  class Reader;
+  class Builder;
+  class Pipeline;
+
+  struct _capnpPrivate {
+    CAPNP_DECLARE_STRUCT_HEADER(f94e1231cc4b13d6, 0, 1)
+    #if !CAPNP_LITE
+    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    #endif  // !CAPNP_LITE
+  };
+};
+
+struct GroupInternals {
+  GroupInternals() = delete;
+
+  class Reader;
+  class Builder;
+  class Pipeline;
+  enum Which: uint16_t {
+    GROUP_HEART_BEAT,
+    LEADER_HEART_BEAT,
+    REQUEST_FOR_VOTE_REQ,
+    REQUEST_FOR_VOTE_REP,
+  };
+
+  struct _capnpPrivate {
+    CAPNP_DECLARE_STRUCT_HEADER(8a25ecc657bf2ed3, 1, 1)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
     #endif  // !CAPNP_LITE
@@ -133,6 +203,370 @@ private:
 };
 #endif  // !CAPNP_LITE
 
+class LeaderHeartBeat::Reader {
+public:
+  typedef LeaderHeartBeat Reads;
+
+  Reader() = default;
+  inline explicit Reader(::capnp::_::StructReader base): _reader(base) {}
+
+  inline ::capnp::MessageSize totalSize() const {
+    return _reader.totalSize().asPublic();
+  }
+
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const {
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+  }
+#endif  // !CAPNP_LITE
+
+  inline bool hasSourceComponentId() const;
+  inline  ::capnp::Text::Reader getSourceComponentId() const;
+
+private:
+  ::capnp::_::StructReader _reader;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::List;
+  friend class ::capnp::MessageBuilder;
+  friend class ::capnp::Orphanage;
+};
+
+class LeaderHeartBeat::Builder {
+public:
+  typedef LeaderHeartBeat Builds;
+
+  Builder() = delete;  // Deleted to discourage incorrect usage.
+                       // You can explicitly initialize to nullptr instead.
+  inline Builder(decltype(nullptr)) {}
+  inline explicit Builder(::capnp::_::StructBuilder base): _builder(base) {}
+  inline operator Reader() const { return Reader(_builder.asReader()); }
+  inline Reader asReader() const { return *this; }
+
+  inline ::capnp::MessageSize totalSize() const { return asReader().totalSize(); }
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const { return asReader().toString(); }
+#endif  // !CAPNP_LITE
+
+  inline bool hasSourceComponentId();
+  inline  ::capnp::Text::Builder getSourceComponentId();
+  inline void setSourceComponentId( ::capnp::Text::Reader value);
+  inline  ::capnp::Text::Builder initSourceComponentId(unsigned int size);
+  inline void adoptSourceComponentId(::capnp::Orphan< ::capnp::Text>&& value);
+  inline ::capnp::Orphan< ::capnp::Text> disownSourceComponentId();
+
+private:
+  ::capnp::_::StructBuilder _builder;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  friend class ::capnp::Orphanage;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+};
+
+#if !CAPNP_LITE
+class LeaderHeartBeat::Pipeline {
+public:
+  typedef LeaderHeartBeat Pipelines;
+
+  inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
+  inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
+      : _typeless(kj::mv(typeless)) {}
+
+private:
+  ::capnp::AnyPointer::Pipeline _typeless;
+  friend class ::capnp::PipelineHook;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+};
+#endif  // !CAPNP_LITE
+
+class RequestForVoteReq::Reader {
+public:
+  typedef RequestForVoteReq Reads;
+
+  Reader() = default;
+  inline explicit Reader(::capnp::_::StructReader base): _reader(base) {}
+
+  inline ::capnp::MessageSize totalSize() const {
+    return _reader.totalSize().asPublic();
+  }
+
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const {
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+  }
+#endif  // !CAPNP_LITE
+
+  inline bool hasSourceComponentId() const;
+  inline  ::capnp::Text::Reader getSourceComponentId() const;
+
+private:
+  ::capnp::_::StructReader _reader;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::List;
+  friend class ::capnp::MessageBuilder;
+  friend class ::capnp::Orphanage;
+};
+
+class RequestForVoteReq::Builder {
+public:
+  typedef RequestForVoteReq Builds;
+
+  Builder() = delete;  // Deleted to discourage incorrect usage.
+                       // You can explicitly initialize to nullptr instead.
+  inline Builder(decltype(nullptr)) {}
+  inline explicit Builder(::capnp::_::StructBuilder base): _builder(base) {}
+  inline operator Reader() const { return Reader(_builder.asReader()); }
+  inline Reader asReader() const { return *this; }
+
+  inline ::capnp::MessageSize totalSize() const { return asReader().totalSize(); }
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const { return asReader().toString(); }
+#endif  // !CAPNP_LITE
+
+  inline bool hasSourceComponentId();
+  inline  ::capnp::Text::Builder getSourceComponentId();
+  inline void setSourceComponentId( ::capnp::Text::Reader value);
+  inline  ::capnp::Text::Builder initSourceComponentId(unsigned int size);
+  inline void adoptSourceComponentId(::capnp::Orphan< ::capnp::Text>&& value);
+  inline ::capnp::Orphan< ::capnp::Text> disownSourceComponentId();
+
+private:
+  ::capnp::_::StructBuilder _builder;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  friend class ::capnp::Orphanage;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+};
+
+#if !CAPNP_LITE
+class RequestForVoteReq::Pipeline {
+public:
+  typedef RequestForVoteReq Pipelines;
+
+  inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
+  inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
+      : _typeless(kj::mv(typeless)) {}
+
+private:
+  ::capnp::AnyPointer::Pipeline _typeless;
+  friend class ::capnp::PipelineHook;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+};
+#endif  // !CAPNP_LITE
+
+class RequestForVoteRep::Reader {
+public:
+  typedef RequestForVoteRep Reads;
+
+  Reader() = default;
+  inline explicit Reader(::capnp::_::StructReader base): _reader(base) {}
+
+  inline ::capnp::MessageSize totalSize() const {
+    return _reader.totalSize().asPublic();
+  }
+
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const {
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+  }
+#endif  // !CAPNP_LITE
+
+  inline bool hasSourceComponentId() const;
+  inline  ::capnp::Text::Reader getSourceComponentId() const;
+
+private:
+  ::capnp::_::StructReader _reader;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::List;
+  friend class ::capnp::MessageBuilder;
+  friend class ::capnp::Orphanage;
+};
+
+class RequestForVoteRep::Builder {
+public:
+  typedef RequestForVoteRep Builds;
+
+  Builder() = delete;  // Deleted to discourage incorrect usage.
+                       // You can explicitly initialize to nullptr instead.
+  inline Builder(decltype(nullptr)) {}
+  inline explicit Builder(::capnp::_::StructBuilder base): _builder(base) {}
+  inline operator Reader() const { return Reader(_builder.asReader()); }
+  inline Reader asReader() const { return *this; }
+
+  inline ::capnp::MessageSize totalSize() const { return asReader().totalSize(); }
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const { return asReader().toString(); }
+#endif  // !CAPNP_LITE
+
+  inline bool hasSourceComponentId();
+  inline  ::capnp::Text::Builder getSourceComponentId();
+  inline void setSourceComponentId( ::capnp::Text::Reader value);
+  inline  ::capnp::Text::Builder initSourceComponentId(unsigned int size);
+  inline void adoptSourceComponentId(::capnp::Orphan< ::capnp::Text>&& value);
+  inline ::capnp::Orphan< ::capnp::Text> disownSourceComponentId();
+
+private:
+  ::capnp::_::StructBuilder _builder;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  friend class ::capnp::Orphanage;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+};
+
+#if !CAPNP_LITE
+class RequestForVoteRep::Pipeline {
+public:
+  typedef RequestForVoteRep Pipelines;
+
+  inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
+  inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
+      : _typeless(kj::mv(typeless)) {}
+
+private:
+  ::capnp::AnyPointer::Pipeline _typeless;
+  friend class ::capnp::PipelineHook;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+};
+#endif  // !CAPNP_LITE
+
+class GroupInternals::Reader {
+public:
+  typedef GroupInternals Reads;
+
+  Reader() = default;
+  inline explicit Reader(::capnp::_::StructReader base): _reader(base) {}
+
+  inline ::capnp::MessageSize totalSize() const {
+    return _reader.totalSize().asPublic();
+  }
+
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const {
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+  }
+#endif  // !CAPNP_LITE
+
+  inline Which which() const;
+  inline bool isGroupHeartBeat() const;
+  inline bool hasGroupHeartBeat() const;
+  inline  ::riaps::distrcoord::GroupHeartBeat::Reader getGroupHeartBeat() const;
+
+  inline bool isLeaderHeartBeat() const;
+  inline bool hasLeaderHeartBeat() const;
+  inline  ::riaps::distrcoord::LeaderHeartBeat::Reader getLeaderHeartBeat() const;
+
+  inline bool isRequestForVoteReq() const;
+  inline bool hasRequestForVoteReq() const;
+  inline  ::riaps::distrcoord::RequestForVoteReq::Reader getRequestForVoteReq() const;
+
+  inline bool isRequestForVoteRep() const;
+  inline bool hasRequestForVoteRep() const;
+  inline  ::riaps::distrcoord::RequestForVoteRep::Reader getRequestForVoteRep() const;
+
+private:
+  ::capnp::_::StructReader _reader;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::List;
+  friend class ::capnp::MessageBuilder;
+  friend class ::capnp::Orphanage;
+};
+
+class GroupInternals::Builder {
+public:
+  typedef GroupInternals Builds;
+
+  Builder() = delete;  // Deleted to discourage incorrect usage.
+                       // You can explicitly initialize to nullptr instead.
+  inline Builder(decltype(nullptr)) {}
+  inline explicit Builder(::capnp::_::StructBuilder base): _builder(base) {}
+  inline operator Reader() const { return Reader(_builder.asReader()); }
+  inline Reader asReader() const { return *this; }
+
+  inline ::capnp::MessageSize totalSize() const { return asReader().totalSize(); }
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const { return asReader().toString(); }
+#endif  // !CAPNP_LITE
+
+  inline Which which();
+  inline bool isGroupHeartBeat();
+  inline bool hasGroupHeartBeat();
+  inline  ::riaps::distrcoord::GroupHeartBeat::Builder getGroupHeartBeat();
+  inline void setGroupHeartBeat( ::riaps::distrcoord::GroupHeartBeat::Reader value);
+  inline  ::riaps::distrcoord::GroupHeartBeat::Builder initGroupHeartBeat();
+  inline void adoptGroupHeartBeat(::capnp::Orphan< ::riaps::distrcoord::GroupHeartBeat>&& value);
+  inline ::capnp::Orphan< ::riaps::distrcoord::GroupHeartBeat> disownGroupHeartBeat();
+
+  inline bool isLeaderHeartBeat();
+  inline bool hasLeaderHeartBeat();
+  inline  ::riaps::distrcoord::LeaderHeartBeat::Builder getLeaderHeartBeat();
+  inline void setLeaderHeartBeat( ::riaps::distrcoord::LeaderHeartBeat::Reader value);
+  inline  ::riaps::distrcoord::LeaderHeartBeat::Builder initLeaderHeartBeat();
+  inline void adoptLeaderHeartBeat(::capnp::Orphan< ::riaps::distrcoord::LeaderHeartBeat>&& value);
+  inline ::capnp::Orphan< ::riaps::distrcoord::LeaderHeartBeat> disownLeaderHeartBeat();
+
+  inline bool isRequestForVoteReq();
+  inline bool hasRequestForVoteReq();
+  inline  ::riaps::distrcoord::RequestForVoteReq::Builder getRequestForVoteReq();
+  inline void setRequestForVoteReq( ::riaps::distrcoord::RequestForVoteReq::Reader value);
+  inline  ::riaps::distrcoord::RequestForVoteReq::Builder initRequestForVoteReq();
+  inline void adoptRequestForVoteReq(::capnp::Orphan< ::riaps::distrcoord::RequestForVoteReq>&& value);
+  inline ::capnp::Orphan< ::riaps::distrcoord::RequestForVoteReq> disownRequestForVoteReq();
+
+  inline bool isRequestForVoteRep();
+  inline bool hasRequestForVoteRep();
+  inline  ::riaps::distrcoord::RequestForVoteRep::Builder getRequestForVoteRep();
+  inline void setRequestForVoteRep( ::riaps::distrcoord::RequestForVoteRep::Reader value);
+  inline  ::riaps::distrcoord::RequestForVoteRep::Builder initRequestForVoteRep();
+  inline void adoptRequestForVoteRep(::capnp::Orphan< ::riaps::distrcoord::RequestForVoteRep>&& value);
+  inline ::capnp::Orphan< ::riaps::distrcoord::RequestForVoteRep> disownRequestForVoteRep();
+
+private:
+  ::capnp::_::StructBuilder _builder;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  friend class ::capnp::Orphanage;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+};
+
+#if !CAPNP_LITE
+class GroupInternals::Pipeline {
+public:
+  typedef GroupInternals Pipelines;
+
+  inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
+  inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
+      : _typeless(kj::mv(typeless)) {}
+
+private:
+  ::capnp::AnyPointer::Pipeline _typeless;
+  friend class ::capnp::PipelineHook;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+};
+#endif  // !CAPNP_LITE
+
 // =======================================================================================
 
 inline  ::riaps::distrcoord::HeartBeatType GroupHeartBeat::Reader::getHeartBeatType() const {
@@ -178,6 +612,317 @@ inline void GroupHeartBeat::Builder::adoptSourceComponentId(
 }
 inline ::capnp::Orphan< ::capnp::Text> GroupHeartBeat::Builder::disownSourceComponentId() {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+
+inline bool LeaderHeartBeat::Reader::hasSourceComponentId() const {
+  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline bool LeaderHeartBeat::Builder::hasSourceComponentId() {
+  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::Text::Reader LeaderHeartBeat::Reader::getSourceComponentId() const {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _reader.getPointerField(0 * ::capnp::POINTERS));
+}
+inline  ::capnp::Text::Builder LeaderHeartBeat::Builder::getSourceComponentId() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void LeaderHeartBeat::Builder::setSourceComponentId( ::capnp::Text::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
+      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+}
+inline  ::capnp::Text::Builder LeaderHeartBeat::Builder::initSourceComponentId(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
+      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+}
+inline void LeaderHeartBeat::Builder::adoptSourceComponentId(
+    ::capnp::Orphan< ::capnp::Text>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
+      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::Text> LeaderHeartBeat::Builder::disownSourceComponentId() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+
+inline bool RequestForVoteReq::Reader::hasSourceComponentId() const {
+  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline bool RequestForVoteReq::Builder::hasSourceComponentId() {
+  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::Text::Reader RequestForVoteReq::Reader::getSourceComponentId() const {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _reader.getPointerField(0 * ::capnp::POINTERS));
+}
+inline  ::capnp::Text::Builder RequestForVoteReq::Builder::getSourceComponentId() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void RequestForVoteReq::Builder::setSourceComponentId( ::capnp::Text::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
+      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+}
+inline  ::capnp::Text::Builder RequestForVoteReq::Builder::initSourceComponentId(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
+      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+}
+inline void RequestForVoteReq::Builder::adoptSourceComponentId(
+    ::capnp::Orphan< ::capnp::Text>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
+      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::Text> RequestForVoteReq::Builder::disownSourceComponentId() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+
+inline bool RequestForVoteRep::Reader::hasSourceComponentId() const {
+  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline bool RequestForVoteRep::Builder::hasSourceComponentId() {
+  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::Text::Reader RequestForVoteRep::Reader::getSourceComponentId() const {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _reader.getPointerField(0 * ::capnp::POINTERS));
+}
+inline  ::capnp::Text::Builder RequestForVoteRep::Builder::getSourceComponentId() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void RequestForVoteRep::Builder::setSourceComponentId( ::capnp::Text::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
+      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+}
+inline  ::capnp::Text::Builder RequestForVoteRep::Builder::initSourceComponentId(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
+      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+}
+inline void RequestForVoteRep::Builder::adoptSourceComponentId(
+    ::capnp::Orphan< ::capnp::Text>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
+      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::Text> RequestForVoteRep::Builder::disownSourceComponentId() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+
+inline  ::riaps::distrcoord::GroupInternals::Which GroupInternals::Reader::which() const {
+  return _reader.getDataField<Which>(0 * ::capnp::ELEMENTS);
+}
+inline  ::riaps::distrcoord::GroupInternals::Which GroupInternals::Builder::which() {
+  return _builder.getDataField<Which>(0 * ::capnp::ELEMENTS);
+}
+
+inline bool GroupInternals::Reader::isGroupHeartBeat() const {
+  return which() == GroupInternals::GROUP_HEART_BEAT;
+}
+inline bool GroupInternals::Builder::isGroupHeartBeat() {
+  return which() == GroupInternals::GROUP_HEART_BEAT;
+}
+inline bool GroupInternals::Reader::hasGroupHeartBeat() const {
+  if (which() != GroupInternals::GROUP_HEART_BEAT) return false;
+  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline bool GroupInternals::Builder::hasGroupHeartBeat() {
+  if (which() != GroupInternals::GROUP_HEART_BEAT) return false;
+  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline  ::riaps::distrcoord::GroupHeartBeat::Reader GroupInternals::Reader::getGroupHeartBeat() const {
+  KJ_IREQUIRE(which() == GroupInternals::GROUP_HEART_BEAT,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupHeartBeat>::get(
+      _reader.getPointerField(0 * ::capnp::POINTERS));
+}
+inline  ::riaps::distrcoord::GroupHeartBeat::Builder GroupInternals::Builder::getGroupHeartBeat() {
+  KJ_IREQUIRE(which() == GroupInternals::GROUP_HEART_BEAT,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupHeartBeat>::get(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void GroupInternals::Builder::setGroupHeartBeat( ::riaps::distrcoord::GroupHeartBeat::Reader value) {
+  _builder.setDataField<GroupInternals::Which>(
+      0 * ::capnp::ELEMENTS, GroupInternals::GROUP_HEART_BEAT);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupHeartBeat>::set(
+      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+}
+inline  ::riaps::distrcoord::GroupHeartBeat::Builder GroupInternals::Builder::initGroupHeartBeat() {
+  _builder.setDataField<GroupInternals::Which>(
+      0 * ::capnp::ELEMENTS, GroupInternals::GROUP_HEART_BEAT);
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupHeartBeat>::init(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void GroupInternals::Builder::adoptGroupHeartBeat(
+    ::capnp::Orphan< ::riaps::distrcoord::GroupHeartBeat>&& value) {
+  _builder.setDataField<GroupInternals::Which>(
+      0 * ::capnp::ELEMENTS, GroupInternals::GROUP_HEART_BEAT);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupHeartBeat>::adopt(
+      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::riaps::distrcoord::GroupHeartBeat> GroupInternals::Builder::disownGroupHeartBeat() {
+  KJ_IREQUIRE(which() == GroupInternals::GROUP_HEART_BEAT,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupHeartBeat>::disown(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+
+inline bool GroupInternals::Reader::isLeaderHeartBeat() const {
+  return which() == GroupInternals::LEADER_HEART_BEAT;
+}
+inline bool GroupInternals::Builder::isLeaderHeartBeat() {
+  return which() == GroupInternals::LEADER_HEART_BEAT;
+}
+inline bool GroupInternals::Reader::hasLeaderHeartBeat() const {
+  if (which() != GroupInternals::LEADER_HEART_BEAT) return false;
+  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline bool GroupInternals::Builder::hasLeaderHeartBeat() {
+  if (which() != GroupInternals::LEADER_HEART_BEAT) return false;
+  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline  ::riaps::distrcoord::LeaderHeartBeat::Reader GroupInternals::Reader::getLeaderHeartBeat() const {
+  KJ_IREQUIRE(which() == GroupInternals::LEADER_HEART_BEAT,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderHeartBeat>::get(
+      _reader.getPointerField(0 * ::capnp::POINTERS));
+}
+inline  ::riaps::distrcoord::LeaderHeartBeat::Builder GroupInternals::Builder::getLeaderHeartBeat() {
+  KJ_IREQUIRE(which() == GroupInternals::LEADER_HEART_BEAT,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderHeartBeat>::get(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void GroupInternals::Builder::setLeaderHeartBeat( ::riaps::distrcoord::LeaderHeartBeat::Reader value) {
+  _builder.setDataField<GroupInternals::Which>(
+      0 * ::capnp::ELEMENTS, GroupInternals::LEADER_HEART_BEAT);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderHeartBeat>::set(
+      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+}
+inline  ::riaps::distrcoord::LeaderHeartBeat::Builder GroupInternals::Builder::initLeaderHeartBeat() {
+  _builder.setDataField<GroupInternals::Which>(
+      0 * ::capnp::ELEMENTS, GroupInternals::LEADER_HEART_BEAT);
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderHeartBeat>::init(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void GroupInternals::Builder::adoptLeaderHeartBeat(
+    ::capnp::Orphan< ::riaps::distrcoord::LeaderHeartBeat>&& value) {
+  _builder.setDataField<GroupInternals::Which>(
+      0 * ::capnp::ELEMENTS, GroupInternals::LEADER_HEART_BEAT);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderHeartBeat>::adopt(
+      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::riaps::distrcoord::LeaderHeartBeat> GroupInternals::Builder::disownLeaderHeartBeat() {
+  KJ_IREQUIRE(which() == GroupInternals::LEADER_HEART_BEAT,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderHeartBeat>::disown(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+
+inline bool GroupInternals::Reader::isRequestForVoteReq() const {
+  return which() == GroupInternals::REQUEST_FOR_VOTE_REQ;
+}
+inline bool GroupInternals::Builder::isRequestForVoteReq() {
+  return which() == GroupInternals::REQUEST_FOR_VOTE_REQ;
+}
+inline bool GroupInternals::Reader::hasRequestForVoteReq() const {
+  if (which() != GroupInternals::REQUEST_FOR_VOTE_REQ) return false;
+  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline bool GroupInternals::Builder::hasRequestForVoteReq() {
+  if (which() != GroupInternals::REQUEST_FOR_VOTE_REQ) return false;
+  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline  ::riaps::distrcoord::RequestForVoteReq::Reader GroupInternals::Reader::getRequestForVoteReq() const {
+  KJ_IREQUIRE(which() == GroupInternals::REQUEST_FOR_VOTE_REQ,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::RequestForVoteReq>::get(
+      _reader.getPointerField(0 * ::capnp::POINTERS));
+}
+inline  ::riaps::distrcoord::RequestForVoteReq::Builder GroupInternals::Builder::getRequestForVoteReq() {
+  KJ_IREQUIRE(which() == GroupInternals::REQUEST_FOR_VOTE_REQ,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::RequestForVoteReq>::get(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void GroupInternals::Builder::setRequestForVoteReq( ::riaps::distrcoord::RequestForVoteReq::Reader value) {
+  _builder.setDataField<GroupInternals::Which>(
+      0 * ::capnp::ELEMENTS, GroupInternals::REQUEST_FOR_VOTE_REQ);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::RequestForVoteReq>::set(
+      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+}
+inline  ::riaps::distrcoord::RequestForVoteReq::Builder GroupInternals::Builder::initRequestForVoteReq() {
+  _builder.setDataField<GroupInternals::Which>(
+      0 * ::capnp::ELEMENTS, GroupInternals::REQUEST_FOR_VOTE_REQ);
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::RequestForVoteReq>::init(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void GroupInternals::Builder::adoptRequestForVoteReq(
+    ::capnp::Orphan< ::riaps::distrcoord::RequestForVoteReq>&& value) {
+  _builder.setDataField<GroupInternals::Which>(
+      0 * ::capnp::ELEMENTS, GroupInternals::REQUEST_FOR_VOTE_REQ);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::RequestForVoteReq>::adopt(
+      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::riaps::distrcoord::RequestForVoteReq> GroupInternals::Builder::disownRequestForVoteReq() {
+  KJ_IREQUIRE(which() == GroupInternals::REQUEST_FOR_VOTE_REQ,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::RequestForVoteReq>::disown(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+
+inline bool GroupInternals::Reader::isRequestForVoteRep() const {
+  return which() == GroupInternals::REQUEST_FOR_VOTE_REP;
+}
+inline bool GroupInternals::Builder::isRequestForVoteRep() {
+  return which() == GroupInternals::REQUEST_FOR_VOTE_REP;
+}
+inline bool GroupInternals::Reader::hasRequestForVoteRep() const {
+  if (which() != GroupInternals::REQUEST_FOR_VOTE_REP) return false;
+  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline bool GroupInternals::Builder::hasRequestForVoteRep() {
+  if (which() != GroupInternals::REQUEST_FOR_VOTE_REP) return false;
+  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline  ::riaps::distrcoord::RequestForVoteRep::Reader GroupInternals::Reader::getRequestForVoteRep() const {
+  KJ_IREQUIRE(which() == GroupInternals::REQUEST_FOR_VOTE_REP,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::RequestForVoteRep>::get(
+      _reader.getPointerField(0 * ::capnp::POINTERS));
+}
+inline  ::riaps::distrcoord::RequestForVoteRep::Builder GroupInternals::Builder::getRequestForVoteRep() {
+  KJ_IREQUIRE(which() == GroupInternals::REQUEST_FOR_VOTE_REP,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::RequestForVoteRep>::get(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void GroupInternals::Builder::setRequestForVoteRep( ::riaps::distrcoord::RequestForVoteRep::Reader value) {
+  _builder.setDataField<GroupInternals::Which>(
+      0 * ::capnp::ELEMENTS, GroupInternals::REQUEST_FOR_VOTE_REP);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::RequestForVoteRep>::set(
+      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+}
+inline  ::riaps::distrcoord::RequestForVoteRep::Builder GroupInternals::Builder::initRequestForVoteRep() {
+  _builder.setDataField<GroupInternals::Which>(
+      0 * ::capnp::ELEMENTS, GroupInternals::REQUEST_FOR_VOTE_REP);
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::RequestForVoteRep>::init(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void GroupInternals::Builder::adoptRequestForVoteRep(
+    ::capnp::Orphan< ::riaps::distrcoord::RequestForVoteRep>&& value) {
+  _builder.setDataField<GroupInternals::Which>(
+      0 * ::capnp::ELEMENTS, GroupInternals::REQUEST_FOR_VOTE_REP);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::RequestForVoteRep>::adopt(
+      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::riaps::distrcoord::RequestForVoteRep> GroupInternals::Builder::disownRequestForVoteRep() {
+  KJ_IREQUIRE(which() == GroupInternals::REQUEST_FOR_VOTE_REP,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::RequestForVoteRep>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
