@@ -268,6 +268,9 @@ namespace riaps{
                             _knownNodes[groupHeartBeat.getSourceComponentId()] = zclock_mono();
                             return nullptr;
                         }
+                    } else if (internal.hasLeaderElection()){
+                        auto msgLeader = internal.getLeaderElection();
+                        _groupLeader->Update(msgLeader);
                     }
                 }
             }

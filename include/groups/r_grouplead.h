@@ -9,6 +9,11 @@
 #include <groups/r_group.h>
 #include <functional>
 #include <chrono>
+#include <random>
+
+#define MIN_ELECTION_TIMEOUT 150
+#define MAX_ELECTION_TIMEOUT 500
+#define APPENDENTRY_TIMEOUT  75
 
 using namespace std::chrono;
 
@@ -16,6 +21,46 @@ namespace riaps{
     namespace groups{
 
         class Group;
+
+        class Timeout {
+        public:
+
+            /**
+             * Intitalizes with 0 timeout from now;
+             */
+            Timeout();
+
+            /**
+             * Initializes the timeut structure from ::now() with the passed timeout
+             * @param timeout
+             */
+            Timeout(duration<int, std::milli> timeout);
+
+            /**
+             * Resets the start time point, doesn't touch the timeout
+             */
+            void Reset();
+
+            /**
+             * Resets the start point and the timeout value
+             * @param timeout
+             */
+            void Reset(duration<int, std::milli> timeout);
+
+            /**
+             * If ::now()>_endPoint
+             * @return
+             */
+            bool IsTimeout();
+
+            steady_clock::time_point GetEndTimePoint();
+
+            ~Timeout();
+        private:
+            steady_clock::time_point  _startPoint; // The election timeout from this timepoint
+            duration<int, std::milli> _timeout; // The election timeout
+            steady_clock::time_point  _endPoint;
+        };
 
         class GroupLead{
         public:
@@ -27,7 +72,7 @@ namespace riaps{
              *
              */
             enum NodeState{FOLLOWER, CANDIDATE, LEADER};
-            GroupLead(riaps::groups::Group* parentGroup);
+            GroupLead(riaps::groups::Group* group);
             const NodeState GetNodeState() const;
 
             /**
@@ -43,28 +88,40 @@ namespace riaps{
             ~GroupLead();
         private:
 
-            void ResetTimer(steady_clock::time_point& start, steady_clock::time_point& end, const duration<int, std::milli>& period);
-            bool IsInPeriod(const steady_clock::time_point& start, const steady_clock::time_point& end, const steady_clock::time_point& sample) const;
+            /**
+             * Generates a random election timeout between 150ms and 300ms (values are specified in RAFT)
+             * @return Random value between 150-300ms
+             */
+            duration<int, std::milli> GenerateElectionTimeo();
+
+            //std::random_device _rd;
+            std::mt19937 _generator;
+            std::uniform_int_distribution<int> _distrElection;
+            const std::string GetComponentId() const;
 
             NodeState _currentState;
 
-            // Last time when the group heard about the leader
-            steady_clock::time_point  _waitTimeStart;
-            duration<int, std::milli> _waitPeriod;
-            steady_clock::time_point  _waitTimeEnd;
-
-            std::function<void()> _resetWaitTime;
-
-            std::function<void()> _resetVoteTime;
+            // Timeouts
+            Timeout  _electionTimeout;
+            Timeout  _appEntryTimeout;
+            uint32_t _electionTerm;
+            uint32_t _numberOfNodesInVote;
 
 
 
-            uint32_t                  _numberOfNodesInVote;
-            steady_clock::time_point  _voteStart;
-            steady_clock::time_point  _voteEnd;
-            duration<int, std::milli> _votePeriod;
+            // Votes from, when
+            std::unordered_map<std::string, steady_clock::time_point> _votes;
 
-            riaps::groups::Group* _parentGroup;
+            riaps::groups::Group* _group;
+
+
+            // Send functions
+            void SendRequestForVote();
+            void SendAppendEntry();
+            void SendVote(const std::string& voteFor);
+            uint32_t GetNumberOfVotes();
+
+
         };
     }
 }
