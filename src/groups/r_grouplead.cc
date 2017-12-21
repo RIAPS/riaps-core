@@ -113,7 +113,7 @@ void GroupLead::Update() {
     else if (_currentState == GroupLead::CANDIDATE && !_electionTimeout.IsTimeout()){
 
     } else if (_currentState == GroupLead::CANDIDATE && _electionTimeout.IsTimeout()){
-        // Vote still in progress, but the timeout has expired.
+        // Vote is still in progress, but the timeout has expired.
         // Be a follower again, maybe better luck next time.
 
         _currentState = GroupLead::NodeState::FOLLOWER;
@@ -201,7 +201,7 @@ void GroupLead::Update(riaps::distrcoord::LeaderElection::Reader &internalMessag
             }
 
             /**
-             * MAJORITY ACHIVED, send append entry, switch state
+             * MAJORITY ACHIEVED, send append entry, switch state
              */
             if (hasMajority){
                 _currentState = GroupLead::LEADER;

@@ -13,7 +13,8 @@ namespace distributedestimator {
         }
 
         void LocalEstimatorBase::DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
-                                                 riaps::ports::PortBase *port) {
+                                                 riaps::ports::PortBase *port,
+                                                 std::shared_ptr<riaps::MessageParams> params) {
             if (port->GetPortName() == PORT_SUB_READY) {
                 messages::SensorReady::Reader sensorReady = capnpreader->getRoot<messages::SensorReady>();
                 OnReady(sensorReady, port);

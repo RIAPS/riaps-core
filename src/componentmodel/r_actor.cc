@@ -1,7 +1,7 @@
 #include <componentmodel/r_argumentparser.h>
 #include <componentmodel/r_actor.h>
 
-//#define NO_GROUP_TEST
+#define NO_GROUP_TEST
 
 namespace riaps {
 
@@ -76,11 +76,7 @@ namespace riaps {
                         nlohmann::json&        jsonActorconfig,
                         nlohmann::json&        configJson     ,
                         std::map<std::string, std::string>& commandLineParams)
-        : //_jsonComponentsconfig(jsonComponentsconfig),
-          //_jsonDevicesconfig(jsonDevicesconfig),
-          //_jsonActorconfig(jsonActorconfig),
-          _commandLineParams(commandLineParams),
-          //_jsonFile(jsonFile),
+        : _commandLineParams(commandLineParams),
           _discovery_socket(nullptr),
           _actor_zsock(nullptr)
     {
@@ -118,7 +114,7 @@ namespace riaps {
                 groupt_conf{
                         "BackupGroup", //GroupId
                         {},
-                        false // leader election enabled/disabled
+                        true // leader election enabled/disabled
                 }
         );
 
@@ -399,9 +395,8 @@ namespace riaps {
         newDeviceConfig.component_type = prop->_deviceName;
         newDeviceConfig.isDevice       = true;
 
-        // TODO: param parsing for device
-//        ArgumentParser parser(_commandLineParams, prop->_jsonActorConfig, prop->_jsonComponentsconfig, prop->_actorName);
-//        new_component_config.component_parameters = parser.Parse(componentName);
+        DeviceArgumentParser parser(_commandLineParams, jsonDeviceConfig);
+        newDeviceConfig.component_parameters = parser.Parse(prop->_deviceName);
 
         // Get the ports
         auto jsonPortsConfig = jsonDeviceConfig[J_PORTS];
@@ -473,7 +468,7 @@ namespace riaps {
             new_component_config.component_type = componentType;
             new_component_config.isDevice       = isDevice;
 
-            ArgumentParser parser(_commandLineParams, prop->_jsonActorConfig, prop->_jsonComponentsconfig, prop->_actorName);
+            ComponentArgumentParser parser(_commandLineParams, prop->_jsonActorConfig, prop->_jsonComponentsconfig, prop->_actorName);
             new_component_config.component_parameters = parser.Parse(componentName);
 
             // Get the ports
@@ -533,8 +528,6 @@ namespace riaps {
         zpoller_add(_poller, _discovery_socket);
 
         // If there is a device, start the device manager client
-        //for (auto& component_config : _component_configurations) {
-
         for(auto itConf = _component_configurations.begin(); itConf!=_component_configurations.end(); itConf++) {
             // If current component is a device, and the actor started from the DeviceActor, then register
             if (itConf->isDevice && IsDeviceActor()) {
@@ -556,8 +549,7 @@ namespace riaps {
 
 
 
-        //for (auto& component_config : _component_configurations){
-            // Load the component library
+        // Load and start the component library
         for(auto itConf = _component_configurations.begin(); itConf!=_component_configurations.end(); itConf++) {
             std::locale loc;
             std::string lowercaselibname;

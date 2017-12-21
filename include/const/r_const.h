@@ -18,5 +18,6 @@
 #define ARG_IDX_APP   1
 #define ARG_IDX_MODEL 2
 #define ARG_IDX_ACTOR 3
+#define ARG_IDX_DEVICE ARG_IDX_ACTOR
 
 #endif //RIAPS_CORE_R_CONST_H

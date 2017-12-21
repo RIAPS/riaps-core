@@ -18,33 +18,59 @@
 class ArgumentParser{
 
 public:
-    ArgumentParser(std::map<std::string, std::string>& commandLineParams,
-                   nlohmann::json&                     json_actorconfig,
-                   nlohmann::json&                     json_componentsconfig,
-                   const std::string&                  actorname);
+    ArgumentParser(std::map<std::string, std::string>& commandLineParams);
 
-    // Process and check actor parameters
-    riaps::componentmodel::Parameters Parse(const std::string& componentName);
+    /**
+     *
+     * @param name Component or device name
+     * @return
+     */
+    virtual riaps::componentmodel::Parameters Parse(const std::string& name) = 0;
+
+    virtual ~ArgumentParser();
+
+protected:
+
+    riaps::componentmodel::Parameters GetComponentFormals(nlohmann::json& jsonFormals);
+
+
+    std::map<std::string, std::string>& _commandLineParams;
+
+};
+
+class ComponentArgumentParser : public ArgumentParser {
+public:
+    ComponentArgumentParser(std::map<std::string, std::string>& commandLineParams,
+                            nlohmann::json& jsonActorConfig,
+                            nlohmann::json& jsonComponentsConfig,
+                            const std::string& actorName);
+
+    riaps::componentmodel::Parameters Parse(const std::string& name);
 
 
 
-
-
-
-    ~ArgumentParser();
-
+    ~ComponentArgumentParser();
 private:
-    riaps::componentmodel::Parameters GetComponentFormals(nlohmann::json&                    jsonFormals);
+
 //    riaps::componentmodel::Parameters GetComponentActuals(nlohmann::json&                    json_componentactuals,
 //                                                          riaps::componentmodel::Parameters& actorParams);
 
     std::vector<riaps::componentmodel::ComponentActual> GetComponentActuals(nlohmann::json& json_componentactuals);
 
-
     nlohmann::json&                     _json_actorconfig;
     nlohmann::json&                     _json_componentsconfig;
-    std::map<std::string, std::string>& _commandLineParams;
     std::string                         _actorname;
+
+};
+
+class DeviceArgumentParser : public ArgumentParser {
+public:
+    DeviceArgumentParser(std::map<std::string, std::string>& commandLineParams, nlohmann::json& jsonDeviceConfig);
+    riaps::componentmodel::Parameters Parse(const std::string& deviceName);
+    ~DeviceArgumentParser();
+private:
+    //std::string _deviceName;
+    nlohmann::json& _jsonDeviceConfig;
 };
 
 #endif //RIAPS_CORE_R_ARGUMENTPARSER_H

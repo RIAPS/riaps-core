@@ -33,9 +33,9 @@ app GpioToggleExample {
 
     // TestGpioToggle actor
     actor TestGpioToggleActor() {
-       //local DataValue, ReadRequest, WriteRequest;	// Local message types
+       local DataValue, ReadRequest, WriteRequest;	// Local message types
        {
-       	  gpioDevice : GpioDeviceComponent(bbb_pin_name='P8_11', direction='OUT', setup_delay=100); // application specific setup options
+       	  gpioDevice : GpioDeviceComponent(bbb_pin_name='P8_11', direction='OUT', pull_up_down='PUD_OFF', setup_delay=60); // application specific setup options
           gpioTester : ToggleGpioComponent();
        }
     }

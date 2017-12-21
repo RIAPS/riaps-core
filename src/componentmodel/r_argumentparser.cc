@@ -4,19 +4,70 @@
 
 #include <componentmodel/r_argumentparser.h>
 #include <componentmodel/r_configuration.h>
+#include <spdlog/spdlog.h>
 
-ArgumentParser::ArgumentParser(std::map<std::string, std::string> &commandLineParams,
-                               nlohmann::json &json_actorconfig,
-                               nlohmann::json &json_componentsconfig,
-                               const std::string& actorname)
-                        : _json_actorconfig(json_actorconfig),
-                          _commandLineParams(commandLineParams),
-                          _json_componentsconfig(json_componentsconfig),
-                          _actorname(actorname) {
+namespace spd = spdlog;
+
+ArgumentParser::ArgumentParser(std::map<std::string, std::string> &commandLineParams)
+                        :
+                          _commandLineParams(commandLineParams)
+
+                          {
 
 }
 
-riaps::componentmodel::Parameters ArgumentParser::Parse(const std::string& componentName) {
+riaps::componentmodel::Parameters ArgumentParser::GetComponentFormals(nlohmann::json &jsonFormals) {
+    Parameters results;
+
+    for (auto it_formal = jsonFormals.begin();
+         it_formal != jsonFormals.end();
+         it_formal++){
+        std::string formalName = (it_formal.value())[J_FORMAL_NAME];
+        bool hasDefault = it_formal.value()[J_FORMAL_DEF] != NULL;
+
+        std::string formalDefault = "";
+
+        // Must check the type
+        if (hasDefault){
+            auto j_formalValue = (it_formal.value())[J_FORMAL_DEF];
+            if (j_formalValue.is_string()){
+                formalDefault = j_formalValue;
+            } else if (j_formalValue.is_boolean()){
+                formalDefault = std::to_string((bool)j_formalValue);
+            } else if (j_formalValue.is_number()){
+                formalDefault = std::to_string((double)j_formalValue);
+            }
+        }
+
+        // If default value is specified, then the parameter is not mandatory.
+        results.AddParam(formalName, "", hasDefault, formalDefault);
+    }
+
+    return results;
+}
+
+
+
+ArgumentParser::~ArgumentParser() {
+
+}
+
+ComponentArgumentParser::ComponentArgumentParser(std::map<std::string, std::string> &commandLineParams,
+                                                 nlohmann::json& jsonActorConfig,
+                                                 nlohmann::json& jsonComponentsConfig,
+                                                 const std::string& actorName)
+        : ArgumentParser(commandLineParams),
+          _json_actorconfig(jsonActorConfig),
+          _json_componentsconfig(jsonComponentsConfig),
+          _actorname(actorName){
+
+}
+
+ComponentArgumentParser::~ComponentArgumentParser() {
+
+}
+
+riaps::componentmodel::Parameters ComponentArgumentParser::Parse(const std::string& name) {
 
 
     auto json_instances     = _json_actorconfig[J_INSTANCES];
@@ -72,7 +123,7 @@ riaps::componentmodel::Parameters ArgumentParser::Parse(const std::string& compo
 
     // Get the components
     //std::cout << json_instances <<std::endl;
-    auto json_compinst = json_instances[componentName];
+    auto json_compinst = json_instances[name];
     //std::cout << json_compinst <<std::endl <<std::flush;
     std::string componentType   = json_compinst[J_TYPE];
     auto json_componentactuals = json_compinst[J_ACTUALS];
@@ -94,7 +145,7 @@ riaps::componentmodel::Parameters ArgumentParser::Parse(const std::string& compo
                 throw std::invalid_argument("Missing argument: "      +
                                             it_actual->GetReferredParamName() +
                                             " for component "         +
-                                            componentName);
+                                            name);
             }
 
             // Found it, create the resolved param
@@ -148,38 +199,10 @@ riaps::componentmodel::Parameters ArgumentParser::Parse(const std::string& compo
     return resolvedComponentParams;
 }
 
-riaps::componentmodel::Parameters ArgumentParser::GetComponentFormals(nlohmann::json &jsonFormals) {
-    Parameters results;
-
-    for (auto it_formal = jsonFormals.begin();
-         it_formal != jsonFormals.end();
-         it_formal++){
-        std::string formalName = (it_formal.value())[J_FORMAL_NAME];
-        bool hasDefault = it_formal.value()[J_FORMAL_DEF] != NULL;
-
-        std::string formalDefault = "";
-
-        // Must check the type
-        if (hasDefault){
-            auto j_formalValue = (it_formal.value())[J_FORMAL_DEF];
-            if (j_formalValue.is_string()){
-                formalDefault = j_formalValue;
-            } else if (j_formalValue.is_boolean()){
-                formalDefault = std::to_string((bool)j_formalValue);
-            } else if (j_formalValue.is_number()){
-                formalDefault = std::to_string((double)j_formalValue);
-            }
-        }
-
-        // If default value is specified, then the parameter is not mandatory.
-        results.AddParam(formalName, "", hasDefault, formalDefault);
-    }
-
-    return results;
-}
 
 
-std::vector<riaps::componentmodel::ComponentActual> ArgumentParser::GetComponentActuals(nlohmann::json& json_componentactuals) {
+
+std::vector<riaps::componentmodel::ComponentActual> ComponentArgumentParser::GetComponentActuals(nlohmann::json& json_componentactuals) {
     std::vector<riaps::componentmodel::ComponentActual> results;
 
     // Check the component actuals
@@ -217,6 +240,51 @@ std::vector<riaps::componentmodel::ComponentActual> ArgumentParser::GetComponent
     return results;
 }
 
-ArgumentParser::~ArgumentParser() {
+
+DeviceArgumentParser::DeviceArgumentParser(std::map<std::string, std::string> &commandLineParams,
+                                           nlohmann::json& jsonDeviceConfig)
+    : ArgumentParser(commandLineParams), _jsonDeviceConfig(jsonDeviceConfig){
+}
+
+riaps::componentmodel::Parameters DeviceArgumentParser::Parse(const std::string &deviceName) {
+    auto jsonDeviceFormals = _jsonDeviceConfig[J_FORMALS];
+    auto deviceFormals = GetComponentFormals(jsonDeviceFormals);
+    auto deviceFormalNames = deviceFormals.GetParameterNames();
+    auto logger = spd::get(deviceName);
+
+    riaps::componentmodel::Parameters resolvedComponentParams;
+
+
+    for (auto it_formal = deviceFormalNames.begin();
+         it_formal != deviceFormalNames.end();
+         it_formal++){
+        auto currentFormal = deviceFormals.GetParam(*it_formal);
+
+        if (_commandLineParams.find(currentFormal->GetName()) == _commandLineParams.end() && !currentFormal->IsOptional()){
+            logger->error("Parameter {} is mandatory but missing (for device: {}).", currentFormal->GetName(), deviceName);
+            continue;
+        }
+
+        Parameter p(currentFormal->GetName(), currentFormal->IsOptional(), currentFormal->GetDefaultValue());
+        p.SetValue(currentFormal->GetDefaultValue());
+        resolvedComponentParams.AddParam(p);
+    }
+
+    // Actuals are the command line params
+    for (auto it = _commandLineParams.begin();
+              it != _commandLineParams.end();
+              it++){
+        if (resolvedComponentParams.GetParam(it->first) == nullptr){
+            logger->error("Parameter {} is passed but no formal definition found (for device: {})", it->first, deviceName);
+            continue;
+        }
+
+        resolvedComponentParams.SetParamValue(it->first, it->second);
+    }
+
+    return resolvedComponentParams;
+}
+
+DeviceArgumentParser::~DeviceArgumentParser() {
 
 }

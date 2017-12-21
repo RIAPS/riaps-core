@@ -33,7 +33,7 @@ int CommandLineParser::ParseDeviceParams(std::map<std::string, std::string> &act
 
 int CommandLineParser::Parse(std::map<std::string, std::string>& actualParams,
                              std::string& appName,
-                             std::string& actorName,
+                             std::string& actorName, //orDeviceName
                              std::string& modelFile,
                              nlohmann::json &jsonConfig) {
 

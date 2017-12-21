@@ -213,11 +213,10 @@ namespace riaps{
         }
 
         ports::GroupSubscriberPort* Group::FetchNextMessage(std::shared_ptr<capnp::FlatArrayMessageReader>& messageReader) {
-            void* which = zpoller_wait(_groupPoller, 10);
+            void* which = zpoller_wait(_groupPoller, 1);
             if (which == nullptr) return nullptr;
 
             // Look for the port
-
             ports::PortBase* currentPort = nullptr;
             try{
                 currentPort = _groupPorts.at(static_cast<zsock_t*>(which)).get();
@@ -260,8 +259,6 @@ namespace riaps{
                         if (groupHeartBeat.getHeartBeatType() == riaps::distrcoord::HeartBeatType::PING) {
                             _logger->debug("<<PING<<");
                             SendPong();
-                            //SendHeartBeat(riaps::distrcoord::HeartBeatType::PONG, groupHeartBeat.getSequenceNumber());
-                            //_logger->debug(">>PONG>>");
                             return nullptr;
                         } else if (groupHeartBeat.getHeartBeatType() == riaps::distrcoord::HeartBeatType::PONG) {
                             _logger->debug("<<PONG<<");
@@ -271,9 +268,15 @@ namespace riaps{
                     } else if (internal.hasLeaderElection()){
                         auto msgLeader = internal.getLeaderElection();
                         _groupLeader->Update(msgLeader);
+                        return nullptr;
                     }
                 }
+
+
             }
+
+            // TODO: Somewhere else would be better
+            _groupLeader->Update();
 
             zmsg_destroy(&msg);
             return subscriberPort;

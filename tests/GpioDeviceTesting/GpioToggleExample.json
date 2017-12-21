@@ -14,8 +14,12 @@
                             "value":"OUT"
                         },
                         {
+                            "name":"pull_up_down",
+                            "value":"PUD_OFF"
+                        },
+                        {
                             "name":"setup_delay",
-                            "value":100
+                            "value":60
                         }
                     ],
                     "type":"GpioDeviceComponent"
@@ -37,6 +41,12 @@
                     "type":"WriteRequest"
                 }
             ],
+            "usage":{
+                "cpu":{},
+                "mem":{},
+                "net":{},
+                "spc":{}
+            },
             "wires":[]
         }
     },
@@ -45,6 +55,7 @@
             "formals":[],
             "name":"ToggleGpioComponent",
             "ports":{
+                "anss":{},
                 "clts":{},
                 "inss":{},
                 "pubs":{
@@ -55,6 +66,7 @@
                         "type":"WriteRequest"
                     }
                 },
+                "qrys":{},
                 "reps":{},
                 "reqs":{},
                 "srvs":{},
@@ -96,6 +108,7 @@
             ],
             "name":"GpioDeviceComponent",
             "ports":{
+                "anss":{},
                 "clts":{},
                 "inss":{
                     "dataQueue":{
@@ -107,6 +120,7 @@
                         "type":"DataValue"
                     }
                 },
+                "qrys":{},
                 "reps":{},
                 "reqs":{},
                 "srvs":{},

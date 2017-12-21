@@ -1,6 +1,3 @@
-//
-// Created by istvan on 3/10/17.
-//
 
 #ifndef RIAPS_CORE_LOCALESTIMATORBASE_H
 #define RIAPS_CORE_LOCALESTIMATORBASE_H
@@ -49,7 +46,8 @@ namespace distributedestimator {
 
         protected:
             virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
-                                         riaps::ports::PortBase *port);
+                                         riaps::ports::PortBase *port,
+                                         std::shared_ptr<riaps::MessageParams> params);
 
             virtual void DispatchInsideMessage(zmsg_t* zmsg,
                                                riaps::ports::PortBase* port);
