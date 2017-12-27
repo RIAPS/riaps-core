@@ -711,8 +711,9 @@ namespace riaps{
         if (_groups.find(groupId)!=_groups.end())
             return false;
 
+        auto newGroupPtr = new riaps::groups::Group(groupId, this);
         auto newGroup = std::unique_ptr<riaps::groups::Group>(
-                new riaps::groups::Group(groupId, this)
+                newGroupPtr
         );
 
         if (newGroup->InitGroup()) {

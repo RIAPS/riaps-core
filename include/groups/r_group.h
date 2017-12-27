@@ -49,6 +49,8 @@ namespace riaps {
              */
             bool operator<(const GroupId& other) const;
 
+            bool operator==(const GroupId& other) const;
+
 
             MSGPACK_DEFINE(groupName, groupTypeId);
         };
@@ -111,6 +113,8 @@ namespace riaps {
 
 
             const ComponentBase* GetParentComponent();
+
+
             std::shared_ptr<std::vector<std::string>> GetKnownComponents();
 
             uint16_t GetMemberCount(uint16_t timeout /*msec*/) const;
@@ -132,7 +136,12 @@ namespace riaps {
             std::map<const zsock_t*, std::shared_ptr<riaps::ports::PortBase>> _groupPorts;
 
             /**
-             * List of nodes who was a sender with timestamp (last known timepoint).
+             *
+             *
+             * List of ComponentID-s where the current group got PING/PONG messages from. Timestamped.
+             *
+             * @note The parent component is excluded from the list.
+             *
              *  key   - component id (uuid, generated runtime, when the component starts
              *  value - timepoint
              */

@@ -7,6 +7,8 @@
 
 #include <messaging/distcoord.capnp.h>
 #include <groups/r_group.h>
+#include <spdlog/spdlog.h>
+
 #include <functional>
 #include <chrono>
 #include <random>
@@ -16,6 +18,8 @@
 #define APPENDENTRY_TIMEOUT  75
 
 using namespace std::chrono;
+
+namespace spd = spdlog;
 
 namespace riaps{
     namespace groups{
@@ -120,6 +124,8 @@ namespace riaps{
             void SendAppendEntry();
             void SendVote(const std::string& voteFor);
             uint32_t GetNumberOfVotes();
+
+            std::shared_ptr<spd::logger> _logger;
 
 
         };

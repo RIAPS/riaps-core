@@ -26,6 +26,10 @@ namespace riaps{
             return groupTypeId<other.groupTypeId;
         }
 
+        bool GroupId::operator==(const GroupId &other) const {
+            return groupTypeId == other.groupTypeId && groupName == other.groupName;
+        }
+
         Group::Group(const GroupId &groupId, const ComponentBase* parentComponent) :
                 _groupId(groupId),
                 _parentComponent(parentComponent),
@@ -34,7 +38,8 @@ namespace riaps{
                 _lastFrame(nullptr),
                 _lastPingSent(0),
                 _pingPeriod(PING_BASE_PERIOD),
-                _groupLeader(nullptr){
+                _groupLeader(nullptr),
+                _groupPoller(nullptr) {
             _pingCounter = 0;
             _logger = spd::get(parentComponent->GetConfig().component_name);
             rndDistribution = std::uniform_int_distribution<int>(1000, 5000);
@@ -92,14 +97,20 @@ namespace riaps{
 
             }
 
+            bool hasJoined = joinGroup(riaps::Actor::GetRunningActor().GetApplicationName(),
+                                       _parentComponent->GetCompUuid(),
+                                       _groupId,
+                                       initializedServices);
+
             // Setup leader election
-            if (_groupTypeConf.hasLeader)
+            if (hasJoined && _groupTypeConf.hasLeader) {
+                _groupLeader = std::unique_ptr<riaps::groups::GroupLead>(
+                        new GroupLead(this)
+                );
+            }
 
             // Register all of the publishers
-            return joinGroup(riaps::Actor::GetRunningActor().GetApplicationName(),
-                             _parentComponent->GetCompUuid(),
-                             _groupId,
-                             initializedServices);
+            return hasJoined;
         }
 
         bool Group::SendMessage(capnp::MallocMessageBuilder &message, const std::string &portName) {
@@ -213,8 +224,15 @@ namespace riaps{
         }
 
         ports::GroupSubscriberPort* Group::FetchNextMessage(std::shared_ptr<capnp::FlatArrayMessageReader>& messageReader) {
+
             void* which = zpoller_wait(_groupPoller, 1);
-            if (which == nullptr) return nullptr;
+            if (which == nullptr){
+                // No incoming message, update the leader
+                if (_groupTypeConf.hasLeader) {
+                    _groupLeader->Update();
+                }
+                return nullptr;
+            }
 
             // Look for the port
             ports::PortBase* currentPort = nullptr;
@@ -275,8 +293,7 @@ namespace riaps{
 
             }
 
-            // TODO: Somewhere else would be better
-            _groupLeader->Update();
+
 
             zmsg_destroy(&msg);
             return subscriberPort;
@@ -287,7 +304,8 @@ namespace riaps{
                 zframe_destroy(&_lastFrame);
                 _lastFrame=nullptr;
             }
-            zpoller_destroy(&_groupPoller);
+            if (_groupPoller != nullptr)
+                zpoller_destroy(&_groupPoller);
         }
     }
 }

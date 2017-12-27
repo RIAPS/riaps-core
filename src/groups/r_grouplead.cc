@@ -56,6 +56,8 @@ GroupLead::GroupLead(Group* group)
      * In RAFT everybody starts in the FOLLOWER state
      */
     _currentState = NodeState::FOLLOWER;
+
+    _logger = spd::get(group->GetParentComponent()->GetConfig().component_name);
 }
 
 void GroupLead::Update() {
@@ -78,12 +80,15 @@ void GroupLead::Update() {
          * The number of nodes are saved since the MAJORITY of votes is needed
          */
         _currentState = GroupLead::NodeState::CANDIDATE;
+        _logger->debug("Election timeout FOLLOWER->CANDIDATE");
 
         /**
          * Snapshot of members in the last MAX_ELECTION_TIMEOUTms.
          * TODO: We chose MAX_ELECTION_TIMEOUTms because this is the max leader election timeout. Should we reconsider this value?
+         *
+         * Note: +1 is added becuase the current node is not included in the GroupMemberCount();
          */
-        _numberOfNodesInVote = _group->GetMemberCount(MAX_ELECTION_TIMEOUT /*msec*/);
+        _numberOfNodesInVote = _group->GetMemberCount(MAX_ELECTION_TIMEOUT /*msec*/) + 1;
 
         /**
          * Set the first election Term
@@ -115,6 +120,8 @@ void GroupLead::Update() {
     } else if (_currentState == GroupLead::CANDIDATE && _electionTimeout.IsTimeout()){
         // Vote is still in progress, but the timeout has expired.
         // Be a follower again, maybe better luck next time.
+
+        _logger->debug("Vote timeout CANDIDATE->FOLLOWER");
 
         _currentState = GroupLead::NodeState::FOLLOWER;
 //        _numberOfNodesInVote = _group->GetMemberCount(MAX_ELECTION_TIMEOUT /*msec*/);
@@ -209,6 +216,8 @@ void GroupLead::Update(riaps::distrcoord::LeaderElection::Reader &internalMessag
             }
         }
     } else if (internalMessage.hasAppendEntry() && _currentState==GroupLead::FOLLOWER){
+        auto msgAppendEntry = internalMessage.getAppendEntry();
+        _logger->debug("Append entry from: {0}", msgAppendEntry.getSourceComponentId().cStr());
         _electionTimeout.Reset(GenerateElectionTimeo());
     }
 }

@@ -1,7 +1,7 @@
 #include <componentmodel/r_argumentparser.h>
 #include <componentmodel/r_actor.h>
 
-#define NO_GROUP_TEST
+//#define NO_GROUP_TEST
 
 namespace riaps {
 
@@ -627,20 +627,28 @@ namespace riaps {
     }
 
     const groupt_conf* riaps::Actor::GetGroupType(const std::string &groupTypeId) const {
-        std::vector<std::string> g{groupTypeId};
+//        std::vector<std::string> g{groupTypeId};
+//
+//        auto result =
+//        std::find_first_of(_grouptype_configurations.begin(),
+//                           _grouptype_configurations.end(),
+//                           g.begin(),
+//                           g.end(),
+//                           [](const groupt_conf& g, const std::string& id){
+//                               if (g.groupTypeId == id) return true;
+//                               return false;
+//                           });
+//
+//        if (result == _grouptype_configurations.end()) return nullptr;
+//        return &(*result);
 
-        auto result =
-        std::find_first_of(_grouptype_configurations.begin(),
-                           _grouptype_configurations.end(),
-                           g.begin(),
-                           g.end(),
-                           [](const groupt_conf& g, const std::string& id){
-                               if (g.groupTypeId == id) return true;
-                               return false;
-                           });
+        for (auto it = _grouptype_configurations.begin(); it!=_grouptype_configurations.end(); it++){
+            auto qrvaanyad = *it;
 
-        if (result == _grouptype_configurations.end()) return nullptr;
-        return &(*result);
+            if (it->groupTypeId == groupTypeId)
+                return &(*it);
+        }
+        return nullptr;
     }
 
 
