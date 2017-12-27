@@ -35,7 +35,7 @@ namespace distributedestimator {
             if (_hasGroup) {
                 if (!_hasJoined) {
                     _hasJoined = true;
-                    bool rc = this->JoinToGroup({"TestGroupId", "Korte"});
+                    bool rc = this->JoinToGroup({"BackupGroup", "Korte"});
                     _logger->debug_if(rc, "Successfully joined to group TestGroupId::Korte");
 
                 } else {

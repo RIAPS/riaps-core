@@ -20,17 +20,17 @@ namespace distributedestimator {
             //PrintMessageOnPort(port, message.getMsg().cStr());
 
             riaps::groups::GroupId gid;
-            gid.groupTypeId = "TestGroupId";
+            gid.groupTypeId = "BackupGroup";
             gid.groupName = "Korte";
 
 
             if (!hasJoined){
-                hasJoined = true;
                 if (this->JoinToGroup(gid)){
+                    hasJoined = true;
                     _logger->debug("Joined to group {}::{}", gid.groupTypeId, gid.groupName);
+                } else {
+                    _logger->debug("Failed to join {}::{}", gid.groupTypeId, gid.groupName);
                 }
-
-
             }
 
 
