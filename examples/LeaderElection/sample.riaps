@@ -1,0 +1,29 @@
+// RIAPS Sample
+
+app LeaderElection {
+    message Dummy;
+
+    component Leader {
+      timer clock 1000;
+    }
+    
+
+    actor ActOne {
+        {
+            c1:Leader();
+        }
+    }
+
+    actor ActTwo {
+            {
+                c2:Leader();
+            }
+        }
+
+    actor ActThree {
+            {
+                c3:Leader();
+            }
+        }
+
+}
