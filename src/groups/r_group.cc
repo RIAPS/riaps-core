@@ -105,7 +105,7 @@ namespace riaps{
             // Setup leader election
             if (hasJoined && _groupTypeConf.hasLeader) {
                 _groupLeader = std::unique_ptr<riaps::groups::GroupLead>(
-                        new GroupLead(this)
+                        new GroupLead(this, &_knownNodes)
                 );
             }
 
@@ -211,7 +211,7 @@ namespace riaps{
         uint16_t Group::GetMemberCount(uint16_t timeout) const {
             auto result =0;
 
-            _logger->warn_if(timeout<_pingPeriod,"Timeout of group members in count() are less then the ping period.");
+            //_logger->warn_if(timeout<_pingPeriod,"Timeout of group members in count() are less then the ping period.");
 
             int64_t now  = zclock_mono();
             int64_t from = now - timeout;
@@ -275,11 +275,11 @@ namespace riaps{
                     if (internal.hasGroupHeartBeat()) {
                         auto groupHeartBeat = internal.getGroupHeartBeat();
                         if (groupHeartBeat.getHeartBeatType() == riaps::distrcoord::HeartBeatType::PING) {
-                            _logger->debug("<<PING<<");
+                            //_logger->debug("<<PING<<");
                             SendPong();
                             return nullptr;
                         } else if (groupHeartBeat.getHeartBeatType() == riaps::distrcoord::HeartBeatType::PONG) {
-                            _logger->debug("<<PONG<<");
+                            //_logger->debug("<<PONG<<");
                             _knownNodes[groupHeartBeat.getSourceComponentId()] = zclock_mono();
                             return nullptr;
                         }

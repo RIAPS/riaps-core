@@ -76,7 +76,7 @@ namespace riaps{
              *
              */
             enum NodeState{FOLLOWER, CANDIDATE, LEADER};
-            GroupLead(riaps::groups::Group* group);
+            GroupLead(riaps::groups::Group* group, std::unordered_map<std::string, int64_t>* knownNodes);
             const NodeState GetNodeState() const;
 
             /**
@@ -126,7 +126,7 @@ namespace riaps{
             uint32_t GetNumberOfVotes();
 
             std::shared_ptr<spd::logger> _logger;
-
+            std::unordered_map<std::string, int64_t>* _knownNodes;
 
         };
     }
