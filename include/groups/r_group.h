@@ -12,6 +12,7 @@
 #include <componentmodel/ports/r_subportgroup.h>
 #include <messaging/disco.capnp.h>
 #include <messaging/distcoord.capnp.h>
+#include <utils/r_timeout.h>
 
 #include <spdlog/spdlog.h>
 #include <msgpack.hpp>
@@ -21,10 +22,14 @@
 #include <vector>
 #include <map>
 #include <random>
+#include <chrono>
 
 #define INTERNAL_SUB_NAME "$SUB#"
 #define INTERNAL_PUB_NAME "$PUB#"
 #define INTERNAL_MESSAGETYPE "InternalGroupMessage"
+
+using namespace std::chrono;
+using namespace riaps::utils;
 
 namespace spd = spdlog;
 
@@ -32,7 +37,6 @@ namespace riaps {
     namespace groups {
 
         class GroupLead;
-
 
         /**
          * The instance name of the group and the group type id (form the config) are the GroupId
@@ -117,7 +121,7 @@ namespace riaps {
 
             std::shared_ptr<std::vector<std::string>> GetKnownComponents();
 
-            uint16_t GetMemberCount(uint16_t timeout /*msec*/) const;
+            uint16_t GetMemberCount();
 
             ~Group();
 
@@ -143,9 +147,9 @@ namespace riaps {
              * @note The parent component is excluded from the list.
              *
              *  key   - component id (uuid, generated runtime, when the component starts
-             *  value - timepoint
+             *  value - timestamp of the last message from the given component
              */
-            std::unordered_map<std::string, int64_t> _knownNodes;
+            std::unordered_map<std::string, Timeout> _knownNodes;
 
             zframe_t*  _lastFrame;
             zpoller_t* _groupPoller;
@@ -153,11 +157,15 @@ namespace riaps {
 
             std::shared_ptr<spd::logger> _logger;
 
-            int64_t  _lastPingSent;
-            float    _pingPeriod;
+            //int64_t  _lastPingSent;
+            //float    _pingPeriod;
 
-            std::default_random_engine         rndGenerator;
-            std::uniform_int_distribution<int> rndDistribution;
+            Timeout _pingTimeout;
+
+
+            std::random_device _rd;
+            std::mt19937         _generator;
+            std::uniform_int_distribution<int> _distrNodeTimeout;
 
             const ComponentBase* _parentComponent;
 

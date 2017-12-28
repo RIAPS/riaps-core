@@ -36,13 +36,14 @@ namespace riaps{
                 _groupPubPort(nullptr),
                 _groupSubPort(nullptr),
                 _lastFrame(nullptr),
-                _lastPingSent(0),
-                _pingPeriod(PING_BASE_PERIOD),
                 _groupLeader(nullptr),
                 _groupPoller(nullptr) {
             _pingCounter = 0;
             _logger = spd::get(parentComponent->GetConfig().component_name);
-            rndDistribution = std::uniform_int_distribution<int>(1000, 5000);
+            _pingTimeout = Timeout(duration<int,std::milli>(PING_BASE_PERIOD));
+
+            _generator = std::mt19937(_rd());
+            _distrNodeTimeout = std::uniform_int_distribution<int>(PING_BASE_PERIOD*1.1, PING_BASE_PERIOD*2);
         }
 
         bool Group::InitGroup() {
@@ -137,7 +138,7 @@ namespace riaps{
             std::transform(_knownNodes.begin(),
                            _knownNodes.end(),
                            std::back_inserter(*result),
-                           [](const std::pair<std::string, int64_t >& p) -> std::string {
+                           [](const std::pair<std::string, Timeout >& p) -> std::string {
                                return p.first;
                            });
 
@@ -170,7 +171,7 @@ namespace riaps{
 
         bool Group::SendPing() {
             _logger->debug(">>PING>>");
-            _lastPingSent = zclock_mono();
+            _pingTimeout.Reset();
             return SendHeartBeat(dc::HeartBeatType::PING);
         }
 
@@ -180,15 +181,36 @@ namespace riaps{
         }
 
         bool Group::SendPingWithPeriod() {
-            int64_t currentTime = zclock_mono();
 
-            if (_lastPingSent == 0)
-                _lastPingSent = currentTime;
-
-            // If the ping period has been reached
-            if ((currentTime - _lastPingSent) > _pingPeriod){
+            /**
+             * If no known node, sending periodically.
+             * Else Send ping ONLY if there is a suspicoius component (timeout exceeded)
+             */
+            if (_knownNodes.size() == 0 && _pingTimeout.IsTimeout()){
+                _pingTimeout.Reset();
                 return SendPing();
             }
+            else {
+                for (auto it = _knownNodes.begin(); it != _knownNodes.end(); it++) {
+                    if (it->second.IsTimeout()&& _pingTimeout.IsTimeout()) {
+                        _pingTimeout.Reset();
+                        return SendPing();
+                    }
+                }
+            }
+
+            //if (_pingTimeout.IsTimeout()){
+            //    return SendPing();
+            //}
+//            int64_t currentTime = zclock_mono();
+//
+//            if (_lastPingSent == 0)
+//                _lastPingSent = currentTime;
+//
+//            // If the ping period has been reached
+//            if ((currentTime - _lastPingSent) > _pingPeriod){
+//                return SendPing();
+//            }
             return false;
         }
 
@@ -208,19 +230,26 @@ namespace riaps{
             return _parentComponent;
         }
 
-        uint16_t Group::GetMemberCount(uint16_t timeout) const {
-            auto result =0;
+        uint16_t Group::GetMemberCount() {
+            // Remove the old ones
 
-            //_logger->warn_if(timeout<_pingPeriod,"Timeout of group members in count() are less then the ping period.");
-
-            int64_t now  = zclock_mono();
-            int64_t from = now - timeout;
-
-            for (auto& pair : _knownNodes) {
-                if (pair.second >= from) result++;
+            for(auto it = std::begin(_knownNodes); it != std::end(_knownNodes);)
+            {
+                if ((*it).second.IsTimeout())
+                {
+                    it = _knownNodes.erase(it);// previously this was something like m_map.erase(it++);
+                }
+                else
+                    ++it;
             }
 
-            return result;
+            return _knownNodes.size();
+
+//            for (auto& pair : _knownNodes) {
+//                if (pair.second >= from) result++;
+//            }
+//
+//            return result;
         }
 
         ports::GroupSubscriberPort* Group::FetchNextMessage(std::shared_ptr<capnp::FlatArrayMessageReader>& messageReader) {
@@ -274,13 +303,21 @@ namespace riaps{
                     auto internal = reader.getRoot<riaps::distrcoord::GroupInternals>();
                     if (internal.hasGroupHeartBeat()) {
                         auto groupHeartBeat = internal.getGroupHeartBeat();
+                        auto it = _knownNodes.find(groupHeartBeat.getSourceComponentId());
+
+                        // New node, set the timeout
+                        if (it == _knownNodes.end()) {
+                            _knownNodes[groupHeartBeat.getSourceComponentId().cStr()] =
+                                    Timeout(duration<int, std::milli>(_distrNodeTimeout(_generator)));
+                        } else
+                            it->second.Reset(duration<int, std::milli>(_distrNodeTimeout(_generator)));
+
                         if (groupHeartBeat.getHeartBeatType() == riaps::distrcoord::HeartBeatType::PING) {
-                            //_logger->debug("<<PING<<");
+                            _logger->debug("<<PING<<");
                             SendPong();
                             return nullptr;
                         } else if (groupHeartBeat.getHeartBeatType() == riaps::distrcoord::HeartBeatType::PONG) {
-                            //_logger->debug("<<PONG<<");
-                            _knownNodes[groupHeartBeat.getSourceComponentId()] = zclock_mono();
+                            _logger->debug("<<PONG<<");
                             return nullptr;
                         }
                     } else if (internal.hasLeaderElection()){

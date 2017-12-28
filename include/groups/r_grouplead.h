@@ -8,6 +8,7 @@
 #include <messaging/distcoord.capnp.h>
 #include <groups/r_group.h>
 #include <spdlog/spdlog.h>
+#include <utils/r_timeout.h>
 
 #include <functional>
 #include <chrono>
@@ -18,6 +19,7 @@
 #define APPENDENTRY_TIMEOUT  75
 
 using namespace std::chrono;
+using namespace riaps::utils;
 
 namespace spd = spdlog;
 
@@ -25,46 +27,6 @@ namespace riaps{
     namespace groups{
 
         class Group;
-
-        class Timeout {
-        public:
-
-            /**
-             * Intitalizes with 0 timeout from now;
-             */
-            Timeout();
-
-            /**
-             * Initializes the timeut structure from ::now() with the passed timeout
-             * @param timeout
-             */
-            Timeout(duration<int, std::milli> timeout);
-
-            /**
-             * Resets the start time point, doesn't touch the timeout
-             */
-            void Reset();
-
-            /**
-             * Resets the start point and the timeout value
-             * @param timeout
-             */
-            void Reset(duration<int, std::milli> timeout);
-
-            /**
-             * If ::now()>_endPoint
-             * @return
-             */
-            bool IsTimeout();
-
-            steady_clock::time_point GetEndTimePoint();
-
-            ~Timeout();
-        private:
-            steady_clock::time_point  _startPoint; // The election timeout from this timepoint
-            duration<int, std::milli> _timeout; // The election timeout
-            steady_clock::time_point  _endPoint;
-        };
 
         class GroupLead{
         public:
@@ -76,7 +38,7 @@ namespace riaps{
              *
              */
             enum NodeState{FOLLOWER, CANDIDATE, LEADER};
-            GroupLead(riaps::groups::Group* group, std::unordered_map<std::string, int64_t>* knownNodes);
+            GroupLead(riaps::groups::Group* group, std::unordered_map<std::string, Timeout>* knownNodes);
             const NodeState GetNodeState() const;
 
             /**
@@ -98,7 +60,7 @@ namespace riaps{
              */
             duration<int, std::milli> GenerateElectionTimeo();
 
-            //std::random_device _rd;
+            std::random_device _rd;
             std::mt19937 _generator;
             std::uniform_int_distribution<int> _distrElection;
             const std::string GetComponentId() const;
@@ -126,7 +88,7 @@ namespace riaps{
             uint32_t GetNumberOfVotes();
 
             std::shared_ptr<spd::logger> _logger;
-            std::unordered_map<std::string, int64_t>* _knownNodes;
+            std::unordered_map<std::string, Timeout>* _knownNodes;
 
         };
     }

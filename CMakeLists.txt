@@ -106,6 +106,7 @@ list (APPEND component_SOURCE
         src/utils/r_capnp_helper.cc
         src/utils/r_message.cc
         src/utils/r_utils.cc
+        src/utils/r_timeout.cc
         )
 
 # libriaps headers
@@ -143,6 +144,7 @@ list (APPEND component_HEADERS
         include/messaging/distcoord.capnp.h
         include/utils/r_expirable.h
         include/utils/r_expirablelist.h
+        include/utils/r_timeout.h
         )
 
 # libriaps

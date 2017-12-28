@@ -685,11 +685,12 @@ namespace riaps{
         }
     }
 
+    // TODO: Remove timeout parameter
     uint16_t ComponentBase::GetGroupMemberCount(const riaps::groups::GroupId &groupId, const int64_t timeout) {
         if (_groups.find(groupId)==_groups.end())
             return 0;
 
-        return _groups[groupId]->GetMemberCount(timeout);
+        return _groups[groupId]->GetMemberCount();
     }
 
     bool ComponentBase::JoinToGroup(riaps::groups::GroupId &&groupId) {

@@ -8,38 +8,8 @@
 using namespace riaps::groups;
 using namespace std::chrono;
 
-Timeout::Timeout() {
-    Reset(duration<int, std::milli>(0));
-}
 
-Timeout::Timeout(duration<int, std::milli> timeout) {
-    Reset(timeout);
-}
-
-void Timeout::Reset() {
-    _startPoint = steady_clock::now();
-    _endPoint   = _startPoint + _timeout;
-}
-
-void Timeout::Reset(duration<int, std::milli> timeout) {
-    _timeout = timeout;
-    Reset();
-}
-
-steady_clock::time_point Timeout::GetEndTimePoint() {
-    return _endPoint;
-}
-
-bool Timeout::IsTimeout() {
-    auto now = steady_clock::now();
-    return now>_endPoint;
-}
-
-Timeout::~Timeout() {
-
-}
-
-GroupLead::GroupLead(Group* group, std::unordered_map<std::string, int64_t>* knownNodes)
+GroupLead::GroupLead(Group* group, std::unordered_map<std::string, Timeout>* knownNodes)
     : _group(group),
       _knownNodes(knownNodes)
 {
@@ -47,7 +17,7 @@ GroupLead::GroupLead(Group* group, std::unordered_map<std::string, int64_t>* kno
     /**
      * Initialize random generators
      */
-    _generator        = std::mt19937(0);
+    _generator        = std::mt19937(_rd());
     _distrElection    = std::uniform_int_distribution<int>(MIN_ELECTION_TIMEOUT, MAX_ELECTION_TIMEOUT);
     _electionTimeout  = Timeout(GenerateElectionTimeo());
     _appEntryTimeout  = Timeout(duration<int, std::milli>(APPENDENTRY_TIMEOUT));
@@ -89,13 +59,13 @@ void GroupLead::Update() {
          *
          * Note: +1 is added becuase the current node is not included in the GroupMemberCount();
          */
-        _numberOfNodesInVote = _group->GetMemberCount(MAX_ELECTION_TIMEOUT /*msec*/) + 1;
+        _numberOfNodesInVote = _group->GetMemberCount() + 1;
 
         /**
          * Set the first election Term
          */
         _electionTerm++;
-        _logger->debug("[{}] Election timeout FOLLOWER->CANDIDATE", _electionTerm);
+        //_logger->debug("[{}] Election timeout FOLLOWER->CANDIDATE", _electionTerm);
 
         /**
          * The node votes to itself, save the timestamp to filter possibly old votes
@@ -103,8 +73,8 @@ void GroupLead::Update() {
         _votes.clear();
         _votes[GetComponentId()] = now;
 
-        // Note: What to do when only one node is in the group??? This is not trivial. RAFT doesn't work with one node.
-        // But RIAPS should does.
+        // TODO: What to do when only one node is in the group??? This is not trivial. RAFT doesn't work with one node.
+        // But RIAPS should?
         SendRequestForVote();
 
         /**
@@ -123,14 +93,9 @@ void GroupLead::Update() {
         // Vote is still in progress, but the timeout has expired.
         // Be a follower again, maybe better luck next time.
 
-        _logger->debug("[{}] Vote timeout CANDIDATE->FOLLOWER",_electionTerm);
+        //_logger->debug("[{}] Vote timeout CANDIDATE->FOLLOWER",_electionTerm);
 
         _currentState = GroupLead::NodeState::FOLLOWER;
-//        _numberOfNodesInVote = _group->GetMemberCount(MAX_ELECTION_TIMEOUT /*msec*/);
-//        _electionTerm++;
-//        _votes.clear();
-//        _votes[GetComponentId()] = now;
-//        SendRequestForVote();
         _electionTimeout.Reset(duration<int, std::milli>(MAX_ELECTION_TIMEOUT));
     }
 
@@ -237,7 +202,7 @@ void GroupLead::Update(riaps::distrcoord::LeaderElection::Reader &internalMessag
     } else if (internalMessage.hasAppendEntry() && _currentState==GroupLead::FOLLOWER){
         auto msgAppendEntry = internalMessage.getAppendEntry();
         //(*_knownNodes)[msgAppendEntry.getSourceComponentId().cStr()] = zclock_mono();
-        _logger->debug("Append entry from: {0}", msgAppendEntry.getSourceComponentId().cStr());
+        //_logger->debug("Append entry from: {0}", msgAppendEntry.getSourceComponentId().cStr());
         _electionTimeout.Reset(GenerateElectionTimeo());
         _electionTerm = msgAppendEntry.getElectionTerm();
     }
