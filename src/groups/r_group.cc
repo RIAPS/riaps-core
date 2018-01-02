@@ -231,25 +231,23 @@ namespace riaps{
         }
 
         uint16_t Group::GetMemberCount() {
-            // Remove the old ones
+            DeleteTimeoutNodes();
+            return _knownNodes.size();
+        }
 
+        uint32_t Group::DeleteTimeoutNodes() {
+            uint32_t deleted=0;
             for(auto it = std::begin(_knownNodes); it != std::end(_knownNodes);)
             {
                 if ((*it).second.IsTimeout())
                 {
-                    it = _knownNodes.erase(it);// previously this was something like m_map.erase(it++);
+                    it = _knownNodes.erase(it);
+                    deleted++;
                 }
                 else
                     ++it;
             }
-
-            return _knownNodes.size();
-
-//            for (auto& pair : _knownNodes) {
-//                if (pair.second >= from) result++;
-//            }
-//
-//            return result;
+            return deleted;
         }
 
         ports::GroupSubscriberPort* Group::FetchNextMessage(std::shared_ptr<capnp::FlatArrayMessageReader>& messageReader) {

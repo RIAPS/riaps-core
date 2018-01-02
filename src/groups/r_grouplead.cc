@@ -54,9 +54,6 @@ void GroupLead::Update() {
 
 
         /**
-         * Snapshot of members in the last MAX_ELECTION_TIMEOUTms.
-         * TODO: We chose MAX_ELECTION_TIMEOUTms because this is the max leader election timeout. Should we reconsider this value?
-         *
          * Note: +1 is added becuase the current node is not included in the GroupMemberCount();
          */
         _numberOfNodesInVote = _group->GetMemberCount() + 1;
@@ -101,6 +98,8 @@ void GroupLead::Update() {
 
     /**
      * If no incoming message for the leader, then the leader just heartbeating
+     * Note: The receivers don't respond to AppendEndtry (no log replication in RIAPS so far,
+     * no reason to implement the reply)
      */
     else if (_currentState == GroupLead::LEADER && _appEntryTimeout.IsTimeout()) {
         SendAppendEntry();

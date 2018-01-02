@@ -109,23 +109,28 @@ namespace riaps {
 
             ports::GroupSubscriberPort* FetchNextMessage(std::shared_ptr<capnp::FlatArrayMessageReader>& messageReader);
 
-
-
             bool SendPingWithPeriod();
             bool SendPing();
             bool SendPong();
 
-
             const ComponentBase* GetParentComponent();
-
 
             std::shared_ptr<std::vector<std::string>> GetKnownComponents();
 
+            /**
+             * Counts the records in _knownNodes map
+             * Before counting, the DeleteTimeoutNodes() is called.
+             * @return Number of nodes in the group.
+             */
             uint16_t GetMemberCount();
 
             ~Group();
-
         private:
+            /**
+             * Delete records from the _knownNodes cache, it the Timer is exceeded
+             * @return Number of deleted records.
+             */
+            uint32_t DeleteTimeoutNodes();
             bool SendHeartBeat(riaps::distrcoord::HeartBeatType type);
 
             const GroupId     _groupId;
