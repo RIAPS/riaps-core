@@ -124,6 +124,8 @@ namespace riaps {
              */
             uint16_t GetMemberCount();
 
+            std::string GetLeaderId();
+
             ~Group();
         private:
             /**

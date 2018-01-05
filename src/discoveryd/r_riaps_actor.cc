@@ -11,6 +11,7 @@ void
 riaps_actor (zsock_t *pipe, void *args)
 {
     auto console = spd::stdout_color_mt("rdiscovery");
+    console->set_level(spd::level::debug);
 
     std::string mac_address = riaps::framework::Network::GetMacAddressStripped();
     std::string host_address = riaps::framework::Network::GetIPAddress();

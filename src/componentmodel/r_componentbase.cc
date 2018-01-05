@@ -44,7 +44,7 @@ namespace riaps{
         //std::map<const zsock_t*, const ports::InsidePort*> insidePorts;
 
         while (!terminated) {
-            void *which = zpoller_wait(poller, 1);
+            void *which = zpoller_wait(poller, 10);
 
             if (firstrun) {
                 firstrun = false;
@@ -691,6 +691,13 @@ namespace riaps{
             return 0;
 
         return _groups[groupId]->GetMemberCount();
+    }
+
+    std::string ComponentBase::GetLeaderId(const riaps::groups::GroupId &groupId) {
+        if (_groups.find(groupId)==_groups.end())
+            return "";
+
+        return _groups[groupId]->GetLeaderId();
     }
 
     bool ComponentBase::JoinToGroup(riaps::groups::GroupId &&groupId) {

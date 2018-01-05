@@ -118,21 +118,21 @@ namespace riaps {
                 }
         );
 
-        p.portName="QueryOut";
-        p.messageType="QueryRequest";
-        _grouptype_configurations.back().groupTypePorts.pubs.push_back(p);
-
-        s.portName = "QueryIn";
-        s.messageType=p.messageType;
-        _grouptype_configurations.back().groupTypePorts.subs.push_back(s);
-
-        p.portName="ResponseOut";
-        p.messageType="Estimate";
-        _grouptype_configurations.back().groupTypePorts.pubs.push_back(p);
-
-        s.portName = "ResponseIn";
-        s.messageType=p.messageType;
-        _grouptype_configurations.back().groupTypePorts.subs.push_back(s);
+//        p.portName="QueryOut";
+//        p.messageType="QueryRequest";
+//        _grouptype_configurations.back().groupTypePorts.pubs.push_back(p);
+//
+//        s.portName = "QueryIn";
+//        s.messageType=p.messageType;
+//        _grouptype_configurations.back().groupTypePorts.subs.push_back(s);
+//
+//        p.portName="ResponseOut";
+//        p.messageType="Estimate";
+//        _grouptype_configurations.back().groupTypePorts.pubs.push_back(p);
+//
+//        s.portName = "ResponseIn";
+//        s.messageType=p.messageType;
+//        _grouptype_configurations.back().groupTypePorts.subs.push_back(s);
 
 
         /////////////////////////

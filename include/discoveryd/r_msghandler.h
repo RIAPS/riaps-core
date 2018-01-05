@@ -56,6 +56,8 @@ namespace riaps{
 
         void handleDhtGroupUpdate(const riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
 
+        void PushDhtValuesToDisco(std::vector<std::shared_ptr<dht::Value>> values);
+
         std::tuple<std::string, std::string> buildInsertKeyValuePair(
                 const std::string&             appName,
                 const std::string&             msgType,

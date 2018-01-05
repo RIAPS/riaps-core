@@ -5,6 +5,7 @@
 #include <discoveryd/r_msghandler.h>
 #include <framework/rfw_configuration.h>
 #include <framework/rfw_network_interfaces.h>
+#include "../../include/discoveryd/r_msghandler.h"
 
 namespace riaps{
     DiscoveryMessageHandler::DiscoveryMessageHandler(dht::DhtRunner &dhtNode, zsock_t** pipe, std::shared_ptr<spdlog::logger> logger)
@@ -250,43 +251,46 @@ namespace riaps{
             if (_groupListeners.find(appName) == _groupListeners.end()) {
                 std::string key = "/groups/"+appName;
                 _groupListeners[appName] =
-                        _dhtNode.listen(key, [](const std::vector<std::shared_ptr<dht::Value>> &values){
+                        _dhtNode.listen(key, [this](const std::vector<std::shared_ptr<dht::Value>> &values){
                             if (values.size() == 0) return true;
 
-                            zsock_t *dhtNotificationSocket = zsock_new_push(DHT_ROUTER_CHANNEL);
+                            std::thread t(&DiscoveryMessageHandler::PushDhtValuesToDisco, this, values);
+                            t.detach();
 
-                            // Let's unpack the data
-                            for (auto& value : values) {
-                                riaps::groups::GroupDetails v = value->unpack<riaps::groups::GroupDetails>();
-
-                                capnp::MallocMessageBuilder dhtMessage;
-                                auto msgDhtUpdate = dhtMessage.initRoot<riaps::discovery::DhtUpdate>();
-                                auto msgGroupUpdate = msgDhtUpdate.initGroupUpdate();
-                                msgGroupUpdate.setComponentId(v.componentId);
-                                msgGroupUpdate.setAppName(v.appName);
-
-                                auto groupId = msgGroupUpdate.initGroupId();
-                                groupId.setGroupName(v.groupId.groupName);
-                                groupId.setGroupType(v.groupId.groupTypeId);
-
-                                auto groupServices = msgGroupUpdate.initServices(v.groupServices.size());
-                                for (int i = 0; i<v.groupServices.size(); i++){
-                                    groupServices[i].setAddress(v.groupServices[i].address);
-                                    groupServices[i].setMessageType(v.groupServices[i].messageType);
-                                }
-
-                                auto serializedMessage = capnp::messageToFlatArray(dhtMessage);
-
-                                zmsg_t *msg = zmsg_new();
-                                auto bytes = serializedMessage.asBytes();
-                                zmsg_pushmem(msg, bytes.begin(), bytes.size());
-                                zmsg_send(&msg, dhtNotificationSocket);
-                                //std::cout << "[DHT] Group notifications sent to discovery service" << std::endl;
-                            }
-
-                            sleep(1);
-                            zsock_destroy(&dhtNotificationSocket);
-                            sleep(1);
+//                            zsock_t *dhtNotificationSocket = zsock_new_push(DHT_ROUTER_CHANNEL);
+//
+//                            // Let's unpack the data
+//                            for (auto& value : values) {
+//                                riaps::groups::GroupDetails v = value->unpack<riaps::groups::GroupDetails>();
+//
+//                                capnp::MallocMessageBuilder dhtMessage;
+//                                auto msgDhtUpdate = dhtMessage.initRoot<riaps::discovery::DhtUpdate>();
+//                                auto msgGroupUpdate = msgDhtUpdate.initGroupUpdate();
+//                                msgGroupUpdate.setComponentId(v.componentId);
+//                                msgGroupUpdate.setAppName(v.appName);
+//
+//                                auto groupId = msgGroupUpdate.initGroupId();
+//                                groupId.setGroupName(v.groupId.groupName);
+//                                groupId.setGroupType(v.groupId.groupTypeId);
+//
+//                                auto groupServices = msgGroupUpdate.initServices(v.groupServices.size());
+//                                for (int i = 0; i<v.groupServices.size(); i++){
+//                                    groupServices[i].setAddress(v.groupServices[i].address);
+//                                    groupServices[i].setMessageType(v.groupServices[i].messageType);
+//                                }
+//
+//                                auto serializedMessage = capnp::messageToFlatArray(dhtMessage);
+//
+//                                zmsg_t *msg = zmsg_new();
+//                                auto bytes = serializedMessage.asBytes();
+//                                zmsg_pushmem(msg, bytes.begin(), bytes.size());
+//                                zmsg_send(&msg, dhtNotificationSocket);
+//                                //std::cout << "[DHT] Group notifications sent to discovery service" << std::endl;
+//                            }
+//
+//                            sleep(1);
+//                            zsock_destroy(&dhtNotificationSocket);
+//                            sleep(1);
 
 
                             return true;
@@ -652,6 +656,7 @@ namespace riaps{
     }
 
     void DiscoveryMessageHandler:: handleGroupJoin(riaps::discovery::GroupJoinReq::Reader& msgGroupJoin){
+
         // Join to the group.
         auto msgGroupServices   = msgGroupJoin.getServices();
         std::string appName     = msgGroupJoin.getAppName();
@@ -670,6 +675,7 @@ namespace riaps{
                                                          msgGroupServices[i].getMessageType(),
                                                          msgGroupServices[i].getAddress()
                                                  });
+            _logger->debug("REG: {}", msgGroupServices[i].getAddress().cStr());
         }
 
 //        msgpack::sbuffer sbuf;
@@ -681,59 +687,35 @@ namespace riaps{
 
 
 
+//        _dhtNode.put(key, dht::Value::pack(groupDetails),[this, key](bool succ){
+//            std::thread t ([this, key, succ](){
+//                if (!succ) zclock_sleep(5000);
+//                this->_dhtNode.get(key, [this](const std::vector<std::shared_ptr<dht::Value>> &values){
+//                    if (values.size() == 0) return true;
+//
+//                    std::thread t(&DiscoveryMessageHandler::PushDhtValuesToDisco, this, values);
+//                    t.detach();
+//
+//                    return true;
+//                });
+//            });
+//            t.detach();
+//
+//        });
+
         _dhtNode.put(key, dht::Value::pack(groupDetails));
-        _dhtNode.get(key, [](const std::vector<std::shared_ptr<dht::Value>> &values){
-            if (values.size() == 0) return true;
 
-            zsock_t *dhtNotificationSocket = zsock_new_push(DHT_ROUTER_CHANNEL);
-
-            // Let's unpack the data
-            for (auto& value : values) {
-                riaps::groups::GroupDetails v = value->unpack<riaps::groups::GroupDetails>();
-
-                capnp::MallocMessageBuilder dhtMessage;
-                auto msgDhtUpdate = dhtMessage.initRoot<riaps::discovery::DhtUpdate>();
-                auto msgGroupUpdate = msgDhtUpdate.initGroupUpdate();
-                msgGroupUpdate.setComponentId(v.componentId);
-                msgGroupUpdate.setAppName(v.appName);
-
-                auto groupId = msgGroupUpdate.initGroupId();
-                groupId.setGroupName(v.groupId.groupName);
-                groupId.setGroupType(v.groupId.groupTypeId);
-
-                auto groupServices = msgGroupUpdate.initServices(v.groupServices.size());
-                for (int i = 0; i<v.groupServices.size(); i++){
-                    groupServices[i].setAddress(v.groupServices[i].address);
-                    groupServices[i].setMessageType(v.groupServices[i].messageType);
-                }
-
-                auto serializedMessage = capnp::messageToFlatArray(dhtMessage);
-
-                zmsg_t *msg = zmsg_new();
-                auto bytes = serializedMessage.asBytes();
-                zmsg_pushmem(msg, bytes.begin(), bytes.size());
-                zmsg_send(&msg, dhtNotificationSocket);
-                //std::cout << "[DHT] Group notifications sent to discovery service" << std::endl;
-            }
-
-            sleep(1);
-            zsock_destroy(&dhtNotificationSocket);
-            sleep(1);
-
-
-            return true;
-        });
 
 
         // Debug
-        std::cout << "Component joined to group: "
-                  << appName << "::"
-                  << groupDetails.groupId.groupTypeId << "::"
-                  << groupDetails.groupId.groupName   << std::endl;
-        std::cout << "Group services: " << std::endl;
-        for (auto& g : groupDetails.groupServices){
-            std::cout << "\t- " << g.address << " " << g.messageType << std::endl;
-        }
+//        std::cout << "Component joined to group: "
+//                  << appName << "::"
+//                  << groupDetails.groupId.groupTypeId << "::"
+//                  << groupDetails.groupId.groupName   << std::endl;
+//        std::cout << "Group services: " << std::endl;
+//        for (auto& g : groupDetails.groupServices){
+//            std::cout << "\t- " << g.address << " " << g.messageType << std::endl;
+//        }
 
         //Send response
         capnp::MallocMessageBuilder repMessage;
@@ -748,6 +730,53 @@ namespace riaps{
         zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
 
         zmsg_send(&msg, _riapsSocket);
+
+        zclock_sleep(5000);
+
+        _dhtNode.get(key, [this](const std::vector<std::shared_ptr<dht::Value>> &values){
+            if (values.size() == 0) return true;
+
+            std::thread t(&DiscoveryMessageHandler::PushDhtValuesToDisco, this, values);
+            t.detach();
+
+            return true;
+        });
+    }
+
+    void DiscoveryMessageHandler::PushDhtValuesToDisco(std::vector<std::shared_ptr<dht::Value>> values) {
+        zsock_t *dhtNotificationSocket = zsock_new_push(DHT_ROUTER_CHANNEL);
+
+        // Let's unpack the data
+        for (auto& value : values) {
+            riaps::groups::GroupDetails v = value->unpack<riaps::groups::GroupDetails>();
+
+            capnp::MallocMessageBuilder dhtMessage;
+            auto msgDhtUpdate = dhtMessage.initRoot<riaps::discovery::DhtUpdate>();
+            auto msgGroupUpdate = msgDhtUpdate.initGroupUpdate();
+            msgGroupUpdate.setComponentId(v.componentId);
+            msgGroupUpdate.setAppName(v.appName);
+
+            auto groupId = msgGroupUpdate.initGroupId();
+            groupId.setGroupName(v.groupId.groupName);
+            groupId.setGroupType(v.groupId.groupTypeId);
+
+            auto groupServices = msgGroupUpdate.initServices(v.groupServices.size());
+            for (int i = 0; i<v.groupServices.size(); i++){
+                groupServices[i].setAddress(v.groupServices[i].address);
+                groupServices[i].setMessageType(v.groupServices[i].messageType);
+            }
+
+            auto serializedMessage = capnp::messageToFlatArray(dhtMessage);
+
+            zmsg_t *msg = zmsg_new();
+            auto bytes = serializedMessage.asBytes();
+            zmsg_pushmem(msg, bytes.begin(), bytes.size());
+            zmsg_send(&msg, dhtNotificationSocket);
+            //std::cout << "[DHT] Group notifications sent to discovery service" << std::endl;
+        }
+
+        zclock_sleep(100);
+        zsock_destroy(&dhtNotificationSocket);
     }
 
     // Handle ZMQ messages, arriving on the zactor PIPE
@@ -1007,6 +1036,14 @@ namespace riaps{
             if (client.second->appName == appName){
                 if (sentCache.find(client.second->socket) != sentCache.end()) continue;
 
+                std::string log;
+                for (int i=0; i<msgGroupUpdate.getServices().size(); i++) {
+
+                    log+=msgGroupUpdate.getServices()[i].getAddress().cStr();
+                    log+="; ";
+                }
+                _logger->debug("UPD: {}", log);
+
                 // Store the socket pointer to avoid multiple sending of the same update.
                 sentCache.insert(client.second->socket);
                 actorFound == true;
@@ -1024,7 +1061,7 @@ namespace riaps{
             }
         }
 
-        // No active actor for this app, purge this listener
+        // TODO: No active actor for this app, purge this listener
         if (!actorFound) {
 
         }

@@ -46,6 +46,8 @@ namespace riaps{
              */
             void Update();
 
+            std::string GetLeaderId();
+
             /**
              * Incoming message arrived, lets update the state
              * @param internalMessage
@@ -89,6 +91,8 @@ namespace riaps{
 
             std::shared_ptr<spd::logger> _logger;
             std::unordered_map<std::string, Timeout>* _knownNodes;
+
+            std::string _leaderId;
 
         };
     }

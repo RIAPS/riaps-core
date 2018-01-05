@@ -28,7 +28,10 @@ namespace leaderelection {
                 }
             } else {
                 riaps::groups::GroupId gid{"BackupGroup", "Korte"};
-                _logger->debug(GetGroupMemberCount(gid, 5000));
+                auto ct = GetGroupMemberCount(gid, 5000);
+                std::string ld = GetLeaderId(gid);
+                _logger->debug("{}, ({})", ct, ld);
+
             }
         }
 

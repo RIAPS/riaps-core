@@ -30,6 +30,13 @@ namespace riaps{
             return groupTypeId == other.groupTypeId && groupName == other.groupName;
         }
 
+        std::string Group::GetLeaderId() {
+            if (_groupTypeConf.hasLeader && _groupLeader != nullptr){
+                return _groupLeader->GetLeaderId();
+            }
+            return "";
+        }
+
         Group::Group(const GroupId &groupId, const ComponentBase* parentComponent) :
                 _groupId(groupId),
                 _parentComponent(parentComponent),

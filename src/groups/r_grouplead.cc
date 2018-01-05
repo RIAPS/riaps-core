@@ -31,6 +31,10 @@ GroupLead::GroupLead(Group* group, std::unordered_map<std::string, Timeout>* kno
     _logger = spd::get(group->GetParentComponent()->GetConfig().component_name);
 }
 
+std::string GroupLead::GetLeaderId() {
+    return _leaderId;
+}
+
 void GroupLead::Update() {
     std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
 
@@ -104,6 +108,7 @@ void GroupLead::Update() {
     else if (_currentState == GroupLead::LEADER && _appEntryTimeout.IsTimeout()) {
         SendAppendEntry();
         _appEntryTimeout.Reset();
+        _leaderId = GetComponentId();
     }
 }
 
@@ -196,6 +201,7 @@ void GroupLead::Update(riaps::distrcoord::LeaderElection::Reader &internalMessag
             if (hasMajority){
                 _currentState = GroupLead::LEADER;
                 SendAppendEntry();
+                _leaderId = GetComponentId();
             }
         }
     } else if (internalMessage.hasAppendEntry() && _currentState==GroupLead::FOLLOWER){
@@ -204,6 +210,7 @@ void GroupLead::Update(riaps::distrcoord::LeaderElection::Reader &internalMessag
         //_logger->debug("Append entry from: {0}", msgAppendEntry.getSourceComponentId().cStr());
         _electionTimeout.Reset(GenerateElectionTimeo());
         _electionTerm = msgAppendEntry.getElectionTerm();
+        _leaderId = msgAppendEntry.getSourceComponentId();
     }
 }
 
