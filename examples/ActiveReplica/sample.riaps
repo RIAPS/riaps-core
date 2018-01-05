@@ -1,0 +1,43 @@
+app ActiveReplica {
+	// Message types used in the app
+    message SensorReady; 
+    message SensorQuery; 
+    message SensorValue; 
+    message Estimate;
+    
+	// Sensor component
+    component Sensor {
+      timer clock 1000; 							// Periodic timer trigger to trigger sensor every 1 sec
+      pub ready : SensorReady ;						// Publish port for SensorReady messages 
+      rep request : ( SensorQuery , SensorValue ) ;	// Reply port to query the sensor and retrieve its value
+    }
+    
+    // The server component
+    component Server {
+      sub ready : SensorReady ;						// Subscriber port to trigger component with SensorReady messages
+      req query : (SensorQuery , SensorValue ) ;	// Request port to query the sensor and retrieve its value
+    }
+    
+    // Global estimator
+    component Client {
+      timer wakeup 3000; 							// Periodic timer to wake up estimator every 3 sec
+    }
+
+    actor Sensor {
+        {
+            sensor: Sensor;
+        }
+    }
+
+    actor Server {
+       {
+		  server : Server;
+       }
+    }
+
+    actor Client {
+       {
+          client : Client;
+       }
+    }
+}

@@ -1,5 +1,13 @@
+#include <capnp/serialize.h>
 #include "utils/r_utils.h"
 
+void operator<<(zmsg_t*& zmsg, capnp::MallocMessageBuilder& message){
+    auto serializedMessage = capnp::messageToFlatArray(message);
+    zmsg = zmsg_new();
+    auto bytes = serializedMessage.asBytes();
+    zmsg_pushmem(zmsg, bytes.begin(), bytes.size());
+
+}
 
 void print_cacheips(std::map<std::string, int64_t>& ipcache) {
     std::cout << "Stored ips: ";
@@ -13,10 +21,10 @@ bool maintain_cache(std::map<std::string, int64_t>& ipcache){
     bool is_maintained = false;
     int64_t time = zclock_mono();
 
-    // Maintain the list, if somebody didn't respond in the past 10 seconds => remove from the list
+    // Maintain the list, if somebody didn't respond in the past IPCACHE_TIMEOUT seconds => remove from the list
     std::vector<std::string> marked_for_delete;
     for (auto it=ipcache.begin(); it!=ipcache.end(); it++){
-        if ((time-it->second)>20000)
+        if ((time-it->second)>IPCACHE_TIMEOUT)
             marked_for_delete.push_back(it->first);
     }
 
@@ -54,5 +62,18 @@ std::vector<std::string> maintain_servicecache(std::map<std::string, int64_t >& 
     }
 
     return outdated_services;
+}
+
+const std::string GetAppPath(const std::string& appName){
+    char* riapsAppsPath = std::getenv(ENV_RIAPSAPPS);
+    
+    if (riapsAppsPath == nullptr) return "";
+    
+    std::string p = riapsAppsPath;
+    if (p.back() == '/')
+        p.pop_back();
+    p+= "/" + appName;
+    
+    return p;
 }
 

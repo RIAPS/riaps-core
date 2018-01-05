@@ -5,7 +5,7 @@
 #ifndef RIAPS_CORE_R_PERIODIC_TIMER_H
 #define RIAPS_CORE_R_PERIODIC_TIMER_H
 
-#include <componentmodel/r_portbase.h>
+#include <componentmodel/ports/r_portbase.h>
 
 #include <czmq.h>
 
@@ -22,7 +22,7 @@ namespace riaps {
 
         class PeriodicTimer : public PortBase {
         public:
-            PeriodicTimer(std::string &timerresponsechannel, const _component_port_tim_j& config);
+            PeriodicTimer(std::string &timerresponsechannel, const _component_port_tim& config, const ComponentBase* parentComponent);
 
             ~PeriodicTimer();
 

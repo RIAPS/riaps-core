@@ -46,7 +46,9 @@ void devm_zactor (zsock_t *pipe, void *args){
 
     zpoller_t* poller = zpoller_new(pipe, NULL);
     assert(poller);
-    zpoller_ignore_interrupts (poller);
+
+    zpoller_set_nonstop(poller, true);
+    //zpoller_ignore_interrupts (poller);
 
     zpoller_add(poller, devmServer);
 

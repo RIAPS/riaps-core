@@ -18,7 +18,9 @@ namespace riaps {
 
             zpoller_t* poller = zpoller_new(pipe, NULL);
             assert(poller);
-            zpoller_ignore_interrupts (poller);
+
+            zpoller_set_nonstop(poller, true);
+            //zpoller_ignore_interrupts (poller);
 
             zsock_signal (pipe, 0);
 
@@ -75,9 +77,10 @@ namespace riaps {
         }
 
 
-        PeriodicTimer::PeriodicTimer(std::string &timerresponsechannel, const _component_port_tim_j &config)
+        PeriodicTimer::PeriodicTimer(std::string &timerresponsechannel, const _component_port_tim &config, const ComponentBase* parentComponent)
                 : PortBase(PortTypes::Timer,
-                  (component_port_config * ) & config),
+                  (component_port_config * ) & config,
+                  parentComponent),
                   _timerresponsechannel(timerresponsechannel) {
             _interval = config.period;
             _periodicTimerActor = zactor_new(ptimeractor, this);

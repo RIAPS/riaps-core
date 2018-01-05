@@ -8,50 +8,52 @@
 // TODO: Move this somewhere else
 #define ASYNC_CHANNEL "ipc://asyncresponsepublisher"
 
+
+
 namespace riaps{
 
     void component_actor(zsock_t* pipe, void* args){
         ComponentBase* comp = (ComponentBase*)args;
-        //comp->_execute.store(true);
 
         zsock_t* timerport = zsock_new_pull(comp->GetTimerChannel().c_str());
         assert(timerport);
 
-
-        zsock_t* timerportOneShot = zsock_new_pull(comp->GetOneShotTimerChannel().c_str());
-        assert(timerportOneShot);
+//        Note: Disable one shot timers, we need more tests.
+//        zsock_t* timerportOneShot = zsock_new_pull(comp->GetOneShotTimerChannel().c_str());
+//        assert(timerportOneShot);
 
         zpoller_t* poller = zpoller_new(pipe, NULL);
         assert(poller);
-        zpoller_ignore_interrupts (poller);
 
+        // New api is czmq, ignore_interrupts is obsolote
+        zpoller_set_nonstop(poller, true);
         zsock_signal (pipe, 0);
 
         int rc = zpoller_add(poller, timerport);
         assert(rc==0);
 
-        rc = zpoller_add(poller, timerportOneShot);
-        assert(rc==0);
-
+//        rc = zpoller_add(poller, timerportOneShot);
+//        assert(rc==0);
 
         bool terminated = false;
         bool firstrun = true;
 
-        std::cout << "Component poller starts" << std::endl;
+        auto consoleLogger = comp->_logger;
+        consoleLogger->info("Component started");
 
         // Register ZMQ Socket - riapsPort pairs. For the quick retrieve.
         std::map<const zsock_t*, const ports::PortBase*>   portSockets;
 
+        // ZMQ Socket - Inside port pairs
         std::map<const zsock_t*, const ports::InsidePort*> insidePorts;
 
-        //while (comp->_execute.load()) {
         while (!terminated) {
-            void *which = zpoller_wait(poller, 500);
+            void *which = zpoller_wait(poller, 1);
 
             if (firstrun) {
                 firstrun = false;
 
-                const component_conf_j& comp_conf = comp->GetConfig();
+                const component_conf& comp_conf = comp->GetConfig();
 
                 // Add insider ports
                 for (auto it_insconf = comp_conf.component_ports.inss.begin();
@@ -120,14 +122,14 @@ namespace riaps{
             if (which == pipe) {
                 zmsg_t *msg = zmsg_recv(which);
                 if (!msg) {
-                    std::cout << "No msg => interrupted" << std::endl;
+                    consoleLogger->warn("No msg => interrupted");
                     break;
                 }
 
                 char *command = zmsg_popstr(msg);
 
                 if (streq(command, "$TERM")) {
-                    std::cout << "$TERM arrived in component" << std::endl;
+                    consoleLogger->debug("$TERM arrived in component");
                     terminated = true;
                 } else if(streq(command, CMD_UPDATE_PORT)){
                     char* portname = zmsg_popstr(msg);
@@ -156,6 +158,35 @@ namespace riaps{
                         zstr_free(&portname);
                     }
                 }
+                else if(streq(command, CMD_UPDATE_GROUP)){
+                    zframe_t* capnp_msgbody = zmsg_pop(msg);
+                    size_t    size = zframe_size(capnp_msgbody);
+                    byte*     data = zframe_data(capnp_msgbody);
+
+                    auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
+
+                    capnp::FlatArrayMessageReader reader(capnp_data);
+                    auto msgDiscoUpd  = reader.getRoot<riaps::discovery::DiscoUpd>();
+                    auto msgGroupUpd  = msgDiscoUpd.getGroupUpdate();
+                    comp->UpdateGroup(msgGroupUpd);
+
+                    zframe_destroy(&capnp_msgbody);
+//                        std::string groupTypeId = zmsg_popstr(msg);
+//                        std::string groupName   = zmsg_popstr(msg);
+//                        std::string address     = zmsg_popstr(msg);
+//                        std::string messageType = zmsg_popstr(msg);
+//
+//                        // Grab the group object
+//                        riaps::groups::GroupId gid;
+//                        gid.groupTypeId = groupTypeId;
+//                        gid.groupName   = groupName;
+//
+//                        auto groups = &(comp->_groups);
+//
+//                        if (groups->find(gid)!=groups->end()){
+//                            //groups[gid]->ConnectToNewServices()
+//                        }
+                }
 
                 zstr_free(&command);
                 zmsg_destroy(&msg);
@@ -179,25 +210,25 @@ namespace riaps{
                 }
             }
             // One shot timer fired somewhere
-            else if (which == timerportOneShot){
-                zmsg_t *msg = zmsg_recv(which);
+//            else if (which == timerportOneShot){
+//                zmsg_t *msg = zmsg_recv(which);
 
-                if (msg) {
-                    char *timerId = zmsg_popstr(msg);
-                    if (timerId){
-                        std::string tid = std::string(timerId);
-                        comp->OnOneShotTimer(tid);
-                        zstr_free(&timerId);
-                    }
-                    zmsg_destroy(&msg);
-                }
-
-                if (comp->_oneShotTimer!=NULL){
-                    comp->_oneShotTimer->stop();
-                    delete comp->_oneShotTimer;
-                    comp->_oneShotTimer = NULL;
-                }
-            }
+//                if (msg) {
+//                    char *timerId = zmsg_popstr(msg);
+//                    if (timerId){
+//                        std::string tid = std::string(timerId);
+//                        comp->OnOneShotTimer(tid);
+//                        zstr_free(&timerId);
+//                    }
+//                    zmsg_destroy(&msg);
+//                }
+//
+//                if (comp->_oneShotTimer!=NULL){
+//                    comp->_oneShotTimer->stop();
+//                    delete comp->_oneShotTimer;
+//                    comp->_oneShotTimer = NULL;
+//                }
+//            }
             else if(which){
                 // Message test with more than one field
                 zmsg_t *msg = zmsg_recv(which);
@@ -213,7 +244,7 @@ namespace riaps{
 
                     // "which" port is not an inside port, dispatch CAPNP message
                     else {
-                        ports::PortBase* riapsPort = (ports::PortBase*)portSockets[(zsock_t*)which];
+                        ports::PortBase* riapsPort = const_cast<ports::PortBase*>(portSockets[static_cast<zsock_t*>(which)]);
 
                         // zmsg_op transfers the ownership, the frame is being removed from the zmsg
                         zframe_t* bodyFrame = zmsg_pop(msg);
@@ -239,16 +270,33 @@ namespace riaps{
             else{
                 // just poll timeout
             }
+
+            // The group messages
+            if (comp->_groups.size()>0){
+
+                // Handle all group messages
+                for (auto it = comp->_groups.begin(); it!=comp->_groups.end(); it++){
+                    it->second->SendPingWithPeriod();
+
+                    std::shared_ptr<capnp::FlatArrayMessageReader> groupMessage(nullptr);
+
+                    //std::string originComponentId;
+                    ports::GroupSubscriberPort* groupRecvPort = it->second->FetchNextMessage(groupMessage);
+
+                    if (groupRecvPort != nullptr)
+                        comp->OnGroupMessage(it->first, *groupMessage, groupRecvPort);
+                }
+            }
         }
 
-        if (comp->_oneShotTimer!=NULL){
-            comp->_oneShotTimer->stop();
-            delete comp->_oneShotTimer;
-            comp->_oneShotTimer = NULL;
-        }
+//        if (comp->_oneShotTimer!=NULL){
+//            comp->_oneShotTimer->stop();
+//            delete comp->_oneShotTimer;
+//            comp->_oneShotTimer = NULL;
+//        }
 
         zpoller_destroy(&poller);
-        zsock_destroy(&timerportOneShot);
+//        zsock_destroy(&timerportOneShot);
         zsock_destroy(&timerport);
     };
 
@@ -271,11 +319,24 @@ namespace riaps{
         zuuid_destroy(&_component_uuid);
     }
 
-    ComponentBase::ComponentBase(component_conf_j& config, Actor& actor) : _actor(&actor), _oneShotTimer(NULL) {
+//    std::shared_ptr<spd::logger> ComponentBase::GetConsoleLogger(){
+//        return _logger;
+//    }
+
+    void ComponentBase::SetDebugLevel(std::shared_ptr<spd::logger> logger, spd::level::level_enum level){
+        logger->set_level(level);
+    }
+
+    ComponentBase::ComponentBase(component_conf& config, Actor& actor) : _actor(&actor)//, _oneShotTimer(NULL)
+    {
         _configuration = config;
 
         //uuid to the component instance
         _component_uuid = zuuid_new();
+
+        size_t q_size = 2048; //queue size must be power of 2
+        spd::set_async_mode(q_size);
+        _logger = spd::stdout_color_mt(_configuration.component_name);
 
         _zactor_component = zactor_new(component_actor, this);
     }
@@ -294,42 +355,7 @@ namespace riaps{
     //}
 
 
-    const ports::PublisherPort* ComponentBase::InitPublisherPort(const _component_port_pub_j& config) {
-        auto result = new ports::PublisherPort(config, this);
-        std::unique_ptr<ports::PortBase> newport(result);
-        _ports[config.portName] = std::move(newport);
-        return result;
-    }
 
-    const ports::SubscriberPort* ComponentBase::InitSubscriberPort(const _component_port_sub_j& config) {
-        std::unique_ptr<ports::SubscriberPort> newport(new ports::SubscriberPort(config, this));
-        auto result = newport.get();
-        newport->Init();
-        _ports[config.portName] = std::move(newport);
-        return result;
-    }
-
-    const ports::ResponsePort* ComponentBase::InitResponsePort(const _component_port_rep_j & config) {
-        auto result = new ports::ResponsePort(config, this);
-        std::unique_ptr<ports::PortBase> newport(result);
-        _ports[config.portName] = std::move(newport);
-        return result;
-    }
-
-    const ports::RequestPort*   ComponentBase::InitRequestPort(const _component_port_req_j& config){
-        std::unique_ptr<ports::RequestPort> newport(new ports::RequestPort(config, this));
-        auto result = newport.get();
-        newport->Init();
-        _ports[config.portName] = std::move(newport);
-        return result;
-    }
-
-    const ports::InsidePort* ComponentBase::InitInsiderPort(const _component_port_ins_j& config) {
-        auto result = new ports::InsidePort(config, riaps::ports::InsidePortMode::BIND, this);
-        std::unique_ptr<ports::PortBase> newport(result);
-        _ports[config.portName] = std::move(newport);
-        return result;
-    }
 
 //    const ports::CallBackTimer* ComponentBase::InitTimerPort(const _component_port_tim_j& config) {
 //        std::string timerchannel = GetTimerChannel();
@@ -342,16 +368,7 @@ namespace riaps{
 //        return result;
 //    }
 
-    const ports::PeriodicTimer* ComponentBase::InitTimerPort(const _component_port_tim_j& config) {
-        std::string timerchannel = GetTimerChannel();
-        std::unique_ptr<ports::PeriodicTimer> newtimer(new ports::PeriodicTimer(timerchannel, config));
-        newtimer->start();
 
-        auto result = newtimer.get();
-
-        _ports[config.portName] = std::move(newtimer);
-        return result;
-    }
 
     ports::PublisherPort* ComponentBase::GetPublisherPortByName(const std::string &portName) {
         ports::PortBase* portBase = GetPortByName(portName);
@@ -371,18 +388,16 @@ namespace riaps{
         return portBase->AsResponsePort();
     }
 
-    bool ComponentBase::CreateOneShotTimer(const std::string &timerid, timespec &wakeuptime) {
-        if (_oneShotTimer!=NULL) return false;
-
-        _oneShotTimer = new timers::OneShotTimer(GetOneShotTimerChannel(),
-                                                 timerid,
-                                                 wakeuptime);
-
-        _oneShotTimer->start();
-        return true;
-    }
-
-
+//    bool ComponentBase::CreateOneShotTimer(const std::string &timerid, timespec &wakeuptime) {
+//        if (_oneShotTimer!=NULL) return false;
+//
+//        _oneShotTimer = new timers::OneShotTimer(GetOneShotTimerChannel(),
+//                                                 timerid,
+//                                                 wakeuptime);
+//
+//        _oneShotTimer->start();
+//        return true;
+//    }
 
     /// \param portName
     /// \return Pointer to the RIAPS port with the given name. NULL if the port was not found.
@@ -394,13 +409,19 @@ namespace riaps{
         return NULL;
     }
 
-
-    const component_conf_j& ComponentBase::GetConfig() const {
+    const component_conf& ComponentBase::GetConfig() const {
         return _configuration;
     }
 
     const Actor* ComponentBase::GetActor() const{
         return _actor;
+    }
+
+    const ports::PublisherPort* ComponentBase::InitPublisherPort(const _component_port_pub& config) {
+        auto result = new ports::PublisherPort(config, this);
+        std::unique_ptr<ports::PortBase> newport(result);
+        _ports[config.portName] = std::move(newport);
+        return result;
     }
 
 //    bool ComponentBase::SendMessageOnPort(zmsg_t** msg, const std::string& portName) const {
@@ -410,47 +431,120 @@ namespace riaps{
 //        return port->Send(msg);
 //    }
 
-    bool ComponentBase::SendMessageOnPort(std::string message, const std::string& portName){
-        ports::PortBase* port = GetPortByName(portName);
+//    bool ComponentBase::SendMessageOnPort(std::string message, const std::string& portName){
+//        ports::PortBase* port = GetPortByName(portName);
+//
+//        if (port->AsSubscribePort() == NULL && port->AsTimerPort() == NULL){
+//            return port->Send(message);
+//        }
+//
+//        return false;
+//
+//    }
 
-        if (port->AsSubscribePort() == NULL && port->AsTimerPort() == NULL){
-            return port->Send(message);
-        }
 
-        return false;
 
+    const ports::SubscriberPort* ComponentBase::InitSubscriberPort(const _component_port_sub& config) {
+        std::unique_ptr<ports::SubscriberPort> newport(new ports::SubscriberPort(config, this));
+        auto result = newport.get();
+        newport->Init();
+        _ports[config.portName] = std::move(newport);
+        return result;
     }
 
-    bool ComponentBase::SendMessageOnPort(zmsg_t **message, const std::string &portName) {
+    const ports::ResponsePort* ComponentBase::InitResponsePort(const _component_port_rep & config) {
+        auto result = new ports::ResponsePort(config, this);
+        std::unique_ptr<ports::PortBase> newport(result);
+        _ports[config.portName] = std::move(newport);
+        return result;
+    }
+
+    const ports::RequestPort*   ComponentBase::InitRequestPort(const _component_port_req& config){
+        std::unique_ptr<ports::RequestPort> newport(new ports::RequestPort(config, this));
+        auto result = newport.get();
+        newport->Init();
+        _ports[config.portName] = std::move(newport);
+        return result;
+    }
+
+    const ports::InsidePort* ComponentBase::InitInsiderPort(const _component_port_ins& config) {
+        auto result = new ports::InsidePort(config, riaps::ports::InsidePortMode::BIND, this);
+        std::unique_ptr<ports::PortBase> newport(result);
+        _ports[config.portName] = std::move(newport);
+        return result;
+    }
+
+    const ports::PeriodicTimer* ComponentBase::InitTimerPort(const _component_port_tim& config) {
+        std::string timerchannel = GetTimerChannel();
+        std::unique_ptr<ports::PeriodicTimer> newtimer(new ports::PeriodicTimer(timerchannel, config, this));
+        newtimer->start();
+
+        auto result = newtimer.get();
+
+        _ports[config.portName] = std::move(newtimer);
+        return result;
+    }
+
+//    bool ComponentBase::SendMessageOnPort(zmsg_t **message, const std::string &portName) {
+//        ports::PortBase* port = GetPortByName(portName);
+//        if (port == NULL) return false;
+//
+//        ports::SenderPort* senderPort = dynamic_cast<ports::SenderPort*>(port);
+//        if (senderPort == nullptr) return false;
+//        senderPort->Send()
+//
+////        if (port->AsSubscribePort() == NULL &&
+////            port->AsTimerPort() == NULL     &&
+////            port->As){
+////            return port->Send(message);
+////        }
+////
+////        return false;
+//    }
+
+//    bool ComponentBase::SendMessageOnPort(msgpack::sbuffer &message, const std::string &portName) {
+//        zmsg_t* msg = zmsg_new();
+//        zmsg_pushmem(msg, message.data(), message.size());
+//        return SendMessageOnPort(&msg, portName);
+//
+//    }
+//
+//    bool ComponentBase::SendMessageOnPort(MessageBase* message, const std::string &portName) {
+//        zmsg_t* msg = message->AsZmqMessage();
+//        return SendMessageOnPort(&msg, portName);
+//    }
+//
+    bool ComponentBase::SendMessageOnPort(capnp::MallocMessageBuilder& message, const std::string &portName) {
         ports::PortBase* port = GetPortByName(portName);
         if (port == NULL) return false;
-        if (port->AsSubscribePort() == NULL && port->AsTimerPort() == NULL){
-            return port->Send(message);
-        }
 
-        return false;
+        ports::SenderPort* senderPort = dynamic_cast<ports::SenderPort*>(port);
+        if (senderPort == nullptr) return false;
+        return senderPort->Send(message);
+
+//        auto serializedMessage = capnp::messageToFlatArray(message);
+//        zmsg_t* msg = zmsg_new();
+//        auto bytes = serializedMessage.asBytes();
+//        zmsg_pushmem(msg, bytes.begin(), bytes.size());
+//        return SendMessageOnPort(&msg, portName);
     }
 
-    bool ComponentBase::SendMessageOnPort(msgpack::sbuffer &message, const std::string &portName) {
-        zmsg_t* msg = zmsg_new();
-        zmsg_pushmem(msg, message.data(), message.size());
-        return SendMessageOnPort(&msg, portName);
+    bool ComponentBase::SendGroupMessage(const riaps::groups::GroupId &groupId,
+                                         capnp::MallocMessageBuilder &message,
+                                         const std::string& portName) {
+        // Search the group
+        if (_groups.find(groupId)==_groups.end()) return false;
+
+        riaps::groups::Group* group = _groups[groupId].get();
+        return group->SendMessage(message, portName);
 
     }
 
-    bool ComponentBase::SendMessageOnPort(MessageBase* message, const std::string &portName) {
-        zmsg_t* msg = message->AsZmqMessage();
-        return SendMessageOnPort(&msg, portName);
-    }
+    bool ComponentBase::SendGroupMessage(const riaps::groups::GroupId&& groupId,
+                                         capnp::MallocMessageBuilder &message,
+                                         const std::string& portName) {
+        return SendGroupMessage(groupId, message, portName);
 
-    bool ComponentBase::SendMessageOnPort(capnp::MallocMessageBuilder& message, const std::string &portName) {
-        auto serializedMessage = capnp::messageToFlatArray(message);
-        zmsg_t* msg = zmsg_new();
-        auto bytes = serializedMessage.asBytes();
-        //auto size = serializedMessage.asBytes().size();
-        //auto bytes = serializedMessage.asBytes().begin();
-        zmsg_pushmem(msg, bytes.begin(), bytes.size());
-        return SendMessageOnPort(&msg, portName);
     }
 
 
@@ -459,7 +553,7 @@ namespace riaps{
         if (port_it!=_ports.end()){
             return port_it->second.get();
         }
-        return NULL;
+        return nullptr;
     }
 
 
@@ -468,15 +562,15 @@ namespace riaps{
         return prefix + GetCompUuid();
     }
 
-    std::string ComponentBase::GetOneShotTimerChannel() {
-        std::string prefix= "inproc://oneshottimer";
-        return prefix + GetCompUuid();
-    }
+//    std::string ComponentBase::GetOneShotTimerChannel() {
+//        std::string prefix= "inproc://oneshottimer";
+//        return prefix + GetCompUuid();
+//    }
 
-    std::string ComponentBase::GetCompUuid(){
-        const char* uuid_str = zuuid_str(_component_uuid);
-        std::string result (uuid_str);
-        return result;
+    const std::string ComponentBase::GetCompUuid() const{
+        std::string uuid_str = zuuid_str(_component_uuid);
+        //std::string result (uuid_str);
+        return uuid_str;
     }
 
     zactor_t* ComponentBase::GetZmqPipe() const {
@@ -505,15 +599,53 @@ namespace riaps{
         }
     }
 
-    void ComponentBase::RegisterHandler(const std::string &portName, riaps_handler handler) {
-        _handlers.insert(std::make_pair(portName, handler));
+    uint16_t ComponentBase::GetGroupMemberCount(const riaps::groups::GroupId &groupId, const int64_t timeout) {
+        if (_groups.find(groupId)==_groups.end())
+            return 0;
+
+        return _groups[groupId]->GetMemberCount(timeout);
     }
 
-    riaps_handler ComponentBase::GetHandler(std::string portName) {
-        if (_handlers.find(portName) == _handlers.end()){
-            return NULL;
+    bool ComponentBase::JoinToGroup(riaps::groups::GroupId &&groupId) {
+//        if (_groups.find(groupId)!=_groups.end())
+//            return false;
+//
+//        std::unique_ptr<riaps::groups::Group> newGroup = std::unique_ptr<riaps::groups::Group>(new riaps::groups::Group(groupId, GetCompUuid()));
+//        if (newGroup->InitGroup()) {
+//            _groups[groupId] = std::move(newGroup);
+//            return true;
+//        }
+//
+//        return false;
+
+        return JoinToGroup(groupId);
+    }
+
+    bool ComponentBase::JoinToGroup(riaps::groups::GroupId &groupId) {
+        if (_groups.find(groupId)!=_groups.end())
+            return false;
+
+        auto newGroup = std::unique_ptr<riaps::groups::Group>(
+                new riaps::groups::Group(groupId, this)
+        );
+
+        if (newGroup->InitGroup()) {
+            _groups[groupId] = std::move(newGroup);
+            return true;
         }
-        return _handlers[portName];
+
+        return false;
+    }
+
+    void ComponentBase::UpdateGroup(riaps::discovery::GroupUpdate::Reader &msgGroupUpdate) {
+        // First, find the affected groups
+        riaps::groups::GroupId gid;
+        gid.groupName   = msgGroupUpdate.getGroupId().getGroupName().cStr();
+        gid.groupTypeId = msgGroupUpdate.getGroupId().getGroupType().cStr();
+
+        if (_groups.find(gid) == _groups.end()) return;
+
+        _groups[gid]->ConnectToNewServices(msgGroupUpdate);
     }
 
     ComponentBase::~ComponentBase() {
