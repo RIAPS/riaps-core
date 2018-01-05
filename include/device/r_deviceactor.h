@@ -37,7 +37,7 @@ namespace riaps {
         std::string _applicationName;
         std::string _deviceActorName;
 
-        std::vector<component_conf_j> _component_configurations;
+        std::vector<component_conf> _component_configurations;
     };
 }
 

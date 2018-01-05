@@ -9,8 +9,8 @@ namespace distributedestimator {
     namespace components {
 
 
-        GlobalEstimator::GlobalEstimator(_component_conf_j &config, riaps::Actor &actor) : GlobalEstimatorBase(config,
-                                                                                                               actor) {
+        GlobalEstimator::GlobalEstimator(_component_conf &config, riaps::Actor &actor) : GlobalEstimatorBase(config,
+                                                                                                             actor) {
             //PrintParameters();
         }
 
@@ -32,6 +32,8 @@ namespace distributedestimator {
 
         }
 
+
+
         GlobalEstimator::~GlobalEstimator() {
 
         }
@@ -39,7 +41,7 @@ namespace distributedestimator {
 
 }
 
-riaps::ComponentBase *create_component(_component_conf_j &config, riaps::Actor &actor) {
+riaps::ComponentBase *create_component(_component_conf &config, riaps::Actor &actor) {
     auto result = new distributedestimator::components::GlobalEstimator(config, actor);
     return result;
 }

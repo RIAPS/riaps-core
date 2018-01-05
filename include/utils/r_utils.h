@@ -8,12 +8,14 @@
 #ifndef R_UTILS
 #define R_UTILS 
 
-#include "../const/r_const.h"
+#include <const/r_const.h>
+
+#include <capnp/message.h>
+#include <czmq.h>
 
 #include <iostream>
 #include <string>
 #include <map>
-#include <czmq.h>
 #include <vector>
 
 // For how long the ip addresses are stored in a local cache.
@@ -50,5 +52,7 @@ std::vector<std::string> maintain_servicecache(std::map<std::string, int64_t >& 
  * @return The full path or empty string if the RIAPSHOME is not set.
  */
 const std::string GetAppPath(const std::string& appName);
+
+void operator<<(zmsg_t*& zmsg, capnp::MallocMessageBuilder& message);
 
 #endif

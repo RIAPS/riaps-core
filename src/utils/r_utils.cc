@@ -1,5 +1,13 @@
+#include <capnp/serialize.h>
 #include "utils/r_utils.h"
 
+void operator<<(zmsg_t*& zmsg, capnp::MallocMessageBuilder& message){
+    auto serializedMessage = capnp::messageToFlatArray(message);
+    zmsg = zmsg_new();
+    auto bytes = serializedMessage.asBytes();
+    zmsg_pushmem(zmsg, bytes.begin(), bytes.size());
+
+}
 
 void print_cacheips(std::map<std::string, int64_t>& ipcache) {
     std::cout << "Stored ips: ";

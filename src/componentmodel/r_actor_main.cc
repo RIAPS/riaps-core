@@ -37,18 +37,23 @@ int main(int argc, char* argv[]) {
             return -1;
         }
 
+        std::shared_ptr<spd::logger> _logger = spd::stdout_color_st(actorName);
         try {
+
             riaps::Actor* aptr = riaps::Actor::CreateActor(configJson, actorName, modelName, actualParams);
+
+
+
             std::unique_ptr<riaps::Actor> actor = std::unique_ptr<riaps::Actor>(aptr);
             actor->Init();
             actor->start();
         }
         catch(std::domain_error& e){
-            std::cerr << "Configuration file error (probably missing property from the json file)" << std::endl;
-            std::cerr << e.what() << std::endl;
+            _logger->error("Configuration file error (probably missing property from the json file)");
+            _logger->error(e.what());
         }
         catch (std::invalid_argument& e){
-            std::cerr << e.what() << std::endl;
+            _logger->error(e.what());
         }
     }
 

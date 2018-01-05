@@ -14,13 +14,10 @@
 
 
 #include <discoveryd/r_riaps_actor.h>
-#include <discoveryd/r_discoveryd_commands.h>
 #include <framework/rfw_network_interfaces.h>
 #include <utils/r_utils.h>
 
-//Filter info and warning logs for now
-#define GOOGLE_STRIP_LOG 1
-#include <glog/logging.h>
+#include <spdlog/spdlog.h>
 
 #include <iostream>
 #include <string>
@@ -39,13 +36,15 @@
 // IPC socket address for sending control messages to the discovery service
 #define CONTROL_SOCKET "ipc:///tmp/discoverycontrol"
 
+#define CMD_JOIN "JOIN"
+
+namespace spd = spdlog;
+
 int main(int argc, char* argv[])
 {
-    // Initialize Google's logging library.
-    google::InitGoogleLogging(argv[0]);
-    FLAGS_logtostderr = 1;
 
-    std::cout << "Starting RIAPS DISCOVERY SERVICE " << std::endl;
+    auto console = spd::stdout_color_mt("rbeacon");
+    console->info("Starting RIAPS DISCOVERY SERVICE ");
 
     // Random generator for beacon interval
     std::random_device rd;
@@ -87,7 +86,8 @@ int main(int argc, char* argv[])
     // Check the listener
     char* hostname = zstr_recv (listener);
     if (!*hostname) {
-        printf ("No listener hostname, no UDP listening.\n");
+        console->critical("No listener hostname, no UDP listening.\n");
+        //printf ("No listener hostname, no UDP listening.\n");
 
         zactor_destroy (&listener);
         free (hostname);
@@ -98,7 +98,8 @@ int main(int argc, char* argv[])
     // check the publisher
     hostname = zstr_recv (speaker);
     if (!*hostname) {
-        printf ("No speaker hostname, no UDP broadcasting\n");
+        //printf ("No speaker hostname, no UDP broadcasting\n");
+        console->critical("No speaker hostname, no UDP listening.\n");
         zactor_destroy (&speaker);
         free (hostname);
         return -1;
@@ -135,7 +136,7 @@ int main(int argc, char* argv[])
         // If no announcement, start sending beacons
         if (zclock_mono()>nextAnnouncement){
 
-            LOG(INFO) << "Send UDP beacon";
+            //LOG(INFO) << "Send UDP beacon";
 
             zsock_send (speaker, "sbi", "PUBLISH", announcement, 2, BEACON_FREQ);
 
@@ -167,7 +168,8 @@ int main(int argc, char* argv[])
                         // Check if the node already connected
                         bool is_newitem = externalipcache.find(std::string(newhost)) == externalipcache.end();
                         if (is_newitem){
-                            std::cout << "Join to DHT node: " << newhost << std::endl;
+                            console->info("Join to DHT node: {}", newhost);
+                            //std::cout <<  << newhost << std::endl;
 
                             int64_t time = zclock_mono();
                             externalipcache[newhost] = time;
@@ -214,7 +216,7 @@ int main(int argc, char* argv[])
         // If UDP package was received
         if (ipaddress) {
 
-            LOG(INFO) << "Beacon arrived";
+            //LOG(INFO) << "Beacon arrived";
 
             // Recalculate (delay) the next announcement
             int nextDiff = dis(gen)*1000;
@@ -251,13 +253,9 @@ int main(int argc, char* argv[])
             }
         }
     }
-
-
     zpoller_destroy(&poller);
     zsock_destroy(&control);
     zactor_destroy(&r_actor);
-
-
     zactor_destroy(&listener);
     zactor_destroy(&speaker);
 

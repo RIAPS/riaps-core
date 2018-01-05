@@ -28,9 +28,9 @@ namespace riaps{
 
 
 
-        const Parameter* Parameters::GetParam(std::string name) const {
+        const Parameter* Parameters::GetParam(const std::string& name) const {
             if (_params.find(name) == _params.end()){
-                return NULL;
+                return nullptr;
             }
             auto ptr = (_params.find(name))->second;
 
@@ -39,7 +39,7 @@ namespace riaps{
 
         const Parameter* Parameters::SetParamValue(std::string name, std::string value) {
             if (_params.find(name) == _params.end()){
-                return NULL;
+                return nullptr;
             }
 
             _params[name]->SetValue(value);
