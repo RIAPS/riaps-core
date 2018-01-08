@@ -731,7 +731,7 @@ namespace riaps{
 
         zmsg_send(&msg, _riapsSocket);
 
-        zclock_sleep(5000);
+        //zclock_sleep(5000);
 
         _dhtNode.get(key, [this](const std::vector<std::shared_ptr<dht::Value>> &values){
             if (values.size() == 0) return true;
