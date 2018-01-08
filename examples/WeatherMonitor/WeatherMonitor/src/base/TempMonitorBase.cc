@@ -11,8 +11,9 @@ namespace weathermonitor {
     	}
     	
     	void TempMonitorBase::DispatchMessage(capnp::FlatArrayMessageReader* capnpreader, riaps::ports::PortBase *port) {
+			std::cout << "TempMonitorBase::DispatchMessage()" << std::endl;
     		auto portName = port->GetPortName();
-			if (port->GetPortName() == PORT_SUB_TEMPUPDATE) {
+			if (portName == PORT_SUB_TEMPUPDATE) {
 				messages::TempData::Reader Tempupdate = capnpreader->getRoot<messages::TempData>();
 				OnTempupdate(Tempupdate, port);
 			}

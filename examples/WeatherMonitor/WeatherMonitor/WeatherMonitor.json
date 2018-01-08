@@ -61,7 +61,7 @@
                 "subs":{},
                 "tims":{
                     "clock":{
-                        "period":5000
+                        "period":50
                     }
                 }
             }
