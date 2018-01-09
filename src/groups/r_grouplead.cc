@@ -50,6 +50,7 @@ void GroupLead::Update() {
      * FOLLOWER --> CANDIDATE
      */
     else if (_currentState == GroupLead::NodeState::FOLLOWER && _electionTimeout.IsTimeout()) {
+        ChangeLeader("");
         /**
          * Step into the next state and send REQUEST_VOTE message to everybody in the group
          * The number of nodes are saved since the MAJORITY of votes is needed
@@ -139,7 +140,8 @@ void GroupLead::Update(riaps::distrcoord::LeaderElection::Reader &internalMessag
 
         }
     }
-    else if (internalMessage.hasRequestForVoteReq() && _currentState == GroupLead::NodeState::CANDIDATE){
+    else if (internalMessage.hasRequestForVoteReq() &&
+            (_currentState == GroupLead::NodeState::CANDIDATE || _currentState == GroupLead::NodeState::LEADER)){
         // This is tricky. Looks like somebody else also started a vote.
         // Selfish, behavior but understandable the candidate doesn't vote for another candidate.
 
@@ -152,15 +154,20 @@ void GroupLead::Update(riaps::distrcoord::LeaderElection::Reader &internalMessag
         // TODO: And vote?
         if (electTerm>_electionTerm){
             _currentState = GroupLead::NodeState::FOLLOWER;
+
+            if (_currentState == GroupLead::NodeState::LEADER){
+                ChangeLeader("");
+            }
+
             _electionTimeout.Reset(GenerateElectionTimeo());
             SendVote(sourceCompId);
         }
 
-    } else if (internalMessage.hasRequestForVoteReq() && _currentState == GroupLead::NodeState::LEADER){
+    } //else if (internalMessage.hasRequestForVoteReq() && _currentState == GroupLead::NodeState::LEADER){
         /**
          * Do nothing. This guy is already a leader.
          */
-    }
+    //}
 
     /**
      * RequestForVote response arrived
@@ -201,7 +208,7 @@ void GroupLead::Update(riaps::distrcoord::LeaderElection::Reader &internalMessag
             if (hasMajority){
                 _currentState = GroupLead::LEADER;
                 SendAppendEntry();
-                _leaderId = GetComponentId();
+                ChangeLeader(GetComponentId());
             }
         }
     } else if (internalMessage.hasAppendEntry() && _currentState==GroupLead::FOLLOWER){
@@ -210,7 +217,7 @@ void GroupLead::Update(riaps::distrcoord::LeaderElection::Reader &internalMessag
         //_logger->debug("Append entry from: {0}", msgAppendEntry.getSourceComponentId().cStr());
         _electionTimeout.Reset(GenerateElectionTimeo());
         _electionTerm = msgAppendEntry.getElectionTerm();
-        _leaderId = msgAppendEntry.getSourceComponentId();
+        ChangeLeader(msgAppendEntry.getSourceComponentId().cStr());
     }
 }
 
@@ -225,6 +232,10 @@ duration<int, std::milli> GroupLead::GenerateElectionTimeo() {
 
 const GroupLead::NodeState GroupLead::GetNodeState() const {
     return _currentState;
+}
+
+void GroupLead::SetOnLeaderChanged(std::function<void(const std::string &)> handler) {
+    _onLeaderChanged = handler;
 }
 
 void GroupLead::SendRequestForVote() {
@@ -259,6 +270,15 @@ void GroupLead::SendVote(const std::string& voteFor) {
     msgVote.setVoteForId(voteFor);
 
     _group->SendInternalMessage(voteBuilder);
+}
+
+void GroupLead::ChangeLeader(const std::string &newLeader) {
+    if (_leaderId!=newLeader){
+        _leaderId = newLeader;
+        if (_onLeaderChanged){
+            _onLeaderChanged(newLeader);
+        }
+    }
 }
 
 GroupLead::~GroupLead() {

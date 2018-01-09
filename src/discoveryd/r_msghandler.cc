@@ -703,7 +703,7 @@ namespace riaps{
 //
 //        });
 
-        _dhtNode.put(key, dht::Value::pack(groupDetails));
+
 
 
 
@@ -741,6 +741,10 @@ namespace riaps{
 
             return true;
         });
+
+        zclock_sleep(1000);
+
+        _dhtNode.put(key, dht::Value::pack(groupDetails));
     }
 
     void DiscoveryMessageHandler::PushDhtValuesToDisco(std::vector<std::shared_ptr<dht::Value>> values) {

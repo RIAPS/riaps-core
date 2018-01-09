@@ -115,6 +115,9 @@ namespace riaps{
                 _groupLeader = std::unique_ptr<riaps::groups::GroupLead>(
                         new GroupLead(this, &_knownNodes)
                 );
+                _groupLeader->SetOnLeaderChanged([this](const std::string& newLeader){
+                    _logger->debug("Leader changed: {}", newLeader);
+                });
             }
 
             // Register all of the publishers

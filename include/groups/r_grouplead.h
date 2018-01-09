@@ -41,6 +41,8 @@ namespace riaps{
             GroupLead(riaps::groups::Group* group, std::unordered_map<std::string, Timeout>* knownNodes);
             const NodeState GetNodeState() const;
 
+            void SetOnLeaderChanged(std::function<void(const std::string&)> handler);
+
             /**
              * Maintain the state whan no incoming message.
              */
@@ -93,6 +95,9 @@ namespace riaps{
             std::unordered_map<std::string, Timeout>* _knownNodes;
 
             std::string _leaderId;
+
+            void ChangeLeader(const std::string& newLeader);
+            std::function<void(const std::string&)> _onLeaderChanged;
 
         };
     }
