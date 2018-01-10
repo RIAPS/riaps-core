@@ -23,6 +23,7 @@
 #include <map>
 #include <random>
 #include <chrono>
+#include <set>
 
 #define INTERNAL_SUB_NAME "$SUB#"
 #define INTERNAL_PUB_NAME "$PUB#"
@@ -105,6 +106,8 @@ namespace riaps {
             void ConnectToNewServices(riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
 
             bool SendMessage(capnp::MallocMessageBuilder& message, const std::string& portName);
+            bool SendMessage(zmsg_t** message, const std::string& portName);
+
             bool SendInternalMessage(capnp::MallocMessageBuilder& message);
 
             ports::GroupSubscriberPort* FetchNextMessage(std::shared_ptr<capnp::FlatArrayMessageReader>& messageReader);
@@ -113,9 +116,12 @@ namespace riaps {
             bool SendPing();
             bool SendPong();
 
+            bool SendMessageToLeader(capnp::MallocMessageBuilder& message);
+            bool SendProposeToLeader(capnp::MallocMessageBuilder& message, const std::string& proposeId);
+
             const ComponentBase* GetParentComponent();
 
-            std::shared_ptr<std::vector<std::string>> GetKnownComponents();
+            std::shared_ptr<std::set<std::string>> GetKnownComponents();
 
             /**
              * Counts the records in _knownNodes map

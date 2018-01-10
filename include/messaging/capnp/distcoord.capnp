@@ -10,9 +10,6 @@ struct GroupHeartBeat {
   sourceComponentId @1 : Text;
 }
 
-
-
-
 struct LeaderElection {
         appendEntry       @0 : AppendEntry;
         requestForVoteReq @1 : RequestForVoteReq;
@@ -37,12 +34,47 @@ struct LeaderElection {
 
             electionTerm      @2 : UInt32;
         }
+}
 
+struct MessageToLeader {
+    sourceComponentId @0 : Text;
+}
+
+struct DistrCoord {
+    sourceComponentId @0 : Text;
+    proposeToLeader   @1 : ProposeToLeader;
+    proposeToSlaves   @2 : ProposeToSlaves;
+    voteForLeader     @3 : VoteForLeader;
+    announce          @4 : Announce;
+
+    struct ProposeToLeader {
+        proposeId @0 : Text;
+    }
+
+    struct ProposeToSlaves {
+        proposeId @0 : Text;
+        leaderId  @1 : Text;
+    }
+
+    struct VoteForLeader {
+        proposeId  @0 : Text;
+        leaderId   @1 : Text;
+        voteResult @2 : VoteResults;
+    }
+
+    struct Announce {
+        proposeId  @0 : Text;
+        voteResult @1 : VoteResults;
+    }
+
+    enum VoteResults { accepted @0; rejected @1; }
 }
 
 struct GroupInternals {
     union{
         groupHeartBeat    @0 : GroupHeartBeat;
         leaderElection    @1 : LeaderElection;
+        messageToLeader   @2 : MessageToLeader;
+        distrCoord        @3 : DistrCoord;
     }
 }

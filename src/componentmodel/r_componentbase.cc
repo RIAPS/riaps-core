@@ -633,6 +633,27 @@ namespace riaps{
 
     }
 
+    bool ComponentBase::SendMessageToLeader(const riaps::groups::GroupId &groupId,
+                                            capnp::MallocMessageBuilder &message) {
+        auto group = GetGroupById(groupId);
+        if (group == nullptr){
+            return false;
+        }
+
+        return group->SendMessageToLeader(message);
+    }
+
+    void ComponentBase::OnMessageFromLeader(const riaps::groups::GroupId &groupId,
+                                            capnp::MallocMessageBuilder &message) {
+        _logger->debug("Message from the leader arrived, but no OnMessageFromHandler() implementation has found in component: {}", GetConfig().component_name);
+    }
+
+    riaps::groups::Group* ComponentBase::GetGroupById(const riaps::groups::GroupId &groupId) {
+        if (_groups.find(groupId)==_groups.end()) return nullptr;
+
+        return _groups[groupId].get();
+    }
+
 
 //    const ports::PortBase* ComponentBase::GetPort(std::string portName) const {
 //        auto port_it = _ports.find(portName);
@@ -730,6 +751,30 @@ namespace riaps{
         }
 
         return false;
+    }
+
+    void ComponentBase::OnAnnounce(riaps::groups::GroupId &groupId, const std::string &proposeId, bool accepted) {
+        _logger->error("Vote result is announced, but no handler implemented in component {}", GetConfig().component_name);
+    }
+
+    void ComponentBase::OnPropose(riaps::groups::GroupId &groupId, const std::string &proposeId,
+                                  capnp::FlatArrayMessageReader &message) {
+        _logger->error("Leader proposed a value but no handler is implemented in component {}", GetConfig().component_name);
+    }
+
+    std::string ComponentBase::SendPropose(riaps::groups::GroupId &groupId, capnp::MallocMessageBuilder &message) {
+        auto group = GetGroupById(groupId);
+        if (group == nullptr) return "";
+
+        zuuid_t* uuid = zuuid_new();
+        std::string strUuid = zuuid_str(uuid);
+        zuuid_destroy(&uuid);
+
+        if (group->SendProposeToLeader(message, strUuid)){
+
+            return strUuid;
+        }
+        return "";
     }
 
     void ComponentBase::UpdateGroup(riaps::discovery::GroupUpdate::Reader &msgGroupUpdate) {

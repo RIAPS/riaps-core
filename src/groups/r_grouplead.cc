@@ -154,6 +154,7 @@ void GroupLead::Update(riaps::distrcoord::LeaderElection::Reader &internalMessag
         // TODO: And vote?
         if (electTerm>_electionTerm){
             _currentState = GroupLead::NodeState::FOLLOWER;
+            _electionTerm = electTerm;
 
             if (_currentState == GroupLead::NodeState::LEADER){
                 ChangeLeader("");
@@ -218,6 +219,19 @@ void GroupLead::Update(riaps::distrcoord::LeaderElection::Reader &internalMessag
         _electionTimeout.Reset(GenerateElectionTimeo());
         _electionTerm = msgAppendEntry.getElectionTerm();
         ChangeLeader(msgAppendEntry.getSourceComponentId().cStr());
+    } else if (internalMessage.hasAppendEntry() && _currentState == GroupLead::LEADER){
+        /**
+         * Something went wrong, cannot be two leader, the leader with less election term will be a follower
+         */
+        auto msgAppendEntry = internalMessage.getAppendEntry();
+        auto electTerm = msgAppendEntry.getElectionTerm();
+
+        if (electTerm>_electionTerm){
+            _currentState = GroupLead::NodeState::FOLLOWER;
+            _electionTerm = electTerm;
+            ChangeLeader(msgAppendEntry.getSourceComponentId());
+            _electionTimeout.Reset(GenerateElectionTimeo());
+        }
     }
 }
 
@@ -247,6 +261,79 @@ void GroupLead::SendRequestForVote() {
     msgReqForVote.setElectionTerm(_electionTerm);
 
     _group->SendInternalMessage(requestForVoteBuilder);
+}
+
+void GroupLead::ProposeFromClient(riaps::distrcoord::DistrCoord::ProposeToLeader::Reader &message) {
+    auto pd = std::unique_ptr<ProposeData>(new ProposeData(_group->GetKnownComponents(), Timeout(duration<int, std::milli>(1000))));
+
+    // TODO: Add known node ids
+    //pd.nodesInVote =
+    std::string proposeId = message.getProposeId();
+    _proposeData[proposeId] = std::move(pd);
+
+    // Send propose to clients
+    capnp::MallocMessageBuilder builder;
+    auto msgInternal = builder.initRoot<riaps::distrcoord::GroupInternals>();
+    auto msgDistCoord = msgInternal.initDistrCoord();
+    auto msgPropose = msgDistCoord.initProposeToSlaves();
+    msgPropose.setProposeId(proposeId);
+    msgPropose.setLeaderId(GetLeaderId());
+
+    if (GetLeaderId() == GetComponentId()){
+        _group->SendInternalMessage(builder);
+    }
+}
+
+void GroupLead::OnVote(riaps::distrcoord::DistrCoord::VoteForLeader::Reader &message, const std::string& sourceComponentId) {
+    std::string voteLeaderId = message.getLeaderId();
+    std::string proposeId    = message.getProposeId();
+    auto vote = message.getVoteResult();
+
+    // May the leader changed
+    if (voteLeaderId != GetLeaderId()) return;
+
+    // Shouldn't be true, but anyway just and an extra check
+    if (voteLeaderId != GetComponentId()) return;
+
+    // If this proposeId is not registerd
+    // Maybe the leader changed, or just already timed out and ereased.
+    if (_proposeData.find(proposeId) == _proposeData.end()) return;
+    if (_proposeData[proposeId]->proposeDeadline.IsTimeout()) {
+        _proposeData.erase(proposeId);
+
+        // No chance to accept
+        Announce(proposeId, riaps::distrcoord::DistrCoord::VoteResults::REJECTED);
+        return;
+    }
+
+    ProposeData* currentItem = _proposeData[proposeId].get();
+    auto nodesInVote         = currentItem->nodesInVote.get();
+    auto nodesVoted          = currentItem->nodesVoted.get();
+
+    // This node is not allowed to vote, was not in the group when the process started
+    if (nodesInVote->find(sourceComponentId) == nodesInVote->end()) {
+        return;
+    }
+
+    nodesVoted->insert(sourceComponentId);
+
+    auto voted     = nodesVoted->size();
+    auto groupSize = nodesInVote->size();
+    auto majority  = (groupSize%2==0)?(groupSize/2)+1:ceil(((double)groupSize)/2.0);
+
+    // Majority, announce
+    if (voted >= majority) {
+        Announce(proposeId, riaps::distrcoord::DistrCoord::VoteResults::ACCEPTED);
+    }
+}
+
+void GroupLead::Announce(const std::string& proposeId, riaps::distrcoord::DistrCoord::VoteResults result) {
+    capnp::MallocMessageBuilder builder;
+    auto msgDistCoord = builder.initRoot<riaps::distrcoord::DistrCoord>();
+    auto msgAnnounce  = msgDistCoord.initAnnounce();
+    msgAnnounce.setProposeId(proposeId);
+    msgAnnounce.setVoteResult(result);
+    _group->SendInternalMessage(builder);
 }
 
 void GroupLead::SendAppendEntry() {
@@ -282,5 +369,10 @@ void GroupLead::ChangeLeader(const std::string &newLeader) {
 }
 
 GroupLead::~GroupLead() {
+
+}
+
+GroupLead::ProposeData::ProposeData(std::shared_ptr<std::set<std::string>> _knownNodes, Timeout &&timeout)
+    : nodesInVote(_knownNodes), proposeDeadline(timeout){
 
 }

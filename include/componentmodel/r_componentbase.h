@@ -124,6 +124,8 @@ namespace riaps {
                               capnp::MallocMessageBuilder& message,
                               const std::string& portName);
 
+
+
         /**
          * @brief Stops the component
          *
@@ -190,6 +192,12 @@ namespace riaps {
         virtual void OnGroupMessage(const riaps::groups::GroupId& groupId,
                                     capnp::FlatArrayMessageReader& capnpreader,
                                     riaps::ports::PortBase* port);
+
+        bool SendMessageToLeader(const riaps::groups::GroupId& groupId,
+                                 capnp::MallocMessageBuilder& message);
+
+        virtual void OnMessageFromLeader(const riaps::groups::GroupId& groupId,
+                                         capnp::MallocMessageBuilder& message);
         
 
         /**
@@ -317,7 +325,10 @@ namespace riaps {
         bool JoinToGroup(riaps::groups::GroupId&  groupId);
 
 
-
+        virtual void OnPropose (riaps::groups::GroupId& groupId, const std::string& proposeId, capnp::FlatArrayMessageReader& message);
+        virtual void OnAnnounce(riaps::groups::GroupId& groupId, const std::string& proposeId, bool accepted);
+        std::string SendPropose(riaps::groups::GroupId& groupId, capnp::MallocMessageBuilder& message);
+        void SendVote(riaps::groups::GroupId& groupId, const std::string& proposeId, bool accept);
 
     private:
 
@@ -349,6 +360,8 @@ namespace riaps {
 
         std::map<riaps::groups::GroupId,
                  std::unique_ptr<riaps::groups::Group>> _groups;
+
+        riaps::groups::Group* GetGroupById(const riaps::groups::GroupId& groupId);
     };
 }
 

@@ -124,8 +124,58 @@ namespace riaps{
             return hasJoined;
         }
 
-        bool Group::SendMessage(capnp::MallocMessageBuilder &message, const std::string &portName) {
 
+
+
+        bool Group::SendInternalMessage(capnp::MallocMessageBuilder &message) {
+            return SendMessage(message, INTERNAL_PUB_NAME);
+        }
+
+        bool Group::SendMessageToLeader(capnp::MallocMessageBuilder &message) {
+            if (GetLeaderId() == "") return false;
+
+            zframe_t* frame;
+            frame << message;
+
+            capnp::MallocMessageBuilder builder;
+            auto msgGroupInternals = builder.initRoot<riaps::distrcoord::GroupInternals>();
+            auto msgHeader = msgGroupInternals.initMessageToLeader();
+            msgHeader.setSourceComponentId(GetParentComponent()->GetCompUuid());
+
+            zframe_t* header;
+            header << builder;
+
+            zmsg_t* zmsg = zmsg_new();
+            zmsg_add(zmsg, header);
+            zmsg_add(zmsg, frame);
+
+            return SendMessage(&zmsg, INTERNAL_PUB_NAME);
+        }
+
+        bool Group::SendProposeToLeader(capnp::MallocMessageBuilder &message, const std::string& proposeId) {
+            if (GetLeaderId() == "") return false;
+
+            zframe_t* frame;
+            frame << message;
+
+            capnp::MallocMessageBuilder builder;
+            auto msgGroupInternals = builder.initRoot<riaps::distrcoord::GroupInternals>();
+            auto msgDc = msgGroupInternals.initDistrCoord();
+            auto msgPropLeader = msgDc.initProposeToLeader();
+            msgPropLeader.setProposeId(proposeId);
+            msgDc.setSourceComponentId(GetParentComponent()->GetCompUuid());
+
+            zframe_t* header;
+            header << builder;
+
+            zmsg_t* zmsg = zmsg_new();
+            zmsg_add(zmsg, header);
+            zmsg_add(zmsg, frame);
+
+            return SendMessage(&zmsg, INTERNAL_PUB_NAME);
+        }
+
+        bool Group::SendMessage(capnp::MallocMessageBuilder& message, const std::string& portName){
             for (auto it = _groupPorts.begin(); it!=_groupPorts.end(); it++){
                 auto currentPort = it->second->AsGroupPublishPort();
                 if (currentPort == nullptr) continue;
@@ -138,19 +188,32 @@ namespace riaps{
             return false;
         }
 
-        bool Group::SendInternalMessage(capnp::MallocMessageBuilder &message) {
-            return SendMessage(message, INTERNAL_PUB_NAME);
+        bool Group::SendMessage(zmsg_t** message, const std::string& portName){
+            for (auto it = _groupPorts.begin(); it!=_groupPorts.end(); it++){
+                auto currentPort = it->second->AsGroupPublishPort();
+                if (currentPort == nullptr) continue;
+                if (currentPort->GetConfig()->portName != portName) continue;
+
+                return currentPort->Send(message);
+
+            }
+
+            return false;
         }
 
-        std::shared_ptr<std::vector<std::string>> Group::GetKnownComponents() {
-            std::shared_ptr<std::vector<std::string>> result(new std::vector<std::string>());
+        std::shared_ptr<std::set<std::string>> Group::GetKnownComponents() {
+            std::shared_ptr<std::set<std::string>> result(new std::set<std::string>());
 
-            std::transform(_knownNodes.begin(),
-                           _knownNodes.end(),
-                           std::back_inserter(*result),
-                           [](const std::pair<std::string, Timeout >& p) -> std::string {
-                               return p.first;
-                           });
+            for (auto& n : _knownNodes){
+                if (n.second.IsTimeout()) continue;
+                result->emplace(n.first);
+            }
+//            std::transform(_knownNodes.begin(),
+//                           _knownNodes.end(),
+//                           std::back_inserter(*result),
+//                           [](const std::pair<std::string, Timeout >& p) -> std::string {
+//                               return p.first;
+//                           });
 
             return result;
         }
@@ -332,13 +395,47 @@ namespace riaps{
                         auto msgLeader = internal.getLeaderElection();
                         _groupLeader->Update(msgLeader);
                         return nullptr;
+                    } else if (internal.hasMessageToLeader()){
+                        auto msgLeader = internal.getMessageToLeader();
+                        if (GetLeaderId() != GetParentComponent()->GetCompUuid()) return nullptr;
+                        _logger->debug("Message to the leader arrived!");
+
+                        return nullptr;
+                    } else if (internal.hasDistrCoord()) {
+                        auto msgDistCoord = internal.getDistrCoord();
+
+                        // The current component is the leader
+                        if (GetLeaderId() == GetParentComponent()->GetCompUuid()) {
+
+                            // Propose arrived to the leader. Leader forwards it to every groupmember.
+                            if (msgDistCoord.hasProposeToLeader()){
+                                auto msgPropose = msgDistCoord.getProposeToLeader();
+                                _logger->info("Propose arrived to leader!!!!");
+                                _groupLeader->ProposeFromClient(msgPropose);
+
+                            // Vote arrived, count the votes and announce the results (if any)
+                            } else if (msgDistCoord.hasVoteForLeader()){
+                                auto msgVote = msgDistCoord.getVoteForLeader();
+                                _groupLeader->OnVote(msgVote, msgDistCoord.getSourceComponentId());
+                            }
+                        }
+                        // The current component is not a leader
+                        else {
+
+                            // propose by the leader, must vote on something
+                            if (msgDistCoord.hasProposeToSlaves()) {
+                                auto msgPropose = msgDistCoord.getProposeToSlaves();
+                            } else if (msgDistCoord.hasAnnounce()) {
+                                auto msgAnnounce = msgDistCoord.getAnnounce();
+                            }
+                        }
+
+
                     }
                 }
 
 
             }
-
-
 
             zmsg_destroy(&msg);
             return subscriberPort;

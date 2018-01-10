@@ -13,6 +13,8 @@
 #include <functional>
 #include <chrono>
 #include <random>
+#include <set>
+#include <unordered_map>
 
 #define MIN_ELECTION_TIMEOUT 150
 #define MAX_ELECTION_TIMEOUT 500
@@ -48,6 +50,10 @@ namespace riaps{
              */
             void Update();
 
+            void ProposeFromClient(riaps::distrcoord::DistrCoord::ProposeToLeader::Reader& message);
+            void OnVote(riaps::distrcoord::DistrCoord::VoteForLeader::Reader& message,
+                        const std::string& sourceComponentId);
+
             std::string GetLeaderId();
 
             /**
@@ -56,6 +62,14 @@ namespace riaps{
              */
             void Update(riaps::distrcoord::LeaderElection::Reader& internalMessage);
             ~GroupLead();
+
+            struct ProposeData {
+                ProposeData(std::shared_ptr<std::set<std::string>> _knownNodes, Timeout&& timeout);
+
+                std::shared_ptr<std::set<std::string>> nodesInVote; // Expect vote from these nodes
+                std::shared_ptr<std::set<std::string>> nodesVoted;  // ID-s of components which already sent the vote
+                Timeout               proposeDeadline; // If the propose expires, the leader announce REJECT
+            };
         private:
 
             /**
@@ -89,6 +103,7 @@ namespace riaps{
             void SendRequestForVote();
             void SendAppendEntry();
             void SendVote(const std::string& voteFor);
+            void Announce(const std::string& proposeId, riaps::distrcoord::DistrCoord::VoteResults result);
             uint32_t GetNumberOfVotes();
 
             std::shared_ptr<spd::logger> _logger;
@@ -98,6 +113,13 @@ namespace riaps{
 
             void ChangeLeader(const std::string& newLeader);
             std::function<void(const std::string&)> _onLeaderChanged;
+
+
+            /**
+             * Active propseId-s with Timeouts, participating nodes and vote count
+             */
+            std::unordered_map<std::string, std::unique_ptr<riaps::groups::GroupLead::ProposeData>> _proposeData;
+
 
         };
     }
