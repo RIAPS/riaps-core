@@ -1,0 +1,29 @@
+// RIAPS Sample
+
+app DistrCoord {
+    message Dummy;
+
+    component DistrCoord {
+      timer clock 5000; // Vote in every 5th sec.
+    }
+    
+
+    actor ActOne {
+        {
+            c1:DistrCoord();
+        }
+    }
+
+    actor ActTwo {
+            {
+                c2:DistrCoord();
+            }
+        }
+
+    actor ActThree {
+            {
+                c3:DistrCoord();
+            }
+        }
+
+}
