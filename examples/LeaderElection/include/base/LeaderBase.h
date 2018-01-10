@@ -1,7 +1,8 @@
 #ifndef RIAPS_CORE_CBASE_H
 #define RIAPS_CORE_CBASE_H
 
-#include "componentmodel/r_componentbase.h"
+#include <componentmodel/r_componentbase.h>
+#include <messages/leaderelection.capnp.h>
 
 #define PORT_TIMER_CLOCK "clock"
 

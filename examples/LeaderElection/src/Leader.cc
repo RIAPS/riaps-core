@@ -29,9 +29,17 @@ namespace leaderelection {
             } else {
                 riaps::groups::GroupId gid{"BackupGroup", "Korte"};
                 auto ct = GetGroupMemberCount(gid, 5000);
-                std::string ld = GetLeaderId(gid);
-                _logger->debug("{}, ({})", ct, ld);
 
+                std::string ld = GetLeaderId(gid);
+                //_logger->debug("{}, ({})", ct, ld);
+                if (ld != GetCompUuid()){
+                    capnp::MallocMessageBuilder builder;
+                    auto msg = builder.initRoot<leaderelection::messages::LeaderMessage>();
+                    msg.setMsg("Hello");
+                    bool rc = SendMessageToLeader(gid, builder);
+                    _logger->error_if(!rc,"Coldn't sent message to the leader");
+                    _logger->info_if(rc,"Message sent to the leader {}->{}", GetCompUuid(),GetLeaderId(gid));
+                }
             }
         }
 
