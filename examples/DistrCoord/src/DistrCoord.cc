@@ -50,7 +50,11 @@ namespace dc {
             }
         }
 
-
+        void DistrCoord::OnPropose(riaps::groups::GroupId &groupId, const std::string &proposeId,
+                                   capnp::FlatArrayMessageReader &message) {
+            auto msg = message.getRoot<dc::messages::AgreeOnThis>();
+            _logger->info("Propose arrived id={}, proposedValue={}", proposeId, msg.getValue().cStr());
+        }
 
         void DistrCoord::OnGroupMessage(const riaps::groups::GroupId &groupId,
                                          capnp::FlatArrayMessageReader &capnpreader, riaps::ports::PortBase *port) {
@@ -62,6 +66,7 @@ namespace dc {
                                            const std::string &portName) {
             return true;
         }
+
 
         DistrCoord::~DistrCoord() {
 

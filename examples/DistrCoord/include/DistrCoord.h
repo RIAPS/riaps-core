@@ -25,6 +25,8 @@ namespace dc {
                                 capnp::FlatArrayMessageReader& capnpreader,
                                 riaps::ports::PortBase* port);
 
+            void OnPropose (riaps::groups::GroupId& groupId, const std::string& proposeId, capnp::FlatArrayMessageReader& message);
+
             virtual bool SendGroupMessage(riaps::groups::GroupId&      groupId,
                                           capnp::MallocMessageBuilder& messageBuilder,
                                           const std::string&           portName);

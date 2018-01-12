@@ -37,7 +37,7 @@ namespace riaps{
             return "";
         }
 
-        Group::Group(const GroupId &groupId, const ComponentBase* parentComponent) :
+        Group::Group(const GroupId &groupId, ComponentBase* parentComponent) :
                 _groupId(groupId),
                 _parentComponent(parentComponent),
                 _groupPubPort(nullptr),
@@ -410,8 +410,17 @@ namespace riaps{
                             // Propose arrived to the leader. Leader forwards it to every groupmember.
                             if (msgDistCoord.hasProposeToLeader()){
                                 auto msgPropose = msgDistCoord.getProposeToLeader();
-                                _logger->info("Propose arrived to leader!!!!");
-                                _groupLeader->ProposeFromClient(msgPropose);
+                                zframe_t* proposeFrame;
+                                proposeFrame = zmsg_pop(msg);
+                                if (proposeFrame == nullptr){
+                                    _logger->error("Propose arrive with empty message frame");
+                                }
+                                else{
+                                    _groupLeader->OnProposeFromClient(msgPropose, &proposeFrame);
+                                    if (proposeFrame!= nullptr)
+                                        zframe_destroy(&proposeFrame);
+                                }
+
 
                             // Vote arrived, count the votes and announce the results (if any)
                             } else if (msgDistCoord.hasVoteForLeader()){
@@ -425,12 +434,19 @@ namespace riaps{
                             // propose by the leader, must vote on something
                             if (msgDistCoord.hasProposeToSlaves()) {
                                 auto msgPropose = msgDistCoord.getProposeToSlaves();
+                                zframe_t* proposeFrame;
+                                proposeFrame = zmsg_pop(msg);
+
+                                capnp::FlatArrayMessageReader* reader;
+                                (*proposeFrame) >> reader;
+                                _parentComponent->OnPropose(_groupId, msgPropose.getProposeId(), *reader);
+
                             } else if (msgDistCoord.hasAnnounce()) {
                                 auto msgAnnounce = msgDistCoord.getAnnounce();
                             }
                         }
 
-
+                        return nullptr;
                     }
                 }
 

@@ -263,12 +263,15 @@ void GroupLead::SendRequestForVote() {
     _group->SendInternalMessage(requestForVoteBuilder);
 }
 
-void GroupLead::ProposeFromClient(riaps::distrcoord::DistrCoord::ProposeToLeader::Reader &message) {
+void GroupLead::OnProposeFromClient(riaps::distrcoord::DistrCoord::ProposeToLeader::Reader& headerMessage,
+                                  zframe_t** messageFrame) {
+    if (GetLeaderId() != GetComponentId()) return;
+
     auto pd = std::unique_ptr<ProposeData>(new ProposeData(_group->GetKnownComponents(), Timeout(duration<int, std::milli>(1000))));
 
     // TODO: Add known node ids
     //pd.nodesInVote =
-    std::string proposeId = message.getProposeId();
+    std::string proposeId = headerMessage.getProposeId();
     _proposeData[proposeId] = std::move(pd);
 
     // Send propose to clients
@@ -279,9 +282,13 @@ void GroupLead::ProposeFromClient(riaps::distrcoord::DistrCoord::ProposeToLeader
     msgPropose.setProposeId(proposeId);
     msgPropose.setLeaderId(GetLeaderId());
 
-    if (GetLeaderId() == GetComponentId()){
-        _group->SendInternalMessage(builder);
-    }
+    zmsg_t* msg = zmsg_new();
+    zframe_t* header;
+    header << builder;
+    zmsg_add(msg, header);
+    zmsg_add(msg, *messageFrame);
+    _group->SendMessage(&msg, INTERNAL_PUB_NAME);
+    *messageFrame = nullptr;
 }
 
 void GroupLead::OnVote(riaps::distrcoord::DistrCoord::VoteForLeader::Reader &message, const std::string& sourceComponentId) {

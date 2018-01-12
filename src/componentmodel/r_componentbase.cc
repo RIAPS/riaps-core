@@ -753,7 +753,7 @@ namespace riaps{
         return false;
     }
 
-    void ComponentBase::OnAnnounce(riaps::groups::GroupId &groupId, const std::string &proposeId, bool accepted) {
+    void ComponentBase::OnAnnounce(const riaps::groups::GroupId &groupId, const std::string &proposeId, bool accepted) {
         _logger->error("Vote result is announced, but no handler implemented in component {}", GetConfig().component_name);
     }
 
@@ -762,7 +762,7 @@ namespace riaps{
         _logger->error("Leader proposed a value but no handler is implemented in component {}", GetConfig().component_name);
     }
 
-    std::string ComponentBase::SendPropose(riaps::groups::GroupId &groupId, capnp::MallocMessageBuilder &message) {
+    std::string ComponentBase::SendPropose(const riaps::groups::GroupId &groupId, capnp::MallocMessageBuilder &message) {
         auto group = GetGroupById(groupId);
         if (group == nullptr) return "";
 
@@ -771,7 +771,7 @@ namespace riaps{
         zuuid_destroy(&uuid);
 
         if (group->SendProposeToLeader(message, strUuid)){
-
+            _logger->debug("SendPropose(), id={}, value=??", strUuid);
             return strUuid;
         }
         return "";

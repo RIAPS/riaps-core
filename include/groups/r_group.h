@@ -95,7 +95,7 @@ namespace riaps {
              * Initializes a group, by the given groupId
              * @param groupId Must have valid configuration entry with the matching id.
              */
-            Group(const GroupId& groupId, const ComponentBase* parentComponent);
+            Group(const GroupId& groupId, ComponentBase* parentComponent);
 
             /**
              * Creates the communication ports and registers the group in the discovery service.
@@ -141,7 +141,7 @@ namespace riaps {
             uint32_t DeleteTimeoutNodes();
             bool SendHeartBeat(riaps::distrcoord::HeartBeatType type);
 
-            const GroupId     _groupId;
+            GroupId     _groupId;
             groupt_conf       _groupTypeConf;
 
             /**
@@ -180,7 +180,7 @@ namespace riaps {
             std::mt19937         _generator;
             std::uniform_int_distribution<int> _distrNodeTimeout;
 
-            const ComponentBase* _parentComponent;
+            ComponentBase* _parentComponent;
 
             std::unique_ptr<riaps::groups::GroupLead> _groupLeader;
 

@@ -50,7 +50,8 @@ namespace riaps{
              */
             void Update();
 
-            void ProposeFromClient(riaps::distrcoord::DistrCoord::ProposeToLeader::Reader& message);
+            void OnProposeFromClient(riaps::distrcoord::DistrCoord::ProposeToLeader::Reader& headerMessage,
+                                     zframe_t** messageFrame);
             void OnVote(riaps::distrcoord::DistrCoord::VoteForLeader::Reader& message,
                         const std::string& sourceComponentId);
 

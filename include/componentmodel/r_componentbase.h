@@ -67,6 +67,7 @@ namespace riaps {
     typedef void (riaps::ComponentBase::*riaps_handler)(const std::string&, msgpack::sbuffer*, riaps::ports::PortBase*);
 
     class ComponentBase {
+        friend riaps::groups::Group;
     public:
 
         /// @param config Configuration, parsed from the model file.
@@ -326,9 +327,9 @@ namespace riaps {
 
 
         virtual void OnPropose (riaps::groups::GroupId& groupId, const std::string& proposeId, capnp::FlatArrayMessageReader& message);
-        virtual void OnAnnounce(riaps::groups::GroupId& groupId, const std::string& proposeId, bool accepted);
-        std::string SendPropose(riaps::groups::GroupId& groupId, capnp::MallocMessageBuilder& message);
-        void SendVote(riaps::groups::GroupId& groupId, const std::string& proposeId, bool accept);
+        virtual void OnAnnounce(const riaps::groups::GroupId& groupId, const std::string& proposeId, bool accepted);
+        std::string SendPropose(const riaps::groups::GroupId& groupId, capnp::MallocMessageBuilder& message);
+        void SendVote(const riaps::groups::GroupId& groupId, const std::string& proposeId, bool accept);
 
     private:
 
