@@ -36,17 +36,23 @@ namespace dc {
             } else {
                 riaps::groups::GroupId gid{"BackupGroup", "Korte"};
 
-                // The component already joined, read the file and lets vote about the content of the file
-                std::ifstream f;
-                f.open("dcoordvote.txt");
-                std::string line;
-                f >> line;
 
-                capnp::MallocMessageBuilder builder;
-                auto msgDc = builder.initRoot<dc::messages::AgreeOnThis>();
-                msgDc.setValue(line);
-                std::string proposeId = SendPropose(gid, builder);
-                _logger->info("Propose send. Value: {} ProposeId: {}", line, proposeId);
+                // If the component is not the leader, then propose()
+
+                if (GetLeaderId(gid)!="" && GetLeaderId(gid)!=GetCompUuid()) {
+                    // The component already joined, read the file and lets vote about the content of the file
+                    std::ifstream f;
+                    f.open("dcoordvote.txt");
+                    std::string line;
+                    f >> line;
+
+                    capnp::MallocMessageBuilder builder;
+                    auto msgDc = builder.initRoot<dc::messages::AgreeOnThis>();
+                    msgDc.setValue(line);
+                    std::string proposeId = SendPropose(gid, builder);
+                    std::string leaderId = GetLeaderId(gid);
+                    //_logger->info("Propose send. Value: {} ProposeId: {}, LeaderId: {}", line, proposeId, leaderId);
+                }
             }
         }
 

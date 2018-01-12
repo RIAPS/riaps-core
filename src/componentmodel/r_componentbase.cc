@@ -771,7 +771,7 @@ namespace riaps{
         zuuid_destroy(&uuid);
 
         if (group->SendProposeToLeader(message, strUuid)){
-            _logger->debug("SendPropose(), id={}, value=??", strUuid);
+            //_logger->debug("SendPropose(), id={}, value=??", strUuid);
             return strUuid;
         }
         return "";

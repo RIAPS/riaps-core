@@ -265,7 +265,14 @@ void GroupLead::SendRequestForVote() {
 
 void GroupLead::OnProposeFromClient(riaps::distrcoord::DistrCoord::ProposeToLeader::Reader& headerMessage,
                                   zframe_t** messageFrame) {
-    if (GetLeaderId() != GetComponentId()) return;
+
+    _logger->debug("OnProposeFromClient()");
+    if (GetLeaderId() != GetComponentId()) {
+        _logger->debug("OnProposeFromClient() returns, GetLeaderId() != GetComponentId()");
+        return;
+    }
+    _logger->debug("OnProposeFromClient() continues");
+
 
     auto pd = std::unique_ptr<ProposeData>(new ProposeData(_group->GetKnownComponents(), Timeout(duration<int, std::milli>(1000))));
 
@@ -278,7 +285,8 @@ void GroupLead::OnProposeFromClient(riaps::distrcoord::DistrCoord::ProposeToLead
     capnp::MallocMessageBuilder builder;
     auto msgInternal = builder.initRoot<riaps::distrcoord::GroupInternals>();
     auto msgDistCoord = msgInternal.initDistrCoord();
-    auto msgPropose = msgDistCoord.initProposeToSlaves();
+    auto msgPropose = msgDistCoord.initProposeToClients();
+    msgDistCoord.setSourceComponentId(GetComponentId());
     msgPropose.setProposeId(proposeId);
     msgPropose.setLeaderId(GetLeaderId());
 
@@ -287,7 +295,10 @@ void GroupLead::OnProposeFromClient(riaps::distrcoord::DistrCoord::ProposeToLead
     header << builder;
     zmsg_add(msg, header);
     zmsg_add(msg, *messageFrame);
-    _group->SendMessage(&msg, INTERNAL_PUB_NAME);
+    if (_group->SendMessage(&msg, INTERNAL_PUB_NAME))
+        _logger->debug("GroupLead::OnProposeFromClient() - Message sent proposeId: {} leaderId: {} sourceId: {}", proposeId, _leaderId, GetComponentId());
+    else
+        _logger->error("OnProposeFromClient() failed to send");
     *messageFrame = nullptr;
 }
 

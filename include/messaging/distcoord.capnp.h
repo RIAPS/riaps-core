@@ -28,7 +28,7 @@ CAPNP_DECLARE_SCHEMA(f5b471e04470e3c4);
 CAPNP_DECLARE_SCHEMA(f8333cb31aa809fa);
 CAPNP_DECLARE_SCHEMA(f56a97f2cf99a7a8);
 CAPNP_DECLARE_SCHEMA(f620a72bb495ea4c);
-CAPNP_DECLARE_SCHEMA(b0d038f091ebaacf);
+CAPNP_DECLARE_SCHEMA(d91410fa05ddbf8a);
 CAPNP_DECLARE_SCHEMA(abcf5ee93da3b52e);
 CAPNP_DECLARE_SCHEMA(bcbc5dbf56f2b379);
 CAPNP_DECLARE_SCHEMA(af4eb8a60cc4ec6a);
@@ -147,7 +147,7 @@ struct DistrCoord {
   class Builder;
   class Pipeline;
   struct ProposeToLeader;
-  struct ProposeToSlaves;
+  struct ProposeToClients;
   struct VoteForLeader;
   struct Announce;
   typedef ::capnp::schemas::VoteResults_af4eb8a60cc4ec6a VoteResults;
@@ -176,15 +176,15 @@ struct DistrCoord::ProposeToLeader {
   };
 };
 
-struct DistrCoord::ProposeToSlaves {
-  ProposeToSlaves() = delete;
+struct DistrCoord::ProposeToClients {
+  ProposeToClients() = delete;
 
   class Reader;
   class Builder;
   class Pipeline;
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(b0d038f091ebaacf, 0, 2)
+    CAPNP_DECLARE_STRUCT_HEADER(d91410fa05ddbf8a, 0, 2)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
     #endif  // !CAPNP_LITE
@@ -806,8 +806,8 @@ public:
   inline bool hasProposeToLeader() const;
   inline  ::riaps::distrcoord::DistrCoord::ProposeToLeader::Reader getProposeToLeader() const;
 
-  inline bool hasProposeToSlaves() const;
-  inline  ::riaps::distrcoord::DistrCoord::ProposeToSlaves::Reader getProposeToSlaves() const;
+  inline bool hasProposeToClients() const;
+  inline  ::riaps::distrcoord::DistrCoord::ProposeToClients::Reader getProposeToClients() const;
 
   inline bool hasVoteForLeader() const;
   inline  ::riaps::distrcoord::DistrCoord::VoteForLeader::Reader getVoteForLeader() const;
@@ -857,12 +857,12 @@ public:
   inline void adoptProposeToLeader(::capnp::Orphan< ::riaps::distrcoord::DistrCoord::ProposeToLeader>&& value);
   inline ::capnp::Orphan< ::riaps::distrcoord::DistrCoord::ProposeToLeader> disownProposeToLeader();
 
-  inline bool hasProposeToSlaves();
-  inline  ::riaps::distrcoord::DistrCoord::ProposeToSlaves::Builder getProposeToSlaves();
-  inline void setProposeToSlaves( ::riaps::distrcoord::DistrCoord::ProposeToSlaves::Reader value);
-  inline  ::riaps::distrcoord::DistrCoord::ProposeToSlaves::Builder initProposeToSlaves();
-  inline void adoptProposeToSlaves(::capnp::Orphan< ::riaps::distrcoord::DistrCoord::ProposeToSlaves>&& value);
-  inline ::capnp::Orphan< ::riaps::distrcoord::DistrCoord::ProposeToSlaves> disownProposeToSlaves();
+  inline bool hasProposeToClients();
+  inline  ::riaps::distrcoord::DistrCoord::ProposeToClients::Builder getProposeToClients();
+  inline void setProposeToClients( ::riaps::distrcoord::DistrCoord::ProposeToClients::Reader value);
+  inline  ::riaps::distrcoord::DistrCoord::ProposeToClients::Builder initProposeToClients();
+  inline void adoptProposeToClients(::capnp::Orphan< ::riaps::distrcoord::DistrCoord::ProposeToClients>&& value);
+  inline ::capnp::Orphan< ::riaps::distrcoord::DistrCoord::ProposeToClients> disownProposeToClients();
 
   inline bool hasVoteForLeader();
   inline  ::riaps::distrcoord::DistrCoord::VoteForLeader::Builder getVoteForLeader();
@@ -897,7 +897,7 @@ public:
       : _typeless(kj::mv(typeless)) {}
 
   inline  ::riaps::distrcoord::DistrCoord::ProposeToLeader::Pipeline getProposeToLeader();
-  inline  ::riaps::distrcoord::DistrCoord::ProposeToSlaves::Pipeline getProposeToSlaves();
+  inline  ::riaps::distrcoord::DistrCoord::ProposeToClients::Pipeline getProposeToClients();
   inline  ::riaps::distrcoord::DistrCoord::VoteForLeader::Pipeline getVoteForLeader();
   inline  ::riaps::distrcoord::DistrCoord::Announce::Pipeline getAnnounce();
 private:
@@ -989,9 +989,9 @@ private:
 };
 #endif  // !CAPNP_LITE
 
-class DistrCoord::ProposeToSlaves::Reader {
+class DistrCoord::ProposeToClients::Reader {
 public:
-  typedef ProposeToSlaves Reads;
+  typedef ProposeToClients Reads;
 
   Reader() = default;
   inline explicit Reader(::capnp::_::StructReader base): _reader(base) {}
@@ -1024,9 +1024,9 @@ private:
   friend class ::capnp::Orphanage;
 };
 
-class DistrCoord::ProposeToSlaves::Builder {
+class DistrCoord::ProposeToClients::Builder {
 public:
-  typedef ProposeToSlaves Builds;
+  typedef ProposeToClients Builds;
 
   Builder() = delete;  // Deleted to discourage incorrect usage.
                        // You can explicitly initialize to nullptr instead.
@@ -1064,9 +1064,9 @@ private:
 };
 
 #if !CAPNP_LITE
-class DistrCoord::ProposeToSlaves::Pipeline {
+class DistrCoord::ProposeToClients::Pipeline {
 public:
-  typedef ProposeToSlaves Pipelines;
+  typedef ProposeToClients Pipelines;
 
   inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
   inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
@@ -1813,40 +1813,40 @@ inline ::capnp::Orphan< ::riaps::distrcoord::DistrCoord::ProposeToLeader> DistrC
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }
 
-inline bool DistrCoord::Reader::hasProposeToSlaves() const {
+inline bool DistrCoord::Reader::hasProposeToClients() const {
   return !_reader.getPointerField(2 * ::capnp::POINTERS).isNull();
 }
-inline bool DistrCoord::Builder::hasProposeToSlaves() {
+inline bool DistrCoord::Builder::hasProposeToClients() {
   return !_builder.getPointerField(2 * ::capnp::POINTERS).isNull();
 }
-inline  ::riaps::distrcoord::DistrCoord::ProposeToSlaves::Reader DistrCoord::Reader::getProposeToSlaves() const {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::ProposeToSlaves>::get(
+inline  ::riaps::distrcoord::DistrCoord::ProposeToClients::Reader DistrCoord::Reader::getProposeToClients() const {
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::ProposeToClients>::get(
       _reader.getPointerField(2 * ::capnp::POINTERS));
 }
-inline  ::riaps::distrcoord::DistrCoord::ProposeToSlaves::Builder DistrCoord::Builder::getProposeToSlaves() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::ProposeToSlaves>::get(
+inline  ::riaps::distrcoord::DistrCoord::ProposeToClients::Builder DistrCoord::Builder::getProposeToClients() {
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::ProposeToClients>::get(
       _builder.getPointerField(2 * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
-inline  ::riaps::distrcoord::DistrCoord::ProposeToSlaves::Pipeline DistrCoord::Pipeline::getProposeToSlaves() {
-  return  ::riaps::distrcoord::DistrCoord::ProposeToSlaves::Pipeline(_typeless.getPointerField(2));
+inline  ::riaps::distrcoord::DistrCoord::ProposeToClients::Pipeline DistrCoord::Pipeline::getProposeToClients() {
+  return  ::riaps::distrcoord::DistrCoord::ProposeToClients::Pipeline(_typeless.getPointerField(2));
 }
 #endif  // !CAPNP_LITE
-inline void DistrCoord::Builder::setProposeToSlaves( ::riaps::distrcoord::DistrCoord::ProposeToSlaves::Reader value) {
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::ProposeToSlaves>::set(
+inline void DistrCoord::Builder::setProposeToClients( ::riaps::distrcoord::DistrCoord::ProposeToClients::Reader value) {
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::ProposeToClients>::set(
       _builder.getPointerField(2 * ::capnp::POINTERS), value);
 }
-inline  ::riaps::distrcoord::DistrCoord::ProposeToSlaves::Builder DistrCoord::Builder::initProposeToSlaves() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::ProposeToSlaves>::init(
+inline  ::riaps::distrcoord::DistrCoord::ProposeToClients::Builder DistrCoord::Builder::initProposeToClients() {
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::ProposeToClients>::init(
       _builder.getPointerField(2 * ::capnp::POINTERS));
 }
-inline void DistrCoord::Builder::adoptProposeToSlaves(
-    ::capnp::Orphan< ::riaps::distrcoord::DistrCoord::ProposeToSlaves>&& value) {
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::ProposeToSlaves>::adopt(
+inline void DistrCoord::Builder::adoptProposeToClients(
+    ::capnp::Orphan< ::riaps::distrcoord::DistrCoord::ProposeToClients>&& value) {
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::ProposeToClients>::adopt(
       _builder.getPointerField(2 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::riaps::distrcoord::DistrCoord::ProposeToSlaves> DistrCoord::Builder::disownProposeToSlaves() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::ProposeToSlaves>::disown(
+inline ::capnp::Orphan< ::riaps::distrcoord::DistrCoord::ProposeToClients> DistrCoord::Builder::disownProposeToClients() {
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::ProposeToClients>::disown(
       _builder.getPointerField(2 * ::capnp::POINTERS));
 }
 
@@ -1956,66 +1956,66 @@ inline ::capnp::Orphan< ::capnp::Text> DistrCoord::ProposeToLeader::Builder::dis
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
-inline bool DistrCoord::ProposeToSlaves::Reader::hasProposeId() const {
+inline bool DistrCoord::ProposeToClients::Reader::hasProposeId() const {
   return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline bool DistrCoord::ProposeToSlaves::Builder::hasProposeId() {
+inline bool DistrCoord::ProposeToClients::Builder::hasProposeId() {
   return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline  ::capnp::Text::Reader DistrCoord::ProposeToSlaves::Reader::getProposeId() const {
+inline  ::capnp::Text::Reader DistrCoord::ProposeToClients::Reader::getProposeId() const {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
       _reader.getPointerField(0 * ::capnp::POINTERS));
 }
-inline  ::capnp::Text::Builder DistrCoord::ProposeToSlaves::Builder::getProposeId() {
+inline  ::capnp::Text::Builder DistrCoord::ProposeToClients::Builder::getProposeId() {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
-inline void DistrCoord::ProposeToSlaves::Builder::setProposeId( ::capnp::Text::Reader value) {
+inline void DistrCoord::ProposeToClients::Builder::setProposeId( ::capnp::Text::Reader value) {
   ::capnp::_::PointerHelpers< ::capnp::Text>::set(
       _builder.getPointerField(0 * ::capnp::POINTERS), value);
 }
-inline  ::capnp::Text::Builder DistrCoord::ProposeToSlaves::Builder::initProposeId(unsigned int size) {
+inline  ::capnp::Text::Builder DistrCoord::ProposeToClients::Builder::initProposeId(unsigned int size) {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
       _builder.getPointerField(0 * ::capnp::POINTERS), size);
 }
-inline void DistrCoord::ProposeToSlaves::Builder::adoptProposeId(
+inline void DistrCoord::ProposeToClients::Builder::adoptProposeId(
     ::capnp::Orphan< ::capnp::Text>&& value) {
   ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
       _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::capnp::Text> DistrCoord::ProposeToSlaves::Builder::disownProposeId() {
+inline ::capnp::Orphan< ::capnp::Text> DistrCoord::ProposeToClients::Builder::disownProposeId() {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
-inline bool DistrCoord::ProposeToSlaves::Reader::hasLeaderId() const {
+inline bool DistrCoord::ProposeToClients::Reader::hasLeaderId() const {
   return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
 }
-inline bool DistrCoord::ProposeToSlaves::Builder::hasLeaderId() {
+inline bool DistrCoord::ProposeToClients::Builder::hasLeaderId() {
   return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
 }
-inline  ::capnp::Text::Reader DistrCoord::ProposeToSlaves::Reader::getLeaderId() const {
+inline  ::capnp::Text::Reader DistrCoord::ProposeToClients::Reader::getLeaderId() const {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
       _reader.getPointerField(1 * ::capnp::POINTERS));
 }
-inline  ::capnp::Text::Builder DistrCoord::ProposeToSlaves::Builder::getLeaderId() {
+inline  ::capnp::Text::Builder DistrCoord::ProposeToClients::Builder::getLeaderId() {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }
-inline void DistrCoord::ProposeToSlaves::Builder::setLeaderId( ::capnp::Text::Reader value) {
+inline void DistrCoord::ProposeToClients::Builder::setLeaderId( ::capnp::Text::Reader value) {
   ::capnp::_::PointerHelpers< ::capnp::Text>::set(
       _builder.getPointerField(1 * ::capnp::POINTERS), value);
 }
-inline  ::capnp::Text::Builder DistrCoord::ProposeToSlaves::Builder::initLeaderId(unsigned int size) {
+inline  ::capnp::Text::Builder DistrCoord::ProposeToClients::Builder::initLeaderId(unsigned int size) {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
       _builder.getPointerField(1 * ::capnp::POINTERS), size);
 }
-inline void DistrCoord::ProposeToSlaves::Builder::adoptLeaderId(
+inline void DistrCoord::ProposeToClients::Builder::adoptLeaderId(
     ::capnp::Orphan< ::capnp::Text>&& value) {
   ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
       _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::capnp::Text> DistrCoord::ProposeToSlaves::Builder::disownLeaderId() {
+inline ::capnp::Orphan< ::capnp::Text> DistrCoord::ProposeToClients::Builder::disownLeaderId() {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }

@@ -153,7 +153,11 @@ namespace riaps{
         }
 
         bool Group::SendProposeToLeader(capnp::MallocMessageBuilder &message, const std::string& proposeId) {
-            if (GetLeaderId() == "") return false;
+            bool hasActiveLeader = GetLeaderId() != "";
+            if (!hasActiveLeader){
+                _logger->error("SendProposeToLeader(), no active leader, send failed");
+                return false;
+            }
 
             zframe_t* frame;
             frame << message;
@@ -172,7 +176,10 @@ namespace riaps{
             zmsg_add(zmsg, header);
             zmsg_add(zmsg, frame);
 
-            return SendMessage(&zmsg, INTERNAL_PUB_NAME);
+            bool rc = SendMessage(&zmsg, INTERNAL_PUB_NAME);
+            _logger->error_if(!rc, "SendProposeToLeader() failed");
+            _logger->debug_if(rc, "SendProposeToLeader() proposeId: {}, leaderId: {}, srcComp: {}", proposeId, GetLeaderId(), GetParentComponent()->GetCompUuid());
+            return rc;
         }
 
         bool Group::SendMessage(capnp::MallocMessageBuilder& message, const std::string& portName){
@@ -243,13 +250,13 @@ namespace riaps{
         }
 
         bool Group::SendPing() {
-            _logger->debug(">>PING>>");
+            //_logger->debug(">>PING>>");
             _pingTimeout.Reset();
             return SendHeartBeat(dc::HeartBeatType::PING);
         }
 
         bool Group::SendPong() {
-            _logger->debug(">>PONG>>");
+            //_logger->debug(">>PONG>>");
             return SendHeartBeat(dc::HeartBeatType::PONG);
         }
 
@@ -384,11 +391,11 @@ namespace riaps{
                             it->second.Reset(duration<int, std::milli>(_distrNodeTimeout(_generator)));
 
                         if (groupHeartBeat.getHeartBeatType() == riaps::distrcoord::HeartBeatType::PING) {
-                            _logger->debug("<<PING<<");
+                            //_logger->debug("<<PING<<");
                             SendPong();
                             return nullptr;
                         } else if (groupHeartBeat.getHeartBeatType() == riaps::distrcoord::HeartBeatType::PONG) {
-                            _logger->debug("<<PONG<<");
+                            //_logger->debug("<<PONG<<");
                             return nullptr;
                         }
                     } else if (internal.hasLeaderElection()){
@@ -403,11 +410,14 @@ namespace riaps{
                         return nullptr;
                     } else if (internal.hasDistrCoord()) {
                         auto msgDistCoord = internal.getDistrCoord();
+                        //_logger->debug("DC message arrived from {} to {}", msgDistCoord.getSourceComponentId().cStr(), GetParentComponent()->GetCompUuid());
 
-                        // The current component is the leader
+//                        // The current component is the leader
                         if (GetLeaderId() == GetParentComponent()->GetCompUuid()) {
+                            _logger->debug("DC message arrived and this component is the leader");
 
-                            // Propose arrived to the leader. Leader forwards it to every groupmember.
+//
+//                            // Propose arrived to the leader. Leader forwards it to every groupmember.
                             if (msgDistCoord.hasProposeToLeader()){
                                 auto msgPropose = msgDistCoord.getProposeToLeader();
                                 zframe_t* proposeFrame;
@@ -416,33 +426,37 @@ namespace riaps{
                                     _logger->error("Propose arrive with empty message frame");
                                 }
                                 else{
+
+                                    _logger->info("Message proposed to the leader, proposeId: {}", msgPropose.getProposeId().cStr());
                                     _groupLeader->OnProposeFromClient(msgPropose, &proposeFrame);
                                     if (proposeFrame!= nullptr)
                                         zframe_destroy(&proposeFrame);
                                 }
-
-
-                            // Vote arrived, count the votes and announce the results (if any)
-                            } else if (msgDistCoord.hasVoteForLeader()){
-                                auto msgVote = msgDistCoord.getVoteForLeader();
-                                _groupLeader->OnVote(msgVote, msgDistCoord.getSourceComponentId());
+//
+//
+//                            // Vote arrived, count the votes and announce the results (if any)
+//                            } else if (msgDistCoord.hasVoteForLeader()){
+//                                auto msgVote = msgDistCoord.getVoteForLeader();
+//                                _groupLeader->OnVote(msgVote, msgDistCoord.getSourceComponentId());
                             }
                         }
-                        // The current component is not a leader
+//                        // The current component is not a leader
                         else {
-
-                            // propose by the leader, must vote on something
-                            if (msgDistCoord.hasProposeToSlaves()) {
-                                auto msgPropose = msgDistCoord.getProposeToSlaves();
+                            _logger->debug("DC message arrived and this component is not the leader");
+//
+//                            // propose by the leader, must vote on something
+                            if (msgDistCoord.hasProposeToClients()) {
+                                auto msgPropose = msgDistCoord.getProposeToClients();
+                                _logger->debug("Message proposed to the client, proposeId: {}", msgPropose.getProposeId().cStr());
                                 zframe_t* proposeFrame;
                                 proposeFrame = zmsg_pop(msg);
-
+//
                                 capnp::FlatArrayMessageReader* reader;
                                 (*proposeFrame) >> reader;
                                 _parentComponent->OnPropose(_groupId, msgPropose.getProposeId(), *reader);
-
+//
                             } else if (msgDistCoord.hasAnnounce()) {
-                                auto msgAnnounce = msgDistCoord.getAnnounce();
+//                                auto msgAnnounce = msgDistCoord.getAnnounce();
                             }
                         }
 

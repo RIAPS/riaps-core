@@ -43,7 +43,7 @@ struct MessageToLeader {
 struct DistrCoord {
     sourceComponentId @0 : Text;
     proposeToLeader   @1 : ProposeToLeader;
-    proposeToSlaves   @2 : ProposeToSlaves;
+    proposeToClients  @2 : ProposeToClients;
     voteForLeader     @3 : VoteForLeader;
     announce          @4 : Announce;
 
@@ -51,7 +51,7 @@ struct DistrCoord {
         proposeId @0 : Text;
     }
 
-    struct ProposeToSlaves {
+    struct ProposeToClients {
         proposeId @0 : Text;
         leaderId  @1 : Text;
     }
