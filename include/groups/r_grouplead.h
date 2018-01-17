@@ -50,9 +50,9 @@ namespace riaps{
              */
             void Update();
 
-            void OnProposeFromClient(riaps::distrcoord::DistrCoord::ProposeToLeader::Reader& headerMessage,
+            void OnProposeFromClient(riaps::distrcoord::Consensus::ProposeToLeader::Reader& headerMessage,
                                      zframe_t** messageFrame);
-            void OnVote(riaps::distrcoord::DistrCoord::VoteForLeader::Reader& message,
+            void OnVote(riaps::distrcoord::Consensus::Vote::Reader& message,
                         const std::string& sourceComponentId);
 
             std::string GetLeaderId();
@@ -69,7 +69,9 @@ namespace riaps{
 
                 std::shared_ptr<std::set<std::string>> nodesInVote; // Expect vote from these nodes
                 std::shared_ptr<std::set<std::string>> nodesVoted;  // ID-s of components which already sent the vote
-                Timeout               proposeDeadline; // If the propose expires, the leader announce REJECT
+                Timeout                                proposeDeadline; // If the propose expires, the leader announce REJECT
+                uint16_t                               accepted;
+                uint16_t                               rejected;
             };
         private:
 
@@ -104,7 +106,7 @@ namespace riaps{
             void SendRequestForVote();
             void SendAppendEntry();
             void SendVote(const std::string& voteFor);
-            void Announce(const std::string& proposeId, riaps::distrcoord::DistrCoord::VoteResults result);
+            void Announce(const std::string& proposeId, riaps::distrcoord::Consensus::VoteResults result);
             uint32_t GetNumberOfVotes();
 
             std::shared_ptr<spd::logger> _logger;

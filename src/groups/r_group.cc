@@ -164,10 +164,10 @@ namespace riaps{
 
             capnp::MallocMessageBuilder builder;
             auto msgGroupInternals = builder.initRoot<riaps::distrcoord::GroupInternals>();
-            auto msgDc = msgGroupInternals.initDistrCoord();
-            auto msgPropLeader = msgDc.initProposeToLeader();
+            auto msgCons = msgGroupInternals.initConsensus();
+            auto msgPropLeader = msgCons.initProposeToLeader();
             msgPropLeader.setProposeId(proposeId);
-            msgDc.setSourceComponentId(GetParentComponent()->GetCompUuid());
+            msgCons.setSourceComponentId(GetParentComponent()->GetCompUuid());
 
             zframe_t* header;
             header << builder;
@@ -408,18 +408,17 @@ namespace riaps{
                         _logger->debug("Message to the leader arrived!");
 
                         return nullptr;
-                    } else if (internal.hasDistrCoord()) {
-                        auto msgDistCoord = internal.getDistrCoord();
-                        //_logger->debug("DC message arrived from {} to {}", msgDistCoord.getSourceComponentId().cStr(), GetParentComponent()->GetCompUuid());
+                    } else if (internal.hasConsensus()) {
+                        auto msgCons = internal.getConsensus();
+                       // _logger->debug("DC message arrived from {}", msgDistCoord.getSourceComponentId().cStr());
 
 //                        // The current component is the leader
                         if (GetLeaderId() == GetParentComponent()->GetCompUuid()) {
-                            _logger->debug("DC message arrived and this component is the leader");
+                            //_logger->debug("DC message arrived and this component is the leader");
 
-//
 //                            // Propose arrived to the leader. Leader forwards it to every groupmember.
-                            if (msgDistCoord.hasProposeToLeader()){
-                                auto msgPropose = msgDistCoord.getProposeToLeader();
+                            if (msgCons.hasProposeToLeader()){
+                                auto msgPropose = msgCons.getProposeToLeader();
                                 zframe_t* proposeFrame;
                                 proposeFrame = zmsg_pop(msg);
                                 if (proposeFrame == nullptr){
@@ -432,31 +431,30 @@ namespace riaps{
                                     if (proposeFrame!= nullptr)
                                         zframe_destroy(&proposeFrame);
                                 }
-//
-//
 //                            // Vote arrived, count the votes and announce the results (if any)
-//                            } else if (msgDistCoord.hasVoteForLeader()){
-//                                auto msgVote = msgDistCoord.getVoteForLeader();
-//                                _groupLeader->OnVote(msgVote, msgDistCoord.getSourceComponentId());
+                            } else if (msgCons.hasVote()){
+                                //_logger->info("Vote arrived to the leader");
+                                auto msgVote = msgCons.getVote();
+                                _groupLeader->OnVote(msgVote, msgCons.getSourceComponentId());
                             }
                         }
 //                        // The current component is not a leader
                         else {
-                            _logger->debug("DC message arrived and this component is not the leader");
-//
+                            //_logger->debug("DC message arrived and this component is not the leader");
 //                            // propose by the leader, must vote on something
-                            if (msgDistCoord.hasProposeToClients()) {
-                                auto msgPropose = msgDistCoord.getProposeToClients();
-                                _logger->debug("Message proposed to the client, proposeId: {}", msgPropose.getProposeId().cStr());
+                            if (msgCons.hasProposeToClients()) {
+                                auto msgPropose = msgCons.getProposeToClients();
+                                //_logger->debug("Message proposed to the client, proposeId: {}", msgPropose.getProposeId().cStr());
                                 zframe_t* proposeFrame;
                                 proposeFrame = zmsg_pop(msg);
-//
                                 capnp::FlatArrayMessageReader* reader;
                                 (*proposeFrame) >> reader;
                                 _parentComponent->OnPropose(_groupId, msgPropose.getProposeId(), *reader);
-//
-                            } else if (msgDistCoord.hasAnnounce()) {
-//                                auto msgAnnounce = msgDistCoord.getAnnounce();
+                            } else if (msgCons.hasAnnounce()) {
+                                auto msgAnnounce = msgCons.getAnnounce();
+                                _parentComponent->OnAnnounce(_groupId,
+                                                             msgAnnounce.getProposeId(),
+                                                             msgAnnounce.getVoteResult() == riaps::distrcoord::Consensus::VoteResults::ACCEPTED);
                             }
                         }
 
@@ -469,6 +467,21 @@ namespace riaps{
 
             zmsg_destroy(&msg);
             return subscriberPort;
+        }
+
+        bool Group::SendVote(const std::string &proposeId, bool accept) {
+            capnp::MallocMessageBuilder builder;
+            auto msgInt = builder.initRoot<riaps::distrcoord::GroupInternals>();
+            auto msgCons = msgInt.initConsensus();
+            msgCons.setSourceComponentId(GetParentComponent()->GetCompUuid());
+            auto msgVote = msgCons.initVote();
+            msgVote.setProposeId(proposeId);
+            if (accept)
+                msgVote.setVoteResult(riaps::distrcoord::Consensus::VoteResults::ACCEPTED);
+            else
+                msgVote.setVoteResult(riaps::distrcoord::Consensus::VoteResults::REJECTED);
+
+            return SendInternalMessage(builder);
         }
 
         Group::~Group() {

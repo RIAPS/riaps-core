@@ -40,11 +40,11 @@ struct MessageToLeader {
     sourceComponentId @0 : Text;
 }
 
-struct DistrCoord {
+struct Consensus {
     sourceComponentId @0 : Text;
     proposeToLeader   @1 : ProposeToLeader;
     proposeToClients  @2 : ProposeToClients;
-    voteForLeader     @3 : VoteForLeader;
+    vote              @3 : Vote;
     announce          @4 : Announce;
 
     struct ProposeToLeader {
@@ -56,10 +56,10 @@ struct DistrCoord {
         leaderId  @1 : Text;
     }
 
-    struct VoteForLeader {
+    struct Vote {
         proposeId  @0 : Text;
-        leaderId   @1 : Text;
-        voteResult @2 : VoteResults;
+        #leaderId   @1 : Text;
+        voteResult @1 : VoteResults;
     }
 
     struct Announce {
@@ -75,6 +75,6 @@ struct GroupInternals {
         groupHeartBeat    @0 : GroupHeartBeat;
         leaderElection    @1 : LeaderElection;
         messageToLeader   @2 : MessageToLeader;
-        distrCoord        @3 : DistrCoord;
+        consensus         @3 : Consensus;
     }
 }

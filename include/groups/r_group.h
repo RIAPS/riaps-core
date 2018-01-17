@@ -119,6 +119,8 @@ namespace riaps {
             bool SendMessageToLeader(capnp::MallocMessageBuilder& message);
             bool SendProposeToLeader(capnp::MallocMessageBuilder& message, const std::string& proposeId);
 
+            bool SendVote(const std::string& proposeId, bool accept);
+
             const ComponentBase* GetParentComponent();
 
             std::shared_ptr<std::set<std::string>> GetKnownComponents();

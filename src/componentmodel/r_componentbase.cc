@@ -771,10 +771,16 @@ namespace riaps{
         zuuid_destroy(&uuid);
 
         if (group->SendProposeToLeader(message, strUuid)){
-            //_logger->debug("SendPropose(), id={}, value=??", strUuid);
             return strUuid;
         }
         return "";
+    }
+
+    bool ComponentBase::SendVote(const riaps::groups::GroupId &groupId, const std::string &proposeId, bool accept) {
+        auto group = GetGroupById(groupId);
+        if (group == nullptr) return false;
+
+        return group->SendVote(proposeId, accept);
     }
 
     void ComponentBase::UpdateGroup(riaps::discovery::GroupUpdate::Reader &msgGroupUpdate) {

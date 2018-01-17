@@ -38,7 +38,6 @@ namespace dc {
 
 
                 // If the component is not the leader, then propose()
-
                 if (GetLeaderId(gid)!="" && GetLeaderId(gid)!=GetCompUuid()) {
                     // The component already joined, read the file and lets vote about the content of the file
                     std::ifstream f;
@@ -51,7 +50,7 @@ namespace dc {
                     msgDc.setValue(line);
                     std::string proposeId = SendPropose(gid, builder);
                     std::string leaderId = GetLeaderId(gid);
-                    //_logger->info("Propose send. Value: {} ProposeId: {}, LeaderId: {}", line, proposeId, leaderId);
+                    _logger->info("Proposed value: {}", line);
                 }
             }
         }
@@ -59,7 +58,25 @@ namespace dc {
         void DistrCoord::OnPropose(riaps::groups::GroupId &groupId, const std::string &proposeId,
                                    capnp::FlatArrayMessageReader &message) {
             auto msg = message.getRoot<dc::messages::AgreeOnThis>();
-            _logger->info("Propose arrived id={}, proposedValue={}", proposeId, msg.getValue().cStr());
+            std::ifstream f;
+            f.open("dcoordvote.txt");
+            std::string line;
+            f >> line;
+
+            if (line == msg.getValue().cStr()){
+                bool rc = SendVote(groupId, proposeId, true);
+                _logger->debug_if(rc,"Vote - ACCEPT {}", proposeId);
+                _logger->error_if(!rc, "Vote - ACCEPT Failed");
+            } else{
+                SendVote(groupId, proposeId, false);
+                _logger->debug("Vote - REJECT {}", proposeId);
+            }
+
+        }
+
+        void DistrCoord::OnAnnounce(const riaps::groups::GroupId &groupId, const std::string &proposeId,
+                                    bool accepted) {
+            _logger->info("Announce, Propose Id: {} is {}", proposeId, accepted?"accepted":"rejected");
         }
 
         void DistrCoord::OnGroupMessage(const riaps::groups::GroupId &groupId,

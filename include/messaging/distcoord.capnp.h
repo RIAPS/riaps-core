@@ -26,17 +26,17 @@ CAPNP_DECLARE_SCHEMA(8a6b413c94c9717c);
 CAPNP_DECLARE_SCHEMA(fa67eeb730a5df5e);
 CAPNP_DECLARE_SCHEMA(f5b471e04470e3c4);
 CAPNP_DECLARE_SCHEMA(f8333cb31aa809fa);
-CAPNP_DECLARE_SCHEMA(f56a97f2cf99a7a8);
-CAPNP_DECLARE_SCHEMA(f620a72bb495ea4c);
-CAPNP_DECLARE_SCHEMA(d91410fa05ddbf8a);
-CAPNP_DECLARE_SCHEMA(abcf5ee93da3b52e);
-CAPNP_DECLARE_SCHEMA(bcbc5dbf56f2b379);
-CAPNP_DECLARE_SCHEMA(af4eb8a60cc4ec6a);
-enum class VoteResults_af4eb8a60cc4ec6a: uint16_t {
+CAPNP_DECLARE_SCHEMA(934fe15762c71e76);
+CAPNP_DECLARE_SCHEMA(880a4d64a0fb8286);
+CAPNP_DECLARE_SCHEMA(a9afe0029ed6bdf8);
+CAPNP_DECLARE_SCHEMA(83e8ac73bacab398);
+CAPNP_DECLARE_SCHEMA(c31d0cfd5f7ff32a);
+CAPNP_DECLARE_SCHEMA(b99fa3405ff6abee);
+enum class VoteResults_b99fa3405ff6abee: uint16_t {
   ACCEPTED,
   REJECTED,
 };
-CAPNP_DECLARE_ENUM(VoteResults, af4eb8a60cc4ec6a);
+CAPNP_DECLARE_ENUM(VoteResults, b99fa3405ff6abee);
 CAPNP_DECLARE_SCHEMA(8a25ecc657bf2ed3);
 
 }  // namespace schemas
@@ -140,28 +140,28 @@ struct MessageToLeader {
   };
 };
 
-struct DistrCoord {
-  DistrCoord() = delete;
+struct Consensus {
+  Consensus() = delete;
 
   class Reader;
   class Builder;
   class Pipeline;
   struct ProposeToLeader;
   struct ProposeToClients;
-  struct VoteForLeader;
+  struct Vote;
   struct Announce;
-  typedef ::capnp::schemas::VoteResults_af4eb8a60cc4ec6a VoteResults;
+  typedef ::capnp::schemas::VoteResults_b99fa3405ff6abee VoteResults;
 
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(f56a97f2cf99a7a8, 0, 5)
+    CAPNP_DECLARE_STRUCT_HEADER(934fe15762c71e76, 0, 5)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
     #endif  // !CAPNP_LITE
   };
 };
 
-struct DistrCoord::ProposeToLeader {
+struct Consensus::ProposeToLeader {
   ProposeToLeader() = delete;
 
   class Reader;
@@ -169,14 +169,14 @@ struct DistrCoord::ProposeToLeader {
   class Pipeline;
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(f620a72bb495ea4c, 0, 1)
+    CAPNP_DECLARE_STRUCT_HEADER(880a4d64a0fb8286, 0, 1)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
     #endif  // !CAPNP_LITE
   };
 };
 
-struct DistrCoord::ProposeToClients {
+struct Consensus::ProposeToClients {
   ProposeToClients() = delete;
 
   class Reader;
@@ -184,29 +184,29 @@ struct DistrCoord::ProposeToClients {
   class Pipeline;
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(d91410fa05ddbf8a, 0, 2)
+    CAPNP_DECLARE_STRUCT_HEADER(a9afe0029ed6bdf8, 0, 2)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
     #endif  // !CAPNP_LITE
   };
 };
 
-struct DistrCoord::VoteForLeader {
-  VoteForLeader() = delete;
+struct Consensus::Vote {
+  Vote() = delete;
 
   class Reader;
   class Builder;
   class Pipeline;
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(abcf5ee93da3b52e, 1, 2)
+    CAPNP_DECLARE_STRUCT_HEADER(83e8ac73bacab398, 1, 1)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
     #endif  // !CAPNP_LITE
   };
 };
 
-struct DistrCoord::Announce {
+struct Consensus::Announce {
   Announce() = delete;
 
   class Reader;
@@ -214,7 +214,7 @@ struct DistrCoord::Announce {
   class Pipeline;
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(bcbc5dbf56f2b379, 1, 1)
+    CAPNP_DECLARE_STRUCT_HEADER(c31d0cfd5f7ff32a, 1, 1)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
     #endif  // !CAPNP_LITE
@@ -231,7 +231,7 @@ struct GroupInternals {
     GROUP_HEART_BEAT,
     LEADER_ELECTION,
     MESSAGE_TO_LEADER,
-    DISTR_COORD,
+    CONSENSUS,
   };
 
   struct _capnpPrivate {
@@ -783,9 +783,9 @@ private:
 };
 #endif  // !CAPNP_LITE
 
-class DistrCoord::Reader {
+class Consensus::Reader {
 public:
-  typedef DistrCoord Reads;
+  typedef Consensus Reads;
 
   Reader() = default;
   inline explicit Reader(::capnp::_::StructReader base): _reader(base) {}
@@ -804,16 +804,16 @@ public:
   inline  ::capnp::Text::Reader getSourceComponentId() const;
 
   inline bool hasProposeToLeader() const;
-  inline  ::riaps::distrcoord::DistrCoord::ProposeToLeader::Reader getProposeToLeader() const;
+  inline  ::riaps::distrcoord::Consensus::ProposeToLeader::Reader getProposeToLeader() const;
 
   inline bool hasProposeToClients() const;
-  inline  ::riaps::distrcoord::DistrCoord::ProposeToClients::Reader getProposeToClients() const;
+  inline  ::riaps::distrcoord::Consensus::ProposeToClients::Reader getProposeToClients() const;
 
-  inline bool hasVoteForLeader() const;
-  inline  ::riaps::distrcoord::DistrCoord::VoteForLeader::Reader getVoteForLeader() const;
+  inline bool hasVote() const;
+  inline  ::riaps::distrcoord::Consensus::Vote::Reader getVote() const;
 
   inline bool hasAnnounce() const;
-  inline  ::riaps::distrcoord::DistrCoord::Announce::Reader getAnnounce() const;
+  inline  ::riaps::distrcoord::Consensus::Announce::Reader getAnnounce() const;
 
 private:
   ::capnp::_::StructReader _reader;
@@ -827,9 +827,9 @@ private:
   friend class ::capnp::Orphanage;
 };
 
-class DistrCoord::Builder {
+class Consensus::Builder {
 public:
-  typedef DistrCoord Builds;
+  typedef Consensus Builds;
 
   Builder() = delete;  // Deleted to discourage incorrect usage.
                        // You can explicitly initialize to nullptr instead.
@@ -851,32 +851,32 @@ public:
   inline ::capnp::Orphan< ::capnp::Text> disownSourceComponentId();
 
   inline bool hasProposeToLeader();
-  inline  ::riaps::distrcoord::DistrCoord::ProposeToLeader::Builder getProposeToLeader();
-  inline void setProposeToLeader( ::riaps::distrcoord::DistrCoord::ProposeToLeader::Reader value);
-  inline  ::riaps::distrcoord::DistrCoord::ProposeToLeader::Builder initProposeToLeader();
-  inline void adoptProposeToLeader(::capnp::Orphan< ::riaps::distrcoord::DistrCoord::ProposeToLeader>&& value);
-  inline ::capnp::Orphan< ::riaps::distrcoord::DistrCoord::ProposeToLeader> disownProposeToLeader();
+  inline  ::riaps::distrcoord::Consensus::ProposeToLeader::Builder getProposeToLeader();
+  inline void setProposeToLeader( ::riaps::distrcoord::Consensus::ProposeToLeader::Reader value);
+  inline  ::riaps::distrcoord::Consensus::ProposeToLeader::Builder initProposeToLeader();
+  inline void adoptProposeToLeader(::capnp::Orphan< ::riaps::distrcoord::Consensus::ProposeToLeader>&& value);
+  inline ::capnp::Orphan< ::riaps::distrcoord::Consensus::ProposeToLeader> disownProposeToLeader();
 
   inline bool hasProposeToClients();
-  inline  ::riaps::distrcoord::DistrCoord::ProposeToClients::Builder getProposeToClients();
-  inline void setProposeToClients( ::riaps::distrcoord::DistrCoord::ProposeToClients::Reader value);
-  inline  ::riaps::distrcoord::DistrCoord::ProposeToClients::Builder initProposeToClients();
-  inline void adoptProposeToClients(::capnp::Orphan< ::riaps::distrcoord::DistrCoord::ProposeToClients>&& value);
-  inline ::capnp::Orphan< ::riaps::distrcoord::DistrCoord::ProposeToClients> disownProposeToClients();
+  inline  ::riaps::distrcoord::Consensus::ProposeToClients::Builder getProposeToClients();
+  inline void setProposeToClients( ::riaps::distrcoord::Consensus::ProposeToClients::Reader value);
+  inline  ::riaps::distrcoord::Consensus::ProposeToClients::Builder initProposeToClients();
+  inline void adoptProposeToClients(::capnp::Orphan< ::riaps::distrcoord::Consensus::ProposeToClients>&& value);
+  inline ::capnp::Orphan< ::riaps::distrcoord::Consensus::ProposeToClients> disownProposeToClients();
 
-  inline bool hasVoteForLeader();
-  inline  ::riaps::distrcoord::DistrCoord::VoteForLeader::Builder getVoteForLeader();
-  inline void setVoteForLeader( ::riaps::distrcoord::DistrCoord::VoteForLeader::Reader value);
-  inline  ::riaps::distrcoord::DistrCoord::VoteForLeader::Builder initVoteForLeader();
-  inline void adoptVoteForLeader(::capnp::Orphan< ::riaps::distrcoord::DistrCoord::VoteForLeader>&& value);
-  inline ::capnp::Orphan< ::riaps::distrcoord::DistrCoord::VoteForLeader> disownVoteForLeader();
+  inline bool hasVote();
+  inline  ::riaps::distrcoord::Consensus::Vote::Builder getVote();
+  inline void setVote( ::riaps::distrcoord::Consensus::Vote::Reader value);
+  inline  ::riaps::distrcoord::Consensus::Vote::Builder initVote();
+  inline void adoptVote(::capnp::Orphan< ::riaps::distrcoord::Consensus::Vote>&& value);
+  inline ::capnp::Orphan< ::riaps::distrcoord::Consensus::Vote> disownVote();
 
   inline bool hasAnnounce();
-  inline  ::riaps::distrcoord::DistrCoord::Announce::Builder getAnnounce();
-  inline void setAnnounce( ::riaps::distrcoord::DistrCoord::Announce::Reader value);
-  inline  ::riaps::distrcoord::DistrCoord::Announce::Builder initAnnounce();
-  inline void adoptAnnounce(::capnp::Orphan< ::riaps::distrcoord::DistrCoord::Announce>&& value);
-  inline ::capnp::Orphan< ::riaps::distrcoord::DistrCoord::Announce> disownAnnounce();
+  inline  ::riaps::distrcoord::Consensus::Announce::Builder getAnnounce();
+  inline void setAnnounce( ::riaps::distrcoord::Consensus::Announce::Reader value);
+  inline  ::riaps::distrcoord::Consensus::Announce::Builder initAnnounce();
+  inline void adoptAnnounce(::capnp::Orphan< ::riaps::distrcoord::Consensus::Announce>&& value);
+  inline ::capnp::Orphan< ::riaps::distrcoord::Consensus::Announce> disownAnnounce();
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -888,18 +888,18 @@ private:
 };
 
 #if !CAPNP_LITE
-class DistrCoord::Pipeline {
+class Consensus::Pipeline {
 public:
-  typedef DistrCoord Pipelines;
+  typedef Consensus Pipelines;
 
   inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
   inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
       : _typeless(kj::mv(typeless)) {}
 
-  inline  ::riaps::distrcoord::DistrCoord::ProposeToLeader::Pipeline getProposeToLeader();
-  inline  ::riaps::distrcoord::DistrCoord::ProposeToClients::Pipeline getProposeToClients();
-  inline  ::riaps::distrcoord::DistrCoord::VoteForLeader::Pipeline getVoteForLeader();
-  inline  ::riaps::distrcoord::DistrCoord::Announce::Pipeline getAnnounce();
+  inline  ::riaps::distrcoord::Consensus::ProposeToLeader::Pipeline getProposeToLeader();
+  inline  ::riaps::distrcoord::Consensus::ProposeToClients::Pipeline getProposeToClients();
+  inline  ::riaps::distrcoord::Consensus::Vote::Pipeline getVote();
+  inline  ::riaps::distrcoord::Consensus::Announce::Pipeline getAnnounce();
 private:
   ::capnp::AnyPointer::Pipeline _typeless;
   friend class ::capnp::PipelineHook;
@@ -908,7 +908,7 @@ private:
 };
 #endif  // !CAPNP_LITE
 
-class DistrCoord::ProposeToLeader::Reader {
+class Consensus::ProposeToLeader::Reader {
 public:
   typedef ProposeToLeader Reads;
 
@@ -940,7 +940,7 @@ private:
   friend class ::capnp::Orphanage;
 };
 
-class DistrCoord::ProposeToLeader::Builder {
+class Consensus::ProposeToLeader::Builder {
 public:
   typedef ProposeToLeader Builds;
 
@@ -973,7 +973,7 @@ private:
 };
 
 #if !CAPNP_LITE
-class DistrCoord::ProposeToLeader::Pipeline {
+class Consensus::ProposeToLeader::Pipeline {
 public:
   typedef ProposeToLeader Pipelines;
 
@@ -989,7 +989,7 @@ private:
 };
 #endif  // !CAPNP_LITE
 
-class DistrCoord::ProposeToClients::Reader {
+class Consensus::ProposeToClients::Reader {
 public:
   typedef ProposeToClients Reads;
 
@@ -1024,7 +1024,7 @@ private:
   friend class ::capnp::Orphanage;
 };
 
-class DistrCoord::ProposeToClients::Builder {
+class Consensus::ProposeToClients::Builder {
 public:
   typedef ProposeToClients Builds;
 
@@ -1064,7 +1064,7 @@ private:
 };
 
 #if !CAPNP_LITE
-class DistrCoord::ProposeToClients::Pipeline {
+class Consensus::ProposeToClients::Pipeline {
 public:
   typedef ProposeToClients Pipelines;
 
@@ -1080,9 +1080,9 @@ private:
 };
 #endif  // !CAPNP_LITE
 
-class DistrCoord::VoteForLeader::Reader {
+class Consensus::Vote::Reader {
 public:
-  typedef VoteForLeader Reads;
+  typedef Vote Reads;
 
   Reader() = default;
   inline explicit Reader(::capnp::_::StructReader base): _reader(base) {}
@@ -1100,10 +1100,7 @@ public:
   inline bool hasProposeId() const;
   inline  ::capnp::Text::Reader getProposeId() const;
 
-  inline bool hasLeaderId() const;
-  inline  ::capnp::Text::Reader getLeaderId() const;
-
-  inline  ::riaps::distrcoord::DistrCoord::VoteResults getVoteResult() const;
+  inline  ::riaps::distrcoord::Consensus::VoteResults getVoteResult() const;
 
 private:
   ::capnp::_::StructReader _reader;
@@ -1117,9 +1114,9 @@ private:
   friend class ::capnp::Orphanage;
 };
 
-class DistrCoord::VoteForLeader::Builder {
+class Consensus::Vote::Builder {
 public:
-  typedef VoteForLeader Builds;
+  typedef Vote Builds;
 
   Builder() = delete;  // Deleted to discourage incorrect usage.
                        // You can explicitly initialize to nullptr instead.
@@ -1140,15 +1137,8 @@ public:
   inline void adoptProposeId(::capnp::Orphan< ::capnp::Text>&& value);
   inline ::capnp::Orphan< ::capnp::Text> disownProposeId();
 
-  inline bool hasLeaderId();
-  inline  ::capnp::Text::Builder getLeaderId();
-  inline void setLeaderId( ::capnp::Text::Reader value);
-  inline  ::capnp::Text::Builder initLeaderId(unsigned int size);
-  inline void adoptLeaderId(::capnp::Orphan< ::capnp::Text>&& value);
-  inline ::capnp::Orphan< ::capnp::Text> disownLeaderId();
-
-  inline  ::riaps::distrcoord::DistrCoord::VoteResults getVoteResult();
-  inline void setVoteResult( ::riaps::distrcoord::DistrCoord::VoteResults value);
+  inline  ::riaps::distrcoord::Consensus::VoteResults getVoteResult();
+  inline void setVoteResult( ::riaps::distrcoord::Consensus::VoteResults value);
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -1160,9 +1150,9 @@ private:
 };
 
 #if !CAPNP_LITE
-class DistrCoord::VoteForLeader::Pipeline {
+class Consensus::Vote::Pipeline {
 public:
-  typedef VoteForLeader Pipelines;
+  typedef Vote Pipelines;
 
   inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
   inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
@@ -1176,7 +1166,7 @@ private:
 };
 #endif  // !CAPNP_LITE
 
-class DistrCoord::Announce::Reader {
+class Consensus::Announce::Reader {
 public:
   typedef Announce Reads;
 
@@ -1196,7 +1186,7 @@ public:
   inline bool hasProposeId() const;
   inline  ::capnp::Text::Reader getProposeId() const;
 
-  inline  ::riaps::distrcoord::DistrCoord::VoteResults getVoteResult() const;
+  inline  ::riaps::distrcoord::Consensus::VoteResults getVoteResult() const;
 
 private:
   ::capnp::_::StructReader _reader;
@@ -1210,7 +1200,7 @@ private:
   friend class ::capnp::Orphanage;
 };
 
-class DistrCoord::Announce::Builder {
+class Consensus::Announce::Builder {
 public:
   typedef Announce Builds;
 
@@ -1233,8 +1223,8 @@ public:
   inline void adoptProposeId(::capnp::Orphan< ::capnp::Text>&& value);
   inline ::capnp::Orphan< ::capnp::Text> disownProposeId();
 
-  inline  ::riaps::distrcoord::DistrCoord::VoteResults getVoteResult();
-  inline void setVoteResult( ::riaps::distrcoord::DistrCoord::VoteResults value);
+  inline  ::riaps::distrcoord::Consensus::VoteResults getVoteResult();
+  inline void setVoteResult( ::riaps::distrcoord::Consensus::VoteResults value);
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -1246,7 +1236,7 @@ private:
 };
 
 #if !CAPNP_LITE
-class DistrCoord::Announce::Pipeline {
+class Consensus::Announce::Pipeline {
 public:
   typedef Announce Pipelines;
 
@@ -1292,9 +1282,9 @@ public:
   inline bool hasMessageToLeader() const;
   inline  ::riaps::distrcoord::MessageToLeader::Reader getMessageToLeader() const;
 
-  inline bool isDistrCoord() const;
-  inline bool hasDistrCoord() const;
-  inline  ::riaps::distrcoord::DistrCoord::Reader getDistrCoord() const;
+  inline bool isConsensus() const;
+  inline bool hasConsensus() const;
+  inline  ::riaps::distrcoord::Consensus::Reader getConsensus() const;
 
 private:
   ::capnp::_::StructReader _reader;
@@ -1349,13 +1339,13 @@ public:
   inline void adoptMessageToLeader(::capnp::Orphan< ::riaps::distrcoord::MessageToLeader>&& value);
   inline ::capnp::Orphan< ::riaps::distrcoord::MessageToLeader> disownMessageToLeader();
 
-  inline bool isDistrCoord();
-  inline bool hasDistrCoord();
-  inline  ::riaps::distrcoord::DistrCoord::Builder getDistrCoord();
-  inline void setDistrCoord( ::riaps::distrcoord::DistrCoord::Reader value);
-  inline  ::riaps::distrcoord::DistrCoord::Builder initDistrCoord();
-  inline void adoptDistrCoord(::capnp::Orphan< ::riaps::distrcoord::DistrCoord>&& value);
-  inline ::capnp::Orphan< ::riaps::distrcoord::DistrCoord> disownDistrCoord();
+  inline bool isConsensus();
+  inline bool hasConsensus();
+  inline  ::riaps::distrcoord::Consensus::Builder getConsensus();
+  inline void setConsensus( ::riaps::distrcoord::Consensus::Reader value);
+  inline  ::riaps::distrcoord::Consensus::Builder initConsensus();
+  inline void adoptConsensus(::capnp::Orphan< ::riaps::distrcoord::Consensus>&& value);
+  inline ::capnp::Orphan< ::riaps::distrcoord::Consensus> disownConsensus();
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -1744,403 +1734,371 @@ inline ::capnp::Orphan< ::capnp::Text> MessageToLeader::Builder::disownSourceCom
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
-inline bool DistrCoord::Reader::hasSourceComponentId() const {
+inline bool Consensus::Reader::hasSourceComponentId() const {
   return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline bool DistrCoord::Builder::hasSourceComponentId() {
+inline bool Consensus::Builder::hasSourceComponentId() {
   return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline  ::capnp::Text::Reader DistrCoord::Reader::getSourceComponentId() const {
+inline  ::capnp::Text::Reader Consensus::Reader::getSourceComponentId() const {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
       _reader.getPointerField(0 * ::capnp::POINTERS));
 }
-inline  ::capnp::Text::Builder DistrCoord::Builder::getSourceComponentId() {
+inline  ::capnp::Text::Builder Consensus::Builder::getSourceComponentId() {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
-inline void DistrCoord::Builder::setSourceComponentId( ::capnp::Text::Reader value) {
+inline void Consensus::Builder::setSourceComponentId( ::capnp::Text::Reader value) {
   ::capnp::_::PointerHelpers< ::capnp::Text>::set(
       _builder.getPointerField(0 * ::capnp::POINTERS), value);
 }
-inline  ::capnp::Text::Builder DistrCoord::Builder::initSourceComponentId(unsigned int size) {
+inline  ::capnp::Text::Builder Consensus::Builder::initSourceComponentId(unsigned int size) {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
       _builder.getPointerField(0 * ::capnp::POINTERS), size);
 }
-inline void DistrCoord::Builder::adoptSourceComponentId(
+inline void Consensus::Builder::adoptSourceComponentId(
     ::capnp::Orphan< ::capnp::Text>&& value) {
   ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
       _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::capnp::Text> DistrCoord::Builder::disownSourceComponentId() {
+inline ::capnp::Orphan< ::capnp::Text> Consensus::Builder::disownSourceComponentId() {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
-inline bool DistrCoord::Reader::hasProposeToLeader() const {
+inline bool Consensus::Reader::hasProposeToLeader() const {
   return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
 }
-inline bool DistrCoord::Builder::hasProposeToLeader() {
+inline bool Consensus::Builder::hasProposeToLeader() {
   return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
 }
-inline  ::riaps::distrcoord::DistrCoord::ProposeToLeader::Reader DistrCoord::Reader::getProposeToLeader() const {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::ProposeToLeader>::get(
+inline  ::riaps::distrcoord::Consensus::ProposeToLeader::Reader Consensus::Reader::getProposeToLeader() const {
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToLeader>::get(
       _reader.getPointerField(1 * ::capnp::POINTERS));
 }
-inline  ::riaps::distrcoord::DistrCoord::ProposeToLeader::Builder DistrCoord::Builder::getProposeToLeader() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::ProposeToLeader>::get(
+inline  ::riaps::distrcoord::Consensus::ProposeToLeader::Builder Consensus::Builder::getProposeToLeader() {
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToLeader>::get(
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
-inline  ::riaps::distrcoord::DistrCoord::ProposeToLeader::Pipeline DistrCoord::Pipeline::getProposeToLeader() {
-  return  ::riaps::distrcoord::DistrCoord::ProposeToLeader::Pipeline(_typeless.getPointerField(1));
+inline  ::riaps::distrcoord::Consensus::ProposeToLeader::Pipeline Consensus::Pipeline::getProposeToLeader() {
+  return  ::riaps::distrcoord::Consensus::ProposeToLeader::Pipeline(_typeless.getPointerField(1));
 }
 #endif  // !CAPNP_LITE
-inline void DistrCoord::Builder::setProposeToLeader( ::riaps::distrcoord::DistrCoord::ProposeToLeader::Reader value) {
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::ProposeToLeader>::set(
+inline void Consensus::Builder::setProposeToLeader( ::riaps::distrcoord::Consensus::ProposeToLeader::Reader value) {
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToLeader>::set(
       _builder.getPointerField(1 * ::capnp::POINTERS), value);
 }
-inline  ::riaps::distrcoord::DistrCoord::ProposeToLeader::Builder DistrCoord::Builder::initProposeToLeader() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::ProposeToLeader>::init(
+inline  ::riaps::distrcoord::Consensus::ProposeToLeader::Builder Consensus::Builder::initProposeToLeader() {
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToLeader>::init(
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }
-inline void DistrCoord::Builder::adoptProposeToLeader(
-    ::capnp::Orphan< ::riaps::distrcoord::DistrCoord::ProposeToLeader>&& value) {
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::ProposeToLeader>::adopt(
+inline void Consensus::Builder::adoptProposeToLeader(
+    ::capnp::Orphan< ::riaps::distrcoord::Consensus::ProposeToLeader>&& value) {
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToLeader>::adopt(
       _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::riaps::distrcoord::DistrCoord::ProposeToLeader> DistrCoord::Builder::disownProposeToLeader() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::ProposeToLeader>::disown(
+inline ::capnp::Orphan< ::riaps::distrcoord::Consensus::ProposeToLeader> Consensus::Builder::disownProposeToLeader() {
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToLeader>::disown(
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }
 
-inline bool DistrCoord::Reader::hasProposeToClients() const {
+inline bool Consensus::Reader::hasProposeToClients() const {
   return !_reader.getPointerField(2 * ::capnp::POINTERS).isNull();
 }
-inline bool DistrCoord::Builder::hasProposeToClients() {
+inline bool Consensus::Builder::hasProposeToClients() {
   return !_builder.getPointerField(2 * ::capnp::POINTERS).isNull();
 }
-inline  ::riaps::distrcoord::DistrCoord::ProposeToClients::Reader DistrCoord::Reader::getProposeToClients() const {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::ProposeToClients>::get(
+inline  ::riaps::distrcoord::Consensus::ProposeToClients::Reader Consensus::Reader::getProposeToClients() const {
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToClients>::get(
       _reader.getPointerField(2 * ::capnp::POINTERS));
 }
-inline  ::riaps::distrcoord::DistrCoord::ProposeToClients::Builder DistrCoord::Builder::getProposeToClients() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::ProposeToClients>::get(
+inline  ::riaps::distrcoord::Consensus::ProposeToClients::Builder Consensus::Builder::getProposeToClients() {
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToClients>::get(
       _builder.getPointerField(2 * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
-inline  ::riaps::distrcoord::DistrCoord::ProposeToClients::Pipeline DistrCoord::Pipeline::getProposeToClients() {
-  return  ::riaps::distrcoord::DistrCoord::ProposeToClients::Pipeline(_typeless.getPointerField(2));
+inline  ::riaps::distrcoord::Consensus::ProposeToClients::Pipeline Consensus::Pipeline::getProposeToClients() {
+  return  ::riaps::distrcoord::Consensus::ProposeToClients::Pipeline(_typeless.getPointerField(2));
 }
 #endif  // !CAPNP_LITE
-inline void DistrCoord::Builder::setProposeToClients( ::riaps::distrcoord::DistrCoord::ProposeToClients::Reader value) {
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::ProposeToClients>::set(
+inline void Consensus::Builder::setProposeToClients( ::riaps::distrcoord::Consensus::ProposeToClients::Reader value) {
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToClients>::set(
       _builder.getPointerField(2 * ::capnp::POINTERS), value);
 }
-inline  ::riaps::distrcoord::DistrCoord::ProposeToClients::Builder DistrCoord::Builder::initProposeToClients() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::ProposeToClients>::init(
+inline  ::riaps::distrcoord::Consensus::ProposeToClients::Builder Consensus::Builder::initProposeToClients() {
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToClients>::init(
       _builder.getPointerField(2 * ::capnp::POINTERS));
 }
-inline void DistrCoord::Builder::adoptProposeToClients(
-    ::capnp::Orphan< ::riaps::distrcoord::DistrCoord::ProposeToClients>&& value) {
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::ProposeToClients>::adopt(
+inline void Consensus::Builder::adoptProposeToClients(
+    ::capnp::Orphan< ::riaps::distrcoord::Consensus::ProposeToClients>&& value) {
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToClients>::adopt(
       _builder.getPointerField(2 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::riaps::distrcoord::DistrCoord::ProposeToClients> DistrCoord::Builder::disownProposeToClients() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::ProposeToClients>::disown(
+inline ::capnp::Orphan< ::riaps::distrcoord::Consensus::ProposeToClients> Consensus::Builder::disownProposeToClients() {
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToClients>::disown(
       _builder.getPointerField(2 * ::capnp::POINTERS));
 }
 
-inline bool DistrCoord::Reader::hasVoteForLeader() const {
+inline bool Consensus::Reader::hasVote() const {
   return !_reader.getPointerField(3 * ::capnp::POINTERS).isNull();
 }
-inline bool DistrCoord::Builder::hasVoteForLeader() {
+inline bool Consensus::Builder::hasVote() {
   return !_builder.getPointerField(3 * ::capnp::POINTERS).isNull();
 }
-inline  ::riaps::distrcoord::DistrCoord::VoteForLeader::Reader DistrCoord::Reader::getVoteForLeader() const {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::VoteForLeader>::get(
+inline  ::riaps::distrcoord::Consensus::Vote::Reader Consensus::Reader::getVote() const {
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Vote>::get(
       _reader.getPointerField(3 * ::capnp::POINTERS));
 }
-inline  ::riaps::distrcoord::DistrCoord::VoteForLeader::Builder DistrCoord::Builder::getVoteForLeader() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::VoteForLeader>::get(
+inline  ::riaps::distrcoord::Consensus::Vote::Builder Consensus::Builder::getVote() {
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Vote>::get(
       _builder.getPointerField(3 * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
-inline  ::riaps::distrcoord::DistrCoord::VoteForLeader::Pipeline DistrCoord::Pipeline::getVoteForLeader() {
-  return  ::riaps::distrcoord::DistrCoord::VoteForLeader::Pipeline(_typeless.getPointerField(3));
+inline  ::riaps::distrcoord::Consensus::Vote::Pipeline Consensus::Pipeline::getVote() {
+  return  ::riaps::distrcoord::Consensus::Vote::Pipeline(_typeless.getPointerField(3));
 }
 #endif  // !CAPNP_LITE
-inline void DistrCoord::Builder::setVoteForLeader( ::riaps::distrcoord::DistrCoord::VoteForLeader::Reader value) {
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::VoteForLeader>::set(
+inline void Consensus::Builder::setVote( ::riaps::distrcoord::Consensus::Vote::Reader value) {
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Vote>::set(
       _builder.getPointerField(3 * ::capnp::POINTERS), value);
 }
-inline  ::riaps::distrcoord::DistrCoord::VoteForLeader::Builder DistrCoord::Builder::initVoteForLeader() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::VoteForLeader>::init(
+inline  ::riaps::distrcoord::Consensus::Vote::Builder Consensus::Builder::initVote() {
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Vote>::init(
       _builder.getPointerField(3 * ::capnp::POINTERS));
 }
-inline void DistrCoord::Builder::adoptVoteForLeader(
-    ::capnp::Orphan< ::riaps::distrcoord::DistrCoord::VoteForLeader>&& value) {
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::VoteForLeader>::adopt(
+inline void Consensus::Builder::adoptVote(
+    ::capnp::Orphan< ::riaps::distrcoord::Consensus::Vote>&& value) {
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Vote>::adopt(
       _builder.getPointerField(3 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::riaps::distrcoord::DistrCoord::VoteForLeader> DistrCoord::Builder::disownVoteForLeader() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::VoteForLeader>::disown(
+inline ::capnp::Orphan< ::riaps::distrcoord::Consensus::Vote> Consensus::Builder::disownVote() {
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Vote>::disown(
       _builder.getPointerField(3 * ::capnp::POINTERS));
 }
 
-inline bool DistrCoord::Reader::hasAnnounce() const {
+inline bool Consensus::Reader::hasAnnounce() const {
   return !_reader.getPointerField(4 * ::capnp::POINTERS).isNull();
 }
-inline bool DistrCoord::Builder::hasAnnounce() {
+inline bool Consensus::Builder::hasAnnounce() {
   return !_builder.getPointerField(4 * ::capnp::POINTERS).isNull();
 }
-inline  ::riaps::distrcoord::DistrCoord::Announce::Reader DistrCoord::Reader::getAnnounce() const {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::Announce>::get(
+inline  ::riaps::distrcoord::Consensus::Announce::Reader Consensus::Reader::getAnnounce() const {
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Announce>::get(
       _reader.getPointerField(4 * ::capnp::POINTERS));
 }
-inline  ::riaps::distrcoord::DistrCoord::Announce::Builder DistrCoord::Builder::getAnnounce() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::Announce>::get(
+inline  ::riaps::distrcoord::Consensus::Announce::Builder Consensus::Builder::getAnnounce() {
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Announce>::get(
       _builder.getPointerField(4 * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
-inline  ::riaps::distrcoord::DistrCoord::Announce::Pipeline DistrCoord::Pipeline::getAnnounce() {
-  return  ::riaps::distrcoord::DistrCoord::Announce::Pipeline(_typeless.getPointerField(4));
+inline  ::riaps::distrcoord::Consensus::Announce::Pipeline Consensus::Pipeline::getAnnounce() {
+  return  ::riaps::distrcoord::Consensus::Announce::Pipeline(_typeless.getPointerField(4));
 }
 #endif  // !CAPNP_LITE
-inline void DistrCoord::Builder::setAnnounce( ::riaps::distrcoord::DistrCoord::Announce::Reader value) {
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::Announce>::set(
+inline void Consensus::Builder::setAnnounce( ::riaps::distrcoord::Consensus::Announce::Reader value) {
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Announce>::set(
       _builder.getPointerField(4 * ::capnp::POINTERS), value);
 }
-inline  ::riaps::distrcoord::DistrCoord::Announce::Builder DistrCoord::Builder::initAnnounce() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::Announce>::init(
+inline  ::riaps::distrcoord::Consensus::Announce::Builder Consensus::Builder::initAnnounce() {
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Announce>::init(
       _builder.getPointerField(4 * ::capnp::POINTERS));
 }
-inline void DistrCoord::Builder::adoptAnnounce(
-    ::capnp::Orphan< ::riaps::distrcoord::DistrCoord::Announce>&& value) {
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::Announce>::adopt(
+inline void Consensus::Builder::adoptAnnounce(
+    ::capnp::Orphan< ::riaps::distrcoord::Consensus::Announce>&& value) {
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Announce>::adopt(
       _builder.getPointerField(4 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::riaps::distrcoord::DistrCoord::Announce> DistrCoord::Builder::disownAnnounce() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord::Announce>::disown(
+inline ::capnp::Orphan< ::riaps::distrcoord::Consensus::Announce> Consensus::Builder::disownAnnounce() {
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Announce>::disown(
       _builder.getPointerField(4 * ::capnp::POINTERS));
 }
 
-inline bool DistrCoord::ProposeToLeader::Reader::hasProposeId() const {
+inline bool Consensus::ProposeToLeader::Reader::hasProposeId() const {
   return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline bool DistrCoord::ProposeToLeader::Builder::hasProposeId() {
+inline bool Consensus::ProposeToLeader::Builder::hasProposeId() {
   return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline  ::capnp::Text::Reader DistrCoord::ProposeToLeader::Reader::getProposeId() const {
+inline  ::capnp::Text::Reader Consensus::ProposeToLeader::Reader::getProposeId() const {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
       _reader.getPointerField(0 * ::capnp::POINTERS));
 }
-inline  ::capnp::Text::Builder DistrCoord::ProposeToLeader::Builder::getProposeId() {
+inline  ::capnp::Text::Builder Consensus::ProposeToLeader::Builder::getProposeId() {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
-inline void DistrCoord::ProposeToLeader::Builder::setProposeId( ::capnp::Text::Reader value) {
+inline void Consensus::ProposeToLeader::Builder::setProposeId( ::capnp::Text::Reader value) {
   ::capnp::_::PointerHelpers< ::capnp::Text>::set(
       _builder.getPointerField(0 * ::capnp::POINTERS), value);
 }
-inline  ::capnp::Text::Builder DistrCoord::ProposeToLeader::Builder::initProposeId(unsigned int size) {
+inline  ::capnp::Text::Builder Consensus::ProposeToLeader::Builder::initProposeId(unsigned int size) {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
       _builder.getPointerField(0 * ::capnp::POINTERS), size);
 }
-inline void DistrCoord::ProposeToLeader::Builder::adoptProposeId(
+inline void Consensus::ProposeToLeader::Builder::adoptProposeId(
     ::capnp::Orphan< ::capnp::Text>&& value) {
   ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
       _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::capnp::Text> DistrCoord::ProposeToLeader::Builder::disownProposeId() {
+inline ::capnp::Orphan< ::capnp::Text> Consensus::ProposeToLeader::Builder::disownProposeId() {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
-inline bool DistrCoord::ProposeToClients::Reader::hasProposeId() const {
+inline bool Consensus::ProposeToClients::Reader::hasProposeId() const {
   return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline bool DistrCoord::ProposeToClients::Builder::hasProposeId() {
+inline bool Consensus::ProposeToClients::Builder::hasProposeId() {
   return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline  ::capnp::Text::Reader DistrCoord::ProposeToClients::Reader::getProposeId() const {
+inline  ::capnp::Text::Reader Consensus::ProposeToClients::Reader::getProposeId() const {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
       _reader.getPointerField(0 * ::capnp::POINTERS));
 }
-inline  ::capnp::Text::Builder DistrCoord::ProposeToClients::Builder::getProposeId() {
+inline  ::capnp::Text::Builder Consensus::ProposeToClients::Builder::getProposeId() {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
-inline void DistrCoord::ProposeToClients::Builder::setProposeId( ::capnp::Text::Reader value) {
+inline void Consensus::ProposeToClients::Builder::setProposeId( ::capnp::Text::Reader value) {
   ::capnp::_::PointerHelpers< ::capnp::Text>::set(
       _builder.getPointerField(0 * ::capnp::POINTERS), value);
 }
-inline  ::capnp::Text::Builder DistrCoord::ProposeToClients::Builder::initProposeId(unsigned int size) {
+inline  ::capnp::Text::Builder Consensus::ProposeToClients::Builder::initProposeId(unsigned int size) {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
       _builder.getPointerField(0 * ::capnp::POINTERS), size);
 }
-inline void DistrCoord::ProposeToClients::Builder::adoptProposeId(
+inline void Consensus::ProposeToClients::Builder::adoptProposeId(
     ::capnp::Orphan< ::capnp::Text>&& value) {
   ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
       _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::capnp::Text> DistrCoord::ProposeToClients::Builder::disownProposeId() {
+inline ::capnp::Orphan< ::capnp::Text> Consensus::ProposeToClients::Builder::disownProposeId() {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
-inline bool DistrCoord::ProposeToClients::Reader::hasLeaderId() const {
+inline bool Consensus::ProposeToClients::Reader::hasLeaderId() const {
   return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
 }
-inline bool DistrCoord::ProposeToClients::Builder::hasLeaderId() {
+inline bool Consensus::ProposeToClients::Builder::hasLeaderId() {
   return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
 }
-inline  ::capnp::Text::Reader DistrCoord::ProposeToClients::Reader::getLeaderId() const {
+inline  ::capnp::Text::Reader Consensus::ProposeToClients::Reader::getLeaderId() const {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
       _reader.getPointerField(1 * ::capnp::POINTERS));
 }
-inline  ::capnp::Text::Builder DistrCoord::ProposeToClients::Builder::getLeaderId() {
+inline  ::capnp::Text::Builder Consensus::ProposeToClients::Builder::getLeaderId() {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }
-inline void DistrCoord::ProposeToClients::Builder::setLeaderId( ::capnp::Text::Reader value) {
+inline void Consensus::ProposeToClients::Builder::setLeaderId( ::capnp::Text::Reader value) {
   ::capnp::_::PointerHelpers< ::capnp::Text>::set(
       _builder.getPointerField(1 * ::capnp::POINTERS), value);
 }
-inline  ::capnp::Text::Builder DistrCoord::ProposeToClients::Builder::initLeaderId(unsigned int size) {
+inline  ::capnp::Text::Builder Consensus::ProposeToClients::Builder::initLeaderId(unsigned int size) {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
       _builder.getPointerField(1 * ::capnp::POINTERS), size);
 }
-inline void DistrCoord::ProposeToClients::Builder::adoptLeaderId(
+inline void Consensus::ProposeToClients::Builder::adoptLeaderId(
     ::capnp::Orphan< ::capnp::Text>&& value) {
   ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
       _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::capnp::Text> DistrCoord::ProposeToClients::Builder::disownLeaderId() {
+inline ::capnp::Orphan< ::capnp::Text> Consensus::ProposeToClients::Builder::disownLeaderId() {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }
 
-inline bool DistrCoord::VoteForLeader::Reader::hasProposeId() const {
+inline bool Consensus::Vote::Reader::hasProposeId() const {
   return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline bool DistrCoord::VoteForLeader::Builder::hasProposeId() {
+inline bool Consensus::Vote::Builder::hasProposeId() {
   return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline  ::capnp::Text::Reader DistrCoord::VoteForLeader::Reader::getProposeId() const {
+inline  ::capnp::Text::Reader Consensus::Vote::Reader::getProposeId() const {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
       _reader.getPointerField(0 * ::capnp::POINTERS));
 }
-inline  ::capnp::Text::Builder DistrCoord::VoteForLeader::Builder::getProposeId() {
+inline  ::capnp::Text::Builder Consensus::Vote::Builder::getProposeId() {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
-inline void DistrCoord::VoteForLeader::Builder::setProposeId( ::capnp::Text::Reader value) {
+inline void Consensus::Vote::Builder::setProposeId( ::capnp::Text::Reader value) {
   ::capnp::_::PointerHelpers< ::capnp::Text>::set(
       _builder.getPointerField(0 * ::capnp::POINTERS), value);
 }
-inline  ::capnp::Text::Builder DistrCoord::VoteForLeader::Builder::initProposeId(unsigned int size) {
+inline  ::capnp::Text::Builder Consensus::Vote::Builder::initProposeId(unsigned int size) {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
       _builder.getPointerField(0 * ::capnp::POINTERS), size);
 }
-inline void DistrCoord::VoteForLeader::Builder::adoptProposeId(
+inline void Consensus::Vote::Builder::adoptProposeId(
     ::capnp::Orphan< ::capnp::Text>&& value) {
   ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
       _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::capnp::Text> DistrCoord::VoteForLeader::Builder::disownProposeId() {
+inline ::capnp::Orphan< ::capnp::Text> Consensus::Vote::Builder::disownProposeId() {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
-inline bool DistrCoord::VoteForLeader::Reader::hasLeaderId() const {
-  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
-}
-inline bool DistrCoord::VoteForLeader::Builder::hasLeaderId() {
-  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
-}
-inline  ::capnp::Text::Reader DistrCoord::VoteForLeader::Reader::getLeaderId() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(1 * ::capnp::POINTERS));
-}
-inline  ::capnp::Text::Builder DistrCoord::VoteForLeader::Builder::getLeaderId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
-}
-inline void DistrCoord::VoteForLeader::Builder::setLeaderId( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(1 * ::capnp::POINTERS), value);
-}
-inline  ::capnp::Text::Builder DistrCoord::VoteForLeader::Builder::initLeaderId(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(1 * ::capnp::POINTERS), size);
-}
-inline void DistrCoord::VoteForLeader::Builder::adoptLeaderId(
-    ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
-}
-inline ::capnp::Orphan< ::capnp::Text> DistrCoord::VoteForLeader::Builder::disownLeaderId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
-}
-
-inline  ::riaps::distrcoord::DistrCoord::VoteResults DistrCoord::VoteForLeader::Reader::getVoteResult() const {
-  return _reader.getDataField< ::riaps::distrcoord::DistrCoord::VoteResults>(
+inline  ::riaps::distrcoord::Consensus::VoteResults Consensus::Vote::Reader::getVoteResult() const {
+  return _reader.getDataField< ::riaps::distrcoord::Consensus::VoteResults>(
       0 * ::capnp::ELEMENTS);
 }
 
-inline  ::riaps::distrcoord::DistrCoord::VoteResults DistrCoord::VoteForLeader::Builder::getVoteResult() {
-  return _builder.getDataField< ::riaps::distrcoord::DistrCoord::VoteResults>(
+inline  ::riaps::distrcoord::Consensus::VoteResults Consensus::Vote::Builder::getVoteResult() {
+  return _builder.getDataField< ::riaps::distrcoord::Consensus::VoteResults>(
       0 * ::capnp::ELEMENTS);
 }
-inline void DistrCoord::VoteForLeader::Builder::setVoteResult( ::riaps::distrcoord::DistrCoord::VoteResults value) {
-  _builder.setDataField< ::riaps::distrcoord::DistrCoord::VoteResults>(
+inline void Consensus::Vote::Builder::setVoteResult( ::riaps::distrcoord::Consensus::VoteResults value) {
+  _builder.setDataField< ::riaps::distrcoord::Consensus::VoteResults>(
       0 * ::capnp::ELEMENTS, value);
 }
 
-inline bool DistrCoord::Announce::Reader::hasProposeId() const {
+inline bool Consensus::Announce::Reader::hasProposeId() const {
   return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline bool DistrCoord::Announce::Builder::hasProposeId() {
+inline bool Consensus::Announce::Builder::hasProposeId() {
   return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline  ::capnp::Text::Reader DistrCoord::Announce::Reader::getProposeId() const {
+inline  ::capnp::Text::Reader Consensus::Announce::Reader::getProposeId() const {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
       _reader.getPointerField(0 * ::capnp::POINTERS));
 }
-inline  ::capnp::Text::Builder DistrCoord::Announce::Builder::getProposeId() {
+inline  ::capnp::Text::Builder Consensus::Announce::Builder::getProposeId() {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
-inline void DistrCoord::Announce::Builder::setProposeId( ::capnp::Text::Reader value) {
+inline void Consensus::Announce::Builder::setProposeId( ::capnp::Text::Reader value) {
   ::capnp::_::PointerHelpers< ::capnp::Text>::set(
       _builder.getPointerField(0 * ::capnp::POINTERS), value);
 }
-inline  ::capnp::Text::Builder DistrCoord::Announce::Builder::initProposeId(unsigned int size) {
+inline  ::capnp::Text::Builder Consensus::Announce::Builder::initProposeId(unsigned int size) {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
       _builder.getPointerField(0 * ::capnp::POINTERS), size);
 }
-inline void DistrCoord::Announce::Builder::adoptProposeId(
+inline void Consensus::Announce::Builder::adoptProposeId(
     ::capnp::Orphan< ::capnp::Text>&& value) {
   ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
       _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::capnp::Text> DistrCoord::Announce::Builder::disownProposeId() {
+inline ::capnp::Orphan< ::capnp::Text> Consensus::Announce::Builder::disownProposeId() {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
-inline  ::riaps::distrcoord::DistrCoord::VoteResults DistrCoord::Announce::Reader::getVoteResult() const {
-  return _reader.getDataField< ::riaps::distrcoord::DistrCoord::VoteResults>(
+inline  ::riaps::distrcoord::Consensus::VoteResults Consensus::Announce::Reader::getVoteResult() const {
+  return _reader.getDataField< ::riaps::distrcoord::Consensus::VoteResults>(
       0 * ::capnp::ELEMENTS);
 }
 
-inline  ::riaps::distrcoord::DistrCoord::VoteResults DistrCoord::Announce::Builder::getVoteResult() {
-  return _builder.getDataField< ::riaps::distrcoord::DistrCoord::VoteResults>(
+inline  ::riaps::distrcoord::Consensus::VoteResults Consensus::Announce::Builder::getVoteResult() {
+  return _builder.getDataField< ::riaps::distrcoord::Consensus::VoteResults>(
       0 * ::capnp::ELEMENTS);
 }
-inline void DistrCoord::Announce::Builder::setVoteResult( ::riaps::distrcoord::DistrCoord::VoteResults value) {
-  _builder.setDataField< ::riaps::distrcoord::DistrCoord::VoteResults>(
+inline void Consensus::Announce::Builder::setVoteResult( ::riaps::distrcoord::Consensus::VoteResults value) {
+  _builder.setDataField< ::riaps::distrcoord::Consensus::VoteResults>(
       0 * ::capnp::ELEMENTS, value);
 }
 
@@ -2307,55 +2265,55 @@ inline ::capnp::Orphan< ::riaps::distrcoord::MessageToLeader> GroupInternals::Bu
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
-inline bool GroupInternals::Reader::isDistrCoord() const {
-  return which() == GroupInternals::DISTR_COORD;
+inline bool GroupInternals::Reader::isConsensus() const {
+  return which() == GroupInternals::CONSENSUS;
 }
-inline bool GroupInternals::Builder::isDistrCoord() {
-  return which() == GroupInternals::DISTR_COORD;
+inline bool GroupInternals::Builder::isConsensus() {
+  return which() == GroupInternals::CONSENSUS;
 }
-inline bool GroupInternals::Reader::hasDistrCoord() const {
-  if (which() != GroupInternals::DISTR_COORD) return false;
+inline bool GroupInternals::Reader::hasConsensus() const {
+  if (which() != GroupInternals::CONSENSUS) return false;
   return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline bool GroupInternals::Builder::hasDistrCoord() {
-  if (which() != GroupInternals::DISTR_COORD) return false;
+inline bool GroupInternals::Builder::hasConsensus() {
+  if (which() != GroupInternals::CONSENSUS) return false;
   return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
-inline  ::riaps::distrcoord::DistrCoord::Reader GroupInternals::Reader::getDistrCoord() const {
-  KJ_IREQUIRE(which() == GroupInternals::DISTR_COORD,
+inline  ::riaps::distrcoord::Consensus::Reader GroupInternals::Reader::getConsensus() const {
+  KJ_IREQUIRE(which() == GroupInternals::CONSENSUS,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord>::get(
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus>::get(
       _reader.getPointerField(0 * ::capnp::POINTERS));
 }
-inline  ::riaps::distrcoord::DistrCoord::Builder GroupInternals::Builder::getDistrCoord() {
-  KJ_IREQUIRE(which() == GroupInternals::DISTR_COORD,
+inline  ::riaps::distrcoord::Consensus::Builder GroupInternals::Builder::getConsensus() {
+  KJ_IREQUIRE(which() == GroupInternals::CONSENSUS,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord>::get(
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus>::get(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
-inline void GroupInternals::Builder::setDistrCoord( ::riaps::distrcoord::DistrCoord::Reader value) {
+inline void GroupInternals::Builder::setConsensus( ::riaps::distrcoord::Consensus::Reader value) {
   _builder.setDataField<GroupInternals::Which>(
-      0 * ::capnp::ELEMENTS, GroupInternals::DISTR_COORD);
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord>::set(
+      0 * ::capnp::ELEMENTS, GroupInternals::CONSENSUS);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus>::set(
       _builder.getPointerField(0 * ::capnp::POINTERS), value);
 }
-inline  ::riaps::distrcoord::DistrCoord::Builder GroupInternals::Builder::initDistrCoord() {
+inline  ::riaps::distrcoord::Consensus::Builder GroupInternals::Builder::initConsensus() {
   _builder.setDataField<GroupInternals::Which>(
-      0 * ::capnp::ELEMENTS, GroupInternals::DISTR_COORD);
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord>::init(
+      0 * ::capnp::ELEMENTS, GroupInternals::CONSENSUS);
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus>::init(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
-inline void GroupInternals::Builder::adoptDistrCoord(
-    ::capnp::Orphan< ::riaps::distrcoord::DistrCoord>&& value) {
+inline void GroupInternals::Builder::adoptConsensus(
+    ::capnp::Orphan< ::riaps::distrcoord::Consensus>&& value) {
   _builder.setDataField<GroupInternals::Which>(
-      0 * ::capnp::ELEMENTS, GroupInternals::DISTR_COORD);
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord>::adopt(
+      0 * ::capnp::ELEMENTS, GroupInternals::CONSENSUS);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus>::adopt(
       _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
 }
-inline ::capnp::Orphan< ::riaps::distrcoord::DistrCoord> GroupInternals::Builder::disownDistrCoord() {
-  KJ_IREQUIRE(which() == GroupInternals::DISTR_COORD,
+inline ::capnp::Orphan< ::riaps::distrcoord::Consensus> GroupInternals::Builder::disownConsensus() {
+  KJ_IREQUIRE(which() == GroupInternals::CONSENSUS,
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::DistrCoord>::disown(
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 

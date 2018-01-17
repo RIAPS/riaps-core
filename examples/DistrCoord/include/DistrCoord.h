@@ -27,6 +27,8 @@ namespace dc {
 
             void OnPropose (riaps::groups::GroupId& groupId, const std::string& proposeId, capnp::FlatArrayMessageReader& message);
 
+            void OnAnnounce(const riaps::groups::GroupId& groupId, const std::string& proposeId, bool accepted);
+
             virtual bool SendGroupMessage(riaps::groups::GroupId&      groupId,
                                           capnp::MallocMessageBuilder& messageBuilder,
                                           const std::string&           portName);
