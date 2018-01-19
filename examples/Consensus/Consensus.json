@@ -84,5 +84,11 @@
             "name":"Dummy"
         }
     ],
+    "groups" : {
+        "group1" : {
+            "leader" : true,
+            "consensus" : true
+        }
+    },
     "name":"DistrCoord"
 }

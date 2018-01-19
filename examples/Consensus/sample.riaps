@@ -1,6 +1,6 @@
 // RIAPS Sample
 
-app DistrCoord {
+app Consensus {
     message Dummy;
 
     component DistrCoord {

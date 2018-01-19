@@ -2,7 +2,7 @@
 // Created by istvan on 11/11/16.
 //
 
-#include "DistrCoord.h"
+#include "Consensus.h"
 #include <capnp/serialize.h>
 #include <capnp/message.h>
 #include <fstream>
@@ -10,7 +10,7 @@
 namespace dc {
     namespace components {
 
-        DistrCoord::DistrCoord(_component_conf &config, riaps::Actor &actor) : DistrCoordBase(config, actor) {
+        Consensus::Consensus(_component_conf &config, riaps::Actor &actor) : ConsensusBase(config, actor) {
             _hasJoined = false;
             SetDebugLevel(_logger, spdlog::level::level_enum::debug);
             _generator = std::mt19937(_rd());
@@ -22,11 +22,11 @@ namespace dc {
             o.close();
         }
 
-        void DistrCoord::OnClock(riaps::ports::PortBase *port) {
+        void Consensus::OnClock(riaps::ports::PortBase *port) {
             //int64_t time = zclock_mono();
 
             if (!_hasJoined) {
-                bool rc = this->JoinToGroup({"BackupGroup", "Korte"});
+                bool rc = this->JoinToGroup({GROUP_TYPE_GROUP1, "Korte"});
                 if (rc) {
                     _logger->debug("Successfully joined to group");
                     _hasJoined = true;
@@ -34,7 +34,7 @@ namespace dc {
                     _logger->debug("Failed to join");
                 }
             } else {
-                riaps::groups::GroupId gid{"BackupGroup", "Korte"};
+                riaps::groups::GroupId gid{GROUP_TYPE_GROUP1, "Korte"};
 
 
                 // If the component is not the leader, then propose()
@@ -55,7 +55,7 @@ namespace dc {
             }
         }
 
-        void DistrCoord::OnPropose(riaps::groups::GroupId &groupId, const std::string &proposeId,
+        void Consensus::OnPropose(riaps::groups::GroupId &groupId, const std::string &proposeId,
                                    capnp::FlatArrayMessageReader &message) {
             auto msg = message.getRoot<dc::messages::AgreeOnThis>();
             std::ifstream f;
@@ -74,31 +74,31 @@ namespace dc {
 
         }
 
-        void DistrCoord::OnAnnounce(const riaps::groups::GroupId &groupId, const std::string &proposeId,
+        void Consensus::OnAnnounce(const riaps::groups::GroupId &groupId, const std::string &proposeId,
                                     bool accepted) {
             _logger->info("Announce, Propose Id: {} is {}", proposeId, accepted?"accepted":"rejected");
         }
 
-        void DistrCoord::OnGroupMessage(const riaps::groups::GroupId &groupId,
+        void Consensus::OnGroupMessage(const riaps::groups::GroupId &groupId,
                                          capnp::FlatArrayMessageReader &capnpreader, riaps::ports::PortBase *port) {
 
         }
 
 
-        bool DistrCoord::SendGroupMessage(riaps::groups::GroupId &groupId, capnp::MallocMessageBuilder &messageBuilder,
+        bool Consensus::SendGroupMessage(riaps::groups::GroupId &groupId, capnp::MallocMessageBuilder &messageBuilder,
                                            const std::string &portName) {
             return true;
         }
 
 
-        DistrCoord::~DistrCoord() {
+        Consensus::~Consensus() {
 
         }
     }
 }
 
 riaps::ComponentBase* create_component(_component_conf& config, riaps::Actor& actor){
-    auto result = new dc::components::DistrCoord(config, actor);
+    auto result = new dc::components::Consensus(config, actor);
     return result;
 }
 

@@ -1,18 +1,15 @@
-//
-// Created by istvan on 3/10/17.
-//
 
-#include <base/DistrCoordBase.h>
+#include <base/ConsensusBase.h>
 
 namespace dc {
     namespace components {
 
-        DistrCoordBase::DistrCoordBase(_component_conf &config, riaps::Actor &actor) : ComponentBase(config,
+        ConsensusBase::ConsensusBase(_component_conf &config, riaps::Actor &actor) : ComponentBase(config,
                                                                                                        actor) {
 
         }
 
-        void DistrCoordBase::DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
+        void ConsensusBase::DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
                                               riaps::ports::PortBase *port,
                                               std::shared_ptr<riaps::MessageParams> params) {
             auto portName = port->GetPortName();
@@ -21,13 +18,13 @@ namespace dc {
             }
         }
 
-        void DistrCoordBase::DispatchInsideMessage(zmsg_t *zmsg, riaps::ports::PortBase *port) {
+        void ConsensusBase::DispatchInsideMessage(zmsg_t *zmsg, riaps::ports::PortBase *port) {
 
         }
 
 
 
-        DistrCoordBase::~DistrCoordBase() {
+        ConsensusBase::~ConsensusBase() {
 
         }
 

@@ -2,18 +2,19 @@
 #define RIAPS_CORE_CBASE_H
 
 #include <componentmodel/r_componentbase.h>
-#include <messages/distrcoord.capnp.h>
+#include <messages/consensus.capnp.h>
 
-#define PORT_TIMER_CLOCK "clock"
+#define PORT_TIMER_CLOCK  "clock"
+#define GROUP_TYPE_GROUP1 "group1"
 
 namespace dc {
     namespace components {
 
-        class DistrCoordBase : public riaps::ComponentBase {
+        class ConsensusBase : public riaps::ComponentBase {
 
         public:
-            DistrCoordBase(_component_conf &config, riaps::Actor &actor);
-            virtual ~DistrCoordBase();
+            ConsensusBase(_component_conf &config, riaps::Actor &actor);
+            virtual ~ConsensusBase();
 
         protected:
 

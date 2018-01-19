@@ -5,17 +5,17 @@
 #ifndef RIAPS_FW_SENSOR_H
 #define RIAPS_FW_SENSOR_H
 
-#include "base/DistrCoordBase.h"
+#include "base/ConsensusBase.h"
 
 namespace dc {
     namespace components {
 
-        class DistrCoord : public DistrCoordBase {
+        class Consensus : public ConsensusBase {
 
         public:
 
-            DistrCoord(_component_conf &config, riaps::Actor &actor);
-            virtual ~DistrCoord();
+            Consensus(_component_conf &config, riaps::Actor &actor);
+            virtual ~Consensus();
 
         protected:
 
