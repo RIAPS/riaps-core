@@ -331,6 +331,8 @@ namespace riaps {
         std::string SendPropose(const riaps::groups::GroupId& groupId, capnp::MallocMessageBuilder& message);
         bool SendVote(const riaps::groups::GroupId& groupId, const std::string& proposeId, bool accept);
 
+        void ScheduleTimer(std::chrono::steady_clock::time_point& tp);
+
     private:
 
         const ports::PublisherPort*  InitPublisherPort  (const _component_port_pub&);
@@ -346,8 +348,7 @@ namespace riaps {
         std::string             GetTimerChannel();
 
 
-        // Note: disable for now, we need more tests.
-        //std::string             GetOneShotTimerChannel();
+        std::string             GetOneShotTimerChannel();
 
         // TODO: uniqueptr
         // Note: disable for now, we need more tests.

@@ -14,9 +14,9 @@ namespace riaps{
         zsock_t* timerport = zsock_new_pull(comp->GetTimerChannel().c_str());
         assert(timerport);
 
-//        Note: Disable one shot timers, we need more tests.
-//        zsock_t* timerportOneShot = zsock_new_pull(comp->GetOneShotTimerChannel().c_str());
-//        assert(timerportOneShot);
+
+        zsock_t* timerportOneShot = zsock_new_pull(comp->GetOneShotTimerChannel().c_str());
+        assert(timerportOneShot);
 
         zpoller_t* poller = zpoller_new(pipe, NULL);
         assert(poller);
@@ -26,6 +26,9 @@ namespace riaps{
         zsock_signal (pipe, 0);
 
         int rc = zpoller_add(poller, timerport);
+        assert(rc==0);
+
+        rc = zpoller_add(poller, timerportOneShot);
         assert(rc==0);
 
 //        rc = zpoller_add(poller, timerportOneShot);
@@ -669,10 +672,10 @@ namespace riaps{
         return prefix + GetCompUuid();
     }
 
-//    std::string ComponentBase::GetOneShotTimerChannel() {
-//        std::string prefix= "inproc://oneshottimer";
-//        return prefix + GetCompUuid();
-//    }
+    std::string ComponentBase::GetOneShotTimerChannel() {
+        std::string prefix= "inproc://oneshottimer";
+        return prefix + GetCompUuid();
+    }
 
     const std::string ComponentBase::GetCompUuid() const{
         std::string uuid_str = zuuid_str(_component_uuid);
@@ -751,6 +754,16 @@ namespace riaps{
         }
 
         return false;
+    }
+
+    void ComponentBase::ScheduleTimer(std::chrono::steady_clock::time_point &tp) {
+        std::string timerChannel = GetTimerChannel();
+        std::thread t([tp, timerChannel](){
+            zsock_t* pushChannel = zsock_new_push(timerChannel.c_str());
+            std::this_thread::sleep_until(tp);
+            zsock_send(pushChannel,"s", "FIRE");
+        });
+        t.detach();
     }
 
     void ComponentBase::OnAnnounce(const riaps::groups::GroupId &groupId, const std::string &proposeId, bool accepted) {
