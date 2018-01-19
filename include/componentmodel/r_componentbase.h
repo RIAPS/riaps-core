@@ -357,7 +357,7 @@ namespace riaps {
 
 
         // All the component ports
-        std::map<std::string, std::unique_ptr<ports::PortBase>> _ports;
+        std::unordered_map<std::string, std::unique_ptr<ports::PortBase>> _ports;
 
         std::map<riaps::groups::GroupId,
                  std::unique_ptr<riaps::groups::Group>> _groups;
