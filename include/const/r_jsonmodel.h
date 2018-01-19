@@ -9,12 +9,10 @@
 #define J_ACTORS       "actors"
 #define J_COMPONENTS   "components"
 #define J_DEVICES      "devices"
-#define J_MESSAGES     "messages"
 
 #define J_INSTANCES    "instances"
 #define J_INTERNALS    "internals"
 #define J_LOCALS       "locals"
-
 
 #define J_FORMALS      "formals"
 #define J_FORMAL_NAME  "name"
@@ -44,6 +42,10 @@
 #define J_PORT_QRYTYPE "qry_type"
 #define J_PORT_ANSTYPE "ans_type"
 
-#define J_TYPE     "type"
+#define J_TYPE         "type"
+
+#define J_GROUPS          "groups"
+#define J_GROUP_LEADER    "leader"
+#define J_GROUP_CONSENSUS "consensus"
 
 #endif //RIAPS_CORE_R_JSONMODEL_H_H

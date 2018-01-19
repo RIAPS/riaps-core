@@ -73,6 +73,7 @@ namespace riaps {
             nlohmann::json _jsonInstances;
             nlohmann::json _jsonDevicesconfig;
             nlohmann::json _jsonComponentsconfig;
+            nlohmann::json _jsonGroups;
         };
 
         struct DeviceProperties {
@@ -158,6 +159,8 @@ namespace riaps {
         ////
 
         void GetPortConfigs(nlohmann::json& jsonPortsConfig, _component_conf& results);
+
+        void ParseGroups();
 
 
         std::vector<component_conf> _component_configurations;

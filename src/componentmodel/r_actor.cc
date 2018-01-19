@@ -1,7 +1,7 @@
 #include <componentmodel/r_argumentparser.h>
 #include <componentmodel/r_actor.h>
 
-//#define NO_GROUP_TEST
+#define NO_GROUP_TEST
 
 namespace riaps {
 
@@ -145,7 +145,7 @@ namespace riaps {
         _actorProperties->_actorName         = actorname;
         _actorProperties->_jsonInstances     = jsonActorconfig[J_INSTANCES];
         _actorProperties->_jsonDevicesconfig = configJson[J_DEVICES];
-        //_jsonActorconfig       = jsonActorconfig;
+        _actorProperties->_jsonGroups        = configJson[J_GROUPS];
         _actorProperties->_jsonComponentsconfig  = configJson[J_COMPONENTS];
 
         //nlohmann::json jsonMessages    = configJson[J_MESSAGES];
@@ -487,8 +487,10 @@ namespace riaps {
         _logger->set_level(spd::level::debug);
         _localMessageTypes = GetLocalMessageTypes(_jsonLocals);
 
-        if (IsComponentActor())
+        if (IsComponentActor()){
+            ParseGroups();
             ParseConfig<ActorProperties>();
+        }
         else if (IsDeviceActor())
             ParseConfig<DeviceProperties>();
         else {
@@ -794,6 +796,28 @@ namespace riaps {
 
 
             //component->UpdateGroup(msgGroupUpdate);
+        }
+    }
+
+    void riaps::Actor::ParseGroups() {
+        const nlohmann::json& jGroups = _actorProperties->_jsonGroups;
+        if (jGroups.size()!=0) {
+            for (auto it_grp = jGroups.begin();
+                 it_grp != jGroups.end();
+                 it_grp++) {
+
+                std::string groupType = it_grp.key();
+                bool hasL = it_grp.value()[J_GROUP_LEADER];
+                bool hasC   = it_grp.value()[J_GROUP_CONSENSUS];
+
+                groupt_conf gc = {
+                    groupType,
+                    {},
+                    hasC,
+                    hasL
+                };
+                _grouptype_configurations.push_back(gc);
+            }
         }
     }
 

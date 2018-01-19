@@ -3,26 +3,26 @@
 app Consensus {
     message Dummy;
 
-    component DistrCoord {
+    component Consensus {
       timer clock 5000; // Vote in every 5th sec.
     }
     
 
     actor ActOne {
         {
-            c1:DistrCoord();
+            c1:Consensus();
         }
     }
 
     actor ActTwo {
             {
-                c2:DistrCoord();
+                c2:Consensus();
             }
         }
 
     actor ActThree {
             {
-                c3:DistrCoord();
+                c3:Consensus();
             }
         }
 

@@ -106,6 +106,7 @@ struct _groupt_conf {
     std::string   groupTypeId;
     _groupt_ports groupTypePorts;
     bool          hasLeader;
+    bool          hasConsensus;
 };
 
 
