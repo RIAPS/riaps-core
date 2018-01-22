@@ -1,94 +1,93 @@
 {
-    "actors":{
-        "ActOne":{
-            "formals":[],
-            "instances":{
-                "c1":{
-                    "actuals":[],
-                    "type":"DistrCoord"
-                }
-            },
-            "internals":[],
-            "locals":[],
-            "usage":{
-                "cpu":{},
-                "mem":{},
-                "net":{},
-                "spc":{}
-            },
-            "wires":[]
-        },
-        "ActThree":{
-            "formals":[],
-            "instances":{
-                "c3":{
-                    "actuals":[],
-                    "type":"DistrCoord"
-                }
-            },
-            "internals":[],
-            "locals":[],
-            "usage":{
-                "cpu":{},
-                "mem":{},
-                "net":{},
-                "spc":{}
-            },
-            "wires":[]
-        },
-        "ActTwo":{
-            "formals":[],
-            "instances":{
-                "c2":{
-                    "actuals":[],
-                    "type":"DistrCoord"
-                }
-            },
-            "internals":[],
-            "locals":[],
-            "usage":{
-                "cpu":{},
-                "mem":{},
-                "net":{},
-                "spc":{}
-            },
-            "wires":[]
+    "name": "Consensus",
+    "groups": {
+        "group1": {
+            "leader": true,
+            "consensus": true,
+            "groupMessages": [],
+            "consensusMessages": []
         }
     },
-    "components":{
-        "DistrCoord":{
-            "formals":[],
-            "name":"DistrCoord",
-            "ports":{
-                "anss":{},
-                "clts":{},
-                "inss":{},
-                "pubs":{},
-                "qrys":{},
-                "reps":{},
-                "reqs":{},
-                "srvs":{},
-                "subs":{},
-                "tims":{
-                    "clock":{
-                        "period":5000
+    "devices": {},
+    "components": {
+        "Consensus": {
+            "name": "Consensus",
+            "formals": [],
+            "libraries": [],
+            "files": [],
+            "devices": [],
+            "exceptHandler": "",
+            "ports": {
+                "reqs": {},
+                "pubs": {},
+                "reps": {},
+                "inss": {},
+                "subs": {},
+                "clts": {},
+                "ans": {},
+                "qry": {},
+                "srvs": {},
+                "tims": {
+                    "clock": {
+                        "period": 5000
                     }
                 }
             }
         }
     },
-    "devices":{},
-    "libraries":[],
-    "messages":[
-        {
-            "name":"Dummy"
-        }
-    ],
-    "groups" : {
-        "group1" : {
-            "leader" : true,
-            "consensus" : true
+    "actors": {
+        "ActOne": {
+            "internals": [],
+            "locals": [],
+            "criticals": [],
+            "formals": [],
+            "wires": [],
+            "instances": {
+                "c1": {
+                    "type": "Consensus",
+                    "actuals": []
+                }
+            },
+            "devices": [],
+            "memory": -1,
+            "space": -1,
+            "exceptHandler": ""
+        },
+        "ActThree": {
+            "internals": [],
+            "locals": [],
+            "criticals": [],
+            "formals": [],
+            "wires": [],
+            "instances": {
+                "c3": {
+                    "type": "Consensus",
+                    "actuals": []
+                }
+            },
+            "devices": [],
+            "memory": -1,
+            "space": -1,
+            "exceptHandler": ""
+        },
+        "ActTwo": {
+            "internals": [],
+            "locals": [],
+            "criticals": [],
+            "formals": [],
+            "wires": [],
+            "instances": {
+                "c2": {
+                    "type": "Consensus",
+                    "actuals": []
+                }
+            },
+            "devices": [],
+            "memory": -1,
+            "space": -1,
+            "exceptHandler": ""
         }
     },
-    "name":"DistrCoord"
+    "messages": [],
+    "libraries": []
 }

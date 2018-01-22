@@ -1,7 +1,14 @@
-// RIAPS Sample
+struct DummyT {
+	msg: String;
+}
+
+message Dummy:DummyT;
 
 app Consensus {
-    message Dummy;
+	
+	group group1{
+		uses leader, consensus;
+	}
 
     component Consensus {
       timer clock 5000; // Vote in every 5th sec.
