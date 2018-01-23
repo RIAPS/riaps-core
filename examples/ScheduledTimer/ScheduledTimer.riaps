@@ -1,0 +1,12 @@
+app ScheduledTimer{
+	component ST {
+      timer clock 5000;
+    }
+    
+
+    actor ActOne {
+        {
+            st:ST();
+        }
+    }
+}

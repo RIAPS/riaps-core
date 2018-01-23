@@ -218,26 +218,20 @@ namespace riaps{
                     zmsg_destroy(&msg);
                 }
             }
-            // One shot timer fired somewhere
-//            else if (which == timerportOneShot){
-//                zmsg_t *msg = zmsg_recv(which);
+            // Message from one shot timer
+            else if (which == timerportOneShot){
+                uint64_t timerId;
+                uint64_t targetTime;
+                zsock_recv(which, "88", &timerId, &targetTime);
 
-//                if (msg) {
-//                    char *timerId = zmsg_popstr(msg);
-//                    if (timerId){
-//                        std::string tid = std::string(timerId);
-//                        comp->OnOneShotTimer(tid);
-//                        zstr_free(&timerId);
-//                    }
-//                    zmsg_destroy(&msg);
-//                }
-//
-//                if (comp->_oneShotTimer!=NULL){
-//                    comp->_oneShotTimer->stop();
-//                    delete comp->_oneShotTimer;
-//                    comp->_oneShotTimer = NULL;
-//                }
-//            }
+                // Calculate the time to wait
+                auto now = duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+                auto remains = duration<uint64_t, std::micro>(targetTime-now);
+                std::this_thread::sleep_for(remains);
+
+                // TODO: if we missed
+                comp->OnScheduledTimer(timerId, false);
+            }
             else if(which){
 
                     ports::PortBase *riapsPort = const_cast<ports::PortBase *>(portSockets[static_cast<zsock_t *>(which)]);
@@ -377,7 +371,13 @@ namespace riaps{
         logger->set_level(level);
     }
 
-    ComponentBase::ComponentBase(component_conf& config, Actor& actor) : _actor(&actor)//, _oneShotTimer(NULL)
+    void ComponentBase::OnScheduledTimer(const uint64_t timerId, bool missed) {
+        _logger->error("Scheduled timer is fired, but no handler is implemented. Implement OnSchedulerTimer() in component {}", GetConfig().component_name);
+    }
+
+    ComponentBase::ComponentBase(component_conf& config, Actor& actor)
+            : _actor(&actor),
+              _timerCounter(0)
     {
         _configuration = config;
 
@@ -756,14 +756,20 @@ namespace riaps{
         return false;
     }
 
-    void ComponentBase::ScheduleTimer(std::chrono::steady_clock::time_point &tp) {
-        std::string timerChannel = GetTimerChannel();
-        std::thread t([tp, timerChannel](){
+    uint64_t ComponentBase::ScheduleTimer(std::chrono::steady_clock::time_point &tp) {
+        std::string timerChannel = GetOneShotTimerChannel();
+        uint64_t timerId = _timerCounter;
+        std::thread t([tp, timerChannel, timerId](){
             zsock_t* pushChannel = zsock_new_push(timerChannel.c_str());
+            uint64_t targetTime = duration_cast<std::chrono::microseconds>(tp.time_since_epoch()).count();
             std::this_thread::sleep_until(tp);
-            zsock_send(pushChannel,"s", "FIRE");
+            zsock_send(pushChannel,"88", timerId, targetTime);
+            zclock_sleep(500);
+            zsock_destroy(&pushChannel);
+            zclock_sleep(500);
         });
         t.detach();
+        return _timerCounter++;
     }
 
     void ComponentBase::OnAnnounce(const riaps::groups::GroupId &groupId, const std::string &proposeId, bool accepted) {

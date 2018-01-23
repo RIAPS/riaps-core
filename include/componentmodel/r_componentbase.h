@@ -263,7 +263,7 @@ namespace riaps {
 
         // Note: disable for now, we need more tests.
         //bool CreateOneShotTimer(const std::string& timerid, timespec& wakeuptime);
-        //virtual void OnOneShotTimer(const std::string& timerid)=0;
+        virtual void OnScheduledTimer(const uint64_t timerId, bool missed);
 
 /*        virtual void DispatchMessage(const std::string& messagetype,
                                      msgpack::sbuffer* message,
@@ -331,7 +331,7 @@ namespace riaps {
         std::string SendPropose(const riaps::groups::GroupId& groupId, capnp::MallocMessageBuilder& message);
         bool SendVote(const riaps::groups::GroupId& groupId, const std::string& proposeId, bool accept);
 
-        void ScheduleTimer(std::chrono::steady_clock::time_point& tp);
+        uint64_t ScheduleTimer(std::chrono::steady_clock::time_point& tp);
 
     private:
 
@@ -364,6 +364,8 @@ namespace riaps {
                  std::unique_ptr<riaps::groups::Group>> _groups;
 
         riaps::groups::Group* GetGroupById(const riaps::groups::GroupId& groupId);
+
+        uint64_t _timerCounter;
     };
 }
 

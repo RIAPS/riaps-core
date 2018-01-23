@@ -1,0 +1,52 @@
+{
+  "name": "ScheduledTimer",
+  "groups": {},
+  "devices": {},
+  "components": {
+    "ST": {
+      "name": "ST",
+      "formals": [],
+      "libraries": [],
+      "files": [],
+      "devices": [],
+      "exceptHandler": "",
+      "ports": {
+        "reqs": {},
+        "pubs": {},
+        "reps": {},
+        "inss": {},
+        "subs": {},
+        "clts": {},
+        "ans": {},
+        "qry": {},
+        "srvs": {},
+        "tims": {
+          "clock": {
+            "period": 5000
+          }
+        }
+      }
+    }
+  },
+  "actors": {
+    "ActOne": {
+      "internals": [],
+      "locals": [],
+      "criticals": [],
+      "formals": [],
+      "wires": [],
+      "instances": {
+        "st": {
+          "type": "ST",
+          "actuals": []
+        }
+      },
+      "devices": [],
+      "memory": -1,
+      "space": -1,
+      "exceptHandler": ""
+    }
+  },
+  "messages": [],
+  "libraries": []
+}
