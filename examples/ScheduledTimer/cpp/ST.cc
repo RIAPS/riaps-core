@@ -12,13 +12,13 @@ namespace scheduledtimer {
       }
       
       void ST::OnClock(riaps::ports::PortBase *port) {
-         if (_experimentStarted){
+         if (!_experimentStarted){
              _experimentStarted = true;
 
              auto wakeUpTime = std::chrono::steady_clock::now();
              wakeUpTime+=duration<int, std::milli>(TIMER_RATE);
-             auto timerId = ScheduleTimer(wakeUpTime);
-             _logger->debug("S[{}];{}", timerId,  duration_cast<std::chrono::microseconds>(wakeUpTime.time_since_epoch()).count());
+             //auto timerId = ScheduleTimer(wakeUpTime);
+             //_logger->debug("S[{}];{}", timerId,  duration_cast<std::chrono::microseconds>(wakeUpTime.time_since_epoch()).count());
          }
       }
       

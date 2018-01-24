@@ -219,18 +219,26 @@ namespace riaps{
                 }
             }
             // Message from one shot timer
-            else if (which == timerportOneShot){
+            else if ((which == timerportOneShot) && !terminated){
                 uint64_t timerId;
                 uint64_t targetTime;
                 zsock_recv(which, "88", &timerId, &targetTime);
 
                 // Calculate the time to wait
                 auto now = duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-                auto remains = duration<uint64_t, std::micro>(targetTime-now);
-                std::this_thread::sleep_for(remains);
 
-                // TODO: if we missed
-                comp->OnScheduledTimer(timerId, false);
+                if (now<targetTime) {
+                    auto remains = duration<uint64_t, std::micro>(targetTime - now);
+                    comp->_logger->error("On time, sleep for: {} microsec", remains.count());
+                    std::this_thread::sleep_for(remains);
+                    comp->OnScheduledTimer(timerId, false);
+                } else if (now == targetTime){
+                    comp->OnScheduledTimer(timerId, false);
+                } else {
+                    comp->_logger->error("Missed timer diff: {} microsec", targetTime - now);
+                    comp->OnScheduledTimer(timerId, true);
+                }
+
             }
             else if(which){
 
@@ -340,7 +348,7 @@ namespace riaps{
 //        }
 
         zpoller_destroy(&poller);
-//        zsock_destroy(&timerportOneShot);
+        zsock_destroy(&timerportOneShot);
         zsock_destroy(&timerport);
     };
 
@@ -761,11 +769,14 @@ namespace riaps{
         uint64_t timerId = _timerCounter;
         std::thread t([tp, timerChannel, timerId](){
             zsock_t* pushChannel = zsock_new_push(timerChannel.c_str());
+            auto ptr  = std::shared_ptr<zsock_t>(pushChannel,[](zsock_t* z){
+                zsock_destroy(&z);
+            });
+
             uint64_t targetTime = duration_cast<std::chrono::microseconds>(tp.time_since_epoch()).count();
-            std::this_thread::sleep_until(tp);
+            auto earlyTp = tp-duration<uint64_t, std::micro>(500);
+            std::this_thread::sleep_until(earlyTp);
             zsock_send(pushChannel,"88", timerId, targetTime);
-            zclock_sleep(500);
-            zsock_destroy(&pushChannel);
             zclock_sleep(500);
         });
         t.detach();

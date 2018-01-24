@@ -19,7 +19,7 @@ namespace leaderelection {
             //int64_t time = zclock_mono();
 
             if (!_hasJoined) {
-                bool rc = this->JoinToGroup({"BackupGroup", "Korte"});
+                bool rc = this->JoinToGroup({GROUP_TYPE_GROUP1, "Korte"});
                 if (rc) {
                     _logger->debug("Successfully joined to group");
                     _hasJoined = true;
@@ -27,7 +27,7 @@ namespace leaderelection {
                     _logger->debug("Failed to join");
                 }
             } else {
-                riaps::groups::GroupId gid{"BackupGroup", "Korte"};
+                riaps::groups::GroupId gid{GROUP_TYPE_GROUP1, "Korte"};
                 auto ct = GetGroupMemberCount(gid, 5000);
 
                 std::string ld = GetLeaderId(gid);

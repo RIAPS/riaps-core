@@ -14,7 +14,7 @@ cmake_minimum_required(VERSION 3.0)
 include_directories(cpp/include)
 
 # Creating Libraries for Component edu.vanderbilt.riaps.app.impl.ComponentImpl@121896 (name: ST) (language: python, realtime: false)
-add_library(ST 
+add_library(st
 			SHARED cpp/ST.cc
 			cpp/STBase.cc
 		    cpp/include/ST.h
@@ -22,6 +22,6 @@ add_library(ST
 
         )
 			
-target_link_libraries(ST czmq riaps dl capnp kj)
-install(TARGETS ST DESTINATION lib)
+target_link_libraries(st czmq riaps dl capnp kj)
+install(TARGETS st DESTINATION lib)
 

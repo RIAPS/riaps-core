@@ -5,6 +5,7 @@
 #include <messages/leaderelection.capnp.h>
 
 #define PORT_TIMER_CLOCK "clock"
+#define GROUP_TYPE_GROUP1 "group1"
 
 namespace leaderelection {
     namespace components {
