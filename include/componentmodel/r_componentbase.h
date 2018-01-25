@@ -42,6 +42,7 @@
 #include <componentmodel/ports/r_answerport.h>
 #include <componentmodel/ports/r_queryport.h>
 
+#define BILLION 1000000000l
 
 namespace spd = spdlog;
 
@@ -263,7 +264,10 @@ namespace riaps {
 
         // Note: disable for now, we need more tests.
         //bool CreateOneShotTimer(const std::string& timerid, timespec& wakeuptime);
-        virtual void OnScheduledTimer(const uint64_t timerId, bool missed);
+        virtual void OnScheduledTimer(char* timerId, bool missed);
+        //virtual void OnScheduledTimer(const uint64_t timerId, bool missed);
+
+
 
 /*        virtual void DispatchMessage(const std::string& messagetype,
                                      msgpack::sbuffer* message,
@@ -331,7 +335,8 @@ namespace riaps {
         std::string SendPropose(const riaps::groups::GroupId& groupId, capnp::MallocMessageBuilder& message);
         bool SendVote(const riaps::groups::GroupId& groupId, const std::string& proposeId, bool accept);
 
-        uint64_t ScheduleTimer(std::chrono::steady_clock::time_point& tp);
+        //uint64_t ScheduleTimer(std::chrono::steady_clock::time_point& tp);
+        uint64_t ScheduleAbsTimer(const timespec& tspec);
 
     private:
 

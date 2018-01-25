@@ -19,13 +19,16 @@ namespace scheduledtimer {
          
          void OnGroupMessage(const riaps::groups::GroupId& groupId, capnp::FlatArrayMessageReader& capnpreader, riaps::ports::PortBase* port);
 
-          void OnScheduledTimer(const uint64_t timerId, bool missed);
+          void OnScheduledTimer(char* timerId, bool missed);
+          //void OnScheduledTimer(const uint64_t timerId, bool missed);
          
          virtual ~ST();
 
       private:
           bool _experimentStarted;
-         
+         std::array<std::string, 300> _sLog;
+          std::array<std::string, 300> _fLog;
+          uint64_t counter;
       };
    }
 }
