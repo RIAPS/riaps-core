@@ -1,0 +1,11 @@
+app AdaptiveTimer{
+	component ATimer{
+		timer clock 5000;
+	}
+	
+	actor ActOne{
+		{
+			a1:ATimer;
+		}
+	}
+}

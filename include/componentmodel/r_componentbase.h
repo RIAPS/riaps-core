@@ -264,8 +264,8 @@ namespace riaps {
 
         // Note: disable for now, we need more tests.
         //bool CreateOneShotTimer(const std::string& timerid, timespec& wakeuptime);
-        virtual void OnScheduledTimer(char* timerId, bool missed);
-        //virtual void OnScheduledTimer(const uint64_t timerId, bool missed);
+        //virtual void OnScheduledTimer(char* timerId, bool missed);
+        virtual void OnScheduledTimer(const uint64_t timerId);
 
 
 
@@ -306,6 +306,8 @@ namespace riaps {
         virtual void DispatchInsideMessage(zmsg_t* zmsg,
                                            ports::PortBase* port) = 0;
 
+        timespec WaitUntil(const timespec& targetTimepoint);
+
         /**
          * Points to the component owner.
          */
@@ -336,7 +338,11 @@ namespace riaps {
         bool SendVote(const riaps::groups::GroupId& groupId, const std::string& proposeId, bool accept);
 
         //uint64_t ScheduleTimer(std::chrono::steady_clock::time_point& tp);
-        uint64_t ScheduleAbsTimer(const timespec& tspec);
+        uint64_t ScheduleAbsTimer(const timespec& t, const uint64_t wakeupOffset = 0 /*nanosec*/);
+        //uint64_t ScheduleAbsTimer(const std::chrono::system_clock::time_point& tp);
+
+//        template<class T>
+//        uint64_t ScheduleAbsTimer(const T& tp);
 
     private:
 

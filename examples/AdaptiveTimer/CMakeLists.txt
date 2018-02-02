@@ -14,11 +14,13 @@
 #include_directories(${CMAKE_SOURCE_DIR}/cpp/include)
 
 # Creating Libraries for Component edu.vanderbilt.riaps.app.impl.ComponentImpl@17c5bf5c (name: ATimer) (language: python, realtime: false)
-add_library(ATimer 
+add_library(atimer
 			SHARED ${CMAKE_CURRENT_SOURCE_DIR}/cpp/ATimer.cc
 			${CMAKE_CURRENT_SOURCE_DIR}/cpp/ATimerBase.cc
+			${CMAKE_CURRENT_SOURCE_DIR}/cpp/include/ATimerBase.h
+            ${CMAKE_CURRENT_SOURCE_DIR}/cpp/include/ATimer.h
 			)
 			
-target_link_libraries(ATimer czmq riaps dl capnp kj)
-install(TARGETS ATimer DESTINATION lib)
+target_link_libraries(atimer czmq riaps dl capnp kj)
+install(TARGETS atimer DESTINATION lib)
 

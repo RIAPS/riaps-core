@@ -5,6 +5,7 @@
 #define RIAPS_FW_ATIMER_H
 
 #include "ATimerBase.h"
+#include <spdlog/formatter.h>
 
 namespace adaptivetimer {
    namespace components {
@@ -18,9 +19,19 @@ namespace adaptivetimer {
          virtual void OnClock(riaps::ports::PortBase *port);
          
          void OnGroupMessage(const riaps::groups::GroupId& groupId, capnp::FlatArrayMessageReader& capnpreader, riaps::ports::PortBase* port);
-         
+
+          void OnScheduledTimer(const uint64_t timerId);
+
          virtual ~ATimer();
-         
+
+      private:
+
+          uint64_t _earlyWakeupOffset;
+          uint64_t _avgDelay;
+
+          bool _started;
+          std::unordered_map<uint64_t, timespec> _timers;
+         std::vector<std::string> _logs;
       };
    }
 }

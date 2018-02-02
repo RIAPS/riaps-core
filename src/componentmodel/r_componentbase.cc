@@ -220,17 +220,20 @@ namespace riaps{
             }
             // Message from one shot timer
             else if ((which == timerportOneShot) && !terminated){
-//                uint64_t timerId;
-//                int64_t tSec;
-//                int64_t tNsec;
-//                zsock_recv(which, "888", &timerId, &tSec, &tNsec);
-//                comp->OnScheduledTimer(timerId, true);
+                //uint64_t timerId;
+                //int64_t tSec;
+                //int64_t tNsec;
+                //zsock_recv(which, "888", &timerId, &tSec, &tNsec);
+                zmsg_t* msg = zmsg_recv(which);
+                zframe_t* idframe = zmsg_pop(msg);
+                uint64_t* timerId = reinterpret_cast<uint64_t*>(zframe_data(idframe));
+                comp->OnScheduledTimer(*timerId);
 
-                char*  ctimerId;
-                char*  tSec;
-                char*  tNsec;
-                zsock_recv(which, "ccc", &ctimerId, &tSec, &tNsec);
-                comp->OnScheduledTimer(ctimerId, true);
+//                char*  ctimerId;
+//                char*  tSec;
+//                char*  tNsec;
+//                zsock_recv(which, "ccc", &ctimerId, &tSec, &tNsec);
+                //comp->OnScheduledTimer(ctimerId, true);
 
 //                earlyWakeup.tv_sec  = tspec.tv_sec  - earlyWakeOffset.tv_sec;
 //                earlyWakeup.tv_nsec = tspec.tv_nsec - earlyWakeOffset.tv_nsec;
@@ -381,7 +384,7 @@ namespace riaps{
         logger->set_level(level);
     }
 
-    void ComponentBase::OnScheduledTimer(char* timerId, bool missed) {
+    void ComponentBase::OnScheduledTimer(const uint64_t timerId) {
         _logger->error("Scheduled timer is fired, but no handler is implemented. Implement OnSchedulerTimer() in component {}", GetConfig().component_name);
     }
 
@@ -785,25 +788,26 @@ namespace riaps{
 //        return _timerCounter++;
 //    }
 
-    uint64_t ComponentBase::ScheduleAbsTimer(const timespec& tspec) {
+    uint64_t ComponentBase::ScheduleAbsTimer(const timespec& tp, const uint64_t wakeupOffset) {
         std::string timerChannel = GetOneShotTimerChannel();
         uint64_t timerId = _timerCounter;
 
-        std::thread t([tspec, timerChannel, timerId](){
+        std::thread t([tp, timerChannel, timerId, wakeupOffset](){
             auto ptr  = std::shared_ptr<zsock_t>(zsock_new_push(timerChannel.c_str()),[](zsock_t* z){
                 zsock_destroy(&z);
                 zclock_sleep(500);
             });
 
             // Wake up earlier by 500 microsec
-            timespec earlyWakeOffset;
-            earlyWakeOffset.tv_sec  = 0;
-            earlyWakeOffset.tv_nsec = 0;
+//            timespec earlyWakeOffset;
+//            earlyWakeOffset.tv_sec  = wakeupOffset/BILLION;
+//            earlyWakeOffset.tv_nsec = wakeupOffset%BILLION;
+//
 
             // Calculate the new wakeup time
             timespec earlyWakeup;
-            earlyWakeup.tv_sec  = tspec.tv_sec  - earlyWakeOffset.tv_sec;
-            earlyWakeup.tv_nsec = tspec.tv_nsec - earlyWakeOffset.tv_nsec;
+            earlyWakeup.tv_sec  = tp.tv_sec  - (wakeupOffset/BILLION);
+            earlyWakeup.tv_nsec = tp.tv_nsec - (wakeupOffset%BILLION);
             if (earlyWakeup.tv_nsec<0){
                 earlyWakeup.tv_sec--;
                 earlyWakeup.tv_nsec+=BILLION;
@@ -811,28 +815,51 @@ namespace riaps{
 
             zmsg_t* msg = zmsg_new();
 
-            std::ostringstream os;
-            os << timerId;
-            zmsg_addstr(msg, os.str().c_str());
-            os.clear();
+            zmsg_addmem(msg, &timerId, sizeof(decltype(timerId)));
 
-            os << earlyWakeup.tv_sec;
-            zmsg_addstr(msg, os.str().c_str());
-            os.clear();
-
-            os << earlyWakeup.tv_nsec;
-            zmsg_addstr(msg, os.str().c_str());
-            os.clear();
 
 
             clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &earlyWakeup, NULL);
             zmsg_send(&msg, ptr.get());
-            //zsock_send(ptr.get(),"888", timerId, earlyWakeup.tv_sec, earlyWakeup.tv_nsec);
             zclock_sleep(400);
         });
         t.detach();
         return _timerCounter++;
     }
+
+    timespec ComponentBase::WaitUntil(const timespec &targetTimepoint) {
+        while (true){
+            timespec now;
+            clock_gettime(CLOCK_REALTIME, &now);
+            if (now.tv_sec>targetTimepoint.tv_sec ||
+                (now.tv_sec == targetTimepoint.tv_sec && now.tv_nsec>targetTimepoint.tv_nsec)){
+                return now;
+            }
+        }
+    }
+
+//    template<>
+//    uint64_t ComponentBase::ScheduleAbsTimer<std::chrono::system_clock::time_point>(const std::chrono::system_clock::time_point& tp) {
+//        std::string timerChannel = GetOneShotTimerChannel();
+//        uint64_t timerId = _timerCounter;
+//
+//        std::thread t([tp, timerChannel, timerId](){
+//            auto ptr  = std::shared_ptr<zsock_t>(zsock_new_push(timerChannel.c_str()),[](zsock_t* z){
+//                zsock_destroy(&z);
+//                zclock_sleep(500);
+//            });
+//
+//            zmsg_t* msg = zmsg_new();
+//            zmsg_addmem(msg, &timerId, sizeof(decltype(timerId)));
+//
+//            std::this_thread::sleep_until(tp);
+//
+//            zmsg_send(&msg, ptr.get());
+//            zclock_sleep(400);
+//        });
+//        t.detach();
+//        return _timerCounter++;
+//    }
 
     void ComponentBase::OnAnnounce(const riaps::groups::GroupId &groupId, const std::string &proposeId, bool accepted) {
         _logger->error("Vote result is announced, but no handler implemented in component {}", GetConfig().component_name);

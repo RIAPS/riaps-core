@@ -86,6 +86,28 @@ std::vector<std::string> maintain_servicecache(std::map<std::string, int64_t >& 
     return outdated_services;
 }
 
+timespec operator-(const timespec& ts1, const timespec& ts2){
+    auto diffSec = ts1.tv_sec   - ts2.tv_sec;
+    auto diffNSec = ts1.tv_nsec - ts2.tv_nsec;
+
+    if (diffNSec<0) {
+        diffSec--;
+        diffNSec+=1000000000l; // BILLION
+    }
+
+    timespec result;
+    result.tv_sec  = diffSec;
+    result.tv_nsec = diffNSec;
+
+    return result;
+}
+
+bool operator>(const timespec& ts1, const timespec& ts2) {
+    if (ts1.tv_sec>ts2.tv_sec) return true;
+    if (ts1.tv_sec == ts2.tv_sec && ts1.tv_nsec>ts2.tv_nsec) return true;
+    return false;
+}
+
 const std::string GetAppPath(const std::string& appName){
     char* riapsAppsPath = std::getenv(ENV_RIAPSAPPS);
     
