@@ -827,6 +827,7 @@ namespace riaps{
         return _timerCounter++;
     }
 
+    //TODO: only if the difference is > 100 microsec
     timespec ComponentBase::WaitUntil(const timespec &targetTimepoint) {
         while (true){
             timespec now;
