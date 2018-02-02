@@ -6,6 +6,9 @@
 
 #include "STBase.h"
 
+#define CLOCK_NANOSLEEP
+//#define CHRONO_WAIT
+
 namespace scheduledtimer {
    namespace components {
       
@@ -19,16 +22,24 @@ namespace scheduledtimer {
          
          void OnGroupMessage(const riaps::groups::GroupId& groupId, capnp::FlatArrayMessageReader& capnpreader, riaps::ports::PortBase* port);
 
-          void OnScheduledTimer(char* timerId, bool missed);
-          //void OnScheduledTimer(const uint64_t timerId, bool missed);
+          //void OnScheduledTimer(char* timerId, bool missed);
+          void OnScheduledTimer(const uint64_t timerId);
          
          virtual ~ST();
 
       private:
           bool _experimentStarted;
-         std::array<std::string, 300> _sLog;
-          std::array<std::string, 300> _fLog;
           uint64_t counter;
+
+
+
+#ifdef CLOCK_NANOSLEEP
+           std::array<std::string, 300> _sLog;
+           std::array<std::string, 300> _fLog;
+           std::unordered_map<uint64_t, timespec> _cache;
+#elif CHRONO_WAIT
+           std::unordered_map<uint64_t, std::chrono::system_clock::time_point> _chCache;
+#endif
       };
    }
 }
