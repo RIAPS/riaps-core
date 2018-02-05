@@ -833,7 +833,6 @@ namespace riaps {
         for (riaps::ComponentBase* component : _components){
             component->HandleCPULimit();
         }
-
     }
 
     riaps::Actor::~Actor() {

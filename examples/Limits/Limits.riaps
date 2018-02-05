@@ -1,0 +1,28 @@
+app Limits {
+	message Dummy;
+	
+	// CPULimit test component
+    component CPULimit {
+      timer ticker 1000; 
+    }
+
+	// MemLimit test component
+    component MemLimit {
+      timer ticker 1000; 
+    }
+
+    // CPULimitActor
+    actor LimitActor {
+//    	uses {
+//			cpu max 10 % over 1;		// Hard limit, w/o 'max' = soft limit
+//			mem 200 MB;					// Mem limit
+//			space 1 GB;					// File space limit
+//			net max 100 kB over 10 sec;	// Net cap limit
+//		}
+      	{
+          cpuLimited: CPULimit;
+          //memLimited : MemLimit; 	
+       	}
+    }
+
+}

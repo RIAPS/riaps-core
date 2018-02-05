@@ -1,0 +1,76 @@
+{
+  "name": "Limits",
+  "groups": {},
+  "devices": {},
+  "components": {
+    "MemLimit": {
+      "name": "MemLimit",
+      "formals": [],
+      "libraries": [],
+      "files": [],
+      "devices": [],
+      "exceptHandler": "",
+      "ports": {
+        "reqs": {},
+        "pubs": {},
+        "reps": {},
+        "inss": {},
+        "subs": {},
+        "clts": {},
+        "ans": {},
+        "qry": {},
+        "srvs": {},
+        "tims": {
+          "ticker": {
+            "period": 1000
+          }
+        }
+      }
+    },
+    "CPULimit": {
+      "name": "CPULimit",
+      "formals": [],
+      "libraries": [],
+      "files": [],
+      "devices": [],
+      "exceptHandler": "",
+      "ports": {
+        "reqs": {},
+        "pubs": {},
+        "reps": {},
+        "inss": {},
+        "subs": {},
+        "clts": {},
+        "ans": {},
+        "qry": {},
+        "srvs": {},
+        "tims": {
+          "ticker": {
+            "period": 1000
+          }
+        }
+      }
+    }
+  },
+  "actors": {
+    "LimitActor": {
+      "internals": [],
+      "locals": [],
+      "criticals": [],
+      "formals": [],
+      "wires": [],
+      "instances": {
+        "cpuLimited": {
+          "type": "CPULimit",
+          "actuals": []
+        }
+      },
+      "devices": [],
+      "memory": -1,
+      "space": -1,
+      "exceptHandler": ""
+    }
+  },
+  "messages": [],
+  "libraries": []
+}
