@@ -1,12 +1,18 @@
 #include <componentmodel/r_argumentparser.h>
 #include <componentmodel/r_actor.h>
+#include <csignal>
 
 #define NO_GROUP_TEST
 
 namespace riaps {
 
-    const Actor& riaps::Actor::GetRunningActor() {
-        return *_currentActor;
+    const Actor* riaps::Actor::GetRunningActor() {
+        return _currentActor;
+    }
+
+    void riaps::Actor::HandleCPULimit(int signum) {
+        auto currentActor = riaps::Actor::GetRunningActor();
+        currentActor->SendCPULimit();
     }
 
     Actor* riaps::Actor::CreateActor(nlohmann::json&    configJson,
@@ -483,6 +489,8 @@ namespace riaps {
 
     bool riaps::Actor::Init() {
 
+        std::signal(SIGXCPU, riaps::Actor::HandleCPULimit);
+
         _logger = spd::get(GetActorName());
         _logger->set_level(spd::level::debug);
         _localMessageTypes = GetLocalMessageTypes(_jsonLocals);
@@ -819,6 +827,13 @@ namespace riaps {
                 _grouptype_configurations.push_back(gc);
             }
         }
+    }
+
+    void riaps::Actor::SendCPULimit() const {
+        for (riaps::ComponentBase* component : _components){
+            component->HandleCPULimit();
+        }
+
     }
 
     riaps::Actor::~Actor() {

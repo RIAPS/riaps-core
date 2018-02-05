@@ -56,7 +56,7 @@ namespace riaps{
         bool Group::InitGroup() {
 
             // If the groupid doesn't exist, just skip the initialization and return false
-            auto groupTypeConf = ::riaps::Actor::GetRunningActor().GetGroupType(_groupId.groupTypeId);
+            auto groupTypeConf = ::riaps::Actor::GetRunningActor()->GetGroupType(_groupId.groupTypeId);
             if (groupTypeConf == nullptr)
                 return false;
 
@@ -105,7 +105,7 @@ namespace riaps{
 
             }
 
-            bool hasJoined = joinGroup(riaps::Actor::GetRunningActor().GetApplicationName(),
+            bool hasJoined = joinGroup(riaps::Actor::GetRunningActor()->GetApplicationName(),
                                        _parentComponent->GetCompUuid(),
                                        _groupId,
                                        initializedServices);

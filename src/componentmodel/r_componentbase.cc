@@ -871,6 +871,13 @@ namespace riaps{
         _logger->error("Leader proposed a value but no handler is implemented in component {}", GetConfig().component_name);
     }
 
+    void ComponentBase::HandleCPULimit() {
+        _logger->error("CPU Limit was violated, but HandleCPULimit() is not implemented in component: {}::{}::{}"
+                , GetActor()->GetApplicationName()
+                , GetActor()->GetActorName()
+                , GetConfig().component_name);
+    }
+
     std::string ComponentBase::SendPropose(const riaps::groups::GroupId &groupId, capnp::MallocMessageBuilder &message) {
         auto group = GetGroupById(groupId);
         if (group == nullptr) return "";

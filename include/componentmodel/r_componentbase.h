@@ -140,6 +140,8 @@ namespace riaps {
 
         void UpdateGroup(riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
 
+        virtual void HandleCPULimit();
+
 
 
 

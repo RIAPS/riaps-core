@@ -42,7 +42,9 @@ namespace riaps {
                                   const std::string& jsonFile  ,
                                   std::map<std::string, std::string>& actualParams);
 
-        static const Actor& GetRunningActor();
+        static const Actor* GetRunningActor();
+
+        static void HandleCPULimit(int signum);
 
         bool Init();
         virtual void start();
@@ -177,7 +179,7 @@ namespace riaps {
         bool IsDeviceActor() const;
         bool IsComponentActor() const;
 
-
+        void SendCPULimit() const;
     };
 }
 
