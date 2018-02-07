@@ -95,6 +95,11 @@ timespec operator-(const timespec& ts1, const timespec& ts2){
         diffNSec+=1000000000l; // BILLION
     }
 
+    if (diffSec<0) {
+        diffSec++;
+        diffNSec-=1000000000l;
+    }
+
     timespec result;
     result.tv_sec  = diffSec;
     result.tv_nsec = diffNSec;

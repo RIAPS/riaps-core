@@ -1,0 +1,109 @@
+{
+  "name": "StaticTimer",
+  "groups": {},
+  "devices": {},
+  "components": {
+    "STimer": {
+      "name": "STimer",
+      "formals": [],
+      "libraries": [],
+      "files": [],
+      "devices": [],
+      "exceptHandler": "",
+      "ports": {
+        "reqs": {},
+        "pubs": {},
+        "reps": {},
+        "inss": {},
+        "subs": {
+          "ping": {
+            "type": "TestMsg",
+            "upperlimit": 0,
+            "lowerlimit": 0
+          }
+        },
+        "clts": {},
+        "ans": {},
+        "qry": {},
+        "srvs": {},
+        "tims": {
+          "clock": {
+            "period": 5000
+          }
+        }
+      }
+    },
+    "Producer": {
+      "name": "Producer",
+      "formals": [],
+      "libraries": [],
+      "files": [],
+      "devices": [],
+      "exceptHandler": "",
+      "ports": {
+        "reqs": {},
+        "pubs": {
+          "ping": {
+            "type": "TestMsg",
+            "upperlimit": 0,
+            "lowerlimit": 0
+          }
+        },
+        "reps": {},
+        "inss": {},
+        "subs": {},
+        "clts": {},
+        "ans": {},
+        "qry": {},
+        "srvs": {},
+        "tims": {
+          "clock": {
+            "period": 500
+          }
+        }
+      }
+    }
+  },
+  "actors": {
+    "ActOne": {
+      "internals": [],
+      "locals": [],
+      "criticals": [],
+      "formals": [],
+      "wires": [],
+      "instances": {
+        "s1": {
+          "type": "STimer",
+          "actuals": []
+        }
+      },
+      "devices": [],
+      "memory": -1,
+      "space": -1,
+      "exceptHandler": ""
+    },
+    "ActProd": {
+      "internals": [],
+      "locals": [],
+      "criticals": [],
+      "formals": [],
+      "wires": [],
+      "instances": {
+        "p": {
+          "type": "Producer",
+          "actuals": []
+        }
+      },
+      "devices": [],
+      "memory": -1,
+      "space": -1,
+      "exceptHandler": ""
+    }
+  },
+  "messages": [
+    {
+      "name": "TestMsg"
+    }
+  ],
+  "libraries": []
+}

@@ -827,13 +827,21 @@ namespace riaps{
         return _timerCounter++;
     }
 
-    //TODO: only if the difference is > 100 microsec
+    //TODO: only if the difference NOT in -50/+50 microsec
     timespec ComponentBase::WaitUntil(const timespec &targetTimepoint) {
+        timespec earlyWakeup = targetTimepoint;
+        earlyWakeup.tv_nsec-=TIMER_ACCURACY;
+
+        if (earlyWakeup.tv_nsec<0){
+            earlyWakeup.tv_sec--;
+            earlyWakeup.tv_nsec+=BILLION;
+        }
+
         while (true){
             timespec now;
             clock_gettime(CLOCK_REALTIME, &now);
-            if (now.tv_sec>targetTimepoint.tv_sec ||
-                (now.tv_sec == targetTimepoint.tv_sec && now.tv_nsec>targetTimepoint.tv_nsec)){
+
+            if (now>earlyWakeup){
                 return now;
             }
         }

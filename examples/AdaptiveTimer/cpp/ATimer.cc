@@ -80,12 +80,14 @@ namespace adaptivetimer {
            auto diffFromTarget = now - targetTime;
            auto diffInNano = diffFromTarget.tv_sec*BILLION + diffFromTarget.tv_nsec;
 
+           _logger->debug(fmt::format("[D],{},{}", diffFromTarget.tv_sec, diffFromTarget.tv_nsec));
+
            // 100 microsec late => increase the offset (fire later)
            if (diffInNano>100*1000){
                auto oldOffset = _earlyWakeupOffset;
                _avgDelay = diffInNano;
                _earlyWakeupOffset+=_avgDelay;
-               _logger->error("In late adjust offset: {}->{}", oldOffset, _earlyWakeupOffset);
+               _logger->debug("In late adjust offset: {}->{}", oldOffset, _earlyWakeupOffset);
            } else {
                // Too much wait between the firetime - targettime, the goal is to spend less time in WaitUntil()
                auto diffTargetFire = targetTime-fireTime;
@@ -102,14 +104,14 @@ namespace adaptivetimer {
                    auto oldOffset = _earlyWakeupOffset;
                    if (_earlyWakeupOffset>_avgDelay) {
                        _earlyWakeupOffset = _earlyWakeupOffset - _avgDelay;
-                       _logger->error("In hurry adjust offset: {}->{}", oldOffset, _earlyWakeupOffset);
+                       _logger->debug("In hurry adjust offset: {}->{}", oldOffset, _earlyWakeupOffset);
                    }
                }
            }
 
-           //_logger->info_if((diffFromTarget.tv_nsec/1000)<=100,"Accuracy: {}s, {}ns", diffFromTarget.tv_sec, diffFromTarget.tv_nsec);
-           //_logger->error_if((diffFromTarget.tv_nsec/1000)>100,"Accuracy: {}s, {}ns", diffFromTarget.tv_sec, diffFromTarget.tv_nsec);
-           _logger->info("Current offset is {}, avg delay is: {}, current delay is: {}", _earlyWakeupOffset, _avgDelay, diffFromTarget.tv_nsec);
+           _logger->info_if((diffFromTarget.tv_nsec/1000)<=100,"Accuracy: {}s, {}ns", diffFromTarget.tv_sec, diffFromTarget.tv_nsec);
+           _logger->error_if((diffFromTarget.tv_nsec/1000)>100,"Accuracy: {}s, {}ns", diffFromTarget.tv_sec, diffFromTarget.tv_nsec);
+           //_logger->info("Current offset is {}, avg delay is: {}, current delay is: {}", _earlyWakeupOffset, _avgDelay, diffFromTarget.tv_nsec);
        }
 
       

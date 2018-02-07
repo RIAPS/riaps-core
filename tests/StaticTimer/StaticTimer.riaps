@@ -1,0 +1,29 @@
+struct Msg{
+	value : String;
+}
+
+message TestMsg:Msg;
+
+app StaticTimer{
+
+	component STimer{
+		timer clock 5000;
+	}
+
+	component Producer{
+		timer clock 500;
+		pub ping:TestMsg;
+	}
+
+	actor ActOne{
+		{
+			s1:STimer;
+		}
+	}
+
+	actor ActProd{
+		{
+			p:Producer;
+		}
+	}
+}

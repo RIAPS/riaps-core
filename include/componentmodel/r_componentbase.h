@@ -43,6 +43,7 @@
 #include <componentmodel/ports/r_queryport.h>
 
 #define BILLION 1000000000l
+#define TIMER_ACCURACY 50*1000 // 50 microsec
 
 namespace spd = spdlog;
 
