@@ -152,10 +152,10 @@ namespace riaps{
             return SendMessage(&zmsg, INTERNAL_PUB_NAME);
         }
 
-        bool Group::SendProposeToLeader(capnp::MallocMessageBuilder &message, const std::string& proposeId) {
+        bool Group::ProposeValueToLeader(capnp::MallocMessageBuilder &message, const std::string &proposeId) {
             bool hasActiveLeader = GetLeaderId() != "";
             if (!hasActiveLeader){
-                _logger->error("SendProposeToLeader(), no active leader, send failed");
+                _logger->error("ProposeValueToLeader(), no active leader, send failed");
                 return false;
             }
 
@@ -165,9 +165,11 @@ namespace riaps{
             capnp::MallocMessageBuilder builder;
             auto msgGroupInternals = builder.initRoot<riaps::distrcoord::GroupInternals>();
             auto msgCons = msgGroupInternals.initConsensus();
+            msgCons.setVoteType(riaps::distrcoord::Consensus::VoteType::VALUE);
+
             auto msgPropLeader = msgCons.initProposeToLeader();
             msgPropLeader.setProposeId(proposeId);
-            msgCons.setSourceComponentId(GetParentComponent()->GetCompUuid());
+            msgCons.setSourceComponentId(GetParentComponentId());
 
             zframe_t* header;
             header << builder;
@@ -177,10 +179,51 @@ namespace riaps{
             zmsg_add(zmsg, frame);
 
             bool rc = SendMessage(&zmsg, INTERNAL_PUB_NAME);
-            _logger->error_if(!rc, "SendProposeToLeader() failed");
-            _logger->debug_if(rc, "SendProposeToLeader() proposeId: {}, leaderId: {}, srcComp: {}", proposeId, GetLeaderId(), GetParentComponent()->GetCompUuid());
+            _logger->error_if(!rc, "ProposeValueToLeader() failed");
+            _logger->debug_if(rc, "ProposeValueToLeader() proposeId: {}, leaderId: {}, srcComp: {}", proposeId, GetLeaderId(), GetParentComponentId());
             return rc;
         }
+
+        bool Group::ProposeActionToLeader(const std::string& proposeId,
+                                          const std::string &actionId,
+                                          const timespec &absTime) {
+            bool hasActiveLeader = GetLeaderId() != "";
+            if (!hasActiveLeader){
+                _logger->error("ProposeActionToLeader(), no active leader, send failed");
+                return false;
+            }
+
+
+            capnp::MallocMessageBuilder builder;
+            auto msgGroupInternals = builder.initRoot<riaps::distrcoord::GroupInternals>();
+            auto msgCons = msgGroupInternals.initConsensus();
+            auto msgPropLeader = msgCons.initProposeToLeader();
+
+            msgCons.setVoteType(riaps::distrcoord::Consensus::VoteType::ACTION);
+
+            msgPropLeader.setProposeId(proposeId);
+            msgCons.setSourceComponentId(GetParentComponentId());
+
+            auto msgTsyncA = msgCons.initTsyncCoordA();
+            msgTsyncA.setActionId(actionId);
+
+            auto msgTime = msgTsyncA.initTime();
+            msgTime.setTvSec(absTime.tv_sec);
+            msgTime.setTvNsec(absTime.tv_nsec);
+
+            zframe_t* header;
+            header << builder;
+
+            zmsg_t* zmsg = zmsg_new();
+            zmsg_add(zmsg, header);
+
+            bool rc = SendMessage(&zmsg, INTERNAL_PUB_NAME);
+            _logger->error_if(!rc, "ProposeActionToLeader() failed");
+            _logger->debug_if(rc, "ProposeActionToLeader() proposeId: {}, leaderId: {}, srcComp: {}", proposeId, GetLeaderId(), GetParentComponent()->GetCompUuid());
+            return rc;
+        }
+
+
 
         bool Group::SendMessage(capnp::MallocMessageBuilder& message, const std::string& portName){
             for (auto it = _groupPorts.begin(); it!=_groupPorts.end(); it++){
@@ -306,8 +349,12 @@ namespace riaps{
             return _groupPubPort->Send(builder);
         }
 
-        const ComponentBase* Group::GetParentComponent() {
+        const ComponentBase* Group::GetParentComponent() const {
             return _parentComponent;
+        }
+
+        const std::string Group::GetParentComponentId() const {
+            return GetParentComponent()->GetCompUuid();
         }
 
         uint16_t Group::GetMemberCount() {
@@ -413,24 +460,33 @@ namespace riaps{
                        // _logger->debug("DC message arrived from {}", msgDistCoord.getSourceComponentId().cStr());
 
 //                        // The current component is the leader
-                        if (GetLeaderId() == GetParentComponent()->GetCompUuid()) {
+                        if (GetLeaderId() == GetParentComponentId()) {
                             //_logger->debug("DC message arrived and this component is the leader");
 
 //                            // Propose arrived to the leader. Leader forwards it to every groupmember.
+                            // TODO: We may not need the forwarding step, since everybody got the message
                             if (msgCons.hasProposeToLeader()){
                                 auto msgPropose = msgCons.getProposeToLeader();
-                                zframe_t* proposeFrame;
-                                proposeFrame = zmsg_pop(msg);
-                                if (proposeFrame == nullptr){
-                                    _logger->error("Propose arrive with empty message frame");
-                                }
-                                else{
 
+                                // Value is proposed
+                                if (msgCons.getVoteType() == riaps::distrcoord::Consensus::VoteType::VALUE){
+                                    zframe_t* proposeFrame;
+                                    proposeFrame = zmsg_pop(msg);
                                     _logger->info("Message proposed to the leader, proposeId: {}", msgPropose.getProposeId().cStr());
                                     _groupLeader->OnProposeFromClient(msgPropose, &proposeFrame);
                                     if (proposeFrame!= nullptr)
                                         zframe_destroy(&proposeFrame);
                                 }
+
+                                // Action is proposed to the leader
+                                else if (msgCons.getVoteType() == riaps::distrcoord::Consensus::VoteType::ACTION) {
+                                    auto msgTsca = msgCons.getTsyncCoordA();
+                                    _logger->info("Action proposed to the leader, proposeId: {}, actionId: {}",
+                                                  msgPropose.getProposeId().cStr(),
+                                                  msgTsca.getActionId().cStr());
+                                    _groupLeader->OnActionProposeFromClient(msgPropose,msgTsca);
+                                }
+
 //                            // Vote arrived, count the votes and announce the results (if any)
                             } else if (msgCons.hasVote()){
                                 //_logger->info("Vote arrived to the leader");
@@ -445,11 +501,27 @@ namespace riaps{
                             if (msgCons.hasProposeToClients()) {
                                 auto msgPropose = msgCons.getProposeToClients();
                                 //_logger->debug("Message proposed to the client, proposeId: {}", msgPropose.getProposeId().cStr());
-                                zframe_t* proposeFrame;
-                                proposeFrame = zmsg_pop(msg);
-                                capnp::FlatArrayMessageReader* reader;
-                                (*proposeFrame) >> reader;
-                                _parentComponent->OnPropose(_groupId, msgPropose.getProposeId(), *reader);
+
+                                if (msgCons.getVoteType() == riaps::distrcoord::Consensus::VoteType::VALUE) {
+                                    zframe_t *proposeFrame;
+                                    proposeFrame = zmsg_pop(msg);
+                                    capnp::FlatArrayMessageReader *reader;
+                                    (*proposeFrame) >> reader;
+                                    _parentComponent->OnPropose(_groupId, msgPropose.getProposeId(), *reader);
+                                } else if (msgCons.getVoteType() == riaps::distrcoord::Consensus::VoteType::ACTION) {
+                                    timespec t{
+                                            msgCons.getTsyncCoordA().getTime().getTvSec(),
+                                            msgCons.getTsyncCoordA().getTime().getTvNsec()
+                                    };
+
+                                    _logger->error_if(t.tv_sec!=msgCons.getTsyncCoordA().getTime().getTvSec(),"tv_sec!=TvSec");
+                                    _logger->error_if(t.tv_nsec!=msgCons.getTsyncCoordA().getTime().getTvNsec(),"tv_nsec!=TvNsec");
+
+                                    _parentComponent->OnActionPropose(_groupId,
+                                                                      msgPropose.getProposeId(),
+                                                                      msgCons.getTsyncCoordA().getActionId(),
+                                                                      t);
+                                }
                             } else if (msgCons.hasAnnounce()) {
                                 auto msgAnnounce = msgCons.getAnnounce();
                                 _parentComponent->OnAnnounce(_groupId,

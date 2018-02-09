@@ -143,10 +143,6 @@ namespace riaps {
 
         virtual void HandleCPULimit();
 
-
-
-
-
         /**
          *
          * @return The component configuration.
@@ -261,6 +257,8 @@ namespace riaps {
          */
         ports::PortBase* GetPortByName(const std::string&);
 
+        const std::string GetComponentName() const;
+
         //std::shared_ptr<spd::logger> GetConsoleLogger();
 
         void SetDebugLevel(std::shared_ptr<spd::logger> logger, spd::level::level_enum level);
@@ -311,20 +309,7 @@ namespace riaps {
 
         timespec WaitUntil(const timespec& targetTimepoint);
 
-        /**
-         * Points to the component owner.
-         */
-        const Actor*      _actor;
 
-        /**
-         * Unique ID of the componenet. Regenerated at every start.
-         */
-        zuuid_t*          _component_uuid;
-
-        /**
-         * Holds the component thread.
-         */
-        zactor_t*         _zactor_component;
 
         /**
          *
@@ -336,16 +321,29 @@ namespace riaps {
 
 
         virtual void OnPropose (riaps::groups::GroupId& groupId, const std::string& proposeId, capnp::FlatArrayMessageReader& message);
+        virtual void OnActionPropose (riaps::groups::GroupId& groupId,
+                                      const std::string& proposeId,
+                                      const std::string& actionId,
+                                      const timespec& timePoint);
+
         virtual void OnAnnounce(const riaps::groups::GroupId& groupId, const std::string& proposeId, bool accepted);
         std::string SendPropose(const riaps::groups::GroupId& groupId, capnp::MallocMessageBuilder& message);
         bool SendVote(const riaps::groups::GroupId& groupId, const std::string& proposeId, bool accept);
 
-        //uint64_t ScheduleTimer(std::chrono::steady_clock::time_point& tp);
-        uint64_t ScheduleAbsTimer(const timespec& t, const uint64_t wakeupOffset = 0 /*nanosec*/);
-        //uint64_t ScheduleAbsTimer(const std::chrono::system_clock::time_point& tp);
+        /**
+         * Proposes an action to the leader.
+         * @param groupId
+         * @param actionId The action to be performed. Developer-generated ID, each component knows the appropriate function to be called.
+         * @param relTime  Relative time (now + tv_sec + tv_nsec later), when the action must be called.
+         * @param message  Additional custom message, which necesseary by the other nodes for the decision.
+         * @return The generated proposeId. The leader announces the results by this id.
+         */
+        std::string ProposeAction(const riaps::groups::GroupId& groupId  ,
+                                  const std::string&            actionId ,
+                                  const timespec&               absTime
+        );
 
-//        template<class T>
-//        uint64_t ScheduleAbsTimer(const T& tp);
+        uint64_t ScheduleAbsTimer(const timespec& t, const uint64_t wakeupOffset = 0 /*nanosec*/);
 
     private:
 
@@ -368,18 +366,33 @@ namespace riaps {
         // Note: disable for now, we need more tests.
         //timers::OneShotTimer*   _oneShotTimer;
 
-        component_conf _configuration;
+        component_conf m_configuration;
 
 
         // All the component ports
-        std::unordered_map<std::string, std::unique_ptr<ports::PortBase>> _ports;
+        std::unordered_map<std::string, std::unique_ptr<ports::PortBase>> m_ports;
 
         std::map<riaps::groups::GroupId,
-                 std::unique_ptr<riaps::groups::Group>> _groups;
+                 std::unique_ptr<riaps::groups::Group>> m_groups;
 
         riaps::groups::Group* GetGroupById(const riaps::groups::GroupId& groupId);
 
-        uint64_t _timerCounter;
+        uint64_t m_timerCounter;
+
+        /**
+         * Unique ID of the componenet. Regenerated at every start.
+         */
+        zuuid_t*          m_componentUuid;
+
+        /**
+         * Points to the component owner.
+         */
+        const Actor*      m_actor;
+
+        /**
+         * Holds the component thread.
+         */
+        zactor_t*         m_zactorComponent;
     };
 }
 

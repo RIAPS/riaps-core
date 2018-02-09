@@ -52,6 +52,10 @@ namespace riaps{
 
             void OnProposeFromClient(riaps::distrcoord::Consensus::ProposeToLeader::Reader& headerMessage,
                                      zframe_t** messageFrame);
+
+            void OnActionProposeFromClient(riaps::distrcoord::Consensus::ProposeToLeader::Reader& headerMessage,
+                                           riaps::distrcoord::Consensus::TimeSyncCoordA::Reader&  tscaMessage);
+
             void OnVote(riaps::distrcoord::Consensus::Vote::Reader& message,
                         const std::string& sourceComponentId);
 
@@ -72,6 +76,9 @@ namespace riaps{
                 Timeout                                proposeDeadline; // If the propose expires, the leader announce REJECT
                 uint16_t                               accepted;
                 uint16_t                               rejected;
+
+                bool                                   isAction;
+                std::string                            actionId;
             };
         private:
 
@@ -81,25 +88,25 @@ namespace riaps{
              */
             duration<int, std::milli> GenerateElectionTimeo();
 
-            std::random_device _rd;
-            std::mt19937 _generator;
-            std::uniform_int_distribution<int> _distrElection;
+            std::random_device m_rd;
+            std::mt19937 m_generator;
+            std::uniform_int_distribution<int> m_distrElection;
             const std::string GetComponentId() const;
 
-            NodeState _currentState;
+            NodeState m_currentState;
 
             // Timeouts
-            Timeout  _electionTimeout;
-            Timeout  _appEntryTimeout;
-            uint32_t _electionTerm;
-            uint32_t _numberOfNodesInVote;
+            Timeout  m_electionTimeout;
+            Timeout  m_appEntryTimeout;
+            uint32_t m_electionTerm;
+            uint32_t m_numberOfNodesInVote;
 
 
 
             // Votes from, when
-            std::unordered_map<std::string, steady_clock::time_point> _votes;
+            std::unordered_map<std::string, steady_clock::time_point> m_votes;
 
-            riaps::groups::Group* _group;
+            riaps::groups::Group* m_group;
 
 
             // Send functions
@@ -110,20 +117,23 @@ namespace riaps{
             uint32_t GetNumberOfVotes();
 
             std::shared_ptr<spd::logger> _logger;
-            std::unordered_map<std::string, Timeout>* _knownNodes;
+            std::unordered_map<std::string, Timeout>* m_knownNodes;
 
-            std::string _leaderId;
+            std::string m_leaderId;
 
             void ChangeLeader(const std::string& newLeader);
-            std::function<void(const std::string&)> _onLeaderChanged;
+            std::function<void(const std::string&)> m_onLeaderChanged;
 
 
             /**
              * Active propseId-s with Timeouts, participating nodes and vote count
              */
-            std::unordered_map<std::string, std::unique_ptr<riaps::groups::GroupLead::ProposeData>> _proposeData;
+            std::unordered_map<std::string, std::shared_ptr<riaps::groups::GroupLead::ProposeData>> m_proposeData;
 
-
+            /**
+             * Active ActionId-s
+             */
+            std::unordered_map<std::string, std::shared_ptr<riaps::groups::GroupLead::ProposeData>> m_actionData;
         };
     }
 }

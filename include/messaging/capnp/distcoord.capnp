@@ -42,10 +42,15 @@ struct MessageToLeader {
 
 struct Consensus {
     sourceComponentId @0 : Text;
-    proposeToLeader   @1 : ProposeToLeader;
-    proposeToClients  @2 : ProposeToClients;
-    vote              @3 : Vote;
-    announce          @4 : Announce;
+    voteType          @1 : VoteType;
+
+    union {
+        proposeToLeader   @2 : ProposeToLeader;
+        proposeToClients  @3 : ProposeToClients;
+        vote              @4 : Vote;
+        announce          @5 : Announce;
+    }
+    tsyncCoordA       @6 : TimeSyncCoordA;
 
     struct ProposeToLeader {
         proposeId @0 : Text;
@@ -67,7 +72,18 @@ struct Consensus {
         voteResult @1 : VoteResults;
     }
 
+    struct TimeSyncCoordA {
+        actionId @0 : Text;
+        time     @1 : TimeSpec;
+
+        struct TimeSpec {
+            tvSec  @0 : Int64;
+            tvNsec @1 : Int64;
+        }
+    }
+
     enum VoteResults { accepted @0; rejected @1; }
+    enum VoteType {value @0; action @1; }
 }
 
 struct GroupInternals {

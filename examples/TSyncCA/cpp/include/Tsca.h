@@ -18,11 +18,23 @@ namespace tsyncca {
          virtual void OnClock(riaps::ports::PortBase *port);
          
          void OnGroupMessage(const riaps::groups::GroupId& groupId, capnp::FlatArrayMessageReader& capnpreader, riaps::ports::PortBase* port);
-         
+         void OnAnnounce(const riaps::groups::GroupId& groupId, const std::string& proposeId, bool accepted);
+
+         void OnActionPropose (riaps::groups::GroupId& groupId,
+                               const std::string& proposeId,
+                               const std::string& actionId,
+                               const timespec& timePoint);
+
          virtual ~Tsca();
 
       private:
           bool m_hasJoined;
+
+          std::unordered_map<std::string, std::function<void()>> m_actions;
+
+          void ActionA();
+
+          std::unordered_map<std::string, timespec> m_accepted;
          
       };
    }

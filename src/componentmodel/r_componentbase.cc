@@ -31,9 +31,6 @@ namespace riaps{
         rc = zpoller_add(poller, timerportOneShot);
         assert(rc==0);
 
-//        rc = zpoller_add(poller, timerportOneShot);
-//        assert(rc==0);
-
         bool terminated = false;
         bool firstrun = true;
 
@@ -46,8 +43,9 @@ namespace riaps{
         // ZMQ Socket - Inside port pairs
         //std::map<const zsock_t*, const ports::InsidePort*> insidePorts;
 
+        // TODO: If leader election is enabled use dynamic timeout in the poller
         while (!terminated) {
-            void *which = zpoller_wait(poller, 1000);
+            void *which = zpoller_wait(poller, 10);
 
             if (firstrun) {
                 firstrun = false;
@@ -329,10 +327,10 @@ namespace riaps{
             }
 
             // The group messages
-            if (comp->_groups.size()>0){
+            if (comp->m_groups.size()>0){
 
                 // Handle all group messages
-                for (auto it = comp->_groups.begin(); it!=comp->_groups.end(); it++){
+                for (auto it = comp->m_groups.begin(); it!=comp->m_groups.end(); it++){
                     it->second->SendPingWithPeriod();
 
                     std::shared_ptr<capnp::FlatArrayMessageReader> groupMessage(nullptr);
@@ -362,18 +360,18 @@ namespace riaps{
         // Stop timers
         for (auto& config : GetConfig().component_ports.tims){
             std::cout << "Stop timer: " << config.portName << std::endl;
-            _ports[config.portName]->AsTimerPort()->stop();
+            m_ports[config.portName]->AsTimerPort()->stop();
         }
 
-        zactor_destroy(&_zactor_component);
+        zactor_destroy(&m_zactorComponent);
 
         // Delete ports
-        for (auto it = _ports.begin(); it!=_ports.end(); it++){
+        for (auto it = m_ports.begin(); it!=m_ports.end(); it++){
             auto port = it->second.release();
             delete port;
         }
 
-        zuuid_destroy(&_component_uuid);
+        zuuid_destroy(&m_componentUuid);
     }
 
 //    std::shared_ptr<spd::logger> ComponentBase::GetConsoleLogger(){
@@ -389,22 +387,22 @@ namespace riaps{
     }
 
     ComponentBase::ComponentBase(component_conf& config, Actor& actor)
-            : _actor(&actor),
-              _timerCounter(0)
+            : m_actor(&actor),
+              m_timerCounter(0)
     {
-        _configuration = config;
+        m_configuration = config;
 
         //uuid to the component instance
-        _component_uuid = zuuid_new();
+        m_componentUuid = zuuid_new();
 
         size_t q_size = 2048; //queue size must be power of 2
         spd::set_async_mode(q_size);
 
-        _logger = spd::get(_configuration.component_name);
+        _logger = spd::get(m_configuration.component_name);
         if (_logger == nullptr)
-            _logger = spd::stdout_color_mt(_configuration.component_name);
+            _logger = spd::stdout_color_mt(m_configuration.component_name);
 
-        _zactor_component = zactor_new(component_actor, this);
+        m_zactorComponent = zactor_new(component_actor, this);
     }
 
     // For the timer port
@@ -472,25 +470,27 @@ namespace riaps{
     /// \param portName
     /// \return Pointer to the RIAPS port with the given name. NULL if the port was not found.
     ports::PortBase* ComponentBase::GetPortByName(const std::string & portName) {
-        if (_ports.find(portName)!=_ports.end()){
-            return _ports[portName].get();
+        if (m_ports.find(portName)!=m_ports.end()){
+            return m_ports[portName].get();
         }
 
         return NULL;
     }
 
     const component_conf& ComponentBase::GetConfig() const {
-        return _configuration;
+        return m_configuration;
     }
 
     const Actor* ComponentBase::GetActor() const{
-        return _actor;
+        return m_actor;
     }
+
+
 
     const ports::PublisherPort* ComponentBase::InitPublisherPort(const _component_port_pub& config) {
         auto result = new ports::PublisherPort(config, this);
         std::unique_ptr<ports::PortBase> newport(result);
-        _ports[config.portName] = std::move(newport);
+        m_ports[config.portName] = std::move(newport);
         return result;
     }
 
@@ -520,14 +520,14 @@ namespace riaps{
         std::unique_ptr<ports::SubscriberPort> newport(new ports::SubscriberPort(config, this));
         auto result = newport.get();
         newport->Init();
-        _ports[config.portName] = std::move(newport);
+        m_ports[config.portName] = std::move(newport);
         return result;
     }
 
     const ports::ResponsePort* ComponentBase::InitResponsePort(const _component_port_rep & config) {
         auto result = new ports::ResponsePort(config, this);
         std::unique_ptr<ports::PortBase> newport(result);
-        _ports[config.portName] = std::move(newport);
+        m_ports[config.portName] = std::move(newport);
         return result;
     }
 
@@ -535,14 +535,14 @@ namespace riaps{
         std::unique_ptr<ports::RequestPort> newport(new ports::RequestPort(config, this));
         auto result = newport.get();
         newport->Init();
-        _ports[config.portName] = std::move(newport);
+        m_ports[config.portName] = std::move(newport);
         return result;
     }
 
     const ports::AnswerPort* ComponentBase::InitAnswerPort(const _component_port_ans & config) {
         auto result = new ports::AnswerPort(config, this);
         std::unique_ptr<ports::PortBase> newport(result);
-        _ports[config.portName] = std::move(newport);
+        m_ports[config.portName] = std::move(newport);
         return result;
     }
 
@@ -550,14 +550,14 @@ namespace riaps{
         std::unique_ptr<ports::QueryPort> newport(new ports::QueryPort(config, this));
         auto result = newport.get();
         newport->Init();
-        _ports[config.portName] = std::move(newport);
+        m_ports[config.portName] = std::move(newport);
         return result;
     }
 
     const ports::InsidePort* ComponentBase::InitInsidePort(const _component_port_ins& config) {
         auto result = new ports::InsidePort(config, riaps::ports::InsidePortMode::BIND, this);
         std::unique_ptr<ports::PortBase> newport(result);
-        _ports[config.portName] = std::move(newport);
+        m_ports[config.portName] = std::move(newport);
         return result;
     }
 
@@ -568,7 +568,7 @@ namespace riaps{
 
         auto result = newtimer.get();
 
-        _ports[config.portName] = std::move(newtimer);
+        m_ports[config.portName] = std::move(newtimer);
         return result;
     }
 
@@ -635,9 +635,9 @@ namespace riaps{
                                          capnp::MallocMessageBuilder &message,
                                          const std::string& portName) {
         // Search the group
-        if (_groups.find(groupId)==_groups.end()) return false;
+        if (m_groups.find(groupId)==m_groups.end()) return false;
 
-        riaps::groups::Group* group = _groups[groupId].get();
+        riaps::groups::Group* group = m_groups[groupId].get();
         return group->SendMessage(message, portName);
 
     }
@@ -665,9 +665,9 @@ namespace riaps{
     }
 
     riaps::groups::Group* ComponentBase::GetGroupById(const riaps::groups::GroupId &groupId) {
-        if (_groups.find(groupId)==_groups.end()) return nullptr;
+        if (m_groups.find(groupId)==m_groups.end()) return nullptr;
 
-        return _groups[groupId].get();
+        return m_groups[groupId].get();
     }
 
 
@@ -691,13 +691,12 @@ namespace riaps{
     }
 
     const std::string ComponentBase::GetCompUuid() const{
-        std::string uuid_str = zuuid_str(_component_uuid);
-        //std::string result (uuid_str);
+        std::string uuid_str = zuuid_str(m_componentUuid);
         return uuid_str;
     }
 
     zactor_t* ComponentBase::GetZmqPipe() const {
-        return _zactor_component;
+        return m_zactorComponent;
     }
 
     void ComponentBase::PrintMessageOnPort(ports::PortBase *port, std::string message) {
@@ -716,25 +715,25 @@ namespace riaps{
     }
 
     void ComponentBase::PrintParameters() {
-        auto parameters = _configuration.component_parameters.GetParameterNames();
+        auto parameters = m_configuration.component_parameters.GetParameterNames();
         for (auto it = parameters.begin(); it!=parameters.end(); it++){
-            std::cout << *it << " : " << _configuration.component_parameters.GetParam(*it)->GetValueAsString() << std::endl;
+            std::cout << *it << " : " << m_configuration.component_parameters.GetParam(*it)->GetValueAsString() << std::endl;
         }
     }
 
     // TODO: Remove timeout parameter
     uint16_t ComponentBase::GetGroupMemberCount(const riaps::groups::GroupId &groupId, const int64_t timeout) {
-        if (_groups.find(groupId)==_groups.end())
+        if (m_groups.find(groupId)==m_groups.end())
             return 0;
 
-        return _groups[groupId]->GetMemberCount();
+        return m_groups[groupId]->GetMemberCount();
     }
 
     std::string ComponentBase::GetLeaderId(const riaps::groups::GroupId &groupId) {
-        if (_groups.find(groupId)==_groups.end())
+        if (m_groups.find(groupId)==m_groups.end())
             return "";
 
-        return _groups[groupId]->GetLeaderId();
+        return m_groups[groupId]->GetLeaderId();
     }
 
     bool ComponentBase::JoinToGroup(riaps::groups::GroupId &&groupId) {
@@ -753,7 +752,7 @@ namespace riaps{
     }
 
     bool ComponentBase::JoinToGroup(riaps::groups::GroupId &groupId) {
-        if (_groups.find(groupId)!=_groups.end())
+        if (m_groups.find(groupId)!=m_groups.end())
             return false;
 
         auto newGroupPtr = new riaps::groups::Group(groupId, this);
@@ -762,7 +761,7 @@ namespace riaps{
         );
 
         if (newGroup->InitGroup()) {
-            _groups[groupId] = std::move(newGroup);
+            m_groups[groupId] = std::move(newGroup);
             return true;
         }
 
@@ -790,7 +789,7 @@ namespace riaps{
 
     uint64_t ComponentBase::ScheduleAbsTimer(const timespec& tp, const uint64_t wakeupOffset) {
         std::string timerChannel = GetOneShotTimerChannel();
-        uint64_t timerId = _timerCounter;
+        uint64_t timerId = m_timerCounter;
 
         std::thread t([tp, timerChannel, timerId, wakeupOffset](){
             auto ptr  = std::shared_ptr<zsock_t>(zsock_new_push(timerChannel.c_str()),[](zsock_t* z){
@@ -824,7 +823,7 @@ namespace riaps{
             zclock_sleep(400);
         });
         t.detach();
-        return _timerCounter++;
+        return m_timerCounter++;
     }
 
     //TODO: only if the difference NOT in -50/+50 microsec
@@ -871,19 +870,30 @@ namespace riaps{
 //    }
 
     void ComponentBase::OnAnnounce(const riaps::groups::GroupId &groupId, const std::string &proposeId, bool accepted) {
-        _logger->error("Vote result is announced, but no handler implemented in component {}", GetConfig().component_name);
+        _logger->error("Vote result is announced, but no handler implemented in component {}", GetComponentName());
     }
 
     void ComponentBase::OnPropose(riaps::groups::GroupId &groupId, const std::string &proposeId,
                                   capnp::FlatArrayMessageReader &message) {
-        _logger->error("Leader proposed a value but no handler is implemented in component {}", GetConfig().component_name);
+        _logger->error("Leader proposed a value but no handler is implemented in component {}", GetComponentName());
+    }
+
+    void ComponentBase::OnActionPropose(riaps::groups::GroupId &groupId,
+                                        const std::string      &proposeId,
+                                        const std::string      &actionId,
+                                        const timespec         &timePoint) {
+        _logger->info("Leader proposed an action, but no handler is implemented in component {}", GetComponentName());
     }
 
     void ComponentBase::HandleCPULimit() {
         _logger->error("CPU Limit was violated, but HandleCPULimit() is not implemented in component: {}::{}::{}"
                 , GetActor()->GetApplicationName()
                 , GetActor()->GetActorName()
-                , GetConfig().component_name);
+                , GetComponentName());
+    }
+
+    const std::string ComponentBase::GetComponentName() const {
+        return GetConfig().component_name;
     }
 
     std::string ComponentBase::SendPropose(const riaps::groups::GroupId &groupId, capnp::MallocMessageBuilder &message) {
@@ -894,7 +904,23 @@ namespace riaps{
         std::string strUuid = zuuid_str(uuid);
         zuuid_destroy(&uuid);
 
-        if (group->SendProposeToLeader(message, strUuid)){
+        if (group->ProposeValueToLeader(message, strUuid)){
+            return strUuid;
+        }
+        return "";
+    }
+
+    std::string ComponentBase::ProposeAction(const riaps::groups::GroupId &groupId,
+                                             const std::string &actionId,
+                                             const timespec &absTime) {
+        auto group = GetGroupById(groupId);
+        if (group == nullptr) return "";
+
+        zuuid_t* uuid = zuuid_new();
+        std::string strUuid = zuuid_str(uuid);
+        zuuid_destroy(&uuid);
+
+        if (group->ProposeActionToLeader(strUuid, actionId, absTime)){
             return strUuid;
         }
         return "";
@@ -913,9 +939,9 @@ namespace riaps{
         gid.groupName   = msgGroupUpdate.getGroupId().getGroupName().cStr();
         gid.groupTypeId = msgGroupUpdate.getGroupId().getGroupType().cStr();
 
-        if (_groups.find(gid) == _groups.end()) return;
+        if (m_groups.find(gid) == m_groups.end()) return;
 
-        _groups[gid]->ConnectToNewServices(msgGroupUpdate);
+        m_groups[gid]->ConnectToNewServices(msgGroupUpdate);
     }
 
     ComponentBase::~ComponentBase() {

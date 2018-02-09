@@ -31,12 +31,20 @@ CAPNP_DECLARE_SCHEMA(880a4d64a0fb8286);
 CAPNP_DECLARE_SCHEMA(a9afe0029ed6bdf8);
 CAPNP_DECLARE_SCHEMA(83e8ac73bacab398);
 CAPNP_DECLARE_SCHEMA(c31d0cfd5f7ff32a);
+CAPNP_DECLARE_SCHEMA(ab26f9059c4c21f2);
+CAPNP_DECLARE_SCHEMA(ca8b82245ff35cf7);
 CAPNP_DECLARE_SCHEMA(b99fa3405ff6abee);
 enum class VoteResults_b99fa3405ff6abee: uint16_t {
   ACCEPTED,
   REJECTED,
 };
 CAPNP_DECLARE_ENUM(VoteResults, b99fa3405ff6abee);
+CAPNP_DECLARE_SCHEMA(939119b600a26e0b);
+enum class VoteType_939119b600a26e0b: uint16_t {
+  VALUE,
+  ACTION,
+};
+CAPNP_DECLARE_ENUM(VoteType, 939119b600a26e0b);
 CAPNP_DECLARE_SCHEMA(8a25ecc657bf2ed3);
 
 }  // namespace schemas
@@ -146,15 +154,24 @@ struct Consensus {
   class Reader;
   class Builder;
   class Pipeline;
+  enum Which: uint16_t {
+    PROPOSE_TO_LEADER,
+    PROPOSE_TO_CLIENTS,
+    VOTE,
+    ANNOUNCE,
+  };
   struct ProposeToLeader;
   struct ProposeToClients;
   struct Vote;
   struct Announce;
+  struct TimeSyncCoordA;
   typedef ::capnp::schemas::VoteResults_b99fa3405ff6abee VoteResults;
+
+  typedef ::capnp::schemas::VoteType_939119b600a26e0b VoteType;
 
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(934fe15762c71e76, 0, 5)
+    CAPNP_DECLARE_STRUCT_HEADER(934fe15762c71e76, 1, 3)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
     #endif  // !CAPNP_LITE
@@ -215,6 +232,37 @@ struct Consensus::Announce {
 
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(c31d0cfd5f7ff32a, 1, 1)
+    #if !CAPNP_LITE
+    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    #endif  // !CAPNP_LITE
+  };
+};
+
+struct Consensus::TimeSyncCoordA {
+  TimeSyncCoordA() = delete;
+
+  class Reader;
+  class Builder;
+  class Pipeline;
+  struct TimeSpec;
+
+  struct _capnpPrivate {
+    CAPNP_DECLARE_STRUCT_HEADER(ab26f9059c4c21f2, 0, 2)
+    #if !CAPNP_LITE
+    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    #endif  // !CAPNP_LITE
+  };
+};
+
+struct Consensus::TimeSyncCoordA::TimeSpec {
+  TimeSpec() = delete;
+
+  class Reader;
+  class Builder;
+  class Pipeline;
+
+  struct _capnpPrivate {
+    CAPNP_DECLARE_STRUCT_HEADER(ca8b82245ff35cf7, 2, 0)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
     #endif  // !CAPNP_LITE
@@ -800,20 +848,30 @@ public:
   }
 #endif  // !CAPNP_LITE
 
+  inline Which which() const;
   inline bool hasSourceComponentId() const;
   inline  ::capnp::Text::Reader getSourceComponentId() const;
 
+  inline  ::riaps::distrcoord::Consensus::VoteType getVoteType() const;
+
+  inline bool isProposeToLeader() const;
   inline bool hasProposeToLeader() const;
   inline  ::riaps::distrcoord::Consensus::ProposeToLeader::Reader getProposeToLeader() const;
 
+  inline bool isProposeToClients() const;
   inline bool hasProposeToClients() const;
   inline  ::riaps::distrcoord::Consensus::ProposeToClients::Reader getProposeToClients() const;
 
+  inline bool isVote() const;
   inline bool hasVote() const;
   inline  ::riaps::distrcoord::Consensus::Vote::Reader getVote() const;
 
+  inline bool isAnnounce() const;
   inline bool hasAnnounce() const;
   inline  ::riaps::distrcoord::Consensus::Announce::Reader getAnnounce() const;
+
+  inline bool hasTsyncCoordA() const;
+  inline  ::riaps::distrcoord::Consensus::TimeSyncCoordA::Reader getTsyncCoordA() const;
 
 private:
   ::capnp::_::StructReader _reader;
@@ -843,6 +901,7 @@ public:
   inline ::kj::StringTree toString() const { return asReader().toString(); }
 #endif  // !CAPNP_LITE
 
+  inline Which which();
   inline bool hasSourceComponentId();
   inline  ::capnp::Text::Builder getSourceComponentId();
   inline void setSourceComponentId( ::capnp::Text::Reader value);
@@ -850,6 +909,10 @@ public:
   inline void adoptSourceComponentId(::capnp::Orphan< ::capnp::Text>&& value);
   inline ::capnp::Orphan< ::capnp::Text> disownSourceComponentId();
 
+  inline  ::riaps::distrcoord::Consensus::VoteType getVoteType();
+  inline void setVoteType( ::riaps::distrcoord::Consensus::VoteType value);
+
+  inline bool isProposeToLeader();
   inline bool hasProposeToLeader();
   inline  ::riaps::distrcoord::Consensus::ProposeToLeader::Builder getProposeToLeader();
   inline void setProposeToLeader( ::riaps::distrcoord::Consensus::ProposeToLeader::Reader value);
@@ -857,6 +920,7 @@ public:
   inline void adoptProposeToLeader(::capnp::Orphan< ::riaps::distrcoord::Consensus::ProposeToLeader>&& value);
   inline ::capnp::Orphan< ::riaps::distrcoord::Consensus::ProposeToLeader> disownProposeToLeader();
 
+  inline bool isProposeToClients();
   inline bool hasProposeToClients();
   inline  ::riaps::distrcoord::Consensus::ProposeToClients::Builder getProposeToClients();
   inline void setProposeToClients( ::riaps::distrcoord::Consensus::ProposeToClients::Reader value);
@@ -864,6 +928,7 @@ public:
   inline void adoptProposeToClients(::capnp::Orphan< ::riaps::distrcoord::Consensus::ProposeToClients>&& value);
   inline ::capnp::Orphan< ::riaps::distrcoord::Consensus::ProposeToClients> disownProposeToClients();
 
+  inline bool isVote();
   inline bool hasVote();
   inline  ::riaps::distrcoord::Consensus::Vote::Builder getVote();
   inline void setVote( ::riaps::distrcoord::Consensus::Vote::Reader value);
@@ -871,12 +936,20 @@ public:
   inline void adoptVote(::capnp::Orphan< ::riaps::distrcoord::Consensus::Vote>&& value);
   inline ::capnp::Orphan< ::riaps::distrcoord::Consensus::Vote> disownVote();
 
+  inline bool isAnnounce();
   inline bool hasAnnounce();
   inline  ::riaps::distrcoord::Consensus::Announce::Builder getAnnounce();
   inline void setAnnounce( ::riaps::distrcoord::Consensus::Announce::Reader value);
   inline  ::riaps::distrcoord::Consensus::Announce::Builder initAnnounce();
   inline void adoptAnnounce(::capnp::Orphan< ::riaps::distrcoord::Consensus::Announce>&& value);
   inline ::capnp::Orphan< ::riaps::distrcoord::Consensus::Announce> disownAnnounce();
+
+  inline bool hasTsyncCoordA();
+  inline  ::riaps::distrcoord::Consensus::TimeSyncCoordA::Builder getTsyncCoordA();
+  inline void setTsyncCoordA( ::riaps::distrcoord::Consensus::TimeSyncCoordA::Reader value);
+  inline  ::riaps::distrcoord::Consensus::TimeSyncCoordA::Builder initTsyncCoordA();
+  inline void adoptTsyncCoordA(::capnp::Orphan< ::riaps::distrcoord::Consensus::TimeSyncCoordA>&& value);
+  inline ::capnp::Orphan< ::riaps::distrcoord::Consensus::TimeSyncCoordA> disownTsyncCoordA();
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -896,10 +969,7 @@ public:
   inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
       : _typeless(kj::mv(typeless)) {}
 
-  inline  ::riaps::distrcoord::Consensus::ProposeToLeader::Pipeline getProposeToLeader();
-  inline  ::riaps::distrcoord::Consensus::ProposeToClients::Pipeline getProposeToClients();
-  inline  ::riaps::distrcoord::Consensus::Vote::Pipeline getVote();
-  inline  ::riaps::distrcoord::Consensus::Announce::Pipeline getAnnounce();
+  inline  ::riaps::distrcoord::Consensus::TimeSyncCoordA::Pipeline getTsyncCoordA();
 private:
   ::capnp::AnyPointer::Pipeline _typeless;
   friend class ::capnp::PipelineHook;
@@ -1239,6 +1309,179 @@ private:
 class Consensus::Announce::Pipeline {
 public:
   typedef Announce Pipelines;
+
+  inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
+  inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
+      : _typeless(kj::mv(typeless)) {}
+
+private:
+  ::capnp::AnyPointer::Pipeline _typeless;
+  friend class ::capnp::PipelineHook;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+};
+#endif  // !CAPNP_LITE
+
+class Consensus::TimeSyncCoordA::Reader {
+public:
+  typedef TimeSyncCoordA Reads;
+
+  Reader() = default;
+  inline explicit Reader(::capnp::_::StructReader base): _reader(base) {}
+
+  inline ::capnp::MessageSize totalSize() const {
+    return _reader.totalSize().asPublic();
+  }
+
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const {
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+  }
+#endif  // !CAPNP_LITE
+
+  inline bool hasActionId() const;
+  inline  ::capnp::Text::Reader getActionId() const;
+
+  inline bool hasTime() const;
+  inline  ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec::Reader getTime() const;
+
+private:
+  ::capnp::_::StructReader _reader;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::List;
+  friend class ::capnp::MessageBuilder;
+  friend class ::capnp::Orphanage;
+};
+
+class Consensus::TimeSyncCoordA::Builder {
+public:
+  typedef TimeSyncCoordA Builds;
+
+  Builder() = delete;  // Deleted to discourage incorrect usage.
+                       // You can explicitly initialize to nullptr instead.
+  inline Builder(decltype(nullptr)) {}
+  inline explicit Builder(::capnp::_::StructBuilder base): _builder(base) {}
+  inline operator Reader() const { return Reader(_builder.asReader()); }
+  inline Reader asReader() const { return *this; }
+
+  inline ::capnp::MessageSize totalSize() const { return asReader().totalSize(); }
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const { return asReader().toString(); }
+#endif  // !CAPNP_LITE
+
+  inline bool hasActionId();
+  inline  ::capnp::Text::Builder getActionId();
+  inline void setActionId( ::capnp::Text::Reader value);
+  inline  ::capnp::Text::Builder initActionId(unsigned int size);
+  inline void adoptActionId(::capnp::Orphan< ::capnp::Text>&& value);
+  inline ::capnp::Orphan< ::capnp::Text> disownActionId();
+
+  inline bool hasTime();
+  inline  ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec::Builder getTime();
+  inline void setTime( ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec::Reader value);
+  inline  ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec::Builder initTime();
+  inline void adoptTime(::capnp::Orphan< ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec>&& value);
+  inline ::capnp::Orphan< ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec> disownTime();
+
+private:
+  ::capnp::_::StructBuilder _builder;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  friend class ::capnp::Orphanage;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+};
+
+#if !CAPNP_LITE
+class Consensus::TimeSyncCoordA::Pipeline {
+public:
+  typedef TimeSyncCoordA Pipelines;
+
+  inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
+  inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
+      : _typeless(kj::mv(typeless)) {}
+
+  inline  ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec::Pipeline getTime();
+private:
+  ::capnp::AnyPointer::Pipeline _typeless;
+  friend class ::capnp::PipelineHook;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+};
+#endif  // !CAPNP_LITE
+
+class Consensus::TimeSyncCoordA::TimeSpec::Reader {
+public:
+  typedef TimeSpec Reads;
+
+  Reader() = default;
+  inline explicit Reader(::capnp::_::StructReader base): _reader(base) {}
+
+  inline ::capnp::MessageSize totalSize() const {
+    return _reader.totalSize().asPublic();
+  }
+
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const {
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+  }
+#endif  // !CAPNP_LITE
+
+  inline  ::int64_t getTvSec() const;
+
+  inline  ::int64_t getTvNsec() const;
+
+private:
+  ::capnp::_::StructReader _reader;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::List;
+  friend class ::capnp::MessageBuilder;
+  friend class ::capnp::Orphanage;
+};
+
+class Consensus::TimeSyncCoordA::TimeSpec::Builder {
+public:
+  typedef TimeSpec Builds;
+
+  Builder() = delete;  // Deleted to discourage incorrect usage.
+                       // You can explicitly initialize to nullptr instead.
+  inline Builder(decltype(nullptr)) {}
+  inline explicit Builder(::capnp::_::StructBuilder base): _builder(base) {}
+  inline operator Reader() const { return Reader(_builder.asReader()); }
+  inline Reader asReader() const { return *this; }
+
+  inline ::capnp::MessageSize totalSize() const { return asReader().totalSize(); }
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const { return asReader().toString(); }
+#endif  // !CAPNP_LITE
+
+  inline  ::int64_t getTvSec();
+  inline void setTvSec( ::int64_t value);
+
+  inline  ::int64_t getTvNsec();
+  inline void setTvNsec( ::int64_t value);
+
+private:
+  ::capnp::_::StructBuilder _builder;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  friend class ::capnp::Orphanage;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+};
+
+#if !CAPNP_LITE
+class Consensus::TimeSyncCoordA::TimeSpec::Pipeline {
+public:
+  typedef TimeSpec Pipelines;
 
   inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
   inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
@@ -1734,6 +1977,13 @@ inline ::capnp::Orphan< ::capnp::Text> MessageToLeader::Builder::disownSourceCom
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
+inline  ::riaps::distrcoord::Consensus::Which Consensus::Reader::which() const {
+  return _reader.getDataField<Which>(1 * ::capnp::ELEMENTS);
+}
+inline  ::riaps::distrcoord::Consensus::Which Consensus::Builder::which() {
+  return _builder.getDataField<Which>(1 * ::capnp::ELEMENTS);
+}
+
 inline bool Consensus::Reader::hasSourceComponentId() const {
   return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
 }
@@ -1766,152 +2016,263 @@ inline ::capnp::Orphan< ::capnp::Text> Consensus::Builder::disownSourceComponent
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
+inline  ::riaps::distrcoord::Consensus::VoteType Consensus::Reader::getVoteType() const {
+  return _reader.getDataField< ::riaps::distrcoord::Consensus::VoteType>(
+      0 * ::capnp::ELEMENTS);
+}
+
+inline  ::riaps::distrcoord::Consensus::VoteType Consensus::Builder::getVoteType() {
+  return _builder.getDataField< ::riaps::distrcoord::Consensus::VoteType>(
+      0 * ::capnp::ELEMENTS);
+}
+inline void Consensus::Builder::setVoteType( ::riaps::distrcoord::Consensus::VoteType value) {
+  _builder.setDataField< ::riaps::distrcoord::Consensus::VoteType>(
+      0 * ::capnp::ELEMENTS, value);
+}
+
+inline bool Consensus::Reader::isProposeToLeader() const {
+  return which() == Consensus::PROPOSE_TO_LEADER;
+}
+inline bool Consensus::Builder::isProposeToLeader() {
+  return which() == Consensus::PROPOSE_TO_LEADER;
+}
 inline bool Consensus::Reader::hasProposeToLeader() const {
+  if (which() != Consensus::PROPOSE_TO_LEADER) return false;
   return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
 }
 inline bool Consensus::Builder::hasProposeToLeader() {
+  if (which() != Consensus::PROPOSE_TO_LEADER) return false;
   return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::distrcoord::Consensus::ProposeToLeader::Reader Consensus::Reader::getProposeToLeader() const {
+  KJ_IREQUIRE(which() == Consensus::PROPOSE_TO_LEADER,
+              "Must check which() before get()ing a union member.");
   return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToLeader>::get(
       _reader.getPointerField(1 * ::capnp::POINTERS));
 }
 inline  ::riaps::distrcoord::Consensus::ProposeToLeader::Builder Consensus::Builder::getProposeToLeader() {
+  KJ_IREQUIRE(which() == Consensus::PROPOSE_TO_LEADER,
+              "Must check which() before get()ing a union member.");
   return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToLeader>::get(
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }
-#if !CAPNP_LITE
-inline  ::riaps::distrcoord::Consensus::ProposeToLeader::Pipeline Consensus::Pipeline::getProposeToLeader() {
-  return  ::riaps::distrcoord::Consensus::ProposeToLeader::Pipeline(_typeless.getPointerField(1));
-}
-#endif  // !CAPNP_LITE
 inline void Consensus::Builder::setProposeToLeader( ::riaps::distrcoord::Consensus::ProposeToLeader::Reader value) {
+  _builder.setDataField<Consensus::Which>(
+      1 * ::capnp::ELEMENTS, Consensus::PROPOSE_TO_LEADER);
   ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToLeader>::set(
       _builder.getPointerField(1 * ::capnp::POINTERS), value);
 }
 inline  ::riaps::distrcoord::Consensus::ProposeToLeader::Builder Consensus::Builder::initProposeToLeader() {
+  _builder.setDataField<Consensus::Which>(
+      1 * ::capnp::ELEMENTS, Consensus::PROPOSE_TO_LEADER);
   return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToLeader>::init(
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }
 inline void Consensus::Builder::adoptProposeToLeader(
     ::capnp::Orphan< ::riaps::distrcoord::Consensus::ProposeToLeader>&& value) {
+  _builder.setDataField<Consensus::Which>(
+      1 * ::capnp::ELEMENTS, Consensus::PROPOSE_TO_LEADER);
   ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToLeader>::adopt(
       _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::distrcoord::Consensus::ProposeToLeader> Consensus::Builder::disownProposeToLeader() {
+  KJ_IREQUIRE(which() == Consensus::PROPOSE_TO_LEADER,
+              "Must check which() before get()ing a union member.");
   return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToLeader>::disown(
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }
 
+inline bool Consensus::Reader::isProposeToClients() const {
+  return which() == Consensus::PROPOSE_TO_CLIENTS;
+}
+inline bool Consensus::Builder::isProposeToClients() {
+  return which() == Consensus::PROPOSE_TO_CLIENTS;
+}
 inline bool Consensus::Reader::hasProposeToClients() const {
-  return !_reader.getPointerField(2 * ::capnp::POINTERS).isNull();
+  if (which() != Consensus::PROPOSE_TO_CLIENTS) return false;
+  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
 }
 inline bool Consensus::Builder::hasProposeToClients() {
-  return !_builder.getPointerField(2 * ::capnp::POINTERS).isNull();
+  if (which() != Consensus::PROPOSE_TO_CLIENTS) return false;
+  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::distrcoord::Consensus::ProposeToClients::Reader Consensus::Reader::getProposeToClients() const {
+  KJ_IREQUIRE(which() == Consensus::PROPOSE_TO_CLIENTS,
+              "Must check which() before get()ing a union member.");
   return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToClients>::get(
-      _reader.getPointerField(2 * ::capnp::POINTERS));
+      _reader.getPointerField(1 * ::capnp::POINTERS));
 }
 inline  ::riaps::distrcoord::Consensus::ProposeToClients::Builder Consensus::Builder::getProposeToClients() {
+  KJ_IREQUIRE(which() == Consensus::PROPOSE_TO_CLIENTS,
+              "Must check which() before get()ing a union member.");
   return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToClients>::get(
-      _builder.getPointerField(2 * ::capnp::POINTERS));
+      _builder.getPointerField(1 * ::capnp::POINTERS));
 }
-#if !CAPNP_LITE
-inline  ::riaps::distrcoord::Consensus::ProposeToClients::Pipeline Consensus::Pipeline::getProposeToClients() {
-  return  ::riaps::distrcoord::Consensus::ProposeToClients::Pipeline(_typeless.getPointerField(2));
-}
-#endif  // !CAPNP_LITE
 inline void Consensus::Builder::setProposeToClients( ::riaps::distrcoord::Consensus::ProposeToClients::Reader value) {
+  _builder.setDataField<Consensus::Which>(
+      1 * ::capnp::ELEMENTS, Consensus::PROPOSE_TO_CLIENTS);
   ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToClients>::set(
-      _builder.getPointerField(2 * ::capnp::POINTERS), value);
+      _builder.getPointerField(1 * ::capnp::POINTERS), value);
 }
 inline  ::riaps::distrcoord::Consensus::ProposeToClients::Builder Consensus::Builder::initProposeToClients() {
+  _builder.setDataField<Consensus::Which>(
+      1 * ::capnp::ELEMENTS, Consensus::PROPOSE_TO_CLIENTS);
   return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToClients>::init(
-      _builder.getPointerField(2 * ::capnp::POINTERS));
+      _builder.getPointerField(1 * ::capnp::POINTERS));
 }
 inline void Consensus::Builder::adoptProposeToClients(
     ::capnp::Orphan< ::riaps::distrcoord::Consensus::ProposeToClients>&& value) {
+  _builder.setDataField<Consensus::Which>(
+      1 * ::capnp::ELEMENTS, Consensus::PROPOSE_TO_CLIENTS);
   ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToClients>::adopt(
-      _builder.getPointerField(2 * ::capnp::POINTERS), kj::mv(value));
+      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::distrcoord::Consensus::ProposeToClients> Consensus::Builder::disownProposeToClients() {
+  KJ_IREQUIRE(which() == Consensus::PROPOSE_TO_CLIENTS,
+              "Must check which() before get()ing a union member.");
   return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToClients>::disown(
-      _builder.getPointerField(2 * ::capnp::POINTERS));
+      _builder.getPointerField(1 * ::capnp::POINTERS));
 }
 
+inline bool Consensus::Reader::isVote() const {
+  return which() == Consensus::VOTE;
+}
+inline bool Consensus::Builder::isVote() {
+  return which() == Consensus::VOTE;
+}
 inline bool Consensus::Reader::hasVote() const {
-  return !_reader.getPointerField(3 * ::capnp::POINTERS).isNull();
+  if (which() != Consensus::VOTE) return false;
+  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
 }
 inline bool Consensus::Builder::hasVote() {
-  return !_builder.getPointerField(3 * ::capnp::POINTERS).isNull();
+  if (which() != Consensus::VOTE) return false;
+  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::distrcoord::Consensus::Vote::Reader Consensus::Reader::getVote() const {
+  KJ_IREQUIRE(which() == Consensus::VOTE,
+              "Must check which() before get()ing a union member.");
   return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Vote>::get(
-      _reader.getPointerField(3 * ::capnp::POINTERS));
+      _reader.getPointerField(1 * ::capnp::POINTERS));
 }
 inline  ::riaps::distrcoord::Consensus::Vote::Builder Consensus::Builder::getVote() {
+  KJ_IREQUIRE(which() == Consensus::VOTE,
+              "Must check which() before get()ing a union member.");
   return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Vote>::get(
-      _builder.getPointerField(3 * ::capnp::POINTERS));
+      _builder.getPointerField(1 * ::capnp::POINTERS));
 }
-#if !CAPNP_LITE
-inline  ::riaps::distrcoord::Consensus::Vote::Pipeline Consensus::Pipeline::getVote() {
-  return  ::riaps::distrcoord::Consensus::Vote::Pipeline(_typeless.getPointerField(3));
-}
-#endif  // !CAPNP_LITE
 inline void Consensus::Builder::setVote( ::riaps::distrcoord::Consensus::Vote::Reader value) {
+  _builder.setDataField<Consensus::Which>(
+      1 * ::capnp::ELEMENTS, Consensus::VOTE);
   ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Vote>::set(
-      _builder.getPointerField(3 * ::capnp::POINTERS), value);
+      _builder.getPointerField(1 * ::capnp::POINTERS), value);
 }
 inline  ::riaps::distrcoord::Consensus::Vote::Builder Consensus::Builder::initVote() {
+  _builder.setDataField<Consensus::Which>(
+      1 * ::capnp::ELEMENTS, Consensus::VOTE);
   return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Vote>::init(
-      _builder.getPointerField(3 * ::capnp::POINTERS));
+      _builder.getPointerField(1 * ::capnp::POINTERS));
 }
 inline void Consensus::Builder::adoptVote(
     ::capnp::Orphan< ::riaps::distrcoord::Consensus::Vote>&& value) {
+  _builder.setDataField<Consensus::Which>(
+      1 * ::capnp::ELEMENTS, Consensus::VOTE);
   ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Vote>::adopt(
-      _builder.getPointerField(3 * ::capnp::POINTERS), kj::mv(value));
+      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::distrcoord::Consensus::Vote> Consensus::Builder::disownVote() {
+  KJ_IREQUIRE(which() == Consensus::VOTE,
+              "Must check which() before get()ing a union member.");
   return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Vote>::disown(
-      _builder.getPointerField(3 * ::capnp::POINTERS));
+      _builder.getPointerField(1 * ::capnp::POINTERS));
 }
 
+inline bool Consensus::Reader::isAnnounce() const {
+  return which() == Consensus::ANNOUNCE;
+}
+inline bool Consensus::Builder::isAnnounce() {
+  return which() == Consensus::ANNOUNCE;
+}
 inline bool Consensus::Reader::hasAnnounce() const {
-  return !_reader.getPointerField(4 * ::capnp::POINTERS).isNull();
+  if (which() != Consensus::ANNOUNCE) return false;
+  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
 }
 inline bool Consensus::Builder::hasAnnounce() {
-  return !_builder.getPointerField(4 * ::capnp::POINTERS).isNull();
+  if (which() != Consensus::ANNOUNCE) return false;
+  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::distrcoord::Consensus::Announce::Reader Consensus::Reader::getAnnounce() const {
+  KJ_IREQUIRE(which() == Consensus::ANNOUNCE,
+              "Must check which() before get()ing a union member.");
   return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Announce>::get(
-      _reader.getPointerField(4 * ::capnp::POINTERS));
+      _reader.getPointerField(1 * ::capnp::POINTERS));
 }
 inline  ::riaps::distrcoord::Consensus::Announce::Builder Consensus::Builder::getAnnounce() {
+  KJ_IREQUIRE(which() == Consensus::ANNOUNCE,
+              "Must check which() before get()ing a union member.");
   return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Announce>::get(
-      _builder.getPointerField(4 * ::capnp::POINTERS));
+      _builder.getPointerField(1 * ::capnp::POINTERS));
 }
-#if !CAPNP_LITE
-inline  ::riaps::distrcoord::Consensus::Announce::Pipeline Consensus::Pipeline::getAnnounce() {
-  return  ::riaps::distrcoord::Consensus::Announce::Pipeline(_typeless.getPointerField(4));
-}
-#endif  // !CAPNP_LITE
 inline void Consensus::Builder::setAnnounce( ::riaps::distrcoord::Consensus::Announce::Reader value) {
+  _builder.setDataField<Consensus::Which>(
+      1 * ::capnp::ELEMENTS, Consensus::ANNOUNCE);
   ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Announce>::set(
-      _builder.getPointerField(4 * ::capnp::POINTERS), value);
+      _builder.getPointerField(1 * ::capnp::POINTERS), value);
 }
 inline  ::riaps::distrcoord::Consensus::Announce::Builder Consensus::Builder::initAnnounce() {
+  _builder.setDataField<Consensus::Which>(
+      1 * ::capnp::ELEMENTS, Consensus::ANNOUNCE);
   return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Announce>::init(
-      _builder.getPointerField(4 * ::capnp::POINTERS));
+      _builder.getPointerField(1 * ::capnp::POINTERS));
 }
 inline void Consensus::Builder::adoptAnnounce(
     ::capnp::Orphan< ::riaps::distrcoord::Consensus::Announce>&& value) {
+  _builder.setDataField<Consensus::Which>(
+      1 * ::capnp::ELEMENTS, Consensus::ANNOUNCE);
   ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Announce>::adopt(
-      _builder.getPointerField(4 * ::capnp::POINTERS), kj::mv(value));
+      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::distrcoord::Consensus::Announce> Consensus::Builder::disownAnnounce() {
+  KJ_IREQUIRE(which() == Consensus::ANNOUNCE,
+              "Must check which() before get()ing a union member.");
   return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Announce>::disown(
-      _builder.getPointerField(4 * ::capnp::POINTERS));
+      _builder.getPointerField(1 * ::capnp::POINTERS));
+}
+
+inline bool Consensus::Reader::hasTsyncCoordA() const {
+  return !_reader.getPointerField(2 * ::capnp::POINTERS).isNull();
+}
+inline bool Consensus::Builder::hasTsyncCoordA() {
+  return !_builder.getPointerField(2 * ::capnp::POINTERS).isNull();
+}
+inline  ::riaps::distrcoord::Consensus::TimeSyncCoordA::Reader Consensus::Reader::getTsyncCoordA() const {
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA>::get(
+      _reader.getPointerField(2 * ::capnp::POINTERS));
+}
+inline  ::riaps::distrcoord::Consensus::TimeSyncCoordA::Builder Consensus::Builder::getTsyncCoordA() {
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA>::get(
+      _builder.getPointerField(2 * ::capnp::POINTERS));
+}
+#if !CAPNP_LITE
+inline  ::riaps::distrcoord::Consensus::TimeSyncCoordA::Pipeline Consensus::Pipeline::getTsyncCoordA() {
+  return  ::riaps::distrcoord::Consensus::TimeSyncCoordA::Pipeline(_typeless.getPointerField(2));
+}
+#endif  // !CAPNP_LITE
+inline void Consensus::Builder::setTsyncCoordA( ::riaps::distrcoord::Consensus::TimeSyncCoordA::Reader value) {
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA>::set(
+      _builder.getPointerField(2 * ::capnp::POINTERS), value);
+}
+inline  ::riaps::distrcoord::Consensus::TimeSyncCoordA::Builder Consensus::Builder::initTsyncCoordA() {
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA>::init(
+      _builder.getPointerField(2 * ::capnp::POINTERS));
+}
+inline void Consensus::Builder::adoptTsyncCoordA(
+    ::capnp::Orphan< ::riaps::distrcoord::Consensus::TimeSyncCoordA>&& value) {
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA>::adopt(
+      _builder.getPointerField(2 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::riaps::distrcoord::Consensus::TimeSyncCoordA> Consensus::Builder::disownTsyncCoordA() {
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA>::disown(
+      _builder.getPointerField(2 * ::capnp::POINTERS));
 }
 
 inline bool Consensus::ProposeToLeader::Reader::hasProposeId() const {
@@ -2100,6 +2461,103 @@ inline  ::riaps::distrcoord::Consensus::VoteResults Consensus::Announce::Builder
 inline void Consensus::Announce::Builder::setVoteResult( ::riaps::distrcoord::Consensus::VoteResults value) {
   _builder.setDataField< ::riaps::distrcoord::Consensus::VoteResults>(
       0 * ::capnp::ELEMENTS, value);
+}
+
+inline bool Consensus::TimeSyncCoordA::Reader::hasActionId() const {
+  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline bool Consensus::TimeSyncCoordA::Builder::hasActionId() {
+  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::Text::Reader Consensus::TimeSyncCoordA::Reader::getActionId() const {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _reader.getPointerField(0 * ::capnp::POINTERS));
+}
+inline  ::capnp::Text::Builder Consensus::TimeSyncCoordA::Builder::getActionId() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void Consensus::TimeSyncCoordA::Builder::setActionId( ::capnp::Text::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
+      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+}
+inline  ::capnp::Text::Builder Consensus::TimeSyncCoordA::Builder::initActionId(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
+      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+}
+inline void Consensus::TimeSyncCoordA::Builder::adoptActionId(
+    ::capnp::Orphan< ::capnp::Text>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
+      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::Text> Consensus::TimeSyncCoordA::Builder::disownActionId() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+
+inline bool Consensus::TimeSyncCoordA::Reader::hasTime() const {
+  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
+}
+inline bool Consensus::TimeSyncCoordA::Builder::hasTime() {
+  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
+}
+inline  ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec::Reader Consensus::TimeSyncCoordA::Reader::getTime() const {
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec>::get(
+      _reader.getPointerField(1 * ::capnp::POINTERS));
+}
+inline  ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec::Builder Consensus::TimeSyncCoordA::Builder::getTime() {
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec>::get(
+      _builder.getPointerField(1 * ::capnp::POINTERS));
+}
+#if !CAPNP_LITE
+inline  ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec::Pipeline Consensus::TimeSyncCoordA::Pipeline::getTime() {
+  return  ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec::Pipeline(_typeless.getPointerField(1));
+}
+#endif  // !CAPNP_LITE
+inline void Consensus::TimeSyncCoordA::Builder::setTime( ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec::Reader value) {
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec>::set(
+      _builder.getPointerField(1 * ::capnp::POINTERS), value);
+}
+inline  ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec::Builder Consensus::TimeSyncCoordA::Builder::initTime() {
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec>::init(
+      _builder.getPointerField(1 * ::capnp::POINTERS));
+}
+inline void Consensus::TimeSyncCoordA::Builder::adoptTime(
+    ::capnp::Orphan< ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec>&& value) {
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec>::adopt(
+      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec> Consensus::TimeSyncCoordA::Builder::disownTime() {
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec>::disown(
+      _builder.getPointerField(1 * ::capnp::POINTERS));
+}
+
+inline  ::int64_t Consensus::TimeSyncCoordA::TimeSpec::Reader::getTvSec() const {
+  return _reader.getDataField< ::int64_t>(
+      0 * ::capnp::ELEMENTS);
+}
+
+inline  ::int64_t Consensus::TimeSyncCoordA::TimeSpec::Builder::getTvSec() {
+  return _builder.getDataField< ::int64_t>(
+      0 * ::capnp::ELEMENTS);
+}
+inline void Consensus::TimeSyncCoordA::TimeSpec::Builder::setTvSec( ::int64_t value) {
+  _builder.setDataField< ::int64_t>(
+      0 * ::capnp::ELEMENTS, value);
+}
+
+inline  ::int64_t Consensus::TimeSyncCoordA::TimeSpec::Reader::getTvNsec() const {
+  return _reader.getDataField< ::int64_t>(
+      1 * ::capnp::ELEMENTS);
+}
+
+inline  ::int64_t Consensus::TimeSyncCoordA::TimeSpec::Builder::getTvNsec() {
+  return _builder.getDataField< ::int64_t>(
+      1 * ::capnp::ELEMENTS);
+}
+inline void Consensus::TimeSyncCoordA::TimeSpec::Builder::setTvNsec( ::int64_t value) {
+  _builder.setDataField< ::int64_t>(
+      1 * ::capnp::ELEMENTS, value);
 }
 
 inline  ::riaps::distrcoord::GroupInternals::Which GroupInternals::Reader::which() const {

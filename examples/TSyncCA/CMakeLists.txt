@@ -17,6 +17,8 @@
 add_library(tsca
 			SHARED ${CMAKE_CURRENT_SOURCE_DIR}/cpp/Tsca.cc
 			${CMAKE_CURRENT_SOURCE_DIR}/cpp/TscaBase.cc
+		${CMAKE_CURRENT_SOURCE_DIR}/cpp/include/TscaBase.h
+		${CMAKE_CURRENT_SOURCE_DIR}/cpp/include/Tsca.h
 			)
 			
 target_link_libraries(tsca czmq riaps dl capnp kj)
