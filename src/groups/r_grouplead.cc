@@ -430,9 +430,17 @@ void GroupLead::OnVote(riaps::distrcoord::Consensus::Vote::Reader &message, cons
     // Majority, announce
     if (accepted >= majority) {
         Announce(proposeId, riaps::distrcoord::Consensus::VoteResults::ACCEPTED);
+        if (m_proposeData[proposeId]->isAction &&
+            m_actionData.find(m_proposeData[proposeId]->actionId) != m_proposeData.end()) {
+            m_actionData.erase(m_proposeData[proposeId]->actionId);
+        }
         m_proposeData.erase(proposeId);
         _logger->debug("Majority in VOTE => ANNOUNCE, {}/{}", groupSize, accepted);
     } else if(rejected>=majority){
+        if (m_proposeData[proposeId]->isAction &&
+            m_actionData.find(m_proposeData[proposeId]->actionId) != m_proposeData.end()) {
+            m_actionData.erase(m_proposeData[proposeId]->actionId);
+        }
         Announce(proposeId, riaps::distrcoord::Consensus::VoteResults::REJECTED);
         m_proposeData.erase(proposeId);
         _logger->debug("No majority in VOTE => ANNOUNCE, {}/{}", groupSize, accepted);

@@ -30,11 +30,14 @@ namespace tsyncca {
       private:
           bool m_hasJoined;
 
-          std::unordered_map<std::string, std::function<void()>> m_actions;
 
-          void ActionA();
+          void ActionA(const uint64_t timerId);
 
           std::unordered_map<std::string, timespec> m_accepted;
+          std::unordered_map<uint64_t, timespec>    m_scheduled;
+          std::set<std::string>                     m_pendingActions;
+
+          uint64_t m_logcounter;
          
       };
    }

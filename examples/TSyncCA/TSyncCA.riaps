@@ -11,7 +11,7 @@ app TSyncCA {
 	}
 
     component Tsca {
-      timer clock 5000; // Vote in every 5th sec.
+      timer clock 3000; // Vote in every 3th sec.
     }
     
 

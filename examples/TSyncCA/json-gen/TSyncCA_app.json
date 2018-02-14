@@ -29,7 +29,7 @@
         "srvs": {},
         "tims": {
           "clock": {
-            "period": 5000
+            "period": 3000
           }
         }
       }

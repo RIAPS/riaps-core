@@ -343,18 +343,32 @@ namespace riaps {
                                   const timespec&               absTime
         );
 
-        uint64_t ScheduleAbsTimer(const timespec& t, const uint64_t wakeupOffset = 0 /*nanosec*/);
+        uint64_t ScheduleAbsTimer (const timespec& t, const uint64_t wakeupOffset = 0 /*nanosec*/);
 
+        /**
+         *
+         * @param tp absolute time when the action is executed
+         * @param action Pointer to the function to be executed
+         * @param wakeupOffset The timer is fired earlier by wakeupOffset.
+         *                     The value is in nanosec and depends on the current platform.
+         *                     On BBB it is 2000 microsec, this is the worst case.
+         *                     If the timer fires too early, make sure to call the WaitUntil() in the handler.
+         * @return unique id of the scheduled timer
+         */
+        uint64_t ScheduleAction   (const timespec& tp, std::function<void(const uint64_t)> action, const uint64_t wakeupOffset = 2000*1000);
+
+
+        std::function<void(const uint64_t)> m_scheduledAction;
     private:
 
-        const ports::PublisherPort*  InitPublisherPort  (const _component_port_pub&);
-        const ports::SubscriberPort* InitSubscriberPort (const _component_port_sub&);
-        const ports::ResponsePort*   InitResponsePort   (const _component_port_rep&);
-        const ports::RequestPort*    InitRequestPort    (const _component_port_req&);
-        const ports::QueryPort*      InitQueryPort      (const _component_port_qry&);
-        const ports::AnswerPort*     InitAnswerPort     (const _component_port_ans&);
-        const ports::PeriodicTimer*  InitTimerPort      (const _component_port_tim&);
-        const ports::InsidePort*     InitInsidePort     (const _component_port_ins&);
+        const ports::PublisherPort*  initPublisherPort  (const _component_port_pub&);
+        const ports::SubscriberPort* initSubscriberPort (const _component_port_sub&);
+        const ports::ResponsePort*   initResponsePort   (const _component_port_rep&);
+        const ports::RequestPort*    initRequestPort    (const _component_port_req&);
+        const ports::QueryPort*      initQueryPort      (const _component_port_qry&);
+        const ports::AnswerPort*     initAnswerPort     (const _component_port_ans&);
+        const ports::PeriodicTimer*  initTimerPort      (const _component_port_tim&);
+        const ports::InsidePort*     initInsidePort     (const _component_port_ins&);
 
 
         std::string             GetTimerChannel();
@@ -393,10 +407,10 @@ namespace riaps {
          * Holds the component thread.
          */
         zactor_t*         m_zactorComponent;
+
+
     };
 }
-
-
 
 
 #endif //RIAPS_R_COMPONENTBASE_H

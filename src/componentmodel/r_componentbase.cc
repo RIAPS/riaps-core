@@ -56,7 +56,7 @@ namespace riaps{
                 for (auto it_insconf = comp_conf.component_ports.inss.begin();
                      it_insconf != comp_conf.component_ports.inss.end();
                      it_insconf++){
-                    const ports::InsidePort* newPort = comp->InitInsidePort(*it_insconf);
+                    const ports::InsidePort* newPort = comp->initInsidePort(*it_insconf);
                     const zsock_t* zmqSocket = newPort->GetSocket();
                     //insidePorts[zmqSocket] = newPort;
                     portSockets[zmqSocket] = newPort;
@@ -69,14 +69,14 @@ namespace riaps{
                           it_timconf++){
                     // Don't put the zmqSocket into portSockets[zmqSocket], just one timer port exist in the component.
                     // Cannot differentiate timerports based on ZMQ Sockets.
-                    comp->InitTimerPort(*it_timconf);
+                    comp->initTimerPort(*it_timconf);
                 }
 
                 // Add and start publishers
                 for (auto it_pubconf = comp_conf.component_ports.pubs.begin();
                           it_pubconf != comp_conf.component_ports.pubs.end();
                           it_pubconf++){
-                    const ports::PublisherPort* newPort = comp->InitPublisherPort(*it_pubconf);
+                    const ports::PublisherPort* newPort = comp->initPublisherPort(*it_pubconf);
                     const zsock_t* zmqSocket = newPort->GetSocket();
 
                     portSockets[zmqSocket] = newPort;
@@ -87,7 +87,7 @@ namespace riaps{
                      it_repconf != comp_conf.component_ports.reps.end();
                      it_repconf++){
 
-                    const ports::ResponsePort* newPort = comp->InitResponsePort(*it_repconf);
+                    const ports::ResponsePort* newPort = comp->initResponsePort(*it_repconf);
                     const zsock_t* zmqSocket = newPort->GetSocket();
                     portSockets[zmqSocket] = newPort;
                     zpoller_add(poller, (void*)newPort->GetSocket());
@@ -98,7 +98,7 @@ namespace riaps{
                      it_ansconf != comp_conf.component_ports.anss.end();
                      it_ansconf++){
 
-                    const ports::AnswerPort* newPort = comp->InitAnswerPort(*it_ansconf);
+                    const ports::AnswerPort* newPort = comp->initAnswerPort(*it_ansconf);
                     const zsock_t* zmqSocket = newPort->GetSocket();
                     portSockets[zmqSocket] = newPort;
                     zpoller_add(poller, (void*)newPort->GetSocket());
@@ -111,7 +111,7 @@ namespace riaps{
                           it_reqconf!= comp_conf.component_ports.reqs.end();
                           it_reqconf++) {
 
-                    const ports::RequestPort* newPort = comp->InitRequestPort(*it_reqconf);
+                    const ports::RequestPort* newPort = comp->initRequestPort(*it_reqconf);
                     const zsock_t* zmqSocket = newPort->GetSocket();
                     portSockets[zmqSocket] = newPort;
                     zpoller_add(poller, (void*)newPort->GetSocket());
@@ -122,7 +122,7 @@ namespace riaps{
                      it_qryconf!= comp_conf.component_ports.qrys.end();
                      it_qryconf++) {
 
-                    const ports::QueryPort* newPort = comp->InitQueryPort(*it_qryconf);
+                    const ports::QueryPort* newPort = comp->initQueryPort(*it_qryconf);
                     const zsock_t* zmqSocket = newPort->GetSocket();
                     portSockets[zmqSocket] = newPort;
                     zpoller_add(poller, (void*)newPort->GetSocket());
@@ -132,7 +132,7 @@ namespace riaps{
                 for (auto it_subconf = comp_conf.component_ports.subs.begin();
                           it_subconf != comp_conf.component_ports.subs.end();
                           it_subconf++) {
-                    const ports::SubscriberPort* newPort = comp->InitSubscriberPort(*it_subconf);
+                    const ports::SubscriberPort* newPort = comp->initSubscriberPort(*it_subconf);
                     const zsock_t* zmqSocket = newPort->GetSocket();
                     portSockets[zmqSocket] = newPort;
                     zpoller_add(poller, (void*)newPort->GetSocket());
@@ -218,27 +218,21 @@ namespace riaps{
             }
             // Message from one shot timer
             else if ((which == timerportOneShot) && !terminated){
-                //uint64_t timerId;
-                //int64_t tSec;
-                //int64_t tNsec;
-                //zsock_recv(which, "888", &timerId, &tSec, &tNsec);
+
                 zmsg_t* msg = zmsg_recv(which);
                 zframe_t* idframe = zmsg_pop(msg);
                 uint64_t* timerId = reinterpret_cast<uint64_t*>(zframe_data(idframe));
-                comp->OnScheduledTimer(*timerId);
 
-//                char*  ctimerId;
-//                char*  tSec;
-//                char*  tNsec;
-//                zsock_recv(which, "ccc", &ctimerId, &tSec, &tNsec);
-                //comp->OnScheduledTimer(ctimerId, true);
+                comp->m_scheduledAction(*timerId);
+//                auto action = comp->m_scheduledActions.find(*timerId);
+//                if (action == comp->m_scheduledActions.end())
+//                    comp->OnScheduledTimer(*timerId);
+//                else
+//                    action->second();
 
-//                earlyWakeup.tv_sec  = tspec.tv_sec  - earlyWakeOffset.tv_sec;
-//                earlyWakeup.tv_nsec = tspec.tv_nsec - earlyWakeOffset.tv_nsec;
-//                if (earlyWakeup.tv_nsec<0){
-//                    earlyWakeup.tv_sec--;
-//                    earlyWakeup.tv_nsec+=BILLION;
-//                }
+                zmsg_destroy(&msg);
+                zframe_destroy(&idframe);
+
 
 
 
@@ -487,7 +481,7 @@ namespace riaps{
 
 
 
-    const ports::PublisherPort* ComponentBase::InitPublisherPort(const _component_port_pub& config) {
+    const ports::PublisherPort* ComponentBase::initPublisherPort(const _component_port_pub& config) {
         auto result = new ports::PublisherPort(config, this);
         std::unique_ptr<ports::PortBase> newport(result);
         m_ports[config.portName] = std::move(newport);
@@ -516,7 +510,7 @@ namespace riaps{
 
 
 
-    const ports::SubscriberPort* ComponentBase::InitSubscriberPort(const _component_port_sub& config) {
+    const ports::SubscriberPort* ComponentBase::initSubscriberPort(const _component_port_sub& config) {
         std::unique_ptr<ports::SubscriberPort> newport(new ports::SubscriberPort(config, this));
         auto result = newport.get();
         newport->Init();
@@ -524,14 +518,14 @@ namespace riaps{
         return result;
     }
 
-    const ports::ResponsePort* ComponentBase::InitResponsePort(const _component_port_rep & config) {
+    const ports::ResponsePort* ComponentBase::initResponsePort(const _component_port_rep & config) {
         auto result = new ports::ResponsePort(config, this);
         std::unique_ptr<ports::PortBase> newport(result);
         m_ports[config.portName] = std::move(newport);
         return result;
     }
 
-    const ports::RequestPort*   ComponentBase::InitRequestPort(const _component_port_req& config){
+    const ports::RequestPort*   ComponentBase::initRequestPort(const _component_port_req& config){
         std::unique_ptr<ports::RequestPort> newport(new ports::RequestPort(config, this));
         auto result = newport.get();
         newport->Init();
@@ -539,14 +533,14 @@ namespace riaps{
         return result;
     }
 
-    const ports::AnswerPort* ComponentBase::InitAnswerPort(const _component_port_ans & config) {
+    const ports::AnswerPort* ComponentBase::initAnswerPort(const _component_port_ans & config) {
         auto result = new ports::AnswerPort(config, this);
         std::unique_ptr<ports::PortBase> newport(result);
         m_ports[config.portName] = std::move(newport);
         return result;
     }
 
-    const ports::QueryPort* ComponentBase::InitQueryPort(const _component_port_qry & config) {
+    const ports::QueryPort* ComponentBase::initQueryPort(const _component_port_qry & config) {
         std::unique_ptr<ports::QueryPort> newport(new ports::QueryPort(config, this));
         auto result = newport.get();
         newport->Init();
@@ -554,14 +548,14 @@ namespace riaps{
         return result;
     }
 
-    const ports::InsidePort* ComponentBase::InitInsidePort(const _component_port_ins& config) {
+    const ports::InsidePort* ComponentBase::initInsidePort(const _component_port_ins& config) {
         auto result = new ports::InsidePort(config, riaps::ports::InsidePortMode::BIND, this);
         std::unique_ptr<ports::PortBase> newport(result);
         m_ports[config.portName] = std::move(newport);
         return result;
     }
 
-    const ports::PeriodicTimer* ComponentBase::InitTimerPort(const _component_port_tim& config) {
+    const ports::PeriodicTimer* ComponentBase::initTimerPort(const _component_port_tim& config) {
         std::string timerchannel = GetTimerChannel();
         std::unique_ptr<ports::PeriodicTimer> newtimer(new ports::PeriodicTimer(timerchannel, config, this));
         newtimer->start();
@@ -826,6 +820,48 @@ namespace riaps{
         return m_timerCounter++;
     }
 
+    uint64_t ComponentBase::ScheduleAction(const timespec &tp,
+                                           std::function<void(const uint64_t)> action,
+                                           const uint64_t wakeupOffset) {
+        std::string timerChannel = GetOneShotTimerChannel();
+        uint64_t timerId = m_timerCounter;
+        m_scheduledAction = action;
+
+        std::thread t([tp, timerChannel, timerId, wakeupOffset](){
+            auto ptr  = std::shared_ptr<zsock_t>(zsock_new_push(timerChannel.c_str()),[](zsock_t* z){
+                zsock_destroy(&z);
+                zclock_sleep(500);
+            });
+
+            // Wake up earlier by 500 microsec
+//            timespec earlyWakeOffset;
+//            earlyWakeOffset.tv_sec  = wakeupOffset/BILLION;
+//            earlyWakeOffset.tv_nsec = wakeupOffset%BILLION;
+//
+
+            // Calculate the new wakeup time
+            timespec earlyWakeup;
+            earlyWakeup.tv_sec  = tp.tv_sec  - (wakeupOffset/BILLION);
+            earlyWakeup.tv_nsec = tp.tv_nsec - (wakeupOffset%BILLION);
+            if (earlyWakeup.tv_nsec<0){
+                earlyWakeup.tv_sec--;
+                earlyWakeup.tv_nsec+=BILLION;
+            }
+
+            zmsg_t* msg = zmsg_new();
+
+            zmsg_addmem(msg, &timerId, sizeof(decltype(timerId)));
+
+
+
+            clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &earlyWakeup, NULL);
+            zmsg_send(&msg, ptr.get());
+            zclock_sleep(400);
+        });
+        t.detach();
+        return m_timerCounter++;
+    }
+
     //TODO: only if the difference NOT in -50/+50 microsec
     timespec ComponentBase::WaitUntil(const timespec &targetTimepoint) {
         timespec earlyWakeup = targetTimepoint;
@@ -846,28 +882,7 @@ namespace riaps{
         }
     }
 
-//    template<>
-//    uint64_t ComponentBase::ScheduleAbsTimer<std::chrono::system_clock::time_point>(const std::chrono::system_clock::time_point& tp) {
-//        std::string timerChannel = GetOneShotTimerChannel();
-//        uint64_t timerId = _timerCounter;
-//
-//        std::thread t([tp, timerChannel, timerId](){
-//            auto ptr  = std::shared_ptr<zsock_t>(zsock_new_push(timerChannel.c_str()),[](zsock_t* z){
-//                zsock_destroy(&z);
-//                zclock_sleep(500);
-//            });
-//
-//            zmsg_t* msg = zmsg_new();
-//            zmsg_addmem(msg, &timerId, sizeof(decltype(timerId)));
-//
-//            std::this_thread::sleep_until(tp);
-//
-//            zmsg_send(&msg, ptr.get());
-//            zclock_sleep(400);
-//        });
-//        t.detach();
-//        return _timerCounter++;
-//    }
+
 
     void ComponentBase::OnAnnounce(const riaps::groups::GroupId &groupId, const std::string &proposeId, bool accepted) {
         _logger->error("Vote result is announced, but no handler implemented in component {}", GetComponentName());
