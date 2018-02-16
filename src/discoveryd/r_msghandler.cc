@@ -204,13 +204,10 @@ namespace riaps{
 
         // If the name of the actor is registered previously and it still run => Error
         bool isRunning = isRegistered && kill(registeredActorIt->second->pid, 0) == 0;
-        //bool isRunning = false;
 
         // If the actor already registered and running
         if (isRunning) {
             m_logger->error("Cannot register actor. This actor already registered ({})", clientKeyBase);
-//            std::cout << "Cannot register actor. This actor already registered (" << clientKeyBase << ")"
-//                      << std::endl;
 
             capnp::MallocMessageBuilder message;
             auto drepmsg = message.initRoot<riaps::discovery::DiscoRep>();

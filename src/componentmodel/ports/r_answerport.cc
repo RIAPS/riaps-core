@@ -13,7 +13,7 @@ namespace riaps{
             PortBase(PortTypes::Answer, (component_port_config*)&config, parent_component),
             SenderPort(this)
         {
-            _port_socket = zsock_new(ZMQ_ROUTER);
+            m_port_socket = zsock_new(ZMQ_ROUTER);
             _host = riaps::framework::Network::GetIPAddress();
 
 
@@ -22,14 +22,14 @@ namespace riaps{
             }
 
             std::string ansEndpoint = "tcp://" + _host + ":!";
-            _port = zsock_bind(_port_socket, "%s", ansEndpoint.c_str());
+            _port = zsock_bind(m_port_socket, "%s", ansEndpoint.c_str());
 
 
             if (_port == -1) {
                 throw std::runtime_error("Couldn't bind response port.");
             }
 
-            _logger->info("Answerport is created on: {}:{}", _host, _port);
+            m_logger->info("Answerport is created on: {}:{}", _host, _port);
 
 
             if (!registerService(riaps::Actor::GetRunningActor()->GetApplicationName(),

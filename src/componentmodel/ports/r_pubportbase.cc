@@ -19,7 +19,7 @@ namespace riaps{
         }
 
         void PublisherPortBase::InitSocket() {
-            _port_socket = zsock_new(ZMQ_PUB);
+            m_port_socket = zsock_new(ZMQ_PUB);
 
             if (GetConfig()->isLocal){
                 _host = "127.0.0.1";
@@ -32,14 +32,14 @@ namespace riaps{
             }
 
             std::string pub_endpoint = "tcp://" + _host + ":!";
-            _port = zsock_bind(_port_socket, "%s", pub_endpoint.c_str());
+            _port = zsock_bind(m_port_socket, "%s", pub_endpoint.c_str());
 
 
             if (_port == -1) {
                 throw std::runtime_error("Couldn't bind publisher port.");
             }
 
-            _logger->debug("Publisher is created on {}:{} [{}]", _host, _port, GetConfig()->messageType);
+            m_logger->debug("Publisher is created on {}:{} [{}]", _host, _port, GetConfig()->messageType);
         }
 
         const _component_port_pub* PublisherPortBase::GetConfig() const {
@@ -47,8 +47,8 @@ namespace riaps{
         }
 
         std::string PublisherPortBase::GetEndpoint() {
-            if (_port_socket) {
-                return std::string(zsock_endpoint(_port_socket));
+            if (m_port_socket) {
+                return std::string(zsock_endpoint(m_port_socket));
             }
             return "";
         }
