@@ -83,61 +83,63 @@ namespace riaps{
         int deregisterActor(const std::string& appName,
                             const std::string& actorName);
 
-        std::string _macAddress;
-        std::string _hostAddress;
+        std::string m_macAddress;
+        std::string m_hostAddress;
 
 
-        int64_t _lastServiceCheckin;
-        int64_t _lastZombieCheck;
+        int64_t m_lastServiceCheckin;
+        int64_t m_lastZombieCheck;
 
-        const uint16_t _serviceCheckPeriod;
-        const uint16_t _zombieCheckPeriod;
+        const uint16_t m_serviceCheckPeriod;
+        const uint16_t m_zombieCheckPeriod;
 
         // Key where the DHT stores zombie nodes
-        const std::string _zombieKey;// = "/zombies";
+        const std::string m_zombieKey;// = "/zombies";
 
-        dht::DhtRunner& _dhtNode;
+        dht::DhtRunner& m_dhtNode;
 
-        std::shared_ptr<spdlog::logger> _logger;
+        std::shared_ptr<spdlog::logger> m_logger;
 
         /**
          * ZMQ socket for DHT communication
          */
-        zsock_t* _dhtUpdateSocket;
+        zsock_t* m_dhtUpdateSocket;
 
         /**
          * ZMQ socket for actor communication
          */
-        zsock_t*   _riapsSocket;
+        zsock_t*   m_riapsSocket;
 
-        zpoller_t* _poller;
-        zsock_t*   _pipe;
+        zpoller_t* m_poller;
+        zsock_t*   m_pipe;
 
-        bool _terminated;
+        std::shared_ptr<zframe_t> m_repIdentity;
+
+        bool m_terminated;
 
         // Stores pair sockets for actor communication
         //std::map<std::string, std::unique_ptr<actor_details_t>> _clients;
-        std::map<std::string, std::shared_ptr<actor_details_t>> _clients;
+        std::map<std::string, std::shared_ptr<actor_details_t>> m_clients;
 
         // TODO: zombieServices is not thread safe, todo implement a threadsafe wrapper
         // Stores addresses of zombie services
         // A service is zombie, if the related socket is not able to respond, but it is still in the DHT
         // The int64 argument is a timestamp. Old zombies are removed from the set after 10 minutes.
-        std::map<std::string, int64_t> _zombieServices;
+        std::map<std::string, int64_t> m_zombieServices;
 
         // Client subscriptions to messageTypes
-        std::map<std::string, std::vector<std::unique_ptr<client_details_t>>> _clientSubscriptions;
+        std::map<std::string, std::vector<std::unique_ptr<client_details_t>>> m_clientSubscriptions;
 
         // Subscribe for group changes
         // AppName - future<>
-        std::map<std::string, std::future<size_t>> _groupListeners;
+        std::map<std::string, std::future<size_t>> m_groupListeners;
 
         // Registered OpenDHT listeners. Every key can be registered only once.
-        std::map<std::string, std::future<size_t>> _registeredListeners;
+        std::map<std::string, std::future<size_t>> m_registeredListeners;
 
         // Registered services, with PID-s. We are using this local cache for renew services in the OpenDHT.
         // Checking the registered services in every 20th seconds.
-        std::map<pid_t, std::vector<std::unique_ptr<service_checkins_t>>> _serviceCheckins;
+        std::map<pid_t, std::vector<std::unique_ptr<service_checkins_t>>> m_serviceCheckins;
 
     };
 }
