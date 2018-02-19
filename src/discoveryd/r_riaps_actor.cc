@@ -40,8 +40,8 @@ riaps_actor (zsock_t *pipe, void *args)
     std::srand(std::time(0));
 
     riaps::DiscoveryMessageHandler msgHandler(dhtNode, &pipe, console);
-    msgHandler.Init();
-    msgHandler.Run();
+    msgHandler.init();
+    msgHandler.run();
 
 
     dhtNode.join();

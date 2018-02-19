@@ -376,7 +376,7 @@ namespace riaps{
         logger->set_level(level);
     }
 
-    void ComponentBase::OnScheduledTimer(const uint64_t timerId) {
+    void ComponentBase::OnScheduledTimer(uint64_t timerId) {
         _logger->error("Scheduled timer is fired, but no handler is implemented. Implement OnSchedulerTimer() in component {}", GetConfig().component_name);
     }
 
@@ -716,7 +716,7 @@ namespace riaps{
     }
 
     // TODO: Remove timeout parameter
-    uint16_t ComponentBase::GetGroupMemberCount(const riaps::groups::GroupId &groupId, const int64_t timeout) {
+    uint16_t ComponentBase::GetGroupMemberCount(const riaps::groups::GroupId &groupId, int64_t timeout) {
         if (m_groups.find(groupId)==m_groups.end())
             return 0;
 
@@ -781,7 +781,7 @@ namespace riaps{
 //        return _timerCounter++;
 //    }
 
-    uint64_t ComponentBase::ScheduleAbsTimer(const timespec& tp, const uint64_t wakeupOffset) {
+    uint64_t ComponentBase::ScheduleAbsTimer(const timespec &tp, uint64_t wakeupOffset) {
         std::string timerChannel = GetOneShotTimerChannel();
         uint64_t timerId = m_timerCounter;
 
@@ -822,7 +822,7 @@ namespace riaps{
 
     uint64_t ComponentBase::ScheduleAction(const timespec &tp,
                                            std::function<void(const uint64_t)> action,
-                                           const uint64_t wakeupOffset) {
+                                           uint64_t wakeupOffset) {
         std::string timerChannel = GetOneShotTimerChannel();
         uint64_t timerId = m_timerCounter;
         m_scheduledAction = action;

@@ -1,6 +1,15 @@
-//
-// Created by istvan on 10/6/17.
-//
+/**
+ * Message handler functions for the commands of discovery service. Uses capnp message buffers,
+ * the messages are defined in disco.capnp
+ *
+ * The discovery service listens for incoming connections on ASYNC REP port (ZMQ ROUTER), on the following addres:
+ * @code riaps::framework::Configuration::GetDiscoveryServiceIpc().
+ *
+ *
+ *
+ * @author Istvan Madari
+ */
+
 
 #ifndef RIAPS_CORE_R_MSGHANDLER_H
 #define RIAPS_CORE_R_MSGHANDLER_H
@@ -35,28 +44,66 @@ namespace riaps{
     class DiscoveryMessageHandler{
     public:
         DiscoveryMessageHandler(dht::DhtRunner& dhtNode, zsock_t** pipe, std::shared_ptr<spdlog::logger> logger = nullptr);
-        bool Init();
-        void Run();
+        bool init();
+        void run();
         ~DiscoveryMessageHandler();
     private:
         bool handleZombieUpdate (const std::vector<std::shared_ptr<dht::Value>> &values);
+
+        /**
+         * Handles messages from the zactor pipe (typically $TERM - terminate)
+         */
         void handlePipeMessage  ();
+
+        /**
+         * Handles messages from the actors
+         */
         void handleRiapsMessage ();
+
+        /**
+         * Handles actor registration, creates the PIPE ZMQ channel between the actor and the discovery service.
+         * @param msgActorReq
+         */
         void handleActorReg     (riaps::discovery::ActorRegReq::Reader     & msgActorReq);
+
+        /**
+         * Unregisters the actor, closes the ZMQ channel, removes all related data.
+         * @param msgActorUnreg
+         */
         void handleActorUnreg   (riaps::discovery::ActorUnregReq::Reader   & msgActorUnreg);
+
+        /**
+         * Registers a service in the DHT.
+         * @param msgServiceReg
+         */
         void handleServiceReg   (riaps::discovery::ServiceRegReq::Reader   & msgServiceReg);
+
+        /**
+         * Searches a service in the DHT, and subscribes to the new services (under the same key).
+         * @param msgServiceLookup
+         */
         void handleServiceLookup(riaps::discovery::ServiceLookupReq::Reader& msgServiceLookup);
+
+        /**
+         * Registers the component in a group and subscribes to notifications about new members.
+         * @param msgGroupJoin
+         */
         void handleGroupJoin    (riaps::discovery::GroupJoinReq::Reader    & msgGroupJoin);
 
+        /**
+         *
+         * @param msgProviderGet
+         * @param clients
+         */
         void handleDhtGet(const riaps::discovery::ProviderListGet::Reader& msgProviderGet,
-                          const std::map<std::string, std::shared_ptr<actor_details_t>>& clients);
+                          const std::map<std::string, std::shared_ptr<ActorDetails>>& clients);
 
         void handleDhtUpdate(const riaps::discovery::ProviderListUpdate::Reader&                          msgProviderUpdate,
-                          const std::map<std::string, std::vector<std::unique_ptr<client_details_t>>>& clientSubscriptions);
+                          const std::map<std::string, std::vector<std::unique_ptr<ClientDetails>>>& clientSubscriptions);
 
         void handleDhtGroupUpdate(const riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
 
-        void PushDhtValuesToDisco(std::vector<std::shared_ptr<dht::Value>> values);
+        void pushDhtValuesToDisco(std::vector<std::shared_ptr<dht::Value>> values);
 
         std::tuple<std::string, std::string> buildInsertKeyValuePair(
                 const std::string&             appName,
@@ -118,8 +165,7 @@ namespace riaps{
         bool m_terminated;
 
         // Stores pair sockets for actor communication
-        //std::map<std::string, std::unique_ptr<actor_details_t>> _clients;
-        std::map<std::string, std::shared_ptr<actor_details_t>> m_clients;
+        std::map<std::string, std::shared_ptr<ActorDetails>> m_clients;
 
         // TODO: zombieServices is not thread safe, todo implement a threadsafe wrapper
         // Stores addresses of zombie services
@@ -128,7 +174,7 @@ namespace riaps{
         std::map<std::string, int64_t> m_zombieServices;
 
         // Client subscriptions to messageTypes
-        std::map<std::string, std::vector<std::unique_ptr<client_details_t>>> m_clientSubscriptions;
+        std::map<std::string, std::vector<std::unique_ptr<ClientDetails>>> m_clientSubscriptions;
 
         // Subscribe for group changes
         // AppName - future<>
@@ -139,7 +185,7 @@ namespace riaps{
 
         // Registered services, with PID-s. We are using this local cache for renew services in the OpenDHT.
         // Checking the registered services in every 20th seconds.
-        std::map<pid_t, std::vector<std::unique_ptr<service_checkins_t>>> m_serviceCheckins;
+        std::map<pid_t, std::vector<std::unique_ptr<ServiceCheckins>>> m_serviceCheckins;
 
     };
 }
