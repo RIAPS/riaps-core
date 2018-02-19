@@ -13,9 +13,9 @@ namespace riaps{
             SenderPort(this)
         {
             m_port_socket = zsock_new(ZMQ_REP);
-            zsock_set_linger(m_port_socket, 0);
-            zsock_set_sndtimeo(m_port_socket, 0);
-            zsock_set_rcvtimeo(m_port_socket, 0);
+            zsock_set_linger(m_port_socket, 500);
+            zsock_set_sndtimeo(m_port_socket, 500);
+            zsock_set_rcvtimeo(m_port_socket, 500);
 
             if (GetConfig()->isLocal){
                 _host = "127.0.0.1";
