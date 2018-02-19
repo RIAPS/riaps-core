@@ -238,7 +238,7 @@ install(TARGETS start_device DESTINATION bin)
 
 SET(MAJOR_VERSION "0")
 SET(MINOR_VERSION "6")
-SET(PATCH_VERSION "2")
+SET(PATCH_VERSION "3")
 
 IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
     INCLUDE(InstallRequiredSystemLibraries)
