@@ -941,11 +941,9 @@ namespace riaps{
                         continue;
                     }
 
-                    std::string clientKeyBase = "/" + subscribedClient->app_name +
-                                                "/" + subscribedClient->actor_name +
-                                                "/";
-
-                    //std::cout << "Search for registered actor: " + clientKeyBase << std::endl;
+                    std::string clientKeyBase = fmt::format("/{}/{}/",
+                                                            subscribedClient->app_name,
+                                                            subscribedClient->actor_name);
 
                     m_logger->info("Search for registered actor: {}", clientKeyBase);
 

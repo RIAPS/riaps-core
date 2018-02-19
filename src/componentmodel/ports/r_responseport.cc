@@ -13,6 +13,9 @@ namespace riaps{
             SenderPort(this)
         {
             m_port_socket = zsock_new(ZMQ_REP);
+            zsock_set_linger(m_port_socket, 0);
+            zsock_set_sndtimeo(m_port_socket, 0);
+            zsock_set_rcvtimeo(m_port_socket, 0);
 
             if (GetConfig()->isLocal){
                 _host = "127.0.0.1";
@@ -24,7 +27,7 @@ namespace riaps{
                 throw std::runtime_error("Response cannot be initiated. Cannot find  available network interface.");
             }
 
-            std::string rep_endpoint = "tcp://" + _host + ":!";
+            std::string rep_endpoint = fmt::format("tcp://{}:!", _host);//"tcp://" + _host + ":!";
             _port = zsock_bind(m_port_socket, "%s", rep_endpoint.c_str());
 
 
