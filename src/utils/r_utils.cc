@@ -30,24 +30,30 @@ void operator>>(zframe_t& frame, std::unique_ptr<capnp::FlatArrayMessageReader>&
     message.reset(new capnp::FlatArrayMessageReader(capnp_data));
 }
 
+namespace spd=spdlog;
 
-void print_cacheips(std::map<std::string, int64_t>& ipcache) {
-    std::cout << "Stored ips: ";
-    for (auto it=ipcache.begin(); it!=ipcache.end(); it++){
-        std::cout << it->first << "; ";
+void print_cacheips(std::map<std::string, riaps::utils::Timeout>& ipcache) {
+    auto logger = spd::get("rdiscovery");
+    if (logger == nullptr)
+        return;
+
+    fmt::MemoryWriter w;
+
+    w.write("Known nodes: ");
+    for (auto &it : ipcache) {
+        w << it.first << "; ";
     }
-    std::cout << std::endl;
+    logger->info(w.c_str());
 }
 
-bool maintain_cache(std::map<std::string, int64_t>& ipcache){
+bool maintain_cache(std::map<std::string, riaps::utils::Timeout>& ipcache){
     bool is_maintained = false;
-    int64_t time = zclock_mono();
 
     // Maintain the list, if somebody didn't respond in the past IPCACHE_TIMEOUT seconds => remove from the list
     std::vector<std::string> marked_for_delete;
-    for (auto it=ipcache.begin(); it!=ipcache.end(); it++){
-        if ((time-it->second)>IPCACHE_TIMEOUT)
-            marked_for_delete.push_back(it->first);
+    for (auto &it : ipcache) {
+        if (it.second.IsTimeout())
+            marked_for_delete.push_back(it.first);
     }
 
     // Remove marked elements
@@ -55,6 +61,21 @@ bool maintain_cache(std::map<std::string, int64_t>& ipcache){
         ipcache.erase(*it);
         is_maintained = true;
     }
+
+//    int64_t time = zclock_mono();
+//
+//    // Maintain the list, if somebody didn't respond in the past IPCACHE_TIMEOUT seconds => remove from the list
+//    std::vector<std::string> marked_for_delete;
+//    for (auto &it : ipcache) {
+//        if ((time- it.second)>IPCACHE_TIMEOUT)
+//            marked_for_delete.push_back(it.first);
+//    }
+//
+//    // Remove marked elements
+//    for (auto it=marked_for_delete.begin(); it!=marked_for_delete.end(); it++){
+//        ipcache.erase(*it);
+//        is_maintained = true;
+//    }
 
     return is_maintained;
 }

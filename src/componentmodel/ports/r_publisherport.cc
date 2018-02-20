@@ -21,8 +21,8 @@ namespace riaps{
             if (!registerService(riaps::Actor::GetRunningActor()->GetApplicationName(),
                                  riaps::Actor::GetRunningActor()->GetActorName(),
                                  config.messageType,
-                                 _host,
-                                 _port,
+                                 m_host,
+                                 m_port,
                                  riaps::discovery::Kind::PUB,
                                  (config.isLocal?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
                                  {})) {

@@ -8,11 +8,14 @@
 #ifndef R_UTILS
 #define R_UTILS 
 
+
 #include <const/r_const.h>
+#include <utils/r_timeout.h>
 
 #include <capnp/message.h>
 #include <capnp/serialize.h>
 #include <czmq.h>
+#include <spdlog/spdlog.h>
 
 #include <iostream>
 #include <memory>
@@ -22,14 +25,14 @@
 
 // For how long the ip addresses are stored in a local cache.
 // The ip addresses are obtained from the UDP beacons
-#define IPCACHE_TIMEOUT 30000 // msec
+#define IPCACHE_TIMEOUT 30000 // millisec
 
 /**
  * Prints the cached IP addresses to the standard output
  * 
  * @param ipcache <IP address, timestamp> pairs
  */
-void print_cacheips(std::map<std::string, int64_t>& ipcache);
+void print_cacheips(std::map<std::string, riaps::utils::Timeout>& ipcache);
 
 
 /**
@@ -39,7 +42,7 @@ void print_cacheips(std::map<std::string, int64_t>& ipcache);
  * @return true if entries are removed from the cache
  */
 
-bool maintain_cache(std::map<std::string, int64_t>& ipcache);
+bool maintain_cache(std::map<std::string, riaps::utils::Timeout>& ipcache);
 
 /**
  * @deprecated

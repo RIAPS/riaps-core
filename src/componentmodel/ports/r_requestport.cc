@@ -11,7 +11,7 @@ namespace riaps {
         RequestPort::RequestPort(const _component_port_req &config, const ComponentBase *parentComponent)
                 : PortBase(PortTypes::Request, (component_port_config*)(&config), parentComponent),
                   SenderPort(this),
-                  _capnpReader(capnp::FlatArrayMessageReader(nullptr)) {
+                  m_capnpReader(capnp::FlatArrayMessageReader(nullptr)) {
             m_port_socket = zsock_new(ZMQ_REQ);
 
             auto i = zsock_rcvtimeo (m_port_socket);
@@ -23,7 +23,7 @@ namespace riaps {
             zmq_setsockopt(m_port_socket, ZMQ_LINGER, &lingerValue, sizeof(int));
 
 
-            _isConnected = false;
+            m_isConnected = false;
         }
 
 
@@ -56,7 +56,7 @@ namespace riaps {
                 return false;
             }
 
-            _isConnected = true;
+            m_isConnected = true;
             std::cout << "Request port connected to: " << rep_endpoint << std::endl;
             return true;
         }
@@ -83,8 +83,8 @@ namespace riaps {
                     byte* data = zframe_data(bodyFrame);
 
                     auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
-                    _capnpReader = capnp::FlatArrayMessageReader(capnp_data);
-                    *messageReader = &_capnpReader;
+                    m_capnpReader = capnp::FlatArrayMessageReader(capnp_data);
+                    *messageReader = &m_capnpReader;
 
                     zframe_destroy(&bodyFrame);
                     return true;
@@ -97,7 +97,7 @@ namespace riaps {
         }
 
         bool RequestPort::Send(capnp::MallocMessageBuilder &message) const {
-            if (m_port_socket == nullptr || !_isConnected){
+            if (m_port_socket == nullptr || !m_isConnected){
                 return false;
             }
 

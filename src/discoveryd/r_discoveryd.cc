@@ -16,6 +16,7 @@
 #include <discoveryd/r_riaps_actor.h>
 #include <framework/rfw_network_interfaces.h>
 #include <utils/r_utils.h>
+#include <utils/r_timeout.h>
 
 #include <spdlog/spdlog.h>
 
@@ -87,7 +88,6 @@ int main(int argc, char* argv[])
     char* hostname = zstr_recv (listener);
     if (!*hostname) {
         console->critical("No listener hostname, no UDP listening.\n");
-        //printf ("No listener hostname, no UDP listening.\n");
 
         zactor_destroy (&listener);
         free (hostname);
@@ -98,7 +98,6 @@ int main(int argc, char* argv[])
     // check the publisher
     hostname = zstr_recv (speaker);
     if (!*hostname) {
-        //printf ("No speaker hostname, no UDP broadcasting\n");
         console->critical("No speaker hostname, no UDP listening.\n");
         zactor_destroy (&speaker);
         free (hostname);
@@ -115,7 +114,9 @@ int main(int argc, char* argv[])
     zsock_send (listener, "sb", "SUBSCRIBE", "", 0);
 
     // Store the ip addresses and timestamps here
-    std::map<std::string, int64_t> ipcache;
+    //std::map<std::string, int64_t> ipcache;
+    std::map<std::string, riaps::utils::Timeout> ipcache;
+
 
     // Node ips from commands, not from UDP packages
     // TODO: Timeout for external nodes
@@ -157,7 +158,7 @@ int main(int argc, char* argv[])
         if (which == control){
             zmsg_t* msg = zmsg_recv(which);
             if (!msg) {
-                std::cout << "No msg from external scripts => interrupted" << std::endl;
+                console->error("No msg from external scripts => interrupted");
             } else{
                 char* header = zmsg_popstr(msg);
                 char* command = zmsg_popstr(msg);
@@ -168,7 +169,7 @@ int main(int argc, char* argv[])
                         // Check if the node already connected
                         bool is_newitem = externalipcache.find(std::string(newhost)) == externalipcache.end();
                         if (is_newitem){
-                            console->info("Join to DHT node: {}", newhost);
+                            //console->info("Join to DHT node: {}", newhost);
                             //std::cout <<  << newhost << std::endl;
 
                             int64_t time = zclock_mono();
@@ -229,8 +230,8 @@ int main(int argc, char* argv[])
 
             // If the ipaddress in the cache, update the timestamp
             // If the ipaddress is new, add to the cache
-            int64_t time = zclock_mono();
-            ipcache[ipaddress] = time;
+            //int64_t time = zclock_mono();
+            ipcache[ipaddress] = riaps::utils::Timeout(std::chrono::duration<int, std::milli>(IPCACHE_TIMEOUT));
 
             // Check for outdated ip addresses (no UDP paca)
             bool is_maintained = maintain_cache(ipcache);

@@ -40,7 +40,7 @@ namespace riaps {
                 char* cRequestId = nullptr;
                 zframe_t *bodyFrame = nullptr, *timestampFrame = nullptr;
                 if (zsock_recv(m_port_socket, "sff", &cRequestId, &bodyFrame, &timestampFrame)==0){
-                    std::string socketId = zuuid_str(_socketId);
+                    std::string socketId = zuuid_str(m_socketId);
                     params.reset(new riaps::MessageParams(socketId, &cRequestId, &timestampFrame));
                     message.reset(new RiapsMessage<R, T>(&bodyFrame));
                 } else {
@@ -79,13 +79,13 @@ namespace riaps {
 
             ~QueryPort() noexcept ;
         protected:
-            bool _isConnected;
+            bool m_isConnected;
 
-            capnp::FlatArrayMessageReader _capnpReader;
+            capnp::FlatArrayMessageReader m_capnpReader;
 
 
 
-            zuuid_t* _socketId;
+            zuuid_t* m_socketId;
 
         };
     }

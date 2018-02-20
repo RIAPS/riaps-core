@@ -42,16 +42,7 @@ link_directories(${LIBALLPATH_LIB})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_HOME_DIRECTORY}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_HOME_DIRECTORY}/bin)
 
-#add includes
 include_directories(include)
-#add_subdirectory(src/componentmodel)
-#add_subdirectory(src/discoveryd)
-#add_subdirectory(src/devm)
-#add_subdirectory(src/device)
-
-
-#include_directories(/usr/local/include/python3.5)
-#include_directories(/usr/include/python3.5)
 
 if (BUILD_TESTS)
     include(CTest)
@@ -109,7 +100,6 @@ list (APPEND component_SOURCE
         src/framework/rfw_network_interfaces.cc
         src/groups/r_group.cc
         src/groups/r_grouplead.cc
-        src/utils/r_capnp_helper.cc
         src/utils/r_message.cc
         src/utils/r_utils.cc
         src/utils/r_timeout.cc
@@ -189,6 +179,7 @@ list(APPEND RDISCOVERYD_SOURCE
         src/discoveryd/r_riaps_actor.cc
         src/discoveryd/r_msghandler.cc
         include/messaging/disco.capnp.c++
+        src/utils/r_timeout.cc
         )
 
 # rdiscoveryd headers
@@ -203,6 +194,7 @@ list(APPEND RDISCOVERYD_HEADERS
         include/messaging/disco.capnp.h
         include/groups/r_group.h
         include/spdlog/spdlog.h
+        include/utils/r_timeout.h
         )
 
 # rdiscoveryd

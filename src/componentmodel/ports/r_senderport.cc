@@ -11,7 +11,7 @@ namespace riaps{
     namespace ports{
 
 
-        SenderPort::SenderPort(PortBase* portBase) : _port(portBase) {
+        SenderPort::SenderPort(PortBase* portBase) : m_port(portBase) {
 
         }
 
@@ -27,7 +27,7 @@ namespace riaps{
         }
         
         bool SenderPort::Send(zmsg_t **message) const {
-            int rc = zmsg_send(message, const_cast<zsock_t*>(_port->GetSocket()));
+            int rc = zmsg_send(message, const_cast<zsock_t*>(m_port->GetSocket()));
             return rc == 0;
         }
 
