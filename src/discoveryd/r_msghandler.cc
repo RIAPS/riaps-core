@@ -33,7 +33,7 @@ namespace riaps{
         zsock_set_sndtimeo(m_riapsSocket, 0);
         zsock_set_rcvtimeo(m_riapsSocket, 0);
 
-        zsock_bind(m_riapsSocket, "%s", riaps::framework::Configuration::GetDiscoveryServiceIpc().c_str());
+        zsock_bind(m_riapsSocket, "%s", riaps::framework::Configuration::GetDiscoveryEndpoint().c_str());
         m_poller = zpoller_new(m_pipe, m_riapsSocket, m_dhtUpdateSocket, nullptr);
         zsock_signal (m_pipe, 0);
         m_lastServiceCheckin = m_lastZombieCheck = zclock_mono();

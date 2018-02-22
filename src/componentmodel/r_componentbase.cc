@@ -11,11 +11,11 @@ namespace riaps{
     void component_actor(zsock_t* pipe, void* args){
         ComponentBase* comp = (ComponentBase*)args;
 
-        zsock_t* timerport = zsock_new_pull(comp->GetTimerChannel().c_str());
+        zsock_t* timerport = zsock_new_pull(comp->getTimerChannel().c_str());
         assert(timerport);
 
 
-        zsock_t* timerportOneShot = zsock_new_pull(comp->GetOneShotTimerChannel().c_str());
+        zsock_t* timerportOneShot = zsock_new_pull(comp->getOneShotTimerChannel().c_str());
         assert(timerportOneShot);
 
         zpoller_t* poller = zpoller_new(pipe, NULL);
@@ -368,8 +368,45 @@ namespace riaps{
         zuuid_destroy(&m_componentUuid);
     }
 
+    void ComponentBase::handleCPULimit() {
+        _logger->error("{} was violated, but {} is not implemented in component: {}::{}::{}"
+                , "CPU limit"
+                , __func__
+                , GetActor()->getApplicationName()
+                , GetActor()->getActorName()
+                , GetComponentName());
+    }
+
+    void ComponentBase::handleMemLimit() {
+        _logger->error("{} was violated, but {} is not implemented in component: {}::{}::{}"
+                , "Memory limit"
+                , __func__
+                , GetActor()->getApplicationName()
+                , GetActor()->getActorName()
+                , GetComponentName());
+    }
+
+    void ComponentBase::handleNetLimit() {
+        _logger->error("{} was violated, but {} is not implemented in component: {}::{}::{}"
+                , "Net limit"
+                , __func__
+                , GetActor()->getApplicationName()
+                , GetActor()->getActorName()
+                , GetComponentName());
+    }
+
+    void ComponentBase::handleSpcLimit() {
+        _logger->error("{} was violated, but {} is not implemented in component: {}::{}::{}"
+                , "Space limit"
+                , __func__
+                , GetActor()->getApplicationName()
+                , GetActor()->getActorName()
+                , GetComponentName());
+
+    }
+
 //    std::shared_ptr<spd::logger> ComponentBase::GetConsoleLogger(){
-//        return _logger;
+//        return m_logger;
 //    }
 
     void ComponentBase::SetDebugLevel(std::shared_ptr<spd::logger> logger, spd::level::level_enum level){
@@ -409,7 +446,7 @@ namespace riaps{
 
 
 //    const ports::CallBackTimer* ComponentBase::InitTimerPort(const _component_port_tim_j& config) {
-//        std::string timerchannel = GetTimerChannel();
+//        std::string timerchannel = getTimerChannel();
 //        std::unique_ptr<ports::CallBackTimer> newtimer(new ports::CallBackTimer(timerchannel, config));
 //        newtimer->start(config.period);
 //
@@ -453,7 +490,7 @@ namespace riaps{
 //    bool ComponentBase::CreateOneShotTimer(const std::string &timerid, timespec &wakeuptime) {
 //        if (_oneShotTimer!=NULL) return false;
 //
-//        _oneShotTimer = new timers::OneShotTimer(GetOneShotTimerChannel(),
+//        _oneShotTimer = new timers::OneShotTimer(getOneShotTimerChannel(),
 //                                                 timerid,
 //                                                 wakeuptime);
 //
@@ -556,7 +593,7 @@ namespace riaps{
     }
 
     const ports::PeriodicTimer* ComponentBase::initTimerPort(const _component_port_tim& config) {
-        std::string timerchannel = GetTimerChannel();
+        std::string timerchannel = getTimerChannel();
         std::unique_ptr<ports::PeriodicTimer> newtimer(new ports::PeriodicTimer(timerchannel, config, this));
         newtimer->start();
 
@@ -645,7 +682,7 @@ namespace riaps{
 
     bool ComponentBase::SendMessageToLeader(const riaps::groups::GroupId &groupId,
                                             capnp::MallocMessageBuilder &message) {
-        auto group = GetGroupById(groupId);
+        auto group = getGroupById(groupId);
         if (group == nullptr){
             return false;
         }
@@ -658,7 +695,7 @@ namespace riaps{
         _logger->debug("Message from the leader arrived, but no OnMessageFromHandler() implementation has found in component: {}", GetConfig().component_name);
     }
 
-    riaps::groups::Group* ComponentBase::GetGroupById(const riaps::groups::GroupId &groupId) {
+    riaps::groups::Group* ComponentBase::getGroupById(const riaps::groups::GroupId &groupId) {
         if (m_groups.find(groupId)==m_groups.end()) return nullptr;
 
         return m_groups[groupId].get();
@@ -674,12 +711,12 @@ namespace riaps{
 //    }
 
 
-    std::string ComponentBase::GetTimerChannel() {
+    std::string ComponentBase::getTimerChannel() {
         std::string prefix= "inproc://timer";
         return prefix + GetCompUuid();
     }
 
-    std::string ComponentBase::GetOneShotTimerChannel() {
+    std::string ComponentBase::getOneShotTimerChannel() {
         std::string prefix= "inproc://oneshottimer";
         return prefix + GetCompUuid();
     }
@@ -763,7 +800,7 @@ namespace riaps{
     }
 
 //    uint64_t ComponentBase::ScheduleTimer(std::chrono::steady_clock::time_point &tp) {
-//        std::string timerChannel = GetOneShotTimerChannel();
+//        std::string timerChannel = getOneShotTimerChannel();
 //        uint64_t timerId = _timerCounter;
 //        std::thread t([tp, timerChannel, timerId](){
 //            auto ptr  = std::shared_ptr<zsock_t>(zsock_new_push(timerChannel.c_str()),[](zsock_t* z){
@@ -782,7 +819,7 @@ namespace riaps{
 //    }
 
     uint64_t ComponentBase::ScheduleAbsTimer(const timespec &tp, uint64_t wakeupOffset) {
-        std::string timerChannel = GetOneShotTimerChannel();
+        std::string timerChannel = getOneShotTimerChannel();
         uint64_t timerId = m_timerCounter;
 
         std::thread t([tp, timerChannel, timerId, wakeupOffset](){
@@ -823,7 +860,7 @@ namespace riaps{
     uint64_t ComponentBase::ScheduleAction(const timespec &tp,
                                            std::function<void(const uint64_t)> action,
                                            uint64_t wakeupOffset) {
-        std::string timerChannel = GetOneShotTimerChannel();
+        std::string timerChannel = getOneShotTimerChannel();
         uint64_t timerId = m_timerCounter;
         m_scheduledAction = action;
 
@@ -900,19 +937,14 @@ namespace riaps{
         _logger->info("Leader proposed an action, but no handler is implemented in component {}", GetComponentName());
     }
 
-    void ComponentBase::HandleCPULimit() {
-        _logger->error("CPU Limit was violated, but HandleCPULimit() is not implemented in component: {}::{}::{}"
-                , GetActor()->GetApplicationName()
-                , GetActor()->GetActorName()
-                , GetComponentName());
-    }
+
 
     const std::string ComponentBase::GetComponentName() const {
         return GetConfig().component_name;
     }
 
     std::string ComponentBase::SendPropose(const riaps::groups::GroupId &groupId, capnp::MallocMessageBuilder &message) {
-        auto group = GetGroupById(groupId);
+        auto group = getGroupById(groupId);
         if (group == nullptr) return "";
 
         zuuid_t* uuid = zuuid_new();
@@ -928,7 +960,7 @@ namespace riaps{
     std::string ComponentBase::ProposeAction(const riaps::groups::GroupId &groupId,
                                              const std::string &actionId,
                                              const timespec &absTime) {
-        auto group = GetGroupById(groupId);
+        auto group = getGroupById(groupId);
         if (group == nullptr) return "";
 
         zuuid_t* uuid = zuuid_new();
@@ -942,7 +974,7 @@ namespace riaps{
     }
 
     bool ComponentBase::SendVote(const riaps::groups::GroupId &groupId, const std::string &proposeId, bool accept) {
-        auto group = GetGroupById(groupId);
+        auto group = getGroupById(groupId);
         if (group == nullptr) return false;
 
         return group->SendVote(proposeId, accept);

@@ -23,9 +23,9 @@ namespace riaps{
             _component_port_sub* currentConfig = (_component_port_sub*)GetConfig();
 
             auto results =
-                    subscribeToService(GetParentComponent()->GetActor()->GetApplicationName(),
+                    subscribeToService(GetParentComponent()->GetActor()->getApplicationName(),
                                          GetParentComponent()->GetConfig().component_name,
-                                         GetParentComponent()->GetActor()->GetActorName(),
+                                       GetParentComponent()->GetActor()->getActorName(),
                                          riaps::discovery::Kind::SUB,
                                          (currentConfig->isLocal?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
                                           currentConfig->portName, // Subscriber name

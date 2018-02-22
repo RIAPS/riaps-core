@@ -38,7 +38,7 @@ namespace riaps{
             zmsg_t* msg = zmsg_new();
             zmsg_pushmem(msg, c, s);
 
-            std::string ipcAddress = riaps::framework::Configuration::GetDeviceManagerServiceIpc();
+            std::string ipcAddress = riaps::framework::Configuration::GetDeviceManagerEndpoint();
             zsock_t * client = zsock_new_req (ipcAddress.c_str());
             assert(client);
 
@@ -117,7 +117,7 @@ namespace riaps{
             zmsg_t* msg = zmsg_new();
             zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
 
-            std::string ipcAddress = riaps::framework::Configuration::GetDeviceManagerServiceIpc();
+            std::string ipcAddress = riaps::framework::Configuration::GetDeviceManagerEndpoint();
             zsock_t * client = zsock_new_req (ipcAddress.c_str());
             assert(client);
 
@@ -180,7 +180,7 @@ namespace riaps{
             zmsg_t* msg = zmsg_new();
             zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
 
-            std::string ipcAddress = riaps::framework::Configuration::GetDeviceManagerServiceIpc();
+            std::string ipcAddress = riaps::framework::Configuration::GetDeviceManagerEndpoint();
             zsock_t * client = zsock_new_req (ipcAddress.c_str());
             assert(client);
 
@@ -253,7 +253,7 @@ namespace riaps{
 //
 //
 //    //std::string mac_address = GetMacAddressStripped();
-//    std::string ipcAddress = riaps::framework::Configuration::GetDiscoveryServiceIpc();
+//    std::string ipcAddress = riaps::framework::Configuration::GetDiscoveryEndpoint();
 //    zsock_t * client = zsock_new_req (ipcAddress.c_str());
 //    assert(client);
 //
@@ -341,7 +341,7 @@ namespace riaps{
 //
 //
 //    //std::string mac_address = GetMacAddressStripped();
-//    std::string ipcAddress = riaps::framework::Configuration::GetDeviceManagerServiceIpc();
+//    std::string ipcAddress = riaps::framework::Configuration::GetDeviceManagerEndpoint();
 //    zsock_t * client = zsock_new_req (ipcAddress.c_str());
 //    assert(client);
 //

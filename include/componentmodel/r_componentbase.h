@@ -142,7 +142,6 @@ namespace riaps {
 
         void UpdateGroup(riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
 
-        virtual void HandleCPULimit();
 
         /**
          *
@@ -169,6 +168,14 @@ namespace riaps {
          *
          */
         virtual void PrintParameters();
+
+        /**
+         * Resource management handlers
+         */
+        virtual void handleCPULimit();
+        virtual void handleMemLimit();
+        virtual void handleSpcLimit();
+        virtual void handleNetLimit();
 
         virtual ~ComponentBase();
 
@@ -373,10 +380,9 @@ namespace riaps {
         const ports::InsidePort*     initInsidePort     (const _component_port_ins&);
 
 
-        std::string             GetTimerChannel();
 
-
-        std::string             GetOneShotTimerChannel();
+        std::string             getTimerChannel();
+        std::string             getOneShotTimerChannel();
 
         // TODO: uniqueptr
         // Note: disable for now, we need more tests.
@@ -391,24 +397,24 @@ namespace riaps {
         std::map<riaps::groups::GroupId,
                  std::unique_ptr<riaps::groups::Group>> m_groups;
 
-        riaps::groups::Group* GetGroupById(const riaps::groups::GroupId& groupId);
+        riaps::groups::Group* getGroupById(const riaps::groups::GroupId &groupId);
 
         uint64_t m_timerCounter;
 
         /**
          * Unique ID of the componenet. Regenerated at every start.
          */
-        zuuid_t*          m_componentUuid;
+        zuuid_t* m_componentUuid;
 
         /**
          * Points to the component owner.
          */
-        const Actor*      m_actor;
+        const Actor* m_actor;
 
         /**
          * Holds the component thread.
          */
-        zactor_t*         m_zactorComponent;
+        zactor_t* m_zactorComponent;
 
 
     };

@@ -32,8 +32,8 @@ namespace riaps{
             m_logger->info("Answerport is created on: {}:{}", m_host, m_port);
 
 
-            if (!registerService(riaps::Actor::GetRunningActor()->GetApplicationName(),
-                                 riaps::Actor::GetRunningActor()->GetActorName(),
+            if (!registerService(riaps::Actor::GetRunningActor()->getApplicationName(),
+                                 riaps::Actor::GetRunningActor()->getActorName(),
                                   config.messageType,
                                   m_host,
                                   m_port,

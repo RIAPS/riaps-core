@@ -17,11 +17,11 @@ namespace riaps{
                     configJson,
                     args) {
 
-        if (_logger == nullptr)
-            _logger = spd::get(devicename);
-        if (_logger == nullptr)
-            _logger = spd::stdout_color_mt(devicename);
-        _logger->info("Creating device {} for application {}", devicename, applicationname);
+        if (m_logger == nullptr)
+            m_logger = spd::get(devicename);
+        if (m_logger == nullptr)
+            m_logger = spd::stdout_color_mt(devicename);
+        m_logger->info("Creating device {} for application {}", devicename, applicationname);
 
     }
 
@@ -30,7 +30,7 @@ namespace riaps{
                                                 const std::string& jsonFile ,
                                                 std::map<std::string, std::string>& actualParams) {
 
-        if (_currentActor == nullptr) {
+        if (CurrentActor == nullptr) {
 
             std::string applicationName = configJson[J_NAME];
             nlohmann::json jsonActors = configJson[J_ACTORS];
@@ -58,14 +58,14 @@ namespace riaps{
 //
             //auto jsonCurrentActor = jsonActors.at(0);
 
-            _currentActor = new ::riaps::DeviceActor(
+            CurrentActor = new ::riaps::DeviceActor(
                     applicationName,
                     deviceName,
                     configJson,
                     actualParams
             );
         }
-        return dynamic_cast<DeviceActor*>(_currentActor);
+        return dynamic_cast<DeviceActor*>(CurrentActor);
 
 
     }

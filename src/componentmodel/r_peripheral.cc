@@ -16,7 +16,7 @@ namespace riaps{
                            const std::string &typeName,
                            const std::map<std::string, std::string> &args) {
 
-        _parentActor->GetDeviceManager()->RegisterDevice(appName, modelName, typeName, args);
+        _parentActor->getDeviceManager()->RegisterDevice(appName, modelName, typeName, args);
         _state = Peripheral::READY;
     }
 

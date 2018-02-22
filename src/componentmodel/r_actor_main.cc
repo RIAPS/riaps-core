@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
             
 
             std::unique_ptr<riaps::Actor> actor = std::unique_ptr<riaps::Actor>(aptr);
-            if (actor->Init())
+            if (actor->init())
                 actor->start();
         }
         catch(std::domain_error& e){

@@ -61,13 +61,13 @@ if (BUILD_TESTS)
     #add_subdirectory(tests/GpioDeviceTesting)
     #add_subdirectory(tests/testPubSub/test_1_1/test_1_1)
     #add_subdirectory(tests/ScheduledTimer)
-
+    #add_subdirectory(examples/Limits)
     # add_subdirectory(examples/EchoIO)
 endif()
 
 
 # libriaps sources
-list (APPEND component_SOURCE
+list (APPEND riapslib_SOURCE
         include/messaging/disco.capnp.c++
         include/messaging/distcoord.capnp.c++
         src/componentmodel/ports/r_queryport.cc
@@ -90,6 +90,7 @@ list (APPEND component_SOURCE
         src/componentmodel/r_componentbase.cc
         src/componentmodel/r_devicethread.cc
         src/componentmodel/r_devmapi.cc
+        src/componentmodel/r_deploapi.cc
         src/componentmodel/r_discoverdapi.cc
         src/componentmodel/r_messagebase.cc
         src/componentmodel/r_parameter.cc
@@ -106,7 +107,7 @@ list (APPEND component_SOURCE
         )
 
 # libriaps headers
-list (APPEND component_HEADERS
+list (APPEND riapslib_HEADERS
         include/componentmodel/ports/r_queryport.h
         include/componentmodel/ports/r_answerport.h
         include/componentmodel/ports/r_insideport.h
@@ -127,7 +128,7 @@ list (APPEND component_HEADERS
         include/componentmodel/r_configuration.h
         include/componentmodel/r_devicethread.h
         include/componentmodel/r_discoverdapi.h
-        include/componentmodel/r_discoverdapi.h
+        include/componentmodel/r_deploapi.h
         include/componentmodel/r_messagebase.h
         include/componentmodel/r_parameter.h
         include/componentmodel/r_periodictimer.h
@@ -145,8 +146,8 @@ list (APPEND component_HEADERS
 
 # libriaps
 add_library(riaps SHARED
-        ${component_SOURCE}
-        ${component_HEADERS}
+        ${riapslib_SOURCE}
+        ${riapslib_HEADERS}
         )
 target_link_libraries(riaps czmq zmq dl capnp kj)
 install(TARGETS riaps DESTINATION lib)
@@ -154,6 +155,8 @@ install(TARGETS riaps DESTINATION lib)
 # start_actor
 set(ACTOR_SOURCE
         src/componentmodel/r_actor_main.cc
+
+        include/messaging/deplo.capnp.c++
         )
 
 set(ACTOR_HEADERS
@@ -164,6 +167,7 @@ set(ACTOR_HEADERS
         include/const/r_jsonmodel.h
         include/const/r_const.h
         include/messaging/disco.capnp.h
+        include/messaging/deplo.capnp.h
         include/json.h)
 
 add_executable(start_actor

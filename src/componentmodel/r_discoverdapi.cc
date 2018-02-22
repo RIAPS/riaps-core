@@ -43,7 +43,7 @@ bool registerService(const std::string&              appName     ,
     zmsg_t* msg = zmsg_new();
     zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
 
-    zsock_t * client = zsock_new_req (riaps::framework::Configuration::GetDiscoveryServiceIpc().c_str());
+    zsock_t * client = zsock_new_req (riaps::framework::Configuration::GetDiscoveryEndpoint().c_str());
     assert(client);
 
     zmsg_send(&msg, client);
@@ -160,7 +160,7 @@ subscribeToService(const std::string&      app_name  ,
     zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
 
     //zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC(mac_address));
-    zsock_t * client = zsock_new_req (riaps::framework::Configuration::GetDiscoveryServiceIpc().c_str());
+    zsock_t * client = zsock_new_req (riaps::framework::Configuration::GetDiscoveryEndpoint().c_str());
     assert(client);
 
     zmsg_send(&msg, client);
@@ -235,7 +235,7 @@ registerActor(const std::string& appname, const std::string& actorname){
     zmsg_t* msg = zmsg_new();
     zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
 
-    std::string ipcAddress = riaps::framework::Configuration::GetDiscoveryServiceIpc();
+    std::string ipcAddress = riaps::framework::Configuration::GetDiscoveryEndpoint();
     zsock_t * client = zsock_new_req (ipcAddress.c_str());
     assert(client);
 
@@ -301,7 +301,7 @@ void deregisterActor(const std::string& actorName, const std::string& appName){
     zmsg_t* msgReq = zmsg_new();
     zmsg_pushmem(msgReq, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
 
-    std::string ipcAddress = riaps::framework::Configuration::GetDiscoveryServiceIpc();
+    std::string ipcAddress = riaps::framework::Configuration::GetDiscoveryEndpoint();
     zsock_t * client = zsock_new_req (ipcAddress.c_str());
     assert(client);
     zmsg_send(&msgReq, client);
@@ -355,7 +355,7 @@ joinGroup(const std::string& appName,
     zmsg_t* msg = zmsg_new();
     zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
 
-    std::string ipcAddress = riaps::framework::Configuration::GetDiscoveryServiceIpc();
+    std::string ipcAddress = riaps::framework::Configuration::GetDiscoveryEndpoint();
     zsock_t * client = zsock_new_req (ipcAddress.c_str());
     assert(client);
 

@@ -56,7 +56,7 @@ namespace riaps{
         bool Group::InitGroup() {
 
             // If the groupid doesn't exist, just skip the initialization and return false
-            auto groupTypeConf = ::riaps::Actor::GetRunningActor()->GetGroupType(_groupId.groupTypeId);
+            auto groupTypeConf = ::riaps::Actor::GetRunningActor()->getGroupType(_groupId.groupTypeId);
             if (groupTypeConf == nullptr)
                 return false;
 
@@ -105,7 +105,7 @@ namespace riaps{
 
             }
 
-            bool hasJoined = joinGroup(riaps::Actor::GetRunningActor()->GetApplicationName(),
+            bool hasJoined = joinGroup(riaps::Actor::GetRunningActor()->getApplicationName(),
                                        _parentComponent->GetCompUuid(),
                                        _groupId,
                                        initializedServices);
@@ -293,13 +293,13 @@ namespace riaps{
         }
 
         bool Group::SendPing() {
-            //_logger->debug(">>PING>>");
+            //m_logger->debug(">>PING>>");
             _pingTimeout.Reset();
             return SendHeartBeat(dc::HeartBeatType::PING);
         }
 
         bool Group::SendPong() {
-            //_logger->debug(">>PONG>>");
+            //m_logger->debug(">>PONG>>");
             return SendHeartBeat(dc::HeartBeatType::PONG);
         }
 
@@ -438,11 +438,11 @@ namespace riaps{
                             it->second.Reset(duration<int, std::milli>(_distrNodeTimeout(_generator)));
 
                         if (groupHeartBeat.getHeartBeatType() == riaps::distrcoord::HeartBeatType::PING) {
-                            //_logger->debug("<<PING<<");
+                            //m_logger->debug("<<PING<<");
                             SendPong();
                             return nullptr;
                         } else if (groupHeartBeat.getHeartBeatType() == riaps::distrcoord::HeartBeatType::PONG) {
-                            //_logger->debug("<<PONG<<");
+                            //m_logger->debug("<<PONG<<");
                             return nullptr;
                         }
                     } else if (internal.hasLeaderElection()){
@@ -457,11 +457,11 @@ namespace riaps{
                         return nullptr;
                     } else if (internal.hasConsensus()) {
                         auto msgCons = internal.getConsensus();
-                       // _logger->debug("DC message arrived from {}", msgDistCoord.getSourceComponentId().cStr());
+                       // m_logger->debug("DC message arrived from {}", msgDistCoord.getSourceComponentId().cStr());
 
 //                        // The current component is the leader
                         if (GetLeaderId() == GetParentComponentId()) {
-                            //_logger->debug("DC message arrived and this component is the leader");
+                            //m_logger->debug("DC message arrived and this component is the leader");
 
 //                            // Propose arrived to the leader. Leader forwards it to every groupmember.
                             // TODO: We may not need the forwarding step, since everybody got the message
@@ -489,18 +489,18 @@ namespace riaps{
 
 //                            // Vote arrived, count the votes and announce the results (if any)
                             } else if (msgCons.hasVote()){
-                                //_logger->info("Vote arrived to the leader");
+                                //m_logger->info("Vote arrived to the leader");
                                 auto msgVote = msgCons.getVote();
                                 _groupLeader->OnVote(msgVote, msgCons.getSourceComponentId());
                             }
                         }
 //                        // The current component is not a leader
                         else {
-                            //_logger->debug("DC message arrived and this component is not the leader");
+                            //m_logger->debug("DC message arrived and this component is not the leader");
 //                            // propose by the leader, must vote on something
                             if (msgCons.hasProposeToClients()) {
                                 auto msgPropose = msgCons.getProposeToClients();
-                                //_logger->debug("Message proposed to the client, proposeId: {}", msgPropose.getProposeId().cStr());
+                                //m_logger->debug("Message proposed to the client, proposeId: {}", msgPropose.getProposeId().cStr());
 
                                 if (msgCons.getVoteType() == riaps::distrcoord::Consensus::VoteType::VALUE) {
                                     zframe_t *proposeFrame;

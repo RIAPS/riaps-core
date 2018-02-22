@@ -1,4 +1,4 @@
-#include <CPULimit.h>
+#include "include/CPULimit.h"
 
 namespace limits {
    namespace components {
@@ -8,13 +8,17 @@ namespace limits {
       }
       
       void CPULimit::OnTicker(riaps::ports::PortBase *port) {
-         std::cout << "CPULimit::OnTicker(): " << port->GetPortName() << std::endl;
+        _logger->info("{}", __PRETTY_FUNCTION__);
       }
       
       void CPULimit::OnGroupMessage(const riaps::groups::GroupId& groupId,
       capnp::FlatArrayMessageReader& capnpreader, riaps::ports::PortBase* port){
          
       }
+
+       void CPULimit::handleCPULimit(){
+           _logger->info("{} is called", __PRETTY_FUNCTION__);
+       }
       
       CPULimit::~CPULimit() {
          
