@@ -31,8 +31,6 @@ namespace riaps {
             return now > _endPoint;
         }
 
-        Timeout::~Timeout() {
-
-        }
+        Timeout::~Timeout() = default;
     }
 }

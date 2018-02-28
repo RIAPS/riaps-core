@@ -84,14 +84,14 @@ namespace riaps {
 
     protected:
 
-        PortTypes                    _port_type;
-        zsock_t*                     _port_socket;
-        std::shared_ptr<spd::logger> _logger;
+        PortTypes                    m_port_type;
+        zsock_t*                     m_port_socket;
+        std::shared_ptr<spd::logger> m_logger;
 
 
     private:
-        const component_port_config* _config;
-        const ComponentBase* _parentComponent;
+        const component_port_config* m_config;
+        const ComponentBase* m_parentComponent;
     };
 }
 }

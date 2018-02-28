@@ -77,8 +77,8 @@ struct Consensus {
         time     @1 : TimeSpec;
 
         struct TimeSpec {
-            tvSec  @0 : Int64;
-            tvNsec @1 : Int64;
+            tvSec  @0 : Int32;
+            tvNsec @1 : Int32;
         }
     }
 

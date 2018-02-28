@@ -3,15 +3,15 @@
 namespace riaps{
     namespace ports{
         GroupPublisherPort::GroupPublisherPort(const _group_port_pub &config, const ComponentBase* parentComponent)
-                : _groupPortConfig(config),
-                  PublisherPortBase(&_groupPortConfig, parentComponent) {
+                : m_groupPortConfig(config),
+                  PublisherPortBase(&m_groupPortConfig, parentComponent) {
             InitSocket();
         }
 
         riaps::groups::GroupService GroupPublisherPort::GetGroupService() {
             riaps::groups::GroupService result;
 
-            result.address     = _host + ":" + std::to_string(_port);
+            result.address     = m_host + ":" + std::to_string(m_port);
             result.messageType = GetConfig()->messageType;
 
             return result;

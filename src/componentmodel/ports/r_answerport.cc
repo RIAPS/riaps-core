@@ -13,30 +13,30 @@ namespace riaps{
             PortBase(PortTypes::Answer, (component_port_config*)&config, parent_component),
             SenderPort(this)
         {
-            _port_socket = zsock_new(ZMQ_ROUTER);
-            _host = riaps::framework::Network::GetIPAddress();
+            m_port_socket = zsock_new(ZMQ_ROUTER);
+            m_host = riaps::framework::Network::GetIPAddress();
 
 
-            if (_host == "") {
+            if (m_host == "") {
                 throw std::runtime_error("Response cannot be initiated. Cannot find  available network interface.");
             }
 
-            std::string ansEndpoint = "tcp://" + _host + ":!";
-            _port = zsock_bind(_port_socket, "%s", ansEndpoint.c_str());
+            std::string ansEndpoint = "tcp://" + m_host + ":!";
+            m_port = zsock_bind(m_port_socket, "%s", ansEndpoint.c_str());
 
 
-            if (_port == -1) {
+            if (m_port == -1) {
                 throw std::runtime_error("Couldn't bind response port.");
             }
 
-            _logger->info("Answerport is created on: {}:{}", _host, _port);
+            m_logger->info("Answerport is created on: {}:{}", m_host, m_port);
 
 
             if (!registerService(riaps::Actor::GetRunningActor()->GetApplicationName(),
                                  riaps::Actor::GetRunningActor()->GetActorName(),
                                   config.messageType,
-                                  _host,
-                                  _port,
+                                  m_host,
+                                  m_port,
                                   riaps::discovery::Kind::ANS,
                                   (config.isLocal?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
                                   {})) {

@@ -16,14 +16,6 @@ riaps_actor (zsock_t *pipe, void *args)
     std::string mac_address = riaps::framework::Network::GetMacAddressStripped();
     std::string host_address = riaps::framework::Network::GetIPAddress();
 
-
-
-//    std::cout //<< "Discovery service is starting, network interface: " << std::endl
-//              << " * " << host_address << std::endl
-//              << " * " << mac_address  << std::endl;
-
-
-    //std::cout << "Start DHT node." << std::endl;
     console->info("Starting DHT node.");
     dht::DhtRunner dhtNode;
 
@@ -40,8 +32,8 @@ riaps_actor (zsock_t *pipe, void *args)
     std::srand(std::time(0));
 
     riaps::DiscoveryMessageHandler msgHandler(dhtNode, &pipe, console);
-    msgHandler.Init();
-    msgHandler.Run();
+    msgHandler.init();
+    msgHandler.run();
 
 
     dhtNode.join();

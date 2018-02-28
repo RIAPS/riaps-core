@@ -17,13 +17,13 @@ namespace riaps{
             _endpoint = "inproc://inside_" + config.portName;
 
             if (mode == InsidePortMode::CONNECT){
-                _port_socket = zsock_new_pair(_endpoint.c_str());
+                m_port_socket = zsock_new_pair(_endpoint.c_str());
             } else {
-                _port_socket = zsock_new(ZMQ_PAIR);
-                zsock_bind(_port_socket, "%s", _endpoint.c_str());
+                m_port_socket = zsock_new(ZMQ_PAIR);
+                zsock_bind(m_port_socket, "%s", _endpoint.c_str());
             }
 
-            zsock_set_rcvtimeo(_port_socket, 500);
+            zsock_set_rcvtimeo(m_port_socket, 500);
         }
 
         const _component_port_ins* InsidePort::GetConfig() const {

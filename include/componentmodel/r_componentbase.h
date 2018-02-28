@@ -43,7 +43,7 @@
 #include <componentmodel/ports/r_queryport.h>
 
 #define BILLION 1000000000l
-#define TIMER_ACCURACY 50*1000 // 50 microsec
+#define TIMER_ACCURACY (50*1000) // 50 microsec
 
 namespace spd = spdlog;
 
@@ -66,7 +66,8 @@ namespace riaps {
      */
     void component_actor(zsock_t* pipe, void* args);
 
-    typedef void (riaps::ComponentBase::*riaps_handler)(const std::string&, msgpack::sbuffer*, riaps::ports::PortBase*);
+    // Depricated, we don't use msgbuf
+    //typedef void (riaps::ComponentBase::*riaps_handler)(const std::string&, msgpack::sbuffer*, riaps::ports::PortBase*);
 
     class ComponentBase {
         friend riaps::groups::Group;
@@ -161,7 +162,7 @@ namespace riaps {
          *
          * The output: <direction><componentType>::<portName>:messageType->message
          */
-        virtual void PrintMessageOnPort(ports::PortBase* port, std::string message="");
+        virtual void PrintMessageOnPort(ports::PortBase* port, std::string message);
 
         /**
          * @brief For debugging. Prints all the commandline parameters of the component.
@@ -207,8 +208,8 @@ namespace riaps {
          * @param timeout A member is counted if heartbeat was recevied from it in the last "timeout" msec
          * @return
          */
-        uint16_t GetGroupMemberCount(const riaps::groups::GroupId& groupId,
-                                     const int64_t timeout = 1000*15 /*15 sec in msec*/);
+        uint16_t GetGroupMemberCount(const riaps::groups::GroupId &groupId,
+                                     int64_t timeout = 1000 * 15 /*15 sec in msec*/);
 
         std::string GetLeaderId(const riaps::groups::GroupId& groupId);
 //
@@ -266,7 +267,7 @@ namespace riaps {
         // Note: disable for now, we need more tests.
         //bool CreateOneShotTimer(const std::string& timerid, timespec& wakeuptime);
         //virtual void OnScheduledTimer(char* timerId, bool missed);
-        virtual void OnScheduledTimer(const uint64_t timerId);
+        virtual void OnScheduledTimer(uint64_t timerId);
 
 
 
@@ -343,7 +344,7 @@ namespace riaps {
                                   const timespec&               absTime
         );
 
-        uint64_t ScheduleAbsTimer (const timespec& t, const uint64_t wakeupOffset = 0 /*nanosec*/);
+        uint64_t ScheduleAbsTimer(const timespec &t, uint64_t wakeupOffset = 0 /*nanosec*/);
 
         /**
          *
@@ -355,7 +356,8 @@ namespace riaps {
          *                     If the timer fires too early, make sure to call the WaitUntil() in the handler.
          * @return unique id of the scheduled timer
          */
-        uint64_t ScheduleAction   (const timespec& tp, std::function<void(const uint64_t)> action, const uint64_t wakeupOffset = 2000*1000);
+        uint64_t ScheduleAction(const timespec &tp, std::function<void(const uint64_t)> action,
+                                uint64_t wakeupOffset = 2000 * 1000);
 
 
         std::function<void(const uint64_t)> m_scheduledAction;

@@ -12,22 +12,22 @@ namespace riaps {
                 : PortBase(PortTypes::Query,
                            (component_port_config*)(&config),
                            component),
-                  _capnpReader(capnp::FlatArrayMessageReader(nullptr)) {
-            _port_socket = zsock_new(ZMQ_DEALER);
-            _socketId = zuuid_new();
+                  m_capnpReader(capnp::FlatArrayMessageReader(nullptr)) {
+            m_port_socket = zsock_new(ZMQ_DEALER);
+            m_socketId = zuuid_new();
 
             //auto i = zsock_rcvtimeo (_port_socket);
 
             int timeout = 500;//msec
             int lingerValue = 0;
             int connectTimeout = 1000; //msec
-            zmq_setsockopt(_port_socket, ZMQ_SNDTIMEO, &timeout , sizeof(int));
-            zmq_setsockopt(_port_socket, ZMQ_LINGER, &lingerValue, sizeof(int));
-            zsock_set_identity(_port_socket, zuuid_str(_socketId));
+            zmq_setsockopt(m_port_socket, ZMQ_SNDTIMEO, &timeout , sizeof(int));
+            zmq_setsockopt(m_port_socket, ZMQ_LINGER, &lingerValue, sizeof(int));
+            zsock_set_identity(m_port_socket, zuuid_str(m_socketId));
 
             //i = zsock_rcvtimeo (_port_socket);
 
-            _isConnected = false;
+            m_isConnected = false;
         }
 
 
@@ -53,15 +53,15 @@ namespace riaps {
         }
 
         bool QueryPort::ConnectToResponse(const std::string &ansEndpoint) {
-            int rc = zsock_connect(_port_socket, "%s", ansEndpoint.c_str());
+            int rc = zsock_connect(m_port_socket, "%s", ansEndpoint.c_str());
 
             if (rc != 0) {
-                _logger->error("Queryport {} couldn't connect to {}", GetConfig()->portName, ansEndpoint);
+                m_logger->error("Queryport {} couldn't connect to {}", GetConfig()->portName, ansEndpoint);
                 return false;
             }
 
-            _isConnected = true;
-            _logger->info("Queryport connected to: {}", ansEndpoint);
+            m_isConnected = true;
+            m_logger->info("Queryport connected to: {}", ansEndpoint);
             return true;
         }
 
@@ -93,7 +93,7 @@ namespace riaps {
 
 
         bool QueryPort::SendQuery(capnp::MallocMessageBuilder &message,std::string& requestId, bool addTimestamp) const {
-            if (_port_socket == nullptr || !_isConnected){
+            if (m_port_socket == nullptr || !m_isConnected){
                 return false;
             }
 
@@ -151,7 +151,7 @@ namespace riaps {
         }
 
         QueryPort::~QueryPort() noexcept {
-            zuuid_destroy(&_socketId);
+            zuuid_destroy(&m_socketId);
         }
 
 

@@ -262,7 +262,7 @@ struct Consensus::TimeSyncCoordA::TimeSpec {
   class Pipeline;
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(ca8b82245ff35cf7, 2, 0)
+    CAPNP_DECLARE_STRUCT_HEADER(ca8b82245ff35cf7, 1, 0)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
     #endif  // !CAPNP_LITE
@@ -1431,9 +1431,9 @@ public:
   }
 #endif  // !CAPNP_LITE
 
-  inline  ::int64_t getTvSec() const;
+  inline  ::int32_t getTvSec() const;
 
-  inline  ::int64_t getTvNsec() const;
+  inline  ::int32_t getTvNsec() const;
 
 private:
   ::capnp::_::StructReader _reader;
@@ -1463,11 +1463,11 @@ public:
   inline ::kj::StringTree toString() const { return asReader().toString(); }
 #endif  // !CAPNP_LITE
 
-  inline  ::int64_t getTvSec();
-  inline void setTvSec( ::int64_t value);
+  inline  ::int32_t getTvSec();
+  inline void setTvSec( ::int32_t value);
 
-  inline  ::int64_t getTvNsec();
-  inline void setTvNsec( ::int64_t value);
+  inline  ::int32_t getTvNsec();
+  inline void setTvNsec( ::int32_t value);
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -2532,31 +2532,31 @@ inline ::capnp::Orphan< ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }
 
-inline  ::int64_t Consensus::TimeSyncCoordA::TimeSpec::Reader::getTvSec() const {
-  return _reader.getDataField< ::int64_t>(
+inline  ::int32_t Consensus::TimeSyncCoordA::TimeSpec::Reader::getTvSec() const {
+  return _reader.getDataField< ::int32_t>(
       0 * ::capnp::ELEMENTS);
 }
 
-inline  ::int64_t Consensus::TimeSyncCoordA::TimeSpec::Builder::getTvSec() {
-  return _builder.getDataField< ::int64_t>(
+inline  ::int32_t Consensus::TimeSyncCoordA::TimeSpec::Builder::getTvSec() {
+  return _builder.getDataField< ::int32_t>(
       0 * ::capnp::ELEMENTS);
 }
-inline void Consensus::TimeSyncCoordA::TimeSpec::Builder::setTvSec( ::int64_t value) {
-  _builder.setDataField< ::int64_t>(
+inline void Consensus::TimeSyncCoordA::TimeSpec::Builder::setTvSec( ::int32_t value) {
+  _builder.setDataField< ::int32_t>(
       0 * ::capnp::ELEMENTS, value);
 }
 
-inline  ::int64_t Consensus::TimeSyncCoordA::TimeSpec::Reader::getTvNsec() const {
-  return _reader.getDataField< ::int64_t>(
+inline  ::int32_t Consensus::TimeSyncCoordA::TimeSpec::Reader::getTvNsec() const {
+  return _reader.getDataField< ::int32_t>(
       1 * ::capnp::ELEMENTS);
 }
 
-inline  ::int64_t Consensus::TimeSyncCoordA::TimeSpec::Builder::getTvNsec() {
-  return _builder.getDataField< ::int64_t>(
+inline  ::int32_t Consensus::TimeSyncCoordA::TimeSpec::Builder::getTvNsec() {
+  return _builder.getDataField< ::int32_t>(
       1 * ::capnp::ELEMENTS);
 }
-inline void Consensus::TimeSyncCoordA::TimeSpec::Builder::setTvNsec( ::int64_t value) {
-  _builder.setDataField< ::int64_t>(
+inline void Consensus::TimeSyncCoordA::TimeSpec::Builder::setTvNsec( ::int32_t value) {
+  _builder.setDataField< ::int32_t>(
       1 * ::capnp::ELEMENTS, value);
 }
 

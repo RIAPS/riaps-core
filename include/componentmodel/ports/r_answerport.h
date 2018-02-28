@@ -37,9 +37,9 @@ namespace riaps {
 
 
         protected:
-            int _port;
-            std::string _host;
-            std::string _endpoint;
+            int m_port;
+            std::string m_host;
+            std::string m_endpoint;
 
             //virtual bool Send(zmsg_t** zmessage) const;
         };

@@ -43,38 +43,38 @@ params_to_service_details(std::vector<std::string>& params,
 
     int current_index = 0;
     bool has_tags = false;
-    for (auto it = params.begin(); it!=params.end(); it++){
+    for (auto &param : params) {
         switch(current_index){
             // service_id
             case 0:
-                service_structure.service_id.assign(*it);
+                service_structure.service_id.assign(param);
                 break;
 
                 // service_name
             case 1:
-                service_structure.service_name.assign(*it);
+                service_structure.service_name.assign(param);
                 break;
 
                 // ip address
             case 2:
-                service_structure.ip_address.assign(*it);
+                service_structure.ip_address.assign(param);
                 break;
 
                 // port
             case 3:
-                service_structure.port.assign(*it);
+                service_structure.port.assign(param);
                 break;
 
                 // $TAGS$
             case 4:
-                if (*it!="$TAGS$")
+                if (param !="$TAGS$")
                     return false;
                 has_tags=true;
                 break;
 
             default:
                 if (has_tags) {
-                    service_structure.tags.push_back(*it);
+                    service_structure.tags.push_back(param);
                 }
         }
 
@@ -101,7 +101,7 @@ service_details_to_zmsg(service_details& current_service, zmsg_t* msg){
     zmsg_addstr(msg, current_service.port.c_str());
 
     zmsg_addstr(msg, "$TAGS$");
-    for (auto it = current_service.tags.begin(); it!=current_service.tags.end(); it++){
-        zmsg_addstr(msg, it->c_str());
+    for (auto &tag : current_service.tags) {
+        zmsg_addstr(msg, tag.c_str());
     }
 }

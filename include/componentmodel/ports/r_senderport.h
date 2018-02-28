@@ -31,7 +31,7 @@ namespace riaps{
 
 
         private:
-            PortBase* _port;
+            PortBase* m_port;
         };
     }
 }
