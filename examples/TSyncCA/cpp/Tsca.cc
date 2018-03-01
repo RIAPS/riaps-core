@@ -42,6 +42,18 @@ namespace tsyncca {
 
        void Tsca::ActionA(const uint64_t timerId) {
            /**
+            * If the current scheduler is FIFO, increase the thread priority
+            */
+
+           sched_param schedParam;
+           if (sched_getscheduler(getpid()) == SCHED_FIFO){
+               sched_getparam(getpid(), &schedParam);
+               sched_param newParam;
+               newParam.__sched_priority = 95;
+               sched_setparam(getpid(), &newParam);
+           }
+
+           /**
             * Busy wait. The action wakes up earlier (last param of ScheduleAction())
             * Use the high-precision WaitUntil() to reach the right time to fire the action.
             */
@@ -63,6 +75,10 @@ namespace tsyncca {
             * The action is not pending anymore.
             */
            m_pendingActions.erase("0");
+
+           if (sched_getscheduler(getpid()) == SCHED_FIFO){
+               sched_setparam(getpid(), &schedParam);
+           }
 
 
            if (m_logcounter>200){
