@@ -5,6 +5,8 @@
 #include <regex>
 #include <sched.h>
 
+using namespace std;
+
 int main(int argc, char* argv[]) {
     //Note: Uncomment for RT-FIFO
 //    sched_param x;

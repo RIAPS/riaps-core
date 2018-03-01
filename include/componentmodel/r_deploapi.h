@@ -30,10 +30,10 @@ namespace riaps {
                                const std::string& actorName,
                                int32_t pid);
 
-//            void registerDevice(const std::string& appName,
-//                                const std::string& modelName,
-//                                const std::string& typeName,
-//                                const std::map<std::string, std::string>& deviceArgs);
+            void registerDevice(const std::string& appName,
+                                const std::string& modelName,
+                                const std::string& typeName,
+                                const std::map<std::string, std::string>& deviceArgs);
 //
 //            void unregisterDevice(const std::string& appName,
 //                                  const std::string& modelName,

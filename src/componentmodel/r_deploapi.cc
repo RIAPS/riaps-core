@@ -72,56 +72,58 @@ namespace riaps{
 
         }
 
-//        void DeploApi::registerDevice(const std::string &appName,
-//                                      const std::string &modelName,
-//                                      const std::string &typeName,
-//                                      const std::map<std::string, std::string> &deviceArgs) {
-//
-//            capnp::MallocMessageBuilder builder;
-//            auto msgDeploReq = builder.initRoot<riaps::deplo::DeplReq>();
-//            auto msgDeviceReg = msgDeploReq.initDeviceReg();
-//            msgDeviceReg.setAppName(appName);
-//            msgDeviceReg.setModelName(modelName);
-//            msgDeviceReg.setTypeName(typeName);
-//            auto msgDevArgs = msgDeviceReg.initDeviceArgs(deviceArgs.size());
-//
-//            int idx = 0;
-//            for (auto& arg : deviceArgs) {
-//                msgDevArgs[idx].setName(arg.first);
-//                msgDevArgs[idx].setValue(arg.second);
-//                idx++;
-//            }
-//
-//            zmsg_t* zmsgReq = nullptr;
-//            zmsgReq << builder;
-//            zmsg_send(&zmsgReq, m_socket.get());
-//
-//            // If the deplo is not running then set m_deploRuns
-//            zmsg_t* zmsgRep = zmsg_recv(m_socket.get());
-//
-//            if (zmsgRep == nullptr){
-//                m_logger->error("No response from deplo, further communications with deplo was suspended");
-//                m_isDeploRunning = false;
-//                return;
-//            } else {
-//                capnp::FlatArrayMessageReader* reader;
-//                zframe_t* frame = zmsg_pop(zmsgRep);
-//                *frame >> reader;
-//
-//                auto msgDeploRep = reader->getRoot<riaps::deplo::DeplRep>();
-//                auto msgDevRep = msgDeploRep.getDeviceReg();
-//                if (msgDevRep.getStatus() == riaps::deplo::Status::OK){
-//                   // Nothing to do, we are happy
-//                } else {
-//                    m_logger->error("Couldn't register actor in deplo");
-//                }
-//
-//                delete reader;
-//                zframe_destroy(&frame);
-//                zmsg_destroy(&zmsgRep);
-//            }
-//
-//        }
+        void DeploApi::registerDevice(const std::string &appName,
+                                      const std::string &modelName,
+                                      const std::string &typeName,
+                                      const std::map<std::string, std::string> &deviceArgs) {
+            m_logger->info("registerDevice({},{},{})", appName, modelName, typeName);
+            capnp::MallocMessageBuilder builder;
+            auto msgDeploReq = builder.initRoot<riaps::deplo::DeplReq>();
+            auto msgDeviceReg = msgDeploReq.initDeviceReg();
+            msgDeviceReg.setAppName(appName);
+            msgDeviceReg.setModelName(modelName);
+            msgDeviceReg.setTypeName(typeName);
+            auto msgDevArgs = msgDeviceReg.initDeviceArgs(deviceArgs.size());
+
+            int idx = 0;
+            for (auto& arg : deviceArgs) {
+                msgDevArgs[idx].setName(arg.first);
+                msgDevArgs[idx].setValue(arg.second);
+                idx++;
+            }
+
+            zmsg_t* zmsgReq = nullptr;
+            zmsgReq << builder;
+            zmsg_send(&zmsgReq, m_socket.get());
+
+            // If the deplo is not running then set m_deploRuns
+            zmsg_t* zmsgRep = zmsg_recv(m_socket.get());
+
+            if (zmsgRep == nullptr){
+                m_logger->error("No response from deplo, further communications with deplo was suspended");
+                m_isDeploRunning = false;
+                return;
+            } else {
+                m_logger->info("Response from deplo in {}", __PRETTY_FUNCTION__);
+                capnp::FlatArrayMessageReader* reader;
+                zframe_t* frame = zmsg_pop(zmsgRep);
+                *frame >> reader;
+
+                auto msgDeploRep = reader->getRoot<riaps::deplo::DeplRep>();
+                auto msgDevRep = msgDeploRep.getDeviceReg();
+                if (msgDevRep.getStatus() == riaps::deplo::Status::OK){
+                   // Nothing to do, we are happy
+                    m_logger->info("device was registered: {}::{}", appName, typeName);
+                } else {
+                    m_logger->error("Couldn't register actor in deplo");
+                }
+
+                delete reader;
+                zframe_destroy(&frame);
+                zmsg_destroy(&zmsgRep);
+            }
+
+        }
 //
 //        void DeploApi::unregisterDevice(const std::string &appName,
 //                                      const std::string &modelName,

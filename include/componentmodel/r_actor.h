@@ -58,6 +58,7 @@ namespace riaps {
         const std::string& getActorName() const;
         const std::string& getApplicationName() const;
         riaps::devm::DevmApi* getDeviceManager() const;
+        riaps::deplo::DeploApi* getDeploManager() const;
 
         // Note: Group configs can be static
         // Todo: Thinking on to make them static... I'm not sure it is good.

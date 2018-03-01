@@ -746,9 +746,9 @@ namespace riaps{
     }
 
     void ComponentBase::PrintParameters() {
-        auto parameters = m_configuration.component_parameters.GetParameterNames();
+        auto parameters = m_configuration.component_parameters.getParameterNames();
         for (auto it = parameters.begin(); it!=parameters.end(); it++){
-            std::cout << *it << " : " << m_configuration.component_parameters.GetParam(*it)->GetValueAsString() << std::endl;
+            std::cout << *it << " : " << m_configuration.component_parameters.getParam(*it)->getValueAsString() << std::endl;
         }
     }
 

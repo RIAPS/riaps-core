@@ -677,6 +677,10 @@ namespace riaps {
         return m_devm.get();
     }
 
+    riaps::deplo::DeploApi* riaps::Actor::getDeploManager() const {
+        return m_deplo.get();
+    }
+
     const std::string& riaps::Actor::getApplicationName() const {
         return m_applicationName;
     }

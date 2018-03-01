@@ -12,45 +12,45 @@ namespace riaps{
 
         }
 
-        void Parameters::AddParam(std::string name, std::string value, bool isOptional, std::string defaultValue) {
+        void Parameters::addParam(std::string name, std::string value, bool isOptional, std::string defaultValue) {
 
             auto newItem = std::shared_ptr<Parameter>(new Parameter(name, isOptional, defaultValue));
             if (value!=""){
-                newItem->SetValue(value);
+                newItem->setValue(value);
             } else{
-                newItem->SetValue(defaultValue);
+                newItem->setValue(defaultValue);
             }
 
-            _params[name] = newItem;
+            m_params[name] = newItem;
         }
 
-        void Parameters::AddParam(const Parameter &param) {
-            AddParam(param.GetName(), param.GetValueAsString(), param.IsOptional(), param.GetDefaultValue());
+        void Parameters::addParam(const Parameter &param) {
+            addParam(param.getName(), param.getValueAsString(), param.isOptional(), param.getDefaultValue());
         }
 
 
 
-        const Parameter* Parameters::GetParam(const std::string& name) const {
-            if (_params.find(name) == _params.end()){
+        const Parameter* Parameters::getParam(const std::string &name) const {
+            if (m_params.find(name) == m_params.end()){
                 return nullptr;
             }
-            auto ptr = (_params.find(name))->second;
+            auto ptr = (m_params.find(name))->second;
 
             return ptr.get();
         }
 
-        const Parameter* Parameters::SetParamValue(std::string name, std::string value) {
-            if (_params.find(name) == _params.end()){
+        const Parameter* Parameters::setParamValue(std::string name, std::string value) {
+            if (m_params.find(name) == m_params.end()){
                 return nullptr;
             }
 
-            _params[name]->SetValue(value);
-            return _params[name].get();
+            m_params[name]->setValue(value);
+            return m_params[name].get();
         }
 
-        std::vector<std::string> Parameters::GetParameterNames() {
+        std::vector<std::string> Parameters::getParameterNames() {
             std::vector<std::string> results;
-            for (auto it = _params.begin(); it!=_params.end(); it++){
+            for (auto it = m_params.begin(); it!=m_params.end(); it++){
                 results.push_back(it->first);
             }
             return results;
@@ -63,34 +63,34 @@ namespace riaps{
         }
 
         Parameter::Parameter(std::string fieldName, bool isOptional, std::string defaultValue) {
-            _paramName = fieldName;
-            _paramDefaultValue = defaultValue;
-            _isOptional = isOptional;
+            m_paramName = fieldName;
+            m_paramDefaultValue = defaultValue;
+            m = isOptional;
         }
 
         Parameter::Parameter() {
 
         }
 
-        const std::string& Parameter::GetDefaultValue() const {
-            return _paramDefaultValue;
+        const std::string& Parameter::getDefaultValue() const {
+            return m_paramDefaultValue;
         }
 
-        const std::string& Parameter::GetName() const {
-            return _paramName;
+        const std::string& Parameter::getName() const {
+            return m_paramName;
         }
 
-        void Parameter::SetValue(std::string value) {
-            _paramValue = value;
+        void Parameter::setValue(std::string value) {
+            m_paramValue = value;
         }
 
-        const std::string& Parameter::GetValueAsString() const{
-            return _paramValue;
+        const std::string& Parameter::getValueAsString() const{
+            return m_paramValue;
         }
 
-        bool Parameter::GetValueAsInt(int* intValue) const {
+        bool Parameter::getValueAsInt(int *intValue) const {
             try{
-                *intValue = std::stoi(_paramValue);
+                *intValue = std::stoi(m_paramValue);
             }catch(std::invalid_argument& e){
                 return false;
             } catch(std::out_of_range& e){
@@ -99,14 +99,14 @@ namespace riaps{
             return true;
         }
 
-        bool Parameter::GetValueAsBool() const {
+        bool Parameter::getValueAsBool() const {
             bool b;
-            std::stringstream(_paramValue) >> std::boolalpha >> b;
+            std::stringstream(m_paramValue) >> std::boolalpha >> b;
             return b;
         }
 
-        bool Parameter::IsOptional() const {
-            return _isOptional;
+        bool Parameter::isOptional() const {
+            return m;
         }
 
         ComponentActual::ComponentActual(const std::string &paramName, const std::string &paramValue, bool hasReferred)
