@@ -1,4 +1,5 @@
 #include "include/Tsca.h"
+#include <framework/rfw_network_interfaces.h>
 
 namespace tsyncca {
    namespace components {
@@ -7,6 +8,9 @@ namespace tsyncca {
       TscaBase(config, actor), m_hasJoined(false), m_logcounter(0) {
           _logger->set_level(spd::level::info);
           _logger->set_pattern("%v");
+
+          auto sharedFileSink = std::make_shared<spdlog::sinks::simple_file_sink_mt>(fmt::format("tsca{}.txt", riaps::framework::Network::GetMacAddressStripped()));
+          m_tscalog = std::make_shared<spdlog::logger>("tsca", sharedFileSink);
       }
       
       void Tsca::OnClock(riaps::ports::PortBase *port) {
@@ -36,6 +40,7 @@ namespace tsyncca {
                    * Propose the action with id "0" to the leader. If accepted, it will be executed "now" (t+2secs).
                    */
                   std::string proposeId = ProposeAction(gid, "0", now);
+                  _logger->info("counter: {}", m_logcounter);
               }
           }
       }
@@ -63,6 +68,7 @@ namespace tsyncca {
 
 
            m_logcounter++;
+           m_tscalog->info("{},{},semmi,semmi,{},{}", tp.tv_sec, tp.tv_nsec, m_scheduled[timerId].tv_sec, m_scheduled[timerId].tv_nsec);
            _logger->info("{},{},semmi,semmi,{},{}", tp.tv_sec, tp.tv_nsec, m_scheduled[timerId].tv_sec, m_scheduled[timerId].tv_nsec);
 
 
@@ -81,7 +87,7 @@ namespace tsyncca {
            }
 
 
-           if (m_logcounter>200){
+           if (m_logcounter>1000){
                std::exit(0);
            }
        }
