@@ -9,7 +9,7 @@
 
 // Name of the ports from the model file
 #define PORT_TIMER_CLOCK "clock"
-#define GROUP_TYPE_GROUPA "groupA"
+
 
 namespace tsyncgpio {
    namespace components {

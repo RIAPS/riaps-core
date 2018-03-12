@@ -9,7 +9,7 @@ using namespace riaps::groups;
 using namespace std::chrono;
 
 
-GroupLead::GroupLead(Group* group, std::unordered_map<std::string, Timeout>* knownNodes)
+GroupLead::GroupLead(Group* group, std::unordered_map<std::string, Timeout<std::milli>>* knownNodes)
     : m_group(group),
       m_knownNodes(knownNodes)
 {
@@ -19,8 +19,8 @@ GroupLead::GroupLead(Group* group, std::unordered_map<std::string, Timeout>* kno
      */
     m_generator        = std::mt19937(m_rd());
     m_distrElection    = std::uniform_int_distribution<int>(MIN_ELECTION_TIMEOUT, MAX_ELECTION_TIMEOUT);
-    m_electionTimeout  = Timeout(GenerateElectionTimeo());
-    m_appEntryTimeout  = Timeout(duration<int, std::milli>(APPENDENTRY_TIMEOUT));
+    m_electionTimeout  = Timeout<std::milli>(GenerateElectionTimeo());
+    m_appEntryTimeout  = Timeout<std::milli>(duration<int, std::milli>(APPENDENTRY_TIMEOUT));
     m_electionTerm     = 0;
 
     /**
@@ -299,7 +299,7 @@ void GroupLead::OnActionProposeFromClient(riaps::distrcoord::Consensus::ProposeT
         }
     }
 
-    auto pd = std::shared_ptr<ProposeData>(new ProposeData(m_group->GetKnownComponents(), Timeout(duration<int, std::milli>(1000))));
+    auto pd = std::shared_ptr<ProposeData>(new ProposeData(m_group->GetKnownComponents(), Timeout<std::milli>(duration<int, std::milli>(1000))));
     pd->isAction = true;
     pd->actionId = tscaMessage.getActionId();
     std::string proposeId = headerMessage.getProposeId();
@@ -345,7 +345,7 @@ void GroupLead::OnProposeFromClient(riaps::distrcoord::Consensus::ProposeToLeade
     //_logger->debug("OnProposeFromClient() continues");
 
 
-    auto pd = std::shared_ptr<ProposeData>(new ProposeData(m_group->GetKnownComponents(), Timeout(duration<int, std::milli>(1000))));
+    auto pd = std::shared_ptr<ProposeData>(new ProposeData(m_group->GetKnownComponents(), Timeout<std::milli>(duration<int, std::milli>(1000))));
 
     // TODO: Add known node ids
     //pd.nodesInVote =
@@ -495,7 +495,7 @@ GroupLead::~GroupLead() {
 
 }
 
-GroupLead::ProposeData::ProposeData(std::shared_ptr<std::set<std::string>> _knownNodes, Timeout &&timeout)
+GroupLead::ProposeData::ProposeData(std::shared_ptr<std::set<std::string>> _knownNodes, Timeout<std::milli> &&timeout)
     : nodesInVote(_knownNodes), proposeDeadline(timeout), accepted(0), rejected(0){
     auto p = new std::set<std::string>();
     nodesVoted = std::move(std::shared_ptr<std::set<std::string>>(p));

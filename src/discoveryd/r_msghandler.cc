@@ -619,6 +619,7 @@ namespace riaps{
         auto msgGroupServices   = msgGroupJoin.getServices();
         std::string appName     = msgGroupJoin.getAppName();
         std::string componentId = msgGroupJoin.getComponentId();
+        auto actorPid           = msgGroupJoin.getPid();
 
         riaps::groups::GroupDetails groupDetails;
         groupDetails.appName     = appName;
@@ -704,6 +705,21 @@ namespace riaps{
         });
 
         zclock_sleep(1000);
+
+        /**
+         * Store the details for renewing
+         */
+
+        if (m_groupServices.find(actorPid) == m_groupServices.end()){
+            m_groupServices[actorPid] == std::vector<std::shared_ptr<RegisteredGroup>>();
+        }
+        auto currentGroupReg = std::make_shared<RegisteredGroup>(RegisteredGroup{
+                key,
+                groupDetails,
+                actorPid,
+                Timeout<std::ratio<60>>(std::chrono::duration<int, std::ratio<60>>(10)) //10 minutes
+        });
+        m_groupServices[actorPid].push_back(std::move(currentGroupReg));
 
         m_dhtNode.put(key, dht::Value::pack(groupDetails));
     }
@@ -1044,7 +1060,6 @@ namespace riaps{
             }
         }
 
-        // Remove killed PIDs
         for (auto it = toBeRemoved.begin(); it!=toBeRemoved.end(); it++){
             //std::cout << "Remove services with PID: " << *it << std::endl;
             m_logger->info("Remove services with PID: {}", *it);
@@ -1060,10 +1075,14 @@ namespace riaps{
                 m_dhtNode.put(m_zombieKey, dht::Value(opendht_data));
             }
 
+            if (m_groupServices.find(*it)!=m_groupServices.end()){
+                m_groupServices.erase(*it);
+            }
+
             m_serviceCheckins.erase(*it);
         }
 
-        // Renew too old services
+
         int64_t now = zclock_mono();
         for (auto pidIt= m_serviceCheckins.begin(); pidIt!=m_serviceCheckins.end(); pidIt++){
             for(auto serviceIt = pidIt->second.begin(); serviceIt!=pidIt->second.end(); serviceIt++){
@@ -1079,7 +1098,17 @@ namespace riaps{
                     m_dhtNode.put(keyhash, dht::Value(opendht_data));
                 }
             }
+
+            if (m_groupServices.find(pidIt->first)!=m_groupServices.end()){
+                for(auto& groupService : m_groupServices[pidIt->first]) {
+                    m_dhtNode.put(groupService->groupKey, groupService->services);
+                    groupService->timeout.Reset();
+                }
+            }
         }
+
+
+
     }
 
     void DiscoveryMessageHandler::maintainZombieList(){

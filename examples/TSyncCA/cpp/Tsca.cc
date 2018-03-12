@@ -1,6 +1,8 @@
 #include "include/Tsca.h"
 #include <framework/rfw_network_interfaces.h>
 
+//#define ELEVATE_PRIVILEGES
+
 namespace tsyncca {
    namespace components {
       
@@ -50,6 +52,7 @@ namespace tsyncca {
             * If the current scheduler is FIFO, increase the thread priority
             */
 
+#ifdef ELEVATE_PRIVILEGES
            sched_param schedParam;
            if (sched_getscheduler(getpid()) == SCHED_FIFO){
                sched_getparam(getpid(), &schedParam);
@@ -57,6 +60,7 @@ namespace tsyncca {
                newParam.__sched_priority = 95;
                sched_setparam(getpid(), &newParam);
            }
+#endif
 
            /**
             * Busy wait. The action wakes up earlier (last param of ScheduleAction())
@@ -82,9 +86,11 @@ namespace tsyncca {
             */
            m_pendingActions.erase("0");
 
+#ifdef ELEVATE_PRIVILEGES
            if (sched_getscheduler(getpid()) == SCHED_FIFO){
                sched_setparam(getpid(), &schedParam);
            }
+#endif
 
 
            if (m_logcounter>1000){
