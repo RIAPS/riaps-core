@@ -1051,18 +1051,41 @@ namespace riaps{
 
     void DiscoveryMessageHandler::maintainRenewal(){
 
-        std::vector<pid_t> toBeRemoved;
+        std::set<pid_t> purgeServices;
+        std::set<pid_t> purgeGroups;
+
+        // Collect terminated component services (pub/rep ports)
         for (auto it= m_serviceCheckins.begin(); it!=m_serviceCheckins.end(); it++){
             // Check pid, mark the removable pids
-            // std::cout << "checking PID " << it->first << std::endl;
             if (!kill(it->first,0)==0){
-                toBeRemoved.push_back(it->first);
+                purgeServices.insert(it->first);
             }
         }
 
-        for (auto it = toBeRemoved.begin(); it!=toBeRemoved.end(); it++){
+        // Collect groups with terminated parent component
+        for (auto it= m_groupServices.begin(); it!=m_groupServices.end(); it++){
+            // Check pid, mark the removable pids
+            if (!kill(it->first,0)==0){
+                m_logger->info("Remove group services with PID: {}", it->first);
+                purgeGroups.insert(it->first);
+            } else {
+                for(auto& groupService : m_groupServices[it->first]) {
+                    if (!groupService->timeout.IsTimeout()) continue;
+                    m_dhtNode.put(groupService->groupKey, groupService->services);
+                    groupService->timeout.Reset();
+                }
+            }
+        }
+
+
+        // Delete terminated groups from cache, keep the values in openDHT, just don't renew them
+        for (auto pid : purgeGroups) {
+            m_groupServices.erase(pid);
+        }
+
+        for (auto it = purgeServices.begin(); it!=purgeServices.end(); it++){
             //std::cout << "Remove services with PID: " << *it << std::endl;
-            m_logger->info("Remove services with PID: {}", *it);
+            m_logger->info("Remove component services with PID: {}", *it);
 
             // Put the service address into the zombies list in DHT
             for (auto serviceIt  = m_serviceCheckins[*it].begin();
@@ -1073,10 +1096,6 @@ namespace riaps{
                 std::string serviceAddress = (*serviceIt)->value;
                 std::vector<uint8_t> opendht_data(serviceAddress.begin(), serviceAddress.end());
                 m_dhtNode.put(m_zombieKey, dht::Value(opendht_data));
-            }
-
-            if (m_groupServices.find(*it)!=m_groupServices.end()){
-                m_groupServices.erase(*it);
             }
 
             m_serviceCheckins.erase(*it);
@@ -1098,17 +1117,7 @@ namespace riaps{
                     m_dhtNode.put(keyhash, dht::Value(opendht_data));
                 }
             }
-
-            if (m_groupServices.find(pidIt->first)!=m_groupServices.end()){
-                for(auto& groupService : m_groupServices[pidIt->first]) {
-                    m_dhtNode.put(groupService->groupKey, groupService->services);
-                    groupService->timeout.Reset();
-                }
-            }
         }
-
-
-
     }
 
     void DiscoveryMessageHandler::maintainZombieList(){

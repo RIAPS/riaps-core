@@ -32,8 +32,8 @@ namespace riaps{
              * Resets the start time point, doesn't touch the timeout
              */
             void Reset() {
-                _startPoint = steady_clock::now();
-                _endPoint = _startPoint + _timeout;
+                m_startPoint = steady_clock::now();
+                m_endPoint = m_startPoint + m_timeout;
             };
 
             /**
@@ -41,7 +41,7 @@ namespace riaps{
              * @param timeout
              */
             void Reset(duration<int, T> timeout){
-                _timeout = timeout;
+                m_timeout = timeout;
                 Reset();
             };
 
@@ -51,18 +51,18 @@ namespace riaps{
              */
             bool IsTimeout() {
                 auto now = steady_clock::now();
-                return now > _endPoint;
+                return now > m_endPoint;
             }
 
             steady_clock::time_point GetEndTimePoint() {
-                return _endPoint;
+                return m_endPoint;
             }
 
             ~Timeout() = default;
         private:
-            steady_clock::time_point  _startPoint; // The election timeout from this timepoint
-            duration<int, T> _timeout; // The election timeout
-            steady_clock::time_point  _endPoint;
+            steady_clock::time_point  m_startPoint; // The election timeout from this timepoint
+            duration<int, T> m_timeout; // The election timeout
+            steady_clock::time_point  m_endPoint;
         };
     }
 }

@@ -342,6 +342,7 @@ joinGroup(const std::string& appName,
 
     msgGroupJoin.setComponentId(componentId);
     msgGroupJoin.setAppName(appName);
+    msgGroupJoin.setPid(getpid());
     msgGroupId.setGroupType(groupId.groupTypeId);
     msgGroupId.setGroupName(groupId.groupName);
 
