@@ -11,20 +11,25 @@
 #define PORT_TIMER_CLOCK "clock"
 
 namespace groupmsgtest {
-   namespace components {
-      
-      class CompTwoBase : public riaps::ComponentBase {
-         
-         public:
-         CompTwoBase(_component_conf &config, riaps::Actor &actor);
-         
-         virtual void OnClock(riaps::ports::PortBase *port)=0;
-         
-         virtual ~CompTwoBase();
-         protected:
-         virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader, riaps::ports::PortBase *port,std::shared_ptr<riaps::MessageParams> params=nullptr );
-         virtual void DispatchInsideMessage(zmsg_t* zmsg, riaps::ports::PortBase* port);
-      };
-   }
-}
-#endif //RIAPS_CORE_COMPTWO_H
+  namespace components {
+
+    class CompTwoBase : public riaps::ComponentBase {
+
+    public:
+      CompTwoBase(_component_conf &config, riaps::Actor &actor);
+
+      virtual void OnClock(riaps::ports::PortBase *port) = 0;
+
+      virtual ~CompTwoBase();
+
+    protected:
+      virtual void
+      DispatchMessage(capnp::FlatArrayMessageReader *capnpreader,
+                      riaps::ports::PortBase *port,
+                      std::shared_ptr<riaps::MessageParams> params = nullptr);
+      virtual void DispatchInsideMessage(zmsg_t *zmsg,
+                                         riaps::ports::PortBase *port);
+    };
+  } // namespace components
+} // namespace groupmsgtest
+#endif // RIAPS_CORE_COMPTWO_H

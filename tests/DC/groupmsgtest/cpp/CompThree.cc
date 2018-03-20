@@ -8,7 +8,14 @@ namespace groupmsgtest {
       }
       
       void CompThree::OnClock(riaps::ports::PortBase *port) {
-         std::cout << "CompThree::OnClock(): " << port->GetPortName() << std::endl;
+         if (!m_joinedToB){
+             _logger->info("Component joins to {}:{}", groupIdB.groupTypeId, groupIdB.groupName);
+            auto joined = JoinToGroup(groupIdB);
+            if (joined){
+                m_joinedToB = true;
+            }
+            _logger->error_if(!joined, "Couldn't join to group {}:{}", groupIdB.groupTypeId, groupIdB.groupName);
+         }
       }
       
       void CompThree::OnGroupMessage(const riaps::groups::GroupId& groupId,

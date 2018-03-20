@@ -5,6 +5,8 @@
 #define RIAPS_FW_COMPONE_H
 
 #include "CompOneBase.h"
+#include "common.h"
+#include "MessageType.capnp.h"
 
 namespace groupmsgtest {
    namespace components {
@@ -20,6 +22,9 @@ namespace groupmsgtest {
          void OnGroupMessage(const riaps::groups::GroupId& groupId, capnp::FlatArrayMessageReader& capnpreader, riaps::ports::PortBase* port);
          
          virtual ~CompOne();
+         private:
+         bool m_joinedToA;
+         
          
       };
    }

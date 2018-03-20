@@ -5,28 +5,33 @@
 #define RIAPS_FW_COMPTHREE_H
 
 #include "CompThreeBase.h"
+#include "common.h"
+#include "MessageType.capnp.h"
 
 namespace groupmsgtest {
-   namespace components {
-      
-      class CompThree : public CompThreeBase {
-         
-         public:
-         
-         CompThree(_component_conf &config, riaps::Actor &actor);
-         
-         virtual void OnClock(riaps::ports::PortBase *port);
-         
-         void OnGroupMessage(const riaps::groups::GroupId& groupId, capnp::FlatArrayMessageReader& capnpreader, riaps::ports::PortBase* port);
-         
-         virtual ~CompThree();
-         
-      };
-   }
-}
+  namespace components {
 
-extern "C" riaps::ComponentBase* create_component(_component_conf&, riaps::Actor& actor);
-extern "C" void destroy_component(riaps::ComponentBase*);
+    class CompThree : public CompThreeBase {
 
+    public:
+      CompThree(_component_conf &config, riaps::Actor &actor);
 
-#endif //RIAPS_FW_COMPTHREE_H
+      virtual void OnClock(riaps::ports::PortBase *port);
+
+      void OnGroupMessage(const riaps::groups::GroupId &groupId,
+                          capnp::FlatArrayMessageReader &capnpreader,
+                          riaps::ports::PortBase *port);
+
+      virtual ~CompThree();
+
+    private:
+      bool m_joinedToB;
+    };
+  } // namespace components
+} // namespace groupmsgtest
+
+extern "C" riaps::ComponentBase *create_component(_component_conf &,
+                                                  riaps::Actor &actor);
+extern "C" void destroy_component(riaps::ComponentBase *);
+
+#endif // RIAPS_FW_COMPTHREE_H
