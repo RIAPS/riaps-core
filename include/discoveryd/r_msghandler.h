@@ -187,6 +187,14 @@ namespace riaps{
         // Checking the registered services in every 20th seconds.
         std::map<pid_t, std::vector<std::unique_ptr<ServiceCheckins>>> m_serviceCheckins;
 
+        struct RegisteredGroup {
+            std::string groupKey;
+            riaps::groups::GroupDetails services;
+            pid_t actorPid;
+            Timeout<std::ratio<60>> timeout; // std::ratio<60> -> minutes
+        };
+
+        std::unordered_map<pid_t, std::vector<std::shared_ptr<RegisteredGroup>>> m_groupServices;
     };
 }
 

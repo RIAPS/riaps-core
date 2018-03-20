@@ -169,7 +169,7 @@ namespace riaps {
              *  key   - component id (uuid, generated runtime, when the component starts
              *  value - timestamp of the last message from the given component
              */
-            std::unordered_map<std::string, Timeout> _knownNodes;
+            std::unordered_map<std::string, Timeout<std::milli>> _knownNodes;
 
             zframe_t*  _lastFrame;
             zpoller_t* _groupPoller;
@@ -180,7 +180,7 @@ namespace riaps {
             //int64_t  _lastPingSent;
             //float    _pingPeriod;
 
-            Timeout _pingTimeout;
+            Timeout<std::milli> _pingTimeout;
 
 
             std::random_device _rd;

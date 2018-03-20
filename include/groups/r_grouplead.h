@@ -40,7 +40,7 @@ namespace riaps{
              *
              */
             enum NodeState{FOLLOWER, CANDIDATE, LEADER};
-            GroupLead(riaps::groups::Group* group, std::unordered_map<std::string, Timeout>* knownNodes);
+            GroupLead(riaps::groups::Group* group, std::unordered_map<std::string, Timeout<std::milli>>* knownNodes);
             const NodeState GetNodeState() const;
 
             void SetOnLeaderChanged(std::function<void(const std::string&)> handler);
@@ -69,11 +69,11 @@ namespace riaps{
             ~GroupLead();
 
             struct ProposeData {
-                ProposeData(std::shared_ptr<std::set<std::string>> _knownNodes, Timeout&& timeout);
+                ProposeData(std::shared_ptr<std::set<std::string>> _knownNodes, Timeout<std::milli>&& timeout);
 
                 std::shared_ptr<std::set<std::string>> nodesInVote; // Expect vote from these nodes
                 std::shared_ptr<std::set<std::string>> nodesVoted;  // ID-s of components which already sent the vote
-                Timeout                                proposeDeadline; // If the propose expires, the leader announce REJECT
+                Timeout<std::milli>                    proposeDeadline; // If the propose expires, the leader announce REJECT
                 uint16_t                               accepted;
                 uint16_t                               rejected;
 
@@ -96,8 +96,8 @@ namespace riaps{
             NodeState m_currentState;
 
             // Timeouts
-            Timeout  m_electionTimeout;
-            Timeout  m_appEntryTimeout;
+            Timeout<std::milli>  m_electionTimeout;
+            Timeout<std::milli>  m_appEntryTimeout;
             uint32_t m_electionTerm;
             uint32_t m_numberOfNodesInVote;
 
@@ -117,7 +117,7 @@ namespace riaps{
             uint32_t GetNumberOfVotes();
 
             std::shared_ptr<spd::logger> _logger;
-            std::unordered_map<std::string, Timeout>* m_knownNodes;
+            std::unordered_map<std::string, Timeout<std::milli>>* m_knownNodes;
 
             std::string m_leaderId;
 

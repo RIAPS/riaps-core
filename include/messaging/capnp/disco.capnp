@@ -127,6 +127,7 @@ struct GroupJoinReq {
     groupId     @1 : GroupId;
     services    @2 : List(GroupService);
     componentId @3 : Text;
+    pid         @4 : Int32;
 }
 
 struct GroupJoinRep {

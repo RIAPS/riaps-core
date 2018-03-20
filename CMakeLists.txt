@@ -56,6 +56,7 @@ if (BUILD_TESTS)
     #add_subdirectory(examples/ActiveReplica)
     #add_subdirectory(examples/AdaptiveTimer)
     #add_subdirectory(examples/TSyncCA)
+    #add_subdirectory(examples/TSyncGpio)
     #add_subdirectory(tests/StaticTimer)
     #add_subdirectory(tests/test_timer)
     #add_subdirectory(tests/GpioDeviceTesting)
@@ -102,7 +103,6 @@ list (APPEND component_SOURCE
         src/groups/r_grouplead.cc
         src/utils/r_message.cc
         src/utils/r_utils.cc
-        src/utils/r_timeout.cc
         )
 
 # libriaps headers
@@ -179,7 +179,6 @@ list(APPEND RDISCOVERYD_SOURCE
         src/discoveryd/r_riaps_actor.cc
         src/discoveryd/r_msghandler.cc
         include/messaging/disco.capnp.c++
-        src/utils/r_timeout.cc
         )
 
 # rdiscoveryd headers
@@ -230,7 +229,7 @@ install(TARGETS start_device DESTINATION bin)
 
 SET(MAJOR_VERSION "0")
 SET(MINOR_VERSION "6")
-SET(PATCH_VERSION "3")
+SET(PATCH_VERSION "4")
 
 IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
     INCLUDE(InstallRequiredSystemLibraries)
