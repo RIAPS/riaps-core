@@ -47,5 +47,6 @@
 #define J_GROUPS          "groups"
 #define J_GROUP_LEADER    "leader"
 #define J_GROUP_CONSENSUS "consensus"
+#define J_GROUP_MESSAGES  "groupMessages"
 
 #endif //RIAPS_CORE_R_JSONMODEL_H_H

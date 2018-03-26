@@ -4,6 +4,8 @@
 
 #define NO_GROUP_TEST
 
+using namespace std;
+
 namespace riaps {
 
     const Actor* riaps::Actor::GetRunningActor() {
@@ -637,24 +639,7 @@ namespace riaps {
     }
 
     const groupt_conf* riaps::Actor::GetGroupType(const std::string &groupTypeId) const {
-//        std::vector<std::string> g{groupTypeId};
-//
-//        auto result =
-//        std::find_first_of(_grouptype_configurations.begin(),
-//                           _grouptype_configurations.end(),
-//                           g.begin(),
-//                           g.end(),
-//                           [](const groupt_conf& g, const std::string& id){
-//                               if (g.groupTypeId == id) return true;
-//                               return false;
-//                           });
-//
-//        if (result == _grouptype_configurations.end()) return nullptr;
-//        return &(*result);
-
         for (auto it = _grouptype_configurations.begin(); it!=_grouptype_configurations.end(); it++){
-            auto qrvaanyad = *it;
-
             if (it->groupTypeId == groupTypeId)
                 return &(*it);
         }
@@ -814,9 +799,17 @@ namespace riaps {
                  it_grp != jGroups.end();
                  it_grp++) {
 
-                std::string groupType = it_grp.key();
+                string groupType = it_grp.key();
                 bool hasL = it_grp.value()[J_GROUP_LEADER];
                 bool hasC   = it_grp.value()[J_GROUP_CONSENSUS];
+
+                vector<group_port_pub> pubs;
+                vector<group_port_sub> subs;
+                
+                for (auto itMsgType : it_grp.value()[J_GROUP_MESSAGES]) {
+                    group_port_pub gPub;
+                    group_port_sub gSub;
+                }
 
                 groupt_conf gc = {
                     groupType,

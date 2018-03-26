@@ -4,13 +4,17 @@
     "groupB": {
       "leader": false,
       "consensus": true,
-      "groupMessages": [],
+      "groupMessages": [
+        "GroupMessage"
+      ],
       "consensusMessages": []
     },
     "groupA": {
       "leader": false,
       "consensus": true,
-      "groupMessages": [],
+      "groupMessages": [
+        "GroupMessage"
+      ],
       "consensusMessages": []
     }
   },
