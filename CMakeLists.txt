@@ -62,6 +62,7 @@ if (BUILD_TESTS)
     #add_subdirectory(tests/GpioDeviceTesting)
     #add_subdirectory(tests/testPubSub/test_1_1/test_1_1)
     #add_subdirectory(tests/ScheduledTimer)
+    add_subdirectory(tests/DC/groupmsgtest)
 
     # add_subdirectory(examples/EchoIO)
 endif()

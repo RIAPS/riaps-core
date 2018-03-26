@@ -481,7 +481,7 @@ namespace riaps{
 
 
 
-    const ports::PublisherPort* ComponentBase::initPublisherPort(const _component_port_pub& config) {
+    const ports::PublisherPort* ComponentBase::initPublisherPort(const component_port_pub& config) {
         auto result = new ports::PublisherPort(config, this);
         std::unique_ptr<ports::PortBase> newport(result);
         m_ports[config.portName] = std::move(newport);
@@ -510,7 +510,7 @@ namespace riaps{
 
 
 
-    const ports::SubscriberPort* ComponentBase::initSubscriberPort(const _component_port_sub& config) {
+    const ports::SubscriberPort* ComponentBase::initSubscriberPort(const component_port_sub& config) {
         std::unique_ptr<ports::SubscriberPort> newport(new ports::SubscriberPort(config, this));
         auto result = newport.get();
         newport->Init();
@@ -518,14 +518,14 @@ namespace riaps{
         return result;
     }
 
-    const ports::ResponsePort* ComponentBase::initResponsePort(const _component_port_rep & config) {
+    const ports::ResponsePort* ComponentBase::initResponsePort(const component_port_rep & config) {
         auto result = new ports::ResponsePort(config, this);
         std::unique_ptr<ports::PortBase> newport(result);
         m_ports[config.portName] = std::move(newport);
         return result;
     }
 
-    const ports::RequestPort*   ComponentBase::initRequestPort(const _component_port_req& config){
+    const ports::RequestPort*   ComponentBase::initRequestPort(const component_port_req& config){
         std::unique_ptr<ports::RequestPort> newport(new ports::RequestPort(config, this));
         auto result = newport.get();
         newport->Init();
@@ -533,14 +533,14 @@ namespace riaps{
         return result;
     }
 
-    const ports::AnswerPort* ComponentBase::initAnswerPort(const _component_port_ans & config) {
+    const ports::AnswerPort* ComponentBase::initAnswerPort(const component_port_ans & config) {
         auto result = new ports::AnswerPort(config, this);
         std::unique_ptr<ports::PortBase> newport(result);
         m_ports[config.portName] = std::move(newport);
         return result;
     }
 
-    const ports::QueryPort* ComponentBase::initQueryPort(const _component_port_qry & config) {
+    const ports::QueryPort* ComponentBase::initQueryPort(const component_port_qry & config) {
         std::unique_ptr<ports::QueryPort> newport(new ports::QueryPort(config, this));
         auto result = newport.get();
         newport->Init();
@@ -548,14 +548,14 @@ namespace riaps{
         return result;
     }
 
-    const ports::InsidePort* ComponentBase::initInsidePort(const _component_port_ins& config) {
+    const ports::InsidePort* ComponentBase::initInsidePort(const component_port_ins& config) {
         auto result = new ports::InsidePort(config, riaps::ports::InsidePortMode::BIND, this);
         std::unique_ptr<ports::PortBase> newport(result);
         m_ports[config.portName] = std::move(newport);
         return result;
     }
 
-    const ports::PeriodicTimer* ComponentBase::initTimerPort(const _component_port_tim& config) {
+    const ports::PeriodicTimer* ComponentBase::initTimerPort(const component_port_tim& config) {
         std::string timerchannel = GetTimerChannel();
         std::unique_ptr<ports::PeriodicTimer> newtimer(new ports::PeriodicTimer(timerchannel, config, this));
         newtimer->start();

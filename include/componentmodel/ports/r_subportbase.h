@@ -15,7 +15,7 @@ namespace riaps{
         public:
             SubscriberPortBase(const component_port_config* config, const ComponentBase* parentComponent);
 
-            virtual const _component_port_sub* GetConfig() const;
+            virtual const component_port_sub* GetConfig() const;
 
             // Returns false, if the subscriber couldn't connect
             bool ConnectToPublihser(const std::string& pub_endpoint);

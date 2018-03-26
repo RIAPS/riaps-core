@@ -19,7 +19,7 @@ namespace groupmsgtest {
              capnp::MallocMessageBuilder builder;
              auto grpMsg = builder.initRoot<MessageType>();
              grpMsg.setMsg("From A");
-             SendGroupMessage(groupIdA, grMsg);
+             //SendGroupMessage(groupIdA, grMsg);
          }
       }
     

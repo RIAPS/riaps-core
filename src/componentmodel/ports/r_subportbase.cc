@@ -33,8 +33,8 @@ namespace riaps {
             return true;
         }
 
-        const _component_port_sub* SubscriberPortBase::GetConfig() const{
-            return (_component_port_sub*)GetPortBaseConfig();
+        const component_port_sub* SubscriberPortBase::GetConfig() const{
+            return (component_port_sub*)GetPortBaseConfig();
         }
 
         SubscriberPortBase::~SubscriberPortBase() {

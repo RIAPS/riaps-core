@@ -183,7 +183,7 @@ namespace riaps {
 
 
 
-                _component_port_pub newpubconfig;
+                component_port_pub newpubconfig;
                 newpubconfig.portName = pubportname;
                 newpubconfig.messageType = pubporttype;
 
@@ -208,7 +208,7 @@ namespace riaps {
                 auto subportname = it_subport.key();
                 auto subporttype = it_subport.value()[J_TYPE];
 
-                _component_port_sub newsubconfig;
+                component_port_sub newsubconfig;
                 newsubconfig.portName = subportname;
                 newsubconfig.messageType = subporttype;
 
@@ -235,7 +235,7 @@ namespace riaps {
                 std::string reptype = it_reqport.value()[J_PORT_REPTYPE];
                 std::string messagetype = reqtype + "#" + reptype;
 
-                _component_port_req newreqconfig;
+                component_port_req newreqconfig;
                 newreqconfig.portName = reqportname;
                 //newreqconfig.messageType = subporttype;
                 newreqconfig.req_type = reqtype;
@@ -265,7 +265,7 @@ namespace riaps {
                 std::string reptype = it_repport.value()[J_PORT_REPTYPE];
                 std::string messagetype = reqtype + "#" + reptype;
 
-                _component_port_rep newrepconfig;
+                component_port_rep newrepconfig;
                 newrepconfig.portName = repportname;
                 newrepconfig.req_type = reqtype;
                 newrepconfig.rep_type = reptype;
@@ -294,7 +294,7 @@ namespace riaps {
                 std::string anstype = it_qryport.value()[J_PORT_ANSTYPE];
                 std::string messagetype = qrytype + "#" + anstype;
 
-                _component_port_qry newqryconfig;
+                component_port_qry newqryconfig;
                 newqryconfig.portName = qryportname;
                 //newreqconfig.messageType = subporttype;
                 newqryconfig.qry_type = qrytype;
@@ -324,7 +324,7 @@ namespace riaps {
                 std::string anstype = it_ansport.value()[J_PORT_ANSTYPE];
                 std::string messagetype = qrytype + "#" + anstype;
 
-                _component_port_ans newansconfig;
+                component_port_ans newansconfig;
                 newansconfig.portName = ansportname;
                 newansconfig.qry_type = qrytype;
                 newansconfig.ans_type = anstype;
@@ -351,7 +351,7 @@ namespace riaps {
                 auto timname = it_tim.key();
                 auto timperiod = it_tim.value()["period"];
 
-                _component_port_tim newtimconfig;
+                component_port_tim newtimconfig;
                 newtimconfig.portName = timname;
                 newtimconfig.period   = timperiod;
 
@@ -369,7 +369,7 @@ namespace riaps {
                 auto insname = it_ins.key();
                 //auto timperiod = it_tim.value()["period"];
 
-                _component_port_ins newinsconfig;
+                component_port_ins newinsconfig;
                 newinsconfig.portName = insname;
 
                 results.component_ports.inss.push_back(newinsconfig);

@@ -8,7 +8,7 @@
 namespace riaps {
     namespace ports {
 
-        RequestPort::RequestPort(const _component_port_req &config, const ComponentBase *parentComponent)
+        RequestPort::RequestPort(const component_port_req &config, const ComponentBase *parentComponent)
                 : PortBase(PortTypes::Request, (component_port_config*)(&config), parentComponent),
                   SenderPort(this),
                   m_capnpReader(capnp::FlatArrayMessageReader(nullptr)) {
@@ -30,7 +30,7 @@ namespace riaps {
 
         void RequestPort::Init() {
 
-            const _component_port_req* current_config = GetConfig();
+            const component_port_req* current_config = GetConfig();
 
             auto results =
                     subscribeToService(GetParentComponent()->GetActor()->GetApplicationName(),
@@ -61,8 +61,8 @@ namespace riaps {
             return true;
         }
 
-        const _component_port_req* RequestPort::GetConfig() const{
-            return (_component_port_req*)GetPortBaseConfig();
+        const component_port_req* RequestPort::GetConfig() const{
+            return (component_port_req*)GetPortBaseConfig();
         }
 
         RequestPort* RequestPort::AsRequestPort() {

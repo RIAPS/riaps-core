@@ -64,7 +64,7 @@ namespace riaps{
 
 
             // Default port for the group. Reserved for RIAPS internal communication protocols
-            _group_port_pub internalPubConfig;
+            group_port_pub internalPubConfig;
             internalPubConfig.messageType = INTERNAL_MESSAGETYPE;
             internalPubConfig.isLocal     = false;
             internalPubConfig.portName    = INTERNAL_PUB_NAME;
@@ -76,7 +76,7 @@ namespace riaps{
             _groupPorts[_groupPubPort->GetSocket()] = _groupPubPort;
 
 
-            _group_port_sub internalSubConfig;
+            group_port_sub internalSubConfig;
             internalSubConfig.messageType = INTERNAL_MESSAGETYPE;
             internalSubConfig.isLocal     = false;
             internalSubConfig.portName    = INTERNAL_SUB_NAME;

@@ -15,7 +15,7 @@ namespace riaps{
             PublisherPortBase(const component_port_config* config, const ComponentBase* parentComponent);
             std::string GetEndpoint();
 
-            virtual const _component_port_pub* GetConfig() const;
+            virtual const component_port_pub* GetConfig() const;
             virtual ~PublisherPortBase();
 
         protected:

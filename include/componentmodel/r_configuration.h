@@ -33,12 +33,11 @@ struct group_port_config : public port_config_base{
 struct component_port_config : public port_config_base {
     bool        isLocal;
 
-    _component_port_config(){
+    component_port_config(){
         isLocal=false;
     }
 };
 
-typedef struct component_port_config component_port_config;
 
 struct component_port_clt : public component_port_config {};
 struct component_port_pub : public component_port_config {};
@@ -75,7 +74,7 @@ struct component_port_ans : public component_port_config{
 
 
 
-struct component_ports {
+struct ComponentPorts {
     std::vector<component_port_clt> clts; // Client
     std::vector<component_port_srv> srvs; // Server
     std::vector<component_port_pub> pubs; // Publisher
@@ -113,12 +112,11 @@ struct groupt_conf {
 struct component_conf {
     std::string               component_name;
     std::string               component_type;
-    component_ports           component_ports;
+    ComponentPorts            component_ports;
     Parameters                component_parameters;
     bool                      isDevice;
 };
 
-typedef struct component_conf component_conf;
-typedef struct groupt_conf    groupt_conf;
+typedef struct component_conf _component_conf;
 
 #endif //RIAPS_FW_R_CONFIGURATION_H

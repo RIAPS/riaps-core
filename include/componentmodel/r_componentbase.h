@@ -363,14 +363,14 @@ namespace riaps {
         std::function<void(const uint64_t)> m_scheduledAction;
     private:
 
-        const ports::PublisherPort*  initPublisherPort  (const _component_port_pub&);
-        const ports::SubscriberPort* initSubscriberPort (const _component_port_sub&);
-        const ports::ResponsePort*   initResponsePort   (const _component_port_rep&);
-        const ports::RequestPort*    initRequestPort    (const _component_port_req&);
-        const ports::QueryPort*      initQueryPort      (const _component_port_qry&);
-        const ports::AnswerPort*     initAnswerPort     (const _component_port_ans&);
-        const ports::PeriodicTimer*  initTimerPort      (const _component_port_tim&);
-        const ports::InsidePort*     initInsidePort     (const _component_port_ins&);
+        const ports::PublisherPort*  initPublisherPort  (const component_port_pub&);
+        const ports::SubscriberPort* initSubscriberPort (const component_port_sub&);
+        const ports::ResponsePort*   initResponsePort   (const component_port_rep&);
+        const ports::RequestPort*    initRequestPort    (const component_port_req&);
+        const ports::QueryPort*      initQueryPort      (const component_port_qry&);
+        const ports::AnswerPort*     initAnswerPort     (const component_port_ans&);
+        const ports::PeriodicTimer*  initTimerPort      (const component_port_tim&);
+        const ports::InsidePort*     initInsidePort     (const component_port_ins&);
 
 
         std::string             GetTimerChannel();

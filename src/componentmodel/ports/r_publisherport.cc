@@ -13,7 +13,7 @@ namespace riaps{
 
 
 
-        PublisherPort::PublisherPort(const _component_port_pub &config, const ComponentBase* parentComponent)
+        PublisherPort::PublisherPort(const component_port_pub &config, const ComponentBase* parentComponent)
             : PublisherPortBase((component_port_config*)&config, parentComponent)
 
         {
