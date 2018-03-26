@@ -13,25 +13,29 @@
     "TscaGpio": {
       "name": "TscaGpio",
       "formals": [],
-      "libraries": [],
+      "libraries": [
+        {
+          "name": "libsoc.so"
+        }
+      ],
       "files": [],
       "devices": [],
       "exceptHandler": "",
       "ports": {
         "reqs": {},
+        "anss": {},
         "pubs": {},
         "reps": {},
         "inss": {},
         "subs": {},
         "clts": {},
-        "ans": {},
-        "qry": {},
         "srvs": {},
         "tims": {
           "clock": {
             "period": 5000
           }
-        }
+        },
+        "qrys": {}
       }
     }
   },
