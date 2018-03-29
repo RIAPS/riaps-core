@@ -32,9 +32,11 @@ struct group_port_config : public port_config_base{
  */
 struct component_port_config : public port_config_base {
     bool        isLocal;
+    bool        isTimed;
 
     component_port_config(){
         isLocal=false;
+        isTimed=false;
     }
 };
 
@@ -48,6 +50,12 @@ struct component_port_req : public component_port_config {
 };
 
 struct component_port_rep : public component_port_config{
+
+    //DEBUG todo: remove
+    component_port_rep(){
+        isTimed = true;
+    }
+
     std::string req_type;
     std::string rep_type;
 };

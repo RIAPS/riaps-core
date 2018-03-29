@@ -65,6 +65,7 @@ void operator<<(zframe_t*& zframe, capnp::MallocMessageBuilder& message);
 
 void operator>>(zframe_t& frame, capnp::FlatArrayMessageReader*& message);
 void operator>>(zframe_t& frame, std::unique_ptr<capnp::FlatArrayMessageReader>& message);
+void operator>>(zframe_t& frame, std::shared_ptr<capnp::FlatArrayMessageReader>& message);
 
 timespec operator-(const timespec& ts1, const timespec& ts2);
 bool operator>(const timespec& ts1, const timespec& ts2);

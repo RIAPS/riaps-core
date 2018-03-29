@@ -11,6 +11,7 @@ namespace riaps {
         RequestPort::RequestPort(const component_port_req &config, const ComponentBase *parentComponent)
                 : PortBase(PortTypes::Request, (component_port_config*)(&config), parentComponent),
                   SenderPort(this),
+                  RecvPort(this),
                   m_capnpReader(capnp::FlatArrayMessageReader(nullptr)) {
             m_port_socket = zsock_new(ZMQ_REQ);
 
@@ -69,7 +70,9 @@ namespace riaps {
             return this;
         }
 
-
+        const timespec& RequestPort::GetRecvTimestamp() const {
+            return m_recvTimestamp;
+        }
 
         bool RequestPort::Recv(capnp::FlatArrayMessageReader** messageReader) {
             zmsg_t* msg = zmsg_recv((void*)GetSocket());
@@ -78,22 +81,40 @@ namespace riaps {
                 //char* msgType = zmsg_popstr(msg);
                 //messageType = msgType;
                 //if (msgType!=NULL){
-                    zframe_t* bodyFrame = zmsg_pop(msg);
-                    size_t size = zframe_size(bodyFrame);
-                    byte* data = zframe_data(bodyFrame);
+                zframe_t* bodyFrame = zmsg_pop(msg);
+                size_t size = zframe_size(bodyFrame);
+                byte* data = zframe_data(bodyFrame);
 
-                    auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
-                    m_capnpReader = capnp::FlatArrayMessageReader(capnp_data);
-                    *messageReader = &m_capnpReader;
+                auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
+                m_capnpReader = capnp::FlatArrayMessageReader(capnp_data);
+                *messageReader = &m_capnpReader;
 
-                    zframe_destroy(&bodyFrame);
-                    return true;
+                zframe_destroy(&bodyFrame);
+
+                if (GetConfig()->isTimed){
+                    auto timeFrame = zmsg_pop(msg);
+                    if (timeFrame) {
+                        auto buffer = zframe_data(timeFrame);
+                        double dTime;
+                        memcpy(&dTime, buffer, sizeof(double));
+                        m_recvTimestamp.tv_sec  = dTime;
+                        m_recvTimestamp.tv_nsec = (dTime-m_recvTimestamp.tv_sec)*BILLION;
+                        zframe_destroy(&timeFrame);
+                    }
+                }
+
+
+                return true;
                 //}
                 //return false;
             }
             zmsg_destroy(&msg);
 
             return false;
+        }
+
+        RecvPort* RequestPort::AsRecvPort() {
+            return this;
         }
 
         bool RequestPort::Send(capnp::MallocMessageBuilder &message) const {

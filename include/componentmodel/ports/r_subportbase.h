@@ -8,10 +8,11 @@
 #include <componentmodel/ports/r_portbase.h>
 
 #include <string>
+#include "r_recvport.h"
 
 namespace riaps{
     namespace ports{
-        class SubscriberPortBase : public PortBase{
+        class SubscriberPortBase : public PortBase, public RecvPort{
         public:
             SubscriberPortBase(const component_port_config* config, const ComponentBase* parentComponent);
 

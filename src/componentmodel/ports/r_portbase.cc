@@ -124,6 +124,10 @@ namespace riaps {
             return nullptr;
         }
 
+        RecvPort* PortBase::AsRecvPort() {
+            return nullptr;
+        }
+
         PortBase::~PortBase() {
             if (m_port_socket) {
                 // std::cout << "Destroy port socket : " << GetPortName() << std::endl;

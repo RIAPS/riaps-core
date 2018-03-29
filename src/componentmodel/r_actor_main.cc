@@ -11,7 +11,7 @@ int main(int argc, char* argv[]) {
     x.__sched_priority = 85;
     auto ret = sched_setscheduler(0, SCHED_FIFO, &x);
 
-    assert(ret==0);
+    //assert(ret==0);
 
     if (CommandLineParser::CommandOptionExists(argv, argv+argc, "-h") || argc < 4){
         std::cout << "Usage: start_actor <app> <model> <actor> [-h]" << std::endl;

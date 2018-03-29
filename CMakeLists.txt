@@ -49,7 +49,7 @@ if (BUILD_TESTS)
     enable_testing()
     # Tests
     # add_subdirectory(examples/DistributedEstimatorPy)
-    #add_subdirectory(examples/DistributedEstimator)
+    add_subdirectory(examples/DistributedEstimator)
     #add_subdirectory(examples/DistributedEstimatorGroup)
     #add_subdirectory(examples/LeaderElection)
     #add_subdirectory(examples/Consensus)
@@ -62,7 +62,7 @@ if (BUILD_TESTS)
     #add_subdirectory(tests/GpioDeviceTesting)
     #add_subdirectory(tests/testPubSub/test_1_1/test_1_1)
     #add_subdirectory(tests/ScheduledTimer)
-    add_subdirectory(tests/DC/groupmsgtest)
+    #add_subdirectory(tests/DC/groupmsgtest)
 
     # add_subdirectory(examples/EchoIO)
 endif()
@@ -79,12 +79,14 @@ list (APPEND component_SOURCE
         src/componentmodel/ports/r_publisherport.cc
         src/componentmodel/ports/r_pubportbase.cc
         src/componentmodel/ports/r_pubportgroup.cc
+        src/componentmodel/ports/r_recvport.cc
         src/componentmodel/ports/r_requestport.cc
         src/componentmodel/ports/r_responseport.cc
         src/componentmodel/ports/r_senderport.cc
         src/componentmodel/ports/r_subportbase.cc
         src/componentmodel/ports/r_subportgroup.cc
         src/componentmodel/ports/r_subscriberport.cc
+        src/componentmodel/ports/r_timedport.cc
         src/componentmodel/r_actor.cc
         src/componentmodel/r_argumentparser.cc
         src/componentmodel/r_payload.cc
@@ -115,12 +117,14 @@ list (APPEND component_HEADERS
         include/componentmodel/ports/r_publisherport.h
         include/componentmodel/ports/r_pubportbase.h
         include/componentmodel/ports/r_pubportgroup.h
+        include/componentmodel/ports/r_recvport.h
         include/componentmodel/ports/r_requestport.h
         include/componentmodel/ports/r_responseport.h
         include/componentmodel/ports/r_senderport.h
         include/componentmodel/ports/r_subportbase.h
         include/componentmodel/ports/r_subportgroup.h
         include/componentmodel/ports/r_subscriberport.h
+        include/componentmodel/ports/r_timedport.h
         include/componentmodel/r_actor.h
         include/componentmodel/r_payload.h
         include/componentmodel/r_commandlineparser.h

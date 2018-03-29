@@ -19,7 +19,7 @@ namespace riaps {
     class ComponentBase;
 
     namespace ports {
-        class RequestPort : public PortBase, public SenderPort {
+        class RequestPort : public PortBase, public SenderPort, public RecvPort {
         public:
             //using PortBase::Send;
 
@@ -31,15 +31,21 @@ namespace riaps {
 
             virtual bool Recv(capnp::FlatArrayMessageReader** messageReader);
 
-            virtual RequestPort* AsRequestPort() ;
+            virtual RequestPort* AsRequestPort();
+            virtual RecvPort*    AsRecvPort()   ;
+
 
             virtual const component_port_req* GetConfig() const;
+
+            const timespec& GetRecvTimestamp() const;
 
 
 
             ~RequestPort() noexcept ;
         protected:
             bool m_isConnected;
+
+            timespec m_recvTimestamp;
 
             capnp::FlatArrayMessageReader m_capnpReader;
 

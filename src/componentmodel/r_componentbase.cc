@@ -297,23 +297,36 @@ namespace riaps{
                             zmsg_destroy(&msg);
                         }
                     } else {
-                        zmsg_t* msg = zmsg_recv(which);
-                        zframe_t* bodyFrame = zmsg_pop(msg);
 
-                        auto msgPtr = new std::shared_ptr<zmsg_t>(msg, [](zmsg_t* z){zmsg_destroy(&z);});
-                        auto framePtr = new std::shared_ptr<zframe_t>(bodyFrame, [](zframe_t* z){zframe_destroy(&z);});
+                        if (riapsPort->AsRecvPort()!= nullptr) {
+                            //Note: new recv() implementation with timestamp processing
+                            auto recvPort = riapsPort->AsRecvPort();
+                            auto capnpMessage = recvPort->Recv();
+                            if (!terminated)
+                                comp->DispatchMessage(capnpMessage.get(), riapsPort);
+                        } else {
 
-                        // zmsg_pop transfers the ownership, the frame is removed from the zmsg.
-                        // Both of them must be explicitly deleted.
-                        auto capnpReader = std::unique_ptr<capnp::FlatArrayMessageReader>(new capnp::FlatArrayMessageReader(nullptr));
+                            // Note: this is the old style, timestamps are not read
+                            zmsg_t* msg = zmsg_recv(which);
+                            zframe_t* bodyFrame = zmsg_pop(msg);
 
-                        (*bodyFrame) >> capnpReader;
+                            auto msgPtr = new std::shared_ptr<zmsg_t>(msg, [](zmsg_t* z){zmsg_destroy(&z);});
+                            auto framePtr = new std::shared_ptr<zframe_t>(bodyFrame, [](zframe_t* z){zframe_destroy(&z);});
 
-                        if (!terminated)
-                            comp->DispatchMessage(capnpReader.get(), riapsPort);
+                            // zmsg_pop transfers the ownership, the frame is removed from the zmsg.
+                            // Both of them must be explicitly deleted.
+                            auto capnpReader = std::unique_ptr<capnp::FlatArrayMessageReader>(new capnp::FlatArrayMessageReader(nullptr));
 
-                        zframe_destroy(&bodyFrame);
-                        zmsg_destroy(&msg);
+                            (*bodyFrame) >> capnpReader;
+
+                            if (!terminated)
+                                comp->DispatchMessage(capnpReader.get(), riapsPort);
+
+                            zframe_destroy(&bodyFrame);
+                            zmsg_destroy(&msg);
+                        }
+
+
                     }
             }
             else{
