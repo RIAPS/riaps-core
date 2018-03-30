@@ -10,7 +10,8 @@ namespace riaps{
         RecvPort::RecvPort(riaps::ports::PortBase *portBase) :
                 m_port(portBase),
                 m_lastFrm(nullptr),
-                m_lastZmsg(nullptr){
+                m_lastZmsg(nullptr),
+                m_lastCapnpReader(nullptr){
 
         }
 
@@ -49,6 +50,7 @@ namespace riaps{
                     SetRecvTimestamp(recvTimestamp);
                 }
             }
+            m_lastCapnpReader = results;
             return results;
         }
     }

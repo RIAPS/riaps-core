@@ -301,6 +301,10 @@ namespace riaps{
                         if (riapsPort->AsRecvPort()!= nullptr) {
                             //Note: new recv() implementation with timestamp processing
                             auto recvPort = riapsPort->AsRecvPort();
+
+                            auto cname = comp->GetComponentName();
+                            auto portName = riapsPort->GetPortName();
+
                             auto capnpMessage = recvPort->Recv();
                             if (!terminated)
                                 comp->DispatchMessage(capnpMessage.get(), riapsPort);

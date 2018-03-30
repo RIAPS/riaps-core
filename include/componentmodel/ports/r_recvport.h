@@ -34,6 +34,8 @@ namespace riaps{
             PortBase*                 m_port;
             std::shared_ptr<zmsg_t>   m_lastZmsg;
             std::shared_ptr<zframe_t> m_lastFrm;
+            std::shared_ptr<capnp::FlatArrayMessageReader> m_lastCapnpReader;
+
         };
     }
 }

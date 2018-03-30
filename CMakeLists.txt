@@ -49,7 +49,7 @@ if (BUILD_TESTS)
     enable_testing()
     # Tests
     # add_subdirectory(examples/DistributedEstimatorPy)
-    add_subdirectory(examples/DistributedEstimator)
+    #add_subdirectory(examples/DistributedEstimator)
     #add_subdirectory(examples/DistributedEstimatorGroup)
     #add_subdirectory(examples/LeaderElection)
     #add_subdirectory(examples/Consensus)
@@ -63,7 +63,7 @@ if (BUILD_TESTS)
     #add_subdirectory(tests/testPubSub/test_1_1/test_1_1)
     #add_subdirectory(tests/ScheduledTimer)
     #add_subdirectory(tests/DC/groupmsgtest)
-
+    #add_subdirectory(tests/TimedTest)
     # add_subdirectory(examples/EchoIO)
 endif()
 

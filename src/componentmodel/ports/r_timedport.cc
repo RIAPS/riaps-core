@@ -17,14 +17,14 @@ namespace riaps {
         void TimedPort::SetSendTimestamp(double t_sentTimestamp) {
             timespec t;
             t.tv_sec = t_sentTimestamp;
-            t.tv_nsec = (t_sentTimestamp-t.tv_nsec)*1000000000.0;
+            t.tv_nsec = (t_sentTimestamp - t.tv_sec)*1000000000.0;
             m_sentTimestamp = t;
         }
 
         void TimedPort::SetRecvTimestamp(double t_recvTimestamp) {
             timespec t;
             t.tv_sec = t_recvTimestamp;
-            t.tv_nsec = (t_recvTimestamp-t.tv_nsec)*1000000000.0;
+            t.tv_nsec = (t_recvTimestamp-t.tv_sec)*1000000000.0;
             m_recvTimestamp = t;
         }
 

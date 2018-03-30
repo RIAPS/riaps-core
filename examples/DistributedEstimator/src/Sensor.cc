@@ -29,12 +29,14 @@ namespace distributedestimator {
 
             //PrintMessageOnPort(port);
             if (port->GetPortBaseConfig()->isTimed){
-                _logger->info("Sensor::OnRequest(): {}, sentTimestamp: {}.{}, recvTimestamp: {}.{}",
-                              message.getMsg().cStr(),
-                              port->AsResponsePort()->GetLastSendTimestamp().tv_sec ,
-                              port->AsResponsePort()->GetLastSendTimestamp().tv_nsec,
-                              port->AsResponsePort()->GetLastRecvTimestamp().tv_sec ,
-                              port->AsResponsePort()->GetLastRecvTimestamp().tv_nsec);
+                auto responsePort = port->AsResponsePort();
+                _logger->info_if(responsePort!=nullptr,
+                                 "Sensor::OnRequest(): {}, sentTimestamp: {}.{}, recvTimestamp: {}.{}",
+                                 message.getMsg().cStr(),
+                                 responsePort->GetLastSendTimestamp().tv_sec ,
+                                 responsePort->GetLastSendTimestamp().tv_nsec,
+                                 responsePort->GetLastRecvTimestamp().tv_sec ,
+                                 responsePort->GetLastRecvTimestamp().tv_nsec);
             } else
                 _logger->info("Sensor::OnRequest(): {}", message.getMsg().cStr());
 
