@@ -30,12 +30,12 @@ namespace timedtest {
       
       bool SensorBase::SendReady(capnp::MallocMessageBuilder &messageBuilder,
       DummyT::Builder &message) {
-         std::cout<< "SensorBase::SendReady()"<< std::endl;
+         //std::cout<< "SensorBase::SendReady()"<< std::endl;
          return SendMessageOnPort(messageBuilder, PORT_PUB_READY);
       }
       bool SensorBase::SendRequest(capnp::MallocMessageBuilder& messageBuilder,
       DummyT::Builder& message) {
-         std::cout<< "SensorBase::SendRequest()"<< std::endl;
+        // std::cout<< "SensorBase::SendRequest()"<< std::endl;
          return SendMessageOnPort(messageBuilder, PORT_REP_REQUEST);
       }
       

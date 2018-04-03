@@ -8,14 +8,30 @@ namespace timedtest {
       }
       
       void Sensor::OnClock(riaps::ports::PortBase *port) {
-         std::cout << "Sensor::OnClock(): " << port->GetPortName() << std::endl;
+          capnp::MallocMessageBuilder builder;
+          auto msg = builder.initRoot<DummyT>();
+          msg.setMsg("0000");
+          SendReady(builder, msg);
       }
       
       
       void Sensor::OnRequest(const DummyT::Reader &message,
       riaps::ports::PortBase *port)
       {
-         std::cout<< "Sensor::OnRequest()"<< std::endl;
+          if (port->GetPortBaseConfig()->isTimed) {
+              _logger->info("{}, sendTs: {}.{}, recvTs: {}.{}", __FUNCTION__,
+                            port->AsRecvPort()->GetLastSendTimestamp().tv_sec,
+                            port->AsRecvPort()->GetLastSendTimestamp().tv_nsec,
+                            port->AsRecvPort()->GetLastRecvTimestamp().tv_sec,
+                            port->AsRecvPort()->GetLastRecvTimestamp().tv_nsec);
+          } else {
+              _logger->info("{}", __FUNCTION__);
+          }
+
+          capnp::MallocMessageBuilder builder;
+          auto msg = builder.initRoot<DummyT>();
+          msg.setMsg("FromSensor");
+          SendRequest(builder, msg);
       }
       
       void Sensor::OnGroupMessage(const riaps::groups::GroupId& groupId,
