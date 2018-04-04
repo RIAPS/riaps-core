@@ -42,6 +42,8 @@
 #define J_PORT_QRYTYPE "qry_type"
 #define J_PORT_ANSTYPE "ans_type"
 
+#define J_PORT_TIMED "timed"
+
 #define J_TYPE         "type"
 
 #define J_GROUPS          "groups"

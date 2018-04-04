@@ -181,11 +181,17 @@ namespace riaps {
                 auto pubportname = it_pubport.key();
                 auto pubporttype = it_pubport.value()[J_TYPE];
 
-
-
                 component_port_pub newpubconfig;
                 newpubconfig.portName = pubportname;
                 newpubconfig.messageType = pubporttype;
+                try {
+                    newpubconfig.isTimed = json_pubports[pubportname].at(J_PORT_TIMED).get<bool>();
+                } catch (nlohmann::json::out_of_range& e) {
+                    newpubconfig.isTimed = false;
+                } catch (nlohmann::json::type_error& e){
+                    _logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, pubportname);
+                    newpubconfig.isTimed = false;
+                }
 
                 // If the porttype is defined in the Local list
                 if (_localMessageTypes.find(pubporttype) != _localMessageTypes.end() || results.isDevice){
@@ -211,6 +217,14 @@ namespace riaps {
                 component_port_sub newsubconfig;
                 newsubconfig.portName = subportname;
                 newsubconfig.messageType = subporttype;
+                try {
+                    newsubconfig.isTimed = json_subports[subportname].at(J_PORT_TIMED).get<bool>();
+                } catch (nlohmann::json::out_of_range& e) {
+                    newsubconfig.isTimed = false;
+                } catch (nlohmann::json::type_error& e){
+                    _logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, subportname);
+                    newsubconfig.isTimed = false;
+                }
 
                 // If the porttype is defined in the Local list
                 if (_localMessageTypes.find(subporttype) != _localMessageTypes.end() || results.isDevice){
@@ -241,6 +255,14 @@ namespace riaps {
                 newreqconfig.req_type = reqtype;
                 newreqconfig.rep_type = reptype;
                 newreqconfig.messageType = messagetype;
+                try {
+                    newreqconfig.isTimed = json_reqports[reqportname].at(J_PORT_TIMED).get<bool>();
+                } catch (nlohmann::json::out_of_range& e) {
+                    newreqconfig.isTimed = false;
+                } catch (nlohmann::json::type_error& e){
+                    _logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, reqportname);
+                    newreqconfig.isTimed = false;
+                }
 
                 // If the porttype is defined in the Local list
                 if (_localMessageTypes.find(reqtype) != _localMessageTypes.end() || results.isDevice){
@@ -270,6 +292,14 @@ namespace riaps {
                 newrepconfig.req_type = reqtype;
                 newrepconfig.rep_type = reptype;
                 newrepconfig.messageType = messagetype;
+                try {
+                    newrepconfig.isTimed = json_repports[repportname].at(J_PORT_TIMED).get<bool>();
+                } catch (nlohmann::json::out_of_range& e) {
+                    newrepconfig.isTimed = false;
+                } catch (nlohmann::json::type_error& e){
+                    _logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, repportname);
+                    newrepconfig.isTimed = false;
+                }
 
                 // If the porttype is defined in the Local list
                 if (_localMessageTypes.find(reqtype) != _localMessageTypes.end() || results.isDevice){
@@ -296,10 +326,18 @@ namespace riaps {
 
                 component_port_qry newqryconfig;
                 newqryconfig.portName = qryportname;
-                //newreqconfig.messageType = subporttype;
                 newqryconfig.qry_type = qrytype;
                 newqryconfig.ans_type = anstype;
                 newqryconfig.messageType = messagetype;
+
+                try {
+                    newqryconfig.isTimed = json_qryports[qryportname].at(J_PORT_TIMED).get<bool>();
+                } catch (nlohmann::json::out_of_range& e) {
+                    newqryconfig.isTimed = false;
+                } catch (nlohmann::json::type_error& e){
+                    _logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, qryportname);
+                    newqryconfig.isTimed = false;
+                }
 
                 // If the porttype is defined in the Local list
                 if (_localMessageTypes.find(qrytype) != _localMessageTypes.end() || results.isDevice){
@@ -329,6 +367,15 @@ namespace riaps {
                 newansconfig.qry_type = qrytype;
                 newansconfig.ans_type = anstype;
                 newansconfig.messageType = messagetype;
+
+                try {
+                    newansconfig.isTimed = json_ansports[ansportname].at(J_PORT_TIMED).get<bool>();
+                } catch (nlohmann::json::out_of_range& e) {
+                    newansconfig.isTimed = false;
+                } catch (nlohmann::json::type_error& e){
+                    _logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, ansportname);
+                    newansconfig.isTimed = false;
+                }
 
                 // If the porttype is defined in the Local list
                 if (_localMessageTypes.find(qrytype) != _localMessageTypes.end() || results.isDevice){
