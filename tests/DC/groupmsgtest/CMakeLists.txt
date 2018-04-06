@@ -48,6 +48,7 @@ include_directories(./messages-gen)
 add_library(compone
         SHARED ./cpp/CompOne.cc
         ./cpp/CompOneBase.cc
+        ./cpp/include/common.h
         )
 
 target_link_libraries(compone czmq riaps dl capnp kj)
@@ -57,6 +58,7 @@ install(TARGETS compone DESTINATION lib)
 add_library(compthree
         SHARED ./cpp/CompThree.cc
         ./cpp/CompThreeBase.cc
+        ./cpp/include/common.h
         )
 
 target_link_libraries(compthree czmq riaps dl capnp kj)
@@ -66,6 +68,7 @@ install(TARGETS compthree DESTINATION lib)
 add_library(comptwo
         SHARED ./cpp/CompTwo.cc
         ./cpp/CompTwoBase.cc
+        ./cpp/include/common.h
         )
 
 target_link_libraries(comptwo czmq riaps dl capnp kj)

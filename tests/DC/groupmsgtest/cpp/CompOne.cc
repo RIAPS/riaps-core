@@ -5,12 +5,13 @@ namespace groupmsgtest {
       
       CompOne::CompOne(_component_conf &config, riaps::Actor &actor) :
       CompOneBase(config, actor), m_joinedToA(false) {
+          _logger->set_pattern("[%n] %v");
       }
       
       void CompOne::OnClock(riaps::ports::PortBase *port) {
          if (!m_joinedToA){
              _logger->info("Component joins to {}:{}", groupIdA.groupTypeId, groupIdA.groupName);
-            auto joined = JoinToGroup(groupIdA);
+            auto joined = JoinGroup(groupIdA);
             if (joined){
                 m_joinedToA = true;
             }
@@ -18,15 +19,15 @@ namespace groupmsgtest {
          } else {
              capnp::MallocMessageBuilder builder;
              auto grpMsg = builder.initRoot<MessageType>();
-             grpMsg.setMsg("From A");
-             //SendGroupMessage(groupIdA, grMsg);
+             auto msgContent = fmt::format("{}", GetComponentName());
+             grpMsg.setMsg(msgContent);
+             _logger->error_if(!SendGroupMessage(groupIdA, builder), "{} couldn't send groupmessage", GetComponentName());
          }
       }
     
       
-      void CompOne::OnGroupMessage(const riaps::groups::GroupId& groupId,
-      capnp::FlatArrayMessageReader& capnpreader, riaps::ports::PortBase* port){
-         
+      void CompOne::OnGroupMessage(const riaps::groups::GroupId& groupId, capnp::FlatArrayMessageReader& capnpreader, riaps::ports::PortBase* port){
+          logGroupMessage(_logger, __FUNCTION__, groupId, capnpreader.getRoot<MessageType>().getMsg());
       }
       
       CompOne::~CompOne() {

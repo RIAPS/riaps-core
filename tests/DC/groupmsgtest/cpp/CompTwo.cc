@@ -5,12 +5,13 @@ namespace groupmsgtest {
       
       CompTwo::CompTwo(_component_conf &config, riaps::Actor &actor) :
       CompTwoBase(config, actor), m_joinedToA(false), m_joinedToB(false) {
+          _logger->set_pattern("[%n] %v");
       }
       
       void CompTwo::OnClock(riaps::ports::PortBase *port) {
          if (!m_joinedToA){
              _logger->info("Component joins to {}:{}", groupIdA.groupTypeId, groupIdA.groupName);
-            auto joined = JoinToGroup(groupIdA);
+            auto joined = JoinGroup(groupIdA);
             if (joined){
                 m_joinedToA = true;
             }
@@ -19,7 +20,7 @@ namespace groupmsgtest {
 
          if (!m_joinedToB){
              _logger->info("Component joins to {}:{}", groupIdB.groupTypeId, groupIdB.groupName);
-            auto joined = JoinToGroup(groupIdB);
+            auto joined = JoinGroup(groupIdB);
             if (joined){
                 m_joinedToB = true;
             }
@@ -29,7 +30,8 @@ namespace groupmsgtest {
       
       void CompTwo::OnGroupMessage(const riaps::groups::GroupId& groupId,
       capnp::FlatArrayMessageReader& capnpreader, riaps::ports::PortBase* port){
-         
+
+          logGroupMessage(_logger, __FUNCTION__, groupId, capnpreader.getRoot<MessageType>().getMsg());
       }
       
       CompTwo::~CompTwo() {
