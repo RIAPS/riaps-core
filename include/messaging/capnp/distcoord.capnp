@@ -86,11 +86,16 @@ struct Consensus {
     enum VoteType {value @0; action @1; }
 }
 
+struct GroupMessage {
+    sourceComponentId @0 : Text;
+}
+
 struct GroupInternals {
     union{
         groupHeartBeat    @0 : GroupHeartBeat;
         leaderElection    @1 : LeaderElection;
         messageToLeader   @2 : MessageToLeader;
         consensus         @3 : Consensus;
+        groupMessage      @4 : GroupMessage;
     }
 }

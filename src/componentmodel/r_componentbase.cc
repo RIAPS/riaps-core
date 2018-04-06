@@ -344,13 +344,14 @@ namespace riaps{
                 for (auto it = comp->m_groups.begin(); it!=comp->m_groups.end(); it++){
                     it->second->SendPingWithPeriod();
 
-                    std::shared_ptr<capnp::FlatArrayMessageReader> groupMessage(nullptr);
+                    //std::shared_ptr<capnp::FlatArrayMessageReader> groupMessage(nullptr);
 
                     //std::string originComponentId;
-                    ports::GroupSubscriberPort* groupRecvPort = it->second->FetchNextMessage(groupMessage);
+                    //ports::GroupSubscriberPort* groupRecvPort = it->second->FetchNextMessage(groupMessage);
+                    it->second->FetchNextMessage();
 
-                    if (groupRecvPort != nullptr)
-                        comp->OnGroupMessage(it->first, *groupMessage, groupRecvPort);
+                    //if (groupRecvPort != nullptr)
+                        //comp->OnGroupMessage(it->first, *groupMessage, groupRecvPort);
                 }
             }
         }
@@ -649,6 +650,7 @@ namespace riaps{
         if (m_groups.find(groupId)==m_groups.end()) return false;
 
         riaps::groups::Group* group = m_groups[groupId].get();
+
         return group->SendMessage(message, portName);
 
     }
@@ -747,22 +749,11 @@ namespace riaps{
         return m_groups[groupId]->GetLeaderId();
     }
 
-    bool ComponentBase::JoinToGroup(riaps::groups::GroupId &&groupId) {
-//        if (_groups.find(groupId)!=_groups.end())
-//            return false;
-//
-//        std::unique_ptr<riaps::groups::Group> newGroup = std::unique_ptr<riaps::groups::Group>(new riaps::groups::Group(groupId, GetCompUuid()));
-//        if (newGroup->InitGroup()) {
-//            _groups[groupId] = std::move(newGroup);
-//            return true;
-//        }
-//
-//        return false;
-
-        return JoinToGroup(groupId);
+    bool ComponentBase::JoinGroup(riaps::groups::GroupId &&groupId) {
+        return JoinGroup(groupId);
     }
 
-    bool ComponentBase::JoinToGroup(riaps::groups::GroupId &groupId) {
+    bool ComponentBase::JoinGroup(riaps::groups::GroupId &groupId) {
         if (m_groups.find(groupId)!=m_groups.end())
             return false;
 
@@ -777,6 +768,17 @@ namespace riaps{
         }
 
         return false;
+    }
+
+    bool ComponentBase::LeaveGroup(riaps::groups::GroupId &&groupId) {
+        return JoinGroup(groupId);
+    }
+
+    bool ComponentBase::LeaveGroup(riaps::groups::GroupId &groupId) {
+        if (m_groups.find(groupId)!=m_groups.end())
+            return false;
+        m_groups.erase(groupId);
+        return true;
     }
 
 //    uint64_t ComponentBase::ScheduleTimer(std::chrono::steady_clock::time_point &tp) {

@@ -122,11 +122,11 @@ namespace riaps {
 
         bool SendGroupMessage(const riaps::groups::GroupId& groupId,
                               capnp::MallocMessageBuilder& message,
-                              const std::string& portName);
+                              const std::string& portName="");
 
         bool SendGroupMessage(const riaps::groups::GroupId&& groupId,
                               capnp::MallocMessageBuilder& message,
-                              const std::string& portName);
+                              const std::string& portName="");
 
 
 
@@ -317,8 +317,16 @@ namespace riaps {
          * @param groupType
          * @param groupName
          */
-        bool JoinToGroup(riaps::groups::GroupId&& groupId);
-        bool JoinToGroup(riaps::groups::GroupId&  groupId);
+        bool JoinGroup(riaps::groups::GroupId&& groupId);
+        bool JoinGroup(riaps::groups::GroupId&  groupId);
+
+        /**
+         *
+         * @param groupType
+         * @param groupName
+         */
+        bool LeaveGroup(riaps::groups::GroupId&& groupId);
+        bool LeaveGroup(riaps::groups::GroupId&  groupId);
 
 
         virtual void OnPropose (riaps::groups::GroupId& groupId, const std::string& proposeId, capnp::FlatArrayMessageReader& message);

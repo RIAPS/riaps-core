@@ -110,7 +110,8 @@ namespace riaps {
 
             bool SendInternalMessage(capnp::MallocMessageBuilder& message);
 
-            ports::GroupSubscriberPort* FetchNextMessage(std::shared_ptr<capnp::FlatArrayMessageReader>& messageReader);
+            //ports::GroupSubscriberPort* FetchNextMessage(std::shared_ptr<capnp::FlatArrayMessageReader>& messageReader);
+            void FetchNextMessage();
 
             bool SendPingWithPeriod();
             bool SendPing();
@@ -148,14 +149,14 @@ namespace riaps {
             uint32_t DeleteTimeoutNodes();
             bool SendHeartBeat(riaps::distrcoord::HeartBeatType type);
 
-            GroupId     _groupId;
-            groupt_conf       _groupTypeConf;
+            GroupId     m_groupId;
+            groupt_conf m_groupTypeConf;
 
             /**
-             * Always store the communication ports in unique_ptr (self-defense)
+             * Always store the communication ports in shart_ptr
              */
-            std::shared_ptr<riaps::ports::GroupPublisherPort>    _groupPubPort;
-            std::shared_ptr<riaps::ports::GroupSubscriberPort>   _groupSubPort;
+            std::shared_ptr<riaps::ports::GroupPublisherPort>    m_groupPubPort;
+            std::shared_ptr<riaps::ports::GroupSubscriberPort>   m_groupSubPort;
 
             std::map<const zsock_t*, std::shared_ptr<riaps::ports::PortBase>> _groupPorts;
 
@@ -171,9 +172,9 @@ namespace riaps {
              */
             std::unordered_map<std::string, Timeout<std::milli>> _knownNodes;
 
-            zframe_t*  _lastFrame;
+            //zframe_t*  _lastFrame;
             zpoller_t* _groupPoller;
-            std::shared_ptr<capnp::FlatArrayMessageReader> _lastReader;
+            //std::shared_ptr<capnp::FlatArrayMessageReader> _lastReader;
 
             std::shared_ptr<spd::logger> _logger;
 

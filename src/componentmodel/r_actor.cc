@@ -846,24 +846,77 @@ namespace riaps {
                  it_grp != jGroups.end();
                  it_grp++) {
 
-                string groupType = it_grp.key();
-                bool hasL = it_grp.value()[J_GROUP_LEADER];
-                bool hasC   = it_grp.value()[J_GROUP_CONSENSUS];
+                string groupTypeName = it_grp.key();
+                string upperGroupTypeName = groupTypeName;
 
-                vector<group_port_pub> pubs;
-                vector<group_port_sub> subs;
-                
-                for (auto itMsgType : it_grp.value()[J_GROUP_MESSAGES]) {
-                    group_port_pub gPub;
-                    group_port_sub gSub;
+                // Note: Uppercase conversion hurts in c++
+                transform(upperGroupTypeName.begin(),
+                          upperGroupTypeName.end(),
+                          upperGroupTypeName.begin(),
+                          [](unsigned char c) -> unsigned char { return std::toupper(c); });
+
+                bool hasL = false; //jGroups[groupTypeName][J_GROUP_LEADER];
+                bool hasC = false; //jGroups[groupTypeName][J_GROUP_CONSENSUS];
+
+                try {
+                    hasL = jGroups[groupTypeName].at(J_GROUP_LEADER).get<bool>();
+                } catch (nlohmann::json::out_of_range& e) {
+                    hasL = false;
+                } catch (nlohmann::json::type_error& e){
+                    _logger->warn("Type error: groups:{}:{} is not bool.", groupTypeName, J_GROUP_LEADER);
+                    hasL = false;
+                }
+
+                try {
+                    hasC = jGroups[groupTypeName].at(J_GROUP_CONSENSUS).get<bool>();
+                } catch (nlohmann::json::out_of_range& e) {
+                    hasC = false;
+                } catch (nlohmann::json::type_error& e){
+                    _logger->warn("Type error: groups:{}:{} is not bool.", groupTypeName, J_GROUP_CONSENSUS);
+                    hasC = false;
+                }
+
+                nlohmann::json groupMessages;
+                try {
+                    groupMessages = jGroups[groupTypeName].at(J_GROUP_MESSAGES);
+                } catch (nlohmann::json::out_of_range& e) {
+                    _logger->warn("No {} is groups::{}", J_GROUP_MESSAGES, groupTypeName);
                 }
 
                 groupt_conf gc = {
-                    groupType,
-                    {},
-                    hasC,
-                    hasL
+                        groupTypeName,
+                        {},
+                        hasC,
+                        hasL
                 };
+
+                // Make sure that the groupMessageType is not listed twice in the json -> convert to hashset
+                set<string> messageTypes;
+                for_each(groupMessages.begin(), groupMessages.end(), [&messageTypes](nlohmann::json& j){
+                    string s  = j.get<string>();
+
+                    transform(s.begin(),
+                              s.end(),
+                              s.begin(),
+                              [](unsigned char c) -> unsigned char { return std::toupper(c); });
+
+                    messageTypes.insert(s);
+
+                });
+
+                for (auto& messageType : messageTypes) {
+
+                    group_port_pub gPub;
+                    gPub.messageType = messageType;
+                    gPub.portName = fmt::format("{}_PORT_{}_OUT", upperGroupTypeName, messageType);
+
+                    group_port_sub gSub;
+                    gPub.messageType = messageType;
+                    gPub.portName = fmt::format("{}_PORT_{}_IN", upperGroupTypeName, messageType);
+
+                    gc.groupTypePorts.pubs.push_back(gPub);
+                    gc.groupTypePorts.subs.push_back(gSub);
+                }
                 _grouptype_configurations.push_back(gc);
             }
         }
