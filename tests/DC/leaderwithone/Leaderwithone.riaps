@@ -1,0 +1,21 @@
+struct MessageType {
+	msg: String;
+}
+
+message GroupLeave:MessageType;
+
+app Leaderwithone{
+	group groupA{	
+		uses leader
+	}
+	
+	component CompOne {
+		timer clock 3000
+	}
+
+	actor ActOne {
+        {
+            c1:CompOne();
+        }
+    }
+}
