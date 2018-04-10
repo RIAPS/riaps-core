@@ -8,7 +8,7 @@
 #include "common.h"
 #include "MessageType.capnp.h"
 
-namespace leaderwithone {
+namespace leaderwithtree {
    namespace components {
       
       class CompOne : public CompOneBase {

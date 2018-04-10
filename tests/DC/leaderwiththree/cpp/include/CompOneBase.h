@@ -11,7 +11,7 @@
 #define PORT_TIMER_CLOCK "clock"
 
 
-namespace leaderwithone {
+namespace leaderwithtree {
   namespace components {
 
     class CompOneBase : public riaps::ComponentBase {
