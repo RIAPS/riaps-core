@@ -198,8 +198,7 @@ namespace riaps {
         bool SendMessageToLeader(const riaps::groups::GroupId& groupId,
                                  capnp::MallocMessageBuilder& message);
 
-        virtual void OnMessageFromLeader(const riaps::groups::GroupId& groupId,
-                                         capnp::MallocMessageBuilder& message);
+
         
 
         /**
@@ -212,10 +211,20 @@ namespace riaps {
                                      int64_t timeout = 1000 * 15 /*15 sec in msec*/);
 
         std::string GetLeaderId(const riaps::groups::GroupId& groupId);
-//
-//        virtual bool SendGroupMessage(riaps::groups::GroupId&      groupId,
-//                                      capnp::MallocMessageBuilder& messageBuilder,
-//                                      const std::string&           portName) = 0;
+
+        /**
+         * Does a valid leader available in the group?
+         * @param groupId
+         * @return
+         */
+        bool IsLeaderAvailable(const riaps::groups::GroupId& groupId);
+
+        /**
+         * Is the current component the leader?
+         * @param groupId
+         * @return
+         */
+        bool IsLeader(const riaps::groups::GroupId& groupId);
 
         /**
          * Search publisher port with portName.
@@ -337,6 +346,9 @@ namespace riaps {
                                       const std::string& proposeId,
                                       const std::string& actionId,
                                       const timespec& timePoint);
+
+        virtual void OnMessageToLeader(const riaps::groups::GroupId& groupId, capnp::FlatArrayMessageReader& message);
+        virtual void OnMessageFromLeader(const riaps::groups::GroupId& groupId, capnp::FlatArrayMessageReader& message);
 
         virtual void OnAnnounce(const riaps::groups::GroupId& groupId, const std::string& proposeId, bool accepted);
         std::string SendPropose(const riaps::groups::GroupId& groupId, capnp::MallocMessageBuilder& message);

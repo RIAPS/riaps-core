@@ -468,16 +468,11 @@ namespace riaps{
         _logger->error("Group message arrived, but no handler implemented in the component");
     }
 
-//    bool ComponentBase::CreateOneShotTimer(const std::string &timerid, timespec &wakeuptime) {
-//        if (_oneShotTimer!=NULL) return false;
-//
-//        _oneShotTimer = new timers::OneShotTimer(GetOneShotTimerChannel(),
-//                                                 timerid,
-//                                                 wakeuptime);
-//
-//        _oneShotTimer->start();
-//        return true;
-//    }
+    void ComponentBase::OnMessageToLeader(const riaps::groups::GroupId& groupId, capnp::FlatArrayMessageReader& message) {
+        _logger->error("Group message arrived to the leader, but {} is not implemented in component: {}",
+                       __FUNCTION__,
+                       GetComponentName());
+    }
 
     /// \param portName
     /// \return Pointer to the RIAPS port with the given name. NULL if the port was not found.
@@ -673,7 +668,7 @@ namespace riaps{
     }
 
     void ComponentBase::OnMessageFromLeader(const riaps::groups::GroupId &groupId,
-                                            capnp::MallocMessageBuilder &message) {
+                                            capnp::FlatArrayMessageReader &message) {
         _logger->debug("Message from the leader arrived, but no OnMessageFromHandler() implementation has found in component: {}", GetConfig().component_name);
     }
 
@@ -682,15 +677,6 @@ namespace riaps{
 
         return m_groups[groupId].get();
     }
-
-
-//    const ports::PortBase* ComponentBase::GetPort(std::string portName) const {
-//        auto port_it = _ports.find(portName);
-//        if (port_it!=_ports.end()){
-//            return port_it->second.get();
-//        }
-//        return nullptr;
-//    }
 
 
     std::string ComponentBase::GetTimerChannel() {
@@ -789,7 +775,26 @@ namespace riaps{
         }
 
         return results;
+    }
 
+    bool ComponentBase::IsMemberOf(riaps::groups::GroupId &groupId) {
+        for(auto& group : m_groups) {
+            if (group.first == groupId)
+                return true;
+        }
+        return false;
+    }
+
+    bool ComponentBase::IsLeader(const riaps::groups::GroupId &groupId) {
+        if (m_groups.find(groupId) == m_groups.end())
+            return false;
+        return GetCompUuid() == m_groups[groupId]->GetLeaderId();
+    }
+
+    bool ComponentBase::IsLeaderAvailable(const riaps::groups::GroupId &groupId) {
+        if (m_groups.find(groupId) == m_groups.end())
+            return false;
+        return m_groups[groupId]->GetLeaderId()!="";
     }
 
     std::vector<riaps::groups::GroupId> ComponentBase::GetGroupMembershipsByType(const std::string &groupType) {

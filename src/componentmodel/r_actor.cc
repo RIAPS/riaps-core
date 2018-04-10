@@ -886,8 +886,8 @@ namespace riaps {
                 groupt_conf gc = {
                         groupTypeName,
                         {},
-                        hasC,
-                        hasL
+                        hasL,
+                        hasC
                 };
 
                 // Make sure that the groupMessageType is not listed twice in the json -> convert to hashset

@@ -609,6 +609,8 @@ namespace riaps{
 
             if (msg) {
 
+                auto msgPtr = std::shared_ptr<zmsg_t>(msg, [](zmsg_t* z){zmsg_destroy(&z);});
+
                 // _lstFrame owns the data. Must be preserved until the next message
                 firstFrame  = zmsg_pop(msg);
                 auto framePtr = std::shared_ptr<zframe_t>(firstFrame, [](zframe_t* z){zframe_destroy(&z);});
@@ -664,7 +666,14 @@ namespace riaps{
                     } else if (internal.hasMessageToLeader()){
                         auto msgLeader = internal.getMessageToLeader();
                         if (GetLeaderId() != GetParentComponent()->GetCompUuid()) return;
-                        _logger->debug("Message to the leader arrived!");
+
+                        zframe_t* leaderMsgFrame = zmsg_pop(msg);
+                        if (!leaderMsgFrame) return;
+                        auto leaderMsgPtr = std::shared_ptr<zframe_t>(leaderMsgFrame, [](zframe_t* z){zframe_destroy(&z);});
+                        capnp::FlatArrayMessageReader capnpLeaderMsg(nullptr);
+                        (*leaderMsgFrame) >> capnpLeaderMsg;
+
+                        _parentComponent->OnMessageToLeader(m_groupId, capnpLeaderMsg);
 
                         return;
                     } else if (internal.hasConsensus()) {
@@ -749,7 +758,7 @@ namespace riaps{
 
             }
 
-            zmsg_destroy(&msg);
+            //zmsg_destroy(&msg);
             return;
         }
 
