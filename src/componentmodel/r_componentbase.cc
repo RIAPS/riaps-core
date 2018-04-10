@@ -775,10 +775,30 @@ namespace riaps{
     }
 
     bool ComponentBase::LeaveGroup(riaps::groups::GroupId &groupId) {
-        if (m_groups.find(groupId)!=m_groups.end())
+        if (m_groups.find(groupId) == m_groups.end())
             return false;
         m_groups.erase(groupId);
         return true;
+    }
+
+    std::vector<riaps::groups::GroupId> ComponentBase::GetGroupMemberships() {
+        std::vector<riaps::groups::GroupId> results;
+
+        for(auto& group : m_groups) {
+            results.push_back(group.first);
+        }
+
+        return results;
+
+    }
+
+    std::vector<riaps::groups::GroupId> ComponentBase::GetGroupMembershipsByType(const std::string &groupType) {
+        std::vector<riaps::groups::GroupId> results;
+        for(auto& group : m_groups) {
+            if (group.first.groupTypeId != groupType) continue;
+            results.push_back(group.first);
+        }
+        return results;
     }
 
 //    uint64_t ComponentBase::ScheduleTimer(std::chrono::steady_clock::time_point &tp) {

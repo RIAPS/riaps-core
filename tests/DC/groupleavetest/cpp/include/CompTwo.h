@@ -26,7 +26,7 @@ namespace groupmsgtest {
 
     private:
       bool    m_joinedToA;
-      bool    m_joinedToB;
+      bool    m_leftA;
       Timeout<std::ratio<1>> m_timeout;
     };
   } // namespace components

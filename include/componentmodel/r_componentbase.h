@@ -328,6 +328,9 @@ namespace riaps {
         bool LeaveGroup(riaps::groups::GroupId&& groupId);
         bool LeaveGroup(riaps::groups::GroupId&  groupId);
 
+        std::vector<riaps::groups::GroupId> GetGroupMemberships();
+        std::vector<riaps::groups::GroupId> GetGroupMembershipsByType(const std::string& groupType);
+        bool IsMemberOf(riaps::groups::GroupId& groupId);
 
         virtual void OnPropose (riaps::groups::GroupId& groupId, const std::string& proposeId, capnp::FlatArrayMessageReader& message);
         virtual void OnActionPropose (riaps::groups::GroupId& groupId,

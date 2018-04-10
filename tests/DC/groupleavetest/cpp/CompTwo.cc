@@ -4,7 +4,7 @@ namespace groupmsgtest {
    namespace components {
       
       CompTwo::CompTwo(_component_conf &config, riaps::Actor &actor) :
-      CompTwoBase(config, actor), m_joinedToA(false), m_joinedToB(false) {
+      CompTwoBase(config, actor), m_joinedToA(false), m_leftA(false) {
           _logger->set_pattern("[%n] %v");
       }
       
@@ -17,17 +17,16 @@ namespace groupmsgtest {
                 m_timeout = Timeout<std::ratio<1>>(duration<int, std::ratio<1>>(20)); // 20 seconds
             }
             _logger->error_if(!joined, "Couldn't join group {}:{}", groupIdA.groupTypeId, groupIdA.groupName);
-         } else if (m_timeout.IsTimeout()){
+         } else if (m_timeout.IsTimeout() && !m_leftA){
              // If timeout -> leave the group
              _logger->info("leaves the group: ({}, {})", groupIdA.groupTypeId, groupIdA.groupName);
              LeaveGroup(groupIdA);
+             m_leftA = true;
          }
-
       }
       
       void CompTwo::OnGroupMessage(const riaps::groups::GroupId& groupId,
       capnp::FlatArrayMessageReader& capnpreader, riaps::ports::PortBase* port){
-
           logGroupMessage(_logger, __FUNCTION__, groupId, capnpreader.getRoot<MessageType>().getMsg());
       }
       
