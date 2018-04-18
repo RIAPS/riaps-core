@@ -36,7 +36,13 @@ struct LeaderElection {
         }
 }
 
+// From group members -> leader
 struct MessageToLeader {
+    sourceComponentId @0 : Text;
+}
+
+// From leader -> group members
+struct LeaderMessage {
     sourceComponentId @0 : Text;
 }
 
@@ -97,5 +103,6 @@ struct GroupInternals {
         messageToLeader   @2 : MessageToLeader;
         consensus         @3 : Consensus;
         groupMessage      @4 : GroupMessage;
+        leaderMessage     @5 : LeaderMessage;
     }
 }

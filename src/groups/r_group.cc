@@ -30,7 +30,7 @@ namespace riaps{
             return groupTypeId == other.groupTypeId && groupName == other.groupName;
         }
 
-        std::string Group::GetLeaderId() {
+        std::string Group::GetLeaderId() const {
             if (m_groupTypeConf.hasLeader && _groupLeader != nullptr){
                 return _groupLeader->GetLeaderId();
             }
@@ -221,6 +221,25 @@ namespace riaps{
             _logger->error_if(!rc, "ProposeActionToLeader() failed");
             _logger->debug_if(rc, "ProposeActionToLeader() proposeId: {}, leaderId: {}, srcComp: {}", proposeId, GetLeaderId(), GetParentComponent()->GetCompUuid());
             return rc;
+        }
+
+        bool Group::SendLeaderMessage(capnp::MallocMessageBuilder &message) {
+            if (GetLeaderId()!=GetParentComponentId()) return false;
+            capnp::MallocMessageBuilder builder;
+            auto intMessage = builder.initRoot<riaps::distrcoord::GroupInternals>();
+            auto grpMessage = intMessage.initGroupMessage();
+            grpMessage.setSourceComponentId(GetParentComponentId());
+
+            zframe_t* header;
+            header << builder;
+
+            zmsg_t* zmsg = zmsg_new();
+            zmsg_add(zmsg, header);
+
+            zframe_t* body;
+            body << message;
+            zmsg_add(zmsg, body);
+            return SendMessage(&zmsg, INTERNAL_PUB_NAME);
         }
 
 

@@ -49,29 +49,12 @@ add_library(compone
         SHARED ./cpp/CompOne.cc
         ./cpp/CompOneBase.cc
         ./cpp/include/common.h
+        ./cpp/include/CompOne.h
+        ./cpp/include/CompOneBase.h
         )
 
 target_link_libraries(compone czmq riaps dl capnp kj)
 install(TARGETS compone DESTINATION lib)
 
-# Creating Libraries for Component edu.vanderbilt.riaps.app.impl.ComponentImpl@215cd1bf (name: CompThree) (language: python, realtime: false)
-add_library(compthree
-        SHARED ./cpp/CompThree.cc
-        ./cpp/CompThreeBase.cc
-        ./cpp/include/common.h
-        )
-
-target_link_libraries(compthree czmq riaps dl capnp kj)
-install(TARGETS compthree DESTINATION lib)
-
-# Creating Libraries for Component edu.vanderbilt.riaps.app.impl.ComponentImpl@7da7baec (name: CompTwo) (language: python, realtime: false)
-add_library(comptwo
-        SHARED ./cpp/CompTwo.cc
-        ./cpp/CompTwoBase.cc
-        ./cpp/include/common.h
-        )
-
-target_link_libraries(comptwo czmq riaps dl capnp kj)
-install(TARGETS comptwo DESTINATION lib)
 
 

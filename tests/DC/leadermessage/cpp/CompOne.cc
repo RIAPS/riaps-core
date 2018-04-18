@@ -27,11 +27,15 @@ namespace leadermessage {
       }
 
       void CompOne::OnMessageToLeader(const riaps::groups::GroupId &groupId, capnp::FlatArrayMessageReader &message) {
+          _logger->info("Messaged arrived from component {}", message.getRoot<MessageType>().getMsg().cStr());
           capnp::MallocMessageBuilder builder;
+          auto msg = builder.initRoot<MessageType>();
+          msg.setMsg(GetCompUuid());
+
       }
 
       void CompOne::OnMessageFromLeader(const riaps::groups::GroupId &groupId, capnp::FlatArrayMessageReader &message) {
-
+          _logger->info("Messaged arrived from leader {}", message.getRoot<MessageType>().getMsg().cStr());
       }
     
       

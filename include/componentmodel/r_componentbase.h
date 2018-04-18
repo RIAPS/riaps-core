@@ -198,6 +198,9 @@ namespace riaps {
         bool SendMessageToLeader(const riaps::groups::GroupId& groupId,
                                  capnp::MallocMessageBuilder& message);
 
+        bool SendLeaderMessage(const riaps::groups::GroupId& groupId,
+                               capnp::MallocMessageBuilder& message);
+
 
         
 
@@ -225,6 +228,9 @@ namespace riaps {
          * @return
          */
         bool IsLeader(const riaps::groups::GroupId& groupId);
+
+
+
 
         /**
          * Search publisher port with portName.
@@ -395,10 +401,15 @@ namespace riaps {
         const ports::PeriodicTimer*  initTimerPort      (const component_port_tim&);
         const ports::InsidePort*     initInsidePort     (const component_port_ins&);
 
+        /**
+         * Is the current component the leader?
+         * @param groupId
+         * @return
+         */
+        bool IsLeader(const riaps::groups::Group* groupId);
+
 
         std::string             GetTimerChannel();
-
-
         std::string             GetOneShotTimerChannel();
 
         // TODO: uniqueptr

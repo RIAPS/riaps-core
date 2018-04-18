@@ -510,16 +510,13 @@ namespace riaps{
         return insidePort->Send(message);
     }
 
-//    bool ComponentBase::SendMessageOnPort(std::string message, const std::string& portName){
-//        ports::PortBase* port = GetPortByName(portName);
-//
-//        if (port->AsSubscribePort() == NULL && port->AsTimerPort() == NULL){
-//            return port->Send(message);
-//        }
-//
-//        return false;
-//
-//    }
+    bool ComponentBase::SendLeaderMessage(const riaps::groups::GroupId &groupId,
+                                          capnp::MallocMessageBuilder &message) {
+        auto group = GetGroupById(groupId);
+        if (group == nullptr) return false;
+        if (!IsLeader(group)) return false;
+        return group->SendLeaderMessage(message);
+    }
 
 
 
@@ -785,10 +782,14 @@ namespace riaps{
         return false;
     }
 
+    bool ComponentBase::IsLeader(const riaps::groups::Group* group) {
+        return GetCompUuid() == group->GetLeaderId();
+    }
+
     bool ComponentBase::IsLeader(const riaps::groups::GroupId &groupId) {
-        if (m_groups.find(groupId) == m_groups.end())
-            return false;
-        return GetCompUuid() == m_groups[groupId]->GetLeaderId();
+        auto group = GetGroupById(groupId);
+        if (group == nullptr) return false;
+        return IsLeader(group);
     }
 
     bool ComponentBase::IsLeaderAvailable(const riaps::groups::GroupId &groupId) {

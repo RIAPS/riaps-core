@@ -118,6 +118,7 @@ namespace riaps {
             bool SendPong();
 
             bool SendMessageToLeader(capnp::MallocMessageBuilder& message);
+            bool SendLeaderMessage(capnp::MallocMessageBuilder& message);
 
             bool ProposeValueToLeader(capnp::MallocMessageBuilder &message, const std::string &proposeId);
             bool SendVote(const std::string& proposeId, bool accept);
@@ -138,7 +139,7 @@ namespace riaps {
              */
             uint16_t GetMemberCount();
 
-            std::string GetLeaderId();
+            std::string GetLeaderId() const;
 
             ~Group();
         private:
