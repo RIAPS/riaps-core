@@ -125,7 +125,7 @@ namespace riaps{
 
 
 
-        void maintainRenewal();
+        void maintainRenewalDepricated();
         void maintainZombieList();
         int deregisterActor(const std::string& appName,
                             const std::string& actorName);

@@ -57,7 +57,9 @@ namespace riaps{
             // Reregister the too old services (OpenDHT ValueType settings, it is 10 minutes by default)
             int64_t loopStartTime = zclock_mono();
             if ((loopStartTime-m_lastServiceCheckin) > m_serviceCheckPeriod){
-                maintainRenewal();
+
+                // Obsolote, riaps-deplo should be asked about the reneewal
+                //maintainRenewal();
             }
 
             // Check outdated zombies
@@ -1049,7 +1051,8 @@ namespace riaps{
         }
     }
 
-    void DiscoveryMessageHandler::maintainRenewal(){
+    // Should be depriacated, riaps-deplo is needed to figure out what runs
+    void DiscoveryMessageHandler::maintainRenewalDepricated(){
 
         std::set<pid_t> purgeServices;
         std::set<pid_t> purgeGroups;

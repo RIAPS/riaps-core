@@ -12,6 +12,7 @@ struct ActorRegReq {
   version @1 : Text;
   actorName @2 : Text;
   pid @3 : Int32;
+  isDevice @4 : Bool;
 }
 
 struct ActorRegRep {
@@ -35,29 +36,29 @@ struct DeviceRegRep {
   status @0 : Status;
 }
 
-struct DeviceUnregReq {
+struct DeviceRelReq {
   appName @0 : Text;
   modelName @1 : Text;
   typeName @2 : Text;
 }
 
-struct DeviceUnregRep {
+struct DeviceRelRep {
   status @0 : Status;
 }
 
 struct DeplReq {
    union {
       actorReg @0 : ActorRegReq;
-      deviceReg @1 : DeviceRegReq;
-      deviceUnreg @2: DeviceUnregReq;
+      deviceGet @1 : DeviceGetReq;
+      deviceRel @2 : DeviceRelReq;
    }
 }
 
 struct DeplRep {
    union {
       actorReg @0 : ActorRegRep;
-      deviceReg @1 : DeviceRegRep;
-      deviceUnreg @2 : DeviceUnregRep;
+      deviceGet @1 : DeviceGetRep;
+      deviceRel @2 : DeviceRelRep;
    }
 }
 
@@ -83,5 +84,16 @@ struct ResMsg {
 		resMemX @1 : ResMemX;
 		resSpcX @2 : ResSpcX;
 		resNetX @3 : ResNetX;
+	}
+}
+
+struct ReinstateMsg {
+	msg @0 : Text;
+}
+
+struct DeplCmd {
+	union {
+		resourceMsg @0 : ResMsg;
+		reinstateCmd @1 : ReinstateMsg;
 	}
 }
