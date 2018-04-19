@@ -184,7 +184,7 @@ namespace riaps {
                 } catch (nlohmann::json::out_of_range& e) {
                     newpubconfig.isTimed = false;
                 } catch (nlohmann::json::type_error& e){
-                    _logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, pubportname);
+                    m_logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, pubportname);
                     newpubconfig.isTimed = false;
                 }
 
@@ -217,7 +217,7 @@ namespace riaps {
                 } catch (nlohmann::json::out_of_range& e) {
                     newsubconfig.isTimed = false;
                 } catch (nlohmann::json::type_error& e){
-                    _logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, subportname);
+                    m_logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, subportname);
                     newsubconfig.isTimed = false;
                 }
 
@@ -255,7 +255,7 @@ namespace riaps {
                 } catch (nlohmann::json::out_of_range& e) {
                     newreqconfig.isTimed = false;
                 } catch (nlohmann::json::type_error& e){
-                    _logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, reqportname);
+                    m_logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, reqportname);
                     newreqconfig.isTimed = false;
                 }
 
@@ -292,7 +292,7 @@ namespace riaps {
                 } catch (nlohmann::json::out_of_range& e) {
                     newrepconfig.isTimed = false;
                 } catch (nlohmann::json::type_error& e){
-                    _logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, repportname);
+                    m_logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, repportname);
                     newrepconfig.isTimed = false;
                 }
 
@@ -330,7 +330,7 @@ namespace riaps {
                 } catch (nlohmann::json::out_of_range& e) {
                     newqryconfig.isTimed = false;
                 } catch (nlohmann::json::type_error& e){
-                    _logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, qryportname);
+                    m_logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, qryportname);
                     newqryconfig.isTimed = false;
                 }
 
@@ -368,7 +368,7 @@ namespace riaps {
                 } catch (nlohmann::json::out_of_range& e) {
                     newansconfig.isTimed = false;
                 } catch (nlohmann::json::type_error& e){
-                    _logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, ansportname);
+                    m_logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, ansportname);
                     newansconfig.isTimed = false;
                 }
 
@@ -896,7 +896,7 @@ namespace riaps {
                 } catch (nlohmann::json::out_of_range& e) {
                     hasL = false;
                 } catch (nlohmann::json::type_error& e){
-                    _logger->warn("Type error: groups:{}:{} is not bool.", groupTypeName, J_GROUP_LEADER);
+                    m_logger->warn("Type error: groups:{}:{} is not bool.", groupTypeName, J_GROUP_LEADER);
                     hasL = false;
                 }
 
@@ -905,7 +905,7 @@ namespace riaps {
                 } catch (nlohmann::json::out_of_range& e) {
                     hasC = false;
                 } catch (nlohmann::json::type_error& e){
-                    _logger->warn("Type error: groups:{}:{} is not bool.", groupTypeName, J_GROUP_CONSENSUS);
+                    m_logger->warn("Type error: groups:{}:{} is not bool.", groupTypeName, J_GROUP_CONSENSUS);
                     hasC = false;
                 }
 
@@ -913,7 +913,7 @@ namespace riaps {
                 try {
                     groupMessages = jGroups[groupTypeName].at(J_GROUP_MESSAGES);
                 } catch (nlohmann::json::out_of_range& e) {
-                    _logger->warn("No {} is groups::{}", J_GROUP_MESSAGES, groupTypeName);
+                    m_logger->warn("No {} is groups::{}", J_GROUP_MESSAGES, groupTypeName);
                 }
 
                 groupt_conf gc = {

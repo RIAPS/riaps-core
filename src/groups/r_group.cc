@@ -56,7 +56,7 @@ namespace riaps{
         bool Group::InitGroup() {
 
             // If the groupid doesn't exist, just skip the initialization and return false
-            auto groupTypeConf = ::riaps::Actor::GetRunningActor()->GetGroupType(m_groupId.groupTypeId);
+            auto groupTypeConf = ::riaps::Actor::GetRunningActor()->getGroupType(m_groupId.groupTypeId);
             if (groupTypeConf == nullptr)
                 return false;
 

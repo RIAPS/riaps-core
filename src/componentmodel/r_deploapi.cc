@@ -17,8 +17,8 @@ namespace riaps{
             });
 
             // recv timeout (just because it is not nice to be stopped by the missing deplo process)
-            //zsock_set_rcvtimeo(m_socket.get(), 1000);
-            //zsock_set_linger(m_socket.get(), 0);
+            zsock_set_rcvtimeo(m_socket.get(), 1000);
+            zsock_set_linger(m_socket.get(), 0);
             zsock_connect(m_socket.get(), "%s", riaps::framework::Configuration::GetDeploEndpoint().c_str());
         }
 

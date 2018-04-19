@@ -549,7 +549,7 @@ namespace riaps{
 
     bool ComponentBase::SendLeaderMessage(const riaps::groups::GroupId &groupId,
                                           capnp::MallocMessageBuilder &message) {
-        auto group = GetGroupById(groupId);
+        auto group = getGroupById(groupId);
         if (group == nullptr) return false;
         if (!IsLeader(group)) return false;
         return group->SendLeaderMessage(message);
@@ -833,7 +833,7 @@ namespace riaps{
     }
 
     bool ComponentBase::IsLeader(const riaps::groups::GroupId &groupId) {
-        auto group = GetGroupById(groupId);
+        auto group = getGroupById(groupId);
         if (group == nullptr) return false;
         return IsLeader(group);
     }
@@ -989,13 +989,6 @@ namespace riaps{
                                         const std::string      &actionId,
                                         const timespec         &timePoint) {
         _logger->info("Leader proposed an action, but no handler is implemented in component {}", GetComponentName());
-    }
-
-    void ComponentBase::HandleCPULimit() {
-        _logger->error("CPU Limit was violated, but HandleCPULimit() is not implemented in component: {}::{}::{}"
-                , GetActor()->GetApplicationName()
-                , GetActor()->GetActorName()
-                , GetComponentName());
     }
 
     const std::string ComponentBase::GetComponentName() const {
