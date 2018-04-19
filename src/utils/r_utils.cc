@@ -23,7 +23,21 @@ void operator>>(zframe_t& frame, capnp::FlatArrayMessageReader*& message){
     message = new capnp::FlatArrayMessageReader(capnp_data);
 }
 
+void operator>>(zframe_t& frame, capnp::FlatArrayMessageReader& message){
+    size_t size      = zframe_size(&frame);
+    byte* data = zframe_data(&frame);
+    kj::ArrayPtr<const capnp::word> capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
+    message=capnp::FlatArrayMessageReader(capnp_data);
+}
+
 void operator>>(zframe_t& frame, std::unique_ptr<capnp::FlatArrayMessageReader>& message){
+    size_t size      = zframe_size(&frame);
+    byte* data = zframe_data(&frame);
+    kj::ArrayPtr<const capnp::word> capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
+    message.reset(new capnp::FlatArrayMessageReader(capnp_data));
+}
+
+void operator>>(zframe_t& frame, std::shared_ptr<capnp::FlatArrayMessageReader>& message){
     size_t size      = zframe_size(&frame);
     byte* data = zframe_data(&frame);
     kj::ArrayPtr<const capnp::word> capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
@@ -32,7 +46,7 @@ void operator>>(zframe_t& frame, std::unique_ptr<capnp::FlatArrayMessageReader>&
 
 namespace spd=spdlog;
 
-void print_cacheips(std::map<std::string, riaps::utils::Timeout>& ipcache) {
+void print_cacheips(std::map<std::string, riaps::utils::Timeout<std::milli>>& ipcache) {
     auto logger = spd::get("rdiscovery");
     if (logger == nullptr)
         return;
@@ -46,7 +60,7 @@ void print_cacheips(std::map<std::string, riaps::utils::Timeout>& ipcache) {
     logger->info(w.c_str());
 }
 
-bool maintain_cache(std::map<std::string, riaps::utils::Timeout>& ipcache){
+bool maintain_cache(std::map<std::string, riaps::utils::Timeout<std::milli>>& ipcache){
     bool is_maintained = false;
 
     // Maintain the list, if somebody didn't respond in the past IPCACHE_TIMEOUT seconds => remove from the list

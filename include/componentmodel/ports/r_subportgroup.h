@@ -11,7 +11,7 @@ namespace riaps{
     namespace ports{
         class GroupSubscriberPort : public SubscriberPortBase {
         public:
-            GroupSubscriberPort(const _component_port_sub &config, const ComponentBase* parentComponent);
+            GroupSubscriberPort(const component_port_sub &config, const ComponentBase* parentComponent);
 
             GroupSubscriberPort* AsGroupSubscriberPort();
 
@@ -20,7 +20,7 @@ namespace riaps{
         private:
             // The group configurations may dynamic (not from the model file)
             // GroupPorts store the original config.
-            const _component_port_sub _groupPortConfig;
+            const component_port_sub _groupPortConfig;
         };
     }
 }

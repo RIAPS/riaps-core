@@ -28,7 +28,7 @@ namespace riaps {
             * @param config
             * @param parent_component
             */
-           PublisherPort(const _component_port_pub& config, const ComponentBase* parentComponent);
+           PublisherPort(const component_port_pub& config, const ComponentBase* parentComponent);
 
            virtual PublisherPort*  AsPublishPort() ;
 

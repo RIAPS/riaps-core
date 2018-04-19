@@ -4,6 +4,8 @@
 
 #define NO_GROUP_TEST
 
+using namespace std;
+
 namespace riaps {
 
     const Actor* riaps::Actor::GetRunningActor() {
@@ -174,11 +176,17 @@ namespace riaps {
                 auto pubportname = it_pubport.key();
                 auto pubporttype = it_pubport.value()[J_TYPE];
 
-
-
-                _component_port_pub newpubconfig;
+                component_port_pub newpubconfig;
                 newpubconfig.portName = pubportname;
                 newpubconfig.messageType = pubporttype;
+                try {
+                    newpubconfig.isTimed = json_pubports[pubportname].at(J_PORT_TIMED).get<bool>();
+                } catch (nlohmann::json::out_of_range& e) {
+                    newpubconfig.isTimed = false;
+                } catch (nlohmann::json::type_error& e){
+                    _logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, pubportname);
+                    newpubconfig.isTimed = false;
+                }
 
                 // If the porttype is defined in the Local list
                 if (m_localMessageTypes.find(pubporttype) != m_localMessageTypes.end() || results.isDevice){
@@ -201,9 +209,17 @@ namespace riaps {
                 auto subportname = it_subport.key();
                 auto subporttype = it_subport.value()[J_TYPE];
 
-                _component_port_sub newsubconfig;
+                component_port_sub newsubconfig;
                 newsubconfig.portName = subportname;
                 newsubconfig.messageType = subporttype;
+                try {
+                    newsubconfig.isTimed = json_subports[subportname].at(J_PORT_TIMED).get<bool>();
+                } catch (nlohmann::json::out_of_range& e) {
+                    newsubconfig.isTimed = false;
+                } catch (nlohmann::json::type_error& e){
+                    _logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, subportname);
+                    newsubconfig.isTimed = false;
+                }
 
                 // If the porttype is defined in the Local list
                 if (m_localMessageTypes.find(subporttype) != m_localMessageTypes.end() || results.isDevice){
@@ -228,12 +244,20 @@ namespace riaps {
                 std::string reptype = it_reqport.value()[J_PORT_REPTYPE];
                 std::string messagetype = reqtype + "#" + reptype;
 
-                _component_port_req newreqconfig;
+                component_port_req newreqconfig;
                 newreqconfig.portName = reqportname;
                 //newreqconfig.messageType = subporttype;
                 newreqconfig.req_type = reqtype;
                 newreqconfig.rep_type = reptype;
                 newreqconfig.messageType = messagetype;
+                try {
+                    newreqconfig.isTimed = json_reqports[reqportname].at(J_PORT_TIMED).get<bool>();
+                } catch (nlohmann::json::out_of_range& e) {
+                    newreqconfig.isTimed = false;
+                } catch (nlohmann::json::type_error& e){
+                    _logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, reqportname);
+                    newreqconfig.isTimed = false;
+                }
 
                 // If the porttype is defined in the Local list
                 if (m_localMessageTypes.find(reqtype) != m_localMessageTypes.end() || results.isDevice){
@@ -258,11 +282,19 @@ namespace riaps {
                 std::string reptype = it_repport.value()[J_PORT_REPTYPE];
                 std::string messagetype = reqtype + "#" + reptype;
 
-                _component_port_rep newrepconfig;
+                component_port_rep newrepconfig;
                 newrepconfig.portName = repportname;
                 newrepconfig.req_type = reqtype;
                 newrepconfig.rep_type = reptype;
                 newrepconfig.messageType = messagetype;
+                try {
+                    newrepconfig.isTimed = json_repports[repportname].at(J_PORT_TIMED).get<bool>();
+                } catch (nlohmann::json::out_of_range& e) {
+                    newrepconfig.isTimed = false;
+                } catch (nlohmann::json::type_error& e){
+                    _logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, repportname);
+                    newrepconfig.isTimed = false;
+                }
 
                 // If the porttype is defined in the Local list
                 if (m_localMessageTypes.find(reqtype) != m_localMessageTypes.end() || results.isDevice){
@@ -287,12 +319,20 @@ namespace riaps {
                 std::string anstype = it_qryport.value()[J_PORT_ANSTYPE];
                 std::string messagetype = qrytype + "#" + anstype;
 
-                _component_port_qry newqryconfig;
+                component_port_qry newqryconfig;
                 newqryconfig.portName = qryportname;
-                //newreqconfig.messageType = subporttype;
                 newqryconfig.qry_type = qrytype;
                 newqryconfig.ans_type = anstype;
                 newqryconfig.messageType = messagetype;
+
+                try {
+                    newqryconfig.isTimed = json_qryports[qryportname].at(J_PORT_TIMED).get<bool>();
+                } catch (nlohmann::json::out_of_range& e) {
+                    newqryconfig.isTimed = false;
+                } catch (nlohmann::json::type_error& e){
+                    _logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, qryportname);
+                    newqryconfig.isTimed = false;
+                }
 
                 // If the porttype is defined in the Local list
                 if (m_localMessageTypes.find(qrytype) != m_localMessageTypes.end() || results.isDevice){
@@ -317,11 +357,20 @@ namespace riaps {
                 std::string anstype = it_ansport.value()[J_PORT_ANSTYPE];
                 std::string messagetype = qrytype + "#" + anstype;
 
-                _component_port_ans newansconfig;
+                component_port_ans newansconfig;
                 newansconfig.portName = ansportname;
                 newansconfig.qry_type = qrytype;
                 newansconfig.ans_type = anstype;
                 newansconfig.messageType = messagetype;
+
+                try {
+                    newansconfig.isTimed = json_ansports[ansportname].at(J_PORT_TIMED).get<bool>();
+                } catch (nlohmann::json::out_of_range& e) {
+                    newansconfig.isTimed = false;
+                } catch (nlohmann::json::type_error& e){
+                    _logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, ansportname);
+                    newansconfig.isTimed = false;
+                }
 
                 // If the porttype is defined in the Local list
                 if (m_localMessageTypes.find(qrytype) != m_localMessageTypes.end() || results.isDevice){
@@ -344,7 +393,7 @@ namespace riaps {
                 auto timname = it_tim.key();
                 auto timperiod = it_tim.value()["period"];
 
-                _component_port_tim newtimconfig;
+                component_port_tim newtimconfig;
                 newtimconfig.portName = timname;
                 newtimconfig.period   = timperiod;
 
@@ -362,7 +411,7 @@ namespace riaps {
                 auto insname = it_ins.key();
                 //auto timperiod = it_tim.value()["period"];
 
-                _component_port_ins newinsconfig;
+                component_port_ins newinsconfig;
                 newinsconfig.portName = insname;
 
                 results.component_ports.inss.push_back(newinsconfig);
@@ -647,24 +696,7 @@ namespace riaps {
     }
 
     const groupt_conf* riaps::Actor::getGroupType(const std::string &groupTypeId) const {
-//        std::vector<std::string> g{groupTypeId};
-//
-//        auto result =
-//        std::find_first_of(m_grouptype_configurations.begin(),
-//                           m_grouptype_configurations.end(),
-//                           g.begin(),
-//                           g.end(),
-//                           [](const groupt_conf& g, const std::string& id){
-//                               if (g.groupTypeId == id) return true;
-//                               return false;
-//                           });
-//
-//        if (result == m_grouptype_configurations.end()) return nullptr;
-//        return &(*result);
-
         for (auto it = m_grouptype_configurations.begin(); it!=m_grouptype_configurations.end(); it++){
-            auto qrvaanyad = *it;
-
             if (it->groupTypeId == groupTypeId)
                 return &(*it);
         }
@@ -847,16 +879,77 @@ namespace riaps {
                  it_grp != jGroups.end();
                  it_grp++) {
 
-                std::string groupType = it_grp.key();
-                bool hasL = it_grp.value()[J_GROUP_LEADER];
-                bool hasC   = it_grp.value()[J_GROUP_CONSENSUS];
+                string groupTypeName = it_grp.key();
+                string upperGroupTypeName = groupTypeName;
+
+                // Note: Uppercase conversion hurts in c++
+                transform(upperGroupTypeName.begin(),
+                          upperGroupTypeName.end(),
+                          upperGroupTypeName.begin(),
+                          [](unsigned char c) -> unsigned char { return std::toupper(c); });
+
+                bool hasL = false; //jGroups[groupTypeName][J_GROUP_LEADER];
+                bool hasC = false; //jGroups[groupTypeName][J_GROUP_CONSENSUS];
+
+                try {
+                    hasL = jGroups[groupTypeName].at(J_GROUP_LEADER).get<bool>();
+                } catch (nlohmann::json::out_of_range& e) {
+                    hasL = false;
+                } catch (nlohmann::json::type_error& e){
+                    _logger->warn("Type error: groups:{}:{} is not bool.", groupTypeName, J_GROUP_LEADER);
+                    hasL = false;
+                }
+
+                try {
+                    hasC = jGroups[groupTypeName].at(J_GROUP_CONSENSUS).get<bool>();
+                } catch (nlohmann::json::out_of_range& e) {
+                    hasC = false;
+                } catch (nlohmann::json::type_error& e){
+                    _logger->warn("Type error: groups:{}:{} is not bool.", groupTypeName, J_GROUP_CONSENSUS);
+                    hasC = false;
+                }
+
+                nlohmann::json groupMessages;
+                try {
+                    groupMessages = jGroups[groupTypeName].at(J_GROUP_MESSAGES);
+                } catch (nlohmann::json::out_of_range& e) {
+                    _logger->warn("No {} is groups::{}", J_GROUP_MESSAGES, groupTypeName);
+                }
 
                 groupt_conf gc = {
-                    groupType,
-                    {},
-                    hasC,
-                    hasL
+                        groupTypeName,
+                        {},
+                        hasL,
+                        hasC
                 };
+
+                // Make sure that the groupMessageType is not listed twice in the json -> convert to hashset
+                set<string> messageTypes;
+                for_each(groupMessages.begin(), groupMessages.end(), [&messageTypes](nlohmann::json& j){
+                    string s  = j.get<string>();
+
+                    transform(s.begin(),
+                              s.end(),
+                              s.begin(),
+                              [](unsigned char c) -> unsigned char { return std::toupper(c); });
+
+                    messageTypes.insert(s);
+
+                });
+
+                for (auto& messageType : messageTypes) {
+
+                    group_port_pub gPub;
+                    gPub.messageType = messageType;
+                    gPub.portName = fmt::format("{}_PORT_{}_OUT", upperGroupTypeName, messageType);
+
+                    group_port_sub gSub;
+                    gPub.messageType = messageType;
+                    gPub.portName = fmt::format("{}_PORT_{}_IN", upperGroupTypeName, messageType);
+
+                    gc.groupTypePorts.pubs.push_back(gPub);
+                    gc.groupTypePorts.subs.push_back(gSub);
+                }
                 m_grouptype_configurations.push_back(gc);
             }
         }

@@ -31,6 +31,7 @@ namespace riaps {
     class GroupSubscriberPort;
     class QueryPort;
     class AnswerPort;
+    class RecvPort;
 
 
     enum PortTypes {Publisher, Subscriber, Request, Response, Timer, Inside, Query, Answer};
@@ -78,6 +79,7 @@ namespace riaps {
         virtual SubscriberPort*      AsSubscribePort()      ;
         virtual PeriodicTimer*       AsTimerPort()          ;
         virtual InsidePort*          AsInsidePort()         ;
+        virtual RecvPort*            AsRecvPort()           ;
 
 
         virtual ~PortBase() noexcept ;

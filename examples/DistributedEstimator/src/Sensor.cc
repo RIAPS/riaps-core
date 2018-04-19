@@ -26,9 +26,19 @@ namespace distributedestimator {
 
         void comp_sensor::OnRequest(const messages::SensorQuery::Reader &message,
                                     riaps::ports::PortBase *port) {
-            //PrintMessageOnPort(port);
 
-            _logger->info("Sensor::OnRequest(): {}", message.getMsg().cStr());
+            //PrintMessageOnPort(port);
+            if (port->GetPortBaseConfig()->isTimed){
+                auto responsePort = port->AsResponsePort();
+                _logger->info_if(responsePort!=nullptr,
+                                 "Sensor::OnRequest(): {}, sentTimestamp: {}.{}, recvTimestamp: {}.{}",
+                                 message.getMsg().cStr(),
+                                 responsePort->GetLastSendTimestamp().tv_sec ,
+                                 responsePort->GetLastSendTimestamp().tv_nsec,
+                                 responsePort->GetLastRecvTimestamp().tv_sec ,
+                                 responsePort->GetLastRecvTimestamp().tv_nsec);
+            } else
+                _logger->info("Sensor::OnRequest(): {}", message.getMsg().cStr());
 
             capnp::MallocMessageBuilder messageBuilder;
             messages::SensorValue::Builder msgSensorValue = messageBuilder.initRoot<messages::SensorValue>();

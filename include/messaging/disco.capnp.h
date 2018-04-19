@@ -357,7 +357,7 @@ struct GroupJoinReq {
   class Pipeline;
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(8cf2e8426e6996b1, 0, 4)
+    CAPNP_DECLARE_STRUCT_HEADER(8cf2e8426e6996b1, 1, 4)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
     #endif  // !CAPNP_LITE
@@ -2154,6 +2154,8 @@ public:
   inline bool hasComponentId() const;
   inline  ::capnp::Text::Reader getComponentId() const;
 
+  inline  ::int32_t getPid() const;
+
 private:
   ::capnp::_::StructReader _reader;
   template <typename, ::capnp::Kind>
@@ -2209,6 +2211,9 @@ public:
   inline  ::capnp::Text::Builder initComponentId(unsigned int size);
   inline void adoptComponentId(::capnp::Orphan< ::capnp::Text>&& value);
   inline ::capnp::Orphan< ::capnp::Text> disownComponentId();
+
+  inline  ::int32_t getPid();
+  inline void setPid( ::int32_t value);
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -4533,6 +4538,20 @@ inline void GroupJoinReq::Builder::adoptComponentId(
 inline ::capnp::Orphan< ::capnp::Text> GroupJoinReq::Builder::disownComponentId() {
   return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
       _builder.getPointerField(3 * ::capnp::POINTERS));
+}
+
+inline  ::int32_t GroupJoinReq::Reader::getPid() const {
+  return _reader.getDataField< ::int32_t>(
+      0 * ::capnp::ELEMENTS);
+}
+
+inline  ::int32_t GroupJoinReq::Builder::getPid() {
+  return _builder.getDataField< ::int32_t>(
+      0 * ::capnp::ELEMENTS);
+}
+inline void GroupJoinReq::Builder::setPid( ::int32_t value) {
+  _builder.setDataField< ::int32_t>(
+      0 * ::capnp::ELEMENTS, value);
 }
 
 inline  ::riaps::discovery::Status GroupJoinRep::Reader::getStatus() const {

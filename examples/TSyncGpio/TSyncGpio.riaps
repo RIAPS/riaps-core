@@ -1,0 +1,39 @@
+struct DummyT {
+	msg: String;
+}
+
+message Dummy:DummyT;
+
+app TSyncGpio {
+	
+	
+	group groupA{
+		uses leader, consensus;
+	}
+
+    component TscaGpio {
+      timer clock 5000; // Vote in every 5th sec.
+      uses {
+      	library libsoc.so
+      } 
+    }
+    
+    actor ActOne {
+        {
+            c1:TscaGpio();
+        }
+    }
+
+    actor ActTwo {
+            {
+                c2:TscaGpio();
+            }
+        }
+
+    actor ActThree {
+            {
+                c3:TscaGpio();
+            }
+        }
+
+}

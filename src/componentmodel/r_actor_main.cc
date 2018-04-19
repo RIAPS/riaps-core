@@ -9,14 +9,14 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
     //Note: Uncomment for RT-FIFO
-//    sched_param x;
-//    x.__sched_priority = 85;
-//    auto ret = sched_setscheduler(0, SCHED_FIFO, &x);
-//
-//    assert(ret==0);
+    sched_param x;
+    x.__sched_priority = 85;
+    auto ret = sched_setscheduler(0, SCHED_FIFO, &x);
+
+    //assert(ret==0);
 
     if (CommandLineParser::CommandOptionExists(argv, argv+argc, "-h") || argc < 4){
-        std::cout << "Usage: start_actor <model> <actor> [-h]" << std::endl;
+        std::cout << "Usage: start_actor <app> <model> <actor> [-h]" << std::endl;
         std::cout << std::endl;
         std::cout << std::setw(15) << "app" << std::endl << "\t\tApplication name" << std::endl;
         std::cout << std::setw(15) << "model" << std::endl << "\t\tModel file argument (.json)" << std::endl;
@@ -25,6 +25,17 @@ int main(int argc, char* argv[]) {
     }
     else {
 
+        sched_param p;
+        sched_getparam(getpid(), &p);
+        auto scheduler = sched_getscheduler(getpid());
+
+        std::map<int, std::string> schedulers = {
+                {SCHED_FIFO, "FIFO"},
+                {SCHED_BATCH, "BATCH"},
+                {SCHED_IDLE, "IDLE"},
+                {SCHED_OTHER, "OTHER"},
+                {SCHED_RR, "RR"}
+        };
 
         // get the rest of the params
         std::map<std::string, std::string> actualParams;
@@ -40,6 +51,8 @@ int main(int argc, char* argv[]) {
         }
 
         std::shared_ptr<spd::logger> _logger = spd::stdout_color_st(actorName);
+        _logger->info("Scheduler: {}, priority: {}", schedulers[scheduler], p.__sched_priority);
+
         
         try {
 

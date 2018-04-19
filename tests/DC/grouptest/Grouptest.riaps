@@ -1,0 +1,24 @@
+struct MessageType {
+	msg: String;
+}
+
+message GroupMessage:MessageType;
+
+app Grouptest{
+	group groupA{	
+		uses consensus
+	}
+	group groupB{	
+		uses consensus
+	}
+	
+	component GroupComp {
+		timer clock 3000
+	}
+	
+	actor ActOne {
+        {
+            c:GroupComp();
+        }
+    }
+}

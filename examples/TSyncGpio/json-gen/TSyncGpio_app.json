@@ -1,0 +1,97 @@
+{
+  "name": "TSyncGpio",
+  "groups": {
+    "groupA": {
+      "leader": true,
+      "consensus": true,
+      "groupMessages": [],
+      "consensusMessages": []
+    }
+  },
+  "devices": {},
+  "components": {
+    "TscaGpio": {
+      "name": "TscaGpio",
+      "formals": [],
+      "libraries": [
+        {
+          "name": "libsoc.so"
+        }
+      ],
+      "files": [],
+      "devices": [],
+      "exceptHandler": "",
+      "ports": {
+        "reqs": {},
+        "anss": {},
+        "pubs": {},
+        "reps": {},
+        "inss": {},
+        "subs": {},
+        "clts": {},
+        "srvs": {},
+        "tims": {
+          "clock": {
+            "period": 5000
+          }
+        },
+        "qrys": {}
+      }
+    }
+  },
+  "actors": {
+    "ActOne": {
+      "internals": [],
+      "locals": [],
+      "criticals": [],
+      "formals": [],
+      "wires": [],
+      "instances": {
+        "c1": {
+          "type": "TscaGpio",
+          "actuals": []
+        }
+      },
+      "devices": [],
+      "memory": -1,
+      "space": -1,
+      "exceptHandler": ""
+    },
+    "ActThree": {
+      "internals": [],
+      "locals": [],
+      "criticals": [],
+      "formals": [],
+      "wires": [],
+      "instances": {
+        "c3": {
+          "type": "TscaGpio",
+          "actuals": []
+        }
+      },
+      "devices": [],
+      "memory": -1,
+      "space": -1,
+      "exceptHandler": ""
+    },
+    "ActTwo": {
+      "internals": [],
+      "locals": [],
+      "criticals": [],
+      "formals": [],
+      "wires": [],
+      "instances": {
+        "c2": {
+          "type": "TscaGpio",
+          "actuals": []
+        }
+      },
+      "devices": [],
+      "memory": -1,
+      "space": -1,
+      "exceptHandler": ""
+    }
+  },
+  "messages": [],
+  "libraries": []
+}

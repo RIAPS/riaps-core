@@ -167,7 +167,6 @@ namespace riaps{
         // Stores pair sockets for actor communication
         std::map<std::string, std::shared_ptr<ActorDetails>> m_clients;
 
-        // TODO: zombieServices is not thread safe, todo implement a threadsafe wrapper
         // Stores addresses of zombie services
         // A service is zombie, if the related socket is not able to respond, but it is still in the DHT
         // The int64 argument is a timestamp. Old zombies are removed from the set after 10 minutes.
@@ -187,6 +186,14 @@ namespace riaps{
         // Checking the registered services in every 20th seconds.
         std::map<pid_t, std::vector<std::unique_ptr<ServiceCheckins>>> m_serviceCheckins;
 
+        struct RegisteredGroup {
+            std::string groupKey;
+            riaps::groups::GroupDetails services;
+            pid_t actorPid;
+            Timeout<std::ratio<60>> timeout; // std::ratio<60> -> minutes
+        };
+
+        std::unordered_map<pid_t, std::vector<std::shared_ptr<RegisteredGroup>>> m_groupServices;
     };
 }
 

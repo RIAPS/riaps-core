@@ -30,12 +30,14 @@ namespace distributedestimator {
             auto port = GetRequestPortByName(PORT_REQ_QUERY);
             if (port == NULL) return false;
 
+            // TODO: with share_ptr it would be better, DSML update is also required
             capnp::FlatArrayMessageReader* messageReader;
 
             if (port->Recv(&messageReader)){
                 message = messageReader->getRoot<messages::SensorValue>();
                 return true;
             }
+
             return false;
         }
 

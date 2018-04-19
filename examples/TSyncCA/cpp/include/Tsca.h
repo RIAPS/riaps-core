@@ -36,6 +36,7 @@ namespace tsyncca {
           std::unordered_map<std::string, timespec> m_accepted;
           std::unordered_map<uint64_t, timespec>    m_scheduled;
           std::set<std::string>                     m_pendingActions;
+          std::shared_ptr<spd::logger>              m_tscalog;
 
           uint64_t m_logcounter;
          

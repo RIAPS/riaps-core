@@ -45,6 +45,7 @@ enum class VoteType_939119b600a26e0b: uint16_t {
   ACTION,
 };
 CAPNP_DECLARE_ENUM(VoteType, 939119b600a26e0b);
+CAPNP_DECLARE_SCHEMA(da85eb41ae25b2c9);
 CAPNP_DECLARE_SCHEMA(8a25ecc657bf2ed3);
 
 }  // namespace schemas
@@ -269,6 +270,21 @@ struct Consensus::TimeSyncCoordA::TimeSpec {
   };
 };
 
+struct GroupMessage {
+  GroupMessage() = delete;
+
+  class Reader;
+  class Builder;
+  class Pipeline;
+
+  struct _capnpPrivate {
+    CAPNP_DECLARE_STRUCT_HEADER(da85eb41ae25b2c9, 0, 1)
+    #if !CAPNP_LITE
+    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    #endif  // !CAPNP_LITE
+  };
+};
+
 struct GroupInternals {
   GroupInternals() = delete;
 
@@ -280,6 +296,7 @@ struct GroupInternals {
     LEADER_ELECTION,
     MESSAGE_TO_LEADER,
     CONSENSUS,
+    GROUP_MESSAGE,
   };
 
   struct _capnpPrivate {
@@ -1495,6 +1512,87 @@ private:
 };
 #endif  // !CAPNP_LITE
 
+class GroupMessage::Reader {
+public:
+  typedef GroupMessage Reads;
+
+  Reader() = default;
+  inline explicit Reader(::capnp::_::StructReader base): _reader(base) {}
+
+  inline ::capnp::MessageSize totalSize() const {
+    return _reader.totalSize().asPublic();
+  }
+
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const {
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+  }
+#endif  // !CAPNP_LITE
+
+  inline bool hasSourceComponentId() const;
+  inline  ::capnp::Text::Reader getSourceComponentId() const;
+
+private:
+  ::capnp::_::StructReader _reader;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::List;
+  friend class ::capnp::MessageBuilder;
+  friend class ::capnp::Orphanage;
+};
+
+class GroupMessage::Builder {
+public:
+  typedef GroupMessage Builds;
+
+  Builder() = delete;  // Deleted to discourage incorrect usage.
+                       // You can explicitly initialize to nullptr instead.
+  inline Builder(decltype(nullptr)) {}
+  inline explicit Builder(::capnp::_::StructBuilder base): _builder(base) {}
+  inline operator Reader() const { return Reader(_builder.asReader()); }
+  inline Reader asReader() const { return *this; }
+
+  inline ::capnp::MessageSize totalSize() const { return asReader().totalSize(); }
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const { return asReader().toString(); }
+#endif  // !CAPNP_LITE
+
+  inline bool hasSourceComponentId();
+  inline  ::capnp::Text::Builder getSourceComponentId();
+  inline void setSourceComponentId( ::capnp::Text::Reader value);
+  inline  ::capnp::Text::Builder initSourceComponentId(unsigned int size);
+  inline void adoptSourceComponentId(::capnp::Orphan< ::capnp::Text>&& value);
+  inline ::capnp::Orphan< ::capnp::Text> disownSourceComponentId();
+
+private:
+  ::capnp::_::StructBuilder _builder;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  friend class ::capnp::Orphanage;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+};
+
+#if !CAPNP_LITE
+class GroupMessage::Pipeline {
+public:
+  typedef GroupMessage Pipelines;
+
+  inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
+  inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
+      : _typeless(kj::mv(typeless)) {}
+
+private:
+  ::capnp::AnyPointer::Pipeline _typeless;
+  friend class ::capnp::PipelineHook;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+};
+#endif  // !CAPNP_LITE
+
 class GroupInternals::Reader {
 public:
   typedef GroupInternals Reads;
@@ -1528,6 +1626,10 @@ public:
   inline bool isConsensus() const;
   inline bool hasConsensus() const;
   inline  ::riaps::distrcoord::Consensus::Reader getConsensus() const;
+
+  inline bool isGroupMessage() const;
+  inline bool hasGroupMessage() const;
+  inline  ::riaps::distrcoord::GroupMessage::Reader getGroupMessage() const;
 
 private:
   ::capnp::_::StructReader _reader;
@@ -1589,6 +1691,14 @@ public:
   inline  ::riaps::distrcoord::Consensus::Builder initConsensus();
   inline void adoptConsensus(::capnp::Orphan< ::riaps::distrcoord::Consensus>&& value);
   inline ::capnp::Orphan< ::riaps::distrcoord::Consensus> disownConsensus();
+
+  inline bool isGroupMessage();
+  inline bool hasGroupMessage();
+  inline  ::riaps::distrcoord::GroupMessage::Builder getGroupMessage();
+  inline void setGroupMessage( ::riaps::distrcoord::GroupMessage::Reader value);
+  inline  ::riaps::distrcoord::GroupMessage::Builder initGroupMessage();
+  inline void adoptGroupMessage(::capnp::Orphan< ::riaps::distrcoord::GroupMessage>&& value);
+  inline ::capnp::Orphan< ::riaps::distrcoord::GroupMessage> disownGroupMessage();
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -2560,6 +2670,38 @@ inline void Consensus::TimeSyncCoordA::TimeSpec::Builder::setTvNsec( ::int32_t v
       1 * ::capnp::ELEMENTS, value);
 }
 
+inline bool GroupMessage::Reader::hasSourceComponentId() const {
+  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline bool GroupMessage::Builder::hasSourceComponentId() {
+  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::Text::Reader GroupMessage::Reader::getSourceComponentId() const {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _reader.getPointerField(0 * ::capnp::POINTERS));
+}
+inline  ::capnp::Text::Builder GroupMessage::Builder::getSourceComponentId() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void GroupMessage::Builder::setSourceComponentId( ::capnp::Text::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
+      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+}
+inline  ::capnp::Text::Builder GroupMessage::Builder::initSourceComponentId(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
+      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+}
+inline void GroupMessage::Builder::adoptSourceComponentId(
+    ::capnp::Orphan< ::capnp::Text>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
+      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::Text> GroupMessage::Builder::disownSourceComponentId() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+
 inline  ::riaps::distrcoord::GroupInternals::Which GroupInternals::Reader::which() const {
   return _reader.getDataField<Which>(0 * ::capnp::ELEMENTS);
 }
@@ -2772,6 +2914,58 @@ inline ::capnp::Orphan< ::riaps::distrcoord::Consensus> GroupInternals::Builder:
   KJ_IREQUIRE(which() == GroupInternals::CONSENSUS,
               "Must check which() before get()ing a union member.");
   return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus>::disown(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+
+inline bool GroupInternals::Reader::isGroupMessage() const {
+  return which() == GroupInternals::GROUP_MESSAGE;
+}
+inline bool GroupInternals::Builder::isGroupMessage() {
+  return which() == GroupInternals::GROUP_MESSAGE;
+}
+inline bool GroupInternals::Reader::hasGroupMessage() const {
+  if (which() != GroupInternals::GROUP_MESSAGE) return false;
+  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline bool GroupInternals::Builder::hasGroupMessage() {
+  if (which() != GroupInternals::GROUP_MESSAGE) return false;
+  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+}
+inline  ::riaps::distrcoord::GroupMessage::Reader GroupInternals::Reader::getGroupMessage() const {
+  KJ_IREQUIRE(which() == GroupInternals::GROUP_MESSAGE,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupMessage>::get(
+      _reader.getPointerField(0 * ::capnp::POINTERS));
+}
+inline  ::riaps::distrcoord::GroupMessage::Builder GroupInternals::Builder::getGroupMessage() {
+  KJ_IREQUIRE(which() == GroupInternals::GROUP_MESSAGE,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupMessage>::get(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void GroupInternals::Builder::setGroupMessage( ::riaps::distrcoord::GroupMessage::Reader value) {
+  _builder.setDataField<GroupInternals::Which>(
+      0 * ::capnp::ELEMENTS, GroupInternals::GROUP_MESSAGE);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupMessage>::set(
+      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+}
+inline  ::riaps::distrcoord::GroupMessage::Builder GroupInternals::Builder::initGroupMessage() {
+  _builder.setDataField<GroupInternals::Which>(
+      0 * ::capnp::ELEMENTS, GroupInternals::GROUP_MESSAGE);
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupMessage>::init(
+      _builder.getPointerField(0 * ::capnp::POINTERS));
+}
+inline void GroupInternals::Builder::adoptGroupMessage(
+    ::capnp::Orphan< ::riaps::distrcoord::GroupMessage>&& value) {
+  _builder.setDataField<GroupInternals::Which>(
+      0 * ::capnp::ELEMENTS, GroupInternals::GROUP_MESSAGE);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupMessage>::adopt(
+      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::riaps::distrcoord::GroupMessage> GroupInternals::Builder::disownGroupMessage() {
+  KJ_IREQUIRE(which() == GroupInternals::GROUP_MESSAGE,
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupMessage>::disown(
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 

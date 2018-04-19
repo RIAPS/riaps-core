@@ -77,7 +77,7 @@ namespace riaps {
         }
 
 
-        PeriodicTimer::PeriodicTimer(std::string &timerresponsechannel, const _component_port_tim &config, const ComponentBase* parentComponent)
+        PeriodicTimer::PeriodicTimer(std::string &timerresponsechannel, const component_port_tim &config, const ComponentBase* parentComponent)
                 : PortBase(PortTypes::Timer,
                   (component_port_config * ) & config,
                   parentComponent),

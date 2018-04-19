@@ -56,12 +56,19 @@ if (BUILD_TESTS)
     #add_subdirectory(examples/ActiveReplica)
     #add_subdirectory(examples/AdaptiveTimer)
     #add_subdirectory(examples/TSyncCA)
+    #add_subdirectory(examples/TSyncGpio)
     #add_subdirectory(tests/StaticTimer)
     #add_subdirectory(tests/test_timer)
-    add_subdirectory(tests/GpioDeviceTesting)
+    #add_subdirectory(tests/GpioDeviceTesting)
     #add_subdirectory(tests/testPubSub/test_1_1/test_1_1)
     #add_subdirectory(tests/ScheduledTimer)
     #add_subdirectory(examples/Limits)
+    #add_subdirectory(tests/DC/groupmsgtest)
+    #add_subdirectory(tests/DC/groupleavetest)
+    #add_subdirectory(tests/DC/leaderwithone)
+    #add_subdirectory(tests/DC/leadermessage)
+    #add_subdirectory(tests/DC/leaderwiththree)
+    # add_subdirectory(tests/TimedTest)
     # add_subdirectory(examples/EchoIO)
 endif()
 
@@ -77,12 +84,14 @@ list (APPEND riapslib_SOURCE
         src/componentmodel/ports/r_publisherport.cc
         src/componentmodel/ports/r_pubportbase.cc
         src/componentmodel/ports/r_pubportgroup.cc
+        src/componentmodel/ports/r_recvport.cc
         src/componentmodel/ports/r_requestport.cc
         src/componentmodel/ports/r_responseport.cc
         src/componentmodel/ports/r_senderport.cc
         src/componentmodel/ports/r_subportbase.cc
         src/componentmodel/ports/r_subportgroup.cc
         src/componentmodel/ports/r_subscriberport.cc
+        src/componentmodel/ports/r_timedport.cc
         src/componentmodel/r_actor.cc
         src/componentmodel/r_argumentparser.cc
         src/componentmodel/r_payload.cc
@@ -103,7 +112,6 @@ list (APPEND riapslib_SOURCE
         src/groups/r_grouplead.cc
         src/utils/r_message.cc
         src/utils/r_utils.cc
-        src/utils/r_timeout.cc
         )
 
 # libriaps headers
@@ -115,12 +123,14 @@ list (APPEND riapslib_HEADERS
         include/componentmodel/ports/r_publisherport.h
         include/componentmodel/ports/r_pubportbase.h
         include/componentmodel/ports/r_pubportgroup.h
+        include/componentmodel/ports/r_recvport.h
         include/componentmodel/ports/r_requestport.h
         include/componentmodel/ports/r_responseport.h
         include/componentmodel/ports/r_senderport.h
         include/componentmodel/ports/r_subportbase.h
         include/componentmodel/ports/r_subportgroup.h
         include/componentmodel/ports/r_subscriberport.h
+        include/componentmodel/ports/r_timedport.h
         include/componentmodel/r_actor.h
         include/componentmodel/r_payload.h
         include/componentmodel/r_commandlineparser.h
@@ -183,7 +193,6 @@ list(APPEND RDISCOVERYD_SOURCE
         src/discoveryd/r_riaps_actor.cc
         src/discoveryd/r_msghandler.cc
         include/messaging/disco.capnp.c++
-        src/utils/r_timeout.cc
         )
 
 # rdiscoveryd headers

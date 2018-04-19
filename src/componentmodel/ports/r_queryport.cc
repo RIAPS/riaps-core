@@ -8,7 +8,7 @@
 namespace riaps {
     namespace ports {
 
-        QueryPort::QueryPort(const _component_port_qry &config, const ComponentBase *component)
+        QueryPort::QueryPort(const component_port_qry &config, const ComponentBase *component)
                 : PortBase(PortTypes::Query,
                            (component_port_config*)(&config),
                            component),
@@ -34,7 +34,7 @@ namespace riaps {
 
         void QueryPort::Init() {
 
-            const _component_port_qry* current_config = GetConfig();
+            const component_port_qry* current_config = GetConfig();
 
             auto results =
                     subscribeToService(GetParentComponent()->GetActor()->getApplicationName(),
@@ -65,8 +65,8 @@ namespace riaps {
             return true;
         }
 
-        const _component_port_qry* QueryPort::GetConfig() const{
-            return (_component_port_qry*)GetPortBaseConfig();
+        const component_port_qry* QueryPort::GetConfig() const{
+            return (component_port_qry*)GetPortBaseConfig();
         }
 
         QueryPort* QueryPort::AsQueryPort() {
