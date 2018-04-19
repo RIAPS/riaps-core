@@ -59,7 +59,7 @@ namespace riaps{
             if ((loopStartTime-m_lastServiceCheckin) > m_serviceCheckPeriod){
 
                 // Obsolote, riaps-deplo should be asked about the reneewal
-                //maintainRenewal();
+                maintainRenewal();
             }
 
             // Check outdated zombies
@@ -1048,6 +1048,25 @@ namespace riaps{
         // TODO: No active actor for this app, purge this listener
         if (!actorFound) {
 
+        }
+    }
+
+    void DiscoveryMessageHandler::maintainRenewal() {
+        int64_t now = zclock_mono();
+        for (auto pidIt= m_serviceCheckins.begin(); pidIt!=m_serviceCheckins.end(); pidIt++){
+            for(auto serviceIt = pidIt->second.begin(); serviceIt!=pidIt->second.end(); serviceIt++){
+
+                // Renew
+                if (now - (*serviceIt)->createdTime > (*serviceIt)->timeout){
+                    (*serviceIt)->createdTime = now;
+
+                    // Reput key-value
+                    std::vector<uint8_t> opendht_data((*serviceIt)->value.begin(), (*serviceIt)->value.end());
+                    auto keyhash = dht::InfoHash::get((*serviceIt)->key);
+
+                    m_dhtNode.put(keyhash, dht::Value(opendht_data));
+                }
+            }
         }
     }
 
