@@ -905,8 +905,12 @@ namespace riaps{
             if (clients.find(clientKeyBase) != clients.end()) {
                 zmsg_send(&msg, clients.at(clientKeyBase)->socket);
                 //std::cout << "Get results were sent to the client: " << clientKeyBase << std::endl;
-                m_logger->info("Get results were sent to the client: {}", clientKeyBase);
-                m_logger->debug(" - Get() returns {}@{}:{}", msgProviderGet.getClient().getPortName().cStr(), host, portNum);
+                //m_logger->info("Get() results were sent to the client: {}", clientKeyBase);
+                m_logger->info("Get() returns {}@{}:{} to {}",
+                               msgProviderGet.getClient().getPortName().cStr(),
+                               host,
+                               portNum,
+                               clientKeyBase);
 
             } else {
                 zmsg_destroy(&msg);
@@ -1003,8 +1007,8 @@ namespace riaps{
                             zmsg_send(&msg, clientSocket->socket);
 
                             //std::cout << "Port update sent to the client: " << clientKeyBase << std::endl;
-                            m_logger->info("Port update sent to the client: {}", clientKeyBase);
-                            m_logger->debug(" - Update() returns {}@{}:{}", subscribedClient->portname, host, portNum);
+                            //m_logger->info("Port update sent to the client: {}", clientKeyBase);
+                            m_logger->info("Update() returns {}@{}:{} to {}", subscribedClient->portname, host, portNum, clientKeyBase);
                         }
                     }
                 }
