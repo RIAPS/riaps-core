@@ -416,7 +416,7 @@ namespace riaps{
         dht::InfoHash lookupkeyhash = dht::InfoHash::get(lookupkey.first);
 
         //std::cout << "Get: " + lookupkey.first << std::endl;
-        m_logger->info("Get: {}", lookupkey.first);
+        m_logger->info("Lookup: {}", lookupkey.first);
 
         //auto zombieServicesCopy = _zombieServices;
         m_dhtNode.get(lookupkey.first,
