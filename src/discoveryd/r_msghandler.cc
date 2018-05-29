@@ -332,7 +332,7 @@ namespace riaps{
                                                msgSock.getPort());
 
         //std::cout << "Register service: " + std::get<0>(kv_pair) << std::endl;
-        m_logger->info("Register service: {}", std::get<0>(kv_pair));
+        m_logger->info("Register service: {}@{}:{}", std::get<0>(kv_pair), msgSock.getHost().cStr(), msgSock.getPort());
 
         // New pid
         if (m_serviceCheckins.find(servicePid) == m_serviceCheckins.end()) {
@@ -906,6 +906,8 @@ namespace riaps{
                 zmsg_send(&msg, clients.at(clientKeyBase)->socket);
                 //std::cout << "Get results were sent to the client: " << clientKeyBase << std::endl;
                 m_logger->info("Get results were sent to the client: {}", clientKeyBase);
+                m_logger->debug(" - Get() returns {}@{}:{}", msgProviderGet.getClient().getPortName().cStr(), host, portNum);
+
             } else {
                 zmsg_destroy(&msg);
                 m_logger->warn("Get returned with values, but client has gone.");
@@ -1002,6 +1004,7 @@ namespace riaps{
 
                             //std::cout << "Port update sent to the client: " << clientKeyBase << std::endl;
                             m_logger->info("Port update sent to the client: {}", clientKeyBase);
+                            m_logger->debug(" - Update() returns {}@{}:{}", subscribedClient->portname, host, portNum);
                         }
                     }
                 }
