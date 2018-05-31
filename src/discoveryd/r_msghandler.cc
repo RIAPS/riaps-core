@@ -351,7 +351,7 @@ namespace riaps{
         std::vector<uint8_t> opendht_data(std::get<1>(kv_pair).begin(), std::get<1>(kv_pair).end());
         auto keyhash = dht::InfoHash::get(std::get<0>(kv_pair));
 
-        dhtPut(keyhash, opendht_data);
+
 
         //m_dhtNode.put(keyhash, dht::Value(opendht_data));
 
@@ -371,11 +371,13 @@ namespace riaps{
         zmsg_addmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
 
         zmsg_send(&msg, m_riapsSocket);
+
+        dhtPut(keyhash, opendht_data);
     }
 
     void DiscoveryMessageHandler::dhtPut(dht::InfoHash& keyhash, std::vector<uint8_t>& data) {
         std::thread t([this, keyhash, data](){
-            for (int i=0; i<2; i++) {
+            for (int i=0; i<1; i++) {
                 // TODO: check if the DHT is still running
                 m_dhtNode.put(keyhash, dht::Value(data));
                 zclock_sleep(1000);
@@ -536,7 +538,7 @@ namespace riaps{
             );
         }
 
-        zclock_sleep(200);
+        zclock_sleep(500);
 
         auto logger = m_logger;
         m_dhtNode.get(lookupkey.first,
@@ -613,15 +615,15 @@ namespace riaps{
                           }
 
                           return true;
-                      }//, [=](bool success){
+                      }, [logger, lookupkey](bool success){
                 // Done Callback
                 // TODO: remove
                 //sleep(1);
-                //std::cout << "Get callback done! " <<std::endl;
+                logger->info("OpenDHT.Get({}) finished with '{}'  callback done!", lookupkey.first,  success );
                 //done_cb(success);
 
 
-                //}
+                }
         );
     }
 
@@ -799,7 +801,7 @@ namespace riaps{
                     char *newhost = zmsg_popstr(msg);
                     if (newhost) {
                         //std::cout << "Join to: " << newhost << std::endl;
-                        m_logger->info("Join to: {}", newhost);
+                        m_logger->info("Join: {}", newhost);
                         std::string str_newhost(newhost);
                         //dhtJoinToCluster(str_newhost, RIAPS_DHT_NODE_PORT, dhtNode);
                         m_dhtNode.bootstrap(str_newhost, std::to_string(RIAPS_DHT_NODE_PORT));

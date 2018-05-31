@@ -26,8 +26,7 @@
 #include <vector>
 
 // Frequency of sending UDP packets (msec)
-//#define BEACON_FREQ 5000
-#define BEACON_FREQ 1000
+#define BEACON_FREQ 5000
 
 // Timeout of port polling for UDP packages
 #define UDP_READ_TIMEOUT 500
@@ -128,32 +127,30 @@ int main(int argc, char* argv[])
     zpoller_t* poller = zpoller_new(control, NULL);
 
     // Generate the time of the next announcement.
-    //int nextDiff = dis(gen)*1000;
-    //int64_t nextAnnouncement = zclock_mono() + nextDiff;
-
-    zsock_send (speaker, "sbi", "PUBLISH", announcement, 2, BEACON_FREQ);
+    int nextDiff = dis(gen)*1000;
+    int64_t nextAnnouncement = zclock_mono() + nextDiff;
 
     while (!zsys_interrupted) {
         // Wait for at most UDP_READ_TIMEOUT millisecond for UDP package
         zsock_set_rcvtimeo (listener, UDP_READ_TIMEOUT);
 
         // If no announcement, start sending beacons
-//        if (zclock_mono()>nextAnnouncement){
-//
-//            //LOG(INFO) << "Send UDP beacon";
-//
-//            zsock_send (speaker, "sbi", "PUBLISH", announcement, 2, BEACON_FREQ);
-//
-//            // wait for sending out the packet
-//            zclock_sleep(100);
-//
-//            // Stop sending beacons
-//            zsock_send(speaker, "s", "SILENCE");
-//
-//            // Calculate the next announcment
-//            int nextDiff = dis(gen)*1000;
-//            nextAnnouncement = zclock_mono() + nextDiff;
-//        }
+        if (zclock_mono()>nextAnnouncement){
+
+            //LOG(INFO) << "Send UDP beacon";
+
+            zsock_send (speaker, "sbi", "PUBLISH", announcement, 2, BEACON_FREQ);
+
+            // wait for sending out the packet
+            zclock_sleep(100);
+
+            // Stop sending beacons
+            zsock_send(speaker, "s", "SILENCE");
+
+            // Calculate the next announcment
+            int nextDiff = dis(gen)*1000;
+            nextAnnouncement = zclock_mono() + nextDiff;
+        }
 
         void *which = zpoller_wait(poller, 1);
 
@@ -194,25 +191,25 @@ int main(int argc, char* argv[])
 
         }
 
-//        if (!has_joined && ipcache.size()>1){
-//            zmsg_t* join_msg = zmsg_new();
-//            zmsg_addstr(join_msg, CMD_JOIN);
-//
-//            // Compose the JOIN command with the available ipaddresses
-//            for (auto it=ipcache.begin(); it!=ipcache.end(); it++){
-//                zmsg_addstr(join_msg, it->first.c_str());
-//            }
-//
-//            zmsg_send(&join_msg, r_actor);
-//
-//            has_joined=true;
-//        }
-//
-//        // If the node joined previously, but the clients left the cluster,
-//        // then try to join again
-//        else if (has_joined && ipcache.size()==1) {
-//            has_joined = false;
-//        }
+        if (!has_joined && ipcache.size()>1){
+            zmsg_t* join_msg = zmsg_new();
+            zmsg_addstr(join_msg, CMD_JOIN);
+
+            // Compose the JOIN command with the available ipaddresses
+            for (auto it=ipcache.begin(); it!=ipcache.end(); it++){
+                zmsg_addstr(join_msg, it->first.c_str());
+            }
+
+            zmsg_send(&join_msg, r_actor);
+
+            has_joined=true;
+        }
+
+        // If the node joined previously, but the clients left the cluster,
+        // then try to join again
+        else if (has_joined && ipcache.size()==1) {
+            has_joined = false;
+        }
 
         // Source of the incoming UDP package
         char *ipaddress = zstr_recv (listener);
@@ -223,10 +220,10 @@ int main(int argc, char* argv[])
             //LOG(INFO) << "Beacon arrived";
 
             // Recalculate (delay) the next announcement
-            //int nextDiff = dis(gen)*1000;
+            int nextDiff = dis(gen)*1000;
 
             // Calculate the next announcment
-            //nextAnnouncement = zclock_mono() + nextDiff;
+            nextAnnouncement = zclock_mono() + nextDiff;
             
             // Check if the item already in the map
             bool is_newitem = ipcache.find(std::string(ipaddress)) == ipcache.end();
@@ -244,18 +241,6 @@ int main(int argc, char* argv[])
                 print_cacheips(ipcache);
             }
 
-            if (is_newitem) {
-                zmsg_t* join_msg = zmsg_new();
-                zmsg_addstr(join_msg, CMD_JOIN);
-
-                // Compose the JOIN command with the available ipaddresses
-                //for (auto it=ipcache.begin(); it!=ipcache.end(); it++){
-                zmsg_addstr(join_msg, ipaddress);
-                //}
-
-                zmsg_send(&join_msg, r_actor);
-            }
-
             zframe_t *content = zframe_recv (listener);
             assert (zframe_size (content) == 2);
             assert (zframe_data (content) [0] == 0xCA);
@@ -269,9 +254,6 @@ int main(int argc, char* argv[])
             }
         }
     }
-
-    zsock_send(speaker, "s", "SILENCE");
-    zclock_sleep(500);
     zpoller_destroy(&poller);
     zsock_destroy(&control);
     zactor_destroy(&r_actor);
@@ -279,7 +261,7 @@ int main(int argc, char* argv[])
     zactor_destroy(&speaker);
 
     // Wait for the threads to stop for sure.
-    zclock_sleep(1500);
+    sleep(2);
     
     return 0;
 }
