@@ -351,7 +351,9 @@ namespace riaps{
         std::vector<uint8_t> opendht_data(std::get<1>(kv_pair).begin(), std::get<1>(kv_pair).end());
         auto keyhash = dht::InfoHash::get(std::get<0>(kv_pair));
 
-        m_dhtNode.put(keyhash, dht::Value(opendht_data));
+        dhtPut(keyhash, opendht_data);
+
+        //m_dhtNode.put(keyhash, dht::Value(opendht_data));
 
         //Send response
         capnp::MallocMessageBuilder message;
@@ -369,6 +371,19 @@ namespace riaps{
         zmsg_addmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
 
         zmsg_send(&msg, m_riapsSocket);
+    }
+
+    void DiscoveryMessageHandler::dhtPut(dht::InfoHash& keyhash, std::vector<uint8_t>& data) {
+        std::thread t([this, keyhash, data](){
+            for (int i=0; i<2; i++) {
+                // TODO: check if the DHT is still running
+                m_dhtNode.put(keyhash, dht::Value(data));
+                zclock_sleep(1000);
+            }
+        });
+
+        t.detach();
+
     }
 
     void DiscoveryMessageHandler::handleServiceLookup(riaps::discovery::ServiceLookupReq::Reader &msgServiceLookup) {
