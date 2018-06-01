@@ -25,7 +25,7 @@
 
 // For how long the ip addresses are stored in a local cache.
 // The ip addresses are obtained from the UDP beacons
-#define IPCACHE_TIMEOUT 10000 // millisec
+#define IPCACHE_TIMEOUT 30000 // millisec
 
 /**
  * Prints the cached IP addresses to the standard output
