@@ -46,7 +46,7 @@ void operator>>(zframe_t& frame, std::shared_ptr<capnp::FlatArrayMessageReader>&
 
 namespace spd=spdlog;
 
-void print_cacheips(std::map<std::string, riaps::utils::Timeout<std::milli>>& ipcache) {
+void print_cacheips(std::map<std::string, riaps::utils::Timeout<std::milli>>& ipcache, const std::string& selfAddress) {
     auto logger = spd::get("rdiscovery");
     if (logger == nullptr)
         return;
@@ -54,6 +54,8 @@ void print_cacheips(std::map<std::string, riaps::utils::Timeout<std::milli>>& ip
     fmt::MemoryWriter w;
 
     w.write("Known nodes: ");
+    if (selfAddress!="")
+       w << "*" << selfAddress << "*; ";
     for (auto &it : ipcache) {
         w << it.first << "; ";
     }

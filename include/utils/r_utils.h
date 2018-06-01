@@ -32,7 +32,7 @@
  * 
  * @param ipcache <IP address, timestamp> pairs
  */
-void print_cacheips(std::map<std::string, riaps::utils::Timeout<std::milli>>& ipcache);
+void print_cacheips(std::map<std::string, riaps::utils::Timeout<std::milli>>& ipcache, const std::string& selfAddress);
 
 
 /**

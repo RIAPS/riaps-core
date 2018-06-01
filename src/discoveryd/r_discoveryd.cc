@@ -55,10 +55,12 @@ int main(int argc, char* argv[])
     std::uniform_int_distribution<> dis(2, 5);
 
     std::string iface = riaps::framework::Network::GetConfiguredIface();
-    if (iface != "")
+    std::string address;
+    if (iface != "") {
         zsys_set_interface(iface.c_str());
+        address = riaps::framework::Network::GetIPAddress(iface);
+    }
     else {
-        std::string address;
         riaps::framework::Network::GetFirstGlobalIface(iface, address);
         assert(iface!="");
         zsys_set_interface(iface.c_str());
@@ -218,38 +220,42 @@ int main(int argc, char* argv[])
 
         // If UDP package was received
         if (ipaddress) {
+            // Selfbeacon
+            if (strcmp(ipaddress,address.c_str()) != 0) {
 
-            //LOG(INFO) << "Beacon arrived";
+                //LOG(INFO) << "Beacon arrived";
 
-            // Recalculate (delay) the next announcement
-            //int nextDiff = dis(gen)*1000;
+                // Recalculate (delay) the next announcement
+                //int nextDiff = dis(gen)*1000;
 
-            // Calculate the next announcment
-            //nextAnnouncement = zclock_mono() + nextDiff;
-            
-            // Check if the item already in the map
-            bool is_newitem = ipcache.find(std::string(ipaddress)) == ipcache.end();
+                // Calculate the next announcment
+                //nextAnnouncement = zclock_mono() + nextDiff;
 
-            // If the ipaddress in the cache, update the timestamp
-            // If the ipaddress is new, add to the cache
-            //int64_t time = zclock_mono();
-            ipcache[ipaddress] = riaps::utils::Timeout<std::milli>(std::chrono::duration<int, std::milli>(IPCACHE_TIMEOUT));
+                // Check if the item already in the map
+                bool is_newitem = ipcache.find(std::string(ipaddress)) == ipcache.end();
 
-            // Check for outdated ip addresses (no UDP paca)
-            bool is_maintained = maintain_cache(ipcache);
+                // If the ipaddress in the cache, update the timestamp
+                // If the ipaddress is new, add to the cache
+                //int64_t time = zclock_mono();
+                ipcache[ipaddress] = riaps::utils::Timeout<std::milli>(
+                        std::chrono::duration<int, std::milli>(IPCACHE_TIMEOUT));
 
-            // If a new item arrive or an old one was deleted => print the contents
-            if (is_newitem || is_maintained) {
-                print_cacheips(ipcache);
-            }
+                // Check for outdated ip addresses (no UDP paca)
+                bool is_maintained = maintain_cache(ipcache);
 
-            if (is_newitem) {
-                zmsg_t* join_msg = zmsg_new();
-                zmsg_addstr(join_msg, CMD_JOIN);
+                // If a new item arrive or an old one was deleted => print the contents
+                if (is_newitem || is_maintained) {
+                    print_cacheips(ipcache, address);
+                }
 
-                zmsg_addstr(join_msg, ipaddress);
+                if (is_newitem) {
+                    zmsg_t *join_msg = zmsg_new();
+                    zmsg_addstr(join_msg, CMD_JOIN);
 
-                zmsg_send(&join_msg, r_actor);
+                    zmsg_addstr(join_msg, ipaddress);
+
+                    zmsg_send(&join_msg, r_actor);
+                }
             }
 
             zframe_t *content = zframe_recv (listener);
@@ -261,7 +267,7 @@ int main(int argc, char* argv[])
         } else{
             bool is_maintained = maintain_cache(ipcache);
             if (is_maintained){
-                print_cacheips(ipcache);
+                print_cacheips(ipcache, address);
             }
         }
     }

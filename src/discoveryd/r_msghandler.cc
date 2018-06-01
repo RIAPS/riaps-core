@@ -540,9 +540,13 @@ namespace riaps{
 
         zclock_sleep(500);
 
+        dhtGet(lookupkey.first, currentClientTmp,0);
+    }
+
+    void DiscoveryMessageHandler::dhtGet(const std::string& lookupKey, ClientDetails clientDetails, uint8_t callLevel) {
         auto logger = m_logger;
-        m_dhtNode.get(lookupkey.first,
-                      [currentClientTmp, logger]
+        m_dhtNode.get(lookupKey,
+                      [clientDetails, logger]
                               (const std::vector<std::shared_ptr<dht::Value>> &values) {
                           // Done Callback
 
@@ -574,18 +578,18 @@ namespace riaps{
 
                               auto msg_path = msg_providerget.initPath();
 
-                              riaps::discovery::Scope scope = currentClientTmp.isLocal ? riaps::discovery::Scope::LOCAL : riaps::discovery::Scope::GLOBAL;
-                              std::string app_name = currentClientTmp.app_name;
+                              riaps::discovery::Scope scope = clientDetails.isLocal ? riaps::discovery::Scope::LOCAL : riaps::discovery::Scope::GLOBAL;
+                              std::string app_name = clientDetails.app_name;
 
                               msg_path.setScope(scope);
-                              msg_path.setAppName(currentClientTmp.app_name);
+                              msg_path.setAppName(clientDetails.app_name);
 
                               auto msg_client = msg_providerget.initClient();
 
-                              msg_client.setActorName(currentClientTmp.actor_name);
-                              msg_client.setPortName(currentClientTmp.portname);
-                              msg_client.setActorHost(currentClientTmp.actor_host);
-                              msg_client.setInstanceName(currentClientTmp.instance_name);
+                              msg_client.setActorName(clientDetails.actor_name);
+                              msg_client.setPortName(clientDetails.portname);
+                              msg_client.setActorHost(clientDetails.actor_host);
+                              msg_client.setInstanceName(clientDetails.instance_name);
 
                               auto number_of_results = dhtGetResults.size();
                               ::capnp::List<::capnp::Text>::Builder get_results = msg_providerget.initResults(
@@ -615,19 +619,28 @@ namespace riaps{
                           }
 
                           return true;
-                      }, [logger, lookupkey](bool success){
-                // Done Callback
-                // TODO: remove
-                //sleep(1);
-                logger->info("OpenDHT.Get({}) finished with '{}'  callback done!", lookupkey.first,  success );
-                //done_cb(success);
+                      }, [logger, lookupKey, clientDetails, callLevel, this](bool success){
+                    // Done Callback
+                    // TODO: remove
+                    //sleep(1);
+                    logger->info("OpenDHT.Get({}) finished with '{}'  callback done!", lookupKey,  success );
+                    if (!success) {
+                        if (callLevel<10) {
+                            std::thread t([lookupKey, clientDetails, callLevel, this]() {
+                                this->dhtGet(lookupKey, clientDetails, callLevel + 1);
+                                zclock_sleep(200);
+                            });
+                            t.detach();
+                        }
+                    }
+                    //done_cb(success);
 
 
                 }
         );
     }
 
-    void DiscoveryMessageHandler:: handleGroupJoin(riaps::discovery::GroupJoinReq::Reader& msgGroupJoin){
+    void DiscoveryMessageHandler::handleGroupJoin(riaps::discovery::GroupJoinReq::Reader& msgGroupJoin){
 
         // Join to the group.
         auto msgGroupServices   = msgGroupJoin.getServices();
