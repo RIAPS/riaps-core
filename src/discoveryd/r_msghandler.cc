@@ -546,9 +546,21 @@ namespace riaps{
     void DiscoveryMessageHandler::dhtGet(const std::string& lookupKey, ClientDetails clientDetails, uint8_t callLevel) {
         auto logger = m_logger;
         m_dhtNode.get(lookupKey,
-                      [clientDetails, logger]
+                      [clientDetails, logger, callLevel, lookupKey, this]
                               (const std::vector<std::shared_ptr<dht::Value>> &values) {
-                          // Done Callback
+
+                          // If the return doesn't have any values, try it one more time.
+                          // Maximum number of retries : 10
+                          if (values.size() == 0) {
+                              if (callLevel<10) {
+                                  std::thread t([lookupKey, clientDetails, callLevel, this]() {
+                                      zclock_sleep(1000);
+                                      this->dhtGet(lookupKey, clientDetails, callLevel + 1);
+                                  });
+                                  t.detach();
+                              }
+                              return true;
+                          }
 
                           std::vector<std::string> dhtGetResults;
                           for (const auto &value :values) {
@@ -628,7 +640,7 @@ namespace riaps{
                         if (callLevel<10) {
                             std::thread t([lookupKey, clientDetails, callLevel, this]() {
                                 this->dhtGet(lookupKey, clientDetails, callLevel + 1);
-                                zclock_sleep(200);
+                                zclock_sleep(300);
                             });
                             t.detach();
                         }
