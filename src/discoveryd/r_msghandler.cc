@@ -377,10 +377,14 @@ namespace riaps{
     }
 
     void DiscoveryMessageHandler::dhtPut(dht::InfoHash& keyhash, std::vector<uint8_t>& data) {
-        std::thread t([this, keyhash, data](){
+        auto logger = m_logger;
+        std::thread t([this, keyhash, data, logger](){
             for (int i=0; i<1; i++) {
-                // TODO: check if the DHT is still running
-                m_dhtNode.put(keyhash, dht::Value(data));
+                m_dhtNode.put(keyhash,
+                              dht::Value(data),
+                              [this, keyhash, data, logger](bool success) {
+                    logger->info("OpenDHT.Put({}) returns: {}", keyhash, success);
+                });
                 zclock_sleep(1000);
             }
         });
