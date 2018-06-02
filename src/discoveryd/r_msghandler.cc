@@ -352,7 +352,8 @@ namespace riaps{
         auto keyhash = dht::InfoHash::get(std::get<0>(kv_pair));
 
 
-
+        dhtPut(keyhash, opendht_data);
+        zclock_sleep(500);
         //m_dhtNode.put(keyhash, dht::Value(opendht_data));
 
         //Send response
@@ -372,7 +373,7 @@ namespace riaps{
 
         zmsg_send(&msg, m_riapsSocket);
 
-        dhtPut(keyhash, opendht_data);
+        
     }
 
     void DiscoveryMessageHandler::dhtPut(dht::InfoHash& keyhash, std::vector<uint8_t>& data) {
@@ -538,7 +539,7 @@ namespace riaps{
             );
         }
 
-        zclock_sleep(500);
+        zclock_sleep(400);
 
         dhtGet(lookupkey.first, currentClientTmp,0);
     }
