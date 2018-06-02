@@ -352,7 +352,7 @@ namespace riaps{
         auto keyhash = dht::InfoHash::get(std::get<0>(kv_pair));
 
 
-        dhtPut(keyhash, opendht_data);
+        dhtPut(keyhash, std::get<0>(kv_pair), opendht_data);
         zclock_sleep(500);
         //m_dhtNode.put(keyhash, dht::Value(opendht_data));
 
@@ -376,14 +376,14 @@ namespace riaps{
         
     }
 
-    void DiscoveryMessageHandler::dhtPut(dht::InfoHash& keyhash, std::vector<uint8_t>& data) {
+    void DiscoveryMessageHandler::dhtPut(dht::InfoHash& keyhash, const std::string& key, std::vector<uint8_t>& data) {
         auto logger = m_logger;
-        std::thread t([this, keyhash, data, logger](){
+        std::thread t([this, keyhash, key, data, logger](){
             for (int i=0; i<1; i++) {
                 m_dhtNode.put(keyhash,
                               dht::Value(data),
-                              [this, keyhash, data, logger](bool success) {
-                    logger->info("OpenDHT.Put({}) returns: {}", keyhash, success);
+                              [this, keyhash, key, data, logger](bool success) {
+                    logger->info("OpenDHT.Put({}) returns: {}", key, success);
                 });
                 zclock_sleep(1000);
             }
