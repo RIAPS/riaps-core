@@ -380,6 +380,7 @@ namespace riaps{
         auto logger = m_logger;
         std::thread t([this, keyhash, key, data, logger](){
             for (int i=0; i<1; i++) {
+                logger->info("OpenDHT.Put({})", key);
                 m_dhtNode.put(keyhash,
                               dht::Value(data),
                               [this, keyhash, key, data, logger](bool success) {
