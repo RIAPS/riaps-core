@@ -26,7 +26,7 @@
 #include <vector>
 
 // Frequency of sending UDP packets (msec)
-#define BEACON_FREQ 1500
+#define BEACON_FREQ 1000
 
 // Timeout of port polling for UDP packages
 #define UDP_READ_TIMEOUT 3000

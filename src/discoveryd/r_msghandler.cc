@@ -639,8 +639,8 @@ namespace riaps{
                     if (!success) {
                         if (callLevel<10) {
                             std::thread t([lookupKey, clientDetails, callLevel, this]() {
+                                zclock_sleep(1000);
                                 this->dhtGet(lookupKey, clientDetails, callLevel + 1);
-                                zclock_sleep(300);
                             });
                             t.detach();
                         }
