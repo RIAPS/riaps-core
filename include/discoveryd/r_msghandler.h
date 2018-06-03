@@ -135,8 +135,8 @@ namespace riaps{
         std::string m_hostAddress;
 
 
-        void dhtPut(dht::InfoHash& keyhash, const std::string& key, std::vector<uint8_t>& data);
-        void dhtGet(const std::string& lookupKey, ClientDetails clientDetails, uint8_t callLevel);
+        void dhtPut(dht::InfoHash keyhash, const std::string key, std::vector<uint8_t> data, uint8_t callLevel);
+        void dhtGet(const std::string lookupKey, ClientDetails clientDetails, uint8_t callLevel);
 
         int64_t m_lastServiceCheckin;
         int64_t m_lastZombieCheck;

@@ -352,7 +352,7 @@ namespace riaps{
         auto keyhash = dht::InfoHash::get(std::get<0>(kv_pair));
 
 
-        dhtPut(keyhash, std::get<0>(kv_pair), opendht_data);
+        dhtPut(keyhash, std::get<0>(kv_pair), opendht_data, 0);
         zclock_sleep(500);
         //m_dhtNode.put(keyhash, dht::Value(opendht_data));
 
@@ -376,22 +376,27 @@ namespace riaps{
         
     }
 
-    void DiscoveryMessageHandler::dhtPut(dht::InfoHash& keyhash, const std::string& key, std::vector<uint8_t>& data) {
+    void DiscoveryMessageHandler::dhtPut(dht::InfoHash keyhash,
+                                         const std::string key,
+                                         std::vector<uint8_t> data,
+                                         uint8_t callLevel) {
         auto logger = m_logger;
-        std::thread t([this, keyhash, key, data, logger](){
-            for (int i=0; i<1; i++) {
-                logger->info("OpenDHT.Put({})", key);
-                m_dhtNode.put(keyhash,
-                              dht::Value(data),
-                              [this, keyhash, key, data, logger](bool success) {
-                    logger->info("OpenDHT.Put({}) returns: {}", key, success);
+        logger->debug("OpenDHT.Put({})", key);
+        m_dhtNode.put(keyhash,
+                      dht::Value(data),
+                      [this, keyhash, key, data, logger, callLevel](bool success) {
+
+            logger->debug("OpenDHT.Put({}) returns: {}", key, success);
+
+            if (!success && callLevel < 10) {
+                std::thread t([keyhash, key, data, callLevel, this](){
+                    zclock_sleep(1000);
+                    this->dhtPut(keyhash, key, data, callLevel +1 );
                 });
-                zclock_sleep(1000);
+                t.detach();
             }
+
         });
-
-        t.detach();
-
     }
 
     void DiscoveryMessageHandler::handleServiceLookup(riaps::discovery::ServiceLookupReq::Reader &msgServiceLookup) {
@@ -476,7 +481,7 @@ namespace riaps{
                                                                                    std::string result = std::string(
                                                                                            value->data.begin(),
                                                                                            value->data.end());
-                                                                                   logger->info("OpenDHT.Listen() returns: {}", result);
+                                                                                   logger->debug("OpenDHT.Listen() returns: {}", result);
                                                                                    update_results.push_back(result);
                                                                                }
 
@@ -549,7 +554,7 @@ namespace riaps{
         dhtGet(lookupkey.first, currentClientTmp,0);
     }
 
-    void DiscoveryMessageHandler::dhtGet(const std::string& lookupKey, ClientDetails clientDetails, uint8_t callLevel) {
+    void DiscoveryMessageHandler::dhtGet(const std::string lookupKey, ClientDetails clientDetails, uint8_t callLevel) {
         auto logger = m_logger;
         m_dhtNode.get(lookupKey,
                       [clientDetails, logger, callLevel, lookupKey, this]
@@ -571,7 +576,7 @@ namespace riaps{
                           std::vector<std::string> dhtGetResults;
                           for (const auto &value :values) {
                               std::string result = std::string(value->data.begin(), value->data.end());
-                              logger->info("OpenDHT.Get() returns: {}", result);
+                              logger->debug("OpenDHT.Get() returns: {}", result);
                               dhtGetResults.push_back(result);
                           }
 
@@ -641,7 +646,7 @@ namespace riaps{
                     // Done Callback
                     // TODO: remove
                     //sleep(1);
-                    logger->info("OpenDHT.Get({}) finished with '{}'  callback done!", lookupKey,  success );
+                    logger->debug("OpenDHT.Get({}) finished with '{}'  callback done!", lookupKey,  success );
                     if (!success) {
                         if (callLevel<10) {
                             std::thread t([lookupKey, clientDetails, callLevel, this]() {
