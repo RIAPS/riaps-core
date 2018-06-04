@@ -35,7 +35,7 @@ namespace riaps{
 
         zsock_bind(m_riapsSocket, "%s", riaps::framework::Configuration::GetDiscoveryEndpoint().c_str());
         m_poller = zpoller_new(m_pipe, m_dhtUpdateSocket, m_riapsSocket, nullptr);
-        zsock_signal (m_pipe, 0);
+
         m_lastServiceCheckin = m_lastZombieCheck = zclock_mono();
         // Get current zombies, and listen to new zombies
         m_dhtNode.get(m_zombieKey, [this](const std::vector<std::shared_ptr<dht::Value>> &values){
@@ -388,13 +388,13 @@ namespace riaps{
 
             logger->debug("OpenDHT.Put({}) returns: {}", key, success);
 
-            if (!success && callLevel < 10) {
-                std::thread t([keyhash, key, data, callLevel, this](){
-                    zclock_sleep(1000);
-                    this->dhtPut(keyhash, key, data, callLevel +1 );
-                });
-                t.detach();
-            }
+//            if (!success && callLevel < 10) {
+//                std::thread t([keyhash, key, data, callLevel, this](){
+//                    zclock_sleep(1000);
+//                    this->dhtPut(keyhash, key, data, callLevel +1 );
+//                });
+//                t.detach();
+//            }
 
         });
     }

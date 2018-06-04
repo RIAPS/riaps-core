@@ -11,12 +11,12 @@ void
 riaps_actor (zsock_t *pipe, void *args)
 {
     auto console = spd::stdout_color_mt("rdiscovery");
-    console->set_level(spd::level::info);
+    console->set_level(spd::level::debug);
 
     std::string mac_address = riaps::framework::Network::GetMacAddressStripped();
     std::string host_address = riaps::framework::Network::GetIPAddress();
 
-    console->info("Starting DHT node.");
+    console->info("Starting DHT node on {}:{} ({})", host_address, RIAPS_DHT_NODE_PORT, mac_address);
     //console->info("Starting DHT backup node.");
     dht::DhtRunner dhtNode;
     //dht::DhtRunner backupNode;
@@ -25,13 +25,27 @@ riaps_actor (zsock_t *pipe, void *args)
     // generated RSA key pair, and listen on port 4222.
 
     //dht_node.run(RIAPS_DHT_NODE_PORT, dht::crypto::generateIdentity(), true);
-    dhtNode.run(RIAPS_DHT_NODE_PORT, {}, true);
+
+    zsock_signal (pipe, 0);
+    try {
+        dhtNode.run(RIAPS_DHT_NODE_PORT, {}, true);
+        char* pipeReturn = "1";
+        zstr_send(pipe, pipeReturn);
+    } catch (dht::DhtException& e){
+        console->error("DHT threw an exception: {}", e.what());
+        char* pipeReturn = "0";
+        zstr_send(pipe, pipeReturn);
+        zclock_sleep(500);
+        return;
+    }
+
+
     //backupNode.run(RIAPS_DHT_NODE_PORT-1, {}, true);
 
     //console->info("Backup Node is connecting to: {}:{}",host_address, RIAPS_DHT_NODE_PORT);
     //backupNode.bootstrap(host_address, std::to_string(RIAPS_DHT_NODE_PORT));
 
-    console->info("DHT is initialized on {}:{}({})", host_address, RIAPS_DHT_NODE_PORT, mac_address);
+    //console->info("DHT is initialized on {}:{}({})", host_address, RIAPS_DHT_NODE_PORT, mac_address);
 
     //std::cout << "DHT node started." <<std::endl;
 
