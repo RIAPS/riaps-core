@@ -192,6 +192,7 @@ list(APPEND RDISCOVERYD_SOURCE
         src/discoveryd/r_discoveryd.cc
         src/discoveryd/r_riaps_actor.cc
         src/discoveryd/r_msghandler.cc
+        src/discoveryd/r_dhttracker.cc
         include/messaging/disco.capnp.c++
         )
 
@@ -201,6 +202,7 @@ list(APPEND RDISCOVERYD_HEADERS
         include/discoveryd/r_discovery_types.h
         include/discoveryd/r_msghandler.h
         include/discoveryd/r_registration.h
+        include/discoveryd/r_dhttracker.h
         include/framework/rfw_configuration.h
         include/framework/rfw_network_interfaces.h
         include/utils/r_utils.h
