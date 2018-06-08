@@ -14,6 +14,7 @@
 
 
 #include <discoveryd/r_riaps_actor.h>
+#include <discoveryd/r_dhttracker.h>
 #include <framework/rfw_network_interfaces.h>
 #include <utils/r_utils.h>
 #include <utils/r_timeout.h>
@@ -67,18 +68,29 @@ int main(int argc, char* argv[])
     }
 
     zactor_t *r_actor = zactor_new(riaps_actor, NULL);
+    uint8_t dhtStarted = 0;
+    zsock_recv(r_actor, "1", &dhtStarted);
 
-    zmsg_t* zactorMsg = zactor_recv(r_actor);
-    char* pipeReturn = zmsg_popstr(zactorMsg);
-    if (*pipeReturn == '1') {
+    if (dhtStarted) {
         console->info("DHT thread is initialized, starts beaconing.");
-        zclock_sleep(500);
-    } else {
+    }else {
         console->error("Unable to initialize DHT thread, exiting.");
         zactor_destroy(&r_actor);
         zclock_sleep(500);
         return -1;
     }
+
+//    zmsg_t* zactorMsg = zactor_recv(r_actor);
+//    char* pipeReturn = zmsg_popstr(zactorMsg);
+//    if (*pipeReturn == '1') {
+//        console->info("DHT thread is initialized, starts beaconing.");
+//        zclock_sleep(500);
+//    } else {
+//        console->error("Unable to initialize DHT thread, exiting.");
+//        zactor_destroy(&r_actor);
+//        zclock_sleep(500);
+//        return -1;
+//    }
 
     zsock_t * control = zsock_new_router(CONTROL_SOCKET);
 
@@ -87,6 +99,8 @@ int main(int argc, char* argv[])
 
     // listen for UDP packages
     zactor_t *listener  = zactor_new (zbeacon, NULL);
+
+    zsock_t* dhtTracker = zsock_new_dealer(CHAN_IN_DHTTRACKER);
 
     #ifdef _DEBUG_
         zstr_sendx (speaker, "VERBOSE", NULL);
@@ -233,7 +247,11 @@ int main(int argc, char* argv[])
 
         // If UDP package was received
         if (ipaddress) {
-            // Selfbeacon
+
+            // Pass the ip addres to the dht tracker to check its stability
+            // DHT must be stable for at least 3 seconds before the registration happens
+            zsock_send(dhtTracker, "ss", CMD_BEACON_IP, ipaddress);
+
             if (strcmp(ipaddress,address.c_str()) != 0) {
 
                 //LOG(INFO) << "Beacon arrived";
@@ -264,9 +282,7 @@ int main(int argc, char* argv[])
                 if (is_newitem) {
                     zmsg_t *join_msg = zmsg_new();
                     zmsg_addstr(join_msg, CMD_JOIN);
-
                     zmsg_addstr(join_msg, ipaddress);
-
                     zmsg_send(&join_msg, r_actor);
                 }
             }
@@ -287,6 +303,7 @@ int main(int argc, char* argv[])
     zsock_send(speaker, "s", "SILENCE");
     zclock_sleep(500);
     zpoller_destroy(&poller);
+    zsock_destroy(&dhtTracker);
     zsock_destroy(&control);
     zactor_destroy(&r_actor);
     zactor_destroy(&listener);

@@ -2,6 +2,7 @@
 #include <discoveryd/r_msghandler.h>
 #include <framework/rfw_configuration.h>
 #include <framework/rfw_network_interfaces.h>
+#include <discoveryd/r_dhttracker.h>
 
 #include <spdlog/spdlog.h>
 
@@ -29,15 +30,18 @@ riaps_actor (zsock_t *pipe, void *args)
     zsock_signal (pipe, 0);
     try {
         dhtNode.run(RIAPS_DHT_NODE_PORT, {}, true);
-        char* pipeReturn = "1";
-        zstr_send(pipe, pipeReturn);
+        zsock_send(pipe, "1", 1);
+        //char* pipeReturn = "1";
+        //zstr_send(pipe, pipeReturn);
     } catch (dht::DhtException& e){
         console->error("DHT threw an exception: {}", e.what());
-        char* pipeReturn = "0";
-        zstr_send(pipe, pipeReturn);
+        zsock_send(pipe, "1", 0);
+        //char* pipeReturn = "0";
+        //zstr_send(pipe, pipeReturn);
         zclock_sleep(500);
         return;
     }
+
 
 
     //backupNode.run(RIAPS_DHT_NODE_PORT-1, {}, true);
@@ -54,10 +58,13 @@ riaps_actor (zsock_t *pipe, void *args)
     riaps::DiscoveryMessageHandler msgHandler(dhtNode, &pipe, console);
     msgHandler.init();
     msgHandler.run();
-
-
     dhtNode.join();
-    zclock_sleep(1000);
+
+    dhtNode.shutdown([console](){
+        console->info("DHT stopped");
+    });
+
+    zclock_sleep(100);
 }
 
 

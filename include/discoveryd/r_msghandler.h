@@ -105,6 +105,8 @@ namespace riaps{
 
         void pushDhtValuesToDisco(std::vector<std::shared_ptr<dht::Value>> values);
 
+        std::future<bool> waitForDht();
+
         std::tuple<std::string, std::string> buildInsertKeyValuePair(
                 const std::string&             appName,
                 const std::string&             msgType,
@@ -163,6 +165,8 @@ namespace riaps{
 
         zpoller_t* m_poller;
         zsock_t*   m_pipe;
+
+        zactor_t* dht_tracker_;
 
         std::shared_ptr<zframe_t> m_repIdentity;
 
