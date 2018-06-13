@@ -28,6 +28,11 @@ namespace riaps{
                 Reset(timeout);
             };
 
+            Timeout<T>(int timeout) {
+                std::chrono::duration<int,T> d(timeout);
+                Reset(d);
+            }
+
             /**
              * Resets the start time point, doesn't touch the timeout
              */

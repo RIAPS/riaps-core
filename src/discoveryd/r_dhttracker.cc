@@ -3,6 +3,8 @@
 //
 
 #include <discoveryd/r_dhttracker.h>
+#include <algorithm>
+#include <framework/rfw_network_interfaces.h>
 
 
 #define LOGGER_NAME "dht_tracker"
@@ -10,12 +12,16 @@
 namespace spd = spdlog;
 
 using namespace std;
+using namespace riaps::utils;
 
-
-
+/**
+ * ZActor thred for checking the DHT stability
+ * @param pipe PAIR socket for messaging with the parent class.
+ * @param args Pointer to the DHT instance
+ */
 void dht_tracker (zsock_t *pipe, void *args) {
     auto dht = static_cast<dht::DhtRunner*>(args);
-    std::map<std::string, bool> node_list;
+    map<string, tuple<bool, Timeout<std::ratio<60>>>> node_list;
 
     zsock_signal (pipe, 0);
 
@@ -26,20 +32,27 @@ void dht_tracker (zsock_t *pipe, void *args) {
     logger->set_level(spd::level::info);
 
     bool terminated = false;
-    bool isStable = false;
-    riaps::utils::Timeout<std::milli> lastStable(duration<int, std::milli>(3000)); //3sec
+    bool isStable   = false;
 
     logger->debug("starts");
+
+    auto publish_ip_to = Timeout<std::ratio<60>>(10);
+    auto republish = [dht, &publish_ip_to](){
+        string self_ip = riaps::framework::Network::GetIPAddress();
+        dht::InfoHash keyhash(self_ip);
+        dht->put(keyhash, self_ip);
+        publish_ip_to.Reset();
+    };
+    republish();
     while (!terminated) {
-        auto which = zpoller_wait(poller, 1000);
+        auto which = zpoller_wait(poller, 2000);
 
         if (which == pipe) {
             zmsg_t* msg = zmsg_recv(which);
             char *command = zmsg_popstr(msg);
 
             if (streq(command, "$TERM")) {
-                //std::cout << std::endl << "$TERMINATE arrived, discovery service is stopping..." << std::endl;
-                logger->info("$TERMINATE arrived, discovery service is stopping.");
+                logger->info("$TERMINATE arrived, dht tracker service is stopping.");
                 terminated = true;
             }
             zstr_free(&command);
@@ -57,17 +70,13 @@ void dht_tracker (zsock_t *pipe, void *args) {
                 // New bacon arrived
                 if (node_list.find(sparam) == node_list.end()) {
                     logger->debug("{}({})", CMD_BEACON_IP, sparam);
-                    node_list[sparam] = false;
-                    dht::InfoHash keyhash(sparam);
-                    std::vector<uint8_t> opendht_data(sparam.begin(), sparam.end());
-                    dht->put(keyhash, sparam);
+                    node_list[sparam] = make_tuple(false, Timeout<std::ratio<60>>(10));
                     isStable = check_state(node_list, *dht);
                 }
-
             } else if (streq(command, CMD_DHT_IP)) {
                 logger->debug("{}({})", CMD_DHT_IP, sparam);
                 if (node_list.find(sparam) != node_list.end()) {
-                    node_list[sparam] = true;
+                    get<0>(node_list[sparam]) = true;
                     isStable = check_state(node_list, *dht);
                 }
             } else if (streq(command, CMD_QUERY_STABLE)) {
@@ -78,6 +87,19 @@ void dht_tracker (zsock_t *pipe, void *args) {
             zstr_free(&frm);
             zstr_free(&command);
             zstr_free(&param);
+        } else {
+
+            // Remove timed out items
+            for(auto it = node_list.begin(); it != node_list.end();)
+            {
+                if(get<1>(it->second).IsTimeout())
+                    it = node_list.erase(it);
+                else ++it;
+            }
+
+            // Republish self_ip in every 10 minutes
+            if (publish_ip_to.IsTimeout())
+                republish();
         }
     }
     logger->info("stopped");
@@ -85,15 +107,15 @@ void dht_tracker (zsock_t *pipe, void *args) {
     zsock_destroy(&in_socket);
 }
 
-bool check_state(std::map<std::string, bool>& node_list, dht::DhtRunner& dht) {
+bool check_state(std::map<std::string, std::tuple<bool, riaps::utils::Timeout<std::ratio<60>>>>& node_list, dht::DhtRunner& dht) {
     auto result = false;
     auto logger = spd::get(LOGGER_NAME);
-    auto stableCount = count_if(node_list.begin(), node_list.end(), [](const pair<string, bool>& item){
-        return item.second;
+    auto stableCount = count_if(node_list.begin(), node_list.end(), [](const pair<string, tuple<bool, Timeout<ratio<60>>>>& item){
+        return get<0>(item.second);
     });
 
-    auto unstableCount = count_if(node_list.begin(), node_list.end(), [](const pair<string, bool>& item){
-        return !item.second;
+    auto unstableCount = count_if(node_list.begin(), node_list.end(), [](const pair<string, tuple<bool, Timeout<ratio<60>>>>& item){
+        return !get<0>(item.second);
     });
 
     logger->debug("Stable/unstable: {}/{}", stableCount, unstableCount);
@@ -102,12 +124,10 @@ bool check_state(std::map<std::string, bool>& node_list, dht::DhtRunner& dht) {
         result = true;
         logger->debug("Stable");
     } else {
-        //zsock_send(out_socket, "s1", CMD_DHT_STABLE, 0);
         vector<tuple<string, shared_future<vector<shared_ptr<dht::Value>>>>> waitList;
-        //logger->debug("Not stable.");
 
         for(auto& item : node_list) {
-            if (!item.second) {
+            if (!get<0>(item.second)) {
                 logger->debug("Not stable: {}", item.first);
                 dht::InfoHash keyhash(item.first);
                 std::future<std::vector<std::shared_ptr<dht::Value>>> task = dht.get(keyhash);
@@ -131,9 +151,6 @@ bool check_state(std::map<std::string, bool>& node_list, dht::DhtRunner& dht) {
                     zclock_sleep(100);
                     zsock_destroy(&puship);
                 });
-
-                //node_list[get<0>(taskItem)] = true;
-                //logger->debug("Node {} is stable from now", get<0>(taskItem));
             }
         }
     }

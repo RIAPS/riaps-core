@@ -22,7 +22,7 @@
 
 void dht_tracker (zsock_t *pipe, void *args);
 
-bool check_state(std::map<std::string, bool>& node_list, dht::DhtRunner& dht);
+bool check_state(std::map<std::string, std::tuple<bool, riaps::utils::Timeout<std::ratio<60>>>>& node_list, dht::DhtRunner& dht);
 
 
 #endif //RIAPS_CORE_R_DHTTRACKER_H
