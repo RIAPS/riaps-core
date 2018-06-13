@@ -26,8 +26,8 @@ namespace riaps {
         enum STATE { STARTING, INITIAL, READY, ACTIVE, CHECKPOINTING, INACTIVE, PASSIVE, DESTROYED};
 
     protected:
-        STATE _state;
-        riaps::Actor* _parentActor;
+        STATE m_state;
+        riaps::Actor* m_parentActor;
     };
 }
 

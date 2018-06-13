@@ -67,7 +67,7 @@ void GroupLead::Update() {
          * Set the first election Term
          */
         m_electionTerm++;
-        //_logger->debug("[{}] Election timeout FOLLOWER->CANDIDATE", _electionTerm);
+        //m_logger->debug("[{}] Election timeout FOLLOWER->CANDIDATE", _electionTerm);
 
         /**
          * The node votes to itself, save the timestamp to filter possibly old votes
@@ -95,7 +95,7 @@ void GroupLead::Update() {
         // Vote is still in progress, but the timeout has expired.
         // Be a follower again, maybe better luck next time.
 
-        //_logger->debug("[{}] Vote timeout CANDIDATE->FOLLOWER",_electionTerm);
+        //m_logger->debug("[{}] Vote timeout CANDIDATE->FOLLOWER",_electionTerm);
 
         m_currentState = GroupLead::NodeState::FOLLOWER;
         m_electionTimeout.Reset(duration<int, std::milli>(MAX_ELECTION_TIMEOUT));
@@ -231,7 +231,7 @@ void GroupLead::Update(riaps::distrcoord::LeaderElection::Reader &internalMessag
     } else if (internalMessage.hasAppendEntry() && m_currentState==GroupLead::FOLLOWER){
         auto msgAppendEntry = internalMessage.getAppendEntry();
         //(*_knownNodes)[msgAppendEntry.getSourceComponentId().cStr()] = zclock_mono();
-        //_logger->debug("Append entry from: {0}", msgAppendEntry.getSourceComponentId().cStr());
+        //m_logger->debug("Append entry from: {0}", msgAppendEntry.getSourceComponentId().cStr());
         m_electionTimeout.Reset(GenerateElectionTimeo());
         m_electionTerm = msgAppendEntry.getElectionTerm();
         ChangeLeader(msgAppendEntry.getSourceComponentId().cStr());
@@ -282,7 +282,7 @@ void GroupLead::SendRequestForVote() {
 void GroupLead::OnActionProposeFromClient(riaps::distrcoord::Consensus::ProposeToLeader::Reader &headerMessage,
                                           riaps::distrcoord::Consensus::TimeSyncCoordA::Reader  &tscaMessage) {
     if (GetLeaderId() != GetComponentId()) {
-        //_logger->debug("OnProposeFromClient() returns, GetLeaderId() != GetComponentId()");
+        //m_logger->debug("OnProposeFromClient() returns, GetLeaderId() != GetComponentId()");
         return;
     }
 
@@ -337,12 +337,12 @@ void GroupLead::OnActionProposeFromClient(riaps::distrcoord::Consensus::ProposeT
 void GroupLead::OnProposeFromClient(riaps::distrcoord::Consensus::ProposeToLeader::Reader& headerMessage,
                                   zframe_t** messageFrame) {
 
-    //_logger->debug("OnProposeFromClient()");
+    //m_logger->debug("OnProposeFromClient()");
     if (GetLeaderId() != GetComponentId()) {
-        //_logger->debug("OnProposeFromClient() returns, GetLeaderId() != GetComponentId()");
+        //m_logger->debug("OnProposeFromClient() returns, GetLeaderId() != GetComponentId()");
         return;
     }
-    //_logger->debug("OnProposeFromClient() continues");
+    //m_logger->debug("OnProposeFromClient() continues");
 
 
     auto pd = std::shared_ptr<ProposeData>(new ProposeData(m_group->GetKnownComponents(), Timeout<std::milli>(duration<int, std::milli>(1000))));

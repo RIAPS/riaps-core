@@ -13,13 +13,13 @@ namespace riaps{
 
 
 
-        PublisherPort::PublisherPort(const _component_port_pub &config, const ComponentBase* parentComponent)
+        PublisherPort::PublisherPort(const component_port_pub &config, const ComponentBase* parentComponent)
             : PublisherPortBase((component_port_config*)&config, parentComponent)
 
         {
             InitSocket();
-            if (!registerService(riaps::Actor::GetRunningActor()->GetApplicationName(),
-                                 riaps::Actor::GetRunningActor()->GetActorName(),
+            if (!registerService(riaps::Actor::GetRunningActor()->getApplicationName(),
+                                 riaps::Actor::GetRunningActor()->getActorName(),
                                  config.messageType,
                                  m_host,
                                  m_port,

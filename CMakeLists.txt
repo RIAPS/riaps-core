@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(riaps_core VERSION 0.6.3)
+project(riaps_core VERSION 0.7.0)
 option(arch "amd64/armhf" "amd64")
 option(BUILD_TESTS  "Build tests" ON)
 set(CMAKE_SYSTEM_NAME Linux)
@@ -62,13 +62,19 @@ if (BUILD_TESTS)
     #add_subdirectory(tests/GpioDeviceTesting)
     #add_subdirectory(tests/testPubSub/test_1_1/test_1_1)
     #add_subdirectory(tests/ScheduledTimer)
-
+    #add_subdirectory(examples/Limits)
+    #add_subdirectory(tests/DC/groupmsgtest)
+    #add_subdirectory(tests/DC/groupleavetest)
+    #add_subdirectory(tests/DC/leaderwithone)
+    #add_subdirectory(tests/DC/leadermessage)
+    #add_subdirectory(tests/DC/leaderwiththree)
+    # add_subdirectory(tests/TimedTest)
     # add_subdirectory(examples/EchoIO)
 endif()
 
 
 # libriaps sources
-list (APPEND component_SOURCE
+list (APPEND riapslib_SOURCE
         include/messaging/disco.capnp.c++
         include/messaging/distcoord.capnp.c++
         src/componentmodel/ports/r_queryport.cc
@@ -78,12 +84,14 @@ list (APPEND component_SOURCE
         src/componentmodel/ports/r_publisherport.cc
         src/componentmodel/ports/r_pubportbase.cc
         src/componentmodel/ports/r_pubportgroup.cc
+        src/componentmodel/ports/r_recvport.cc
         src/componentmodel/ports/r_requestport.cc
         src/componentmodel/ports/r_responseport.cc
         src/componentmodel/ports/r_senderport.cc
         src/componentmodel/ports/r_subportbase.cc
         src/componentmodel/ports/r_subportgroup.cc
         src/componentmodel/ports/r_subscriberport.cc
+        src/componentmodel/ports/r_timedport.cc
         src/componentmodel/r_actor.cc
         src/componentmodel/r_argumentparser.cc
         src/componentmodel/r_payload.cc
@@ -91,6 +99,7 @@ list (APPEND component_SOURCE
         src/componentmodel/r_componentbase.cc
         src/componentmodel/r_devicethread.cc
         src/componentmodel/r_devmapi.cc
+        src/componentmodel/r_deploapi.cc
         src/componentmodel/r_discoverdapi.cc
         src/componentmodel/r_messagebase.cc
         src/componentmodel/r_parameter.cc
@@ -106,7 +115,7 @@ list (APPEND component_SOURCE
         )
 
 # libriaps headers
-list (APPEND component_HEADERS
+list (APPEND riapslib_HEADERS
         include/componentmodel/ports/r_queryport.h
         include/componentmodel/ports/r_answerport.h
         include/componentmodel/ports/r_insideport.h
@@ -114,12 +123,14 @@ list (APPEND component_HEADERS
         include/componentmodel/ports/r_publisherport.h
         include/componentmodel/ports/r_pubportbase.h
         include/componentmodel/ports/r_pubportgroup.h
+        include/componentmodel/ports/r_recvport.h
         include/componentmodel/ports/r_requestport.h
         include/componentmodel/ports/r_responseport.h
         include/componentmodel/ports/r_senderport.h
         include/componentmodel/ports/r_subportbase.h
         include/componentmodel/ports/r_subportgroup.h
         include/componentmodel/ports/r_subscriberport.h
+        include/componentmodel/ports/r_timedport.h
         include/componentmodel/r_actor.h
         include/componentmodel/r_payload.h
         include/componentmodel/r_commandlineparser.h
@@ -127,7 +138,7 @@ list (APPEND component_HEADERS
         include/componentmodel/r_configuration.h
         include/componentmodel/r_devicethread.h
         include/componentmodel/r_discoverdapi.h
-        include/componentmodel/r_discoverdapi.h
+        include/componentmodel/r_deploapi.h
         include/componentmodel/r_messagebase.h
         include/componentmodel/r_parameter.h
         include/componentmodel/r_periodictimer.h
@@ -145,8 +156,8 @@ list (APPEND component_HEADERS
 
 # libriaps
 add_library(riaps SHARED
-        ${component_SOURCE}
-        ${component_HEADERS}
+        ${riapslib_SOURCE}
+        ${riapslib_HEADERS}
         )
 target_link_libraries(riaps czmq zmq dl capnp kj)
 install(TARGETS riaps DESTINATION lib)
@@ -154,6 +165,8 @@ install(TARGETS riaps DESTINATION lib)
 # start_actor
 set(ACTOR_SOURCE
         src/componentmodel/r_actor_main.cc
+
+        include/messaging/deplo.capnp.c++
         )
 
 set(ACTOR_HEADERS
@@ -164,6 +177,7 @@ set(ACTOR_HEADERS
         include/const/r_jsonmodel.h
         include/const/r_const.h
         include/messaging/disco.capnp.h
+        include/messaging/deplo.capnp.h
         include/json.h)
 
 add_executable(start_actor
@@ -178,6 +192,7 @@ list(APPEND RDISCOVERYD_SOURCE
         src/discoveryd/r_discoveryd.cc
         src/discoveryd/r_riaps_actor.cc
         src/discoveryd/r_msghandler.cc
+        src/discoveryd/r_dhttracker.cc
         include/messaging/disco.capnp.c++
         )
 
@@ -187,6 +202,7 @@ list(APPEND RDISCOVERYD_HEADERS
         include/discoveryd/r_discovery_types.h
         include/discoveryd/r_msghandler.h
         include/discoveryd/r_registration.h
+        include/discoveryd/r_dhttracker.h
         include/framework/rfw_configuration.h
         include/framework/rfw_network_interfaces.h
         include/utils/r_utils.h
@@ -228,8 +244,9 @@ install(TARGETS start_device DESTINATION bin)
 
 
 SET(MAJOR_VERSION "0")
-SET(MINOR_VERSION "6")
-SET(PATCH_VERSION "4")
+SET(MINOR_VERSION "7")
+SET(PATCH_VERSION "1")
+
 
 IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
     INCLUDE(InstallRequiredSystemLibraries)

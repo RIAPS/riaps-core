@@ -8,7 +8,7 @@
 namespace riaps {
     namespace ports {
 
-        QueryPort::QueryPort(const _component_port_qry &config, const ComponentBase *component)
+        QueryPort::QueryPort(const component_port_qry &config, const ComponentBase *component)
                 : PortBase(PortTypes::Query,
                            (component_port_config*)(&config),
                            component),
@@ -34,12 +34,12 @@ namespace riaps {
 
         void QueryPort::Init() {
 
-            const _component_port_qry* current_config = GetConfig();
+            const component_port_qry* current_config = GetConfig();
 
             auto results =
-                    subscribeToService(GetParentComponent()->GetActor()->GetApplicationName(),
+                    subscribeToService(GetParentComponent()->GetActor()->getApplicationName(),
                                        GetParentComponent()->GetConfig().component_name,
-                                       GetParentComponent()->GetActor()->GetActorName(),
+                                       GetParentComponent()->GetActor()->getActorName(),
                                        riaps::discovery::Kind::QRY,
                                        (current_config->isLocal?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
                                        current_config->portName, // Subscriber name
@@ -65,8 +65,8 @@ namespace riaps {
             return true;
         }
 
-        const _component_port_qry* QueryPort::GetConfig() const{
-            return (_component_port_qry*)GetPortBaseConfig();
+        const component_port_qry* QueryPort::GetConfig() const{
+            return (component_port_qry*)GetPortBaseConfig();
         }
 
         QueryPort* QueryPort::AsQueryPort() {
@@ -85,7 +85,7 @@ namespace riaps {
 //                std::string socketId = zuuid_str(_socketId);
 //                params.reset(new riaps::MessageParams(socketId, &cRequestId, &timestampFrame));
 //            } else {
-//                _logger->error("Wrong incoming message format on port: {}", GetPortName());
+//                m_logger->error("Wrong incoming message format on port: {}", GetPortName());
 //            }
 //
 //            return false;

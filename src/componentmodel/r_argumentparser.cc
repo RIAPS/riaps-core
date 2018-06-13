@@ -40,7 +40,7 @@ riaps::componentmodel::Parameters ArgumentParser::GetComponentFormals(nlohmann::
         }
 
         // If default value is specified, then the parameter is not mandatory.
-        results.AddParam(formalName, "", hasDefault, formalDefault);
+        results.addParam(formalName, "", hasDefault, formalDefault);
     }
 
     return results;
@@ -98,12 +98,12 @@ riaps::componentmodel::Parameters ComponentArgumentParser::Parse(const std::stri
             // Optional parameter is not passed to the actor
             // Set it to the default value
             if (_commandLineParams.find(formalName) == _commandLineParams.end()){
-                actorParams.AddParam(formalName, "", isOptional, formalDefault);
+                actorParams.addParam(formalName, "", isOptional, formalDefault);
             }
 
             // Optional parameter is passed, set the parameter to the passed value
             else {
-                actorParams.AddParam(formalName, _commandLineParams[formalName], isOptional, formalDefault);
+                actorParams.addParam(formalName, _commandLineParams[formalName], isOptional, formalDefault);
             }
         }
 
@@ -116,7 +116,7 @@ riaps::componentmodel::Parameters ComponentArgumentParser::Parse(const std::stri
                 );
             }
             else {
-                actorParams.AddParam(formalName, _commandLineParams[formalName], isOptional, formalDefault);
+                actorParams.addParam(formalName, _commandLineParams[formalName], isOptional, formalDefault);
             }
         }
     }
@@ -138,7 +138,7 @@ riaps::componentmodel::Parameters ComponentArgumentParser::Parse(const std::stri
 
         // Actual value refers to a previously passed parameter -> resolve
         if (it_actual->HasParamReferred()) {
-            auto currentActorParam = actorParams.GetParam(it_actual->GetReferredParamName());
+            auto currentActorParam = actorParams.getParam(it_actual->GetReferredParamName());
 
             // Something is wrong, missing argument
             if (currentActorParam == NULL){
@@ -149,16 +149,16 @@ riaps::componentmodel::Parameters ComponentArgumentParser::Parse(const std::stri
             }
 
             // Found it, create the resolved param
-            Parameter p(it_actual->GetParamName(), currentActorParam->IsOptional());
-            p.SetValue(currentActorParam->GetValueAsString());
-            resolvedComponentParams.AddParam(p);
+            Parameter p(it_actual->GetParamName(), currentActorParam->isOptional());
+            p.setValue(currentActorParam->getValueAsString());
+            resolvedComponentParams.addParam(p);
         }
 
         // Just value, leave it as is
         else {
             Parameter p(it_actual->GetParamName(), false);
-            p.SetValue(it_actual->GetParamValue());
-            resolvedComponentParams.AddParam(p);
+            p.setValue(it_actual->GetParamValue());
+            resolvedComponentParams.addParam(p);
         }
 
 
@@ -168,7 +168,7 @@ riaps::componentmodel::Parameters ComponentArgumentParser::Parse(const std::stri
     auto json_componentconfig = _json_componentsconfig[componentType];
     auto json_componentformals = json_componentconfig[J_FORMALS];
     auto componentFormals = GetComponentFormals(json_componentformals);
-    auto componentFormalNames = componentFormals.GetParameterNames();
+    auto componentFormalNames = componentFormals.getParameterNames();
 
     // Check if every parameter was passed. If not, check if they are optional.
     // If not passed and not optional -> error.
@@ -176,23 +176,23 @@ riaps::componentmodel::Parameters ComponentArgumentParser::Parse(const std::stri
     for (auto it_formal = componentFormalNames.begin();
               it_formal != componentFormalNames.end();
               it_formal++){
-        auto currentFormal = componentFormals.GetParam(*it_formal);
+        auto currentFormal = componentFormals.getParam(*it_formal);
 
         // Yep, the parameter already exist
-        if (resolvedComponentParams.GetParam(currentFormal->GetName())!=NULL){
+        if (resolvedComponentParams.getParam(currentFormal->getName())!=NULL){
             continue;
         }
         // The parameter hasn't passed. Check if it is optional
-        else if (currentFormal->IsOptional()){
+        else if (currentFormal->isOptional()){
             // Yes it is optional, set the default value
-            Parameter p(currentFormal->GetName(), currentFormal->IsOptional(), currentFormal->GetDefaultValue());
-            p.SetValue(currentFormal->GetDefaultValue());
-            resolvedComponentParams.AddParam(p);
+            Parameter p(currentFormal->getName(), currentFormal->isOptional(), currentFormal->getDefaultValue());
+            p.setValue(currentFormal->getDefaultValue());
+            resolvedComponentParams.addParam(p);
         }
 
         // Not optional and not passed. Error!
         else {
-            throw std::invalid_argument("Parameter: " + currentFormal->GetName() + " is mandatory, but not passed.");
+            throw std::invalid_argument("Parameter: " + currentFormal->getName() + " is mandatory, but not passed.");
         }
     }
 
@@ -249,7 +249,7 @@ DeviceArgumentParser::DeviceArgumentParser(std::map<std::string, std::string> &c
 riaps::componentmodel::Parameters DeviceArgumentParser::Parse(const std::string &deviceName) {
     auto jsonDeviceFormals = _jsonDeviceConfig[J_FORMALS];
     auto deviceFormals = GetComponentFormals(jsonDeviceFormals);
-    auto deviceFormalNames = deviceFormals.GetParameterNames();
+    auto deviceFormalNames = deviceFormals.getParameterNames();
     auto logger = spd::get(deviceName);
 
     riaps::componentmodel::Parameters resolvedComponentParams;
@@ -258,28 +258,28 @@ riaps::componentmodel::Parameters DeviceArgumentParser::Parse(const std::string 
     for (auto it_formal = deviceFormalNames.begin();
          it_formal != deviceFormalNames.end();
          it_formal++){
-        auto currentFormal = deviceFormals.GetParam(*it_formal);
+        auto currentFormal = deviceFormals.getParam(*it_formal);
 
-        if (_commandLineParams.find(currentFormal->GetName()) == _commandLineParams.end() && !currentFormal->IsOptional()){
-            logger->error("Parameter {} is mandatory but missing (for device: {}).", currentFormal->GetName(), deviceName);
+        if (_commandLineParams.find(currentFormal->getName()) == _commandLineParams.end() && !currentFormal->isOptional()){
+            logger->error("Parameter {} is mandatory but missing (for device: {}).", currentFormal->getName(), deviceName);
             continue;
         }
 
-        Parameter p(currentFormal->GetName(), currentFormal->IsOptional(), currentFormal->GetDefaultValue());
-        p.SetValue(currentFormal->GetDefaultValue());
-        resolvedComponentParams.AddParam(p);
+        Parameter p(currentFormal->getName(), currentFormal->isOptional(), currentFormal->getDefaultValue());
+        p.setValue(currentFormal->getDefaultValue());
+        resolvedComponentParams.addParam(p);
     }
 
     // Actuals are the command line params
     for (auto it = _commandLineParams.begin();
               it != _commandLineParams.end();
               it++){
-        if (resolvedComponentParams.GetParam(it->first) == nullptr){
+        if (resolvedComponentParams.getParam(it->first) == nullptr){
             logger->error("Parameter {} is passed but no formal definition found (for device: {})", it->first, deviceName);
             continue;
         }
 
-        resolvedComponentParams.SetParamValue(it->first, it->second);
+        resolvedComponentParams.setParamValue(it->first, it->second);
     }
 
     return resolvedComponentParams;

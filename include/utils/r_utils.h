@@ -32,7 +32,7 @@
  * 
  * @param ipcache <IP address, timestamp> pairs
  */
-void print_cacheips(std::map<std::string, riaps::utils::Timeout<std::milli>>& ipcache);
+void print_cacheips(std::map<std::string, riaps::utils::Timeout<std::milli>>& ipcache, const std::string& selfAddress);
 
 
 /**
@@ -65,6 +65,8 @@ void operator<<(zframe_t*& zframe, capnp::MallocMessageBuilder& message);
 
 void operator>>(zframe_t& frame, capnp::FlatArrayMessageReader*& message);
 void operator>>(zframe_t& frame, std::unique_ptr<capnp::FlatArrayMessageReader>& message);
+void operator>>(zframe_t& frame, std::shared_ptr<capnp::FlatArrayMessageReader>& message);
+void operator>>(zframe_t& frame, capnp::FlatArrayMessageReader& message);
 
 timespec operator-(const timespec& ts1, const timespec& ts2);
 bool operator>(const timespec& ts1, const timespec& ts2);

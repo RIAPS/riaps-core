@@ -27,6 +27,14 @@ namespace riaps{
         }
         
         bool SenderPort::Send(zmsg_t **message) const {
+            if (m_port->GetPortBaseConfig()->isTimed){
+                timespec t;
+                clock_gettime(CLOCK_REALTIME, &t);
+                double tdouble = (float)t.tv_sec + (((float)t.tv_nsec)/1000000000.0);
+                byte* buffer = new byte[sizeof(tdouble)];
+                memcpy(buffer, &tdouble, sizeof(tdouble));
+                zmsg_addmem(*message, buffer, sizeof(double));
+            }
             int rc = zmsg_send(message, const_cast<zsock_t*>(m_port->GetSocket()));
             return rc == 0;
         }

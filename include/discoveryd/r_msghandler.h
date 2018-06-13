@@ -105,6 +105,8 @@ namespace riaps{
 
         void pushDhtValuesToDisco(std::vector<std::shared_ptr<dht::Value>> values);
 
+        std::future<bool> waitForDht();
+
         std::tuple<std::string, std::string> buildInsertKeyValuePair(
                 const std::string&             appName,
                 const std::string&             msgType,
@@ -125,6 +127,7 @@ namespace riaps{
 
 
 
+        void maintainRenewalDepricated();
         void maintainRenewal();
         void maintainZombieList();
         int deregisterActor(const std::string& appName,
@@ -133,6 +136,9 @@ namespace riaps{
         std::string m_macAddress;
         std::string m_hostAddress;
 
+
+        void dhtPut(dht::InfoHash keyhash, const std::string key, std::vector<uint8_t> data, uint8_t callLevel);
+        void dhtGet(const std::string lookupKey, ClientDetails clientDetails, uint8_t callLevel);
 
         int64_t m_lastServiceCheckin;
         int64_t m_lastZombieCheck;
@@ -160,6 +166,8 @@ namespace riaps{
         zpoller_t* m_poller;
         zsock_t*   m_pipe;
 
+        zactor_t* dht_tracker_;
+
         std::shared_ptr<zframe_t> m_repIdentity;
 
         bool m_terminated;
@@ -167,7 +175,6 @@ namespace riaps{
         // Stores pair sockets for actor communication
         std::map<std::string, std::shared_ptr<ActorDetails>> m_clients;
 
-        // TODO: zombieServices is not thread safe, todo implement a threadsafe wrapper
         // Stores addresses of zombie services
         // A service is zombie, if the related socket is not able to respond, but it is still in the DHT
         // The int64 argument is a timestamp. Old zombies are removed from the set after 10 minutes.

@@ -10,7 +10,6 @@
 // Name of the ports from the model file
 #define PORT_TIMER_CLOCK "clock"
 
-
 namespace tsyncgpio {
    namespace components {
       

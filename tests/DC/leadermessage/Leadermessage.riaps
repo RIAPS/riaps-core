@@ -1,0 +1,33 @@
+struct MessageType {
+	msg: String;
+}
+
+message GroupMessage:MessageType;
+
+app Leadermessage{
+	group groupA{	
+		uses leader
+	}
+	
+	component CompOne {
+		timer clock 3000
+	}
+	
+	actor ActOne {
+        {
+            c1:CompOne();
+        }
+    }
+
+    actor ActTwo {
+            {
+                c1:CompOne();
+            }
+        }
+
+    actor ActThree {
+            {
+                c1:CompOne();
+            }
+        }
+}

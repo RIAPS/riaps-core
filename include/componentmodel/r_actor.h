@@ -10,6 +10,7 @@
 #include <componentmodel/r_peripheral.h>
 #include <componentmodel/r_devmapi.h>
 #include <componentmodel/r_configuration.h>
+#include <componentmodel/r_deploapi.h>
 #include <messaging/disco.capnp.h>
 #include <const/r_const.h>
 #include <utils/r_utils.h>
@@ -33,6 +34,10 @@ namespace riaps {
     class ComponentBase;
     class Peripheral;
 
+    namespace deplo {
+        class DeploApi;
+    }
+
     class Actor {
     public:
 
@@ -44,49 +49,48 @@ namespace riaps {
 
         static const Actor* GetRunningActor();
 
-        static void HandleCPULimit(int signum);
-
-        bool Init();
+        bool init();
         virtual void start();
-        std::string  GetActorId();
+        std::string  getActorId();
 
         // Todo: Can they be static?
         // Todo: Actually a better question: can the whole actor be static?
-        const std::string& GetActorName() const;
-        const std::string& GetApplicationName() const;
-        riaps::devm::DevmApi* GetDeviceManager() const;
+        const std::string& getActorName() const;
+        const std::string& getApplicationName() const;
+        riaps::devm::DevmApi* getDeviceManager() const;
+        riaps::deplo::DeploApi* getDeploManager() const;
 
         // Note: Group configs can be static
         // Todo: Thinking on to make them static... I'm not sure it is good.
-        const std::vector<groupt_conf>& GetGroupTypes() const;
-        const groupt_conf* GetGroupType(const std::string& groupTypeId) const;
-        ComponentBase* GetComponentByName(const std::string& componentName) const;
+        const std::vector<groupt_conf>& getGroupTypes() const;
+        const groupt_conf* getGroupType(const std::string &groupTypeId) const;
+        ComponentBase* getComponentByName(const std::string &componentName) const;
 
         virtual ~Actor();
-        void UpdatePort(std::string& instancename, std::string& portname, std::string& host, int port);
-        void UpdateGroup(zframe_t* capnpMessageBody, const std::string& sourceComponentId);
+        void updatePort(std::string &instancename, std::string &portname, std::string &host, int port);
+        void updateGroup(zframe_t *capnpMessageBody, const std::string &sourceComponentId);
 
     protected:
 
         struct ActorProperties {
-            std::string    _actorName;
-            std::string    _jsonFile;
-            nlohmann::json _jsonActorConfig;
-            nlohmann::json _jsonInstances;
-            nlohmann::json _jsonDevicesconfig;
-            nlohmann::json _jsonComponentsconfig;
-            nlohmann::json _jsonGroups;
+            std::string    actorName;
+            std::string    jsonFile;
+            nlohmann::json jsonActorConfig;
+            nlohmann::json jsonInstances;
+            nlohmann::json jsonDevicesconfig;
+            nlohmann::json jsonComponentsconfig;
+            nlohmann::json jsonGroups;
         };
 
         struct DeviceProperties {
-            std::string    _actorName;
-            std::string    _deviceName;
-            nlohmann::json _configJson;
-            nlohmann::json _jsonDevicesconfig;
+            std::string    actorName;
+            std::string    deviceName;
+            nlohmann::json configJson;
+            nlohmann::json jsonDevicesconfig;
         };
 
-        std::unique_ptr<ActorProperties>  _actorProperties;
-        std::unique_ptr<DeviceProperties> _deviceProperties;
+        std::unique_ptr<ActorProperties>  m_actorProperties;
+        std::unique_ptr<DeviceProperties> m_deviceProperties;
 
         /**
          * Starting a regular actor, NOT a device component
@@ -119,39 +123,39 @@ namespace riaps {
         );
 
         template<class T>
-        bool ParseConfig(){
+        bool parseConfig(){
 
         }
 
-        std::set<std::string> GetLocalMessageTypes(nlohmann::json& jsonLocals);
+        std::set<std::string> getLocalMessageTypes(nlohmann::json &jsonLocals);
 
 
 
         // Channel for incomming controll messages (e.g.: restart component)
-        zsock_t*                    _actor_zsock;
-
-        zsock_t*                    _discovery_socket;
+        zsock_t*                    m_actor_zsock;
+        zsock_t*                    m_discovery_socket;
 
 
         int                         _actor_port;
-        //std::string                 _jsonFile;
+        //std::string                 jsonFile;
         std::string                 _actor_endpoint;
-        zuuid_t*                    _actor_id;
-        //std::string                 _actorName;
-        std::string                 _applicationName;
-        std::vector<ComponentBase*> _components;
-        std::vector<Peripheral*>    _peripherals;
-        std::vector<void*>          _component_dll_handles;
+        std::shared_ptr<zuuid_t> m_actor_id;
+        //std::string                 actorName;
+        std::string                 m_applicationName;
+        std::vector<ComponentBase*> m_components;
+        std::vector<Peripheral*>    m_peripherals;
+        std::vector<void*>          m_component_dll_handles;
         //bool                        _startDevice; // The actor doesn;t start the device. The DeviceActor starts it only
-        //std::string                 _deviceName;  // If the DeviceActor starts the device, the device name is set here
+        //std::string                 deviceName;  // If the DeviceActor starts the device, the device name is set here
                                                   // and not passed in parameters. Only the actorname comes from parameters.
 
 
-        std::map<std::string, std::string>&   _commandLineParams;
-        std::unique_ptr<riaps::devm::DevmApi> _devm;
+        std::map<std::string, std::string>&   m_commandLineParams;
+        std::unique_ptr<riaps::devm::DevmApi> m_devm;
+        std::unique_ptr<riaps::deplo::DeploApi> m_deplo;
 
-        //nlohmann::json  _jsonComponentsconfig;
-        //nlohmann::json  _jsonDevicesconfig;
+        //nlohmann::json  jsonComponentsconfig;
+        //nlohmann::json  jsonDevicesconfig;
         //nlohmann::json  _jsonActorconfig;
         nlohmann::json  _jsonInternals;
         nlohmann::json  _jsonLocals;
@@ -160,26 +164,24 @@ namespace riaps {
         // Configurations
         ////
 
-        void GetPortConfigs(nlohmann::json& jsonPortsConfig, _component_conf& results);
+        void getPortConfigs(nlohmann::json &jsonPortsConfig, _component_conf &results);
 
-        void ParseGroups();
+        void parseGroups();
 
 
-        std::vector<component_conf> _component_configurations;
-        std::vector<groupt_conf>    _grouptype_configurations;
-        std::set<std::string>       _localMessageTypes;
+        std::vector<component_conf> m_component_configurations;
+        std::vector<groupt_conf>    m_grouptype_configurations;
+        std::set<std::string>       m_localMessageTypes;
 
-        static Actor* _currentActor;
-        std::shared_ptr<spd::logger> _logger;
+        static Actor* CurrentActor;
+        std::shared_ptr<spd::logger> m_logger;
     private:
-        zpoller_t*    _poller;
+        zpoller_t*    m_poller;
 
 
 
-        bool IsDeviceActor() const;
-        bool IsComponentActor() const;
-
-        void SendCPULimit() const;
+        bool isDeviceActor() const;
+        bool isComponentActor() const;
     };
 }
 

@@ -8,14 +8,15 @@
 #include <componentmodel/ports/r_portbase.h>
 
 #include <string>
+#include "r_recvport.h"
 
 namespace riaps{
     namespace ports{
-        class SubscriberPortBase : public PortBase{
+        class SubscriberPortBase : public PortBase, public RecvPort{
         public:
             SubscriberPortBase(const component_port_config* config, const ComponentBase* parentComponent);
 
-            virtual const _component_port_sub* GetConfig() const;
+            virtual const component_port_sub* GetConfig() const;
 
             // Returns false, if the subscriber couldn't connect
             bool ConnectToPublihser(const std::string& pub_endpoint);

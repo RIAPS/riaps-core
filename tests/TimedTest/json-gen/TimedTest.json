@@ -1,0 +1,156 @@
+{
+  "name": "TimedTest",
+  "groups": {},
+  "devices": {},
+  "components": {
+    "Filter": {
+      "name": "Filter",
+      "formals": [],
+      "libraries": [],
+      "files": [],
+      "devices": [],
+      "exceptHandler": "",
+      "ports": {
+        "reqs": {
+          "query": {
+            "req_type": "SensorQuery",
+            "rep_type": "SensorValue",
+            "deadline": 0,
+            "upperlimit": 0,
+            "lowerlimit": 0
+          }
+        },
+        "anss": {},
+        "pubs": {
+          "estimate": {
+            "type": "Estimate",
+            "upperlimit": 0,
+            "lowerlimit": 0
+          }
+        },
+        "reps": {},
+        "inss": {},
+        "subs": {
+          "ready": {
+            "type": "SensorReady",
+            "upperlimit": 0,
+            "lowerlimit": 0
+          }
+        },
+        "clts": {},
+        "srvs": {},
+        "tims": {},
+        "qrys": {}
+      }
+    },
+    "Sensor": {
+      "name": "Sensor",
+      "formals": [],
+      "libraries": [],
+      "files": [],
+      "devices": [],
+      "exceptHandler": "",
+      "ports": {
+        "reqs": {},
+        "anss": {},
+        "pubs": {
+          "ready": {
+            "type": "SensorReady",
+            "upperlimit": 0,
+            "lowerlimit": 0
+          }
+        },
+        "reps": {
+          "request": {
+            "req_type": "SensorQuery",
+            "rep_type": "SensorValue",
+            "deadline": 0,
+            "upperlimit": 0,
+            "lowerlimit": 0
+          }
+        },
+        "inss": {},
+        "subs": {},
+        "clts": {},
+        "srvs": {},
+        "tims": {
+          "clock": {
+            "period": 1000
+          }
+        },
+        "qrys": {}
+      }
+    }
+  },
+  "actors": {
+    "Filter": {
+      "internals": [],
+      "locals": [
+        {
+          "type": "SensorReady"
+        },
+        {
+          "type": "SensorQuery"
+        },
+        {
+          "type": "SensorValue"
+        }
+      ],
+      "criticals": [],
+      "formals": [],
+      "wires": [],
+      "instances": {
+        "filter": {
+          "type": "Filter",
+          "actuals": []
+        }
+      },
+      "devices": [],
+      "memory": -1,
+      "space": -1,
+      "exceptHandler": ""
+    },
+    "Sensor": {
+      "internals": [],
+      "locals": [
+        {
+          "type": "SensorReady"
+        },
+        {
+          "type": "SensorQuery"
+        },
+        {
+          "type": "SensorValue"
+        }
+      ],
+      "criticals": [],
+      "formals": [],
+      "wires": [],
+      "instances": {
+        "sensor": {
+          "type": "Sensor",
+          "actuals": []
+        }
+      },
+      "devices": [],
+      "memory": -1,
+      "space": -1,
+      "exceptHandler": ""
+    }
+  },
+  "messages": [
+    {
+      "name": "Estimate"
+    },
+    {
+      "name": "SensorValue"
+    },
+    {
+      "name": "SensorReady"
+    },
+    {
+      "name": "SensorQuery"
+    }
+  ],
+  "libraries": []
+}

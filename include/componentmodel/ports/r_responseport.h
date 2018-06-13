@@ -6,6 +6,7 @@
 #define RIAPS_FW_R_RESPONSEPORT_H
 
 #include <componentmodel/ports/r_portbase.h>
+#include "r_recvport.h"
 #include <componentmodel/r_componentbase.h>
 #include <componentmodel/r_configuration.h>
 
@@ -22,13 +23,14 @@ namespace riaps {
 
         //class PortBase;
 
-        class ResponsePort : public PortBase, public SenderPort {
+        class ResponsePort : public PortBase, public SenderPort, public RecvPort {
         public:
 
-            ResponsePort(const _component_port_rep &config, const ComponentBase *parent_component);
-            virtual const _component_port_rep* GetConfig() const;
+            ResponsePort(const component_port_rep &config, const ComponentBase *parent_component);
+            virtual const component_port_rep* GetConfig() const;
 
             virtual ResponsePort* AsResponsePort() ;
+            virtual RecvPort*     AsRecvPort()     ;
 
             ~ResponsePort() noexcept ;
 

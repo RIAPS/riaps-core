@@ -8,9 +8,10 @@
 namespace riaps {
     namespace ports {
 
-        RequestPort::RequestPort(const _component_port_req &config, const ComponentBase *parentComponent)
+        RequestPort::RequestPort(const component_port_req &config, const ComponentBase *parentComponent)
                 : PortBase(PortTypes::Request, (component_port_config*)(&config), parentComponent),
                   SenderPort(this),
+                  RecvPort(this),
                   m_capnpReader(capnp::FlatArrayMessageReader(nullptr)) {
             m_port_socket = zsock_new(ZMQ_REQ);
 
@@ -30,12 +31,12 @@ namespace riaps {
 
         void RequestPort::Init() {
 
-            const _component_port_req* current_config = GetConfig();
+            const component_port_req* current_config = GetConfig();
 
             auto results =
-                    subscribeToService(GetParentComponent()->GetActor()->GetApplicationName(),
+                    subscribeToService(GetParentComponent()->GetActor()->getApplicationName(),
                                          GetParentComponent()->GetConfig().component_name,
-                                         GetParentComponent()->GetActor()->GetActorName(),
+                                       GetParentComponent()->GetActor()->getActorName(),
                                          riaps::discovery::Kind::REQ,
                                          (current_config->isLocal?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
                                          current_config->portName, // Subscriber name
@@ -61,39 +62,67 @@ namespace riaps {
             return true;
         }
 
-        const _component_port_req* RequestPort::GetConfig() const{
-            return (_component_port_req*)GetPortBaseConfig();
+        const component_port_req* RequestPort::GetConfig() const{
+            return (component_port_req*)GetPortBaseConfig();
         }
 
         RequestPort* RequestPort::AsRequestPort() {
             return this;
         }
 
+        const timespec& RequestPort::GetRecvTimestamp() const {
+            return m_recvTimestamp;
+        }
 
-
+        // TODO: return shared_ptr instead of pointer
         bool RequestPort::Recv(capnp::FlatArrayMessageReader** messageReader) {
-            zmsg_t* msg = zmsg_recv((void*)GetSocket());
+            auto capnpMessage = RecvPort::Recv();
+            if (capnpMessage == nullptr) return false;
 
-            if (msg){
-                //char* msgType = zmsg_popstr(msg);
-                //messageType = msgType;
-                //if (msgType!=NULL){
-                    zframe_t* bodyFrame = zmsg_pop(msg);
-                    size_t size = zframe_size(bodyFrame);
-                    byte* data = zframe_data(bodyFrame);
 
-                    auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
-                    m_capnpReader = capnp::FlatArrayMessageReader(capnp_data);
-                    *messageReader = &m_capnpReader;
+            *messageReader = capnpMessage.get();
+            return true;
 
-                    zframe_destroy(&bodyFrame);
-                    return true;
-                //}
-                //return false;
-            }
-            zmsg_destroy(&msg);
+//            zmsg_t* msg = zmsg_recv((void*)GetSocket());
+//
+//            if (msg){
+//                //char* msgType = zmsg_popstr(msg);
+//                //messageType = msgType;
+//                //if (msgType!=NULL){
+//                zframe_t* bodyFrame = zmsg_pop(msg);
+//                size_t size = zframe_size(bodyFrame);
+//                byte* data = zframe_data(bodyFrame);
+//
+//                auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
+//                m_capnpReader = capnp::FlatArrayMessageReader(capnp_data);
+//                *messageReader = &m_capnpReader;
+//
+//                zframe_destroy(&bodyFrame);
+//
+//                if (GetConfig()->isTimed){
+//                    auto timeFrame = zmsg_pop(msg);
+//                    if (timeFrame) {
+//                        auto buffer = zframe_data(timeFrame);
+//                        double dTime;
+//                        memcpy(&dTime, buffer, sizeof(double));
+//                        m_recvTimestamp.tv_sec  = dTime;
+//                        m_recvTimestamp.tv_nsec = (dTime-m_recvTimestamp.tv_sec)*BILLION;
+//                        zframe_destroy(&timeFrame);
+//                    }
+//                }
+//
+//
+//                return true;
+//                //}
+//                //return false;
+//            }
+//            zmsg_destroy(&msg);
+//
+//            return false;
+        }
 
-            return false;
+        RecvPort* RequestPort::AsRecvPort() {
+            return this;
         }
 
         bool RequestPort::Send(capnp::MallocMessageBuilder &message) const {
@@ -101,11 +130,13 @@ namespace riaps {
                 return false;
             }
 
-            zmsg_t* zmsg;
-            zmsg << message;
+            return SenderPort::Send(message);
 
-            int rc = zmsg_send(&zmsg, const_cast<zsock_t*>(GetSocket()));
-            return rc==0;
+//            zmsg_t* zmsg;
+//            zmsg << message;
+//
+//            int rc = zmsg_send(&zmsg, const_cast<zsock_t*>(GetSocket()));
+//            return rc==0;
         }
 
         RequestPort::~RequestPort() noexcept {

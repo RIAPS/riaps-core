@@ -7,7 +7,7 @@
 namespace riaps{
     namespace ports{
 
-        InsidePort::InsidePort(const _component_port_ins &config, InsidePortMode mode, const ComponentBase *parent_component)
+        InsidePort::InsidePort(const component_port_ins &config, InsidePortMode mode, const ComponentBase *parent_component)
             : PortBase(PortTypes::Inside,
                        (component_port_config*)&config,
                        parent_component),
@@ -26,8 +26,8 @@ namespace riaps{
             zsock_set_rcvtimeo(m_port_socket, 500);
         }
 
-        const _component_port_ins* InsidePort::GetConfig() const {
-            return (_component_port_ins*)GetPortBaseConfig();
+        const component_port_ins* InsidePort::GetConfig() const {
+            return (component_port_ins*)GetPortBaseConfig();
         }
 
         const std::string& InsidePort::GetEndpoint() {

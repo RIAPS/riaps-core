@@ -29,19 +29,25 @@ namespace distributedestimator {
             if (result) {
                 messages::SensorValue::Reader sensorValue;
                 if (RecvQuery(sensorValue)) {
-                    _logger->info("LocalEstimator::OnQuery(): {}", sensorValue.getMsg().cStr());
-                    //std::cout << sensorValue.getMsg().cStr() << std::endl;
+                    if (GetPortByName(PORT_REQ_QUERY)->GetPortBaseConfig()->isTimed) {
+                        auto recvPort = GetPortByName(PORT_REQ_QUERY)->AsRecvPort();
+                        if (recvPort!=nullptr){
+                            _logger->info("LocalEstimator::OnQuery(): {};  sentTimestamp: {}.{}, recvTimestamp: {}.{}",
+                                          sensorValue.getMsg().cStr(),
+                                          recvPort->GetLastSendTimestamp().tv_sec ,
+                                          recvPort->GetLastSendTimestamp().tv_nsec,
+                                          recvPort->GetLastRecvTimestamp().tv_sec ,
+                                          recvPort->GetLastRecvTimestamp().tv_nsec
+                            );
+                        }
+                    } else {
+                        _logger->info("LocalEstimator::OnQuery(): {}", sensorValue.getMsg().cStr());
+                    }
+
                     capnp::MallocMessageBuilder builderEstimate;
                     auto estimateMsg = builderEstimate.initRoot<messages::Estimate>();
                     estimateMsg.setMsg("local_est(" + std::to_string(::getpid()) + ")");
-                    //auto valueList = estimateMsg.initValues(2);
-                    //valueList.set(0, 1.05);
-                    //valueList.set(1, 10.05);
                     SendEstimate(builderEstimate, estimateMsg);
-                    //messages::Estimate estimateMessage;
-                    //estimateMessage.GetData().push_back(1.05);
-                    //estimateMessage.GetData().push_back(10.05);
-                    //SendEstimate(estimateMessage);
                 }
             }
         }

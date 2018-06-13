@@ -1,0 +1,42 @@
+// RIAPS Sample
+struct DummyT {
+	msg: String;
+}
+
+message SensorReady:DummyT;
+message SensorQuery:DummyT;
+message SensorValue:DummyT;
+message Estimate:DummyT;
+
+app TimedTest {
+	// Message types used in the app
+
+    
+	// Sensor component
+    component Sensor {
+      timer clock 1000; 							// Periodic timer trigger to trigger sensor every 1 sec
+      pub ready : SensorReady;				// Publish port for SensorReady messages 
+      rep request : ( SensorQuery , SensorValue );	// Reply port to query the sensor and retrieve its value
+    }
+    
+    // Filter component
+    component Filter () {
+      sub ready : SensorReady;				// Subscriber port to trigger component with SensorReady messages
+      req query : (SensorQuery , SensorValue );	// Request port to query the sensor and retrieve its value
+      pub estimate : Estimate ;						// Publish port to publish estimated value messages
+    }
+    
+    // Sensor actor
+    actor Sensor {
+       local SensorReady, SensorQuery, SensorValue ;	// Local message types
+       {  // Sensor component
+          sensor : Sensor;
+       }
+    }
+    actor Filter {
+	   local SensorReady, SensorQuery, SensorValue ;	// Local message types
+       {   
+		  filter : Filter;
+       }
+    }
+}

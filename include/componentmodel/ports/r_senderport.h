@@ -5,8 +5,6 @@
 #ifndef RIAPS_CORE_R_SENDERPORT_H
 #define RIAPS_CORE_R_SENDERPORT_H
 
-//#include <componentmodel/ports/r_portbase.h>
-
 #include <capnp/message.h>
 #include <capnp/serialize.h>
 #include <czmq.h>
@@ -26,9 +24,8 @@ namespace riaps{
 
             virtual bool Send(capnp::MallocMessageBuilder& message) const;
             virtual bool Send(zmsg_t** message) const;
-            
-            virtual ~SenderPort();
 
+            virtual ~SenderPort();
 
         private:
             PortBase* m_port;

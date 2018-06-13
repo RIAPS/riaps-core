@@ -14,6 +14,7 @@
 
 
 #include <discoveryd/r_riaps_actor.h>
+#include <discoveryd/r_dhttracker.h>
 #include <framework/rfw_network_interfaces.h>
 #include <utils/r_utils.h>
 #include <utils/r_timeout.h>
@@ -26,10 +27,10 @@
 #include <vector>
 
 // Frequency of sending UDP packets (msec)
-#define BEACON_FREQ 5000
+#define BEACON_FREQ 1000
 
 // Timeout of port polling for UDP packages
-#define UDP_READ_TIMEOUT 500
+#define UDP_READ_TIMEOUT 3000
 
 // Port to be used for sending/receiving UDP beacon packages
 #define UDP_PACKET_PORT 9999
@@ -55,16 +56,42 @@ int main(int argc, char* argv[])
     std::uniform_int_distribution<> dis(2, 5);
 
     std::string iface = riaps::framework::Network::GetConfiguredIface();
-    if (iface != "")
+    std::string address;
+    if (iface != "") {
         zsys_set_interface(iface.c_str());
+        address = riaps::framework::Network::GetIPAddress(iface);
+    }
     else {
-        std::string address;
         riaps::framework::Network::GetFirstGlobalIface(iface, address);
         assert(iface!="");
         zsys_set_interface(iface.c_str());
     }
 
     zactor_t *r_actor = zactor_new(riaps_actor, NULL);
+    uint8_t dhtStarted = 0;
+    zsock_recv(r_actor, "1", &dhtStarted);
+
+    if (dhtStarted) {
+        console->info("DHT thread is initialized, starts beaconing.");
+    }else {
+        console->error("Unable to initialize DHT thread, exiting.");
+        zactor_destroy(&r_actor);
+        zclock_sleep(500);
+        return -1;
+    }
+
+//    zmsg_t* zactorMsg = zactor_recv(r_actor);
+//    char* pipeReturn = zmsg_popstr(zactorMsg);
+//    if (*pipeReturn == '1') {
+//        console->info("DHT thread is initialized, starts beaconing.");
+//        zclock_sleep(500);
+//    } else {
+//        console->error("Unable to initialize DHT thread, exiting.");
+//        zactor_destroy(&r_actor);
+//        zclock_sleep(500);
+//        return -1;
+//    }
+
     zsock_t * control = zsock_new_router(CONTROL_SOCKET);
 
     // zbeacon for sending UDP beacons
@@ -72,6 +99,8 @@ int main(int argc, char* argv[])
 
     // listen for UDP packages
     zactor_t *listener  = zactor_new (zbeacon, NULL);
+
+    zsock_t* dhtTracker = zsock_new_dealer(CHAN_IN_DHTTRACKER);
 
     #ifdef _DEBUG_
         zstr_sendx (speaker, "VERBOSE", NULL);
@@ -127,30 +156,32 @@ int main(int argc, char* argv[])
     zpoller_t* poller = zpoller_new(control, NULL);
 
     // Generate the time of the next announcement.
-    int nextDiff = dis(gen)*1000;
-    int64_t nextAnnouncement = zclock_mono() + nextDiff;
+    //int nextDiff = dis(gen)*1000;
+    //int64_t nextAnnouncement = zclock_mono() + nextDiff;
+
+    zsock_send (speaker, "sbi", "PUBLISH", announcement, 2, BEACON_FREQ);
 
     while (!zsys_interrupted) {
         // Wait for at most UDP_READ_TIMEOUT millisecond for UDP package
         zsock_set_rcvtimeo (listener, UDP_READ_TIMEOUT);
 
         // If no announcement, start sending beacons
-        if (zclock_mono()>nextAnnouncement){
-
-            //LOG(INFO) << "Send UDP beacon";
-
-            zsock_send (speaker, "sbi", "PUBLISH", announcement, 2, BEACON_FREQ);
-
-            // wait for sending out the packet
-            zclock_sleep(100);
-
-            // Stop sending beacons
-            zsock_send(speaker, "s", "SILENCE");
-
-            // Calculate the next announcment
-            int nextDiff = dis(gen)*1000;
-            nextAnnouncement = zclock_mono() + nextDiff;
-        }
+//        if (zclock_mono()>nextAnnouncement){
+//
+//            //LOG(INFO) << "Send UDP beacon";
+//
+//            zsock_send (speaker, "sbi", "PUBLISH", announcement, 2, BEACON_FREQ);
+//
+//            // wait for sending out the packet
+//            zclock_sleep(100);
+//
+//            // Stop sending beacons
+//            zsock_send(speaker, "s", "SILENCE");
+//
+//            // Calculate the next announcment
+//            int nextDiff = dis(gen)*1000;
+//            nextAnnouncement = zclock_mono() + nextDiff;
+//        }
 
         void *which = zpoller_wait(poller, 1);
 
@@ -191,25 +222,25 @@ int main(int argc, char* argv[])
 
         }
 
-        if (!has_joined && ipcache.size()>1){
-            zmsg_t* join_msg = zmsg_new();
-            zmsg_addstr(join_msg, CMD_JOIN);
-
-            // Compose the JOIN command with the available ipaddresses
-            for (auto it=ipcache.begin(); it!=ipcache.end(); it++){
-                zmsg_addstr(join_msg, it->first.c_str());
-            }
-            
-            zmsg_send(&join_msg, r_actor);
-
-            has_joined=true;
-        }
-
-        // If the node joined previously, but the clients left the cluster,
-        // then try to join again
-        else if (has_joined && ipcache.size()==1) {
-            has_joined = false;
-        }
+//        if (!has_joined && ipcache.size()>1){
+//            zmsg_t* join_msg = zmsg_new();
+//            zmsg_addstr(join_msg, CMD_JOIN);
+//
+//            // Compose the JOIN command with the available ipaddresses
+//            for (auto it=ipcache.begin(); it!=ipcache.end(); it++){
+//                zmsg_addstr(join_msg, it->first.c_str());
+//            }
+//
+//            zmsg_send(&join_msg, r_actor);
+//
+//            has_joined=true;
+//        }
+//
+//        // If the node joined previously, but the clients left the cluster,
+//        // then try to join again
+//        else if (has_joined && ipcache.size()==1) {
+//            has_joined = false;
+//        }
 
         // Source of the incoming UDP package
         char *ipaddress = zstr_recv (listener);
@@ -217,28 +248,43 @@ int main(int argc, char* argv[])
         // If UDP package was received
         if (ipaddress) {
 
-            //LOG(INFO) << "Beacon arrived";
+            // Pass the ip addres to the dht tracker to check its stability
+            // DHT must be stable for at least 3 seconds before the registration happens
+            zsock_send(dhtTracker, "ss", CMD_BEACON_IP, ipaddress);
 
-            // Recalculate (delay) the next announcement
-            int nextDiff = dis(gen)*1000;
+            if (strcmp(ipaddress,address.c_str()) != 0) {
 
-            // Calculate the next announcment
-            nextAnnouncement = zclock_mono() + nextDiff;
-            
-            // Check if the item already in the map
-            bool is_newitem = ipcache.find(std::string(ipaddress)) == ipcache.end();
+                //LOG(INFO) << "Beacon arrived";
 
-            // If the ipaddress in the cache, update the timestamp
-            // If the ipaddress is new, add to the cache
-            //int64_t time = zclock_mono();
-            ipcache[ipaddress] = riaps::utils::Timeout<std::milli>(std::chrono::duration<int, std::milli>(IPCACHE_TIMEOUT));
+                // Recalculate (delay) the next announcement
+                //int nextDiff = dis(gen)*1000;
 
-            // Check for outdated ip addresses (no UDP paca)
-            bool is_maintained = maintain_cache(ipcache);
+                // Calculate the next announcment
+                //nextAnnouncement = zclock_mono() + nextDiff;
 
-            // If a new item arrive or an old one was deleted => print the contents
-            if (is_newitem || is_maintained) {
-                print_cacheips(ipcache);
+                // Check if the item already in the map
+                bool is_newitem = ipcache.find(std::string(ipaddress)) == ipcache.end();
+
+                // If the ipaddress in the cache, update the timestamp
+                // If the ipaddress is new, add to the cache
+                //int64_t time = zclock_mono();
+                ipcache[ipaddress] = riaps::utils::Timeout<std::milli>(
+                        std::chrono::duration<int, std::milli>(IPCACHE_TIMEOUT));
+
+                // Check for outdated ip addresses (no UDP paca)
+                bool is_maintained = maintain_cache(ipcache);
+
+                // If a new item arrive or an old one was deleted => print the contents
+                if (is_newitem || is_maintained) {
+                    print_cacheips(ipcache, address);
+                }
+
+                if (is_newitem) {
+                    zmsg_t *join_msg = zmsg_new();
+                    zmsg_addstr(join_msg, CMD_JOIN);
+                    zmsg_addstr(join_msg, ipaddress);
+                    zmsg_send(&join_msg, r_actor);
+                }
             }
 
             zframe_t *content = zframe_recv (listener);
@@ -250,18 +296,21 @@ int main(int argc, char* argv[])
         } else{
             bool is_maintained = maintain_cache(ipcache);
             if (is_maintained){
-                print_cacheips(ipcache);
+                print_cacheips(ipcache, address);
             }
         }
     }
+    zsock_send(speaker, "s", "SILENCE");
+    zclock_sleep(500);
     zpoller_destroy(&poller);
+    zsock_destroy(&dhtTracker);
     zsock_destroy(&control);
     zactor_destroy(&r_actor);
     zactor_destroy(&listener);
     zactor_destroy(&speaker);
 
     // Wait for the threads to stop for sure.
-    sleep(2);
+    zclock_sleep(1500);
     
     return 0;
 }

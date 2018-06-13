@@ -42,8 +42,8 @@ namespace riaps{
             m_logger->debug("Publisher is created on {}:{} [{}]", m_host, m_port, GetConfig()->messageType);
         }
 
-        const _component_port_pub* PublisherPortBase::GetConfig() const {
-            return (_component_port_pub*)GetPortBaseConfig();
+        const component_port_pub* PublisherPortBase::GetConfig() const {
+            return (component_port_pub*)GetPortBaseConfig();
         }
 
         std::string PublisherPortBase::GetEndpoint() {

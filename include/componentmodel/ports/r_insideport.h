@@ -24,12 +24,11 @@ namespace riaps {
         public:
             //using PortBase::Send;
 
-            InsidePort(const _component_port_ins &config, InsidePortMode mode, const ComponentBase *parent_component);
+            InsidePort(const component_port_ins &config, InsidePortMode mode, const ComponentBase *parent_component);
 
             const std::string& GetEndpoint();
 
-            virtual const _component_port_ins* GetConfig() const;
-
+            virtual const component_port_ins* GetConfig() const;
             virtual InsidePort*  AsInsidePort() ;
 
             //virtual bool Send(zmsg_t** zmessage) const;

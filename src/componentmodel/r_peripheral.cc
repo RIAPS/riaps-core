@@ -6,9 +6,9 @@
 
 namespace riaps{
     Peripheral::Peripheral(Actor* parentActor)
-            : _state(Peripheral::STARTING),
-              _parentActor(parentActor) {
-        _state = Peripheral::INITIAL;
+            : m_state(Peripheral::STARTING),
+              m_parentActor(parentActor) {
+        m_state = Peripheral::INITIAL;
     }
 
     void Peripheral::Setup(const std::string &appName,
@@ -16,8 +16,9 @@ namespace riaps{
                            const std::string &typeName,
                            const std::map<std::string, std::string> &args) {
 
-        _parentActor->GetDeviceManager()->RegisterDevice(appName, modelName, typeName, args);
-        _state = Peripheral::READY;
+        //m_parentActor->getDeviceManager()->RegisterDevice(appName, modelName, typeName, args);
+        m_parentActor->getDeploManager()->registerDevice(appName, modelName, typeName, args);
+        m_state = Peripheral::READY;
     }
 
     Peripheral::~Peripheral() {

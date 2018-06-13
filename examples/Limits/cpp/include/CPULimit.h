@@ -16,6 +16,8 @@ namespace limits {
          CPULimit(_component_conf &config, riaps::Actor &actor);
          
          virtual void OnTicker(riaps::ports::PortBase *port);
+
+          virtual void handleCPULimit();
          
          void OnGroupMessage(const riaps::groups::GroupId& groupId, capnp::FlatArrayMessageReader& capnpreader, riaps::ports::PortBase* port);
          

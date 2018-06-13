@@ -5,13 +5,15 @@
 #include <regex>
 #include <sched.h>
 
+using namespace std;
+
 int main(int argc, char* argv[]) {
     //Note: Uncomment for RT-FIFO
     sched_param x;
     x.__sched_priority = 85;
     auto ret = sched_setscheduler(0, SCHED_FIFO, &x);
 
-    assert(ret==0);
+    //assert(ret==0);
 
     if (CommandLineParser::CommandOptionExists(argv, argv+argc, "-h") || argc < 4){
         std::cout << "Usage: start_actor <app> <model> <actor> [-h]" << std::endl;
@@ -59,7 +61,7 @@ int main(int argc, char* argv[]) {
             
 
             std::unique_ptr<riaps::Actor> actor = std::unique_ptr<riaps::Actor>(aptr);
-            if (actor->Init())
+            if (actor->init())
                 actor->start();
         }
         catch(std::domain_error& e){

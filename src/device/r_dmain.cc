@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
                                                           modelName   ,
                                                           actualParams);
             std::unique_ptr<riaps::DeviceActor> device = std::unique_ptr<riaps::DeviceActor>(dptr);
-            if (dptr->Init())
+            if (dptr->init())
                 dptr->start();
             //delete dptr;
         }

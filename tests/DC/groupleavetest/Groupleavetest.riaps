@@ -1,0 +1,26 @@
+struct MessageType {
+	msg: String;
+}
+
+message GroupLeave:MessageType;
+
+app Groupleavetest{
+	group groupA{	
+		uses consensus
+	}
+	
+	component CompOne {
+		timer clock 3000
+	}
+	
+	component CompTwo {
+		timer clock 3000
+	}
+	
+	actor ActOne {
+        {
+            c1:CompOne();
+            c2:CompTwo();
+        }
+    }
+}

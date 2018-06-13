@@ -20,17 +20,17 @@ namespace riaps {
         public:
             Parameters();
 
-            void AddParam(const Parameter& param);
-            void AddParam(std::string name, std::string value, bool isOptional, std::string defaultValue = "");
-            const Parameter* SetParamValue(std::string name, std::string value);
-            const Parameter* GetParam(const std::string& name) const;
+            void addParam(const Parameter &param);
+            void addParam(std::string name, std::string value, bool isOptional, std::string defaultValue = "");
+            const Parameter* setParamValue(std::string name, std::string value);
+            const Parameter* getParam(const std::string &name) const;
 
-            std::vector<std::string>      GetParameterNames();
+            std::vector<std::string>      getParameterNames();
 
             ~Parameters();
 
         private:
-            std::map<std::string, std::shared_ptr<Parameter>> _params;
+            std::map<std::string, std::shared_ptr<Parameter>> m_params;
         };
 
         // Todo: check whether templates can be used here?
@@ -39,24 +39,24 @@ namespace riaps {
             Parameter(std::string fieldName, bool isOptional, std::string defaultValue = "");
             Parameter();
 
-            void SetValue(std::string value);
+            void setValue(std::string value);
 
-            const std::string& GetValueAsString() const;
+            const std::string& getValueAsString() const;
 
-            bool GetValueAsInt(int* intValue) const;
+            bool getValueAsInt(int *intValue) const;
 
-            bool GetValueAsBool() const;
+            bool getValueAsBool() const;
 
-            const std::string& GetName() const;
-            const std::string& GetDefaultValue() const;
+            const std::string& getName() const;
+            const std::string& getDefaultValue() const;
 
-            bool IsOptional() const;
+            bool isOptional() const;
 
         private:
-            std::string _paramName;
-            std::string _paramDefaultValue;
-            std::string _paramValue;
-            bool        _isOptional;
+            std::string m_paramName;
+            std::string m_paramDefaultValue;
+            std::string m_paramValue;
+            bool        m;
         };
 
         class ComponentActual{

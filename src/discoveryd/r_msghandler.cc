@@ -6,6 +6,7 @@
 #include <framework/rfw_configuration.h>
 #include <framework/rfw_network_interfaces.h>
 #include "../../include/discoveryd/r_msghandler.h"
+#include <discoveryd/r_dhttracker.h>
 
 namespace riaps{
     DiscoveryMessageHandler::DiscoveryMessageHandler(dht::DhtRunner &dhtNode, zsock_t** pipe, std::shared_ptr<spdlog::logger> logger)
@@ -33,20 +34,57 @@ namespace riaps{
         zsock_set_sndtimeo(m_riapsSocket, 0);
         zsock_set_rcvtimeo(m_riapsSocket, 0);
 
-        zsock_bind(m_riapsSocket, "%s", riaps::framework::Configuration::GetDiscoveryServiceIpc().c_str());
-        m_poller = zpoller_new(m_pipe, m_riapsSocket, m_dhtUpdateSocket, nullptr);
-        zsock_signal (m_pipe, 0);
+        zactor_t* dhtTracker = zactor_new(dht_tracker, &m_dhtNode);
+
+        zsock_bind(m_riapsSocket, "%s", riaps::framework::Configuration::GetDiscoveryEndpoint().c_str());
+        m_poller = zpoller_new(m_pipe, m_dhtUpdateSocket, m_riapsSocket, nullptr);
+
         m_lastServiceCheckin = m_lastZombieCheck = zclock_mono();
         // Get current zombies, and listen to new zombies
         m_dhtNode.get(m_zombieKey, [this](const std::vector<std::shared_ptr<dht::Value>> &values){
-            return this->handleZombieUpdate(values);
+            std::async(std::launch::async, &DiscoveryMessageHandler::handleZombieUpdate, this, values);
+//            std::thread t([values, this](){
+//                this->handleZombieUpdate(values);
+//            });
+//            t.detach();
+            return true;
         });
         // Subscribe for further zombies
         m_dhtNode.listen(m_zombieKey, [this](const std::vector<std::shared_ptr<dht::Value>> &values){
-            return this->handleZombieUpdate(values);
+            std::async(std::launch::async, &DiscoveryMessageHandler::handleZombieUpdate, this, values);
+//            std::thread t([values, this]() {
+//                handleZombieUpdate(values);
+//            });
+//            t.detach();
+            return true;
         });
     }
 
+    std::future<bool> DiscoveryMessageHandler::waitForDht() {
+        auto& logger = m_logger;
+        return std::async(std::launch::async, [logger]()->bool{
+            zsock_t* query = zsock_new(ZMQ_DEALER);
+            zuuid_t* socketId = zuuid_new();
+            zsock_set_identity(query, zuuid_str(socketId));
+            zsock_connect(query, CHAN_IN_DHTTRACKER);
+
+            // Retry
+            auto retry = 10;
+            uint8_t result =0;
+            while(retry-->0 && !result) {
+                zsock_send(query, "ss", CMD_QUERY_STABLE, "void");
+                zsock_recv(query, "1", &result);
+
+                if (!result) {
+                    logger->info("DHT is not ready.");
+                    zclock_sleep(500);
+                }
+            }
+            zuuid_destroy(&socketId);
+            zsock_destroy(&query);
+            return result==1;
+        });
+    }
 
 
     void DiscoveryMessageHandler::run() {
@@ -57,6 +95,8 @@ namespace riaps{
             // Reregister the too old services (OpenDHT ValueType settings, it is 10 minutes by default)
             int64_t loopStartTime = zclock_mono();
             if ((loopStartTime-m_lastServiceCheckin) > m_serviceCheckPeriod){
+
+                // Obsolote, riaps-deplo should be asked about the reneewal
                 maintainRenewal();
             }
 
@@ -171,16 +211,14 @@ namespace riaps{
             zmsg_destroy(&riapsMessage);
             zframe_destroy(&capnp_msgbody);
         }
-
-
     }
 
     void DiscoveryMessageHandler::handleActorReg(riaps::discovery::ActorRegReq::Reader& msgActorReq) {
 
         std::string actorname = std::string(msgActorReq.getActorName().cStr());
-        std::string appName   = std::string(msgActorReq.getAppName().cStr());
+        std::string appname   = std::string(msgActorReq.getAppName().cStr());
 
-        std::string clientKeyBase = fmt::format("/{}/{}/",appName, actorname); //"/" + appName + '/' + actorname + "/";
+        std::string clientKeyBase = fmt::format("/{}/{}/",appname, actorname); //"/" + appName + '/' + actorname + "/";
         m_logger->info("Register actor with PID - {} : {}", msgActorReq.getPid(), clientKeyBase);
 
         auto registeredActorIt = m_clients.find(clientKeyBase);
@@ -213,7 +251,7 @@ namespace riaps{
 
             // Purge the old instance
             if (isRegistered && !isRunning) {
-                deregisterActor(appName, actorname);
+                deregisterActor(appname, actorname);
             }
 
             // Open a new PAIR socket for actor communication
@@ -225,20 +263,17 @@ namespace riaps{
             m_clients[clientKeyBase] -> socket  = actor_socket;
             m_clients[clientKeyBase] -> port    = port;
             m_clients[clientKeyBase] -> pid     = msgActorReq.getPid();
-            m_clients[clientKeyBase] -> appName = appName;
+            m_clients[clientKeyBase] -> appName = appname;
 
             // Subscribe to groups
-            if (m_groupListeners.find(appName) == m_groupListeners.end()) {
-                std::string key = "/groups/"+appName;
-                m_groupListeners[appName] =
+            if (m_groupListeners.find(appname) == m_groupListeners.end()) {
+                std::string key = fmt::format("/groups/{}",appname);
+                m_groupListeners[appname] =
                         m_dhtNode.listen(key, [this](const std::vector<std::shared_ptr<dht::Value>> &values){
                             if (values.size() == 0) return true;
 
                             std::thread t(&DiscoveryMessageHandler::pushDhtValuesToDisco, this, values);
                             t.detach();
-
-
-
                             return true;
                         });
             }
@@ -264,15 +299,9 @@ namespace riaps{
             // Use the same object, do not create another copy of actor_details;
             std::string clientKeyLocal = clientKeyBase + m_macAddress;
             m_clients[clientKeyLocal] = m_clients[clientKeyBase];
-            //_clients[clientKeyLocal] = std::unique_ptr<actor_details_t>(new actor_details_t());
-            //_clients[clientKeyLocal]->port = port;
-            //_clients[clientKeyLocal]->pid = msgActorReq.getPid();
 
             std::string clientKeyGlobal = clientKeyBase + m_hostAddress;
             m_clients[clientKeyGlobal] = m_clients[clientKeyBase];
-            //_clients[clientKeyGlobal] = std::unique_ptr<actor_details_t>(new actor_details_t());
-            //_clients[clientKeyGlobal]->port = port;
-            //_clients[clientKeyGlobal]->pid = msgActorReq.getPid();
         }
     }
 
@@ -317,6 +346,9 @@ namespace riaps{
     }
 
     void DiscoveryMessageHandler::handleServiceReg(riaps::discovery::ServiceRegReq::Reader &msgServiceReg) {
+
+        auto check_dht = waitForDht();
+
         auto msgPath           = msgServiceReg.getPath();
         auto msgSock           = msgServiceReg.getSocket();
         auto servicePid         = msgServiceReg.getPid();
@@ -330,7 +362,7 @@ namespace riaps{
                                                msgSock.getPort());
 
         //std::cout << "Register service: " + std::get<0>(kv_pair) << std::endl;
-        m_logger->info("Register service: {}", std::get<0>(kv_pair));
+        m_logger->info("Register service: {}@{}:{}", std::get<0>(kv_pair), msgSock.getHost().cStr(), msgSock.getPort());
 
         // New pid
         if (m_serviceCheckins.find(servicePid) == m_serviceCheckins.end()) {
@@ -349,7 +381,14 @@ namespace riaps{
         std::vector<uint8_t> opendht_data(std::get<1>(kv_pair).begin(), std::get<1>(kv_pair).end());
         auto keyhash = dht::InfoHash::get(std::get<0>(kv_pair));
 
-        m_dhtNode.put(keyhash, dht::Value(opendht_data));
+        check_dht.wait();
+        if (!check_dht.get()) {
+            m_logger->error("DHT may be not ready");
+        }
+
+        dhtPut(keyhash, std::get<0>(kv_pair), opendht_data, 0);
+        zclock_sleep(500);
+        //m_dhtNode.put(keyhash, dht::Value(opendht_data));
 
         //Send response
         capnp::MallocMessageBuilder message;
@@ -367,6 +406,31 @@ namespace riaps{
         zmsg_addmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
 
         zmsg_send(&msg, m_riapsSocket);
+
+        
+    }
+
+    void DiscoveryMessageHandler::dhtPut(dht::InfoHash keyhash,
+                                         const std::string key,
+                                         std::vector<uint8_t> data,
+                                         uint8_t callLevel) {
+        auto logger = m_logger;
+        logger->debug("OpenDHT.Put({})", key);
+        m_dhtNode.put(keyhash,
+                      dht::Value(data),
+                      [this, keyhash, key, data, logger, callLevel](bool success) {
+
+            logger->debug("OpenDHT.Put({}) returns: {}", key, success);
+
+//            if (!success && callLevel < 10) {
+//                std::thread t([keyhash, key, data, callLevel, this](){
+//                    zclock_sleep(1000);
+//                    this->dhtPut(keyhash, key, data, callLevel +1 );
+//                });
+//                t.detach();
+//            }
+
+        });
     }
 
     void DiscoveryMessageHandler::handleServiceLookup(riaps::discovery::ServiceLookupReq::Reader &msgServiceLookup) {
@@ -414,97 +478,7 @@ namespace riaps{
         dht::InfoHash lookupkeyhash = dht::InfoHash::get(lookupkey.first);
 
         //std::cout << "Get: " + lookupkey.first << std::endl;
-        m_logger->info("Get: {}", lookupkey.first);
-
-        //auto zombieServicesCopy = _zombieServices;
-        m_dhtNode.get(lookupkey.first,
-                    [currentClientTmp, lookupkey]
-                            (const std::vector<std::shared_ptr<dht::Value>> &values) {
-                        // Done Callback
-
-                        std::vector<std::string> dhtGetResults;
-                        for (const auto &value :values) {
-                            std::string result = std::string(value->data.begin(), value->data.end());
-                            dhtGetResults.push_back(result);
-                        }
-
-                        // Remove elements if they considered as zombie
-//                        dhtGetResults.erase(
-//                                std::remove_if(dhtGetResults.begin(),
-//                                               dhtGetResults.end(),
-//                                               [&zombieServicesCopy](const std::string& s) {
-//                                                   auto z = zombieServicesCopy;
-//                                                   auto b = zombieServicesCopy.find(s)!=zombieServicesCopy.end();
-//                                                   return b;
-//                                               }), dhtGetResults.end());
-
-                        // IF there are still some results.
-                        if (dhtGetResults.size() > 0) {
-
-                            zsock_t *notify_ractor_socket = zsock_new_push(DHT_ROUTER_CHANNEL);
-
-                            capnp::MallocMessageBuilder message;
-                            auto msg_providerlistpush = message.initRoot<riaps::discovery::DhtUpdate>();
-                            auto msg_providerget = msg_providerlistpush.initProviderGet();
-
-                            auto msg_path = msg_providerget.initPath();
-
-                            riaps::discovery::Scope scope = currentClientTmp.isLocal ? riaps::discovery::Scope::LOCAL : riaps::discovery::Scope::GLOBAL;
-                            std::string app_name = currentClientTmp.app_name;
-
-                            msg_path.setScope(scope);
-                            msg_path.setAppName(currentClientTmp.app_name);
-
-                            auto msg_client = msg_providerget.initClient();
-
-                            msg_client.setActorName(currentClientTmp.actor_name);
-                            msg_client.setPortName(currentClientTmp.portname);
-                            msg_client.setActorHost(currentClientTmp.actor_host);
-                            msg_client.setInstanceName(currentClientTmp.instance_name);
-
-                            auto number_of_results = dhtGetResults.size();
-                            ::capnp::List<::capnp::Text>::Builder get_results = msg_providerget.initResults(
-                                    number_of_results);
-
-                            int provider_index = 0;
-                            for (std::string provider : dhtGetResults) {
-                                char *c = (char *) provider.c_str();
-                                ::capnp::Text::Builder B(c, provider.length());
-                                get_results.set(provider_index++, B.asString());
-                            }
-
-                            auto serializedMessage = capnp::messageToFlatArray(message);
-
-                            zmsg_t *msg = zmsg_new();
-                            auto bytes = serializedMessage.asBytes();
-                            zmsg_pushmem(msg, bytes.begin(), bytes.size());
-                            zmsg_send(&msg, notify_ractor_socket);
-                            //std::cout << "Get results sent to discovery service" << std::endl;
-
-
-                            sleep(1);
-                            zsock_destroy(&notify_ractor_socket);
-                            sleep(1);
-                        } else {
-                            //std::cout << "Get has no results for query: " << lookupkey.first << std::endl;
-                        }
-
-                        return true;
-                    }//, [=](bool success){
-                // Done Callback
-                // TODO: remove
-                //sleep(1);
-                //std::cout << "Get callback done! " <<std::endl;
-                //done_cb(success);
-
-
-                //}
-        );
-
-
-
-
-
+        m_logger->info("Lookup: {}", lookupkey.first);
 
         //Send response
         capnp::MallocMessageBuilder message;
@@ -530,90 +504,169 @@ namespace riaps{
         if (m_registeredListeners.find(lookupkeyhash.toString()) == m_registeredListeners.end()) {
 
             // Add listener to the added key
-            m_registeredListeners[lookupkeyhash.toString()] = m_dhtNode.listen(lookupkeyhash,
-                                                                           [lookupkey](
-                                                                                   const std::vector<std::shared_ptr<dht::Value>> &values) {
+            auto logger = m_logger;
+            m_registeredListeners[lookupkeyhash.toString()] =
+                    m_dhtNode.listen(lookupkeyhash,
+                                     [lookupkey, logger](const std::vector<std::shared_ptr<dht::Value>> &values) {
+                                           std::vector<std::string> update_results;
+                                           for (const auto &value :values) {
+                                               std::string result = std::string(
+                                                       value->data.begin(),
+                                                       value->data.end());
+                                               logger->debug("OpenDHT.Listen() returns: {}", result);
+                                               update_results.push_back(result);
+                                           }
+
+                                           if (update_results.size()>0) {
+                                               std::thread t([lookupkey, update_results]() {
+                                                   zsock_t *notify_ractor_socket = zsock_new_push(
+                                                           DHT_ROUTER_CHANNEL);
+
+                                                   capnp::MallocMessageBuilder message;
 
 
-                                                                               std::vector<std::string> update_results;
-                                                                               for (const auto &value :values) {
-                                                                                   std::string result = std::string(
-                                                                                           value->data.begin(),
-                                                                                           value->data.end());
-                                                                                   update_results.push_back(result);
-                                                                               }
+                                                   auto msg_providerlist_push = message.initRoot<riaps::discovery::DhtUpdate>();
+                                                   auto msg_provider_update = msg_providerlist_push.initProviderUpdate();
+                                                   msg_provider_update.setProviderpath(lookupkey.first);
 
-                                                                               // Remove elements if they considered as zombie
-//                                                                               update_results.erase(
-//                                                                                       std::remove_if(update_results.begin(),
-//                                                                                                      update_results.end(),
-//                                                                                                      [&zombieServicesCopy](const std::string& s) {
-//                                                                                                          auto z = zombieServicesCopy;
-//                                                                                                          auto b = zombieServicesCopy.find(s)!=zombieServicesCopy.end();
-//                                                                                                          return b;
-//                                                                                                      }), update_results.end());
+                                                   auto number_of_providers = update_results.size();
+                                                   ::capnp::List<::capnp::Text>::Builder msg_providers = msg_provider_update.initNewvalues(
+                                                           number_of_providers);
 
-                                                                               if (update_results.size()>0) {
+                                                   int provider_index = 0;
+                                                   for (std::string provider : update_results) {
+                                                       ::capnp::Text::Builder b(
+                                                               (char *) provider.c_str());
+                                                       msg_providers.set(
+                                                               provider_index++,
+                                                               b.asString());
+                                                   }
 
-                                                                                   zsock_t *notify_ractor_socket = zsock_new_push(
-                                                                                           DHT_ROUTER_CHANNEL);
+                                                   auto serializedMessage = capnp::messageToFlatArray(
+                                                           message);
 
-                                                                                   capnp::MallocMessageBuilder message;
+                                                   zmsg_t *msg = zmsg_new();
+                                                   zmsg_pushmem(msg,
+                                                                serializedMessage.asBytes().begin(),
+                                                                serializedMessage.asBytes().size());
 
-
-                                                                                   auto msg_providerlist_push = message.initRoot<riaps::discovery::DhtUpdate>();
-                                                                                   auto msg_provider_update = msg_providerlist_push.initProviderUpdate();
-                                                                                   msg_provider_update.setProviderpath(
-                                                                                           lookupkey.first);
-
-
-                                                                                   auto number_of_providers = update_results.size();
-                                                                                   ::capnp::List<::capnp::Text>::Builder msg_providers = msg_provider_update.initNewvalues(
-                                                                                           number_of_providers);
-
-                                                                                   int provider_index = 0;
-                                                                                   for (std::string provider : update_results) {
-                                                                                       ::capnp::Text::Builder b(
-                                                                                               (char *) provider.c_str());
-                                                                                       msg_providers.set(
-                                                                                               provider_index++,
-                                                                                               b.asString());
-                                                                                   }
-
-                                                                                   auto serializedMessage = capnp::messageToFlatArray(
-                                                                                           message);
-
-                                                                                   zmsg_t *msg = zmsg_new();
-                                                                                   zmsg_pushmem(msg,
-                                                                                                serializedMessage.asBytes().begin(),
-                                                                                                serializedMessage.asBytes().size());
-
-                                                                                   zmsg_send(&msg,
-                                                                                             notify_ractor_socket);
+                                                   zmsg_send(&msg,
+                                                             notify_ractor_socket);
 
 //                                                                                   std::cout
 //                                                                                           << "Changes sent to discovery service: "
 //                                                                                           << lookupkey.first
 //                                                                                           << std::endl;
 
-                                                                                   sleep(1);
-                                                                                   zsock_destroy(
-                                                                                           &notify_ractor_socket);
-                                                                                   sleep(1);
-                                                                               }
-
-                                                                               return true; // keep listening
-                                                                           }
+                                                   sleep(1);
+                                                   zsock_destroy(&notify_ractor_socket);
+                                                   sleep(1);
+                                               });
+                                               t.detach();
+                                           }
+                                           return true; // keep listening
+                                       }
             );
         }
 
+        zclock_sleep(400);
 
-
-
-
+        dhtGet(lookupkey.first, currentClientTmp,0);
     }
 
-    void DiscoveryMessageHandler:: handleGroupJoin(riaps::discovery::GroupJoinReq::Reader& msgGroupJoin){
+    void DiscoveryMessageHandler::dhtGet(const std::string lookupKey, ClientDetails clientDetails, uint8_t callLevel) {
+        auto logger = m_logger;
+        m_dhtNode.get(lookupKey,
+                      [clientDetails, logger, callLevel, lookupKey, this]
+                              (const std::vector<std::shared_ptr<dht::Value>> &values) {
+
+                          // If the return doesn't have any values, try it one more time.
+                          // Maximum number of retries : 10
+                          if (values.size() == 0) {
+                              if (callLevel<10) {
+                                  std::thread t([lookupKey, clientDetails, callLevel, this]() {
+                                      zclock_sleep(1000);
+                                      this->dhtGet(lookupKey, clientDetails, callLevel + 1);
+                                  });
+                                  t.detach();
+                              }
+                              return true;
+                          }
+
+                          std::vector<std::string> dhtGetResults;
+                          for (const auto &value :values) {
+                              std::string result = std::string(value->data.begin(), value->data.end());
+                              logger->debug("OpenDHT.Get() returns: {}", result);
+                              dhtGetResults.push_back(result);
+                          }
+
+                          // IF there are some results, send them async mode
+                          std::thread t([dhtGetResults, clientDetails](){
+                              zsock_t *notify_ractor_socket = zsock_new_push(DHT_ROUTER_CHANNEL);
+
+                              capnp::MallocMessageBuilder message;
+                              auto msg_providerlistpush = message.initRoot<riaps::discovery::DhtUpdate>();
+                              auto msg_providerget = msg_providerlistpush.initProviderGet();
+
+                              auto msg_path = msg_providerget.initPath();
+
+                              riaps::discovery::Scope scope = clientDetails.isLocal ? riaps::discovery::Scope::LOCAL : riaps::discovery::Scope::GLOBAL;
+                              std::string app_name = clientDetails.app_name;
+
+                              msg_path.setScope(scope);
+                              msg_path.setAppName(clientDetails.app_name);
+
+                              auto msg_client = msg_providerget.initClient();
+
+                              msg_client.setActorName(clientDetails.actor_name);
+                              msg_client.setPortName(clientDetails.portname);
+                              msg_client.setActorHost(clientDetails.actor_host);
+                              msg_client.setInstanceName(clientDetails.instance_name);
+
+                              auto number_of_results = dhtGetResults.size();
+                              ::capnp::List<::capnp::Text>::Builder get_results = msg_providerget.initResults(
+                                      number_of_results);
+
+                              int provider_index = 0;
+                              for (std::string provider : dhtGetResults) {
+                                  char *c = (char *) provider.c_str();
+                                  ::capnp::Text::Builder B(c, provider.length());
+                                  get_results.set(provider_index++, B.asString());
+                              }
+
+                              auto serializedMessage = capnp::messageToFlatArray(message);
+
+                              zmsg_t *msg = zmsg_new();
+                              auto bytes = serializedMessage.asBytes();
+                              zmsg_pushmem(msg, bytes.begin(), bytes.size());
+                              zmsg_send(&msg, notify_ractor_socket);
+                              //std::cout << "Get results sent to discovery service" << std::endl;
+
+
+                              sleep(1);
+                              zsock_destroy(&notify_ractor_socket);
+                              sleep(1);
+                          });
+                          t.detach();
+
+                          return true;
+                      }, [logger, lookupKey, clientDetails, callLevel, this](bool success){
+                    logger->debug("OpenDHT.Get({}) finished with '{}'  callback done!", lookupKey,  success );
+                    if (!success) {
+                        if (callLevel<10) {
+                            std::thread t([lookupKey, clientDetails, callLevel, this]() {
+                                zclock_sleep(1000);
+                                this->dhtGet(lookupKey, clientDetails, callLevel + 1);
+                            });
+                            t.detach();
+                        }
+                    }
+
+                }
+        );
+    }
+
+    void DiscoveryMessageHandler::handleGroupJoin(riaps::discovery::GroupJoinReq::Reader& msgGroupJoin){
 
         // Join to the group.
         auto msgGroupServices   = msgGroupJoin.getServices();
@@ -637,44 +690,7 @@ namespace riaps{
             m_logger->debug("REG: {}", msgGroupServices[i].getAddress().cStr());
         }
 
-//        msgpack::sbuffer sbuf;
-//        msgpack::pack(sbuf, groupDetails);
-        std::string key = "/groups/"+appName;
-//        dht::Blob b(sbuf.data(), sbuf.data()+sbuf.size());
-//        _dhtNode.put(key, dht::Value(b));
-
-
-
-
-//        _dhtNode.put(key, dht::Value::pack(groupDetails),[this, key](bool succ){
-//            std::thread t ([this, key, succ](){
-//                if (!succ) zclock_sleep(5000);
-//                this->_dhtNode.get(key, [this](const std::vector<std::shared_ptr<dht::Value>> &values){
-//                    if (values.size() == 0) return true;
-//
-//                    std::thread t(&DiscoveryMessageHandler::PushDhtValuesToDisco, this, values);
-//                    t.detach();
-//
-//                    return true;
-//                });
-//            });
-//            t.detach();
-//
-//        });
-
-
-
-
-
-        // Debug
-//        std::cout << "Component joined to group: "
-//                  << appName << "::"
-//                  << groupDetails.groupId.groupTypeId << "::"
-//                  << groupDetails.groupId.groupName   << std::endl;
-//        std::cout << "Group services: " << std::endl;
-//        for (auto& g : groupDetails.groupServices){
-//            std::cout << "\t- " << g.address << " " << g.messageType << std::endl;
-//        }
+        std::string key = fmt::format("/groups/{}",appName);
 
         //Send response
         capnp::MallocMessageBuilder repMessage;
@@ -692,8 +708,6 @@ namespace riaps{
         zmsg_addmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
 
         zmsg_send(&msg, m_riapsSocket);
-
-        //zclock_sleep(5000);
 
         m_dhtNode.get(key, [this](const std::vector<std::shared_ptr<dht::Value>> &values){
             if (values.size() == 0) return true;
@@ -787,7 +801,7 @@ namespace riaps{
                     char *newhost = zmsg_popstr(msg);
                     if (newhost) {
                         //std::cout << "Join to: " << newhost << std::endl;
-                        m_logger->info("Join to: {}", newhost);
+                        m_logger->info("Join: {}", newhost);
                         std::string str_newhost(newhost);
                         //dhtJoinToCluster(str_newhost, RIAPS_DHT_NODE_PORT, dhtNode);
                         m_dhtNode.bootstrap(str_newhost, std::to_string(RIAPS_DHT_NODE_PORT));
@@ -903,14 +917,18 @@ namespace riaps{
             if (clients.find(clientKeyBase) != clients.end()) {
                 zmsg_send(&msg, clients.at(clientKeyBase)->socket);
                 //std::cout << "Get results were sent to the client: " << clientKeyBase << std::endl;
-                m_logger->info("Get results were sent to the client: {}", clientKeyBase);
+                //m_logger->info("Get() results were sent to the client: {}", clientKeyBase);
+                m_logger->info("Get() returns {}@{}:{} to {}",
+                               msgProviderGet.getClient().getPortName().cStr(),
+                               host,
+                               portNum,
+                               clientKeyBase);
+
             } else {
                 zmsg_destroy(&msg);
                 m_logger->warn("Get returned with values, but client has gone.");
                 //std::cout << "Get returned with values, but client has gone. " << std::endl;
             }
-
-
         }
     }
 
@@ -999,7 +1017,8 @@ namespace riaps{
                             zmsg_send(&msg, clientSocket->socket);
 
                             //std::cout << "Port update sent to the client: " << clientKeyBase << std::endl;
-                            m_logger->info("Port update sent to the client: {}", clientKeyBase);
+                            //m_logger->info("Port update sent to the client: {}", clientKeyBase);
+                            m_logger->info("Update() returns {}@{}:{} to {}", subscribedClient->portname, host, portNum, clientKeyBase);
                         }
                     }
                 }
@@ -1049,7 +1068,27 @@ namespace riaps{
         }
     }
 
-    void DiscoveryMessageHandler::maintainRenewal(){
+    void DiscoveryMessageHandler::maintainRenewal() {
+        int64_t now = zclock_mono();
+        for (auto pidIt= m_serviceCheckins.begin(); pidIt!=m_serviceCheckins.end(); pidIt++){
+            for(auto serviceIt = pidIt->second.begin(); serviceIt!=pidIt->second.end(); serviceIt++){
+
+                // Renew
+                if (now - (*serviceIt)->createdTime > (*serviceIt)->timeout){
+                    (*serviceIt)->createdTime = now;
+
+                    // Reput key-value
+                    std::vector<uint8_t> opendht_data((*serviceIt)->value.begin(), (*serviceIt)->value.end());
+                    auto keyhash = dht::InfoHash::get((*serviceIt)->key);
+
+                    m_dhtNode.put(keyhash, dht::Value(opendht_data));
+                }
+            }
+        }
+    }
+
+    // Should be depriacated, riaps-deplo is needed to figure out what runs
+    void DiscoveryMessageHandler::maintainRenewalDepricated(){
 
         std::set<pid_t> purgeServices;
         std::set<pid_t> purgeGroups;
@@ -1168,7 +1207,8 @@ namespace riaps{
         zpoller_destroy(&m_poller);
         zsock_destroy(&m_dhtUpdateSocket);
         zsock_destroy(&m_riapsSocket);
-        sleep(1);
+        zactor_destroy(&dht_tracker_);
+        zclock_sleep(500);
 
         for (auto it_client = m_clients.begin(); it_client!=m_clients.end(); it_client++){
             if (it_client->second->socket!=NULL) {

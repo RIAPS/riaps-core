@@ -69,7 +69,7 @@ public:
     riaps::componentmodel::Parameters Parse(const std::string& deviceName);
     ~DeviceArgumentParser();
 private:
-    //std::string _deviceName;
+    //std::string deviceName;
     nlohmann::json& _jsonDeviceConfig;
 };
 
