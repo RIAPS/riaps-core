@@ -198,7 +198,7 @@ namespace riaps{
             std::string groupKey;
             riaps::groups::GroupDetails services;
             pid_t actorPid;
-            Timeout<std::ratio<60>> timeout; // std::ratio<60> -> minutes
+            Timeout<std::chrono::minutes> timeout;
         };
 
         std::unordered_map<pid_t, std::vector<std::shared_ptr<RegisteredGroup>>> m_groupServices;

@@ -47,7 +47,7 @@ namespace riaps{
                 _groupPoller(nullptr) {
             _pingCounter = 0;
             _logger = spd::get(parentComponent->GetConfig().component_name);
-            _pingTimeout = Timeout<std::milli>(duration<int,std::milli>(PING_BASE_PERIOD));
+            _pingTimeout = Timeout<std::chrono::milliseconds>(PING_BASE_PERIOD);
 
             _generator = std::mt19937(_rd());
             _distrNodeTimeout = std::uniform_int_distribution<int>(PING_BASE_PERIOD*1.1, PING_BASE_PERIOD*2);
@@ -666,9 +666,9 @@ namespace riaps{
                         // New node, set the timeout
                         if (it == _knownNodes.end()) {
                             _knownNodes[groupHeartBeat.getSourceComponentId().cStr()] =
-                                    Timeout<std::milli>(duration<int, std::milli>(_distrNodeTimeout(_generator)));
+                                    Timeout<std::chrono::milliseconds>(_distrNodeTimeout(_generator));
                         } else
-                            it->second.Reset(duration<int, std::milli>(_distrNodeTimeout(_generator)));
+                            it->second.Reset(_distrNodeTimeout(_generator));
 
                         if (groupHeartBeat.getHeartBeatType() == riaps::distrcoord::HeartBeatType::PING) {
                             //m_logger->debug("<<PING<<");

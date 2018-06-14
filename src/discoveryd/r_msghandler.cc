@@ -731,7 +731,7 @@ namespace riaps{
                 key,
                 groupDetails,
                 actorPid,
-                Timeout<std::ratio<60>>(std::chrono::duration<int, std::ratio<60>>(10)) //10 minutes
+                Timeout<std::chrono::minutes>(10) //10 minutes
         });
         m_groupServices[actorPid].push_back(std::move(currentGroupReg));
 
