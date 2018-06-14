@@ -268,8 +268,8 @@ int main(int argc, char* argv[])
                 // If the ipaddress in the cache, update the timestamp
                 // If the ipaddress is new, add to the cache
                 //int64_t time = zclock_mono();
-                ipcache[ipaddress] = riaps::utils::Timeout<std::milli>(
-                        std::chrono::milliseconds>(IPCACHE_TIMEOUT);
+                ipcache[ipaddress] = riaps::utils::Timeout<std::chrono::milliseconds>(
+                        std::chrono::milliseconds(IPCACHE_TIMEOUT));
 
                 // Check for outdated ip addresses (no UDP paca)
                 bool is_maintained = maintain_cache(ipcache);
