@@ -15,7 +15,7 @@ using namespace std;
 using namespace riaps::utils;
 
 /**
- * ZActor thred for checking the DHT stability
+ * ZActor thread for checking the DHT stability
  * @param pipe PAIR socket for messaging with the parent class.
  * @param args Pointer to the DHT instance
  */
@@ -29,7 +29,7 @@ void dht_tracker (zsock_t *pipe, void *args) {
     zpoller_t* poller = zpoller_new(pipe, in_socket, nullptr);
 
     auto logger = spd::stdout_color_mt(LOGGER_NAME);
-    logger->set_level(spd::level::debug);
+    logger->set_level(spd::level::info);
 
     bool terminated = false;
     bool isStable   = false;
@@ -53,7 +53,7 @@ void dht_tracker (zsock_t *pipe, void *args) {
             char *command = zmsg_popstr(msg);
 
             if (streq(command, "$TERM")) {
-                logger->info("$TERMINATE arrived, dht tracker service is stopping.");
+                logger->debug("stops");
                 terminated = true;
             }
             zstr_free(&command);
@@ -114,7 +114,7 @@ void dht_tracker (zsock_t *pipe, void *args) {
                 isStable = check_state(node_list, *dht);
         }
     }
-    logger->info("stopped");
+    logger->debug("stopped");
     zpoller_destroy(&poller);
     zsock_destroy(&in_socket);
 }

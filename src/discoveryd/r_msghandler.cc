@@ -34,7 +34,7 @@ namespace riaps{
         zsock_set_sndtimeo(m_riapsSocket, 0);
         zsock_set_rcvtimeo(m_riapsSocket, 0);
 
-        zactor_t* dhtTracker = zactor_new(dht_tracker, &m_dhtNode);
+        dht_tracker_ = zactor_new(dht_tracker, &m_dhtNode);
 
         zsock_bind(m_riapsSocket, "%s", riaps::framework::Configuration::GetDiscoveryEndpoint().c_str());
         m_poller = zpoller_new(m_pipe, m_dhtUpdateSocket, m_riapsSocket, nullptr);
