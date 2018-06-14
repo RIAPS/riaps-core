@@ -40,7 +40,7 @@ namespace riaps{
              *
              */
             enum NodeState{FOLLOWER, CANDIDATE, LEADER};
-            GroupLead(riaps::groups::Group* group, std::unordered_map<std::string, Timeout<std::milli>>* knownNodes);
+            GroupLead(riaps::groups::Group* group, std::unordered_map<std::string, Timeout<std::chrono::milliseconds>>* knownNodes);
             const NodeState GetNodeState() const;
 
             void SetOnLeaderChanged(std::function<void(const std::string&)> handler);
@@ -69,11 +69,11 @@ namespace riaps{
             ~GroupLead();
 
             struct ProposeData {
-                ProposeData(std::shared_ptr<std::set<std::string>> _knownNodes, Timeout<std::milli>&& timeout);
+                ProposeData(std::shared_ptr<std::set<std::string>> _knownNodes, Timeout<std::chrono::milliseconds>&& timeout);
 
                 std::shared_ptr<std::set<std::string>> nodesInVote; // Expect vote from these nodes
                 std::shared_ptr<std::set<std::string>> nodesVoted;  // ID-s of components which already sent the vote
-                Timeout<std::milli>                    proposeDeadline; // If the propose expires, the leader announce REJECT
+                Timeout<std::chrono::milliseconds>     proposeDeadline; // If the propose expires, the leader announce REJECT
                 uint16_t                               accepted;
                 uint16_t                               rejected;
 
@@ -86,7 +86,7 @@ namespace riaps{
              * Generates a random election timeout between 150ms and 300ms (values are specified in RAFT)
              * @return Random value between 150-300ms
              */
-            duration<int, std::milli> GenerateElectionTimeo();
+            int64_t GenerateElectionTimeo();
 
             std::random_device m_rd;
             std::mt19937 m_generator;
@@ -96,8 +96,8 @@ namespace riaps{
             NodeState m_currentState;
 
             // Timeouts
-            Timeout<std::milli>  m_electionTimeout;
-            Timeout<std::milli>  m_appEntryTimeout;
+            Timeout<std::chrono::milliseconds>  m_electionTimeout;
+            Timeout<std::chrono::milliseconds>  m_appEntryTimeout;
             uint32_t m_electionTerm;
             uint32_t m_numberOfNodesInVote;
 
@@ -117,7 +117,7 @@ namespace riaps{
             uint32_t GetNumberOfVotes();
 
             std::shared_ptr<spd::logger> _logger;
-            std::unordered_map<std::string, Timeout<std::milli>>* m_knownNodes;
+            std::unordered_map<std::string, Timeout<std::chrono::milliseconds>>* m_knownNodes;
 
             std::string m_leaderId;
 

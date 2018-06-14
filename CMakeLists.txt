@@ -112,6 +112,7 @@ list (APPEND riapslib_SOURCE
         src/groups/r_grouplead.cc
         src/utils/r_message.cc
         src/utils/r_utils.cc
+        src/utils/r_timeout.cc
         )
 
 # libriaps headers
@@ -194,6 +195,7 @@ list(APPEND RDISCOVERYD_SOURCE
         src/discoveryd/r_msghandler.cc
         src/discoveryd/r_dhttracker.cc
         include/messaging/disco.capnp.c++
+        src/utils/r_timeout.cc
         )
 
 # rdiscoveryd headers

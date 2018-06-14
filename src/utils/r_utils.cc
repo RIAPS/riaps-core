@@ -46,7 +46,7 @@ void operator>>(zframe_t& frame, std::shared_ptr<capnp::FlatArrayMessageReader>&
 
 namespace spd=spdlog;
 
-void print_cacheips(std::map<std::string, riaps::utils::Timeout<std::milli>>& ipcache, const std::string& selfAddress) {
+void print_cacheips(std::map<std::string, riaps::utils::Timeout<std::chrono::milliseconds>>& ipcache, const std::string& selfAddress) {
     auto logger = spd::get("rdiscovery");
     if (logger == nullptr)
         return;
@@ -62,7 +62,7 @@ void print_cacheips(std::map<std::string, riaps::utils::Timeout<std::milli>>& ip
     logger->info(w.c_str());
 }
 
-bool maintain_cache(std::map<std::string, riaps::utils::Timeout<std::milli>>& ipcache){
+bool maintain_cache(std::map<std::string, riaps::utils::Timeout<std::chrono::milliseconds>>& ipcache){
     bool is_maintained = false;
 
     // Maintain the list, if somebody didn't respond in the past IPCACHE_TIMEOUT seconds => remove from the list

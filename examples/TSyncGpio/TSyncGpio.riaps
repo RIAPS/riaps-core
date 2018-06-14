@@ -5,7 +5,7 @@ struct DummyT {
 message Dummy:DummyT;
 
 app TSyncGpio {
-	
+
 	group groupA{
 		uses leader, consensus;
 	}

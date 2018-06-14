@@ -144,7 +144,7 @@ int main(int argc, char* argv[])
 
     // Store the ip addresses and timestamps here
     //std::map<std::string, int64_t> ipcache;
-    std::map<std::string, riaps::utils::Timeout<std::milli>> ipcache;
+    std::map<std::string, riaps::utils::Timeout<std::chrono::milliseconds>> ipcache;
 
 
     // Node ips from commands, not from UDP packages
@@ -269,7 +269,7 @@ int main(int argc, char* argv[])
                 // If the ipaddress is new, add to the cache
                 //int64_t time = zclock_mono();
                 ipcache[ipaddress] = riaps::utils::Timeout<std::milli>(
-                        std::chrono::duration<int, std::milli>(IPCACHE_TIMEOUT));
+                        std::chrono::milliseconds>(IPCACHE_TIMEOUT);
 
                 // Check for outdated ip addresses (no UDP paca)
                 bool is_maintained = maintain_cache(ipcache);

@@ -9,7 +9,7 @@ using namespace riaps::groups;
 using namespace std::chrono;
 
 
-GroupLead::GroupLead(Group* group, std::unordered_map<std::string, Timeout<std::milli>>* knownNodes)
+GroupLead::GroupLead(Group* group, std::unordered_map<std::string, Timeout<std::chrono::milliseconds>>* knownNodes)
     : m_group(group),
       m_knownNodes(knownNodes)
 {
@@ -19,8 +19,8 @@ GroupLead::GroupLead(Group* group, std::unordered_map<std::string, Timeout<std::
      */
     m_generator        = std::mt19937(m_rd());
     m_distrElection    = std::uniform_int_distribution<int>(MIN_ELECTION_TIMEOUT, MAX_ELECTION_TIMEOUT);
-    m_electionTimeout  = Timeout<std::milli>(GenerateElectionTimeo());
-    m_appEntryTimeout  = Timeout<std::milli>(duration<int, std::milli>(APPENDENTRY_TIMEOUT));
+    m_electionTimeout  = Timeout<std::chrono::milliseconds>(GenerateElectionTimeo());
+    m_appEntryTimeout  = Timeout<std::chrono::milliseconds>(APPENDENTRY_TIMEOUT);
     m_electionTerm     = 0;
 
     /**
@@ -82,7 +82,7 @@ void GroupLead::Update() {
         /**
          * Waiting for responses until the MAX election timeout.
          */
-        m_electionTimeout.Reset(duration<int, std::milli>(MAX_ELECTION_TIMEOUT));
+        m_electionTimeout.Reset(std::chrono::milliseconds(MAX_ELECTION_TIMEOUT));
     }
 
     /**
@@ -98,7 +98,7 @@ void GroupLead::Update() {
         //m_logger->debug("[{}] Vote timeout CANDIDATE->FOLLOWER",_electionTerm);
 
         m_currentState = GroupLead::NodeState::FOLLOWER;
-        m_electionTimeout.Reset(duration<int, std::milli>(MAX_ELECTION_TIMEOUT));
+        m_electionTimeout.Reset(std::chrono::milliseconds(MAX_ELECTION_TIMEOUT));
     }
 
     /**
@@ -256,8 +256,8 @@ uint32_t GroupLead::GetNumberOfVotes() {
     return m_votes.size();
 }
 
-duration<int, std::milli> GroupLead::GenerateElectionTimeo() {
-    return duration<int, std::milli>(m_distrElection(m_generator));
+int64_t GroupLead::GenerateElectionTimeo() {
+    return m_distrElection(m_generator);
 }
 
 const GroupLead::NodeState GroupLead::GetNodeState() const {
@@ -299,7 +299,7 @@ void GroupLead::OnActionProposeFromClient(riaps::distrcoord::Consensus::ProposeT
         }
     }
 
-    auto pd = std::shared_ptr<ProposeData>(new ProposeData(m_group->GetKnownComponents(), Timeout<std::milli>(duration<int, std::milli>(1000))));
+    auto pd = std::shared_ptr<ProposeData>(new ProposeData(m_group->GetKnownComponents(), Timeout<std::chrono::milliseconds>(std::chrono::milliseconds(1000))));
     pd->isAction = true;
     pd->actionId = tscaMessage.getActionId();
     std::string proposeId = headerMessage.getProposeId();
@@ -345,7 +345,7 @@ void GroupLead::OnProposeFromClient(riaps::distrcoord::Consensus::ProposeToLeade
     //m_logger->debug("OnProposeFromClient() continues");
 
 
-    auto pd = std::shared_ptr<ProposeData>(new ProposeData(m_group->GetKnownComponents(), Timeout<std::milli>(duration<int, std::milli>(1000))));
+    auto pd = std::shared_ptr<ProposeData>(new ProposeData(m_group->GetKnownComponents(), Timeout<std::chrono::milliseconds>(std::chrono::milliseconds(1000))));
 
     // TODO: Add known node ids
     //pd.nodesInVote =
@@ -495,7 +495,7 @@ GroupLead::~GroupLead() {
 
 }
 
-GroupLead::ProposeData::ProposeData(std::shared_ptr<std::set<std::string>> _knownNodes, Timeout<std::milli> &&timeout)
+GroupLead::ProposeData::ProposeData(std::shared_ptr<std::set<std::string>> _knownNodes, Timeout<std::chrono::milliseconds> &&timeout)
     : nodesInVote(_knownNodes), proposeDeadline(timeout), accepted(0), rejected(0){
     auto p = new std::set<std::string>();
     nodesVoted = std::move(std::shared_ptr<std::set<std::string>>(p));
