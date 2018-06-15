@@ -70,6 +70,7 @@ if (BUILD_TESTS)
     #add_subdirectory(tests/DC/leaderwiththree)
     # add_subdirectory(tests/TimedTest)
     # add_subdirectory(examples/EchoIO)
+    add_subdirectory(tests/DistributedEstimatorPybind)
 endif()
 
 
@@ -244,8 +245,8 @@ install(TARGETS start_device DESTINATION bin)
 
 
 SET(MAJOR_VERSION "0")
-SET(MINOR_VERSION "7")
-SET(PATCH_VERSION "6")
+SET(MINOR_VERSION "8")
+SET(PATCH_VERSION "0")
 
 
 IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
