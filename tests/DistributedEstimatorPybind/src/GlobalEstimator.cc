@@ -5,13 +5,17 @@
 
 #include <GlobalEstimator.h>
 
+#include <pybind11/stl.h>
+#include <pybind11/pybind11.h>
+
+namespace py = pybind11;
+
 namespace distributedestimator {
     namespace components {
 
 
         GlobalEstimator::GlobalEstimator(_component_conf &config, riaps::Actor &actor) : GlobalEstimatorBase(config,
                                                                                                              actor) {
-            //PrintParameters();
         }
 
         void GlobalEstimator::OnEstimate(messages::Estimate::Reader &message,
