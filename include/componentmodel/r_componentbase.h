@@ -76,6 +76,7 @@ namespace riaps {
         /// @param config Configuration, parsed from the model file.
         /// @param actor Parent actor, the owner the component.
         ComponentBase(component_conf& config, Actor& actor);
+        ComponentBase() = default;
 
         /// @return The owner actor.
         const Actor* GetActor() const;
