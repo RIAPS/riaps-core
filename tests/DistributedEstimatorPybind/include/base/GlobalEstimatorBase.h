@@ -18,6 +18,7 @@ namespace distributedestimator{
         public:
 
             GlobalEstimatorBase(_component_conf& config, riaps::Actor& actor);
+            GlobalEstimatorBase() = default;
 
             virtual void OnEstimate(messages::Estimate::Reader& message,
                                     riaps::ports::PortBase* port)=0;

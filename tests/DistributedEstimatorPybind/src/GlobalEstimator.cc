@@ -46,3 +46,9 @@ riaps::ComponentBase *create_component(_component_conf &config, riaps::Actor &ac
 void destroy_component(riaps::ComponentBase *comp) {
     delete comp;
 }
+
+
+PYBIND11_MODULE(ge, m) {
+    py::class_<distributedestimator::components::GlobalEstimator> c(m, "GlobalEstimator");
+    c.def(py::init());
+}
