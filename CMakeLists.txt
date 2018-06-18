@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(riaps_core VERSION 0.7.0)
+project(riaps_core VERSION 0.8.0)
 option(arch "amd64/armhf" "amd64")
 option(BUILD_TESTS  "Build tests" ON)
 set(CMAKE_SYSTEM_NAME Linux)
@@ -24,6 +24,8 @@ else()
     set (CMAKE_CXX_FLAGS "-std=c++11 -D_GLIBCXX_USE_CXX11_ABI=0")
     set (CMAKE_C_FLAGS "-std=c99")
 endif()
+
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 #set(pybind11_DIR ${CMAKE_HOME_DIRECTORY})
 
