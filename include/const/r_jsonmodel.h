@@ -42,7 +42,8 @@
 #define J_PORT_QRYTYPE "qry_type"
 #define J_PORT_ANSTYPE "ans_type"
 
-#define J_PORT_TIMED "timed"
+#define J_PORT_TIMED  "timed"
+#define J_PORT_PERIOD "period"
 
 #define J_TYPE         "type"
 

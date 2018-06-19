@@ -42,6 +42,7 @@
 #include <componentmodel/ports/r_answerport.h>
 #include <componentmodel/ports/r_queryport.h>
 
+
 #define BILLION 1000000000l
 #define TIMER_ACCURACY (50*1000) // 50 microsec
 
@@ -77,6 +78,23 @@ namespace riaps {
         /// @param actor Parent actor, the owner the component.
         ComponentBase(component_conf& config, Actor& actor);
         ComponentBase() = default;
+
+        ///////////////////// PYBIND11 DEFINITIONS ///////////////////////
+
+        /**
+         * Constructor for pybind11
+         */
+//         ComponentBase(const py::object*  parent_actor ,
+//                       const py::dict     type_spec    ,
+//                       const std::string& name         ,
+//                       const std::string& type_name    ,
+//                       const py::dict     args
+//         );
+
+
+        /////////////////////////////////////////
+        // END PYBIND DEFS
+        /////////////////////////////////////////
 
         /// @return The owner actor.
         const Actor* GetActor() const;
@@ -425,7 +443,7 @@ namespace riaps {
         // Note: disable for now, we need more tests.
         //timers::OneShotTimer*   _oneShotTimer;
 
-        component_conf m_configuration;
+        component_conf configuration_;
 
 
         // All the component ports

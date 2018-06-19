@@ -15,7 +15,12 @@ namespace distributedestimator {
         public:
 
             GlobalEstimator(_component_conf &config, riaps::Actor &actor);
-            GlobalEstimator() = default;
+            
+            GlobalEstimator(const py::object*  parent_actor ,
+                            const py::dict     type_spec    ,
+                            const std::string& name         ,
+                            const std::string& type_name    ,
+                            const py::dict     args);
 
             virtual void OnEstimate(messages::Estimate::Reader &message,
                                     riaps::ports::PortBase *port);

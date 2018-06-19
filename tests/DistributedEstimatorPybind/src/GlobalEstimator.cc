@@ -18,6 +18,16 @@ namespace distributedestimator {
                                                                                                              actor) {
         }
 
+        GlobalEstimator::GlobalEstimator(
+                        const py::object*  parent_actor ,
+                        const py::dict     type_spec    ,
+                        const std::string& name         ,
+                        const std::string& type_name    ,
+                        const py::dict     args)
+                : GlobalEstimatorBase(parent_actor, type_spec, name, type_name, args){
+
+        }
+
         void GlobalEstimator::OnEstimate(messages::Estimate::Reader &message,
                                          riaps::ports::PortBase *port) {
             //PrintMessageOnPort(port);
@@ -48,7 +58,8 @@ void destroy_component(riaps::ComponentBase *comp) {
 }
 
 
-PYBIND11_MODULE(ge, m) {
-    py::class_<distributedestimator::components::GlobalEstimator> c(m, "GlobalEstimator");
-    c.def(py::init());
+PYBIND11_MODULE(globalestimator, m) {
+    py::class_<distributedestimator::components::GlobalEstimator> testClass(m, "GlobalEstimator");
+    testClass.def(py::init<const py::object*, const py::dict, const std::string&, const std::string&, const py::dict>());
+
 }

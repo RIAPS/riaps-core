@@ -5,10 +5,7 @@ option(BUILD_TESTS  "Build tests" ON)
 set(CMAKE_SYSTEM_NAME Linux)
 
 set(riaps_prefix "/opt/riaps/" CACHE STRING "the riaps prefix")
-
-
-
-
+#find_package(pybind11)
 
 #Set the platform
 if (${arch} STREQUAL "armhf")
@@ -19,8 +16,8 @@ if (${arch} STREQUAL "armhf")
  set (CMAKE_CXX_FLAGS "-std=c++11 -g")
  set (CMAKE_C_FLAGS "-std=c99 -g")
 else()
-    set(CMAKE_C_COMPILER gcc-5)
-    set(CMAKE_CXX_COMPILER g++-5)
+    #set(CMAKE_C_COMPILER gcc-5)
+    #set(CMAKE_CXX_COMPILER g++-5)
     set (CMAKE_CXX_FLAGS "-std=c++11 -D_GLIBCXX_USE_CXX11_ABI=0")
     set (CMAKE_C_FLAGS "-std=c99")
 endif()
@@ -45,6 +42,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_HOME_DIRECTORY}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_HOME_DIRECTORY}/bin)
 
 include_directories(include)
+include_directories(pybind11/include)
+include_directories(/usr/include/python3.5m/)
+
+add_subdirectory(pybind11)
 
 if (BUILD_TESTS)
     include(CTest)
@@ -72,7 +73,7 @@ if (BUILD_TESTS)
     #add_subdirectory(tests/DC/leaderwiththree)
     # add_subdirectory(tests/TimedTest)
     # add_subdirectory(examples/EchoIO)
-    #add_subdirectory(tests/DistributedEstimatorPybind)
+    add_subdirectory(tests/DistributedEstimatorPybind)
 endif()
 
 
@@ -162,7 +163,8 @@ add_library(riaps SHARED
         ${riapslib_SOURCE}
         ${riapslib_HEADERS}
         )
-target_link_libraries(riaps czmq zmq dl capnp kj)
+#pybind11_add_module(riaps ${riapslib_SOURCE} ${riapslib_HEADERS})
+target_link_libraries(riaps PRIVATE czmq zmq dl capnp kj)
 install(TARGETS riaps DESTINATION lib)
 
 # start_actor
@@ -183,12 +185,12 @@ set(ACTOR_HEADERS
         include/messaging/deplo.capnp.h
         include/json.h)
 
-add_executable(start_actor
-        ${ACTOR_SOURCE}
-        ${ACTOR_HEADERS}
-        )
-target_link_libraries(start_actor czmq zmq riaps capnp pthread)
-install(TARGETS start_actor DESTINATION bin)
+#add_executable(start_actor
+#        ${ACTOR_SOURCE}
+#        ${ACTOR_HEADERS}
+#        )
+#target_link_libraries(start_actor czmq zmq riaps capnp pthread)
+#install(TARGETS start_actor DESTINATION bin)
 
 # rdiscoveryd source
 list(APPEND RDISCOVERYD_SOURCE
@@ -220,7 +222,7 @@ add_executable(rdiscoveryd
         ${RDISCOVERYD_SOURCE}
         ${RDISCOVERYD_HEADERS}
         )
-target_link_libraries(rdiscoveryd czmq zmq opendht gnutls riaps capnp nettle hogweed gmp pthread)
+target_link_libraries(rdiscoveryd czmq zmq opendht gnutls riaps capnp nettle hogweed gmp pthread kj)
 
 install(TARGETS rdiscoveryd DESTINATION bin)
 
@@ -236,14 +238,14 @@ list(APPEND DEVICE_HEADERS
         include/device/r_deviceactor.h
         )
 
-# start_device
-add_executable(start_device
-        ${DEVICE_SOURCE}
-        ${DEVICE_HEADERS}
-        )
-target_link_libraries(start_device czmq zmq opendht gnutls riaps capnp nettle hogweed gmp pthread)
-
-install(TARGETS start_device DESTINATION bin)
+## start_device
+#add_executable(start_device
+#        ${DEVICE_SOURCE}
+#        ${DEVICE_HEADERS}
+#        )
+#target_link_libraries(start_device czmq zmq opendht gnutls riaps capnp nettle hogweed gmp pthread)
+#
+#install(TARGETS start_device DESTINATION bin)
 
 
 SET(MAJOR_VERSION "0")
