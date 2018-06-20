@@ -367,6 +367,14 @@ namespace riaps{
         zsock_destroy(&timerport);
     };
 
+    void ComponentBase::setup() {
+
+    }
+
+    void ComponentBase::activate() {
+        m_zactorComponent = zactor_new(component_actor, this);
+    }
+
     void ComponentBase::StopComponent() {
         //_execute.store(false);
         // Stop timers
@@ -434,15 +442,25 @@ namespace riaps{
     void ComponentBase::OnScheduledTimer(uint64_t timerId) {
         _logger->error("Scheduled timer is fired, but no handler is implemented. Implement OnSchedulerTimer() in component {}", GetConfig().component_name);
     }
+    
+    void ComponentBase::set_config(component_conf &c_conf) {
+        configuration_ = c_conf;
+    }
+
+    ComponentBase::ComponentBase() {
+        m_componentUuid = zuuid_new();
+        _logger = spd::get(configuration_.component_name);
+        if (_logger == nullptr)
+            _logger = spd::stdout_color_mt(configuration_.component_name);
+    }
 
     ComponentBase::ComponentBase(component_conf& config, Actor& actor)
             : m_actor(&actor),
               m_timerCounter(0)
     {
         configuration_ = config;
+        setup();
 
-        //uuid to the component instance
-        m_componentUuid = zuuid_new();
 
         size_t q_size = 2048; //queue size must be power of 2
         spd::set_async_mode(q_size);
@@ -451,7 +469,7 @@ namespace riaps{
         if (_logger == nullptr)
             _logger = spd::stdout_color_mt(configuration_.component_name);
 
-        m_zactorComponent = zactor_new(component_actor, this);
+
     }
 
 //    ComponentBase::ComponentBase(const py::object*  parent_actor ,

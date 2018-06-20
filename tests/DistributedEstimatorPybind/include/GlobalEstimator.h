@@ -40,5 +40,12 @@ namespace distributedestimator {
 extern "C" riaps::ComponentBase* create_component(_component_conf&, riaps::Actor& actor);
 extern "C" void destroy_component(riaps::ComponentBase*);
 
+std::unique_ptr<distributedestimator::components::GlobalEstimator> create_component_py(
+                    const py::object*  parent_actor ,
+                    const py::dict     type_spec    ,
+                    const std::string& name         ,
+                    const std::string& type_name    ,
+                    const py::dict     args
+);
 
 #endif //RIAPS_FW_GLOBALESTIMATOR_H

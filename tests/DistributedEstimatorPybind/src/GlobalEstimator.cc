@@ -58,8 +58,21 @@ void destroy_component(riaps::ComponentBase *comp) {
 }
 
 
+std::unique_ptr<distributedestimator::components::GlobalEstimator> create_component_py(
+        const py::object*  parent_actor ,
+        const py::dict     type_spec    ,
+        const std::string& name         ,
+        const std::string& type_name    ,
+        const py::dict     args
+) {
+    auto ptr = new distributedestimator::components::GlobalEstimator(parent_actor, type_spec, name, type_name, args);
+    return std::move(std::unique_ptr<distributedestimator::components::GlobalEstimator>(ptr));
+}
+
 PYBIND11_MODULE(globalestimator, m) {
     py::class_<distributedestimator::components::GlobalEstimator> testClass(m, "GlobalEstimator");
     testClass.def(py::init<const py::object*, const py::dict, const std::string&, const std::string&, const py::dict>());
-
+    testClass.def("setup", &distributedestimator::components::GlobalEstimator::setup);
+    testClass.def("activate", &distributedestimator::components::GlobalEstimator::activate);
+    m.def("create_component_py", &create_component_py, "Instantiates the component from python configuration");
 }

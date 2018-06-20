@@ -77,23 +77,13 @@ namespace riaps {
         /// @param config Configuration, parsed from the model file.
         /// @param actor Parent actor, the owner the component.
         ComponentBase(component_conf& config, Actor& actor);
-        ComponentBase() = default;
-
-        ///////////////////// PYBIND11 DEFINITIONS ///////////////////////
-
-        /**
-         * Constructor for pybind11
-         */
-//         ComponentBase(const py::object*  parent_actor ,
-//                       const py::dict     type_spec    ,
-//                       const std::string& name         ,
-//                       const std::string& type_name    ,
-//                       const py::dict     args
-//         );
 
 
-        /////////////////////////////////////////
-        // END PYBIND DEFS
+        ///////////////////// PYTHON PART ///////////////////////
+        ComponentBase();
+        virtual void setup();
+        virtual void activate();
+
         /////////////////////////////////////////
 
         /// @return The owner actor.
@@ -201,6 +191,9 @@ namespace riaps {
     protected:
         std::shared_ptr<spd::logger> _logger;
 
+        // PYTHON STUFF //
+        void set_config(component_conf& c_conf);
+        //////////////////
 
         /**
          * Sends a ZMQ message on the given inside port. This Send() is just for InsidePorts
