@@ -20,7 +20,7 @@ riaps_actor (zsock_t *pipe, void *args)
     console->info("Starting DHT node on {}:{} ({})", host_address, RIAPS_DHT_NODE_PORT, mac_address);
     //console->info("Starting DHT backup node.");
     dht::DhtRunner dhtNode;
-    //dht::DhtRunner backupNode;
+    dht::DhtRunner backupNode;
 
     // Launch a dht node on a new thread, using a
     // generated RSA key pair, and listen on port 4222.
@@ -30,6 +30,8 @@ riaps_actor (zsock_t *pipe, void *args)
     zsock_signal (pipe, 0);
     try {
         dhtNode.run(RIAPS_DHT_NODE_PORT, {}, true);
+        backupNode.run(RIAPS_DHT_NODE_PORT-1, {}, true);
+        backupNode.bootstrap(host_address, std::to_string(RIAPS_DHT_NODE_PORT));
         zsock_send(pipe, "1", 1);
         //char* pipeReturn = "1";
         //zstr_send(pipe, pipeReturn);
@@ -59,9 +61,12 @@ riaps_actor (zsock_t *pipe, void *args)
     msgHandler.init();
     msgHandler.run();
     dhtNode.join();
-
+    backupNode.join();
     dhtNode.shutdown([console](){
         console->info("DHT stopped");
+    });
+    backupNode.shutdown([console](){
+        console->info("Secondary DHT stopped");
     });
 
     zclock_sleep(100);

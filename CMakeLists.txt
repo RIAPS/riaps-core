@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(riaps_core VERSION 0.7.0)
+project(riaps_core VERSION 0.7.62)
 option(arch "amd64/armhf" "amd64")
 option(BUILD_TESTS  "Build tests" ON)
 set(CMAKE_SYSTEM_NAME Linux)
@@ -245,7 +245,7 @@ install(TARGETS start_device DESTINATION bin)
 
 SET(MAJOR_VERSION "0")
 SET(MINOR_VERSION "7")
-SET(PATCH_VERSION "6")
+SET(PATCH_VERSION "62")
 
 
 IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
