@@ -87,7 +87,7 @@ namespace riaps {
     protected:
 
         PortTypes                    m_port_type;
-        zsock_t*                     m_port_socket;
+        zsock_t*                     port_socket_;
         std::shared_ptr<spd::logger> m_logger;
 
 

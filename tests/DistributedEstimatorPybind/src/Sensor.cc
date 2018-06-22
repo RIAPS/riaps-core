@@ -85,5 +85,6 @@ PYBIND11_MODULE(sensor, m) {
     testClass.def(py::init<const py::object*, const py::dict, const std::string&, const std::string&, const py::dict, const std::string&, const std::string&>());
     testClass.def("setup", &distributedestimator::components::Sensor::setup);
     testClass.def("activate", &distributedestimator::components::Sensor::activate);
+    testClass.def("handlePortUpdate", &distributedestimator::components::Sensor::HandlePortUpdate);
     m.def("create_component_py", &create_component_py, "Instantiates the component from python configuration");
 }

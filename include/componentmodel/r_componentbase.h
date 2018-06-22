@@ -85,6 +85,7 @@ namespace riaps {
 
         virtual void setup();
         virtual void activate();
+        void HandlePortUpdate(const std::string &port_name, const std::string &host, int port);
 
         /////////////////////////////////////////
 

@@ -43,11 +43,11 @@ namespace riaps {
 
             ~RequestPort() noexcept ;
         protected:
-            bool m_isConnected;
+            bool is_connected_;
 
             timespec m_recvTimestamp;
 
-            capnp::FlatArrayMessageReader m_capnpReader;
+            capnp::FlatArrayMessageReader capnp_reader_;
 
             virtual bool Send(capnp::MallocMessageBuilder& message) const;
         };

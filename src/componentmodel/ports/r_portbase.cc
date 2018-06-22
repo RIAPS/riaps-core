@@ -21,7 +21,7 @@ namespace riaps {
                 : parent_component_(parentComponent) {
             m_port_type = portType;
             m_config = config;
-            m_port_socket = nullptr;
+            port_socket_ = nullptr;
 
             // InsidePorts have no parent components
             if (parentComponent == nullptr) {
@@ -64,7 +64,7 @@ namespace riaps {
 //        }
 
         const zsock_t *PortBase::GetSocket() const {
-            return m_port_socket;
+            return port_socket_;
         }
 
         const ComponentBase* PortBase::parent_component() {
@@ -129,8 +129,8 @@ namespace riaps {
         }
 
         PortBase::~PortBase() {
-            if (m_port_socket) {
-                zsock_destroy(&m_port_socket);
+            if (port_socket_) {
+                zsock_destroy(&port_socket_);
             }
         }
     }

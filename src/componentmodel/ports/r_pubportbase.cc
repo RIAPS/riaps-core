@@ -19,7 +19,7 @@ namespace riaps{
         }
 
         void PublisherPortBase::InitSocket() {
-            m_port_socket = zsock_new(ZMQ_PUB);
+            port_socket_ = zsock_new(ZMQ_PUB);
 
             if (GetConfig()->isLocal){
                 host_ = "127.0.0.1";
@@ -32,7 +32,7 @@ namespace riaps{
             }
 
             std::string pub_endpoint = "tcp://" + host_ + ":!";
-            port_ = zsock_bind(m_port_socket, "%s", pub_endpoint.c_str());
+            port_ = zsock_bind(port_socket_, "%s", pub_endpoint.c_str());
 
 
             if (port_ == -1) {
@@ -47,8 +47,8 @@ namespace riaps{
         }
 
         std::string PublisherPortBase::GetEndpoint() {
-            if (m_port_socket) {
-                return std::string(zsock_endpoint(m_port_socket));
+            if (port_socket_) {
+                return std::string(zsock_endpoint(port_socket_));
             }
             return "";
         }

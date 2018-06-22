@@ -13,10 +13,10 @@ namespace riaps{
             SenderPort(this),
             RecvPort(this)
         {
-            m_port_socket = zsock_new(ZMQ_REP);
-            zsock_set_linger(m_port_socket, 500);
-            zsock_set_sndtimeo(m_port_socket, 500);
-            zsock_set_rcvtimeo(m_port_socket, 500);
+            port_socket_ = zsock_new(ZMQ_REP);
+            zsock_set_linger(port_socket_, 500);
+            zsock_set_sndtimeo(port_socket_, 500);
+            zsock_set_rcvtimeo(port_socket_, 500);
 
             if (GetConfig()->isLocal){
                 host_ = "127.0.0.1";
@@ -29,7 +29,7 @@ namespace riaps{
             }
 
             std::string rep_endpoint = fmt::format("tcp://{}:!", host_);//"tcp://" + _host + ":!";
-            m_port = zsock_bind(m_port_socket, "%s", rep_endpoint.c_str());
+            m_port = zsock_bind(port_socket_, "%s", rep_endpoint.c_str());
 
 
             if (m_port == -1) {

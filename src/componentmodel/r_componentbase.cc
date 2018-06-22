@@ -54,7 +54,6 @@ namespace riaps{
         while (!terminated) {
             void *which = zpoller_wait(poller, 10);
             if (firstrun) {
-                consoleLogger->debug("firstrun");
                 firstrun = false;
 
                 const component_conf& comp_conf = comp->GetConfig();
@@ -74,7 +73,6 @@ namespace riaps{
                 for (auto it_timconf = comp_conf.component_ports.tims.begin();
                           it_timconf != comp_conf.component_ports.tims.end();
                           it_timconf++){
-                    consoleLogger->debug("Start timer: {} {}", it_timconf->portName, it_timconf->period);
                     // Don't put the zmqSocket into portSockets[zmqSocket], just one timer port exist in the component.
                     // Cannot differentiate timerports based on ZMQ Sockets.
                     comp->initTimerPort(*it_timconf);
@@ -140,7 +138,6 @@ namespace riaps{
                 for (auto it_subconf = comp_conf.component_ports.subs.begin();
                           it_subconf != comp_conf.component_ports.subs.end();
                           it_subconf++) {
-                    consoleLogger->debug("Inti subs: {} {} local:{} timed:{}", it_subconf->portName, it_subconf->messageType, it_subconf->isLocal, it_subconf->isTimed);
                     const ports::SubscriberPort* newPort = comp->initSubscriberPort(*it_subconf);
                     const zsock_t* zmqSocket = newPort->GetSocket();
                     portSockets[zmqSocket] = newPort;
@@ -535,6 +532,18 @@ namespace riaps{
 
     const component_conf& ComponentBase::GetConfig() const {
         return configuration_;
+    }
+
+    void ComponentBase::HandlePortUpdate(const std::string &port_name, const std::string &host,
+                                         int port) {
+        zmsg_t *msg_portupdate = zmsg_new();
+
+        zmsg_addstr(msg_portupdate, CMD_UPDATE_PORT);
+        zmsg_addstr(msg_portupdate, port_name.c_str());
+        zmsg_addstr(msg_portupdate, host.c_str());
+        zmsg_addstr(msg_portupdate, std::to_string(port).c_str());
+
+        zmsg_send(&msg_portupdate, m_zactorComponent);
     }
 
 //    const Actor* ComponentBase::GetActor() const{

@@ -12,15 +12,15 @@ namespace riaps {
         }
 
         void SubscriberPortBase::InitSocket() {
-            m_port_socket = zsock_new(ZMQ_SUB);
-            assert(m_port_socket);
-            zsock_set_subscribe(m_port_socket, "");
+            port_socket_ = zsock_new(ZMQ_SUB);
+            assert(port_socket_);
+            zsock_set_subscribe(port_socket_, "");
         }
 
         /// \param pub_endpoint The endpoint, INCLUDING the transport layer. e.g.: tcp://192.168.1.1:4245
         /// \return True if the connection successful. False otherwise.
         bool SubscriberPortBase::ConnectToPublihser(const std::string &pubEndpoint) {
-            int rc = zsock_connect(m_port_socket, "%s", pubEndpoint.c_str());
+            int rc = zsock_connect(port_socket_, "%s", pubEndpoint.c_str());
 
             if (rc != 0) {
                 std::cout << "Subscriber '" + GetPortBaseConfig()->portName + "' couldn't connect to " + pubEndpoint

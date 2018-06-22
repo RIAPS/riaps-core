@@ -87,5 +87,6 @@ PYBIND11_MODULE(localestimator, m) {
     testClass.def(py::init<const py::object*, const py::dict, const std::string&, const std::string&, const py::dict, const std::string&, const std::string&>());
     testClass.def("setup", &distributedestimator::components::LocalEstimator::setup);
     testClass.def("activate", &distributedestimator::components::LocalEstimator::activate);
+    testClass.def("handlePortUpdate", &distributedestimator::components::LocalEstimator::HandlePortUpdate);
     m.def("create_component_py", &create_component_py, "Instantiates the component from python configuration");
 }

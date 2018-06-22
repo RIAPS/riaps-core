@@ -71,5 +71,6 @@ PYBIND11_MODULE(globalestimator, m) {
     testClass.def(py::init<const py::object*, const py::dict, const std::string&, const std::string&, const py::dict, const std::string&, const std::string&>());
     testClass.def("setup", &distributedestimator::components::GlobalEstimator::setup);
     testClass.def("activate", &distributedestimator::components::GlobalEstimator::activate);
+    testClass.def("handlePortUpdate", &distributedestimator::components::GlobalEstimator::HandlePortUpdate);
     m.def("create_component_py", &create_component_py, "Instantiates the component from python configuration");
 }
