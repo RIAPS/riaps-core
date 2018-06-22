@@ -34,6 +34,22 @@ pybind11_add_module(globalestimator src/GlobalEstimator.cc
                                     )
 target_link_libraries(globalestimator PRIVATE czmq riaps dl capnp kj converter)
 
+pybind11_add_module(localestimator src/LocalEstimator.cc
+        src/base/LocalEstimatorBase.cc
+        include/messages/distributedestimator.capnp.c++
+        include/base/LocalEstimatorBase.h
+        include/LocalEstimator.h
+        )
+target_link_libraries(localestimator PRIVATE czmq riaps dl capnp kj converter)
+
+pybind11_add_module(sensor src/Sensor.cc
+        src/base/SensorBase.cc
+        include/messages/distributedestimator.capnp.c++
+        include/base/SensorBase.h
+        include/Sensor.h
+        )
+target_link_libraries(sensor PRIVATE czmq riaps dl capnp kj converter)
+
 #pybind11_add_module(inh ./testinh/Child.cc ./testinh/Child.h)
 #target_link_libraries(inh PRIVATE parent)
 
