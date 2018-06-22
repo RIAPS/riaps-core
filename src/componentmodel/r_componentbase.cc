@@ -11,6 +11,9 @@ namespace riaps{
     void component_actor(zsock_t* pipe, void* args){
         ComponentBase* comp = (ComponentBase*)args;
 
+        zsock_t* pycontrol = zsock_new_pair(fmt::format("inproc://part_{}_control", comp->configuration_.component_name).c_str());
+        assert(pycontrol);
+
         zsock_t* timerport = zsock_new_pull(comp->getTimerChannel().c_str());
         assert(timerport);
 
@@ -31,10 +34,14 @@ namespace riaps{
         rc = zpoller_add(poller, timerportOneShot);
         assert(rc==0);
 
+        rc = zpoller_add(poller, pycontrol);
+        assert(rc==0);
+
         bool terminated = false;
         bool firstrun = true;
 
         auto consoleLogger = comp->_logger;
+        consoleLogger->set_level(spd::level::debug);
         consoleLogger->info("Component started");
 
         // Register ZMQ Socket - riapsPort pairs. For the quick retrieve.
@@ -46,8 +53,8 @@ namespace riaps{
         // TODO: If leader election is enabled use dynamic timeout in the poller
         while (!terminated) {
             void *which = zpoller_wait(poller, 10);
-
             if (firstrun) {
+                consoleLogger->debug("firstrun");
                 firstrun = false;
 
                 const component_conf& comp_conf = comp->GetConfig();
@@ -67,6 +74,7 @@ namespace riaps{
                 for (auto it_timconf = comp_conf.component_ports.tims.begin();
                           it_timconf != comp_conf.component_ports.tims.end();
                           it_timconf++){
+                    consoleLogger->debug("Start timer: {} {}", it_timconf->portName, it_timconf->period);
                     // Don't put the zmqSocket into portSockets[zmqSocket], just one timer port exist in the component.
                     // Cannot differentiate timerports based on ZMQ Sockets.
                     comp->initTimerPort(*it_timconf);
@@ -132,6 +140,7 @@ namespace riaps{
                 for (auto it_subconf = comp_conf.component_ports.subs.begin();
                           it_subconf != comp_conf.component_ports.subs.end();
                           it_subconf++) {
+                    consoleLogger->debug("Inti subs: {} {} local:{} timed:{}", it_subconf->portName, it_subconf->messageType, it_subconf->isLocal, it_subconf->isTimed);
                     const ports::SubscriberPort* newPort = comp->initSubscriberPort(*it_subconf);
                     const zsock_t* zmqSocket = newPort->GetSocket();
                     portSockets[zmqSocket] = newPort;
@@ -200,6 +209,7 @@ namespace riaps{
                 zmsg_destroy(&msg);
             }
             else if (which == timerport) {
+                consoleLogger->debug("message on timerport");
                 zmsg_t *msg = zmsg_recv(which);
 
                 if (msg) {
@@ -237,8 +247,11 @@ namespace riaps{
 
 
             }
+            else if (which == pycontrol) {
+                comp->_logger->info("PYCONTORLL");
+            }
             else if(which){
-
+                    consoleLogger->debug("Message on other ports");
                     ports::PortBase *riapsPort = const_cast<ports::PortBase *>(portSockets[static_cast<zsock_t *>(which)]);
 
                     // If the port is async, the frames are different
@@ -391,15 +404,15 @@ namespace riaps{
             delete port;
         }
 
-        zuuid_destroy(&m_componentUuid);
+        zuuid_destroy(&component_uuid_);
     }
 
     void ComponentBase::handleCPULimit() {
         _logger->error("{} was violated, but {} is not implemented in component: {}::{}::{}"
                 , "CPU limit"
                 , __func__
-                , GetActor()->getApplicationName()
-                , GetActor()->getActorName()
+                , actor()->application_name()
+                , actor()->actor_name()
                 , GetComponentName());
     }
 
@@ -407,8 +420,8 @@ namespace riaps{
         _logger->error("{} was violated, but {} is not implemented in component: {}::{}::{}"
                 , "Memory limit"
                 , __func__
-                , GetActor()->getApplicationName()
-                , GetActor()->getActorName()
+                , actor()->application_name()
+                , actor()->actor_name()
                 , GetComponentName());
     }
 
@@ -416,8 +429,8 @@ namespace riaps{
         _logger->error("{} was violated, but {} is not implemented in component: {}::{}::{}"
                 , "Net limit"
                 , __func__
-                , GetActor()->getApplicationName()
-                , GetActor()->getActorName()
+                , actor()->application_name()
+                , actor()->actor_name()
                 , GetComponentName());
     }
 
@@ -425,8 +438,8 @@ namespace riaps{
         _logger->error("{} was violated, but {} is not implemented in component: {}::{}::{}"
                 , "Space limit"
                 , __func__
-                , GetActor()->getApplicationName()
-                , GetActor()->getActorName()
+                , actor()->application_name()
+                , actor()->actor_name()
                 , GetComponentName());
 
     }
@@ -445,331 +458,34 @@ namespace riaps{
     
     void ComponentBase::set_config(component_conf &c_conf) {
         configuration_ = c_conf;
-    }
-
-    ComponentBase::ComponentBase() {
-        m_componentUuid = zuuid_new();
         _logger = spd::get(configuration_.component_name);
         if (_logger == nullptr)
             _logger = spd::stdout_color_mt(configuration_.component_name);
+        _logger->set_level(spd::level::debug);
     }
 
-    ComponentBase::ComponentBase(component_conf& config, Actor& actor)
-            : m_actor(&actor),
-              m_timerCounter(0)
-    {
-        configuration_ = config;
-        setup();
-
-
-        size_t q_size = 2048; //queue size must be power of 2
-        spd::set_async_mode(q_size);
-
-        _logger = spd::get(configuration_.component_name);
-        if (_logger == nullptr)
-            _logger = spd::stdout_color_mt(configuration_.component_name);
-
-
+    ComponentBase::ComponentBase(const std::string &application_name, const std::string &actor_name) {
+        actor_ = std::make_shared<PyActor>(application_name, actor_name);
+        component_uuid_ = zuuid_new();
     }
 
-//    ComponentBase::ComponentBase(const py::object*  parent_actor ,
-//                                 const py::dict     type_spec    ,
-//                                 const std::string& name         ,
-//                                 const std::string& type_name    ,
-//                                 const py::dict     args
-//    ) {
-//        configuration_.component_name = name;
-//        configuration_.component_type = type_name;
+//    ComponentBase::ComponentBase(component_conf& config, Actor& actor)
+//            : m_actor(&actor),
+//              m_timerCounter(0)
+//    {
+//        configuration_ = config;
+//        setup();
 //
-//        // Load the port definitions
-//        ParsePortConfig(type_spec);
+//
+//        size_t q_size = 2048; //queue size must be power of 2
+//        spd::set_async_mode(q_size);
+//
+//        _logger = spd::get(configuration_.component_name);
+//        if (_logger == nullptr)
+//            _logger = spd::stdout_color_mt(configuration_.component_name);
+//
+//
 //    }
-
-
-//    void ComponentBase::ParsePortConfig(const py::dict &dict) {
-//        auto lll = spd::stdout_color_mt("pybind");
-//        auto json_ports = dict["ports"];
-//
-//        auto json_pubs  = json_ports["pubs"].cast<std::vector<py::dict>>();
-//        auto json_subs  = json_ports["pubs"].cast<std::vector<py::dict>>();
-//
-//        for (auto it = json_subs.begin(); it!=json_subs.end(); it++){
-//            for (auto item : *it){
-//                lll->info("{}",item.first.cast<std::string>());
-//            }
-//        }
-//
-//
-//
-////        for (auto it_pubport=json_pubports.begin();
-////             it_pubport!=json_pubports.end();
-////             it_pubport++){
-////
-////            auto pubportname = it_pubport.key();
-////            auto pubporttype = it_pubport.value()[J_TYPE];
-////
-////            component_port_pub newpubconfig;
-////            newpubconfig.portName = pubportname;
-////            newpubconfig.messageType = pubporttype;
-////            try {
-////                newpubconfig.isTimed = json_pubports[pubportname].at(J_PORT_TIMED).get<bool>();
-////            } catch (nlohmann::json::out_of_range& e) {
-////                newpubconfig.isTimed = false;
-////            } catch (nlohmann::json::type_error& e){
-////                m_logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, pubportname);
-////                newpubconfig.isTimed = false;
-////            }
-////
-////            // If the porttype is defined in the Local list
-////            if (m_localMessageTypes.find(pubporttype) != m_localMessageTypes.end() || results.isDevice){
-////                newpubconfig.isLocal = true;
-////            } else {
-////                newpubconfig.isLocal = false;
-////            }
-////
-////            results.component_ports.pubs.push_back(newpubconfig);
-////        }
-////
-////        // Parse subscribers from the config
-////        if (jsonPortsConfig.count(J_PORTS_SUBS)!=0){
-////            auto json_subports = jsonPortsConfig[J_PORTS_SUBS];
-////            for (auto it_subport = json_subports.begin();
-////                 it_subport != json_subports.end() ;
-////                 it_subport++){
-////
-////                auto subportname = it_subport.key();
-////                auto subporttype = it_subport.value()[J_TYPE];
-////
-////                component_port_sub newsubconfig;
-////                newsubconfig.portName = subportname;
-////                newsubconfig.messageType = subporttype;
-////                try {
-////                    newsubconfig.isTimed = json_subports[subportname].at(J_PORT_TIMED).get<bool>();
-////                } catch (nlohmann::json::out_of_range& e) {
-////                    newsubconfig.isTimed = false;
-////                } catch (nlohmann::json::type_error& e){
-////                    m_logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, subportname);
-////                    newsubconfig.isTimed = false;
-////                }
-////
-////                // If the porttype is defined in the Local list
-////                if (m_localMessageTypes.find(subporttype) != m_localMessageTypes.end() || results.isDevice){
-////                    newsubconfig.isLocal = true;
-////                } else {
-////                    newsubconfig.isLocal = false;
-////                }
-////
-////                results.component_ports.subs.push_back(newsubconfig);
-////            }
-////        }
-////
-////        // Parse request ports
-////        if (jsonPortsConfig.count(J_PORTS_REQS)!=0){
-////            auto json_reqports = jsonPortsConfig[J_PORTS_REQS];
-////            for (auto it_reqport = json_reqports.begin();
-////                 it_reqport != json_reqports.end() ;
-////                 it_reqport++){
-////
-////                auto reqportname = it_reqport.key();
-////                std::string reqtype = it_reqport.value()[J_PORT_REQTYPE];
-////                std::string reptype = it_reqport.value()[J_PORT_REPTYPE];
-////                std::string messagetype = reqtype + "#" + reptype;
-////
-////                component_port_req newreqconfig;
-////                newreqconfig.portName = reqportname;
-////                //newreqconfig.messageType = subporttype;
-////                newreqconfig.req_type = reqtype;
-////                newreqconfig.rep_type = reptype;
-////                newreqconfig.messageType = messagetype;
-////                try {
-////                    newreqconfig.isTimed = json_reqports[reqportname].at(J_PORT_TIMED).get<bool>();
-////                } catch (nlohmann::json::out_of_range& e) {
-////                    newreqconfig.isTimed = false;
-////                } catch (nlohmann::json::type_error& e){
-////                    m_logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, reqportname);
-////                    newreqconfig.isTimed = false;
-////                }
-////
-////                // If the porttype is defined in the Local list
-////                if (m_localMessageTypes.find(reqtype) != m_localMessageTypes.end() || results.isDevice){
-////                    newreqconfig.isLocal = true;
-////                } else {
-////                    newreqconfig.isLocal = false;
-////                }
-////
-////                results.component_ports.reqs.push_back(newreqconfig);
-////            }
-////        }
-////
-////        // Parse response ports
-////        if (jsonPortsConfig.count(J_PORTS_REPS)!=0){
-////            auto json_repports = jsonPortsConfig[J_PORTS_REPS];
-////            for (auto it_repport = json_repports.begin();
-////                 it_repport != json_repports.end() ;
-////                 it_repport++){
-////
-////                auto repportname = it_repport.key();
-////                std::string reqtype = it_repport.value()[J_PORT_REQTYPE];
-////                std::string reptype = it_repport.value()[J_PORT_REPTYPE];
-////                std::string messagetype = reqtype + "#" + reptype;
-////
-////                component_port_rep newrepconfig;
-////                newrepconfig.portName = repportname;
-////                newrepconfig.req_type = reqtype;
-////                newrepconfig.rep_type = reptype;
-////                newrepconfig.messageType = messagetype;
-////                try {
-////                    newrepconfig.isTimed = json_repports[repportname].at(J_PORT_TIMED).get<bool>();
-////                } catch (nlohmann::json::out_of_range& e) {
-////                    newrepconfig.isTimed = false;
-////                } catch (nlohmann::json::type_error& e){
-////                    m_logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, repportname);
-////                    newrepconfig.isTimed = false;
-////                }
-////
-////                // If the porttype is defined in the Local list
-////                if (m_localMessageTypes.find(reqtype) != m_localMessageTypes.end() || results.isDevice){
-////                    newrepconfig.isLocal = true;
-////                } else {
-////                    newrepconfig.isLocal = false;
-////                }
-////
-////                results.component_ports.reps.push_back(newrepconfig);
-////            }
-////        }
-////
-////        // Parse query ports
-////        if (jsonPortsConfig.count(J_PORTS_QRYS)!=0){
-////            auto json_qryports = jsonPortsConfig[J_PORTS_QRYS];
-////            for (auto it_qryport = json_qryports.begin();
-////                 it_qryport != json_qryports.end() ;
-////                 it_qryport++){
-////
-////                auto qryportname = it_qryport.key();
-////                std::string qrytype = it_qryport.value()[J_PORT_QRYTYPE];
-////                std::string anstype = it_qryport.value()[J_PORT_ANSTYPE];
-////                std::string messagetype = qrytype + "#" + anstype;
-////
-////                component_port_qry newqryconfig;
-////                newqryconfig.portName = qryportname;
-////                newqryconfig.qry_type = qrytype;
-////                newqryconfig.ans_type = anstype;
-////                newqryconfig.messageType = messagetype;
-////
-////                try {
-////                    newqryconfig.isTimed = json_qryports[qryportname].at(J_PORT_TIMED).get<bool>();
-////                } catch (nlohmann::json::out_of_range& e) {
-////                    newqryconfig.isTimed = false;
-////                } catch (nlohmann::json::type_error& e){
-////                    m_logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, qryportname);
-////                    newqryconfig.isTimed = false;
-////                }
-////
-////                // If the porttype is defined in the Local list
-////                if (m_localMessageTypes.find(qrytype) != m_localMessageTypes.end() || results.isDevice){
-////                    newqryconfig.isLocal = true;
-////                } else {
-////                    newqryconfig.isLocal = false;
-////                }
-////
-////                results.component_ports.qrys.push_back(newqryconfig);
-////            }
-////        }
-////
-////        // Parse answer ports
-////        if (jsonPortsConfig.count(J_PORTS_ANSS)!=0){
-////            auto json_ansports = jsonPortsConfig[J_PORTS_ANSS];
-////            for (auto it_ansport = json_ansports.begin();
-////                 it_ansport != json_ansports.end() ;
-////                 it_ansport++){
-////
-////                auto ansportname = it_ansport.key();
-////                std::string qrytype = it_ansport.value()[J_PORT_QRYTYPE];
-////                std::string anstype = it_ansport.value()[J_PORT_ANSTYPE];
-////                std::string messagetype = qrytype + "#" + anstype;
-////
-////                component_port_ans newansconfig;
-////                newansconfig.portName = ansportname;
-////                newansconfig.qry_type = qrytype;
-////                newansconfig.ans_type = anstype;
-////                newansconfig.messageType = messagetype;
-////
-////                try {
-////                    newansconfig.isTimed = json_ansports[ansportname].at(J_PORT_TIMED).get<bool>();
-////                } catch (nlohmann::json::out_of_range& e) {
-////                    newansconfig.isTimed = false;
-////                } catch (nlohmann::json::type_error& e){
-////                    m_logger->warn("Type error: {}:{}:timed is not bool.",results.component_name, ansportname);
-////                    newansconfig.isTimed = false;
-////                }
-////
-////                // If the porttype is defined in the Local list
-////                if (m_localMessageTypes.find(qrytype) != m_localMessageTypes.end() || results.isDevice){
-////                    newansconfig.isLocal = true;
-////                } else {
-////                    newansconfig.isLocal = false;
-////                }
-////
-////                results.component_ports.anss.push_back(newansconfig);
-////            }
-////        }
-////
-////        // Get the timers
-////        if (jsonPortsConfig.count(J_PORTS_TIMS)!=0){
-////            auto json_tims = jsonPortsConfig[J_PORTS_TIMS];
-////            for (auto it_tim = json_tims.begin();
-////                 it_tim != json_tims.end() ;
-////                 it_tim++){
-////
-////                auto timname = it_tim.key();
-////                auto timperiod = it_tim.value()["period"];
-////
-////                component_port_tim newtimconfig;
-////                newtimconfig.portName = timname;
-////                newtimconfig.period   = timperiod;
-////
-////                results.component_ports.tims.push_back(newtimconfig);
-////            }
-////        }
-////
-////        // Get the inside ports
-////        if (jsonPortsConfig.count(J_PORTS_INSS)!=0){
-////            auto json_inss = jsonPortsConfig[J_PORTS_INSS];
-////            for (auto it_ins = json_inss.begin();
-////                 it_ins != json_inss.end() ;
-////                 it_ins++){
-////
-////                auto insname = it_ins.key();
-////                //auto timperiod = it_tim.value()["period"];
-////
-////                component_port_ins newinsconfig;
-////                newinsconfig.portName = insname;
-////
-////                results.component_ports.inss.push_back(newinsconfig);
-////            }
-////        }
-//    }
-//
-//    // For the timer port
-////    void ComponentBase::DispatchMessage(const std::string &messagetype, msgpack::sbuffer* message,
-////                                        ports::PortBase *port) {
-////        auto handler = GetHandler(port->GetPortName());
-////        (this->*handler)(messagetype, message, port);
-////    }
-//
-//
-//
-////    const ports::CallBackTimer* ComponentBase::InitTimerPort(const _component_port_tim_j& config) {
-////        std::string timerchannel = getTimerChannel();
-////        std::unique_ptr<ports::CallBackTimer> newtimer(new ports::CallBackTimer(timerchannel, config));
-////        newtimer->start(config.period);
-////
-////        auto result = newtimer.get();
-////
-////        _ports[config.portName] = std::move(newtimer);
-////        return result;
-////    }
-
 
 
     ports::PublisherPort* ComponentBase::GetPublisherPortByName(const std::string &portName) {
@@ -821,11 +537,14 @@ namespace riaps{
         return configuration_;
     }
 
-    const Actor* ComponentBase::GetActor() const{
-        return m_actor;
+//    const Actor* ComponentBase::GetActor() const{
+//        return m_actor;
+//    }
+
+
+    std::shared_ptr<PyActor> ComponentBase::actor() const{
+        return actor_;
     }
-
-
 
     const ports::PublisherPort* ComponentBase::initPublisherPort(const component_port_pub& config) {
         auto result = new ports::PublisherPort(config, this);
@@ -1029,7 +748,7 @@ namespace riaps{
     }
 
     const std::string ComponentBase::GetCompUuid() const{
-        std::string uuid_str = zuuid_str(m_componentUuid);
+        std::string uuid_str = zuuid_str(component_uuid_);
         return uuid_str;
     }
 

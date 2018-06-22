@@ -47,7 +47,7 @@ namespace riaps {
                                   const std::string& jsonFile  ,
                                   std::map<std::string, std::string>& actualParams);
 
-        static const Actor* GetRunningActor();
+        //static const Actor* GetRunningActor();
 
         bool init();
         virtual void start();
@@ -56,7 +56,7 @@ namespace riaps {
         // Todo: Can they be static?
         // Todo: Actually a better question: can the whole actor be static?
         const std::string& getActorName() const;
-        const std::string& getApplicationName() const;
+        const std::string& application_name() const;
         riaps::devm::DevmApi* getDeviceManager() const;
         riaps::deplo::DeploApi* getDeploManager() const;
 
@@ -141,7 +141,7 @@ namespace riaps {
         std::string                 _actor_endpoint;
         std::shared_ptr<zuuid_t> m_actor_id;
         //std::string                 actorName;
-        std::string                 m_applicationName;
+        std::string                 application_name_;
         std::vector<ComponentBase*> m_components;
         std::vector<Peripheral*>    m_peripherals;
         std::vector<void*>          m_component_dll_handles;

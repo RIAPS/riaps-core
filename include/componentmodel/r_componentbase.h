@@ -10,6 +10,7 @@
 #ifndef RIAPS_R_COMPONENTBASE_H
 #define RIAPS_R_COMPONENTBASE_H
 
+#include <componentmodel/r_pyactor.h>
 #include <componentmodel/r_discoverdapi.h>
 #include <componentmodel/r_configuration.h>
 #include <componentmodel/r_periodictimer.h>
@@ -51,7 +52,7 @@ namespace spd = spdlog;
 
 namespace riaps {
 
-    class Actor;
+    //class PyActor;
 
     namespace groups{
         class Group;
@@ -76,18 +77,20 @@ namespace riaps {
 
         /// @param config Configuration, parsed from the model file.
         /// @param actor Parent actor, the owner the component.
-        ComponentBase(component_conf& config, Actor& actor);
+        //ComponentBase(component_conf& config, Actor& actor);
 
 
         ///////////////////// PYTHON PART ///////////////////////
-        ComponentBase();
+        ComponentBase(const std::string &application_name, const std::string &actor_name);
+
         virtual void setup();
         virtual void activate();
 
         /////////////////////////////////////////
 
         /// @return The owner actor.
-        const Actor* GetActor() const;
+        //const Actor* GetActor() const;
+        std::shared_ptr<PyActor> actor() const;
 
         zactor_t* GetZmqPipe() const;
 
@@ -452,12 +455,13 @@ namespace riaps {
         /**
          * Unique ID of the componenet. Regenerated at every start.
          */
-        zuuid_t* m_componentUuid;
+        zuuid_t* component_uuid_;
 
         /**
          * Points to the component owner.
          */
-        const Actor* m_actor;
+        std::shared_ptr<PyActor> actor_;
+        //const Actor* actor_;
 
         /**
          * Holds the component thread.

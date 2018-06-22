@@ -97,6 +97,7 @@ list (APPEND riapslib_SOURCE
         src/componentmodel/ports/r_subscriberport.cc
         src/componentmodel/ports/r_timedport.cc
         src/componentmodel/r_actor.cc
+        src/componentmodel/r_pyactor.cc
         src/componentmodel/r_argumentparser.cc
         src/componentmodel/r_payload.cc
         src/componentmodel/r_commandlineparser.cc
@@ -136,6 +137,7 @@ list (APPEND riapslib_HEADERS
         include/componentmodel/ports/r_subscriberport.h
         include/componentmodel/ports/r_timedport.h
         include/componentmodel/r_actor.h
+        include/componentmodel/r_pyactor.h
         include/componentmodel/r_payload.h
         include/componentmodel/r_commandlineparser.h
         include/componentmodel/r_componentbase.h

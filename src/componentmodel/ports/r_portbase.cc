@@ -18,7 +18,7 @@ namespace riaps {
         PortBase::PortBase(PortTypes portType,
                            const component_port_config* config,
                            const ComponentBase* parentComponent)
-                : m_parentComponent(parentComponent) {
+                : parent_component_(parentComponent) {
             m_port_type = portType;
             m_config = config;
             m_port_socket = nullptr;
@@ -29,7 +29,7 @@ namespace riaps {
                 std::string loggerName = fmt::format("{}::{}", loggerPrefix, config->portName);
                 m_logger = spd::stdout_color_mt(loggerName);
             } else {
-                m_logger = spd::get(m_parentComponent->GetConfig().component_name);
+                m_logger = spd::get(parent_component_->GetConfig().component_name);
             }
 
 
@@ -67,8 +67,8 @@ namespace riaps {
             return m_port_socket;
         }
 
-        const ComponentBase* PortBase::GetParentComponent() {
-            return m_parentComponent;
+        const ComponentBase* PortBase::parent_component() {
+            return parent_component_;
         }
 
         const component_port_config* PortBase::GetPortBaseConfig() const {
@@ -130,7 +130,6 @@ namespace riaps {
 
         PortBase::~PortBase() {
             if (m_port_socket) {
-                // std::cout << "Destroy port socket : " << GetPortName() << std::endl;
                 zsock_destroy(&m_port_socket);
             }
         }

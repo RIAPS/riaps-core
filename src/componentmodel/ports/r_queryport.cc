@@ -37,9 +37,9 @@ namespace riaps {
             const component_port_qry* current_config = GetConfig();
 
             auto results =
-                    subscribeToService(GetParentComponent()->GetActor()->getApplicationName(),
-                                       GetParentComponent()->GetConfig().component_name,
-                                       GetParentComponent()->GetActor()->getActorName(),
+                    subscribeToService(parent_component()->actor()->application_name(),
+                                       parent_component()->GetConfig().component_name,
+                                       parent_component()->actor()->actor_name(),
                                        riaps::discovery::Kind::QRY,
                                        (current_config->isLocal?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
                                        current_config->portName, // Subscriber name

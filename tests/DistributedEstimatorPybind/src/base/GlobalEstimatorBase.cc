@@ -8,19 +8,20 @@
 namespace distributedestimator {
     namespace components {
 
-        GlobalEstimatorBase::GlobalEstimatorBase(_component_conf &config, riaps::Actor &actor) : ComponentBase(config,
-                                                                                                               actor) {
+//        GlobalEstimatorBase::GlobalEstimatorBase(_component_conf &config, riaps::Actor &actor) : ComponentBase(config,
+//                                                                                                               actor) {
+//
+//        }
 
-        }
 
-
-        GlobalEstimatorBase::GlobalEstimatorBase(const py::object *parent_actor,
-                                                 const py::dict type_spec,
-                                                 const std::string &name,
-                                                 const std::string &type_name,
-                                                 const py::dict args)
-                : ComponentBase() {
+        GlobalEstimatorBase::GlobalEstimatorBase(const py::object *parent_actor, const py::dict type_spec,
+                                                         const std::string &name, const std::string &type_name, const py::dict args,
+                                                         const std::string &application_name, const std::string &actor_name)
+                : ComponentBase(application_name, actor_name) {
             auto result = PyConfigConverter::convert(type_spec);
+            result.component_name = name;
+            result.component_type = type_name;
+            result.isDevice=false;
             set_config(result);
             auto l = spd::stdout_color_mt("debuglogger");
             printNames<component_port_sub>(result.component_ports.subs);

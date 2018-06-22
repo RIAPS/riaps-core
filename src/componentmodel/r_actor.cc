@@ -8,9 +8,9 @@ using namespace std;
 
 namespace riaps {
 
-    const Actor* riaps::Actor::GetRunningActor() {
-        return CurrentActor;
-    }
+    //const Actor* riaps::Actor::GetRunningActor() {
+    //    return CurrentActor;
+    //}
 
     Actor* riaps::Actor::CreateActor(nlohmann::json&    configJson,
                                      const std::string& actorName ,
@@ -70,7 +70,7 @@ namespace riaps {
         m_deviceProperties->configJson        = configJson;
         m_deviceProperties->jsonDevicesconfig = configJson[J_DEVICES];
 
-        m_applicationName = applicationname;
+        application_name_ = applicationname;
     }
 
     riaps::Actor::Actor(const std::string&     applicationname,
@@ -155,7 +155,7 @@ namespace riaps {
 
 
         //actorName       = actorname;
-        m_applicationName = applicationname;
+        application_name_ = applicationname;
 
         //jsonInstances = jsonActorconfig[J_INSTANCES];
         _jsonInternals = jsonActorconfig[J_INTERNALS];
@@ -566,7 +566,7 @@ namespace riaps {
         if (isDeviceActor()){
             // Devices are registered in the deplo by the devm, not by the actor
         } else {
-            m_deplo->registerActor(getApplicationName(),
+            m_deplo->registerActor(application_name(),
                                    "0",
                                    m_actorProperties->actorName,
                                    getpid());
@@ -584,8 +584,8 @@ namespace riaps {
 
         // Register the actor in the discovery service
         m_discovery_socket = isDeviceActor()                                                ?
-                            registerActor(m_applicationName, m_deviceProperties->deviceName):
-                            registerActor(m_applicationName, m_actorProperties ->actorName );
+                            registerActor(application_name_, m_deviceProperties->deviceName):
+                            registerActor(application_name_, m_actorProperties ->actorName );
 
 
         if (m_discovery_socket == NULL) {
@@ -605,7 +605,7 @@ namespace riaps {
                  * Register actor in the device manager.
                  * The device manager starts
                  */
-                m_devm->RegisterActor(m_deviceProperties->deviceName, m_applicationName, "0");
+                m_devm->RegisterActor(m_deviceProperties->deviceName, application_name_, "0");
                 zpoller_add(m_poller, m_devm->GetSocket());
                 break;
             }
@@ -628,7 +628,7 @@ namespace riaps {
 
 
             const std::string componentLibraryName = "lib" + lowercaselibname + ".so";
-            const std::string appPath = GetAppPath(getApplicationName());
+            const std::string appPath = GetAppPath(application_name());
 
             void* dlOpenHandle = nullptr;
 
@@ -668,7 +668,7 @@ namespace riaps {
                 // If it is a device, then start the pheripheral first
                 else if (itConf->isDevice && isComponentActor()){
                     auto peripheral = new Peripheral(this);
-                    peripheral->Setup(m_applicationName, m_actorProperties->jsonFile, itConf->component_type, m_commandLineParams);
+                    peripheral->Setup(application_name_, m_actorProperties->jsonFile, itConf->component_type, m_commandLineParams);
                     m_peripherals.push_back(peripheral);
                 }
 
@@ -713,8 +713,8 @@ namespace riaps {
         return m_deplo.get();
     }
 
-    const std::string& riaps::Actor::getApplicationName() const {
-        return m_applicationName;
+    const std::string& riaps::Actor::application_name() const {
+        return application_name_;
     }
 
     std::string riaps::Actor::getActorId() {
@@ -961,7 +961,7 @@ namespace riaps {
 
         // Deregister only, if the registration was successful
         if (m_discovery_socket!= nullptr)
-            deregisterActor(getActorName(), getApplicationName());
+            deregisterActor(getActorName(), application_name());
 
         for (riaps::ComponentBase* component : m_components){
             m_logger->info("Stop component: {}", component->GetConfig().component_name);

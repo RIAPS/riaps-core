@@ -23,19 +23,21 @@ namespace riaps{
             component_port_sub* currentConfig = (component_port_sub*)GetConfig();
 
             auto results =
-                    subscribeToService(GetParentComponent()->GetActor()->getApplicationName(),
-                                         GetParentComponent()->GetConfig().component_name,
-                                       GetParentComponent()->GetActor()->getActorName(),
+                    subscribeToService(parent_component()->actor()->application_name(),
+                                       parent_component()->GetConfig().component_name,
+                                       parent_component()->actor()->actor_name(),
                                          riaps::discovery::Kind::SUB,
                                          (currentConfig->isLocal?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
                                           currentConfig->portName, // Subscriber name
                                           currentConfig->messageType);
-
+            m_logger->debug("After subscribe");
             for (auto result : results) {
                 std::string endpoint = "tcp://" + result.host_name + ":" + std::to_string(result.port);
                 ConnectToPublihser(endpoint);
             }
+            m_logger->debug("{} end", __FUNCTION__);
         }
+
 
 
 

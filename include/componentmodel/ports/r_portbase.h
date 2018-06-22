@@ -59,7 +59,7 @@ namespace riaps {
         //bool Send(std::vector<std::string>& fields) const;
         //virtual bool Send(zmsg_t** zmessage) const;
 
-        const ComponentBase* GetParentComponent();
+        const ComponentBase* parent_component();
 
 
         const PortTypes& GetPortType() const;
@@ -93,7 +93,7 @@ namespace riaps {
 
     private:
         const component_port_config* m_config;
-        const ComponentBase* m_parentComponent;
+        const ComponentBase* parent_component_;
     };
 }
 }
