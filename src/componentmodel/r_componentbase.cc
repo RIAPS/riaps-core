@@ -480,9 +480,9 @@ namespace riaps{
 //        size_t q_size = 2048; //queue size must be power of 2
 //        spd::set_async_mode(q_size);
 //
-//        _logger = spd::get(configuration_.component_name);
-//        if (_logger == nullptr)
-//            _logger = spd::stdout_color_mt(configuration_.component_name);
+//        logger_ = spd::get(configuration_.component_name);
+//        if (logger_ == nullptr)
+//            logger_ = spd::stdout_color_mt(configuration_.component_name);
 //
 //
 //    }
@@ -790,7 +790,7 @@ namespace riaps{
         if (m_groups.find(groupId)==m_groups.end())
             return "";
 
-        return m_groups[groupId]->GetLeaderId();
+        return m_groups[groupId]->leader_id();
     }
 
     bool ComponentBase::JoinGroup(riaps::groups::GroupId &&groupId) {
@@ -844,7 +844,7 @@ namespace riaps{
     }
 
     bool ComponentBase::IsLeader(const riaps::groups::Group* group) {
-        return GetCompUuid() == group->GetLeaderId();
+        return GetCompUuid() == group->leader_id();
     }
 
     bool ComponentBase::IsLeader(const riaps::groups::GroupId &groupId) {
@@ -856,13 +856,13 @@ namespace riaps{
     bool ComponentBase::IsLeaderAvailable(const riaps::groups::GroupId &groupId) {
         if (m_groups.find(groupId) == m_groups.end())
             return false;
-        return m_groups[groupId]->GetLeaderId()!="";
+        return m_groups[groupId]->leader_id()!="";
     }
 
     std::vector<riaps::groups::GroupId> ComponentBase::GetGroupMembershipsByType(const std::string &groupType) {
         std::vector<riaps::groups::GroupId> results;
         for(auto& group : m_groups) {
-            if (group.first.groupTypeId != groupType) continue;
+            if (group.first.group_type_id != groupType) continue;
             results.push_back(group.first);
         }
         return results;
@@ -1050,8 +1050,8 @@ namespace riaps{
     void ComponentBase::UpdateGroup(riaps::discovery::GroupUpdate::Reader &msgGroupUpdate) {
         // First, find the affected groups
         riaps::groups::GroupId gid;
-        gid.groupName   = msgGroupUpdate.getGroupId().getGroupName().cStr();
-        gid.groupTypeId = msgGroupUpdate.getGroupId().getGroupType().cStr();
+        gid.group_name   = msgGroupUpdate.getGroupId().getGroupName().cStr();
+        gid.group_type_id = msgGroupUpdate.getGroupId().getGroupType().cStr();
 
         if (m_groups.find(gid) == m_groups.end()) return;
 

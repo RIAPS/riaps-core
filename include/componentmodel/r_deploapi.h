@@ -35,7 +35,7 @@ namespace riaps {
                                 const std::string& typeName,
                                 const std::map<std::string, std::string>& deviceArgs);
 //
-//            void unregisterDevice(const std::string& appName,
+//            void unregisterDevice(const std::string& app_name,
 //                                  const std::string& modelName,
 //                                  const std::string& typeName);
 

@@ -55,8 +55,8 @@ namespace riaps{
 
 //        bool PublisherPortBase::Send(zmsg_t** zmessage) const {
 //            //const _component_port_pub_j* currentConfig = GetConfig();
-//            //std::string messageType = currentConfig->messageType;
-//            //zmsg_pushstr(*zmessage, messageType.c_str());
+//            //std::string message_type = currentConfig->message_type;
+//            //zmsg_pushstr(*zmessage, message_type.c_str());
 //
 //            int rc = zmsg_send(zmessage, _port_socket);
 //            return rc == 0;

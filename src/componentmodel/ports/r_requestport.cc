@@ -87,7 +87,7 @@ namespace riaps {
 //
 //            if (msg){
 //                //char* msgType = zmsg_popstr(msg);
-//                //messageType = msgType;
+//                //message_type = msgType;
 //                //if (msgType!=NULL){
 //                zframe_t* bodyFrame = zmsg_pop(msg);
 //                size_t size = zframe_size(bodyFrame);

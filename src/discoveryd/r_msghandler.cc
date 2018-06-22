@@ -218,7 +218,7 @@ namespace riaps{
         std::string actorname = std::string(msgActorReq.getActorName().cStr());
         std::string appname   = std::string(msgActorReq.getAppName().cStr());
 
-        std::string clientKeyBase = fmt::format("/{}/{}/",appname, actorname); //"/" + appName + '/' + actorname + "/";
+        std::string clientKeyBase = fmt::format("/{}/{}/",appname, actorname); //"/" + app_name + '/' + actorname + "/";
         m_logger->info("Register actor with PID - {} : {}", msgActorReq.getPid(), clientKeyBase);
 
         auto registeredActorIt = m_clients.find(clientKeyBase);
@@ -675,15 +675,15 @@ namespace riaps{
         auto actorPid           = msgGroupJoin.getPid();
 
         riaps::groups::GroupDetails groupDetails;
-        groupDetails.appName     = appName;
-        groupDetails.componentId = componentId;
-        groupDetails.groupId = {
+        groupDetails.app_name     = appName;
+        groupDetails.component_id = componentId;
+        groupDetails.group_id = {
                 msgGroupJoin.getGroupId().getGroupType(),
                 msgGroupJoin.getGroupId().getGroupName()
         };
 
         for (int i = 0; i<msgGroupServices.size(); i++){
-            groupDetails.groupServices.push_back({
+            groupDetails.group_services.push_back({
                                                          msgGroupServices[i].getMessageType(),
                                                          msgGroupServices[i].getAddress()
                                                  });
@@ -751,17 +751,17 @@ namespace riaps{
             capnp::MallocMessageBuilder dhtMessage;
             auto msgDhtUpdate = dhtMessage.initRoot<riaps::discovery::DhtUpdate>();
             auto msgGroupUpdate = msgDhtUpdate.initGroupUpdate();
-            msgGroupUpdate.setComponentId(v.componentId);
-            msgGroupUpdate.setAppName(v.appName);
+            msgGroupUpdate.setComponentId(v.component_id);
+            msgGroupUpdate.setAppName(v.app_name);
 
             auto groupId = msgGroupUpdate.initGroupId();
-            groupId.setGroupName(v.groupId.groupName);
-            groupId.setGroupType(v.groupId.groupTypeId);
+            groupId.setGroupName(v.group_id.group_name);
+            groupId.setGroupType(v.group_id.group_type_id);
 
-            auto groupServices = msgGroupUpdate.initServices(v.groupServices.size());
-            for (int i = 0; i<v.groupServices.size(); i++){
-                groupServices[i].setAddress(v.groupServices[i].address);
-                groupServices[i].setMessageType(v.groupServices[i].messageType);
+            auto groupServices = msgGroupUpdate.initServices(v.group_services.size());
+            for (int i = 0; i<v.group_services.size(); i++){
+                groupServices[i].setAddress(v.group_services[i].address);
+                groupServices[i].setMessageType(v.group_services[i].message_type);
             }
 
             auto serializedMessage = capnp::messageToFlatArray(dhtMessage);

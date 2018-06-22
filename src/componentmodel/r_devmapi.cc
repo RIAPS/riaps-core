@@ -230,7 +230,7 @@ namespace riaps{
 
 //
 //zsock_t*
-//RegisterApp(const std::string& appName,
+//RegisterApp(const std::string& app_name,
 //               const std::string& modelName,
 //               const std::string& typeName,
 //               const std::vector<std::pair<std::string, std::string>>& args) {
@@ -307,7 +307,7 @@ namespace riaps{
 //}
 //
 //zsock_t*
-//RegisterDevice(const std::string& appName,
+//RegisterDevice(const std::string& app_name,
 //               const std::string& modelName,
 //               const std::string& typeName,
 //               const std::vector<std::pair<std::string, std::string>>& args){
@@ -320,7 +320,7 @@ namespace riaps{
 //    DevmReq::Builder root = message.initRoot<DevmReq>();
 //    DeviceRegReq::Builder dreqBuilder = root.initDeviceReg();
 //
-//    dreqBuilder.setAppName(appName);
+//    dreqBuilder.setAppName(app_name);
 //    dreqBuilder.setModelName(modelName);
 //    dreqBuilder.setTypeName(typeName);
 //

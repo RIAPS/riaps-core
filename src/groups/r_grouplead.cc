@@ -28,7 +28,7 @@ GroupLead::GroupLead(Group* group, std::unordered_map<std::string, Timeout<std::
      */
     m_currentState = NodeState::FOLLOWER;
 
-    _logger = spd::get(group->GetParentComponent()->GetConfig().component_name);
+    _logger = spd::get(group->parent_component()->GetConfig().component_name);
 }
 
 std::string GroupLead::GetLeaderId() {
@@ -130,7 +130,7 @@ void GroupLead::Update() {
 }
 
 const std::string GroupLead::GetComponentId() const {
-    return m_group->GetParentComponent()->GetCompUuid();
+    return m_group->parent_component()->GetCompUuid();
 }
 
 void GroupLead::Update(riaps::distrcoord::LeaderElection::Reader &internalMessage) {
@@ -143,7 +143,7 @@ void GroupLead::Update(riaps::distrcoord::LeaderElection::Reader &internalMessag
         auto msgVoteReq = internalMessage.getRequestForVoteReq();
         auto electTerm  = msgVoteReq.getElectionTerm();
         std::string sourceCompId = msgVoteReq.getSourceComponentId();
-        //(*_knownNodes)[sourceCompId] = zclock_mono();
+        //(*known_nodes_)[sourceCompId] = zclock_mono();
         
         /**
          * If the component didn't vote in this round (term) and the sender is a different component then VOTE
@@ -164,7 +164,7 @@ void GroupLead::Update(riaps::distrcoord::LeaderElection::Reader &internalMessag
         auto msgVoteReq = internalMessage.getRequestForVoteReq();
         auto electTerm  = msgVoteReq.getElectionTerm();
         std::string sourceCompId = msgVoteReq.getSourceComponentId();
-        //(*_knownNodes)[sourceCompId] = zclock_mono();
+        //(*known_nodes_)[sourceCompId] = zclock_mono();
 
         // If higher term arrived switch state back to follower
         // TODO: And vote?
@@ -194,7 +194,7 @@ void GroupLead::Update(riaps::distrcoord::LeaderElection::Reader &internalMessag
         std::string votedTo  = theVote.getVoteForId();
         std::string voteFrom = theVote.getSourceComponentId();
         auto        elecTerm = theVote.getElectionTerm();
-        //(*_knownNodes)[voteFrom] = zclock_mono();
+        //(*known_nodes_)[voteFrom] = zclock_mono();
 
         /**
          * Accept the vote only if the vote is for the current term and the From is not the current node
@@ -230,7 +230,7 @@ void GroupLead::Update(riaps::distrcoord::LeaderElection::Reader &internalMessag
         }
     } else if (internalMessage.hasAppendEntry() && m_currentState==GroupLead::FOLLOWER){
         auto msgAppendEntry = internalMessage.getAppendEntry();
-        //(*_knownNodes)[msgAppendEntry.getSourceComponentId().cStr()] = zclock_mono();
+        //(*known_nodes_)[msgAppendEntry.getSourceComponentId().cStr()] = zclock_mono();
         //m_logger->debug("Append entry from: {0}", msgAppendEntry.getSourceComponentId().cStr());
         m_electionTimeout.Reset(GenerateElectionTimeo());
         m_electionTerm = msgAppendEntry.getElectionTerm();
@@ -282,7 +282,7 @@ void GroupLead::SendRequestForVote() {
 void GroupLead::OnActionProposeFromClient(riaps::distrcoord::Consensus::ProposeToLeader::Reader &headerMessage,
                                           riaps::distrcoord::Consensus::TimeSyncCoordA::Reader  &tscaMessage) {
     if (GetLeaderId() != GetComponentId()) {
-        //m_logger->debug("OnProposeFromClient() returns, GetLeaderId() != GetComponentId()");
+        //m_logger->debug("OnProposeFromClient() returns, leader_id() != GetComponentId()");
         return;
     }
 
@@ -329,7 +329,7 @@ void GroupLead::OnActionProposeFromClient(riaps::distrcoord::Consensus::ProposeT
 
 
     if (m_group->SendMessage(&msg, INTERNAL_PUB_NAME))
-        _logger->debug("GroupLead::OnActionProposeFromClient() - Message sent, proposeId: {} leaderId: {} sourceId: {} actionId: {}", proposeId, m_leaderId, GetComponentId(), actionId);
+        _logger->debug("GroupLead::OnActionProposeFromClient() - Message sent, proposeId: {} leader_id: {} sourceId: {} actionId: {}", proposeId, m_leaderId, GetComponentId(), actionId);
     else
         _logger->error("OnActionProposeFromClient() failed to send");
 }
@@ -339,7 +339,7 @@ void GroupLead::OnProposeFromClient(riaps::distrcoord::Consensus::ProposeToLeade
 
     //m_logger->debug("OnProposeFromClient()");
     if (GetLeaderId() != GetComponentId()) {
-        //m_logger->debug("OnProposeFromClient() returns, GetLeaderId() != GetComponentId()");
+        //m_logger->debug("OnProposeFromClient() returns, leader_id() != GetComponentId()");
         return;
     }
     //m_logger->debug("OnProposeFromClient() continues");
@@ -368,7 +368,7 @@ void GroupLead::OnProposeFromClient(riaps::distrcoord::Consensus::ProposeToLeade
     zmsg_add(msg, header);
     zmsg_add(msg, *messageFrame);
     if (m_group->SendMessage(&msg, INTERNAL_PUB_NAME))
-        _logger->debug("GroupLead::OnProposeFromClient() - Message sent, proposeId: {} leaderId: {} sourceId: {}", proposeId, m_leaderId, GetComponentId());
+        _logger->debug("GroupLead::OnProposeFromClient() - Message sent, proposeId: {} leader_id: {} sourceId: {}", proposeId, m_leaderId, GetComponentId());
     else
         _logger->error("OnProposeFromClient() failed to send");
     *messageFrame = nullptr;
@@ -378,7 +378,7 @@ void GroupLead::OnVote(riaps::distrcoord::Consensus::Vote::Reader &message, cons
     std::string proposeId    = message.getProposeId();
 
     // May the leader changed
-    //if (voteLeaderId != GetLeaderId()) return;
+    //if (voteLeaderId != leader_id()) return;
 
     // Shouldn't be true, but anyway just and an extra check
     //if (voteLeaderId != GetComponentId()) return;

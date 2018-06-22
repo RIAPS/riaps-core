@@ -43,8 +43,8 @@ namespace riaps {
          * The instance name of the group and the group type id (form the config) are the GroupId
          */
         struct GroupId {
-            std::string groupTypeId;
-            std::string groupName;
+            std::string group_type_id;
+            std::string group_name;
 
 
             /**
@@ -57,27 +57,27 @@ namespace riaps {
             bool operator==(const GroupId& other) const;
 
 
-            MSGPACK_DEFINE(groupName, groupTypeId);
+            MSGPACK_DEFINE(group_name, group_type_id);
         };
 
         /**
          * Description of one port in the group.
          */
         struct GroupService {
-            std::string messageType;
+            std::string message_type;
             std::string address;
-            MSGPACK_DEFINE(messageType, address);
+            MSGPACK_DEFINE(message_type, address);
         };
 
         /**
          * All the details of the group in one structure.
          */
         struct GroupDetails {
-            std::string               appName;
-            std::string               componentId;
-            GroupId                   groupId;
-            std::vector<GroupService> groupServices;
-            MSGPACK_DEFINE(appName, componentId, groupId, groupServices);
+            std::string               app_name;
+            std::string               component_id;
+            GroupId                   group_id;
+            std::vector<GroupService> group_services;
+            MSGPACK_DEFINE(app_name, component_id, group_id, group_services);
 
         };
 
@@ -93,9 +93,9 @@ namespace riaps {
 
             /**
              * Initializes a group, by the given groupId
-             * @param groupId Must have valid configuration entry with the matching id.
+             * @param group_id Must have valid configuration entry with the matching id.
              */
-            Group(const GroupId& groupId, ComponentBase* parentComponent);
+            Group(const GroupId& group_id, ComponentBase* parentComponent);
 
             /**
              * Creates the communication ports and registers the group in the discovery service.
@@ -121,14 +121,14 @@ namespace riaps {
             bool SendLeaderMessage(capnp::MallocMessageBuilder& message);
 
             bool ProposeValueToLeader(capnp::MallocMessageBuilder &message, const std::string &proposeId);
-            bool SendVote(const std::string& proposeId, bool accept);
+            bool SendVote(const std::string& propose_id, bool accept);
 
             bool ProposeActionToLeader(const std::string& proposeId,
                                        const std::string &actionId,
                                        const timespec &absTime);
 
-            const ComponentBase* GetParentComponent() const;
-            const std::string GetParentComponentId() const;
+            const ComponentBase* parent_component() const;
+            const std::string parent_component_id() const;
 
             std::shared_ptr<std::set<std::string>> GetKnownComponents();
 
@@ -139,7 +139,7 @@ namespace riaps {
              */
             uint16_t GetMemberCount();
 
-            std::string GetLeaderId() const;
+            std::string leader_id() const;
 
             ~Group();
         private:
@@ -150,16 +150,16 @@ namespace riaps {
             uint32_t DeleteTimeoutNodes();
             bool SendHeartBeat(riaps::distrcoord::HeartBeatType type);
 
-            GroupId     m_groupId;
-            groupt_conf m_groupTypeConf;
+            GroupId     group_id_;
+            groupt_conf group_type_conf_;
 
             /**
              * Always store the communication ports in shart_ptr
              */
-            std::shared_ptr<riaps::ports::GroupPublisherPort>    m_groupPubPort;
-            std::shared_ptr<riaps::ports::GroupSubscriberPort>   m_groupSubPort;
+            std::shared_ptr<riaps::ports::GroupPublisherPort>    group_pubport_;
+            std::shared_ptr<riaps::ports::GroupSubscriberPort>   group_subport_;
 
-            std::map<const zsock_t*, std::shared_ptr<riaps::ports::PortBase>> _groupPorts;
+            std::map<const zsock_t*, std::shared_ptr<riaps::ports::PortBase>> group_ports_;
 
             /**
              *
@@ -171,32 +171,22 @@ namespace riaps {
              *  key   - component id (uuid, generated runtime, when the component starts
              *  value - timestamp of the last message from the given component
              */
-            std::unordered_map<std::string, Timeout<std::chrono::milliseconds>> _knownNodes;
+            std::unordered_map<std::string, Timeout<std::chrono::milliseconds>> known_nodes_;
 
-            //zframe_t*  _lastFrame;
-            zpoller_t* _groupPoller;
-            //std::shared_ptr<capnp::FlatArrayMessageReader> _lastReader;
+            zpoller_t* group_poller_;
 
-            std::shared_ptr<spd::logger> _logger;
+            std::shared_ptr<spd::logger> logger_;
 
-            //int64_t  _lastPingSent;
-            //float    _pingPeriod;
-
-            Timeout<std::chrono::milliseconds> _pingTimeout;
+            Timeout<std::chrono::milliseconds> ping_timeout_;
 
 
-            std::random_device _rd;
-            std::mt19937         _generator;
-            std::uniform_int_distribution<int> _distrNodeTimeout;
+            std::random_device random_device_;
+            std::mt19937         random_generator_;
+            std::uniform_int_distribution<int> timeout_distribution_;
 
-            ComponentBase* _parentComponent;
+            ComponentBase* parent_component_;
 
-            std::unique_ptr<riaps::groups::GroupLead> _groupLeader;
-
-            // debug
-            uint16_t _pingCounter;
-
-
+            std::unique_ptr<riaps::groups::GroupLead> group_leader_;
         };
 
     }

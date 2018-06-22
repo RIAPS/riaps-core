@@ -12,7 +12,7 @@ namespace riaps{
             riaps::groups::GroupService result;
 
             result.address     = m_host + ":" + std::to_string(m_port);
-            result.messageType = GetConfig()->messageType;
+            result.message_type = GetConfig()->messageType;
 
             return result;
         }
@@ -21,7 +21,7 @@ namespace riaps{
 //            zmsg_t* msg = nullptr;
 //            msg << message;
 //
-//            // Add the componentId as the first frame of the message
+//            // Add the component_id as the first frame of the message
 //            zmsg_pushstr(msg, _componentId.c_str());
 //
 //            return Send(&msg);

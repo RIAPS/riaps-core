@@ -106,11 +106,11 @@ namespace riaps {
 //        );
 //
 //        p.portName="TestPubPortName";
-//        p.messageType="TestPortType";
+//        p.message_type="TestPortType";
 //        m_grouptype_configurations.back().groupTypePorts.pubs.push_back(p);
 //
 //        s.portName = "TestSubPortName";
-//        s.messageType=p.messageType;
+//        s.message_type=p.message_type;
 //        m_grouptype_configurations.back().groupTypePorts.subs.push_back(s);
 
         m_grouptype_configurations.push_back(
@@ -122,19 +122,19 @@ namespace riaps {
         );
 
 //        p.portName="QueryOut";
-//        p.messageType="QueryRequest";
+//        p.message_type="QueryRequest";
 //        m_grouptype_configurations.back().groupTypePorts.pubs.push_back(p);
 //
 //        s.portName = "QueryIn";
-//        s.messageType=p.messageType;
+//        s.message_type=p.message_type;
 //        m_grouptype_configurations.back().groupTypePorts.subs.push_back(s);
 //
 //        p.portName="ResponseOut";
-//        p.messageType="Estimate";
+//        p.message_type="Estimate";
 //        m_grouptype_configurations.back().groupTypePorts.pubs.push_back(p);
 //
 //        s.portName = "ResponseIn";
-//        s.messageType=p.messageType;
+//        s.message_type=p.message_type;
 //        m_grouptype_configurations.back().groupTypePorts.subs.push_back(s);
 
 
@@ -246,7 +246,7 @@ namespace riaps {
 
                 component_port_req newreqconfig;
                 newreqconfig.portName = reqportname;
-                //newreqconfig.messageType = subporttype;
+                //newreqconfig.message_type = subporttype;
                 newreqconfig.req_type = reqtype;
                 newreqconfig.rep_type = reptype;
                 newreqconfig.messageType = messagetype;

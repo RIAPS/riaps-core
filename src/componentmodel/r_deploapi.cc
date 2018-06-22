@@ -125,14 +125,14 @@ namespace riaps{
 
         }
 //
-//        void DeploApi::unregisterDevice(const std::string &appName,
+//        void DeploApi::unregisterDevice(const std::string &app_name,
 //                                      const std::string &modelName,
 //                                      const std::string &typeName) {
 //
 //            capnp::MallocMessageBuilder builder;
 //            auto msgDeploReq = builder.initRoot<riaps::deplo::DeplReq>();
 //            auto msgDeviceUnreg = msgDeploReq.initDeviceUnreg();
-//            msgDeviceUnreg.setAppName(appName);
+//            msgDeviceUnreg.setAppName(app_name);
 //            msgDeviceUnreg.setModelName(modelName);
 //            msgDeviceUnreg.setTypeName(typeName);
 //

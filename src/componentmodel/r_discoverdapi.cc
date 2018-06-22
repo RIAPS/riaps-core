@@ -307,12 +307,12 @@ joinGroup(const std::string& appName,
     msgGroupJoin.setComponentId(componentId);
     msgGroupJoin.setAppName(appName);
     msgGroupJoin.setPid(getpid());
-    msgGroupId.setGroupType(groupId.groupTypeId);
-    msgGroupId.setGroupName(groupId.groupName);
+    msgGroupId.setGroupType(groupId.group_type_id);
+    msgGroupId.setGroupName(groupId.group_name);
 
     for (int i = 0; i< groupServices.size(); i++){
         msgGroupServices[i].setAddress(groupServices[i].address);
-        msgGroupServices[i].setMessageType(groupServices[i].messageType);
+        msgGroupServices[i].setMessageType(groupServices[i].message_type);
     }
 
     auto serializedMessage = capnp::messageToFlatArray(message);
