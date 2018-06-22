@@ -4,6 +4,7 @@
 
 #include <componentmodel/ports/r_queryport.h>
 #include <fmt/format.h>
+#include <framework/rfw_network_interfaces.h>
 
 namespace riaps {
     namespace ports {
@@ -35,11 +36,13 @@ namespace riaps {
         void QueryPort::Init() {
 
             const component_port_qry* current_config = GetConfig();
+            const std::string host = (current_config->isLocal) ? "127.0.0.1" : riaps::framework::Network::GetIPAddress();
 
             auto results =
                     subscribeToService(parent_component()->actor()->application_name(),
                                        parent_component()->GetConfig().component_name,
                                        parent_component()->actor()->actor_name(),
+                                       host,
                                        riaps::discovery::Kind::QRY,
                                        (current_config->isLocal?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
                                        current_config->portName, // Subscriber name

@@ -8,6 +8,11 @@
 #include "componentmodel/r_componentbase.h"
 #include "messages/distributedestimator.capnp.h"
 
+#include <pybind11/stl.h>
+#include <pybind11/pybind11.h>
+
+namespace py = pybind11;
+
 // Name of the ports from the model file
 #define PORT_SUB_READY    "ready"
 #define PORT_REQ_QUERY    "query"
@@ -20,7 +25,10 @@ namespace distributedestimator {
 
         public:
 
-            LocalEstimatorBase(_component_conf &config, riaps::Actor &actor);
+            //LocalEstimatorBase(_component_conf &config, riaps::Actor &actor);
+            LocalEstimatorBase(const py::object *parent_actor, const py::dict type_spec,
+                               const std::string &name, const std::string &type_name, const py::dict args,
+                               const std::string &application_name, const std::string &actor_name);
 
             //virtual void RegisterHandlers();
 

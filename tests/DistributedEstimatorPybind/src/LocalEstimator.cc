@@ -8,9 +8,12 @@ namespace distributedestimator {
     namespace components {
 
 
-        LocalEstimator::LocalEstimator(_component_conf &config, riaps::Actor &actor) :
-                LocalEstimatorBase(config, actor) {
-            //PrintParameters();
+        LocalEstimator::LocalEstimator(const py::object *parent_actor, const py::dict type_spec, const std::string &name,
+                                       const std::string &type_name, const py::dict args,
+                                       const std::string &application_name, const std::string &actor_name)
+                : LocalEstimatorBase(parent_actor, type_spec, name, type_name, args, application_name,
+                                      actor_name) {
+
         }
 
         void LocalEstimator::OnReady(const messages::SensorReady::Reader &message,
@@ -60,11 +63,29 @@ namespace distributedestimator {
     }
 }
 
-riaps::ComponentBase *create_component(_component_conf &config, riaps::Actor &actor) {
-    auto result = new distributedestimator::components::LocalEstimator(config, actor);
-    return result;
+//riaps::ComponentBase *create_component(_component_conf &config, riaps::Actor &actor) {
+//    auto result = new distributedestimator::components::LocalEstimator(config, actor);
+//    return result;
+//}
+//
+//void destroy_component(riaps::ComponentBase *comp) {
+//    delete comp;
+//}
+
+std::unique_ptr<distributedestimator::components::LocalEstimator>
+create_component_py(const py::object *parent_actor, const py::dict type_spec, const std::string &name,
+                    const std::string &type_name, const py::dict args, const std::string &application_name,
+                    const std::string &actor_name) {
+    auto ptr = new distributedestimator::components::LocalEstimator(parent_actor, type_spec, name, type_name, args,
+                                                                     application_name,
+                                                                     actor_name);
+    return std::move(std::unique_ptr<distributedestimator::components::LocalEstimator>(ptr));
 }
 
-void destroy_component(riaps::ComponentBase *comp) {
-    delete comp;
+PYBIND11_MODULE(localestimator, m) {
+    py::class_<distributedestimator::components::LocalEstimator> testClass(m, "LocalEstimator");
+    testClass.def(py::init<const py::object*, const py::dict, const std::string&, const std::string&, const py::dict, const std::string&, const std::string&>());
+    testClass.def("setup", &distributedestimator::components::LocalEstimator::setup);
+    testClass.def("activate", &distributedestimator::components::LocalEstimator::activate);
+    m.def("create_component_py", &create_component_py, "Instantiates the component from python configuration");
 }

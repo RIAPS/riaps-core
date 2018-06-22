@@ -3,13 +3,20 @@
 //
 
 #include <base/LocalEstimatorBase.h>
+#include <converter.h>
 
 namespace distributedestimator {
     namespace components {
 
-        LocalEstimatorBase::LocalEstimatorBase(_component_conf &config, riaps::Actor &actor) : ComponentBase(config,
-                                                                                                             actor) {
-
+        LocalEstimatorBase::LocalEstimatorBase(const py::object *parent_actor, const py::dict type_spec,
+                                               const std::string &name, const std::string &type_name, const py::dict args,
+                                               const std::string &application_name, const std::string &actor_name)
+                : ComponentBase(application_name, actor_name) {
+            auto config = PyConfigConverter::convert(type_spec);
+            config.component_name = name;
+            config.component_type = type_name;
+            config.isDevice=false;
+            set_config(config);
         }
 
         void LocalEstimatorBase::DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,

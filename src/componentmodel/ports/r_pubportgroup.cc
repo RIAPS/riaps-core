@@ -11,7 +11,7 @@ namespace riaps{
         riaps::groups::GroupService GroupPublisherPort::GetGroupService() {
             riaps::groups::GroupService result;
 
-            result.address     = m_host + ":" + std::to_string(m_port);
+            result.address     = host_ + ":" + std::to_string(port_);
             result.message_type = GetConfig()->messageType;
 
             return result;

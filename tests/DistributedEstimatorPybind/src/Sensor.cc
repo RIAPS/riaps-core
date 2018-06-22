@@ -9,11 +9,15 @@
 namespace distributedestimator {
     namespace components {
 
-        comp_sensor::comp_sensor(_component_conf &config, riaps::Actor &actor) : comp_sensorbase(config, actor) {
-            //PrintParameters();
+        Sensor::Sensor(const py::object *parent_actor, const py::dict type_spec, const std::string &name,
+                                 const std::string &type_name, const py::dict args,
+                                 const std::string &application_name, const std::string &actor_name)
+                : SensorBase(parent_actor, type_spec, name, type_name, args, application_name,
+                                      actor_name) {
+
         }
 
-        void comp_sensor::OnClock(riaps::ports::PortBase *port) {
+        void Sensor::OnClock(riaps::ports::PortBase *port) {
             int64_t time = zclock_mono();
             _logger->info("Sensor::OnClock(): {}", time);
 
@@ -24,7 +28,7 @@ namespace distributedestimator {
             SendReady(messageBuilder, msgSensorReady);
         }
 
-        void comp_sensor::OnRequest(const messages::SensorQuery::Reader &message,
+        void Sensor::OnRequest(const messages::SensorQuery::Reader &message,
                                     riaps::ports::PortBase *port) {
 
             //PrintMessageOnPort(port);
@@ -51,17 +55,35 @@ namespace distributedestimator {
 
 
 
-        comp_sensor::~comp_sensor() {
+        Sensor::~Sensor() {
 
         }
     }
 }
+//
+//riaps::ComponentBase* create_component(_component_conf& config, riaps::Actor& actor){
+//    auto result = new distributedestimator::components::comp_sensor(config, actor);
+//    return result;
+//}
+//
+//void destroy_component(riaps::ComponentBase* comp){
+//    delete comp;
+//}
 
-riaps::ComponentBase* create_component(_component_conf& config, riaps::Actor& actor){
-    auto result = new distributedestimator::components::comp_sensor(config, actor);
-    return result;
+std::unique_ptr<distributedestimator::components::Sensor>
+create_component_py(const py::object *parent_actor, const py::dict type_spec, const std::string &name,
+                    const std::string &type_name, const py::dict args, const std::string &application_name,
+                    const std::string &actor_name) {
+    auto ptr = new distributedestimator::components::Sensor(parent_actor, type_spec, name, type_name, args,
+                                                                     application_name,
+                                                                     actor_name);
+    return std::move(std::unique_ptr<distributedestimator::components::Sensor>(ptr));
 }
 
-void destroy_component(riaps::ComponentBase* comp){
-    delete comp;
+PYBIND11_MODULE(sensor, m) {
+    py::class_<distributedestimator::components::Sensor> testClass(m, "Sensor");
+    testClass.def(py::init<const py::object*, const py::dict, const std::string&, const std::string&, const py::dict, const std::string&, const std::string&>());
+    testClass.def("setup", &distributedestimator::components::Sensor::setup);
+    testClass.def("activate", &distributedestimator::components::Sensor::activate);
+    m.def("create_component_py", &create_component_py, "Instantiates the component from python configuration");
 }

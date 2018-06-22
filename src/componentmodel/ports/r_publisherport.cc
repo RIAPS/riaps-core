@@ -21,8 +21,8 @@ namespace riaps{
             if (!registerService(parent_component()->actor()->application_name(),
                                  parent_component()->actor()->actor_name(),
                                  config.messageType,
-                                 m_host,
-                                 m_port,
+                                 host_,
+                                 port_,
                                  riaps::discovery::Kind::PUB,
                                  (config.isLocal?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
                                  {})) {

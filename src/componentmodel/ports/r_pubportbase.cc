@@ -22,24 +22,24 @@ namespace riaps{
             m_port_socket = zsock_new(ZMQ_PUB);
 
             if (GetConfig()->isLocal){
-                m_host = "127.0.0.1";
+                host_ = "127.0.0.1";
             } else {
-                m_host = riaps::framework::Network::GetIPAddress();
+                host_ = riaps::framework::Network::GetIPAddress();
             }
 
-            if (m_host == "") {
+            if (host_ == "") {
                 throw std::runtime_error("Publisher cannot be initiated. Cannot find  available network interface.");
             }
 
-            std::string pub_endpoint = "tcp://" + m_host + ":!";
-            m_port = zsock_bind(m_port_socket, "%s", pub_endpoint.c_str());
+            std::string pub_endpoint = "tcp://" + host_ + ":!";
+            port_ = zsock_bind(m_port_socket, "%s", pub_endpoint.c_str());
 
 
-            if (m_port == -1) {
+            if (port_ == -1) {
                 throw std::runtime_error("Couldn't bind publisher port.");
             }
 
-            m_logger->debug("Publisher is created on {}:{} [{}]", m_host, m_port, GetConfig()->messageType);
+            m_logger->debug("Publisher is created on {}:{} [{}]", host_, port_, GetConfig()->messageType);
         }
 
         const component_port_pub* PublisherPortBase::GetConfig() const {

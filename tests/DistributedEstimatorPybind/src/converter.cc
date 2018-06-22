@@ -14,9 +14,7 @@ component_conf PyConfigConverter::convert(const py::dict& dict) {
     component_conf result;
     result.isDevice = false;
 
-    auto lll = spd::stdout_color_mt("pybind");
     auto json_ports = dict[J_PORTS];
-
     auto json_pubs  = json_ports[J_PORTS_PUBS].cast<py::dict>();
     auto json_subs  = json_ports[J_PORTS_SUBS].cast<py::dict>();
     auto json_reqs  = json_ports[J_PORTS_REQS].cast<py::dict>();

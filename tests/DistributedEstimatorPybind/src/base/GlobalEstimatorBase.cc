@@ -18,17 +18,11 @@ namespace distributedestimator {
                                                          const std::string &name, const std::string &type_name, const py::dict args,
                                                          const std::string &application_name, const std::string &actor_name)
                 : ComponentBase(application_name, actor_name) {
-            auto result = PyConfigConverter::convert(type_spec);
-            result.component_name = name;
-            result.component_type = type_name;
-            result.isDevice=false;
-            set_config(result);
-            auto l = spd::stdout_color_mt("debuglogger");
-            printNames<component_port_sub>(result.component_ports.subs);
-            printNames<component_port_pub>(result.component_ports.pubs);
-            printNames<component_port_req>(result.component_ports.reqs);
-            printNames<component_port_rep>(result.component_ports.reps);
-            printNames<component_port_tim>(result.component_ports.tims);
+            auto config = PyConfigConverter::convert(type_spec);
+            config.component_name = name;
+            config.component_type = type_name;
+            config.isDevice=false;
+            set_config(config);
         }
 
         void GlobalEstimatorBase::DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,

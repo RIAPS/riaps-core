@@ -91,6 +91,7 @@ std::vector<service_lookup_result>
 subscribeToService(const std::string&      app_name  ,
                    const std::string&      part_name , // instance_name
                    const std::string&      actor_name,
+                   const std::string&      ip_address,
                    riaps::discovery::Kind  kind      ,
                    riaps::discovery::Scope scope     ,
                    const std::string&      port_name ,
@@ -116,14 +117,13 @@ subscribeToService(const std::string&      app_name  ,
     clientBuilder.setActorName(actor_name);
     clientBuilder.setInstanceName(part_name);
     clientBuilder.setPortName(port_name);
-    //clientBuilder.setActorHost()
+    clientBuilder.setActorHost(ip_address);
 
     auto serializedMessage = capnp::messageToFlatArray(message);
 
     zmsg_t* msg = zmsg_new();
     zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
 
-    //zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC(mac_address));
     zsock_t * client = zsock_new_req (riaps::framework::Configuration::GetDiscoveryEndpoint().c_str());
     assert(client);
 

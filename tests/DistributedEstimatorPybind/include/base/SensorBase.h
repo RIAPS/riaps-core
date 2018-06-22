@@ -8,6 +8,11 @@
 #include "componentmodel/r_componentbase.h"
 #include "messages/distributedestimator.capnp.h"
 
+#include <pybind11/stl.h>
+#include <pybind11/pybind11.h>
+
+namespace py = pybind11;
+
 // Name of the ports from the model file
 #define PORT_TIMER_CLOCK "clock"
 #define PORT_PUB_READY   "ready"
@@ -16,11 +21,15 @@
 namespace distributedestimator {
     namespace components {
 
-        class comp_sensorbase : public riaps::ComponentBase {
+        class SensorBase : public riaps::ComponentBase {
 
         public:
 
-            comp_sensorbase(_component_conf &config, riaps::Actor &actor);
+            //comp_sensorbase(_component_conf &config, riaps::Actor &actor);
+
+            SensorBase(const py::object *parent_actor, const py::dict type_spec,
+                            const std::string &name, const std::string &type_name, const py::dict args,
+                            const std::string &application_name, const std::string &actor_name);
 
             //virtual void RegisterHandlers();
 
@@ -42,7 +51,7 @@ namespace distributedestimator {
                                    messages::SensorReady::Builder& message);
 
 
-            virtual ~comp_sensorbase();
+            virtual ~SensorBase();
 
         protected:
 
