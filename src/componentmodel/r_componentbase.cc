@@ -73,6 +73,7 @@ namespace riaps{
                 for (auto it_timconf = comp_conf.component_ports.tims.begin();
                           it_timconf != comp_conf.component_ports.tims.end();
                           it_timconf++){
+                    consoleLogger->debug("Register timer: {}", it_timconf->portName);
                     // Don't put the zmqSocket into portSockets[zmqSocket], just one timer port exist in the component.
                     // Cannot differentiate timerports based on ZMQ Sockets.
                     comp->initTimerPort(*it_timconf);
@@ -82,6 +83,7 @@ namespace riaps{
                 for (auto it_pubconf = comp_conf.component_ports.pubs.begin();
                           it_pubconf != comp_conf.component_ports.pubs.end();
                           it_pubconf++){
+                    consoleLogger->debug("Register pub: {}", it_pubconf->portName);
                     const ports::PublisherPort* newPort = comp->initPublisherPort(*it_pubconf);
                     const zsock_t* zmqSocket = newPort->GetSocket();
 
@@ -92,7 +94,7 @@ namespace riaps{
                 for (auto it_repconf = comp_conf.component_ports.reps.begin();
                      it_repconf != comp_conf.component_ports.reps.end();
                      it_repconf++){
-
+                    consoleLogger->debug("Register REP: {}", it_repconf->portName);
                     const ports::ResponsePort* newPort = comp->initResponsePort(*it_repconf);
                     const zsock_t* zmqSocket = newPort->GetSocket();
                     portSockets[zmqSocket] = newPort;
@@ -206,7 +208,6 @@ namespace riaps{
                 zmsg_destroy(&msg);
             }
             else if (which == timerport) {
-                consoleLogger->debug("message on timerport");
                 zmsg_t *msg = zmsg_recv(which);
 
                 if (msg) {
@@ -214,9 +215,9 @@ namespace riaps{
                     ports::PeriodicTimer* timerPort = (ports::PeriodicTimer*)comp->GetPortByName(portName);
                     std::vector<std::string> fields;
 
-                    if (!terminated)
-                        comp->DispatchMessage(NULL, timerPort);
-
+                    if (!terminated) {
+                        comp->DispatchMessage(nullptr, timerPort);
+                    }
 
 
                     zstr_free(&portName);
@@ -536,6 +537,7 @@ namespace riaps{
 
     void ComponentBase::HandlePortUpdate(const std::string &port_name, const std::string &host,
                                          int port) {
+        _logger->debug("{}({},{},{})", __FUNCTION__, port_name, host, port);
         zmsg_t *msg_portupdate = zmsg_new();
 
         zmsg_addstr(msg_portupdate, CMD_UPDATE_PORT);

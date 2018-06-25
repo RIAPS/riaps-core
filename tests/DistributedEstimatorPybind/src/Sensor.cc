@@ -14,7 +14,7 @@ namespace distributedestimator {
                                  const std::string &application_name, const std::string &actor_name)
                 : SensorBase(parent_actor, type_spec, name, type_name, args, application_name,
                                       actor_name) {
-
+            _logger->set_level(spd::level::debug);
         }
 
         void Sensor::OnClock(riaps::ports::PortBase *port) {
