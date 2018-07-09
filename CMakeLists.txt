@@ -7,9 +7,10 @@ set(CMAKE_SYSTEM_NAME Linux)
 set(riaps_prefix "/opt/riaps/" CACHE STRING "the riaps prefix")
 #find_package(pybind11)
 
-#Set the platform
+add_subdirectory(pybind11)
+
 if (${arch} STREQUAL "armhf")
- set(TOOLCHAIN_PREFIX arm-linux-gnueabihf)
+ set(TOOLCHAIN_PREFIX /usr/bin/arm-linux-gnueabihf)
  set(CMAKE_C_COMPILER ${TOOLCHAIN_PREFIX}-gcc)
  set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}-g++-5)
  set(CMAKE_FIND_ROOT_PATH /usr/${TOOLCHAIN_PREFIX})
@@ -45,13 +46,12 @@ include_directories(include)
 include_directories(pybind11/include)
 include_directories(/usr/include/python3.5m/)
 
-add_subdirectory(pybind11)
+#add_subdirectory(pybind11)
 
 if (BUILD_TESTS)
     include(CTest)
     enable_testing()
     # Tests
-    # add_subdirectory(examples/DistributedEstimatorPy)
     #add_subdirectory(examples/DistributedEstimator)
     #add_subdirectory(examples/DistributedEstimatorGroup)
     #add_subdirectory(examples/LeaderElection)
@@ -73,7 +73,7 @@ if (BUILD_TESTS)
     #add_subdirectory(tests/DC/leaderwiththree)
     # add_subdirectory(tests/TimedTest)
     # add_subdirectory(examples/EchoIO)
-    add_subdirectory(tests/DistributedEstimatorPybind)
+    # add_subdirectory(tests/DistributedEstimatorPybind)
 endif()
 
 
@@ -187,12 +187,12 @@ set(ACTOR_HEADERS
         include/messaging/deplo.capnp.h
         include/json.h)
 
-#add_executable(start_actor
-#        ${ACTOR_SOURCE}
-#        ${ACTOR_HEADERS}
-#        )
-#target_link_libraries(start_actor czmq zmq riaps capnp pthread)
-#install(TARGETS start_actor DESTINATION bin)
+add_executable(start_actor
+        ${ACTOR_SOURCE}
+        ${ACTOR_HEADERS}
+        )
+target_link_libraries(start_actor czmq zmq riaps capnp pthread)
+install(TARGETS start_actor DESTINATION bin)
 
 # rdiscoveryd source
 list(APPEND RDISCOVERYD_SOURCE
@@ -240,14 +240,14 @@ list(APPEND DEVICE_HEADERS
         include/device/r_deviceactor.h
         )
 
-## start_device
-#add_executable(start_device
-#        ${DEVICE_SOURCE}
-#        ${DEVICE_HEADERS}
-#        )
-#target_link_libraries(start_device czmq zmq opendht gnutls riaps capnp nettle hogweed gmp pthread)
-#
-#install(TARGETS start_device DESTINATION bin)
+# start_device
+add_executable(start_device
+        ${DEVICE_SOURCE}
+        ${DEVICE_HEADERS}
+        )
+target_link_libraries(start_device czmq zmq opendht gnutls riaps capnp nettle hogweed gmp pthread)
+
+install(TARGETS start_device DESTINATION bin)
 
 
 SET(MAJOR_VERSION "0")
