@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="classExpirableList" kind="class" language="C++" prot="public">
+    <compoundname>ExpirableList</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename</type>
+        <declname>T</declname>
+        <defname>T</defname>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classExpirableList_1a15e6372aea22f38ecf920672f44edf6d" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; <ref refid="classExpirable" kindref="compound">Expirable</ref>&lt; T &gt; &gt;</type>
+        <definition>std::vector&lt;Expirable&lt;T&gt; &gt; ExpirableList&lt; T &gt;::_values</definition>
+        <argsstring></argsstring>
+        <name>_values</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" line="78" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" bodystart="75" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classExpirableList_1a1fe18a66f673f27bca5e8d8dca6998ae" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>ExpirableList&lt; T &gt;::ExpirableList</definition>
+        <argsstring>()</argsstring>
+        <name>ExpirableList</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" line="61" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" bodystart="61" bodyend="61"/>
+      </memberdef>
+      <memberdef kind="function" id="classExpirableList_1afff2038cb9192c155076fb1f506a921f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void ExpirableList&lt; T &gt;::AddValue</definition>
+        <argsstring>(const T &amp;value, const int64_t duration=10000)</argsstring>
+        <name>AddValue</name>
+        <param>
+          <type>const T &amp;</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type>const int64_t</type>
+          <declname>duration</declname>
+          <defval>10000</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" line="63" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" bodystart="63" bodyend="66"/>
+      </memberdef>
+      <memberdef kind="function" id="classExpirableList_1a16cbc78dcac85be754822610b8d6047b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void ExpirableList&lt; T &gt;::AddValue</definition>
+        <argsstring>(Expirable&lt; T &gt; &amp;value)</argsstring>
+        <name>AddValue</name>
+        <param>
+          <type><ref refid="classExpirable" kindref="compound">Expirable</ref>&lt; T &gt; &amp;</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" line="68" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" bodystart="68" bodyend="70"/>
+      </memberdef>
+      <memberdef kind="function" id="classExpirableList_1a59963caa8fc17e232850143eab7a23d9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classExpiredIterator" kindref="compound">ExpiredIterator</ref>&lt; T &gt;</type>
+        <definition>ExpiredIterator&lt;T&gt; ExpirableList&lt; T &gt;::begin</definition>
+        <argsstring>()</argsstring>
+        <name>begin</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" line="72" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" bodystart="72" bodyend="72"/>
+      </memberdef>
+      <memberdef kind="function" id="classExpirableList_1ac6d91cabade2705ccfb865ca04dcf423" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classExpiredIterator" kindref="compound">ExpiredIterator</ref>&lt; T &gt;</type>
+        <definition>ExpiredIterator&lt;T&gt; ExpirableList&lt; T &gt;::end</definition>
+        <argsstring>()</argsstring>
+        <name>end</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" line="73" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" bodystart="73" bodyend="73"/>
+      </memberdef>
+      <memberdef kind="function" id="classExpirableList_1aa6bd63123b6696e9fe0d176d80affa32" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>ExpirableList&lt; T &gt;::~ExpirableList</definition>
+        <argsstring>()</argsstring>
+        <name>~ExpirableList</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" line="75" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" bodystart="75" bodyend="75"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" line="59" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" bodystart="59" bodyend="80"/>
+    <listofallmembers>
+      <member refid="classExpirableList_1a15e6372aea22f38ecf920672f44edf6d" prot="private" virt="non-virtual"><scope>ExpirableList</scope><name>_values</name></member>
+      <member refid="classExpirableList_1afff2038cb9192c155076fb1f506a921f" prot="public" virt="non-virtual"><scope>ExpirableList</scope><name>AddValue</name></member>
+      <member refid="classExpirableList_1a16cbc78dcac85be754822610b8d6047b" prot="public" virt="non-virtual"><scope>ExpirableList</scope><name>AddValue</name></member>
+      <member refid="classExpirableList_1a59963caa8fc17e232850143eab7a23d9" prot="public" virt="non-virtual"><scope>ExpirableList</scope><name>begin</name></member>
+      <member refid="classExpirableList_1ac6d91cabade2705ccfb865ca04dcf423" prot="public" virt="non-virtual"><scope>ExpirableList</scope><name>end</name></member>
+      <member refid="classExpirableList_1a1fe18a66f673f27bca5e8d8dca6998ae" prot="public" virt="non-virtual"><scope>ExpirableList</scope><name>ExpirableList</name></member>
+      <member refid="classExpirableList_1aa6bd63123b6696e9fe0d176d80affa32" prot="public" virt="non-virtual"><scope>ExpirableList</scope><name>~ExpirableList</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

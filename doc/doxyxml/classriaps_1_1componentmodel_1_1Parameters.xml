@@ -1,0 +1,162 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="classriaps_1_1componentmodel_1_1Parameters" kind="class" language="C++" prot="public">
+    <compoundname>riaps::componentmodel::Parameters</compoundname>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classriaps_1_1componentmodel_1_1Parameters_1a691580eed5ef846115be7940eec4941a" prot="private" static="no" mutable="no">
+        <type>std::map&lt; std::string, std::shared_ptr&lt; <ref refid="classriaps_1_1componentmodel_1_1Parameter" kindref="compound">Parameter</ref> &gt; &gt;</type>
+        <definition>std::map&lt;std::string, std::shared_ptr&lt;Parameter&gt; &gt; riaps::componentmodel::Parameters::m_params</definition>
+        <argsstring></argsstring>
+        <name>m_params</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_parameter.h" line="33" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_parameter.h" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classriaps_1_1componentmodel_1_1Parameters_1ab0d858d5975ee424bb424fcd6bb643a8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>riaps::componentmodel::Parameters::Parameters</definition>
+        <argsstring>()</argsstring>
+        <name>Parameters</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_parameter.h" line="21" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1componentmodel_1_1Parameters_1a62cc942d936158d3b2d7695528e70d5d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void riaps::componentmodel::Parameters::addParam</definition>
+        <argsstring>(const Parameter &amp;param)</argsstring>
+        <name>addParam</name>
+        <param>
+          <type>const <ref refid="classriaps_1_1componentmodel_1_1Parameter" kindref="compound">Parameter</ref> &amp;</type>
+          <declname>param</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_parameter.h" line="23" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1componentmodel_1_1Parameters_1a26f5ee7cb9aee5b6a815f1198c2c056d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void riaps::componentmodel::Parameters::addParam</definition>
+        <argsstring>(std::string name, std::string value, bool isOptional, std::string defaultValue=&quot;&quot;)</argsstring>
+        <name>addParam</name>
+        <param>
+          <type>std::string</type>
+          <declname>name</declname>
+        </param>
+        <param>
+          <type>std::string</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>isOptional</declname>
+        </param>
+        <param>
+          <type>std::string</type>
+          <declname>defaultValue</declname>
+          <defval>&quot;&quot;</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_parameter.h" line="24" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1componentmodel_1_1Parameters_1ac3b88300ae3b8eafad805da871cf4751" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>const <ref refid="classriaps_1_1componentmodel_1_1Parameter" kindref="compound">Parameter</ref> *</type>
+        <definition>const Parameter* riaps::componentmodel::Parameters::setParamValue</definition>
+        <argsstring>(std::string name, std::string value)</argsstring>
+        <name>setParamValue</name>
+        <param>
+          <type>std::string</type>
+          <declname>name</declname>
+        </param>
+        <param>
+          <type>std::string</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_parameter.h" line="25" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1componentmodel_1_1Parameters_1a8849022b883a452c54b396b30db9e11e" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>const <ref refid="classriaps_1_1componentmodel_1_1Parameter" kindref="compound">Parameter</ref> *</type>
+        <definition>const Parameter* riaps::componentmodel::Parameters::getParam</definition>
+        <argsstring>(const std::string &amp;name) const </argsstring>
+        <name>getParam</name>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_parameter.h" line="26" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1componentmodel_1_1Parameters_1a6cde67778de4405cdbc793e7fd0c6d01" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::vector&lt; std::string &gt;</type>
+        <definition>std::vector&lt;std::string&gt; riaps::componentmodel::Parameters::getParameterNames</definition>
+        <argsstring>()</argsstring>
+        <name>getParameterNames</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_parameter.h" line="28" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1componentmodel_1_1Parameters_1a19f1f4ecbd1d579693f3b36121c5716a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>riaps::componentmodel::Parameters::~Parameters</definition>
+        <argsstring>()</argsstring>
+        <name>~Parameters</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_parameter.h" line="30" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/istvan/work/riaps-core/include/componentmodel/r_parameter.h" line="19" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_parameter.h" bodystart="19" bodyend="34"/>
+    <listofallmembers>
+      <member refid="classriaps_1_1componentmodel_1_1Parameters_1a62cc942d936158d3b2d7695528e70d5d" prot="public" virt="non-virtual"><scope>riaps::componentmodel::Parameters</scope><name>addParam</name></member>
+      <member refid="classriaps_1_1componentmodel_1_1Parameters_1a26f5ee7cb9aee5b6a815f1198c2c056d" prot="public" virt="non-virtual"><scope>riaps::componentmodel::Parameters</scope><name>addParam</name></member>
+      <member refid="classriaps_1_1componentmodel_1_1Parameters_1a8849022b883a452c54b396b30db9e11e" prot="public" virt="non-virtual"><scope>riaps::componentmodel::Parameters</scope><name>getParam</name></member>
+      <member refid="classriaps_1_1componentmodel_1_1Parameters_1a6cde67778de4405cdbc793e7fd0c6d01" prot="public" virt="non-virtual"><scope>riaps::componentmodel::Parameters</scope><name>getParameterNames</name></member>
+      <member refid="classriaps_1_1componentmodel_1_1Parameters_1a691580eed5ef846115be7940eec4941a" prot="private" virt="non-virtual"><scope>riaps::componentmodel::Parameters</scope><name>m_params</name></member>
+      <member refid="classriaps_1_1componentmodel_1_1Parameters_1ab0d858d5975ee424bb424fcd6bb643a8" prot="public" virt="non-virtual"><scope>riaps::componentmodel::Parameters</scope><name>Parameters</name></member>
+      <member refid="classriaps_1_1componentmodel_1_1Parameters_1ac3b88300ae3b8eafad805da871cf4751" prot="public" virt="non-virtual"><scope>riaps::componentmodel::Parameters</scope><name>setParamValue</name></member>
+      <member refid="classriaps_1_1componentmodel_1_1Parameters_1a19f1f4ecbd1d579693f3b36121c5716a" prot="public" virt="non-virtual"><scope>riaps::componentmodel::Parameters</scope><name>~Parameters</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

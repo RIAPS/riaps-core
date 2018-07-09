@@ -1,0 +1,326 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="r__timeout_8h" kind="file" language="C++">
+    <compoundname>r_timeout.h</compoundname>
+    <includes local="no">chrono</includes>
+    <includedby refid="r__dhttracker_8h" local="no">/home/istvan/work/riaps-core/include/discoveryd/r_dhttracker.h</includedby>
+    <includedby refid="r__group_8h" local="no">/home/istvan/work/riaps-core/include/groups/r_group.h</includedby>
+    <includedby refid="r__grouplead_8h" local="no">/home/istvan/work/riaps-core/include/groups/r_grouplead.h</includedby>
+    <includedby refid="r__utils_8h" local="no">/home/istvan/work/riaps-core/include/utils/r_utils.h</includedby>
+    <incdepgraph>
+      <node id="1969">
+        <label>/home/istvan/work/riaps-core/include/utils/r_timeout.h</label>
+        <link refid="r_timeout.h"/>
+        <childnode refid="1970" relation="include">
+        </childnode>
+      </node>
+      <node id="1970">
+        <label>chrono</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="1987">
+        <label>/home/istvan/work/riaps-core/include/device/r_deviceactor.h</label>
+        <link refid="r__deviceactor_8h_source"/>
+      </node>
+      <node id="1973">
+        <label>/home/istvan/work/riaps-core/include/groups/r_group.h</label>
+        <link refid="r__group_8h_source"/>
+        <childnode refid="1974" relation="include">
+        </childnode>
+        <childnode refid="1975" relation="include">
+        </childnode>
+        <childnode refid="1977" relation="include">
+        </childnode>
+        <childnode refid="1984" relation="include">
+        </childnode>
+        <childnode refid="1988" relation="include">
+        </childnode>
+      </node>
+      <node id="1988">
+        <label>/home/istvan/work/riaps-core/include/groups/r_grouplead.h</label>
+        <link refid="r__grouplead_8h_source"/>
+        <childnode refid="1973" relation="include">
+        </childnode>
+      </node>
+      <node id="1976">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_actor_main.h</label>
+        <link refid="r__actor__main_8h_source"/>
+      </node>
+      <node id="1983">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_deploapi.h</label>
+        <link refid="r__deploapi_8h_source"/>
+        <childnode refid="1975" relation="include">
+        </childnode>
+      </node>
+      <node id="1981">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_responseport.h</label>
+        <link refid="r__responseport_8h_source"/>
+        <childnode refid="1977" relation="include">
+        </childnode>
+      </node>
+      <node id="1980">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_requestport.h</label>
+        <link refid="r__requestport_8h_source"/>
+        <childnode refid="1977" relation="include">
+        </childnode>
+      </node>
+      <node id="1990">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_commandlineparser.h</label>
+        <link refid="r__commandlineparser_8h_source"/>
+      </node>
+      <node id="1979">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_queryport.h</label>
+        <link refid="r__queryport_8h_source"/>
+        <childnode refid="1977" relation="include">
+        </childnode>
+      </node>
+      <node id="1992">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_riapsmessage.h</label>
+        <link refid="r__riapsmessage_8h_source"/>
+        <childnode refid="1979" relation="include">
+        </childnode>
+      </node>
+      <node id="1985">
+        <label>/home/istvan/work/riaps-core/include/discoveryd/r_riaps_actor.h</label>
+        <link refid="r__riaps__actor_8h_source"/>
+      </node>
+      <node id="1984">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_discoverdapi.h</label>
+        <link refid="r__discoverdapi_8h_source"/>
+        <childnode refid="1975" relation="include">
+        </childnode>
+        <childnode refid="1977" relation="include">
+        </childnode>
+        <childnode refid="1985" relation="include">
+        </childnode>
+      </node>
+      <node id="1982">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_subscriberport.h</label>
+        <link refid="r__subscriberport_8h_source"/>
+        <childnode refid="1977" relation="include">
+        </childnode>
+      </node>
+      <node id="1971">
+        <label>/home/istvan/work/riaps-core/include/utils/r_timeout.h</label>
+        <link refid="r_timeout.h"/>
+        <childnode refid="1972" relation="include">
+        </childnode>
+        <childnode refid="1973" relation="include">
+        </childnode>
+        <childnode refid="1988" relation="include">
+        </childnode>
+        <childnode refid="1989" relation="include">
+        </childnode>
+      </node>
+      <node id="1978">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_answerport.h</label>
+        <link refid="r__answerport_8h_source"/>
+        <childnode refid="1977" relation="include">
+        </childnode>
+      </node>
+      <node id="1974">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_pubportgroup.h</label>
+        <link refid="r__pubportgroup_8h_source"/>
+        <childnode refid="1973" relation="include">
+        </childnode>
+      </node>
+      <node id="1986">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_peripheral.h</label>
+        <link refid="r__peripheral_8h_source"/>
+        <childnode refid="1975" relation="include">
+        </childnode>
+      </node>
+      <node id="1975">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_actor.h</label>
+        <link refid="r__actor_8h_source"/>
+        <childnode refid="1976" relation="include">
+        </childnode>
+        <childnode refid="1977" relation="include">
+        </childnode>
+        <childnode refid="1986" relation="include">
+        </childnode>
+        <childnode refid="1987" relation="include">
+        </childnode>
+        <childnode refid="1973" relation="include">
+        </childnode>
+      </node>
+      <node id="1977">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_componentbase.h</label>
+        <link refid="r__componentbase_8h_source"/>
+        <childnode refid="1978" relation="include">
+        </childnode>
+        <childnode refid="1979" relation="include">
+        </childnode>
+        <childnode refid="1980" relation="include">
+        </childnode>
+        <childnode refid="1981" relation="include">
+        </childnode>
+        <childnode refid="1982" relation="include">
+        </childnode>
+        <childnode refid="1975" relation="include">
+        </childnode>
+        <childnode refid="1983" relation="include">
+        </childnode>
+        <childnode refid="1984" relation="include">
+        </childnode>
+      </node>
+      <node id="1972">
+        <label>/home/istvan/work/riaps-core/include/discoveryd/r_dhttracker.h</label>
+        <link refid="r__dhttracker_8h_source"/>
+      </node>
+      <node id="1991">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_devicethread.h</label>
+        <link refid="r__devicethread_8h_source"/>
+      </node>
+      <node id="1989">
+        <label>/home/istvan/work/riaps-core/include/utils/r_utils.h</label>
+        <link refid="r__utils_8h_source"/>
+        <childnode refid="1975" relation="include">
+        </childnode>
+        <childnode refid="1990" relation="include">
+        </childnode>
+        <childnode refid="1991" relation="include">
+        </childnode>
+        <childnode refid="1992" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="classriaps_1_1utils_1_1Timeout" prot="public">riaps::utils::Timeout</innerclass>
+    <innernamespace refid="namespaceriaps">riaps</innernamespace>
+    <innernamespace refid="namespaceriaps_1_1utils">riaps::utils</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>RIAPS_CORE_R_TIMEOUT_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>RIAPS_CORE_R_TIMEOUT_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;chrono&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacestd_1_1chrono" kindref="compound">std::chrono</ref>;</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespaceriaps" kindref="compound">riaps</ref>{</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">utils{</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>T&gt;</highlight></codeline>
+<codeline lineno="12" refid="classriaps_1_1utils_1_1Timeout" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classriaps_1_1utils_1_1Timeout" kindref="compound">Timeout</ref><sp/>{</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19" refid="classriaps_1_1utils_1_1Timeout_1af79ed08efbb50af9e39ad6356e9d98ed" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classriaps_1_1utils_1_1Timeout" kindref="compound">Timeout&lt;T&gt;</ref>(){</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Reset(T(0));</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27" refid="classriaps_1_1utils_1_1Timeout_1ab874c9be6851a9376f252b9938205d8a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classriaps_1_1utils_1_1Timeout" kindref="compound">Timeout&lt;T&gt;</ref>(T<sp/>timeout){</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Reset(timeout);</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classriaps_1_1utils_1_1Timeout" kindref="compound">Timeout&lt;T&gt;</ref>(int64_t<sp/>timeout)<sp/>{</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>T<sp/>d(timeout);</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Reset(d);</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39" refid="classriaps_1_1utils_1_1Timeout_1abd25168965820d5e0e5e8d295687c55c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classriaps_1_1utils_1_1Timeout_1abd25168965820d5e0e5e8d295687c55c" kindref="member">Reset</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_startPoint<sp/>=<sp/>steady_clock::now();</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_endPoint<sp/>=<sp/>m_startPoint<sp/>+<sp/>m_timeout;</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48" refid="classriaps_1_1utils_1_1Timeout_1a055868c7b9e8dfddc6e573f79ef838a1" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classriaps_1_1utils_1_1Timeout_1a055868c7b9e8dfddc6e573f79ef838a1" kindref="member">Reset</ref>(T<sp/>timeout){</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_timeout<sp/>=<sp/>timeout;</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Reset();</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>Reset(int64_t<sp/>timeout)<sp/>{</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_timeout<sp/>=<sp/>T(timeout);</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight></codeline>
+<codeline lineno="61" refid="classriaps_1_1utils_1_1Timeout_1a9b5ddbef80caa47f0d2e19385fbed356" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classriaps_1_1utils_1_1Timeout_1a9b5ddbef80caa47f0d2e19385fbed356" kindref="member">IsTimeout</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>now<sp/>=<sp/>steady_clock::now();</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>now<sp/>&gt;<sp/>m_endPoint;</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>steady_clock::time_point<sp/>GetEndTimePoint()<sp/>{</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>m_endPoint;</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>~<ref refid="classriaps_1_1utils_1_1Timeout" kindref="compound">Timeout</ref>()<sp/>=<sp/></highlight><highlight class="keywordflow">default</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>steady_clock::time_point<sp/><sp/>m_startPoint;<sp/></highlight><highlight class="comment">//<sp/>The<sp/>election<sp/>timeout<sp/>from<sp/>this<sp/>timepoint</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>T<sp/>m_timeout;<sp/></highlight><highlight class="comment">//<sp/>The<sp/>election<sp/>timeout</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>steady_clock::time_point<sp/><sp/>m_endPoint;</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="77"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"></highlight><highlight class="comment">//namespace<sp/>riaps{</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/>namespace<sp/>utils{</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="81"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>template&lt;typename<sp/>T&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="82"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>class<sp/>Timeout<sp/>{</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>public:</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>/**</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*<sp/>Intitalizes<sp/>with<sp/>0<sp/>timeout<sp/>from<sp/>now;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="87"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="89"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Timeout&lt;T&gt;(){</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="90"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Reset(duration&lt;int64_t<sp/>,<sp/>T&gt;(0));</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>};</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>/**</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*<sp/>Initializes<sp/>the<sp/>timeut<sp/>structure<sp/>from<sp/>::now()<sp/>with<sp/>the<sp/>passed<sp/>timeout</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="95"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*<sp/>@param<sp/>timeout</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="97"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Timeout&lt;T&gt;(duration&lt;int64_t,<sp/>T&gt;<sp/>timeout){</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="98"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Reset(timeout);</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="99"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>};</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="100"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="101"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Timeout&lt;T&gt;(int64_t<sp/>timeout)<sp/>{</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::chrono::duration&lt;int64_t,T&gt;<sp/>d(timeout);</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="103"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Reset(d);</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="104"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="105"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="106"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>/**</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="107"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*<sp/>Resets<sp/>the<sp/>start<sp/>time<sp/>point,<sp/>doesn&apos;t<sp/>touch<sp/>the<sp/>timeout</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="108"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="109"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>void<sp/>Reset()<sp/>{</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="110"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_startPoint<sp/>=<sp/>steady_clock::now();</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="111"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_endPoint<sp/>=<sp/>m_startPoint<sp/>+<sp/>m_timeout;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="112"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>};</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="113"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="114"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>/**</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="115"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*<sp/>Resets<sp/>the<sp/>start<sp/>point<sp/>and<sp/>the<sp/>timeout<sp/>value</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="116"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*<sp/>@param<sp/>timeout</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="117"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="118"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>void<sp/>Reset(duration&lt;int64_t,<sp/>T&gt;<sp/>timeout){</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="119"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_timeout<sp/>=<sp/>timeout;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="120"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Reset();</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>};</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="122"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="123"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>/**</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="124"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*<sp/>If<sp/>::now()&gt;_endPoint</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="125"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*<sp/>@return</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="126"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="127"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>bool<sp/>IsTimeout()<sp/>{</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="128"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>auto<sp/>now<sp/>=<sp/>steady_clock::now();</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="129"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>now<sp/>&gt;<sp/>m_endPoint;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="130"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="131"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="132"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>steady_clock::time_point<sp/>GetEndTimePoint()<sp/>{</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="133"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>m_endPoint;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="134"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="135"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="136"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>~Timeout()<sp/>=<sp/>default;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="137"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>private:</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="138"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>steady_clock::time_point<sp/><sp/>m_startPoint;<sp/>//<sp/>The<sp/>election<sp/>timeout<sp/>from<sp/>this<sp/>timepoint</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="139"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>duration&lt;int64_t,<sp/>T&gt;<sp/>m_timeout;<sp/>//<sp/>The<sp/>election<sp/>timeout</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="140"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>steady_clock::time_point<sp/><sp/>m_endPoint;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="141"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>};</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="142"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/>}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="143"><highlight class="normal"></highlight><highlight class="comment">//}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="144"><highlight class="normal"></highlight></codeline>
+<codeline lineno="145"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/>//RIAPS_CORE_R_TIMEOUT_H</highlight></codeline>
+    </programlisting>
+    <location file="/home/istvan/work/riaps-core/include/utils/r_timeout.h"/>
+  </compounddef>
+</doxygen>

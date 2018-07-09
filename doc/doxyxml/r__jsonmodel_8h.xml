@@ -1,0 +1,485 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="r__jsonmodel_8h" kind="file" language="C++">
+    <compoundname>r_jsonmodel.h</compoundname>
+    <includedby refid="r__argumentparser_8h" local="no">/home/istvan/work/riaps-core/include/componentmodel/r_argumentparser.h</includedby>
+    <includedby refid="r__commandlineparser_8h" local="no">/home/istvan/work/riaps-core/include/componentmodel/r_commandlineparser.h</includedby>
+    <invincdepgraph>
+      <node id="1591">
+        <label>/home/istvan/work/riaps-core/include/const/r_jsonmodel.h</label>
+        <link refid="r_jsonmodel.h"/>
+        <childnode refid="1592" relation="include">
+        </childnode>
+        <childnode refid="1593" relation="include">
+        </childnode>
+      </node>
+      <node id="1593">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_commandlineparser.h</label>
+        <link refid="r__commandlineparser_8h_source"/>
+      </node>
+      <node id="1592">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_argumentparser.h</label>
+        <link refid="r__argumentparser_8h_source"/>
+      </node>
+    </invincdepgraph>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="r__jsonmodel_8h_1a0b20ebb246fbc06dda713280e4882ff7" prot="public" static="no">
+        <name>J_NAME</name>
+        <initializer>&quot;name&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="8" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="8" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1a3d560f69097f5130562b1c5e7f1aff92" prot="public" static="no">
+        <name>J_ACTORS</name>
+        <initializer>&quot;actors&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="9" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="9" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1a0f4da05bcf94063c3da75d38471871f0" prot="public" static="no">
+        <name>J_COMPONENTS</name>
+        <initializer>&quot;components&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="10" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1a6da8694b1ab6e110f77a0ee9c914f033" prot="public" static="no">
+        <name>J_DEVICES</name>
+        <initializer>&quot;devices&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="11" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1a2b5aef0145fbab3d4b21335d15d384f5" prot="public" static="no">
+        <name>J_INSTANCES</name>
+        <initializer>&quot;instances&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="13" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1a8da9e91ceee86f5e8c4931fe2d161116" prot="public" static="no">
+        <name>J_INTERNALS</name>
+        <initializer>&quot;internals&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="14" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1a5d0c2cbea4bfa378bb11647b5d875959" prot="public" static="no">
+        <name>J_LOCALS</name>
+        <initializer>&quot;locals&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="15" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="15" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1aa5bf5ac21d8ef87a7270f09b1ea90c94" prot="public" static="no">
+        <name>J_FORMALS</name>
+        <initializer>&quot;formals&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="17" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="17" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1ace3455e6793bc970335a6c80bbe25aee" prot="public" static="no">
+        <name>J_FORMAL_NAME</name>
+        <initializer>&quot;name&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="18" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="18" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1a3d219834c2b83b751a32d85549976a85" prot="public" static="no">
+        <name>J_FORMAL_DEF</name>
+        <initializer>&quot;default&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="19" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1a828bfbbe9537538a26dc7defc69e0c05" prot="public" static="no">
+        <name>J_ACTUALS</name>
+        <initializer>&quot;actuals&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="21" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1afd63c5f6a832248ef20a6a3692706f5d" prot="public" static="no">
+        <name>J_ACTUAL_NAME</name>
+        <initializer>&quot;name&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="22" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1a3e9af3ef8b85b68cbc18c798a285f283" prot="public" static="no">
+        <name>J_ACTUAL_PARAM</name>
+        <initializer>&quot;param&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="23" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="23" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1a2a370057a5f785f21ded8fbc324a76c4" prot="public" static="no">
+        <name>J_ACTUAL_VALUE</name>
+        <initializer>&quot;value&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="24" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="24" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1a9ae501e8c19efd5fdf2decb322a054b3" prot="public" static="no">
+        <name>J_PORTS</name>
+        <initializer>&quot;ports&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="26" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="26" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1a9153a5e53c0363edf39c78cf87c006dd" prot="public" static="no">
+        <name>J_PORTS_CLTS</name>
+        <initializer>&quot;clts&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="27" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1a676ca23669b0305c9bdd45017878d1f2" prot="public" static="no">
+        <name>J_PORTS_INSS</name>
+        <initializer>&quot;inss&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="28" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1a929256f0370c7300e651558b3cd85307" prot="public" static="no">
+        <name>J_PORTS_PUBS</name>
+        <initializer>&quot;pubs&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="29" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1a8b43744381da413db536a12d48a299c1" prot="public" static="no">
+        <name>J_PORTS_REPS</name>
+        <initializer>&quot;reps&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="30" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1a354cac4badc3b1ff39bc70d7628f7a2d" prot="public" static="no">
+        <name>J_PORTS_REQS</name>
+        <initializer>&quot;reqs&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="31" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1a1aebc70d475c1c2a0f085671ba172820" prot="public" static="no">
+        <name>J_PORTS_SRVS</name>
+        <initializer>&quot;srvs&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="32" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1ae34b4033d7cdc0fe74e11a1dc395b55d" prot="public" static="no">
+        <name>J_PORTS_SUBS</name>
+        <initializer>&quot;subs&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="33" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1a625b91ebb12099cf7caada0e057d8ed2" prot="public" static="no">
+        <name>J_PORTS_TIMS</name>
+        <initializer>&quot;tims&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="34" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1a676ca23669b0305c9bdd45017878d1f2" prot="public" static="no">
+        <name>J_PORTS_INSS</name>
+        <initializer>&quot;inss&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="35" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1af3a2af8b52610f0afca9c684ad217fc7" prot="public" static="no">
+        <name>J_PORTS_QRYS</name>
+        <initializer>&quot;qrys&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="36" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1a37ceb40c197fe2d8dee5766bf993753f" prot="public" static="no">
+        <name>J_PORTS_ANSS</name>
+        <initializer>&quot;anss&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="37" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1aeee287befc3d4280065011b3efd7b169" prot="public" static="no">
+        <name>J_PORT_REQTYPE</name>
+        <initializer>&quot;req_type&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="39" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1abc0bfc44c24d26b923ecdb119ce35da5" prot="public" static="no">
+        <name>J_PORT_REPTYPE</name>
+        <initializer>&quot;rep_type&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="40" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1a452e0372b04cf553074a7db8aeeff66b" prot="public" static="no">
+        <name>J_PORT_QRYTYPE</name>
+        <initializer>&quot;qry_type&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="42" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1a6122e7d2e57b902cfdbff4bf6d6b0e5b" prot="public" static="no">
+        <name>J_PORT_ANSTYPE</name>
+        <initializer>&quot;ans_type&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="43" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="43" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1ad69259da358500f720906c4def477031" prot="public" static="no">
+        <name>J_PORT_TIMED</name>
+        <initializer>&quot;timed&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="45" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1ae317d7ed123d3b5350a4507d22235170" prot="public" static="no">
+        <name>J_TYPE</name>
+        <initializer>&quot;type&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="47" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1acc3a5cd4aa865a631044767f0c795ea2" prot="public" static="no">
+        <name>J_GROUPS</name>
+        <initializer>&quot;groups&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="49" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1a79befaa9bbb4cea50e014e50c26d40f8" prot="public" static="no">
+        <name>J_GROUP_LEADER</name>
+        <initializer>&quot;leader&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="50" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="50" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1ae3e122e1bbade08c14dc4a199f48c3f8" prot="public" static="no">
+        <name>J_GROUP_CONSENSUS</name>
+        <initializer>&quot;consensus&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="51" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="51" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="r__jsonmodel_8h_1ac7a123922a2566ed64072a2ec2001330" prot="public" static="no">
+        <name>J_GROUP_MESSAGES</name>
+        <initializer>&quot;groupMessages&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" line="52" column="9" bodyfile="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h" bodystart="52" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Created<sp/>by<sp/>istvan<sp/>on<sp/>2/21/17.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>RIAPS_CORE_R_JSONMODEL_H_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>RIAPS_CORE_R_JSONMODEL_H_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_NAME<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;name&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_ACTORS<sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;actors&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_COMPONENTS<sp/><sp/><sp/>&quot;components&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_DEVICES<sp/><sp/><sp/><sp/><sp/><sp/>&quot;devices&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_INSTANCES<sp/><sp/><sp/><sp/>&quot;instances&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_INTERNALS<sp/><sp/><sp/><sp/>&quot;internals&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_LOCALS<sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;locals&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_FORMALS<sp/><sp/><sp/><sp/><sp/><sp/>&quot;formals&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_FORMAL_NAME<sp/><sp/>&quot;name&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_FORMAL_DEF<sp/><sp/><sp/>&quot;default&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_ACTUALS<sp/><sp/><sp/><sp/><sp/><sp/>&quot;actuals&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_ACTUAL_NAME<sp/><sp/>&quot;name&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_ACTUAL_PARAM<sp/>&quot;param&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_ACTUAL_VALUE<sp/>&quot;value&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_PORTS<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;ports&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_PORTS_CLTS<sp/><sp/><sp/>&quot;clts&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_PORTS_INSS<sp/><sp/><sp/>&quot;inss&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_PORTS_PUBS<sp/><sp/><sp/>&quot;pubs&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_PORTS_REPS<sp/><sp/><sp/>&quot;reps&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_PORTS_REQS<sp/><sp/><sp/>&quot;reqs&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_PORTS_SRVS<sp/><sp/><sp/>&quot;srvs&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_PORTS_SUBS<sp/><sp/><sp/>&quot;subs&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_PORTS_TIMS<sp/><sp/><sp/>&quot;tims&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_PORTS_INSS<sp/><sp/><sp/>&quot;inss&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_PORTS_QRYS<sp/><sp/><sp/>&quot;qrys&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_PORTS_ANSS<sp/><sp/><sp/>&quot;anss&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_PORT_REQTYPE<sp/>&quot;req_type&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_PORT_REPTYPE<sp/>&quot;rep_type&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_PORT_QRYTYPE<sp/>&quot;qry_type&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_PORT_ANSTYPE<sp/>&quot;ans_type&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_PORT_TIMED<sp/>&quot;timed&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_TYPE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;type&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_GROUPS<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;groups&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_GROUP_LEADER<sp/><sp/><sp/><sp/>&quot;leader&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_GROUP_CONSENSUS<sp/>&quot;consensus&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>J_GROUP_MESSAGES<sp/><sp/>&quot;groupMessages&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/>//RIAPS_CORE_R_JSONMODEL_H_H</highlight></codeline>
+    </programlisting>
+    <location file="/home/istvan/work/riaps-core/include/const/r_jsonmodel.h"/>
+  </compounddef>
+</doxygen>

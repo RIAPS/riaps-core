@@ -1,0 +1,818 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="r__peripheral_8h" kind="file" language="C++">
+    <compoundname>r_peripheral.h</compoundname>
+    <includes refid="r__actor_8h" local="no">componentmodel/r_actor.h</includes>
+    <includes local="no">map</includes>
+    <includes local="no">string</includes>
+    <includedby refid="r__actor_8h" local="no">/home/istvan/work/riaps-core/include/componentmodel/r_actor.h</includedby>
+    <incdepgraph>
+      <node id="1450">
+        <label>componentmodel/ports/r_pubportbase.h</label>
+        <link refid="r__pubportbase_8h_source"/>
+        <childnode refid="1428" relation="include">
+        </childnode>
+        <childnode refid="1451" relation="include">
+        </childnode>
+      </node>
+      <node id="1475">
+        <label>messaging/devm.capnp.h</label>
+      </node>
+      <node id="1438">
+        <label>atomic</label>
+      </node>
+      <node id="1465">
+        <label>componentmodel/ports/r_insideport.h</label>
+        <link refid="r__insideport_8h_source"/>
+        <childnode refid="1428" relation="include">
+        </childnode>
+        <childnode refid="1451" relation="include">
+        </childnode>
+        <childnode refid="1434" relation="include">
+        </childnode>
+        <childnode refid="1433" relation="include">
+        </childnode>
+      </node>
+      <node id="1441">
+        <label>groups/r_group.h</label>
+        <link refid="r__group_8h_source"/>
+        <childnode refid="1417" relation="include">
+        </childnode>
+        <childnode refid="1423" relation="include">
+        </childnode>
+        <childnode refid="1442" relation="include">
+        </childnode>
+        <childnode refid="1449" relation="include">
+        </childnode>
+        <childnode refid="1453" relation="include">
+        </childnode>
+        <childnode refid="1457" relation="include">
+        </childnode>
+        <childnode refid="1443" relation="include">
+        </childnode>
+        <childnode refid="1444" relation="include">
+        </childnode>
+        <childnode refid="1429" relation="include">
+        </childnode>
+        <childnode refid="1458" relation="include">
+        </childnode>
+        <childnode refid="1430" relation="include">
+        </childnode>
+        <childnode refid="1421" relation="include">
+        </childnode>
+        <childnode refid="1420" relation="include">
+        </childnode>
+        <childnode refid="1425" relation="include">
+        </childnode>
+        <childnode refid="1446" relation="include">
+        </childnode>
+        <childnode refid="1445" relation="include">
+        </childnode>
+        <childnode refid="1447" relation="include">
+        </childnode>
+      </node>
+      <node id="1428">
+        <label>componentmodel/ports/r_portbase.h</label>
+        <link refid="r__portbase_8h_source"/>
+        <childnode refid="1423" relation="include">
+        </childnode>
+        <childnode refid="1429" relation="include">
+        </childnode>
+        <childnode refid="1430" relation="include">
+        </childnode>
+        <childnode refid="1421" relation="include">
+        </childnode>
+        <childnode refid="1431" relation="include">
+        </childnode>
+      </node>
+      <node id="1451">
+        <label>componentmodel/ports/r_senderport.h</label>
+        <link refid="r__senderport_8h_source"/>
+        <childnode refid="1433" relation="include">
+        </childnode>
+        <childnode refid="1434" relation="include">
+        </childnode>
+        <childnode refid="1430" relation="include">
+        </childnode>
+        <childnode refid="1452" relation="include">
+        </childnode>
+        <childnode refid="1440" relation="include">
+        </childnode>
+      </node>
+      <node id="1437">
+        <label>functional</label>
+      </node>
+      <node id="1460">
+        <label>queue</label>
+      </node>
+      <node id="1442">
+        <label>groups/r_grouplead.h</label>
+        <link refid="r__grouplead_8h_source"/>
+        <childnode refid="1443" relation="include">
+        </childnode>
+        <childnode refid="1441" relation="include">
+        </childnode>
+        <childnode refid="1429" relation="include">
+        </childnode>
+        <childnode refid="1444" relation="include">
+        </childnode>
+        <childnode refid="1437" relation="include">
+        </childnode>
+        <childnode refid="1445" relation="include">
+        </childnode>
+        <childnode refid="1446" relation="include">
+        </childnode>
+        <childnode refid="1447" relation="include">
+        </childnode>
+        <childnode refid="1448" relation="include">
+        </childnode>
+      </node>
+      <node id="1440">
+        <label>componentmodel/r_payload.h</label>
+        <link refid="r__payload_8h_source"/>
+        <childnode refid="1430" relation="include">
+        </childnode>
+        <childnode refid="1426" relation="include">
+        </childnode>
+      </node>
+      <node id="1423">
+        <label>componentmodel/r_configuration.h</label>
+        <link refid="r__configuration_8h_source"/>
+        <childnode refid="1424" relation="include">
+        </childnode>
+        <childnode refid="1421" relation="include">
+        </childnode>
+        <childnode refid="1420" relation="include">
+        </childnode>
+      </node>
+      <node id="1430">
+        <label>czmq.h</label>
+      </node>
+      <node id="1478">
+        <label>messaging/deplo.capnp.h</label>
+      </node>
+      <node id="1457">
+        <label>messaging/disco.capnp.h</label>
+      </node>
+      <node id="1454">
+        <label>componentmodel/ports/r_subportbase.h</label>
+        <link refid="r__subportbase_8h_source"/>
+        <childnode refid="1428" relation="include">
+        </childnode>
+        <childnode refid="1421" relation="include">
+        </childnode>
+        <childnode refid="1455" relation="include">
+        </childnode>
+      </node>
+      <node id="1476">
+        <label>componentmodel/r_deploapi.h</label>
+        <link refid="r__deploapi_8h_source"/>
+        <childnode refid="1422" relation="include">
+        </childnode>
+        <childnode refid="1477" relation="include">
+        </childnode>
+        <childnode refid="1478" relation="include">
+        </childnode>
+        <childnode refid="1430" relation="include">
+        </childnode>
+        <childnode refid="1429" relation="include">
+        </childnode>
+        <childnode refid="1426" relation="include">
+        </childnode>
+        <childnode refid="1420" relation="include">
+        </childnode>
+      </node>
+      <node id="1470">
+        <label>const/r_const.h</label>
+        <link refid="r__const_8h_source"/>
+      </node>
+      <node id="1434">
+        <label>capnp/serialize.h</label>
+      </node>
+      <node id="1424">
+        <label>componentmodel/r_parameter.h</label>
+        <link refid="r__parameter_8h_source"/>
+        <childnode refid="1421" relation="include">
+        </childnode>
+        <childnode refid="1425" relation="include">
+        </childnode>
+        <childnode refid="1426" relation="include">
+        </childnode>
+        <childnode refid="1420" relation="include">
+        </childnode>
+      </node>
+      <node id="1421">
+        <label>string</label>
+      </node>
+      <node id="1463">
+        <label>componentmodel/ports/r_responseport.h</label>
+        <link refid="r__responseport_8h_source"/>
+        <childnode refid="1428" relation="include">
+        </childnode>
+        <childnode refid="1455" relation="include">
+        </childnode>
+        <childnode refid="1422" relation="include">
+        </childnode>
+        <childnode refid="1423" relation="include">
+        </childnode>
+        <childnode refid="1430" relation="include">
+        </childnode>
+        <childnode refid="1421" relation="include">
+        </childnode>
+      </node>
+      <node id="1425">
+        <label>map</label>
+      </node>
+      <node id="1464">
+        <label>componentmodel/ports/r_requestport.h</label>
+        <link refid="r__requestport_8h_source"/>
+        <childnode refid="1422" relation="include">
+        </childnode>
+        <childnode refid="1423" relation="include">
+        </childnode>
+        <childnode refid="1432" relation="include">
+        </childnode>
+        <childnode refid="1451" relation="include">
+        </childnode>
+        <childnode refid="1430" relation="include">
+        </childnode>
+        <childnode refid="1421" relation="include">
+        </childnode>
+      </node>
+      <node id="1467">
+        <label>componentmodel/ports/r_queryport.h</label>
+        <link refid="r__queryport_8h_source"/>
+        <childnode refid="1422" relation="include">
+        </childnode>
+        <childnode refid="1423" relation="include">
+        </childnode>
+        <childnode refid="1432" relation="include">
+        </childnode>
+        <childnode refid="1451" relation="include">
+        </childnode>
+        <childnode refid="1468" relation="include">
+        </childnode>
+        <childnode refid="1430" relation="include">
+        </childnode>
+        <childnode refid="1471" relation="include">
+        </childnode>
+        <childnode refid="1421" relation="include">
+        </childnode>
+      </node>
+      <node id="1468">
+        <label>componentmodel/r_riapsmessage.h</label>
+        <link refid="r__riapsmessage_8h_source"/>
+        <childnode refid="1469" relation="include">
+        </childnode>
+        <childnode refid="1430" relation="include">
+        </childnode>
+        <childnode refid="1434" relation="include">
+        </childnode>
+        <childnode refid="1433" relation="include">
+        </childnode>
+      </node>
+      <node id="1419">
+        <label>componentmodel/r_riaps_actor_commands.h</label>
+        <link refid="r__riaps__actor__commands_8h_source"/>
+        <childnode refid="1420" relation="include">
+        </childnode>
+        <childnode refid="1421" relation="include">
+        </childnode>
+      </node>
+      <node id="1459">
+        <label>fstream</label>
+      </node>
+      <node id="1473">
+        <label>json.h</label>
+      </node>
+      <node id="1443">
+        <label>messaging/distcoord.capnp.h</label>
+      </node>
+      <node id="1418">
+        <label>componentmodel/r_discoverdapi.h</label>
+        <link refid="r__discoverdapi_8h_source"/>
+        <childnode refid="1419" relation="include">
+        </childnode>
+        <childnode refid="1422" relation="include">
+        </childnode>
+        <childnode refid="1441" relation="include">
+        </childnode>
+        <childnode refid="1457" relation="include">
+        </childnode>
+        <childnode refid="1433" relation="include">
+        </childnode>
+        <childnode refid="1434" relation="include">
+        </childnode>
+        <childnode refid="1472" relation="include">
+        </childnode>
+        <childnode refid="1473" relation="include">
+        </childnode>
+        <childnode refid="1421" relation="include">
+        </childnode>
+        <childnode refid="1420" relation="include">
+        </childnode>
+        <childnode refid="1430" relation="include">
+        </childnode>
+        <childnode refid="1431" relation="include">
+        </childnode>
+      </node>
+      <node id="1453">
+        <label>componentmodel/ports/r_subportgroup.h</label>
+        <link refid="r__subportgroup_8h_source"/>
+        <childnode refid="1454" relation="include">
+        </childnode>
+      </node>
+      <node id="1432">
+        <label>componentmodel/r_messagebase.h</label>
+        <link refid="r__messagebase_8h_source"/>
+        <childnode refid="1430" relation="include">
+        </childnode>
+        <childnode refid="1433" relation="include">
+        </childnode>
+        <childnode refid="1434" relation="include">
+        </childnode>
+      </node>
+      <node id="1455">
+        <label>r_recvport.h</label>
+        <link refid="r__recvport_8h_source"/>
+        <childnode refid="1456" relation="include">
+        </childnode>
+        <childnode refid="1433" relation="include">
+        </childnode>
+        <childnode refid="1434" relation="include">
+        </childnode>
+        <childnode refid="1429" relation="include">
+        </childnode>
+        <childnode refid="1430" relation="include">
+        </childnode>
+        <childnode refid="1426" relation="include">
+        </childnode>
+      </node>
+      <node id="1429">
+        <label>spdlog/spdlog.h</label>
+      </node>
+      <node id="1446">
+        <label>random</label>
+      </node>
+      <node id="1472">
+        <label>capnp/serialize-packed.h</label>
+      </node>
+      <node id="1439">
+        <label>ctime</label>
+      </node>
+      <node id="1471">
+        <label>zuuid.h</label>
+      </node>
+      <node id="1462">
+        <label>componentmodel/ports/r_subscriberport.h</label>
+        <link refid="r__subscriberport_8h_source"/>
+        <childnode refid="1426" relation="include">
+        </childnode>
+        <childnode refid="1422" relation="include">
+        </childnode>
+        <childnode refid="1423" relation="include">
+        </childnode>
+        <childnode refid="1454" relation="include">
+        </childnode>
+      </node>
+      <node id="1444">
+        <label>utils/r_timeout.h</label>
+        <link refid="r__timeout_8h_source"/>
+        <childnode refid="1445" relation="include">
+        </childnode>
+      </node>
+      <node id="1420">
+        <label>vector</label>
+      </node>
+      <node id="1466">
+        <label>componentmodel/ports/r_answerport.h</label>
+        <link refid="r__answerport_8h_source"/>
+        <childnode refid="1428" relation="include">
+        </childnode>
+        <childnode refid="1422" relation="include">
+        </childnode>
+        <childnode refid="1423" relation="include">
+        </childnode>
+        <childnode refid="1430" relation="include">
+        </childnode>
+        <childnode refid="1421" relation="include">
+        </childnode>
+      </node>
+      <node id="1449">
+        <label>componentmodel/ports/r_pubportgroup.h</label>
+        <link refid="r__pubportgroup_8h_source"/>
+        <childnode refid="1441" relation="include">
+        </childnode>
+        <childnode refid="1423" relation="include">
+        </childnode>
+        <childnode refid="1450" relation="include">
+        </childnode>
+      </node>
+      <node id="1458">
+        <label>msgpack.hpp</label>
+      </node>
+      <node id="1416">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_peripheral.h</label>
+        <link refid="r_peripheral.h"/>
+        <childnode refid="1417" relation="include">
+        </childnode>
+        <childnode refid="1425" relation="include">
+        </childnode>
+        <childnode refid="1421" relation="include">
+        </childnode>
+      </node>
+      <node id="1474">
+        <label>componentmodel/r_devmapi.h</label>
+        <link refid="r__devmapi_8h_source"/>
+        <childnode refid="1433" relation="include">
+        </childnode>
+        <childnode refid="1434" relation="include">
+        </childnode>
+        <childnode refid="1475" relation="include">
+        </childnode>
+        <childnode refid="1430" relation="include">
+        </childnode>
+        <childnode refid="1420" relation="include">
+        </childnode>
+        <childnode refid="1421" relation="include">
+        </childnode>
+        <childnode refid="1425" relation="include">
+        </childnode>
+        <childnode refid="1431" relation="include">
+        </childnode>
+      </node>
+      <node id="1431">
+        <label>iostream</label>
+      </node>
+      <node id="1417">
+        <label>componentmodel/r_actor.h</label>
+        <link refid="r__actor_8h_source"/>
+        <childnode refid="1418" relation="include">
+        </childnode>
+        <childnode refid="1422" relation="include">
+        </childnode>
+        <childnode refid="1416" relation="include">
+        </childnode>
+        <childnode refid="1474" relation="include">
+        </childnode>
+        <childnode refid="1423" relation="include">
+        </childnode>
+        <childnode refid="1476" relation="include">
+        </childnode>
+        <childnode refid="1457" relation="include">
+        </childnode>
+        <childnode refid="1470" relation="include">
+        </childnode>
+        <childnode refid="1469" relation="include">
+        </childnode>
+        <childnode refid="1441" relation="include">
+        </childnode>
+        <childnode refid="1429" relation="include">
+        </childnode>
+        <childnode refid="1473" relation="include">
+        </childnode>
+        <childnode refid="1430" relation="include">
+        </childnode>
+        <childnode refid="1479" relation="include">
+        </childnode>
+        <childnode refid="1431" relation="include">
+        </childnode>
+        <childnode refid="1421" relation="include">
+        </childnode>
+        <childnode refid="1459" relation="include">
+        </childnode>
+        <childnode refid="1447" relation="include">
+        </childnode>
+      </node>
+      <node id="1435">
+        <label>componentmodel/r_oneshottimer.h</label>
+        <link refid="r__oneshottimer_8h_source"/>
+        <childnode refid="1428" relation="include">
+        </childnode>
+        <childnode refid="1421" relation="include">
+        </childnode>
+        <childnode refid="1436" relation="include">
+        </childnode>
+        <childnode refid="1437" relation="include">
+        </childnode>
+        <childnode refid="1438" relation="include">
+        </childnode>
+        <childnode refid="1439" relation="include">
+        </childnode>
+      </node>
+      <node id="1448">
+        <label>unordered_map</label>
+      </node>
+      <node id="1422">
+        <label>componentmodel/r_componentbase.h</label>
+        <link refid="r__componentbase_8h_source"/>
+        <childnode refid="1418" relation="include">
+        </childnode>
+        <childnode refid="1423" relation="include">
+        </childnode>
+        <childnode refid="1427" relation="include">
+        </childnode>
+        <childnode refid="1417" relation="include">
+        </childnode>
+        <childnode refid="1432" relation="include">
+        </childnode>
+        <childnode refid="1435" relation="include">
+        </childnode>
+        <childnode refid="1440" relation="include">
+        </childnode>
+        <childnode refid="1441" relation="include">
+        </childnode>
+        <childnode refid="1457" relation="include">
+        </childnode>
+        <childnode refid="1458" relation="include">
+        </childnode>
+        <childnode refid="1433" relation="include">
+        </childnode>
+        <childnode refid="1434" relation="include">
+        </childnode>
+        <childnode refid="1429" relation="include">
+        </childnode>
+        <childnode refid="1431" relation="include">
+        </childnode>
+        <childnode refid="1459" relation="include">
+        </childnode>
+        <childnode refid="1420" relation="include">
+        </childnode>
+        <childnode refid="1426" relation="include">
+        </childnode>
+        <childnode refid="1460" relation="include">
+        </childnode>
+        <childnode refid="1446" relation="include">
+        </childnode>
+        <childnode refid="1439" relation="include">
+        </childnode>
+        <childnode refid="1461" relation="include">
+        </childnode>
+        <childnode refid="1462" relation="include">
+        </childnode>
+        <childnode refid="1463" relation="include">
+        </childnode>
+        <childnode refid="1464" relation="include">
+        </childnode>
+        <childnode refid="1465" relation="include">
+        </childnode>
+        <childnode refid="1466" relation="include">
+        </childnode>
+        <childnode refid="1467" relation="include">
+        </childnode>
+      </node>
+      <node id="1445">
+        <label>chrono</label>
+      </node>
+      <node id="1436">
+        <label>thread</label>
+      </node>
+      <node id="1427">
+        <label>componentmodel/r_periodictimer.h</label>
+        <link refid="r__periodictimer_8h_source"/>
+        <childnode refid="1428" relation="include">
+        </childnode>
+        <childnode refid="1430" relation="include">
+        </childnode>
+        <childnode refid="1421" relation="include">
+        </childnode>
+      </node>
+      <node id="1456">
+        <label>r_timedport.h</label>
+        <link refid="r__timedport_8h_source"/>
+        <childnode refid="1439" relation="include">
+        </childnode>
+      </node>
+      <node id="1452">
+        <label>type_traits</label>
+      </node>
+      <node id="1447">
+        <label>set</label>
+      </node>
+      <node id="1477">
+        <label>framework/rfw_configuration.h</label>
+        <link refid="rfw__configuration_8h_source"/>
+        <childnode refid="1470" relation="include">
+        </childnode>
+        <childnode refid="1421" relation="include">
+        </childnode>
+      </node>
+      <node id="1433">
+        <label>capnp/message.h</label>
+      </node>
+      <node id="1469">
+        <label>utils/r_utils.h</label>
+        <link refid="r__utils_8h_source"/>
+        <childnode refid="1470" relation="include">
+        </childnode>
+        <childnode refid="1444" relation="include">
+        </childnode>
+        <childnode refid="1433" relation="include">
+        </childnode>
+        <childnode refid="1434" relation="include">
+        </childnode>
+        <childnode refid="1430" relation="include">
+        </childnode>
+        <childnode refid="1429" relation="include">
+        </childnode>
+        <childnode refid="1431" relation="include">
+        </childnode>
+        <childnode refid="1426" relation="include">
+        </childnode>
+        <childnode refid="1421" relation="include">
+        </childnode>
+        <childnode refid="1425" relation="include">
+        </childnode>
+        <childnode refid="1420" relation="include">
+        </childnode>
+      </node>
+      <node id="1426">
+        <label>memory</label>
+      </node>
+      <node id="1461">
+        <label>componentmodel/ports/r_publisherport.h</label>
+        <link refid="r__publisherport_8h_source"/>
+        <childnode refid="1423" relation="include">
+        </childnode>
+        <childnode refid="1450" relation="include">
+        </childnode>
+        <childnode refid="1430" relation="include">
+        </childnode>
+        <childnode refid="1421" relation="include">
+        </childnode>
+      </node>
+      <node id="1479">
+        <label>dlfcn.h</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="1492">
+        <label>/home/istvan/work/riaps-core/include/device/r_deviceactor.h</label>
+        <link refid="r__deviceactor_8h_source"/>
+      </node>
+      <node id="1493">
+        <label>/home/istvan/work/riaps-core/include/groups/r_group.h</label>
+        <link refid="r__group_8h_source"/>
+        <childnode refid="1494" relation="include">
+        </childnode>
+        <childnode refid="1481" relation="include">
+        </childnode>
+        <childnode refid="1483" relation="include">
+        </childnode>
+        <childnode refid="1490" relation="include">
+        </childnode>
+        <childnode refid="1495" relation="include">
+        </childnode>
+      </node>
+      <node id="1495">
+        <label>/home/istvan/work/riaps-core/include/groups/r_grouplead.h</label>
+        <link refid="r__grouplead_8h_source"/>
+        <childnode refid="1493" relation="include">
+        </childnode>
+      </node>
+      <node id="1482">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_actor_main.h</label>
+        <link refid="r__actor__main_8h_source"/>
+      </node>
+      <node id="1489">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_deploapi.h</label>
+        <link refid="r__deploapi_8h_source"/>
+        <childnode refid="1481" relation="include">
+        </childnode>
+      </node>
+      <node id="1487">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_responseport.h</label>
+        <link refid="r__responseport_8h_source"/>
+        <childnode refid="1483" relation="include">
+        </childnode>
+      </node>
+      <node id="1486">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_requestport.h</label>
+        <link refid="r__requestport_8h_source"/>
+        <childnode refid="1483" relation="include">
+        </childnode>
+      </node>
+      <node id="1485">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_queryport.h</label>
+        <link refid="r__queryport_8h_source"/>
+        <childnode refid="1483" relation="include">
+        </childnode>
+      </node>
+      <node id="1491">
+        <label>/home/istvan/work/riaps-core/include/discoveryd/r_riaps_actor.h</label>
+        <link refid="r__riaps__actor_8h_source"/>
+      </node>
+      <node id="1490">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_discoverdapi.h</label>
+        <link refid="r__discoverdapi_8h_source"/>
+        <childnode refid="1481" relation="include">
+        </childnode>
+        <childnode refid="1483" relation="include">
+        </childnode>
+        <childnode refid="1491" relation="include">
+        </childnode>
+      </node>
+      <node id="1488">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_subscriberport.h</label>
+        <link refid="r__subscriberport_8h_source"/>
+        <childnode refid="1483" relation="include">
+        </childnode>
+      </node>
+      <node id="1484">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_answerport.h</label>
+        <link refid="r__answerport_8h_source"/>
+        <childnode refid="1483" relation="include">
+        </childnode>
+      </node>
+      <node id="1494">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_pubportgroup.h</label>
+        <link refid="r__pubportgroup_8h_source"/>
+        <childnode refid="1493" relation="include">
+        </childnode>
+      </node>
+      <node id="1480">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_peripheral.h</label>
+        <link refid="r_peripheral.h"/>
+        <childnode refid="1481" relation="include">
+        </childnode>
+      </node>
+      <node id="1481">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_actor.h</label>
+        <link refid="r__actor_8h_source"/>
+        <childnode refid="1482" relation="include">
+        </childnode>
+        <childnode refid="1483" relation="include">
+        </childnode>
+        <childnode refid="1480" relation="include">
+        </childnode>
+        <childnode refid="1492" relation="include">
+        </childnode>
+        <childnode refid="1493" relation="include">
+        </childnode>
+      </node>
+      <node id="1483">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_componentbase.h</label>
+        <link refid="r__componentbase_8h_source"/>
+        <childnode refid="1484" relation="include">
+        </childnode>
+        <childnode refid="1485" relation="include">
+        </childnode>
+        <childnode refid="1486" relation="include">
+        </childnode>
+        <childnode refid="1487" relation="include">
+        </childnode>
+        <childnode refid="1488" relation="include">
+        </childnode>
+        <childnode refid="1481" relation="include">
+        </childnode>
+        <childnode refid="1489" relation="include">
+        </childnode>
+        <childnode refid="1490" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="classriaps_1_1Peripheral" prot="public">riaps::Peripheral</innerclass>
+    <innernamespace refid="namespaceriaps">riaps</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Created<sp/>by<sp/>istvan<sp/>on<sp/>5/11/17.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>RIAPS_CORE_R_PERIPHERAL_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>RIAPS_CORE_R_PERIPHERAL_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;componentmodel/r_actor.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;map&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespaceriaps" kindref="compound">riaps</ref><sp/>{</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">Actor;</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16" refid="classriaps_1_1Peripheral" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classriaps_1_1Peripheral" kindref="compound">Peripheral</ref><sp/>{</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classriaps_1_1Peripheral" kindref="compound">Peripheral</ref>(<ref refid="classriaps_1_1Actor" kindref="compound">riaps::Actor</ref>*<sp/>parentActor);</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>~<ref refid="classriaps_1_1Peripheral" kindref="compound">Peripheral</ref>();</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>Setup(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;appName,</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;modelName,</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;typeName,</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::map&lt;std::string,<sp/>std::string&gt;<sp/>&amp;args);</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/>STATE<sp/>{<sp/>STARTING,<sp/>INITIAL,<sp/>READY,<sp/>ACTIVE,<sp/>CHECKPOINTING,<sp/>INACTIVE,<sp/>PASSIVE,<sp/>DESTROYED};</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">protected</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>STATE<sp/>m_state;</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classriaps_1_1Actor" kindref="compound">riaps::Actor</ref>*<sp/>m_parentActor;</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="32"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/>//RIAPS_CORE_R_PERIPHERAL_H</highlight></codeline>
+    </programlisting>
+    <location file="/home/istvan/work/riaps-core/include/componentmodel/r_peripheral.h"/>
+  </compounddef>
+</doxygen>

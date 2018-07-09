@@ -1,0 +1,200 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="classriaps_1_1Peripheral" kind="class" language="C++" prot="public">
+    <compoundname>riaps::Peripheral</compoundname>
+      <sectiondef kind="public-type">
+      <memberdef kind="enum" id="classriaps_1_1Peripheral_1a1e1b0a873e65cf18077599d1f89d1661" prot="public" static="no">
+        <name>STATE</name>
+        <enumvalue id="classriaps_1_1Peripheral_1a1e1b0a873e65cf18077599d1f89d1661abe3224c80dbdba5f117e49b99c379503" prot="public">
+          <name>STARTING</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="classriaps_1_1Peripheral_1a1e1b0a873e65cf18077599d1f89d1661a3d7531b47e2c49cb03cb540c622abe3d" prot="public">
+          <name>INITIAL</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="classriaps_1_1Peripheral_1a1e1b0a873e65cf18077599d1f89d1661a3c50fe7cebd6ac38b6be809f61a97990" prot="public">
+          <name>READY</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="classriaps_1_1Peripheral_1a1e1b0a873e65cf18077599d1f89d1661a99c37dda49a36b668396ae14ec2a2898" prot="public">
+          <name>ACTIVE</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="classriaps_1_1Peripheral_1a1e1b0a873e65cf18077599d1f89d1661a1e9c858efc4ce734d603d25b9b3e8b78" prot="public">
+          <name>CHECKPOINTING</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="classriaps_1_1Peripheral_1a1e1b0a873e65cf18077599d1f89d1661a97bd9290c7b0c7a30e172fee1b59d5b3" prot="public">
+          <name>INACTIVE</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="classriaps_1_1Peripheral_1a1e1b0a873e65cf18077599d1f89d1661a33092646133c64e072edce5626383f56" prot="public">
+          <name>PASSIVE</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="classriaps_1_1Peripheral_1a1e1b0a873e65cf18077599d1f89d1661aa5995ee2bdb0da2e722d8f8306b9a138" prot="public">
+          <name>DESTROYED</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_peripheral.h" line="26" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_peripheral.h" bodystart="26" bodyend="26"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="protected-attrib">
+      <memberdef kind="variable" id="classriaps_1_1Peripheral_1a5dc3e97f62f7d509fe91fbcb5b178e10" prot="protected" static="no" mutable="no">
+        <type>STATE</type>
+        <definition>STATE riaps::Peripheral::m_state</definition>
+        <argsstring></argsstring>
+        <name>m_state</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_peripheral.h" line="29" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_peripheral.h" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1Peripheral_1a132d8467e2602981de0c4f96ecd3a7d9" prot="protected" static="no" mutable="no">
+        <type><ref refid="classriaps_1_1Actor" kindref="compound">riaps::Actor</ref> *</type>
+        <definition>riaps::Actor* riaps::Peripheral::m_parentActor</definition>
+        <argsstring></argsstring>
+        <name>m_parentActor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_peripheral.h" line="30" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_peripheral.h" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classriaps_1_1Peripheral_1aa3f1da472fbda688fa5475f195fc4a5b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>riaps::Peripheral::Peripheral</definition>
+        <argsstring>(riaps::Actor *parentActor)</argsstring>
+        <name>Peripheral</name>
+        <param>
+          <type><ref refid="classriaps_1_1Actor" kindref="compound">riaps::Actor</ref> *</type>
+          <declname>parentActor</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_peripheral.h" line="18" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1Peripheral_1a3841858c0988b9b0c97569080e92c8c3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>riaps::Peripheral::~Peripheral</definition>
+        <argsstring>()</argsstring>
+        <name>~Peripheral</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_peripheral.h" line="19" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1Peripheral_1acf6a3c4fba225abf489b8c0f0e0b68d0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void riaps::Peripheral::Setup</definition>
+        <argsstring>(const std::string &amp;appName, const std::string &amp;modelName, const std::string &amp;typeName, const std::map&lt; std::string, std::string &gt; &amp;args)</argsstring>
+        <name>Setup</name>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>appName</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>modelName</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>typeName</declname>
+        </param>
+        <param>
+          <type>const std::map&lt; std::string, std::string &gt; &amp;</type>
+          <declname>args</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_peripheral.h" line="21" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="544">
+        <label>riaps::Actor</label>
+        <link refid="classriaps_1_1Actor"/>
+        <childnode refid="544" relation="usage">
+          <edgelabel>CurrentActor</edgelabel>
+        </childnode>
+      </node>
+      <node id="543">
+        <label>riaps::Peripheral</label>
+        <link refid="classriaps_1_1Peripheral"/>
+        <childnode refid="544" relation="usage">
+          <edgelabel>m_parentActor</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/home/istvan/work/riaps-core/include/componentmodel/r_peripheral.h" line="16" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_peripheral.h" bodystart="16" bodyend="31"/>
+    <listofallmembers>
+      <member refid="classriaps_1_1Peripheral_1a1e1b0a873e65cf18077599d1f89d1661a99c37dda49a36b668396ae14ec2a2898" prot="public" virt="non-virtual"><scope>riaps::Peripheral</scope><name>ACTIVE</name></member>
+      <member refid="classriaps_1_1Peripheral_1a1e1b0a873e65cf18077599d1f89d1661a1e9c858efc4ce734d603d25b9b3e8b78" prot="public" virt="non-virtual"><scope>riaps::Peripheral</scope><name>CHECKPOINTING</name></member>
+      <member refid="classriaps_1_1Peripheral_1a1e1b0a873e65cf18077599d1f89d1661aa5995ee2bdb0da2e722d8f8306b9a138" prot="public" virt="non-virtual"><scope>riaps::Peripheral</scope><name>DESTROYED</name></member>
+      <member refid="classriaps_1_1Peripheral_1a1e1b0a873e65cf18077599d1f89d1661a97bd9290c7b0c7a30e172fee1b59d5b3" prot="public" virt="non-virtual"><scope>riaps::Peripheral</scope><name>INACTIVE</name></member>
+      <member refid="classriaps_1_1Peripheral_1a1e1b0a873e65cf18077599d1f89d1661a3d7531b47e2c49cb03cb540c622abe3d" prot="public" virt="non-virtual"><scope>riaps::Peripheral</scope><name>INITIAL</name></member>
+      <member refid="classriaps_1_1Peripheral_1a132d8467e2602981de0c4f96ecd3a7d9" prot="protected" virt="non-virtual"><scope>riaps::Peripheral</scope><name>m_parentActor</name></member>
+      <member refid="classriaps_1_1Peripheral_1a5dc3e97f62f7d509fe91fbcb5b178e10" prot="protected" virt="non-virtual"><scope>riaps::Peripheral</scope><name>m_state</name></member>
+      <member refid="classriaps_1_1Peripheral_1a1e1b0a873e65cf18077599d1f89d1661a33092646133c64e072edce5626383f56" prot="public" virt="non-virtual"><scope>riaps::Peripheral</scope><name>PASSIVE</name></member>
+      <member refid="classriaps_1_1Peripheral_1aa3f1da472fbda688fa5475f195fc4a5b" prot="public" virt="non-virtual"><scope>riaps::Peripheral</scope><name>Peripheral</name></member>
+      <member refid="classriaps_1_1Peripheral_1a1e1b0a873e65cf18077599d1f89d1661a3c50fe7cebd6ac38b6be809f61a97990" prot="public" virt="non-virtual"><scope>riaps::Peripheral</scope><name>READY</name></member>
+      <member refid="classriaps_1_1Peripheral_1acf6a3c4fba225abf489b8c0f0e0b68d0" prot="public" virt="non-virtual"><scope>riaps::Peripheral</scope><name>Setup</name></member>
+      <member refid="classriaps_1_1Peripheral_1a1e1b0a873e65cf18077599d1f89d1661abe3224c80dbdba5f117e49b99c379503" prot="public" virt="non-virtual"><scope>riaps::Peripheral</scope><name>STARTING</name></member>
+      <member refid="classriaps_1_1Peripheral_1a1e1b0a873e65cf18077599d1f89d1661" prot="public" virt="non-virtual"><scope>riaps::Peripheral</scope><name>STATE</name></member>
+      <member refid="classriaps_1_1Peripheral_1a3841858c0988b9b0c97569080e92c8c3" prot="public" virt="non-virtual"><scope>riaps::Peripheral</scope><name>~Peripheral</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

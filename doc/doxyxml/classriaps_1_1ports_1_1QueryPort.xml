@@ -1,0 +1,274 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="classriaps_1_1ports_1_1QueryPort" kind="class" language="C++" prot="public">
+    <compoundname>riaps::ports::QueryPort</compoundname>
+    <basecompoundref refid="classriaps_1_1ports_1_1PortBase" prot="public" virt="non-virtual">riaps::ports::PortBase</basecompoundref>
+      <sectiondef kind="protected-attrib">
+      <memberdef kind="variable" id="classriaps_1_1ports_1_1QueryPort_1ab6a805561249877a0d9cc458ee168b74" prot="protected" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool riaps::ports::QueryPort::m_isConnected</definition>
+        <argsstring></argsstring>
+        <name>m_isConnected</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_queryport.h" line="82" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/ports/r_queryport.h" bodystart="82" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1ports_1_1QueryPort_1aa3cc296147c97caca9c284fa9352f8a6" prot="protected" static="no" mutable="no">
+        <type>capnp::FlatArrayMessageReader</type>
+        <definition>capnp::FlatArrayMessageReader riaps::ports::QueryPort::m_capnpReader</definition>
+        <argsstring></argsstring>
+        <name>m_capnpReader</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_queryport.h" line="84" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/ports/r_queryport.h" bodystart="84" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1ports_1_1QueryPort_1a2b2405b5a15071f9d7cad0f376d658b1" prot="protected" static="no" mutable="no">
+        <type>zuuid_t *</type>
+        <definition>zuuid_t* riaps::ports::QueryPort::m_socketId</definition>
+        <argsstring></argsstring>
+        <name>m_socketId</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_queryport.h" line="88" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/ports/r_queryport.h" bodystart="88" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classriaps_1_1ports_1_1QueryPort_1a5cbdeb646874e0e8d1b7e09cbcfa18e0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>riaps::ports::QueryPort::QueryPort</definition>
+        <argsstring>(const component_port_qry &amp;config, const ComponentBase *component)</argsstring>
+        <name>QueryPort</name>
+        <param>
+          <type>const <ref refid="structcomponent__port__qry" kindref="compound">component_port_qry</ref> &amp;</type>
+          <declname>config</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classriaps_1_1ComponentBase" kindref="compound">ComponentBase</ref> *</type>
+          <declname>component</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_queryport.h" line="27" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1QueryPort_1a746baf25e5c9ef7998090d766d424812" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type>void</type>
+        <definition>virtual void riaps::ports::QueryPort::Init</definition>
+        <argsstring>()</argsstring>
+        <name>Init</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_queryport.h" line="28" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1QueryPort_1a66f2ca6d3e5560712e34998948fe112d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool riaps::ports::QueryPort::ConnectToResponse</definition>
+        <argsstring>(const std::string &amp;ansEndpoint)</argsstring>
+        <name>ConnectToResponse</name>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>ansEndpoint</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_queryport.h" line="31" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1QueryPort_1a456cc81940dc3cda7612a4d7208c0154" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class R</type>
+          </param>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type>bool</type>
+        <definition>bool riaps::ports::QueryPort::RecvQuery</definition>
+        <argsstring>(std::shared_ptr&lt; riaps::RiapsMessage&lt; R, T &gt;&gt; &amp;message, std::shared_ptr&lt; riaps::MessageParams &gt; &amp;params)</argsstring>
+        <name>RecvQuery</name>
+        <param>
+          <type>std::shared_ptr&lt; <ref refid="classriaps_1_1RiapsMessage" kindref="compound">riaps::RiapsMessage</ref>&lt; R, T &gt;&gt; &amp;</type>
+          <declname>message</declname>
+        </param>
+        <param>
+          <type>std::shared_ptr&lt; <ref refid="classriaps_1_1MessageParams" kindref="compound">riaps::MessageParams</ref> &gt; &amp;</type>
+          <declname>params</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+<para>|RequestId|Message|Timestamp|</para>        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_queryport.h" line="34" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/ports/r_queryport.h" bodystart="34" bodyend="51"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1QueryPort_1a9b46818b7dfb883900764a88c28d2c77" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool riaps::ports::QueryPort::SendQuery</definition>
+        <argsstring>(capnp::MallocMessageBuilder &amp;message, std::string &amp;requestId, bool addTimestamp=false) const </argsstring>
+        <name>SendQuery</name>
+        <param>
+          <type>capnp::MallocMessageBuilder &amp;</type>
+          <declname>message</declname>
+        </param>
+        <param>
+          <type>std::string &amp;</type>
+          <declname>requestId</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>addTimestamp</declname>
+          <defval>false</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Converts the passed capnp message to bytes and sends the bytearray.</para><para>The message frame is extended:</para><para>*-------<mdash/>* | FRAME 0 | -&gt; socket id (automatically set by ZMQ) +-------<mdash/>+ | FRAME 1 | -&gt; requestId (ZMQ generated unique id, zuuid_t struct represented as string) +-------<mdash/>+ | FRAME 2 | -&gt; the message to be sent, converted to bytes +-------<mdash/>+ | FRAME 3 | -&gt; timestamp (added by the framework, if addTimestamp parameter is true) +-------<mdash/>+</para><para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>message</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The message to be sent. </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>addTimestamp</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if true, timestamp is added as payload. using the system clock (NOT the mono clock) </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Request id. Response also contains it. Empty string if the Send() failed. </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_queryport.h" line="74" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1QueryPort_1acfb6d7067e95eba5f3d821291592ecbf" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type><ref refid="classriaps_1_1ports_1_1QueryPort" kindref="compound">QueryPort</ref> *</type>
+        <definition>virtual QueryPort* riaps::ports::QueryPort::AsQueryPort</definition>
+        <argsstring>()</argsstring>
+        <name>AsQueryPort</name>
+        <reimplements refid="classriaps_1_1ports_1_1PortBase_1a4bf856bf3fcbe292abf49c1d2d6ead4b">AsQueryPort</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_queryport.h" line="76" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1QueryPort_1af53c32c9835ec1b3b1c4b19bad602c71" prot="public" static="no" const="yes" explicit="no" inline="no" virt="virtual">
+        <type>const <ref refid="structcomponent__port__qry" kindref="compound">component_port_qry</ref> *</type>
+        <definition>virtual const component_port_qry* riaps::ports::QueryPort::GetConfig</definition>
+        <argsstring>() const </argsstring>
+        <name>GetConfig</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_queryport.h" line="78" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1QueryPort_1ac8ce554d45cc7c99a33483f0b4e8b6bb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>riaps::ports::QueryPort::~QueryPort</definition>
+        <argsstring>() noexcept</argsstring>
+        <name>~QueryPort</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_queryport.h" line="80" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="596">
+        <label>riaps::ports::PortBase</label>
+        <link refid="classriaps_1_1ports_1_1PortBase"/>
+      </node>
+      <node id="595">
+        <label>riaps::ports::QueryPort</label>
+        <link refid="classriaps_1_1ports_1_1QueryPort"/>
+        <childnode refid="596" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="598">
+        <label>riaps::ports::PortBase</label>
+        <link refid="classriaps_1_1ports_1_1PortBase"/>
+      </node>
+      <node id="597">
+        <label>riaps::ports::QueryPort</label>
+        <link refid="classriaps_1_1ports_1_1QueryPort"/>
+        <childnode refid="598" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_queryport.h" line="24" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/ports/r_queryport.h" bodystart="24" bodyend="90"/>
+    <listofallmembers>
+      <member refid="classriaps_1_1ports_1_1PortBase_1abdf423b8960ed3e0182dc0e397bdb067" prot="public" virt="virtual"><scope>riaps::ports::QueryPort</scope><name>AsAnswerPort</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a606bc38f681830c4525a4ab203840260" prot="public" virt="virtual"><scope>riaps::ports::QueryPort</scope><name>AsGroupPublishPort</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a90527a72d9c4edce850c49b43bf24834" prot="public" virt="virtual"><scope>riaps::ports::QueryPort</scope><name>AsGroupSubscriberPort</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a6605ebeb4a10da371b32dce46825af56" prot="public" virt="virtual"><scope>riaps::ports::QueryPort</scope><name>AsInsidePort</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a0c7881243184086c94d76334d68098e7" prot="public" virt="virtual"><scope>riaps::ports::QueryPort</scope><name>AsPublishPort</name></member>
+      <member refid="classriaps_1_1ports_1_1QueryPort_1acfb6d7067e95eba5f3d821291592ecbf" prot="public" virt="virtual"><scope>riaps::ports::QueryPort</scope><name>AsQueryPort</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a652f4b02a2f5fb806cd5f7b96c3b1f48" prot="public" virt="virtual"><scope>riaps::ports::QueryPort</scope><name>AsRecvPort</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a5772ee01b85721a9367d0b0602823a25" prot="public" virt="virtual"><scope>riaps::ports::QueryPort</scope><name>AsRequestPort</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a133fe860a48361cd0b83f8ae891d6f62" prot="public" virt="virtual"><scope>riaps::ports::QueryPort</scope><name>AsResponsePort</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a19d7f0a48e2725a2778473ad0bbb0a98" prot="public" virt="virtual"><scope>riaps::ports::QueryPort</scope><name>AsSubscribePort</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a4924044fb72f752c6a366b38ac42c105" prot="public" virt="virtual"><scope>riaps::ports::QueryPort</scope><name>AsTimerPort</name></member>
+      <member refid="classriaps_1_1ports_1_1QueryPort_1a66f2ca6d3e5560712e34998948fe112d" prot="public" virt="non-virtual"><scope>riaps::ports::QueryPort</scope><name>ConnectToResponse</name></member>
+      <member refid="classriaps_1_1ports_1_1QueryPort_1af53c32c9835ec1b3b1c4b19bad602c71" prot="public" virt="virtual"><scope>riaps::ports::QueryPort</scope><name>GetConfig</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a1d0c5bead7c8c0938a2a89285493735e" prot="public" virt="non-virtual"><scope>riaps::ports::QueryPort</scope><name>GetParentComponent</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a0db04f047fd5a60c903d0ad859f73a39" prot="public" virt="virtual"><scope>riaps::ports::QueryPort</scope><name>GetPortBaseConfig</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a9a1e459dcad1ee8de0b65bbb205c4018" prot="public" virt="virtual"><scope>riaps::ports::QueryPort</scope><name>GetPortName</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a457594248f0e87737fb762c3af4ab432" prot="public" virt="non-virtual"><scope>riaps::ports::QueryPort</scope><name>GetPortType</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a6383aa77a6ce27b786926d215b902b4d" prot="public" virt="virtual"><scope>riaps::ports::QueryPort</scope><name>GetSocket</name></member>
+      <member refid="classriaps_1_1ports_1_1QueryPort_1a746baf25e5c9ef7998090d766d424812" prot="public" virt="virtual"><scope>riaps::ports::QueryPort</scope><name>Init</name></member>
+      <member refid="classriaps_1_1ports_1_1QueryPort_1aa3cc296147c97caca9c284fa9352f8a6" prot="protected" virt="non-virtual"><scope>riaps::ports::QueryPort</scope><name>m_capnpReader</name></member>
+      <member refid="classriaps_1_1ports_1_1QueryPort_1ab6a805561249877a0d9cc458ee168b74" prot="protected" virt="non-virtual"><scope>riaps::ports::QueryPort</scope><name>m_isConnected</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a76e350bc9cefa58cd2978aabc64ef1cb" prot="protected" virt="non-virtual"><scope>riaps::ports::QueryPort</scope><name>m_logger</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1aaeee614c0de553c6e1bc560c31930b5f" prot="protected" virt="non-virtual"><scope>riaps::ports::QueryPort</scope><name>m_port_socket</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1af558a31ff1bc2a35af92d92757971df9" prot="protected" virt="non-virtual"><scope>riaps::ports::QueryPort</scope><name>m_port_type</name></member>
+      <member refid="classriaps_1_1ports_1_1QueryPort_1a2b2405b5a15071f9d7cad0f376d658b1" prot="protected" virt="non-virtual"><scope>riaps::ports::QueryPort</scope><name>m_socketId</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a884c1d1d23bc78b121633498bdd913ce" prot="public" virt="non-virtual"><scope>riaps::ports::QueryPort</scope><name>PortBase</name></member>
+      <member refid="classriaps_1_1ports_1_1QueryPort_1a5cbdeb646874e0e8d1b7e09cbcfa18e0" prot="public" virt="non-virtual"><scope>riaps::ports::QueryPort</scope><name>QueryPort</name></member>
+      <member refid="classriaps_1_1ports_1_1QueryPort_1a456cc81940dc3cda7612a4d7208c0154" prot="public" virt="non-virtual"><scope>riaps::ports::QueryPort</scope><name>RecvQuery</name></member>
+      <member refid="classriaps_1_1ports_1_1QueryPort_1a9b46818b7dfb883900764a88c28d2c77" prot="public" virt="non-virtual"><scope>riaps::ports::QueryPort</scope><name>SendQuery</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1ab88e9df5c9ec106946a2ee4519e2c1ac" prot="public" virt="virtual"><scope>riaps::ports::QueryPort</scope><name>~PortBase</name></member>
+      <member refid="classriaps_1_1ports_1_1QueryPort_1ac8ce554d45cc7c99a33483f0b4e8b6bb" prot="public" virt="non-virtual"><scope>riaps::ports::QueryPort</scope><name>~QueryPort</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

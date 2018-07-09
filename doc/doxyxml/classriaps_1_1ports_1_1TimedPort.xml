@@ -1,0 +1,218 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="classriaps_1_1ports_1_1TimedPort" kind="class" language="C++" prot="public">
+    <compoundname>riaps::ports::TimedPort</compoundname>
+    <derivedcompoundref refid="classriaps_1_1ports_1_1RecvPort" prot="public" virt="non-virtual">riaps::ports::RecvPort</derivedcompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classriaps_1_1ports_1_1TimedPort_1a9da7c6a9a26e40a5b144ce5fa4427429" prot="private" static="no" mutable="no">
+        <type>timespec</type>
+        <definition>timespec riaps::ports::TimedPort::m_recvTimestamp</definition>
+        <argsstring></argsstring>
+        <name>m_recvTimestamp</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_timedport.h" line="33" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/ports/r_timedport.h" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1ports_1_1TimedPort_1aac371d3a559dae466d5b2089755549c7" prot="private" static="no" mutable="no">
+        <type>timespec</type>
+        <definition>timespec riaps::ports::TimedPort::m_sentTimestamp</definition>
+        <argsstring></argsstring>
+        <name>m_sentTimestamp</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_timedport.h" line="34" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/ports/r_timedport.h" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classriaps_1_1ports_1_1TimedPort_1af27856196ca7777eb049ce8760abc411" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>riaps::ports::TimedPort::TimedPort</definition>
+        <argsstring>()</argsstring>
+        <name>TimedPort</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_timedport.h" line="14" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1TimedPort_1a3e377079dcd26c57784b8e0f03df40df" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>riaps::ports::TimedPort::~TimedPort</definition>
+        <argsstring>()=default</argsstring>
+        <name>~TimedPort</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_timedport.h" line="15" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1TimedPort_1a11ecce443a0f66cdabca02f120d974a8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>const timespec</type>
+        <definition>const timespec riaps::ports::TimedPort::GetLastRecvTimestamp</definition>
+        <argsstring>()</argsstring>
+        <name>GetLastRecvTimestamp</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_timedport.h" line="17" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1TimedPort_1a833a7266cd56e3eb54a9277e80eace73" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>const timespec</type>
+        <definition>const timespec riaps::ports::TimedPort::GetLastSendTimestamp</definition>
+        <argsstring>()</argsstring>
+        <name>GetLastSendTimestamp</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_timedport.h" line="18" column="1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="protected-func">
+      <memberdef kind="function" id="classriaps_1_1ports_1_1TimedPort_1aa3f3a8207eae0051e8af2540aca7cd34" prot="protected" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void riaps::ports::TimedPort::SetRecvTimestamp</definition>
+        <argsstring>(double t_recvTimestamp)</argsstring>
+        <name>SetRecvTimestamp</name>
+        <param>
+          <type>double</type>
+          <declname>t_recvTimestamp</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_timedport.h" line="24" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1TimedPort_1a81a475f2e29c49357e7ec2453e74562c" prot="protected" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void riaps::ports::TimedPort::SetSendTimestamp</definition>
+        <argsstring>(double t_sentTimestamp)</argsstring>
+        <name>SetSendTimestamp</name>
+        <param>
+          <type>double</type>
+          <declname>t_sentTimestamp</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_timedport.h" line="25" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1TimedPort_1a7d7ac92d308241edcb9d0e5f48f39f05" prot="protected" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void riaps::ports::TimedPort::SetRecvTimestamp</definition>
+        <argsstring>(timespec t_recvTimestamp)</argsstring>
+        <name>SetRecvTimestamp</name>
+        <param>
+          <type>timespec</type>
+          <declname>t_recvTimestamp</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_timedport.h" line="27" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1TimedPort_1a8a8f27004609916396b480eb96ea50c2" prot="protected" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void riaps::ports::TimedPort::SetSendTimestamp</definition>
+        <argsstring>(timespec t_sentTimestamp)</argsstring>
+        <name>SetSendTimestamp</name>
+        <param>
+          <type>timespec</type>
+          <declname>t_sentTimestamp</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_timedport.h" line="28" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="668">
+        <label>riaps::ports::SubscriberPortBase</label>
+        <link refid="classriaps_1_1ports_1_1SubscriberPortBase"/>
+        <childnode refid="665" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="665">
+        <label>riaps::ports::RecvPort</label>
+        <link refid="classriaps_1_1ports_1_1RecvPort"/>
+        <childnode refid="664" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="670">
+        <label>riaps::ports::SubscriberPort</label>
+        <link refid="classriaps_1_1ports_1_1SubscriberPort"/>
+        <childnode refid="668" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="666">
+        <label>riaps::ports::RequestPort</label>
+        <link refid="classriaps_1_1ports_1_1RequestPort"/>
+        <childnode refid="665" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="664">
+        <label>riaps::ports::TimedPort</label>
+        <link refid="classriaps_1_1ports_1_1TimedPort"/>
+      </node>
+      <node id="669">
+        <label>riaps::ports::GroupSubscriberPort</label>
+        <link refid="classriaps_1_1ports_1_1GroupSubscriberPort"/>
+        <childnode refid="668" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="667">
+        <label>riaps::ports::ResponsePort</label>
+        <link refid="classriaps_1_1ports_1_1ResponsePort"/>
+        <childnode refid="665" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_timedport.h" line="12" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/ports/r_timedport.h" bodystart="12" bodyend="35"/>
+    <listofallmembers>
+      <member refid="classriaps_1_1ports_1_1TimedPort_1a11ecce443a0f66cdabca02f120d974a8" prot="public" virt="non-virtual"><scope>riaps::ports::TimedPort</scope><name>GetLastRecvTimestamp</name></member>
+      <member refid="classriaps_1_1ports_1_1TimedPort_1a833a7266cd56e3eb54a9277e80eace73" prot="public" virt="non-virtual"><scope>riaps::ports::TimedPort</scope><name>GetLastSendTimestamp</name></member>
+      <member refid="classriaps_1_1ports_1_1TimedPort_1a9da7c6a9a26e40a5b144ce5fa4427429" prot="private" virt="non-virtual"><scope>riaps::ports::TimedPort</scope><name>m_recvTimestamp</name></member>
+      <member refid="classriaps_1_1ports_1_1TimedPort_1aac371d3a559dae466d5b2089755549c7" prot="private" virt="non-virtual"><scope>riaps::ports::TimedPort</scope><name>m_sentTimestamp</name></member>
+      <member refid="classriaps_1_1ports_1_1TimedPort_1aa3f3a8207eae0051e8af2540aca7cd34" prot="protected" virt="non-virtual"><scope>riaps::ports::TimedPort</scope><name>SetRecvTimestamp</name></member>
+      <member refid="classriaps_1_1ports_1_1TimedPort_1a7d7ac92d308241edcb9d0e5f48f39f05" prot="protected" virt="non-virtual"><scope>riaps::ports::TimedPort</scope><name>SetRecvTimestamp</name></member>
+      <member refid="classriaps_1_1ports_1_1TimedPort_1a81a475f2e29c49357e7ec2453e74562c" prot="protected" virt="non-virtual"><scope>riaps::ports::TimedPort</scope><name>SetSendTimestamp</name></member>
+      <member refid="classriaps_1_1ports_1_1TimedPort_1a8a8f27004609916396b480eb96ea50c2" prot="protected" virt="non-virtual"><scope>riaps::ports::TimedPort</scope><name>SetSendTimestamp</name></member>
+      <member refid="classriaps_1_1ports_1_1TimedPort_1af27856196ca7777eb049ce8760abc411" prot="public" virt="non-virtual"><scope>riaps::ports::TimedPort</scope><name>TimedPort</name></member>
+      <member refid="classriaps_1_1ports_1_1TimedPort_1a3e377079dcd26c57784b8e0f03df40df" prot="public" virt="non-virtual"><scope>riaps::ports::TimedPort</scope><name>~TimedPort</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

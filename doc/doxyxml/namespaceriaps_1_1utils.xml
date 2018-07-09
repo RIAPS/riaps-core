@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="namespaceriaps_1_1utils" kind="namespace" language="C++">
+    <compoundname>riaps::utils</compoundname>
+    <innerclass refid="classriaps_1_1utils_1_1Timeout" prot="public">riaps::utils::Timeout</innerclass>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/istvan/work/riaps-core/include/utils/r_timeout.h" line="10" column="1"/>
+  </compounddef>
+</doxygen>

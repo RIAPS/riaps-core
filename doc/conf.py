@@ -13,7 +13,7 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 # import os
-# import sys
+import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
 
@@ -153,3 +153,9 @@ texinfo_documents = [
      author, 'RIAPS', 'One line description of project.',
      'Miscellaneous'),
 ]
+
+sys.path.append("/home/istvan/work/riaps-core/doc/ext/breathe/")
+extensions = ['sphinx.ext.todo', 'breathe']
+breathe_projects = {"riaps" : "/home/istvan/work/riaps-core/doc/doxyxml"}
+breathe_default_project = "riaps"
+

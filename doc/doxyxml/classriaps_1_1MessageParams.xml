@@ -1,0 +1,255 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="classriaps_1_1MessageParams" kind="class" language="C++" prot="public">
+    <compoundname>riaps::MessageParams</compoundname>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classriaps_1_1MessageParams_1aac99e9b165457aa369b4d47ed31d3beb" prot="private" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string riaps::MessageParams::_originId</definition>
+        <argsstring></argsstring>
+        <name>_originId</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_payload.h" line="33" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_payload.h" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1MessageParams_1ae0ce9c1494a7583e1f610b3e51119a1c" prot="private" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string riaps::MessageParams::_requestId</definition>
+        <argsstring></argsstring>
+        <name>_requestId</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_payload.h" line="34" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_payload.h" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1MessageParams_1a8885ce527f4c1789f62d02ae9663c81b" prot="private" static="no" mutable="no">
+        <type>zframe_t *</type>
+        <definition>zframe_t* riaps::MessageParams::_timestampFrame</definition>
+        <argsstring></argsstring>
+        <name>_timestampFrame</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_payload.h" line="35" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_payload.h" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1MessageParams_1a2b7bf7e9d521dfa0225bcb42df2ef09f" prot="private" static="no" mutable="no">
+        <type>int64_t</type>
+        <definition>int64_t riaps::MessageParams::_timestamp</definition>
+        <argsstring></argsstring>
+        <name>_timestamp</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_payload.h" line="36" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_payload.h" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1MessageParams_1a20b6174e8649a66ac389bcbdd3a58f8d" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool riaps::MessageParams::_hasTimestamp</definition>
+        <argsstring></argsstring>
+        <name>_hasTimestamp</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_payload.h" line="37" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_payload.h" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classriaps_1_1MessageParams_1a913ab69db44af76bf3de3ba17e8e1389" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>riaps::MessageParams::MessageParams</definition>
+        <argsstring>(char **originId, char **requestId, zframe_t **timestamp)</argsstring>
+        <name>MessageParams</name>
+        <param>
+          <type>char **</type>
+          <declname>originId</declname>
+        </param>
+        <param>
+          <type>char **</type>
+          <declname>requestId</declname>
+        </param>
+        <param>
+          <type>zframe_t **</type>
+          <declname>timestamp</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_payload.h" line="11" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1MessageParams_1ac99a02b36323af465a0cb30edb3f4ee1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>riaps::MessageParams::MessageParams</definition>
+        <argsstring>(const std::string &amp;originId, char **requestId, zframe_t **timestamp)</argsstring>
+        <name>MessageParams</name>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>originId</declname>
+        </param>
+        <param>
+          <type>char **</type>
+          <declname>requestId</declname>
+        </param>
+        <param>
+          <type>zframe_t **</type>
+          <declname>timestamp</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_payload.h" line="15" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1MessageParams_1a8e8701a0972e118ad80b5477c9e88081" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>riaps::MessageParams::MessageParams</definition>
+        <argsstring>(char **requestId, zframe_t **timestamp)</argsstring>
+        <name>MessageParams</name>
+        <param>
+          <type>char **</type>
+          <declname>requestId</declname>
+        </param>
+        <param>
+          <type>zframe_t **</type>
+          <declname>timestamp</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_payload.h" line="19" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1MessageParams_1ae7eb0c7e5b7120eb59b7221a21ef7097" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>const std::string &amp;</type>
+        <definition>const std::string&amp; riaps::MessageParams::GetOriginId</definition>
+        <argsstring>() const </argsstring>
+        <name>GetOriginId</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_payload.h" line="22" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1MessageParams_1a7d4786302687b83b369495320741733f" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>const std::string &amp;</type>
+        <definition>const std::string&amp; riaps::MessageParams::GetRequestId</definition>
+        <argsstring>() const </argsstring>
+        <name>GetRequestId</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_payload.h" line="23" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1MessageParams_1a149f90874ec4018758927a85b2a5e383" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>const int64_t</type>
+        <definition>const int64_t riaps::MessageParams::GetTimestamp</definition>
+        <argsstring>() const </argsstring>
+        <name>GetTimestamp</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_payload.h" line="24" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1MessageParams_1a2f2d788fd301574e4d2f2e9466e3b3bf" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool riaps::MessageParams::HasTimestamp</definition>
+        <argsstring>() const </argsstring>
+        <name>HasTimestamp</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_payload.h" line="25" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1MessageParams_1a6cb1a98404a0a216a180d7a36fc70cba" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type></type>
+        <definition>virtual riaps::MessageParams::~MessageParams</definition>
+        <argsstring>()</argsstring>
+        <name>~MessageParams</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_payload.h" line="28" column="1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="classriaps_1_1MessageParams_1a7520f69fc04386566d76ffff80979ed6" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void riaps::MessageParams::Init</definition>
+        <argsstring>(char **requestId, zframe_t **timestamp)</argsstring>
+        <name>Init</name>
+        <param>
+          <type>char **</type>
+          <declname>requestId</declname>
+        </param>
+        <param>
+          <type>zframe_t **</type>
+          <declname>timestamp</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_payload.h" line="31" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/istvan/work/riaps-core/include/componentmodel/r_payload.h" line="9" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_payload.h" bodystart="9" bodyend="38"/>
+    <listofallmembers>
+      <member refid="classriaps_1_1MessageParams_1a20b6174e8649a66ac389bcbdd3a58f8d" prot="private" virt="non-virtual"><scope>riaps::MessageParams</scope><name>_hasTimestamp</name></member>
+      <member refid="classriaps_1_1MessageParams_1aac99e9b165457aa369b4d47ed31d3beb" prot="private" virt="non-virtual"><scope>riaps::MessageParams</scope><name>_originId</name></member>
+      <member refid="classriaps_1_1MessageParams_1ae0ce9c1494a7583e1f610b3e51119a1c" prot="private" virt="non-virtual"><scope>riaps::MessageParams</scope><name>_requestId</name></member>
+      <member refid="classriaps_1_1MessageParams_1a2b7bf7e9d521dfa0225bcb42df2ef09f" prot="private" virt="non-virtual"><scope>riaps::MessageParams</scope><name>_timestamp</name></member>
+      <member refid="classriaps_1_1MessageParams_1a8885ce527f4c1789f62d02ae9663c81b" prot="private" virt="non-virtual"><scope>riaps::MessageParams</scope><name>_timestampFrame</name></member>
+      <member refid="classriaps_1_1MessageParams_1ae7eb0c7e5b7120eb59b7221a21ef7097" prot="public" virt="non-virtual"><scope>riaps::MessageParams</scope><name>GetOriginId</name></member>
+      <member refid="classriaps_1_1MessageParams_1a7d4786302687b83b369495320741733f" prot="public" virt="non-virtual"><scope>riaps::MessageParams</scope><name>GetRequestId</name></member>
+      <member refid="classriaps_1_1MessageParams_1a149f90874ec4018758927a85b2a5e383" prot="public" virt="non-virtual"><scope>riaps::MessageParams</scope><name>GetTimestamp</name></member>
+      <member refid="classriaps_1_1MessageParams_1a2f2d788fd301574e4d2f2e9466e3b3bf" prot="public" virt="non-virtual"><scope>riaps::MessageParams</scope><name>HasTimestamp</name></member>
+      <member refid="classriaps_1_1MessageParams_1a7520f69fc04386566d76ffff80979ed6" prot="private" virt="non-virtual"><scope>riaps::MessageParams</scope><name>Init</name></member>
+      <member refid="classriaps_1_1MessageParams_1a913ab69db44af76bf3de3ba17e8e1389" prot="public" virt="non-virtual"><scope>riaps::MessageParams</scope><name>MessageParams</name></member>
+      <member refid="classriaps_1_1MessageParams_1ac99a02b36323af465a0cb30edb3f4ee1" prot="public" virt="non-virtual"><scope>riaps::MessageParams</scope><name>MessageParams</name></member>
+      <member refid="classriaps_1_1MessageParams_1a8e8701a0972e118ad80b5477c9e88081" prot="public" virt="non-virtual"><scope>riaps::MessageParams</scope><name>MessageParams</name></member>
+      <member refid="classriaps_1_1MessageParams_1a6cb1a98404a0a216a180d7a36fc70cba" prot="public" virt="virtual"><scope>riaps::MessageParams</scope><name>~MessageParams</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

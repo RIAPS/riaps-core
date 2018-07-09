@@ -1,0 +1,221 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="classriaps_1_1ports_1_1RecvPort" kind="class" language="C++" prot="public">
+    <compoundname>riaps::ports::RecvPort</compoundname>
+    <basecompoundref refid="classriaps_1_1ports_1_1TimedPort" prot="public" virt="non-virtual">riaps::ports::TimedPort</basecompoundref>
+    <derivedcompoundref refid="classriaps_1_1ports_1_1RequestPort" prot="public" virt="non-virtual">riaps::ports::RequestPort</derivedcompoundref>
+    <derivedcompoundref refid="classriaps_1_1ports_1_1ResponsePort" prot="public" virt="non-virtual">riaps::ports::ResponsePort</derivedcompoundref>
+    <derivedcompoundref refid="classriaps_1_1ports_1_1SubscriberPortBase" prot="public" virt="non-virtual">riaps::ports::SubscriberPortBase</derivedcompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classriaps_1_1ports_1_1RecvPort_1ae17f4ca2de457a388a7ea38c6c8856e1" prot="private" static="no" mutable="no">
+        <type><ref refid="classriaps_1_1ports_1_1PortBase" kindref="compound">PortBase</ref> *</type>
+        <definition>PortBase* riaps::ports::RecvPort::m_port</definition>
+        <argsstring></argsstring>
+        <name>m_port</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_recvport.h" line="34" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/ports/r_recvport.h" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1ports_1_1RecvPort_1ad9e33b34907f5c12ec90abc730b1b5d9" prot="private" static="no" mutable="no">
+        <type>std::shared_ptr&lt; zmsg_t &gt;</type>
+        <definition>std::shared_ptr&lt;zmsg_t&gt; riaps::ports::RecvPort::m_lastZmsg</definition>
+        <argsstring></argsstring>
+        <name>m_lastZmsg</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_recvport.h" line="35" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/ports/r_recvport.h" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1ports_1_1RecvPort_1a0e5f3c0a3cdbd81eee270151d7a009ae" prot="private" static="no" mutable="no">
+        <type>std::shared_ptr&lt; zframe_t &gt;</type>
+        <definition>std::shared_ptr&lt;zframe_t&gt; riaps::ports::RecvPort::m_lastFrm</definition>
+        <argsstring></argsstring>
+        <name>m_lastFrm</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_recvport.h" line="36" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/ports/r_recvport.h" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1ports_1_1RecvPort_1a35ac45e7ca38e704cc48fff16fee05eb" prot="private" static="no" mutable="no">
+        <type>std::shared_ptr&lt; capnp::FlatArrayMessageReader &gt;</type>
+        <definition>std::shared_ptr&lt;capnp::FlatArrayMessageReader&gt; riaps::ports::RecvPort::m_lastCapnpReader</definition>
+        <argsstring></argsstring>
+        <name>m_lastCapnpReader</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_recvport.h" line="37" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/ports/r_recvport.h" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classriaps_1_1ports_1_1RecvPort_1a19d2688a6446d4d813d9dd41a1c1606e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>riaps::ports::RecvPort::RecvPort</definition>
+        <argsstring>(PortBase *portBase)</argsstring>
+        <name>RecvPort</name>
+        <param>
+          <type><ref refid="classriaps_1_1ports_1_1PortBase" kindref="compound">PortBase</ref> *</type>
+          <declname>portBase</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_recvport.h" line="24" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1RecvPort_1a4ffc42917ccb62f02c24d582e21c3ba7" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type>std::shared_ptr&lt; capnp::FlatArrayMessageReader &gt;</type>
+        <definition>virtual std::shared_ptr&lt;capnp::FlatArrayMessageReader&gt; riaps::ports::RecvPort::Recv</definition>
+        <argsstring>()</argsstring>
+        <name>Recv</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_recvport.h" line="26" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1RecvPort_1a24f21b596ddfebf1b8eccc3a38ce3555" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type>std::shared_ptr&lt; capnp::FlatArrayMessageReader &gt;</type>
+        <definition>virtual std::shared_ptr&lt;capnp::FlatArrayMessageReader&gt; riaps::ports::RecvPort::Recv</definition>
+        <argsstring>(zsock_t *socket)</argsstring>
+        <name>Recv</name>
+        <param>
+          <type>zsock_t *</type>
+          <declname>socket</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_recvport.h" line="27" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1RecvPort_1a3411961d493fb1daa11f7f53257cfd70" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type>std::shared_ptr&lt; capnp::FlatArrayMessageReader &gt;</type>
+        <definition>virtual std::shared_ptr&lt;capnp::FlatArrayMessageReader&gt; riaps::ports::RecvPort::Recv</definition>
+        <argsstring>(zmsg_t *msg)</argsstring>
+        <name>Recv</name>
+        <param>
+          <type>zmsg_t *</type>
+          <declname>msg</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_recvport.h" line="28" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1RecvPort_1a86e66fd7329b75991e47f03477ca5277" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type></type>
+        <definition>virtual riaps::ports::RecvPort::~RecvPort</definition>
+        <argsstring>()=default</argsstring>
+        <name>~RecvPort</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_recvport.h" line="30" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="603">
+        <label>riaps::ports::SubscriberPortBase</label>
+        <link refid="classriaps_1_1ports_1_1SubscriberPortBase"/>
+        <childnode refid="599" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="599">
+        <label>riaps::ports::RecvPort</label>
+        <link refid="classriaps_1_1ports_1_1RecvPort"/>
+        <childnode refid="600" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="605">
+        <label>riaps::ports::SubscriberPort</label>
+        <link refid="classriaps_1_1ports_1_1SubscriberPort"/>
+        <childnode refid="603" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="601">
+        <label>riaps::ports::RequestPort</label>
+        <link refid="classriaps_1_1ports_1_1RequestPort"/>
+        <childnode refid="599" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="600">
+        <label>riaps::ports::TimedPort</label>
+        <link refid="classriaps_1_1ports_1_1TimedPort"/>
+      </node>
+      <node id="604">
+        <label>riaps::ports::GroupSubscriberPort</label>
+        <link refid="classriaps_1_1ports_1_1GroupSubscriberPort"/>
+        <childnode refid="603" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="602">
+        <label>riaps::ports::ResponsePort</label>
+        <link refid="classriaps_1_1ports_1_1ResponsePort"/>
+        <childnode refid="599" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="606">
+        <label>riaps::ports::RecvPort</label>
+        <link refid="classriaps_1_1ports_1_1RecvPort"/>
+        <childnode refid="607" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="607">
+        <label>riaps::ports::TimedPort</label>
+        <link refid="classriaps_1_1ports_1_1TimedPort"/>
+      </node>
+    </collaborationgraph>
+    <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_recvport.h" line="21" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/ports/r_recvport.h" bodystart="21" bodyend="39"/>
+    <listofallmembers>
+      <member refid="classriaps_1_1ports_1_1TimedPort_1a11ecce443a0f66cdabca02f120d974a8" prot="public" virt="non-virtual"><scope>riaps::ports::RecvPort</scope><name>GetLastRecvTimestamp</name></member>
+      <member refid="classriaps_1_1ports_1_1TimedPort_1a833a7266cd56e3eb54a9277e80eace73" prot="public" virt="non-virtual"><scope>riaps::ports::RecvPort</scope><name>GetLastSendTimestamp</name></member>
+      <member refid="classriaps_1_1ports_1_1RecvPort_1a35ac45e7ca38e704cc48fff16fee05eb" prot="private" virt="non-virtual"><scope>riaps::ports::RecvPort</scope><name>m_lastCapnpReader</name></member>
+      <member refid="classriaps_1_1ports_1_1RecvPort_1a0e5f3c0a3cdbd81eee270151d7a009ae" prot="private" virt="non-virtual"><scope>riaps::ports::RecvPort</scope><name>m_lastFrm</name></member>
+      <member refid="classriaps_1_1ports_1_1RecvPort_1ad9e33b34907f5c12ec90abc730b1b5d9" prot="private" virt="non-virtual"><scope>riaps::ports::RecvPort</scope><name>m_lastZmsg</name></member>
+      <member refid="classriaps_1_1ports_1_1RecvPort_1ae17f4ca2de457a388a7ea38c6c8856e1" prot="private" virt="non-virtual"><scope>riaps::ports::RecvPort</scope><name>m_port</name></member>
+      <member refid="classriaps_1_1ports_1_1RecvPort_1a4ffc42917ccb62f02c24d582e21c3ba7" prot="public" virt="virtual"><scope>riaps::ports::RecvPort</scope><name>Recv</name></member>
+      <member refid="classriaps_1_1ports_1_1RecvPort_1a24f21b596ddfebf1b8eccc3a38ce3555" prot="public" virt="virtual"><scope>riaps::ports::RecvPort</scope><name>Recv</name></member>
+      <member refid="classriaps_1_1ports_1_1RecvPort_1a3411961d493fb1daa11f7f53257cfd70" prot="public" virt="virtual"><scope>riaps::ports::RecvPort</scope><name>Recv</name></member>
+      <member refid="classriaps_1_1ports_1_1RecvPort_1a19d2688a6446d4d813d9dd41a1c1606e" prot="public" virt="non-virtual"><scope>riaps::ports::RecvPort</scope><name>RecvPort</name></member>
+      <member refid="classriaps_1_1ports_1_1TimedPort_1aa3f3a8207eae0051e8af2540aca7cd34" prot="protected" virt="non-virtual"><scope>riaps::ports::RecvPort</scope><name>SetRecvTimestamp</name></member>
+      <member refid="classriaps_1_1ports_1_1TimedPort_1a7d7ac92d308241edcb9d0e5f48f39f05" prot="protected" virt="non-virtual"><scope>riaps::ports::RecvPort</scope><name>SetRecvTimestamp</name></member>
+      <member refid="classriaps_1_1ports_1_1TimedPort_1a81a475f2e29c49357e7ec2453e74562c" prot="protected" virt="non-virtual"><scope>riaps::ports::RecvPort</scope><name>SetSendTimestamp</name></member>
+      <member refid="classriaps_1_1ports_1_1TimedPort_1a8a8f27004609916396b480eb96ea50c2" prot="protected" virt="non-virtual"><scope>riaps::ports::RecvPort</scope><name>SetSendTimestamp</name></member>
+      <member refid="classriaps_1_1ports_1_1TimedPort_1af27856196ca7777eb049ce8760abc411" prot="public" virt="non-virtual"><scope>riaps::ports::RecvPort</scope><name>TimedPort</name></member>
+      <member refid="classriaps_1_1ports_1_1RecvPort_1a86e66fd7329b75991e47f03477ca5277" prot="public" virt="virtual"><scope>riaps::ports::RecvPort</scope><name>~RecvPort</name></member>
+      <member refid="classriaps_1_1ports_1_1TimedPort_1a3e377079dcd26c57784b8e0f03df40df" prot="public" virt="non-virtual"><scope>riaps::ports::RecvPort</scope><name>~TimedPort</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

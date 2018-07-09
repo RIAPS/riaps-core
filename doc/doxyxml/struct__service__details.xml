@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="struct__service__details" kind="struct" language="C++" prot="public">
+    <compoundname>_service_details</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct__service__details_1af0ac450074fa6b0f95069f031ac46a7f" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string _service_details::service_id</definition>
+        <argsstring></argsstring>
+        <name>service_id</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_message.h" line="10" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_message.h" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__service__details_1a67df1948cd8dccd5a10169562ec56f7d" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string _service_details::service_name</definition>
+        <argsstring></argsstring>
+        <name>service_name</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_message.h" line="11" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_message.h" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__service__details_1a1dca5e4d1dcf71de7c7fefa0a7f6a8cf" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string _service_details::ip_address</definition>
+        <argsstring></argsstring>
+        <name>ip_address</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_message.h" line="12" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_message.h" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__service__details_1a372fdfc3b07983f37d5e1e39a3915690" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string _service_details::port</definition>
+        <argsstring></argsstring>
+        <name>port</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_message.h" line="13" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_message.h" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct__service__details_1a7fbfa3c7ba9ab555498574d403f998c9" prot="public" static="no" mutable="no">
+        <type>std::vector&lt; std::string &gt;</type>
+        <definition>std::vector&lt;std::string&gt; _service_details::tags</definition>
+        <argsstring></argsstring>
+        <name>tags</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_message.h" line="14" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_message.h" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="struct__service__details_1a10ffc5bf3de8b66cfd4c0e6c4d225e5c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool _service_details::operator==</definition>
+        <argsstring>(_service_details const &amp;rhs)</argsstring>
+        <name>operator==</name>
+        <param>
+          <type><ref refid="struct__service__details" kindref="compound">_service_details</ref> const &amp;</type>
+          <declname>rhs</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_message.h" line="16" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_message.h" bodystart="16" bodyend="24"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/istvan/work/riaps-core/include/utils/r_message.h" line="9" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_message.h" bodystart="9" bodyend="25"/>
+    <listofallmembers>
+      <member refid="struct__service__details_1a1dca5e4d1dcf71de7c7fefa0a7f6a8cf" prot="public" virt="non-virtual"><scope>_service_details</scope><name>ip_address</name></member>
+      <member refid="struct__service__details_1a10ffc5bf3de8b66cfd4c0e6c4d225e5c" prot="public" virt="non-virtual"><scope>_service_details</scope><name>operator==</name></member>
+      <member refid="struct__service__details_1a372fdfc3b07983f37d5e1e39a3915690" prot="public" virt="non-virtual"><scope>_service_details</scope><name>port</name></member>
+      <member refid="struct__service__details_1af0ac450074fa6b0f95069f031ac46a7f" prot="public" virt="non-virtual"><scope>_service_details</scope><name>service_id</name></member>
+      <member refid="struct__service__details_1a67df1948cd8dccd5a10169562ec56f7d" prot="public" virt="non-virtual"><scope>_service_details</scope><name>service_name</name></member>
+      <member refid="struct__service__details_1a7fbfa3c7ba9ab555498574d403f998c9" prot="public" virt="non-virtual"><scope>_service_details</scope><name>tags</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

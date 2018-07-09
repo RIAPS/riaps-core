@@ -1,0 +1,576 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="r__utils_8h" kind="file" language="C++">
+    <compoundname>r_utils.h</compoundname>
+    <includes refid="r__const_8h" local="no">const/r_const.h</includes>
+    <includes refid="r__timeout_8h" local="no">utils/r_timeout.h</includes>
+    <includes local="no">capnp/message.h</includes>
+    <includes local="no">capnp/serialize.h</includes>
+    <includes local="no">czmq.h</includes>
+    <includes local="no">spdlog/spdlog.h</includes>
+    <includes local="no">iostream</includes>
+    <includes local="no">memory</includes>
+    <includes local="no">string</includes>
+    <includes local="no">map</includes>
+    <includes local="no">vector</includes>
+    <includedby refid="r__actor_8h" local="no">/home/istvan/work/riaps-core/include/componentmodel/r_actor.h</includedby>
+    <includedby refid="r__commandlineparser_8h" local="no">/home/istvan/work/riaps-core/include/componentmodel/r_commandlineparser.h</includedby>
+    <includedby refid="r__devicethread_8h" local="no">/home/istvan/work/riaps-core/include/componentmodel/r_devicethread.h</includedby>
+    <includedby refid="r__riapsmessage_8h" local="no">/home/istvan/work/riaps-core/include/componentmodel/r_riapsmessage.h</includedby>
+    <incdepgraph>
+      <node id="1999">
+        <label>czmq.h</label>
+      </node>
+      <node id="1994">
+        <label>const/r_const.h</label>
+        <link refid="r__const_8h_source"/>
+      </node>
+      <node id="1998">
+        <label>capnp/serialize.h</label>
+      </node>
+      <node id="2003">
+        <label>string</label>
+      </node>
+      <node id="2004">
+        <label>map</label>
+      </node>
+      <node id="2000">
+        <label>spdlog/spdlog.h</label>
+      </node>
+      <node id="1995">
+        <label>utils/r_timeout.h</label>
+        <link refid="r__timeout_8h_source"/>
+        <childnode refid="1996" relation="include">
+        </childnode>
+      </node>
+      <node id="2005">
+        <label>vector</label>
+      </node>
+      <node id="2001">
+        <label>iostream</label>
+      </node>
+      <node id="1996">
+        <label>chrono</label>
+      </node>
+      <node id="1997">
+        <label>capnp/message.h</label>
+      </node>
+      <node id="1993">
+        <label>/home/istvan/work/riaps-core/include/utils/r_utils.h</label>
+        <link refid="r_utils.h"/>
+        <childnode refid="1994" relation="include">
+        </childnode>
+        <childnode refid="1995" relation="include">
+        </childnode>
+        <childnode refid="1997" relation="include">
+        </childnode>
+        <childnode refid="1998" relation="include">
+        </childnode>
+        <childnode refid="1999" relation="include">
+        </childnode>
+        <childnode refid="2000" relation="include">
+        </childnode>
+        <childnode refid="2001" relation="include">
+        </childnode>
+        <childnode refid="2002" relation="include">
+        </childnode>
+        <childnode refid="2003" relation="include">
+        </childnode>
+        <childnode refid="2004" relation="include">
+        </childnode>
+        <childnode refid="2005" relation="include">
+        </childnode>
+      </node>
+      <node id="2002">
+        <label>memory</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="2019">
+        <label>/home/istvan/work/riaps-core/include/device/r_deviceactor.h</label>
+        <link refid="r__deviceactor_8h_source"/>
+      </node>
+      <node id="2020">
+        <label>/home/istvan/work/riaps-core/include/groups/r_group.h</label>
+        <link refid="r__group_8h_source"/>
+        <childnode refid="2021" relation="include">
+        </childnode>
+        <childnode refid="2007" relation="include">
+        </childnode>
+        <childnode refid="2009" relation="include">
+        </childnode>
+        <childnode refid="2016" relation="include">
+        </childnode>
+        <childnode refid="2022" relation="include">
+        </childnode>
+      </node>
+      <node id="2022">
+        <label>/home/istvan/work/riaps-core/include/groups/r_grouplead.h</label>
+        <link refid="r__grouplead_8h_source"/>
+        <childnode refid="2020" relation="include">
+        </childnode>
+      </node>
+      <node id="2008">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_actor_main.h</label>
+        <link refid="r__actor__main_8h_source"/>
+      </node>
+      <node id="2015">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_deploapi.h</label>
+        <link refid="r__deploapi_8h_source"/>
+        <childnode refid="2007" relation="include">
+        </childnode>
+      </node>
+      <node id="2013">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_responseport.h</label>
+        <link refid="r__responseport_8h_source"/>
+        <childnode refid="2009" relation="include">
+        </childnode>
+      </node>
+      <node id="2012">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_requestport.h</label>
+        <link refid="r__requestport_8h_source"/>
+        <childnode refid="2009" relation="include">
+        </childnode>
+      </node>
+      <node id="2023">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_commandlineparser.h</label>
+        <link refid="r__commandlineparser_8h_source"/>
+      </node>
+      <node id="2011">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_queryport.h</label>
+        <link refid="r__queryport_8h_source"/>
+        <childnode refid="2009" relation="include">
+        </childnode>
+      </node>
+      <node id="2025">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_riapsmessage.h</label>
+        <link refid="r__riapsmessage_8h_source"/>
+        <childnode refid="2011" relation="include">
+        </childnode>
+      </node>
+      <node id="2017">
+        <label>/home/istvan/work/riaps-core/include/discoveryd/r_riaps_actor.h</label>
+        <link refid="r__riaps__actor_8h_source"/>
+      </node>
+      <node id="2016">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_discoverdapi.h</label>
+        <link refid="r__discoverdapi_8h_source"/>
+        <childnode refid="2007" relation="include">
+        </childnode>
+        <childnode refid="2009" relation="include">
+        </childnode>
+        <childnode refid="2017" relation="include">
+        </childnode>
+      </node>
+      <node id="2014">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_subscriberport.h</label>
+        <link refid="r__subscriberport_8h_source"/>
+        <childnode refid="2009" relation="include">
+        </childnode>
+      </node>
+      <node id="2010">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_answerport.h</label>
+        <link refid="r__answerport_8h_source"/>
+        <childnode refid="2009" relation="include">
+        </childnode>
+      </node>
+      <node id="2021">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_pubportgroup.h</label>
+        <link refid="r__pubportgroup_8h_source"/>
+        <childnode refid="2020" relation="include">
+        </childnode>
+      </node>
+      <node id="2018">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_peripheral.h</label>
+        <link refid="r__peripheral_8h_source"/>
+        <childnode refid="2007" relation="include">
+        </childnode>
+      </node>
+      <node id="2007">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_actor.h</label>
+        <link refid="r__actor_8h_source"/>
+        <childnode refid="2008" relation="include">
+        </childnode>
+        <childnode refid="2009" relation="include">
+        </childnode>
+        <childnode refid="2018" relation="include">
+        </childnode>
+        <childnode refid="2019" relation="include">
+        </childnode>
+        <childnode refid="2020" relation="include">
+        </childnode>
+      </node>
+      <node id="2009">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_componentbase.h</label>
+        <link refid="r__componentbase_8h_source"/>
+        <childnode refid="2010" relation="include">
+        </childnode>
+        <childnode refid="2011" relation="include">
+        </childnode>
+        <childnode refid="2012" relation="include">
+        </childnode>
+        <childnode refid="2013" relation="include">
+        </childnode>
+        <childnode refid="2014" relation="include">
+        </childnode>
+        <childnode refid="2007" relation="include">
+        </childnode>
+        <childnode refid="2015" relation="include">
+        </childnode>
+        <childnode refid="2016" relation="include">
+        </childnode>
+      </node>
+      <node id="2024">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_devicethread.h</label>
+        <link refid="r__devicethread_8h_source"/>
+      </node>
+      <node id="2006">
+        <label>/home/istvan/work/riaps-core/include/utils/r_utils.h</label>
+        <link refid="r_utils.h"/>
+        <childnode refid="2007" relation="include">
+        </childnode>
+        <childnode refid="2023" relation="include">
+        </childnode>
+        <childnode refid="2024" relation="include">
+        </childnode>
+        <childnode refid="2025" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="r__utils_8h_1a982e41b42ccf575e3744e087177d6bb1" prot="public" static="no">
+        <name>IPCACHE_TIMEOUT</name>
+        <initializer>30000</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Helper functions to maintain and debug the stored IP addresses from UDP beacons.</para><para><simplesect kind="author"><para>Istvan Madari </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_utils.h" line="28" column="9" bodyfile="/home/istvan/work/riaps-core/include/utils/r_utils.h" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="r__utils_8h_1afc852ef877eeb7a37261a1fb56dd0388" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void print_cacheips</definition>
+        <argsstring>(std::map&lt; std::string, riaps::utils::Timeout&lt; std::chrono::milliseconds &gt;&gt; &amp;ipcache, const std::string &amp;selfAddress)</argsstring>
+        <name>print_cacheips</name>
+        <param>
+          <type>std::map&lt; std::string, <ref refid="classriaps_1_1utils_1_1Timeout" kindref="compound">riaps::utils::Timeout</ref>&lt; std::chrono::milliseconds &gt;&gt; &amp;</type>
+          <declname>ipcache</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>selfAddress</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Prints the cached IP addresses to the standard output</para><para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>ipcache</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>&lt;IP address, timestamp&gt; pairs </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_utils.h" line="35" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="r__utils_8h_1a7a249d9e67d0fe3d0f8ea564e6d949b9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool maintain_cache</definition>
+        <argsstring>(std::map&lt; std::string, riaps::utils::Timeout&lt; std::chrono::milliseconds &gt;&gt; &amp;ipcache)</argsstring>
+        <name>maintain_cache</name>
+        <param>
+          <type>std::map&lt; std::string, <ref refid="classriaps_1_1utils_1_1Timeout" kindref="compound">riaps::utils::Timeout</ref>&lt; std::chrono::milliseconds &gt;&gt; &amp;</type>
+          <declname>ipcache</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Removes entries from the IP CACHE if no package from the node for IPCACHE_TIMEOUT.</para><para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>ipcache</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>&lt;IP address, timestamp&gt; pairs </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>true if entries are removed from the cache </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_utils.h" line="45" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="r__utils_8h_1a1861a8e398aab3f7f7da73a99086f2cd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::vector&lt; std::string &gt;</type>
+        <definition>std::vector&lt;std::string&gt; maintain_servicecache</definition>
+        <argsstring>(std::map&lt; std::string, int64_t &gt; &amp;servicecache)</argsstring>
+        <name>maintain_servicecache</name>
+        <param>
+          <type>std::map&lt; std::string, int64_t &gt; &amp;</type>
+          <declname>servicecache</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><xrefsect id="deprecated_1_deprecated000001"><xreftitle>Deprecated</xreftitle><xrefdescription></xrefdescription></xrefsect></para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_utils.h" line="50" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="r__utils_8h_1a325640bf75d16d1eb7625382ce9613db" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>const std::string</type>
+        <definition>const std::string GetAppPath</definition>
+        <argsstring>(const std::string &amp;appName)</argsstring>
+        <name>GetAppPath</name>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>appName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Returns the full path of the given RIAPS application. The full path is the concatenated string of RIAPSHOME env. variable and appName, without &apos;/&apos; at the end. The function does NOT check whether the path is valid.</para><para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>appName</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Name of the RIAPS application. </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The full path or empty string if the RIAPSHOME is not set. </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_utils.h" line="59" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="r__utils_8h_1a526a976e58037da41a1dd91c045ca70e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void operator&lt;&lt;</definition>
+        <argsstring>(zmsg_t *&amp;zmsg, capnp::MallocMessageBuilder &amp;message)</argsstring>
+        <name>operator&lt;&lt;</name>
+        <param>
+          <type>zmsg_t *&amp;</type>
+          <declname>zmsg</declname>
+        </param>
+        <param>
+          <type>capnp::MallocMessageBuilder &amp;</type>
+          <declname>message</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_utils.h" line="61" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="r__utils_8h_1a4e5bc24be6e41b7031a01ddc354d6a31" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void operator&lt;&lt;</definition>
+        <argsstring>(zframe_t *&amp;zframe, capnp::MallocMessageBuilder &amp;message)</argsstring>
+        <name>operator&lt;&lt;</name>
+        <param>
+          <type>zframe_t *&amp;</type>
+          <declname>zframe</declname>
+        </param>
+        <param>
+          <type>capnp::MallocMessageBuilder &amp;</type>
+          <declname>message</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_utils.h" line="62" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="r__utils_8h_1a969ebe13d78d658580a464431f6fb68a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void operator&gt;&gt;</definition>
+        <argsstring>(zframe_t &amp;frame, capnp::FlatArrayMessageReader *&amp;message)</argsstring>
+        <name>operator&gt;&gt;</name>
+        <param>
+          <type>zframe_t &amp;</type>
+          <declname>frame</declname>
+        </param>
+        <param>
+          <type>capnp::FlatArrayMessageReader *&amp;</type>
+          <declname>message</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_utils.h" line="66" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="r__utils_8h_1a60f69426e0542ee8b6099028b393eda3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void operator&gt;&gt;</definition>
+        <argsstring>(zframe_t &amp;frame, std::unique_ptr&lt; capnp::FlatArrayMessageReader &gt; &amp;message)</argsstring>
+        <name>operator&gt;&gt;</name>
+        <param>
+          <type>zframe_t &amp;</type>
+          <declname>frame</declname>
+        </param>
+        <param>
+          <type>std::unique_ptr&lt; capnp::FlatArrayMessageReader &gt; &amp;</type>
+          <declname>message</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_utils.h" line="67" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="r__utils_8h_1ac1e6a2bdd873e8e798542db1fe85ab61" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void operator&gt;&gt;</definition>
+        <argsstring>(zframe_t &amp;frame, std::shared_ptr&lt; capnp::FlatArrayMessageReader &gt; &amp;message)</argsstring>
+        <name>operator&gt;&gt;</name>
+        <param>
+          <type>zframe_t &amp;</type>
+          <declname>frame</declname>
+        </param>
+        <param>
+          <type>std::shared_ptr&lt; capnp::FlatArrayMessageReader &gt; &amp;</type>
+          <declname>message</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_utils.h" line="68" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="r__utils_8h_1ac3559deb48ee5d4b4d0ad9f1591b88c6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void operator&gt;&gt;</definition>
+        <argsstring>(zframe_t &amp;frame, capnp::FlatArrayMessageReader &amp;message)</argsstring>
+        <name>operator&gt;&gt;</name>
+        <param>
+          <type>zframe_t &amp;</type>
+          <declname>frame</declname>
+        </param>
+        <param>
+          <type>capnp::FlatArrayMessageReader &amp;</type>
+          <declname>message</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_utils.h" line="69" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="r__utils_8h_1a17d2460aa1408c99f0856dfe158619e6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>timespec</type>
+        <definition>timespec operator-</definition>
+        <argsstring>(const timespec &amp;ts1, const timespec &amp;ts2)</argsstring>
+        <name>operator-</name>
+        <param>
+          <type>const timespec &amp;</type>
+          <declname>ts1</declname>
+        </param>
+        <param>
+          <type>const timespec &amp;</type>
+          <declname>ts2</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_utils.h" line="71" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="r__utils_8h_1ab2f7af551361f02b7eb0668e88049f69" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool operator&gt;</definition>
+        <argsstring>(const timespec &amp;ts1, const timespec &amp;ts2)</argsstring>
+        <name>operator&gt;</name>
+        <param>
+          <type>const timespec &amp;</type>
+          <declname>ts1</declname>
+        </param>
+        <param>
+          <type>const timespec &amp;</type>
+          <declname>ts2</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_utils.h" line="72" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"></codeline>
+<codeline lineno="8"><highlight class="preprocessor">#ifndef<sp/>R_UTILS</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>R_UTILS<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;const/r_const.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;utils/r_timeout.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;capnp/message.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;capnp/serialize.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;czmq.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;spdlog/spdlog.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;memory&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;map&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;vector&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="comment">//<sp/>For<sp/>how<sp/>long<sp/>the<sp/>ip<sp/>addresses<sp/>are<sp/>stored<sp/>in<sp/>a<sp/>local<sp/>cache.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="comment">//<sp/>The<sp/>ip<sp/>addresses<sp/>are<sp/>obtained<sp/>from<sp/>the<sp/>UDP<sp/>beacons</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>IPCACHE_TIMEOUT<sp/>30000<sp/>//<sp/>millisec</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>print_cacheips(std::map&lt;std::string,<sp/><ref refid="classriaps_1_1utils_1_1Timeout" kindref="compound">riaps::utils::Timeout&lt;std::chrono::milliseconds&gt;</ref>&gt;&amp;<sp/>ipcache,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string&amp;<sp/>selfAddress);</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>maintain_cache(std::map&lt;std::string,<sp/><ref refid="classriaps_1_1utils_1_1Timeout" kindref="compound">riaps::utils::Timeout&lt;std::chrono::milliseconds&gt;</ref>&gt;&amp;<sp/>ipcache);</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal">std::vector&lt;std::string&gt;<sp/>maintain_servicecache(std::map&lt;std::string,<sp/>int64_t<sp/>&gt;&amp;<sp/>servicecache);</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>GetAppPath(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string&amp;<sp/>appName);</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>operator&lt;&lt;(zmsg_t*&amp;<sp/><sp/><sp/>zmsg,<sp/>capnp::MallocMessageBuilder&amp;<sp/>message);</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>operator&lt;&lt;(zframe_t*&amp;<sp/>zframe,<sp/>capnp::MallocMessageBuilder&amp;<sp/>message);</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>operator&gt;&gt;(zframe_t&amp;<sp/>frame,<sp/>capnp::FlatArrayMessageReader*&amp;<sp/>message);</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>operator&gt;&gt;(zframe_t&amp;<sp/>frame,<sp/>std::unique_ptr&lt;capnp::FlatArrayMessageReader&gt;&amp;<sp/>message);</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>operator&gt;&gt;(zframe_t&amp;<sp/>frame,<sp/>std::shared_ptr&lt;capnp::FlatArrayMessageReader&gt;&amp;<sp/>message);</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>operator&gt;&gt;(zframe_t&amp;<sp/>frame,<sp/>capnp::FlatArrayMessageReader&amp;<sp/>message);</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal">timespec<sp/>operator-(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>timespec&amp;<sp/>ts1,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>timespec&amp;<sp/>ts2);</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>operator&gt;(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>timespec&amp;<sp/>ts1,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>timespec&amp;<sp/>ts2);</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/home/istvan/work/riaps-core/include/utils/r_utils.h"/>
+  </compounddef>
+</doxygen>

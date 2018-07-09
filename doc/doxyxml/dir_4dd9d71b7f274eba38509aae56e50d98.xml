@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="dir_4dd9d71b7f274eba38509aae56e50d98" kind="dir">
+    <compoundname>/home/istvan/work/riaps-core/include/componentmodel</compoundname>
+    <innerdir refid="dir_a69e1878892fe2d393081137be0f6472">/home/istvan/work/riaps-core/include/componentmodel/ports</innerdir>
+    <innerfile refid="r__actor_8h">r_actor.h</innerfile>
+    <innerfile refid="r__actor__main_8h">r_actor_main.h</innerfile>
+    <innerfile refid="r__argumentparser_8h">r_argumentparser.h</innerfile>
+    <innerfile refid="r__callbacktimer_8h">r_callbacktimer.h</innerfile>
+    <innerfile refid="r__commandlineparser_8h">r_commandlineparser.h</innerfile>
+    <innerfile refid="r__componentbase_8h">r_componentbase.h</innerfile>
+    <innerfile refid="r__configuration_8h">r_configuration.h</innerfile>
+    <innerfile refid="r__deploapi_8h">r_deploapi.h</innerfile>
+    <innerfile refid="r__devicethread_8h">r_devicethread.h</innerfile>
+    <innerfile refid="r__devmapi_8h">r_devmapi.h</innerfile>
+    <innerfile refid="r__discoverdapi_8h">r_discoverdapi.h</innerfile>
+    <innerfile refid="r__messagebase_8h">r_messagebase.h</innerfile>
+    <innerfile refid="r__oneshottimer_8h">r_oneshottimer.h</innerfile>
+    <innerfile refid="r__parameter_8h">r_parameter.h</innerfile>
+    <innerfile refid="r__payload_8h">r_payload.h</innerfile>
+    <innerfile refid="r__periodictimer_8h">r_periodictimer.h</innerfile>
+    <innerfile refid="r__peripheral_8h">r_peripheral.h</innerfile>
+    <innerfile refid="r__portregister_8h">r_portregister.h</innerfile>
+    <innerfile refid="r__riaps__actor__commands_8h">r_riaps_actor_commands.h</innerfile>
+    <innerfile refid="r__riapsmessage_8h">r_riapsmessage.h</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/istvan/work/riaps-core/include/componentmodel/"/>
+  </compounddef>
+</doxygen>

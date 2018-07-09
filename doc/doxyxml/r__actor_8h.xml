@@ -1,0 +1,977 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="r__actor_8h" kind="file" language="C++">
+    <compoundname>r_actor.h</compoundname>
+    <includes refid="r__discoverdapi_8h" local="no">componentmodel/r_discoverdapi.h</includes>
+    <includes refid="r__componentbase_8h" local="no">componentmodel/r_componentbase.h</includes>
+    <includes refid="r__peripheral_8h" local="no">componentmodel/r_peripheral.h</includes>
+    <includes refid="r__devmapi_8h" local="no">componentmodel/r_devmapi.h</includes>
+    <includes refid="r__configuration_8h" local="no">componentmodel/r_configuration.h</includes>
+    <includes refid="r__deploapi_8h" local="no">componentmodel/r_deploapi.h</includes>
+    <includes local="no">messaging/disco.capnp.h</includes>
+    <includes refid="r__const_8h" local="no">const/r_const.h</includes>
+    <includes refid="r__utils_8h" local="no">utils/r_utils.h</includes>
+    <includes refid="r__group_8h" local="no">groups/r_group.h</includes>
+    <includes local="no">spdlog/spdlog.h</includes>
+    <includes local="no">json.h</includes>
+    <includes local="no">czmq.h</includes>
+    <includes local="no">dlfcn.h</includes>
+    <includes local="no">iostream</includes>
+    <includes local="no">string</includes>
+    <includes local="no">fstream</includes>
+    <includes local="no">set</includes>
+    <includedby refid="r__actor__main_8h" local="no">/home/istvan/work/riaps-core/include/componentmodel/r_actor_main.h</includedby>
+    <includedby refid="r__componentbase_8h" local="no">/home/istvan/work/riaps-core/include/componentmodel/r_componentbase.h</includedby>
+    <includedby refid="r__peripheral_8h" local="no">/home/istvan/work/riaps-core/include/componentmodel/r_peripheral.h</includedby>
+    <includedby refid="r__deviceactor_8h" local="no">/home/istvan/work/riaps-core/include/device/r_deviceactor.h</includedby>
+    <includedby refid="r__group_8h" local="no">/home/istvan/work/riaps-core/include/groups/r_group.h</includedby>
+    <incdepgraph>
+      <node id="799">
+        <label>componentmodel/ports/r_pubportbase.h</label>
+        <link refid="r__pubportbase_8h_source"/>
+        <childnode refid="777" relation="include">
+        </childnode>
+        <childnode refid="800" relation="include">
+        </childnode>
+      </node>
+      <node id="825">
+        <label>messaging/devm.capnp.h</label>
+      </node>
+      <node id="787">
+        <label>atomic</label>
+      </node>
+      <node id="814">
+        <label>componentmodel/ports/r_insideport.h</label>
+        <link refid="r__insideport_8h_source"/>
+        <childnode refid="777" relation="include">
+        </childnode>
+        <childnode refid="800" relation="include">
+        </childnode>
+        <childnode refid="783" relation="include">
+        </childnode>
+        <childnode refid="782" relation="include">
+        </childnode>
+      </node>
+      <node id="790">
+        <label>groups/r_group.h</label>
+        <link refid="r__group_8h_source"/>
+        <childnode refid="766" relation="include">
+        </childnode>
+        <childnode refid="772" relation="include">
+        </childnode>
+        <childnode refid="791" relation="include">
+        </childnode>
+        <childnode refid="798" relation="include">
+        </childnode>
+        <childnode refid="802" relation="include">
+        </childnode>
+        <childnode refid="806" relation="include">
+        </childnode>
+        <childnode refid="792" relation="include">
+        </childnode>
+        <childnode refid="793" relation="include">
+        </childnode>
+        <childnode refid="778" relation="include">
+        </childnode>
+        <childnode refid="807" relation="include">
+        </childnode>
+        <childnode refid="779" relation="include">
+        </childnode>
+        <childnode refid="770" relation="include">
+        </childnode>
+        <childnode refid="769" relation="include">
+        </childnode>
+        <childnode refid="774" relation="include">
+        </childnode>
+        <childnode refid="795" relation="include">
+        </childnode>
+        <childnode refid="794" relation="include">
+        </childnode>
+        <childnode refid="796" relation="include">
+        </childnode>
+      </node>
+      <node id="777">
+        <label>componentmodel/ports/r_portbase.h</label>
+        <link refid="r__portbase_8h_source"/>
+        <childnode refid="772" relation="include">
+        </childnode>
+        <childnode refid="778" relation="include">
+        </childnode>
+        <childnode refid="779" relation="include">
+        </childnode>
+        <childnode refid="770" relation="include">
+        </childnode>
+        <childnode refid="780" relation="include">
+        </childnode>
+      </node>
+      <node id="800">
+        <label>componentmodel/ports/r_senderport.h</label>
+        <link refid="r__senderport_8h_source"/>
+        <childnode refid="782" relation="include">
+        </childnode>
+        <childnode refid="783" relation="include">
+        </childnode>
+        <childnode refid="779" relation="include">
+        </childnode>
+        <childnode refid="801" relation="include">
+        </childnode>
+        <childnode refid="789" relation="include">
+        </childnode>
+      </node>
+      <node id="786">
+        <label>functional</label>
+      </node>
+      <node id="809">
+        <label>queue</label>
+      </node>
+      <node id="791">
+        <label>groups/r_grouplead.h</label>
+        <link refid="r__grouplead_8h_source"/>
+        <childnode refid="792" relation="include">
+        </childnode>
+        <childnode refid="790" relation="include">
+        </childnode>
+        <childnode refid="778" relation="include">
+        </childnode>
+        <childnode refid="793" relation="include">
+        </childnode>
+        <childnode refid="786" relation="include">
+        </childnode>
+        <childnode refid="794" relation="include">
+        </childnode>
+        <childnode refid="795" relation="include">
+        </childnode>
+        <childnode refid="796" relation="include">
+        </childnode>
+        <childnode refid="797" relation="include">
+        </childnode>
+      </node>
+      <node id="789">
+        <label>componentmodel/r_payload.h</label>
+        <link refid="r__payload_8h_source"/>
+        <childnode refid="779" relation="include">
+        </childnode>
+        <childnode refid="775" relation="include">
+        </childnode>
+      </node>
+      <node id="772">
+        <label>componentmodel/r_configuration.h</label>
+        <link refid="r__configuration_8h_source"/>
+        <childnode refid="773" relation="include">
+        </childnode>
+        <childnode refid="770" relation="include">
+        </childnode>
+        <childnode refid="769" relation="include">
+        </childnode>
+      </node>
+      <node id="779">
+        <label>czmq.h</label>
+      </node>
+      <node id="828">
+        <label>messaging/deplo.capnp.h</label>
+      </node>
+      <node id="806">
+        <label>messaging/disco.capnp.h</label>
+      </node>
+      <node id="803">
+        <label>componentmodel/ports/r_subportbase.h</label>
+        <link refid="r__subportbase_8h_source"/>
+        <childnode refid="777" relation="include">
+        </childnode>
+        <childnode refid="770" relation="include">
+        </childnode>
+        <childnode refid="804" relation="include">
+        </childnode>
+      </node>
+      <node id="826">
+        <label>componentmodel/r_deploapi.h</label>
+        <link refid="r__deploapi_8h_source"/>
+        <childnode refid="771" relation="include">
+        </childnode>
+        <childnode refid="827" relation="include">
+        </childnode>
+        <childnode refid="828" relation="include">
+        </childnode>
+        <childnode refid="779" relation="include">
+        </childnode>
+        <childnode refid="778" relation="include">
+        </childnode>
+        <childnode refid="775" relation="include">
+        </childnode>
+        <childnode refid="769" relation="include">
+        </childnode>
+      </node>
+      <node id="819">
+        <label>const/r_const.h</label>
+        <link refid="r__const_8h_source"/>
+      </node>
+      <node id="783">
+        <label>capnp/serialize.h</label>
+      </node>
+      <node id="773">
+        <label>componentmodel/r_parameter.h</label>
+        <link refid="r__parameter_8h_source"/>
+        <childnode refid="770" relation="include">
+        </childnode>
+        <childnode refid="774" relation="include">
+        </childnode>
+        <childnode refid="775" relation="include">
+        </childnode>
+        <childnode refid="769" relation="include">
+        </childnode>
+      </node>
+      <node id="770">
+        <label>string</label>
+      </node>
+      <node id="812">
+        <label>componentmodel/ports/r_responseport.h</label>
+        <link refid="r__responseport_8h_source"/>
+        <childnode refid="777" relation="include">
+        </childnode>
+        <childnode refid="804" relation="include">
+        </childnode>
+        <childnode refid="771" relation="include">
+        </childnode>
+        <childnode refid="772" relation="include">
+        </childnode>
+        <childnode refid="779" relation="include">
+        </childnode>
+        <childnode refid="770" relation="include">
+        </childnode>
+      </node>
+      <node id="774">
+        <label>map</label>
+      </node>
+      <node id="813">
+        <label>componentmodel/ports/r_requestport.h</label>
+        <link refid="r__requestport_8h_source"/>
+        <childnode refid="771" relation="include">
+        </childnode>
+        <childnode refid="772" relation="include">
+        </childnode>
+        <childnode refid="781" relation="include">
+        </childnode>
+        <childnode refid="800" relation="include">
+        </childnode>
+        <childnode refid="779" relation="include">
+        </childnode>
+        <childnode refid="770" relation="include">
+        </childnode>
+      </node>
+      <node id="816">
+        <label>componentmodel/ports/r_queryport.h</label>
+        <link refid="r__queryport_8h_source"/>
+        <childnode refid="771" relation="include">
+        </childnode>
+        <childnode refid="772" relation="include">
+        </childnode>
+        <childnode refid="781" relation="include">
+        </childnode>
+        <childnode refid="800" relation="include">
+        </childnode>
+        <childnode refid="817" relation="include">
+        </childnode>
+        <childnode refid="779" relation="include">
+        </childnode>
+        <childnode refid="820" relation="include">
+        </childnode>
+        <childnode refid="770" relation="include">
+        </childnode>
+      </node>
+      <node id="817">
+        <label>componentmodel/r_riapsmessage.h</label>
+        <link refid="r__riapsmessage_8h_source"/>
+        <childnode refid="818" relation="include">
+        </childnode>
+        <childnode refid="779" relation="include">
+        </childnode>
+        <childnode refid="783" relation="include">
+        </childnode>
+        <childnode refid="782" relation="include">
+        </childnode>
+      </node>
+      <node id="768">
+        <label>componentmodel/r_riaps_actor_commands.h</label>
+        <link refid="r__riaps__actor__commands_8h_source"/>
+        <childnode refid="769" relation="include">
+        </childnode>
+        <childnode refid="770" relation="include">
+        </childnode>
+      </node>
+      <node id="808">
+        <label>fstream</label>
+      </node>
+      <node id="822">
+        <label>json.h</label>
+      </node>
+      <node id="792">
+        <label>messaging/distcoord.capnp.h</label>
+      </node>
+      <node id="767">
+        <label>componentmodel/r_discoverdapi.h</label>
+        <link refid="r__discoverdapi_8h_source"/>
+        <childnode refid="768" relation="include">
+        </childnode>
+        <childnode refid="771" relation="include">
+        </childnode>
+        <childnode refid="790" relation="include">
+        </childnode>
+        <childnode refid="806" relation="include">
+        </childnode>
+        <childnode refid="782" relation="include">
+        </childnode>
+        <childnode refid="783" relation="include">
+        </childnode>
+        <childnode refid="821" relation="include">
+        </childnode>
+        <childnode refid="822" relation="include">
+        </childnode>
+        <childnode refid="770" relation="include">
+        </childnode>
+        <childnode refid="769" relation="include">
+        </childnode>
+        <childnode refid="779" relation="include">
+        </childnode>
+        <childnode refid="780" relation="include">
+        </childnode>
+      </node>
+      <node id="802">
+        <label>componentmodel/ports/r_subportgroup.h</label>
+        <link refid="r__subportgroup_8h_source"/>
+        <childnode refid="803" relation="include">
+        </childnode>
+      </node>
+      <node id="781">
+        <label>componentmodel/r_messagebase.h</label>
+        <link refid="r__messagebase_8h_source"/>
+        <childnode refid="779" relation="include">
+        </childnode>
+        <childnode refid="782" relation="include">
+        </childnode>
+        <childnode refid="783" relation="include">
+        </childnode>
+      </node>
+      <node id="804">
+        <label>r_recvport.h</label>
+        <link refid="r__recvport_8h_source"/>
+        <childnode refid="805" relation="include">
+        </childnode>
+        <childnode refid="782" relation="include">
+        </childnode>
+        <childnode refid="783" relation="include">
+        </childnode>
+        <childnode refid="778" relation="include">
+        </childnode>
+        <childnode refid="779" relation="include">
+        </childnode>
+        <childnode refid="775" relation="include">
+        </childnode>
+      </node>
+      <node id="778">
+        <label>spdlog/spdlog.h</label>
+      </node>
+      <node id="795">
+        <label>random</label>
+      </node>
+      <node id="821">
+        <label>capnp/serialize-packed.h</label>
+      </node>
+      <node id="788">
+        <label>ctime</label>
+      </node>
+      <node id="820">
+        <label>zuuid.h</label>
+      </node>
+      <node id="811">
+        <label>componentmodel/ports/r_subscriberport.h</label>
+        <link refid="r__subscriberport_8h_source"/>
+        <childnode refid="775" relation="include">
+        </childnode>
+        <childnode refid="771" relation="include">
+        </childnode>
+        <childnode refid="772" relation="include">
+        </childnode>
+        <childnode refid="803" relation="include">
+        </childnode>
+      </node>
+      <node id="793">
+        <label>utils/r_timeout.h</label>
+        <link refid="r__timeout_8h_source"/>
+        <childnode refid="794" relation="include">
+        </childnode>
+      </node>
+      <node id="769">
+        <label>vector</label>
+      </node>
+      <node id="815">
+        <label>componentmodel/ports/r_answerport.h</label>
+        <link refid="r__answerport_8h_source"/>
+        <childnode refid="777" relation="include">
+        </childnode>
+        <childnode refid="771" relation="include">
+        </childnode>
+        <childnode refid="772" relation="include">
+        </childnode>
+        <childnode refid="779" relation="include">
+        </childnode>
+        <childnode refid="770" relation="include">
+        </childnode>
+      </node>
+      <node id="798">
+        <label>componentmodel/ports/r_pubportgroup.h</label>
+        <link refid="r__pubportgroup_8h_source"/>
+        <childnode refid="790" relation="include">
+        </childnode>
+        <childnode refid="772" relation="include">
+        </childnode>
+        <childnode refid="799" relation="include">
+        </childnode>
+      </node>
+      <node id="807">
+        <label>msgpack.hpp</label>
+      </node>
+      <node id="823">
+        <label>componentmodel/r_peripheral.h</label>
+        <link refid="r__peripheral_8h_source"/>
+        <childnode refid="766" relation="include">
+        </childnode>
+        <childnode refid="774" relation="include">
+        </childnode>
+        <childnode refid="770" relation="include">
+        </childnode>
+      </node>
+      <node id="824">
+        <label>componentmodel/r_devmapi.h</label>
+        <link refid="r__devmapi_8h_source"/>
+        <childnode refid="782" relation="include">
+        </childnode>
+        <childnode refid="783" relation="include">
+        </childnode>
+        <childnode refid="825" relation="include">
+        </childnode>
+        <childnode refid="779" relation="include">
+        </childnode>
+        <childnode refid="769" relation="include">
+        </childnode>
+        <childnode refid="770" relation="include">
+        </childnode>
+        <childnode refid="774" relation="include">
+        </childnode>
+        <childnode refid="780" relation="include">
+        </childnode>
+      </node>
+      <node id="780">
+        <label>iostream</label>
+      </node>
+      <node id="766">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_actor.h</label>
+        <link refid="r_actor.h"/>
+        <childnode refid="767" relation="include">
+        </childnode>
+        <childnode refid="771" relation="include">
+        </childnode>
+        <childnode refid="823" relation="include">
+        </childnode>
+        <childnode refid="824" relation="include">
+        </childnode>
+        <childnode refid="772" relation="include">
+        </childnode>
+        <childnode refid="826" relation="include">
+        </childnode>
+        <childnode refid="806" relation="include">
+        </childnode>
+        <childnode refid="819" relation="include">
+        </childnode>
+        <childnode refid="818" relation="include">
+        </childnode>
+        <childnode refid="790" relation="include">
+        </childnode>
+        <childnode refid="778" relation="include">
+        </childnode>
+        <childnode refid="822" relation="include">
+        </childnode>
+        <childnode refid="779" relation="include">
+        </childnode>
+        <childnode refid="829" relation="include">
+        </childnode>
+        <childnode refid="780" relation="include">
+        </childnode>
+        <childnode refid="770" relation="include">
+        </childnode>
+        <childnode refid="808" relation="include">
+        </childnode>
+        <childnode refid="796" relation="include">
+        </childnode>
+      </node>
+      <node id="784">
+        <label>componentmodel/r_oneshottimer.h</label>
+        <link refid="r__oneshottimer_8h_source"/>
+        <childnode refid="777" relation="include">
+        </childnode>
+        <childnode refid="770" relation="include">
+        </childnode>
+        <childnode refid="785" relation="include">
+        </childnode>
+        <childnode refid="786" relation="include">
+        </childnode>
+        <childnode refid="787" relation="include">
+        </childnode>
+        <childnode refid="788" relation="include">
+        </childnode>
+      </node>
+      <node id="797">
+        <label>unordered_map</label>
+      </node>
+      <node id="771">
+        <label>componentmodel/r_componentbase.h</label>
+        <link refid="r__componentbase_8h_source"/>
+        <childnode refid="767" relation="include">
+        </childnode>
+        <childnode refid="772" relation="include">
+        </childnode>
+        <childnode refid="776" relation="include">
+        </childnode>
+        <childnode refid="766" relation="include">
+        </childnode>
+        <childnode refid="781" relation="include">
+        </childnode>
+        <childnode refid="784" relation="include">
+        </childnode>
+        <childnode refid="789" relation="include">
+        </childnode>
+        <childnode refid="790" relation="include">
+        </childnode>
+        <childnode refid="806" relation="include">
+        </childnode>
+        <childnode refid="807" relation="include">
+        </childnode>
+        <childnode refid="782" relation="include">
+        </childnode>
+        <childnode refid="783" relation="include">
+        </childnode>
+        <childnode refid="778" relation="include">
+        </childnode>
+        <childnode refid="780" relation="include">
+        </childnode>
+        <childnode refid="808" relation="include">
+        </childnode>
+        <childnode refid="769" relation="include">
+        </childnode>
+        <childnode refid="775" relation="include">
+        </childnode>
+        <childnode refid="809" relation="include">
+        </childnode>
+        <childnode refid="795" relation="include">
+        </childnode>
+        <childnode refid="788" relation="include">
+        </childnode>
+        <childnode refid="810" relation="include">
+        </childnode>
+        <childnode refid="811" relation="include">
+        </childnode>
+        <childnode refid="812" relation="include">
+        </childnode>
+        <childnode refid="813" relation="include">
+        </childnode>
+        <childnode refid="814" relation="include">
+        </childnode>
+        <childnode refid="815" relation="include">
+        </childnode>
+        <childnode refid="816" relation="include">
+        </childnode>
+      </node>
+      <node id="794">
+        <label>chrono</label>
+      </node>
+      <node id="785">
+        <label>thread</label>
+      </node>
+      <node id="776">
+        <label>componentmodel/r_periodictimer.h</label>
+        <link refid="r__periodictimer_8h_source"/>
+        <childnode refid="777" relation="include">
+        </childnode>
+        <childnode refid="779" relation="include">
+        </childnode>
+        <childnode refid="770" relation="include">
+        </childnode>
+      </node>
+      <node id="805">
+        <label>r_timedport.h</label>
+        <link refid="r__timedport_8h_source"/>
+        <childnode refid="788" relation="include">
+        </childnode>
+      </node>
+      <node id="801">
+        <label>type_traits</label>
+      </node>
+      <node id="796">
+        <label>set</label>
+      </node>
+      <node id="827">
+        <label>framework/rfw_configuration.h</label>
+        <link refid="rfw__configuration_8h_source"/>
+        <childnode refid="819" relation="include">
+        </childnode>
+        <childnode refid="770" relation="include">
+        </childnode>
+      </node>
+      <node id="782">
+        <label>capnp/message.h</label>
+      </node>
+      <node id="818">
+        <label>utils/r_utils.h</label>
+        <link refid="r__utils_8h_source"/>
+        <childnode refid="819" relation="include">
+        </childnode>
+        <childnode refid="793" relation="include">
+        </childnode>
+        <childnode refid="782" relation="include">
+        </childnode>
+        <childnode refid="783" relation="include">
+        </childnode>
+        <childnode refid="779" relation="include">
+        </childnode>
+        <childnode refid="778" relation="include">
+        </childnode>
+        <childnode refid="780" relation="include">
+        </childnode>
+        <childnode refid="775" relation="include">
+        </childnode>
+        <childnode refid="770" relation="include">
+        </childnode>
+        <childnode refid="774" relation="include">
+        </childnode>
+        <childnode refid="769" relation="include">
+        </childnode>
+      </node>
+      <node id="775">
+        <label>memory</label>
+      </node>
+      <node id="810">
+        <label>componentmodel/ports/r_publisherport.h</label>
+        <link refid="r__publisherport_8h_source"/>
+        <childnode refid="772" relation="include">
+        </childnode>
+        <childnode refid="799" relation="include">
+        </childnode>
+        <childnode refid="779" relation="include">
+        </childnode>
+        <childnode refid="770" relation="include">
+        </childnode>
+      </node>
+      <node id="829">
+        <label>dlfcn.h</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="842">
+        <label>/home/istvan/work/riaps-core/include/device/r_deviceactor.h</label>
+        <link refid="r__deviceactor_8h_source"/>
+      </node>
+      <node id="843">
+        <label>/home/istvan/work/riaps-core/include/groups/r_group.h</label>
+        <link refid="r__group_8h_source"/>
+        <childnode refid="844" relation="include">
+        </childnode>
+        <childnode refid="830" relation="include">
+        </childnode>
+        <childnode refid="832" relation="include">
+        </childnode>
+        <childnode refid="839" relation="include">
+        </childnode>
+        <childnode refid="845" relation="include">
+        </childnode>
+      </node>
+      <node id="845">
+        <label>/home/istvan/work/riaps-core/include/groups/r_grouplead.h</label>
+        <link refid="r__grouplead_8h_source"/>
+        <childnode refid="843" relation="include">
+        </childnode>
+      </node>
+      <node id="831">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_actor_main.h</label>
+        <link refid="r__actor__main_8h_source"/>
+      </node>
+      <node id="838">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_deploapi.h</label>
+        <link refid="r__deploapi_8h_source"/>
+        <childnode refid="830" relation="include">
+        </childnode>
+      </node>
+      <node id="836">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_responseport.h</label>
+        <link refid="r__responseport_8h_source"/>
+        <childnode refid="832" relation="include">
+        </childnode>
+      </node>
+      <node id="835">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_requestport.h</label>
+        <link refid="r__requestport_8h_source"/>
+        <childnode refid="832" relation="include">
+        </childnode>
+      </node>
+      <node id="834">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_queryport.h</label>
+        <link refid="r__queryport_8h_source"/>
+        <childnode refid="832" relation="include">
+        </childnode>
+      </node>
+      <node id="840">
+        <label>/home/istvan/work/riaps-core/include/discoveryd/r_riaps_actor.h</label>
+        <link refid="r__riaps__actor_8h_source"/>
+      </node>
+      <node id="839">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_discoverdapi.h</label>
+        <link refid="r__discoverdapi_8h_source"/>
+        <childnode refid="830" relation="include">
+        </childnode>
+        <childnode refid="832" relation="include">
+        </childnode>
+        <childnode refid="840" relation="include">
+        </childnode>
+      </node>
+      <node id="837">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_subscriberport.h</label>
+        <link refid="r__subscriberport_8h_source"/>
+        <childnode refid="832" relation="include">
+        </childnode>
+      </node>
+      <node id="833">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_answerport.h</label>
+        <link refid="r__answerport_8h_source"/>
+        <childnode refid="832" relation="include">
+        </childnode>
+      </node>
+      <node id="844">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_pubportgroup.h</label>
+        <link refid="r__pubportgroup_8h_source"/>
+        <childnode refid="843" relation="include">
+        </childnode>
+      </node>
+      <node id="841">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_peripheral.h</label>
+        <link refid="r__peripheral_8h_source"/>
+        <childnode refid="830" relation="include">
+        </childnode>
+      </node>
+      <node id="830">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_actor.h</label>
+        <link refid="r_actor.h"/>
+        <childnode refid="831" relation="include">
+        </childnode>
+        <childnode refid="832" relation="include">
+        </childnode>
+        <childnode refid="841" relation="include">
+        </childnode>
+        <childnode refid="842" relation="include">
+        </childnode>
+        <childnode refid="843" relation="include">
+        </childnode>
+      </node>
+      <node id="832">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_componentbase.h</label>
+        <link refid="r__componentbase_8h_source"/>
+        <childnode refid="833" relation="include">
+        </childnode>
+        <childnode refid="834" relation="include">
+        </childnode>
+        <childnode refid="835" relation="include">
+        </childnode>
+        <childnode refid="836" relation="include">
+        </childnode>
+        <childnode refid="837" relation="include">
+        </childnode>
+        <childnode refid="830" relation="include">
+        </childnode>
+        <childnode refid="838" relation="include">
+        </childnode>
+        <childnode refid="839" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="classriaps_1_1Actor" prot="public">riaps::Actor</innerclass>
+    <innerclass refid="structriaps_1_1Actor_1_1ActorProperties" prot="protected">riaps::Actor::ActorProperties</innerclass>
+    <innerclass refid="structriaps_1_1Actor_1_1DeviceProperties" prot="protected">riaps::Actor::DeviceProperties</innerclass>
+    <innernamespace refid="namespaceriaps">riaps</innernamespace>
+    <innernamespace refid="namespaceriaps_1_1deplo">riaps::deplo</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Created<sp/>by<sp/>parallels<sp/>on<sp/>9/6/16.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>RIAPS_R_ACTOR_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>RIAPS_R_ACTOR_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;componentmodel/r_discoverdapi.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;componentmodel/r_componentbase.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;componentmodel/r_peripheral.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;componentmodel/r_devmapi.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;componentmodel/r_configuration.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;componentmodel/r_deploapi.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;messaging/disco.capnp.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;const/r_const.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;utils/r_utils.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;groups/r_group.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;spdlog/spdlog.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;json.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;czmq.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;dlfcn.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;fstream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;set&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">spd<sp/>=<sp/>spdlog;</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespaceriaps" kindref="compound">riaps</ref><sp/>{</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">ComponentBase;</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">Peripheral;</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">deplo<sp/>{</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">DeploApi;</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="41" refid="classriaps_1_1Actor" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classriaps_1_1Actor" kindref="compound">Actor</ref><sp/>{</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="classriaps_1_1Actor" kindref="compound">Actor</ref>*<sp/>CreateActor(nlohmann::json&amp;<sp/>configJson<sp/><sp/><sp/>,</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string&amp;<sp/>actorName<sp/>,</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string&amp;<sp/>jsonFile<sp/><sp/>,</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::map&lt;std::string,<sp/>std::string&gt;&amp;<sp/>actualParams);</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="classriaps_1_1Actor" kindref="compound">Actor</ref>*<sp/>GetRunningActor();</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>init();</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>start();</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::string<sp/><sp/>getActorId();</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Todo:<sp/>Can<sp/>they<sp/>be<sp/>static?</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Todo:<sp/>Actually<sp/>a<sp/>better<sp/>question:<sp/>can<sp/>the<sp/>whole<sp/>actor<sp/>be<sp/>static?</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string&amp;<sp/>getActorName()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string&amp;<sp/>getApplicationName()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classriaps_1_1devm_1_1DevmApi" kindref="compound">riaps::devm::DevmApi</ref>*<sp/>getDeviceManager()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classriaps_1_1deplo_1_1DeploApi" kindref="compound">riaps::deplo::DeploApi</ref>*<sp/>getDeploManager()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Note:<sp/>Group<sp/>configs<sp/>can<sp/>be<sp/>static</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Todo:<sp/>Thinking<sp/>on<sp/>to<sp/>make<sp/>them<sp/>static...<sp/>I&apos;m<sp/>not<sp/>sure<sp/>it<sp/>is<sp/>good.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;groupt_conf&gt;&amp;<sp/>getGroupTypes()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structgroupt__conf" kindref="compound">groupt_conf</ref>*<sp/>getGroupType(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;groupTypeId)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classriaps_1_1ComponentBase" kindref="compound">ComponentBase</ref>*<sp/>getComponentByName(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;componentName)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/>~<ref refid="classriaps_1_1Actor" kindref="compound">Actor</ref>();</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>updatePort(std::string<sp/>&amp;instancename,<sp/>std::string<sp/>&amp;portname,<sp/>std::string<sp/>&amp;host,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>port);</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>updateGroup(zframe_t<sp/>*capnpMessageBody,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;sourceComponentId);</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">protected</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"></highlight></codeline>
+<codeline lineno="75" refid="structriaps_1_1Actor_1_1ActorProperties" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structriaps_1_1Actor_1_1ActorProperties" kindref="compound">ActorProperties</ref><sp/>{</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::string<sp/><sp/><sp/><sp/>actorName;</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::string<sp/><sp/><sp/><sp/>jsonFile;</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>nlohmann::json<sp/>jsonActorConfig;</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>nlohmann::json<sp/>jsonInstances;</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>nlohmann::json<sp/>jsonDevicesconfig;</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>nlohmann::json<sp/>jsonComponentsconfig;</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>nlohmann::json<sp/>jsonGroups;</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight></codeline>
+<codeline lineno="85" refid="structriaps_1_1Actor_1_1DeviceProperties" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structriaps_1_1Actor_1_1DeviceProperties" kindref="compound">DeviceProperties</ref><sp/>{</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::string<sp/><sp/><sp/><sp/>actorName;</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::string<sp/><sp/><sp/><sp/>deviceName;</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>nlohmann::json<sp/>configJson;</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>nlohmann::json<sp/>jsonDevicesconfig;</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::unique_ptr&lt;ActorProperties&gt;<sp/><sp/>m_actorProperties;</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::unique_ptr&lt;DeviceProperties&gt;<sp/>m_deviceProperties;</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"></highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classriaps_1_1Actor" kindref="compound">Actor</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string&amp;<sp/><sp/><sp/><sp/><sp/>applicationname<sp/><sp/><sp/><sp/><sp/><sp/><sp/>,</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string&amp;<sp/><sp/><sp/><sp/><sp/>actorname<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string&amp;<sp/><sp/><sp/><sp/><sp/>jsonFile<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>nlohmann::json&amp;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>jsonActorconfig<sp/><sp/><sp/><sp/><sp/><sp/><sp/>,</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>nlohmann::json&amp;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>configJson<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::map&lt;std::string,<sp/>std::string&gt;&amp;<sp/>commandLineParams</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>);</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"></highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classriaps_1_1Actor" kindref="compound">Actor</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string&amp;<sp/><sp/><sp/><sp/><sp/>applicationname<sp/><sp/><sp/><sp/><sp/><sp/><sp/>,</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string&amp;<sp/><sp/><sp/><sp/><sp/>deviceName<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>nlohmann::json&amp;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>configJson<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::map&lt;std::string,<sp/>std::string&gt;&amp;<sp/>commandLineParams</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>);</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"></highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T&gt;</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>parseConfig(){</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"></highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"></highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::set&lt;std::string&gt;<sp/>getLocalMessageTypes(nlohmann::json<sp/>&amp;jsonLocals);</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"></highlight></codeline>
+<codeline lineno="132"><highlight class="normal"></highlight></codeline>
+<codeline lineno="133"><highlight class="normal"></highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Channel<sp/>for<sp/>incomming<sp/>controll<sp/>messages<sp/>(e.g.:<sp/>restart<sp/>component)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>zsock_t*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_actor_zsock;</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>zsock_t*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_discovery_socket;</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"></highlight></codeline>
+<codeline lineno="138"><highlight class="normal"></highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>_actor_port;</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//std::string<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>jsonFile;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::string<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>_actor_endpoint;</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::shared_ptr&lt;zuuid_t&gt;<sp/>m_actor_id;</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//std::string<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>actorName;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::string<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_applicationName;</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::vector&lt;ComponentBase*&gt;<sp/>m_components;</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::vector&lt;Peripheral*&gt;<sp/><sp/><sp/><sp/>m_peripherals;</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::vector&lt;void*&gt;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_component_dll_handles;</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//bool<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>_startDevice;<sp/>//<sp/>The<sp/>actor<sp/>doesn;t<sp/>start<sp/>the<sp/>device.<sp/>The<sp/>DeviceActor<sp/>starts<sp/>it<sp/>only</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//std::string<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>deviceName;<sp/><sp/>//<sp/>If<sp/>the<sp/>DeviceActor<sp/>starts<sp/>the<sp/>device,<sp/>the<sp/>device<sp/>name<sp/>is<sp/>set<sp/>here</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>and<sp/>not<sp/>passed<sp/>in<sp/>parameters.<sp/>Only<sp/>the<sp/>actorname<sp/>comes<sp/>from<sp/>parameters.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="151"><highlight class="normal"></highlight></codeline>
+<codeline lineno="152"><highlight class="normal"></highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::map&lt;std::string,<sp/>std::string&gt;&amp;<sp/><sp/><sp/>m_commandLineParams;</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::unique_ptr&lt;riaps::devm::DevmApi&gt;<sp/>m_devm;</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::unique_ptr&lt;riaps::deplo::DeploApi&gt;<sp/>m_deplo;</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"></highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//nlohmann::json<sp/><sp/>jsonComponentsconfig;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//nlohmann::json<sp/><sp/>jsonDevicesconfig;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//nlohmann::json<sp/><sp/>_jsonActorconfig;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>nlohmann::json<sp/><sp/>_jsonInternals;</highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>nlohmann::json<sp/><sp/>_jsonLocals;</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>nlohmann::json<sp/><sp/>_jsonFormals;</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"></highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Configurations</highlight></codeline>
+<codeline lineno="166"><highlight class="comment"></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>getPortConfigs(nlohmann::json<sp/>&amp;jsonPortsConfig,<sp/><ref refid="structcomponent__conf" kindref="compound">_component_conf</ref><sp/>&amp;results);</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"></highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>parseGroups();</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"></highlight></codeline>
+<codeline lineno="171"><highlight class="normal"></highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::vector&lt;component_conf&gt;<sp/>m_component_configurations;</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::vector&lt;groupt_conf&gt;<sp/><sp/><sp/><sp/>m_grouptype_configurations;</highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::set&lt;std::string&gt;<sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_localMessageTypes;</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"></highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="classriaps_1_1Actor" kindref="compound">Actor</ref>*<sp/>CurrentActor;</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::shared_ptr&lt;spd::logger&gt;<sp/>m_logger;</highlight></codeline>
+<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="179"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>zpoller_t*<sp/><sp/><sp/><sp/>m_poller;</highlight></codeline>
+<codeline lineno="180"><highlight class="normal"></highlight></codeline>
+<codeline lineno="181"><highlight class="normal"></highlight></codeline>
+<codeline lineno="182"><highlight class="normal"></highlight></codeline>
+<codeline lineno="183"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>isDeviceActor()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="184"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>isComponentActor()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="185"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="186"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"></highlight></codeline>
+<codeline lineno="188"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/>//RIAPS_R_ACTOR_H</highlight></codeline>
+    </programlisting>
+    <location file="/home/istvan/work/riaps-core/include/componentmodel/r_actor.h"/>
+  </compounddef>
+</doxygen>

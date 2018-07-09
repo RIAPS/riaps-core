@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="structgroupt__conf" kind="struct" language="C++" prot="public">
+    <compoundname>groupt_conf</compoundname>
+    <includes refid="r__configuration_8h" local="no">r_configuration.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structgroupt__conf_1a0b08fae4faf1cb78b43ce7442edc709a" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string groupt_conf::groupTypeId</definition>
+        <argsstring></argsstring>
+        <name>groupTypeId</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" line="117" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" bodystart="117" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structgroupt__conf_1af2361990c9abc6024ebedd69dbf166ec" prot="public" static="no" mutable="no">
+        <type><ref refid="structgroupt__ports" kindref="compound">groupt_ports</ref></type>
+        <definition>groupt_ports groupt_conf::groupTypePorts</definition>
+        <argsstring></argsstring>
+        <name>groupTypePorts</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" line="118" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" bodystart="118" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structgroupt__conf_1a28ba16bf73d7f7b2ee9bd0679368376b" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool groupt_conf::hasLeader</definition>
+        <argsstring></argsstring>
+        <name>hasLeader</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" line="119" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" bodystart="119" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structgroupt__conf_1a2b50e2f7223925c534dc7a9351f33f14" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool groupt_conf::hasConsensus</definition>
+        <argsstring></argsstring>
+        <name>hasConsensus</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" line="120" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" bodystart="120" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>Grouptype configuration </para>    </detaileddescription>
+    <collaborationgraph>
+      <node id="516">
+        <label>groupt_conf</label>
+        <link refid="structgroupt__conf"/>
+        <childnode refid="517" relation="usage">
+          <edgelabel>groupTypePorts</edgelabel>
+        </childnode>
+      </node>
+      <node id="517">
+        <label>groupt_ports</label>
+        <link refid="structgroupt__ports"/>
+      </node>
+    </collaborationgraph>
+    <location file="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" line="116" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" bodystart="116" bodyend="121"/>
+    <listofallmembers>
+      <member refid="structgroupt__conf_1a0b08fae4faf1cb78b43ce7442edc709a" prot="public" virt="non-virtual"><scope>groupt_conf</scope><name>groupTypeId</name></member>
+      <member refid="structgroupt__conf_1af2361990c9abc6024ebedd69dbf166ec" prot="public" virt="non-virtual"><scope>groupt_conf</scope><name>groupTypePorts</name></member>
+      <member refid="structgroupt__conf_1a2b50e2f7223925c534dc7a9351f33f14" prot="public" virt="non-virtual"><scope>groupt_conf</scope><name>hasConsensus</name></member>
+      <member refid="structgroupt__conf_1a28ba16bf73d7f7b2ee9bd0679368376b" prot="public" virt="non-virtual"><scope>groupt_conf</scope><name>hasLeader</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

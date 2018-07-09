@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="structriaps_1_1groups_1_1GroupService" kind="struct" language="C++" prot="public">
+    <compoundname>riaps::groups::GroupService</compoundname>
+    <includes refid="r__group_8h" local="no">r_group.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structriaps_1_1groups_1_1GroupService_1aa4d4e6472e0369502844f785786872cd" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string riaps::groups::GroupService::messageType</definition>
+        <argsstring></argsstring>
+        <name>messageType</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_group.h" line="67" column="1" bodyfile="/home/istvan/work/riaps-core/include/groups/r_group.h" bodystart="67" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structriaps_1_1groups_1_1GroupService_1a59cb26c6f953a270ac5957060e0f1e84" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string riaps::groups::GroupService::address</definition>
+        <argsstring></argsstring>
+        <name>address</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_group.h" line="68" column="1" bodyfile="/home/istvan/work/riaps-core/include/groups/r_group.h" bodystart="68" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="structriaps_1_1groups_1_1GroupService_1a8fa7fc33d74464ef247c5a3645f83059" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>riaps::groups::GroupService::MSGPACK_DEFINE</definition>
+        <argsstring>(messageType, address)</argsstring>
+        <name>MSGPACK_DEFINE</name>
+        <param>
+          <type>messageType</type>
+        </param>
+        <param>
+          <type>address</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_group.h" line="69" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>Description of one port in the group. </para>    </detaileddescription>
+    <location file="/home/istvan/work/riaps-core/include/groups/r_group.h" line="66" column="1" bodyfile="/home/istvan/work/riaps-core/include/groups/r_group.h" bodystart="66" bodyend="70"/>
+    <listofallmembers>
+      <member refid="structriaps_1_1groups_1_1GroupService_1a59cb26c6f953a270ac5957060e0f1e84" prot="public" virt="non-virtual"><scope>riaps::groups::GroupService</scope><name>address</name></member>
+      <member refid="structriaps_1_1groups_1_1GroupService_1aa4d4e6472e0369502844f785786872cd" prot="public" virt="non-virtual"><scope>riaps::groups::GroupService</scope><name>messageType</name></member>
+      <member refid="structriaps_1_1groups_1_1GroupService_1a8fa7fc33d74464ef247c5a3645f83059" prot="public" virt="non-virtual"><scope>riaps::groups::GroupService</scope><name>MSGPACK_DEFINE</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

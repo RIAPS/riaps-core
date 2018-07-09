@@ -66,9 +66,6 @@ namespace riaps {
      */
     void component_actor(zsock_t* pipe, void* args);
 
-    // Depricated, we don't use msgbuf
-    //typedef void (riaps::ComponentBase::*riaps_handler)(const std::string&, msgpack::sbuffer*, riaps::ports::PortBase*);
-
     class ComponentBase {
         friend riaps::groups::Group;
     public:

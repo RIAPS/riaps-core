@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="structport__config__base" kind="struct" language="C++" prot="public">
+    <compoundname>port_config_base</compoundname>
+    <derivedcompoundref refid="structcomponent__port__config" prot="public" virt="non-virtual">component_port_config</derivedcompoundref>
+    <derivedcompoundref refid="structgroup__port__config" prot="public" virt="non-virtual">group_port_config</derivedcompoundref>
+    <includes refid="r__configuration_8h" local="no">r_configuration.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structport__config__base_1ac5c494b5b65e0c3eff084b5830e9688a" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string port_config_base::portName</definition>
+        <argsstring></argsstring>
+        <name>portName</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" line="19" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structport__config__base_1a4895f25b46b0988f7f23150ed7526bf0" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string port_config_base::messageType</definition>
+        <argsstring></argsstring>
+        <name>messageType</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" line="20" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>Baseclass for component and group ports. Contains portName - messageType mapping. </para>    </detaileddescription>
+    <inheritancegraph>
+      <node id="551">
+        <label>component_port_qry</label>
+        <link refid="structcomponent__port__qry"/>
+        <childnode refid="546" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="552">
+        <label>component_port_rep</label>
+        <link refid="structcomponent__port__rep"/>
+        <childnode refid="546" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="553">
+        <label>component_port_req</label>
+        <link refid="structcomponent__port__req"/>
+        <childnode refid="546" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="548">
+        <label>component_port_clt</label>
+        <link refid="structcomponent__port__clt"/>
+        <childnode refid="546" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="550">
+        <label>component_port_pub</label>
+        <link refid="structcomponent__port__pub"/>
+        <childnode refid="546" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="554">
+        <label>component_port_srv</label>
+        <link refid="structcomponent__port__srv"/>
+        <childnode refid="546" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="555">
+        <label>component_port_sub</label>
+        <link refid="structcomponent__port__sub"/>
+        <childnode refid="546" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="547">
+        <label>component_port_ans</label>
+        <link refid="structcomponent__port__ans"/>
+        <childnode refid="546" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="556">
+        <label>component_port_tim</label>
+        <link refid="structcomponent__port__tim"/>
+        <childnode refid="546" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="549">
+        <label>component_port_ins</label>
+        <link refid="structcomponent__port__ins"/>
+        <childnode refid="546" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="546">
+        <label>component_port_config</label>
+        <link refid="structcomponent__port__config"/>
+        <childnode refid="545" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="557">
+        <label>group_port_config</label>
+        <link refid="structgroup__port__config"/>
+        <childnode refid="545" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="545">
+        <label>port_config_base</label>
+        <link refid="structport__config__base"/>
+      </node>
+    </inheritancegraph>
+    <location file="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" line="18" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" bodystart="18" bodyend="21"/>
+    <listofallmembers>
+      <member refid="structport__config__base_1a4895f25b46b0988f7f23150ed7526bf0" prot="public" virt="non-virtual"><scope>port_config_base</scope><name>messageType</name></member>
+      <member refid="structport__config__base_1ac5c494b5b65e0c3eff084b5830e9688a" prot="public" virt="non-virtual"><scope>port_config_base</scope><name>portName</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

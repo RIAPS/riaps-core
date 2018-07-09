@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="structgroupt__ports" kind="struct" language="C++" prot="public">
+    <compoundname>groupt_ports</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structgroupt__ports_1a71c03cadf7b391f8bd3217a0bc7fca65" prot="public" static="no" mutable="no">
+        <type>std::vector&lt; <ref refid="structcomponent__port__pub" kindref="compound">group_port_pub</ref> &gt;</type>
+        <definition>std::vector&lt;group_port_pub&gt; groupt_ports::pubs</definition>
+        <argsstring></argsstring>
+        <name>pubs</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" line="109" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" bodystart="109" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structgroupt__ports_1a99e5f1c6598a8884fa8bb867c7ab79c4" prot="public" static="no" mutable="no">
+        <type>std::vector&lt; <ref refid="structcomponent__port__sub" kindref="compound">group_port_sub</ref> &gt;</type>
+        <definition>std::vector&lt;group_port_sub&gt; groupt_ports::subs</definition>
+        <argsstring></argsstring>
+        <name>subs</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" line="110" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" bodystart="110" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" line="108" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" bodystart="108" bodyend="111"/>
+    <listofallmembers>
+      <member refid="structgroupt__ports_1a71c03cadf7b391f8bd3217a0bc7fca65" prot="public" virt="non-virtual"><scope>groupt_ports</scope><name>pubs</name></member>
+      <member refid="structgroupt__ports_1a99e5f1c6598a8884fa8bb867c7ab79c4" prot="public" virt="non-virtual"><scope>groupt_ports</scope><name>subs</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

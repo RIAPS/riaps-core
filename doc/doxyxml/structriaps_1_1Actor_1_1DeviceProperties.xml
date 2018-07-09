@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="structriaps_1_1Actor_1_1DeviceProperties" kind="struct" language="C++" prot="protected">
+    <compoundname>riaps::Actor::DeviceProperties</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structriaps_1_1Actor_1_1DeviceProperties_1adac1cbc54907c59ff2f5ca6b3cb2ebbf" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string riaps::Actor::DeviceProperties::actorName</definition>
+        <argsstring></argsstring>
+        <name>actorName</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_actor.h" line="86" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_actor.h" bodystart="86" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structriaps_1_1Actor_1_1DeviceProperties_1a1673b8d576db49b8c8f579f508db1e31" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string riaps::Actor::DeviceProperties::deviceName</definition>
+        <argsstring></argsstring>
+        <name>deviceName</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_actor.h" line="87" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_actor.h" bodystart="87" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structriaps_1_1Actor_1_1DeviceProperties_1a3c17af9b49adca710a368c94ce61e044" prot="public" static="no" mutable="no">
+        <type>nlohmann::json</type>
+        <definition>nlohmann::json riaps::Actor::DeviceProperties::configJson</definition>
+        <argsstring></argsstring>
+        <name>configJson</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_actor.h" line="88" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_actor.h" bodystart="88" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structriaps_1_1Actor_1_1DeviceProperties_1a2173a10fc3b32cd5dec6b265988ad6e9" prot="public" static="no" mutable="no">
+        <type>nlohmann::json</type>
+        <definition>nlohmann::json riaps::Actor::DeviceProperties::jsonDevicesconfig</definition>
+        <argsstring></argsstring>
+        <name>jsonDevicesconfig</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_actor.h" line="89" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_actor.h" bodystart="89" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/istvan/work/riaps-core/include/componentmodel/r_actor.h" line="85" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_actor.h" bodystart="85" bodyend="90"/>
+    <listofallmembers>
+      <member refid="structriaps_1_1Actor_1_1DeviceProperties_1adac1cbc54907c59ff2f5ca6b3cb2ebbf" prot="public" virt="non-virtual"><scope>riaps::Actor::DeviceProperties</scope><name>actorName</name></member>
+      <member refid="structriaps_1_1Actor_1_1DeviceProperties_1a3c17af9b49adca710a368c94ce61e044" prot="public" virt="non-virtual"><scope>riaps::Actor::DeviceProperties</scope><name>configJson</name></member>
+      <member refid="structriaps_1_1Actor_1_1DeviceProperties_1a1673b8d576db49b8c8f579f508db1e31" prot="public" virt="non-virtual"><scope>riaps::Actor::DeviceProperties</scope><name>deviceName</name></member>
+      <member refid="structriaps_1_1Actor_1_1DeviceProperties_1a2173a10fc3b32cd5dec6b265988ad6e9" prot="public" virt="non-virtual"><scope>riaps::Actor::DeviceProperties</scope><name>jsonDevicesconfig</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

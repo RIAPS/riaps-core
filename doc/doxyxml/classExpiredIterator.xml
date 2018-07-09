@@ -1,0 +1,134 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="classExpiredIterator" kind="class" language="C++" prot="public">
+    <compoundname>ExpiredIterator</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename</type>
+        <declname>T</declname>
+        <defname>T</defname>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classExpiredIterator_1a87e12963a98a493c702d64e986a320df" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; <ref refid="classExpirable" kindref="compound">Expirable</ref>&lt; T &gt; &gt;::iterator</type>
+        <definition>std::vector&lt;Expirable&lt;T&gt; &gt;::iterator ExpiredIterator&lt; T &gt;::_it</definition>
+        <argsstring></argsstring>
+        <name>_it</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" line="52" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classExpiredIterator_1aed4e6d04873c37fdd41922e49dc302ac" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; <ref refid="classExpirable" kindref="compound">Expirable</ref>&lt; T &gt; &gt;::iterator</type>
+        <definition>std::vector&lt;Expirable&lt;T&gt; &gt;::iterator ExpiredIterator&lt; T &gt;::_end</definition>
+        <argsstring></argsstring>
+        <name>_end</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" line="53" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" bodystart="53" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classExpiredIterator_1a66e5825adb05712da44033bd62edf35b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>ExpiredIterator&lt; T &gt;::ExpiredIterator</definition>
+        <argsstring>(typename std::vector&lt; Expirable&lt; T &gt;&gt;::iterator it, typename std::vector&lt; Expirable&lt; T &gt;&gt;::iterator end)</argsstring>
+        <name>ExpiredIterator</name>
+        <param>
+          <type>typename std::vector&lt; <ref refid="classExpirable" kindref="compound">Expirable</ref>&lt; T &gt;&gt;::iterator</type>
+          <declname>it</declname>
+        </param>
+        <param>
+          <type>typename std::vector&lt; <ref refid="classExpirable" kindref="compound">Expirable</ref>&lt; T &gt;&gt;::iterator</type>
+          <declname>end</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" line="16" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" bodystart="16" bodyend="26"/>
+      </memberdef>
+      <memberdef kind="function" id="classExpiredIterator_1a19500111e72ca0928ca08266a5f0f2cb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool ExpiredIterator&lt; T &gt;::operator!=</definition>
+        <argsstring>(const ExpiredIterator&lt; T &gt; &amp;expiredIt)</argsstring>
+        <name>operator!=</name>
+        <param>
+          <type>const <ref refid="classExpiredIterator" kindref="compound">ExpiredIterator</ref>&lt; T &gt; &amp;</type>
+          <declname>expiredIt</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" line="28" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" bodystart="28" bodyend="30"/>
+      </memberdef>
+      <memberdef kind="function" id="classExpiredIterator_1ae571fb6289ed1ec9a43b9722f69021ad" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classExpirable" kindref="compound">Expirable</ref>&lt; T &gt; &amp;</type>
+        <definition>Expirable&lt;T&gt;&amp; ExpiredIterator&lt; T &gt;::operator*</definition>
+        <argsstring>()</argsstring>
+        <name>operator*</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" line="32" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" bodystart="32" bodyend="34"/>
+      </memberdef>
+      <memberdef kind="function" id="classExpiredIterator_1a3904c41cf97d62209b4804accb69942f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classExpirable" kindref="compound">Expirable</ref>&lt; T &gt; *</type>
+        <definition>Expirable&lt;T&gt;* ExpiredIterator&lt; T &gt;::operator-&gt;</definition>
+        <argsstring>()</argsstring>
+        <name>operator-&gt;</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" line="36" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" bodystart="36" bodyend="38"/>
+      </memberdef>
+      <memberdef kind="function" id="classExpiredIterator_1a4a91e84a5e40dba6c720b3318dede0c3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="classExpiredIterator" kindref="compound">ExpiredIterator</ref></type>
+        <definition>ExpiredIterator ExpiredIterator&lt; T &gt;::operator++</definition>
+        <argsstring>()</argsstring>
+        <name>operator++</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" line="40" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" bodystart="40" bodyend="49"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" line="13" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_expirablelist.h" bodystart="13" bodyend="55"/>
+    <listofallmembers>
+      <member refid="classExpiredIterator_1aed4e6d04873c37fdd41922e49dc302ac" prot="private" virt="non-virtual"><scope>ExpiredIterator</scope><name>_end</name></member>
+      <member refid="classExpiredIterator_1a87e12963a98a493c702d64e986a320df" prot="private" virt="non-virtual"><scope>ExpiredIterator</scope><name>_it</name></member>
+      <member refid="classExpiredIterator_1a66e5825adb05712da44033bd62edf35b" prot="public" virt="non-virtual"><scope>ExpiredIterator</scope><name>ExpiredIterator</name></member>
+      <member refid="classExpiredIterator_1a19500111e72ca0928ca08266a5f0f2cb" prot="public" virt="non-virtual"><scope>ExpiredIterator</scope><name>operator!=</name></member>
+      <member refid="classExpiredIterator_1ae571fb6289ed1ec9a43b9722f69021ad" prot="public" virt="non-virtual"><scope>ExpiredIterator</scope><name>operator*</name></member>
+      <member refid="classExpiredIterator_1a4a91e84a5e40dba6c720b3318dede0c3" prot="public" virt="non-virtual"><scope>ExpiredIterator</scope><name>operator++</name></member>
+      <member refid="classExpiredIterator_1a3904c41cf97d62209b4804accb69942f" prot="public" virt="non-virtual"><scope>ExpiredIterator</scope><name>operator-&gt;</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

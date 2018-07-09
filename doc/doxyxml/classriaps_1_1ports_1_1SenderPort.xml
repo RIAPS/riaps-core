@@ -1,0 +1,153 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="classriaps_1_1ports_1_1SenderPort" kind="class" language="C++" prot="public">
+    <compoundname>riaps::ports::SenderPort</compoundname>
+    <derivedcompoundref refid="classriaps_1_1ports_1_1AnswerPort" prot="public" virt="non-virtual">riaps::ports::AnswerPort</derivedcompoundref>
+    <derivedcompoundref refid="classriaps_1_1ports_1_1InsidePort" prot="public" virt="non-virtual">riaps::ports::InsidePort</derivedcompoundref>
+    <derivedcompoundref refid="classriaps_1_1ports_1_1PublisherPortBase" prot="public" virt="non-virtual">riaps::ports::PublisherPortBase</derivedcompoundref>
+    <derivedcompoundref refid="classriaps_1_1ports_1_1RequestPort" prot="public" virt="non-virtual">riaps::ports::RequestPort</derivedcompoundref>
+    <derivedcompoundref refid="classriaps_1_1ports_1_1ResponsePort" prot="public" virt="non-virtual">riaps::ports::ResponsePort</derivedcompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classriaps_1_1ports_1_1SenderPort_1acc8b810854ddcad4d21158aff03416f1" prot="private" static="no" mutable="no">
+        <type><ref refid="classriaps_1_1ports_1_1PortBase" kindref="compound">PortBase</ref> *</type>
+        <definition>PortBase* riaps::ports::SenderPort::m_port</definition>
+        <argsstring></argsstring>
+        <name>m_port</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_senderport.h" line="31" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/ports/r_senderport.h" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classriaps_1_1ports_1_1SenderPort_1a0f6aac8476e7ed7ec4d74095735107ba" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>riaps::ports::SenderPort::SenderPort</definition>
+        <argsstring>(PortBase *portBase)</argsstring>
+        <name>SenderPort</name>
+        <param>
+          <type><ref refid="classriaps_1_1ports_1_1PortBase" kindref="compound">PortBase</ref> *</type>
+          <declname>portBase</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_senderport.h" line="23" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1SenderPort_1adbcc44b7faf971285d1c3266938fa1ee" prot="public" static="no" const="yes" explicit="no" inline="no" virt="virtual">
+        <type>bool</type>
+        <definition>virtual bool riaps::ports::SenderPort::Send</definition>
+        <argsstring>(capnp::MallocMessageBuilder &amp;message) const </argsstring>
+        <name>Send</name>
+        <reimplementedby refid="classriaps_1_1ports_1_1RequestPort_1af3e7829b80a1166eda053c14d33d34f9">Send</reimplementedby>
+        <param>
+          <type>capnp::MallocMessageBuilder &amp;</type>
+          <declname>message</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_senderport.h" line="25" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1SenderPort_1a943a11ba23fa0306bfb4b9287f5974e2" prot="public" static="no" const="yes" explicit="no" inline="no" virt="virtual">
+        <type>bool</type>
+        <definition>virtual bool riaps::ports::SenderPort::Send</definition>
+        <argsstring>(zmsg_t **message) const </argsstring>
+        <name>Send</name>
+        <param>
+          <type>zmsg_t **</type>
+          <declname>message</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_senderport.h" line="26" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1SenderPort_1a3eb852c0821e539f809c7c824da85f08" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type></type>
+        <definition>virtual riaps::ports::SenderPort::~SenderPort</definition>
+        <argsstring>()</argsstring>
+        <name>~SenderPort</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_senderport.h" line="28" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="632">
+        <label>riaps::ports::InsidePort</label>
+        <link refid="classriaps_1_1ports_1_1InsidePort"/>
+        <childnode refid="630" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="636">
+        <label>riaps::ports::RequestPort</label>
+        <link refid="classriaps_1_1ports_1_1RequestPort"/>
+        <childnode refid="630" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="634">
+        <label>riaps::ports::GroupPublisherPort</label>
+        <link refid="classriaps_1_1ports_1_1GroupPublisherPort"/>
+        <childnode refid="633" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="630">
+        <label>riaps::ports::SenderPort</label>
+        <link refid="classriaps_1_1ports_1_1SenderPort"/>
+      </node>
+      <node id="637">
+        <label>riaps::ports::ResponsePort</label>
+        <link refid="classriaps_1_1ports_1_1ResponsePort"/>
+        <childnode refid="630" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="633">
+        <label>riaps::ports::PublisherPortBase</label>
+        <link refid="classriaps_1_1ports_1_1PublisherPortBase"/>
+        <childnode refid="630" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="631">
+        <label>riaps::ports::AnswerPort</label>
+        <link refid="classriaps_1_1ports_1_1AnswerPort"/>
+        <childnode refid="630" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="635">
+        <label>riaps::ports::PublisherPort</label>
+        <link refid="classriaps_1_1ports_1_1PublisherPort"/>
+        <childnode refid="633" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_senderport.h" line="20" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/ports/r_senderport.h" bodystart="20" bodyend="32"/>
+    <listofallmembers>
+      <member refid="classriaps_1_1ports_1_1SenderPort_1acc8b810854ddcad4d21158aff03416f1" prot="private" virt="non-virtual"><scope>riaps::ports::SenderPort</scope><name>m_port</name></member>
+      <member refid="classriaps_1_1ports_1_1SenderPort_1adbcc44b7faf971285d1c3266938fa1ee" prot="public" virt="virtual"><scope>riaps::ports::SenderPort</scope><name>Send</name></member>
+      <member refid="classriaps_1_1ports_1_1SenderPort_1a943a11ba23fa0306bfb4b9287f5974e2" prot="public" virt="virtual"><scope>riaps::ports::SenderPort</scope><name>Send</name></member>
+      <member refid="classriaps_1_1ports_1_1SenderPort_1a0f6aac8476e7ed7ec4d74095735107ba" prot="public" virt="non-virtual"><scope>riaps::ports::SenderPort</scope><name>SenderPort</name></member>
+      <member refid="classriaps_1_1ports_1_1SenderPort_1a3eb852c0821e539f809c7c824da85f08" prot="public" virt="virtual"><scope>riaps::ports::SenderPort</scope><name>~SenderPort</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

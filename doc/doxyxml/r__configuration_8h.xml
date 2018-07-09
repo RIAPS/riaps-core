@@ -1,0 +1,469 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="r__configuration_8h" kind="file" language="C++">
+    <compoundname>r_configuration.h</compoundname>
+    <includes refid="r__parameter_8h" local="no">componentmodel/r_parameter.h</includes>
+    <includes local="no">string</includes>
+    <includes local="no">vector</includes>
+    <includedby refid="r__answerport_8h" local="no">/home/istvan/work/riaps-core/include/componentmodel/ports/r_answerport.h</includedby>
+    <includedby refid="r__portbase_8h" local="no">/home/istvan/work/riaps-core/include/componentmodel/ports/r_portbase.h</includedby>
+    <includedby refid="r__publisherport_8h" local="no">/home/istvan/work/riaps-core/include/componentmodel/ports/r_publisherport.h</includedby>
+    <includedby refid="r__pubportgroup_8h" local="no">/home/istvan/work/riaps-core/include/componentmodel/ports/r_pubportgroup.h</includedby>
+    <includedby refid="r__queryport_8h" local="no">/home/istvan/work/riaps-core/include/componentmodel/ports/r_queryport.h</includedby>
+    <includedby refid="r__requestport_8h" local="no">/home/istvan/work/riaps-core/include/componentmodel/ports/r_requestport.h</includedby>
+    <includedby refid="r__responseport_8h" local="no">/home/istvan/work/riaps-core/include/componentmodel/ports/r_responseport.h</includedby>
+    <includedby refid="r__subscriberport_8h" local="no">/home/istvan/work/riaps-core/include/componentmodel/ports/r_subscriberport.h</includedby>
+    <includedby refid="r__actor_8h" local="no">/home/istvan/work/riaps-core/include/componentmodel/r_actor.h</includedby>
+    <includedby refid="r__componentbase_8h" local="no">/home/istvan/work/riaps-core/include/componentmodel/r_componentbase.h</includedby>
+    <includedby refid="r__devicethread_8h" local="no">/home/istvan/work/riaps-core/include/componentmodel/r_devicethread.h</includedby>
+    <includedby refid="r__group_8h" local="no">/home/istvan/work/riaps-core/include/groups/r_group.h</includedby>
+    <incdepgraph>
+      <node id="1031">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h</label>
+        <link refid="r_configuration.h"/>
+        <childnode refid="1032" relation="include">
+        </childnode>
+        <childnode refid="1033" relation="include">
+        </childnode>
+        <childnode refid="1036" relation="include">
+        </childnode>
+      </node>
+      <node id="1032">
+        <label>componentmodel/r_parameter.h</label>
+        <link refid="r__parameter_8h_source"/>
+        <childnode refid="1033" relation="include">
+        </childnode>
+        <childnode refid="1034" relation="include">
+        </childnode>
+        <childnode refid="1035" relation="include">
+        </childnode>
+        <childnode refid="1036" relation="include">
+        </childnode>
+      </node>
+      <node id="1033">
+        <label>string</label>
+      </node>
+      <node id="1034">
+        <label>map</label>
+      </node>
+      <node id="1036">
+        <label>vector</label>
+      </node>
+      <node id="1035">
+        <label>memory</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="1057">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_pubportbase.h</label>
+        <link refid="r__pubportbase_8h_source"/>
+        <childnode refid="1058" relation="include">
+        </childnode>
+        <childnode refid="1049" relation="include">
+        </childnode>
+      </node>
+      <node id="1047">
+        <label>/home/istvan/work/riaps-core/include/device/r_deviceactor.h</label>
+        <link refid="r__deviceactor_8h_source"/>
+      </node>
+      <node id="1055">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_insideport.h</label>
+        <link refid="r__insideport_8h_source"/>
+        <childnode refid="1039" relation="include">
+        </childnode>
+        <childnode refid="1056" relation="include">
+        </childnode>
+      </node>
+      <node id="1048">
+        <label>/home/istvan/work/riaps-core/include/groups/r_group.h</label>
+        <link refid="r__group_8h_source"/>
+        <childnode refid="1049" relation="include">
+        </childnode>
+        <childnode refid="1044" relation="include">
+        </childnode>
+        <childnode refid="1039" relation="include">
+        </childnode>
+        <childnode refid="1050" relation="include">
+        </childnode>
+        <childnode refid="1052" relation="include">
+        </childnode>
+      </node>
+      <node id="1054">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_portbase.h</label>
+        <link refid="r__portbase_8h_source"/>
+        <childnode refid="1038" relation="include">
+        </childnode>
+        <childnode refid="1055" relation="include">
+        </childnode>
+        <childnode refid="1057" relation="include">
+        </childnode>
+        <childnode refid="1042" relation="include">
+        </childnode>
+        <childnode refid="1060" relation="include">
+        </childnode>
+        <childnode refid="1062" relation="include">
+        </childnode>
+        <childnode refid="1063" relation="include">
+        </childnode>
+      </node>
+      <node id="1052">
+        <label>/home/istvan/work/riaps-core/include/groups/r_grouplead.h</label>
+        <link refid="r__grouplead_8h_source"/>
+        <childnode refid="1048" relation="include">
+        </childnode>
+      </node>
+      <node id="1037">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h</label>
+        <link refid="r_configuration.h"/>
+        <childnode refid="1038" relation="include">
+        </childnode>
+        <childnode refid="1054" relation="include">
+        </childnode>
+        <childnode refid="1058" relation="include">
+        </childnode>
+        <childnode refid="1049" relation="include">
+        </childnode>
+        <childnode refid="1040" relation="include">
+        </childnode>
+        <childnode refid="1041" relation="include">
+        </childnode>
+        <childnode refid="1042" relation="include">
+        </childnode>
+        <childnode refid="1043" relation="include">
+        </childnode>
+        <childnode refid="1044" relation="include">
+        </childnode>
+        <childnode refid="1039" relation="include">
+        </childnode>
+        <childnode refid="1056" relation="include">
+        </childnode>
+        <childnode refid="1048" relation="include">
+        </childnode>
+      </node>
+      <node id="1045">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_actor_main.h</label>
+        <link refid="r__actor__main_8h_source"/>
+      </node>
+      <node id="1060">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_subportbase.h</label>
+        <link refid="r__subportbase_8h_source"/>
+        <childnode refid="1061" relation="include">
+        </childnode>
+        <childnode refid="1043" relation="include">
+        </childnode>
+      </node>
+      <node id="1053">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_deploapi.h</label>
+        <link refid="r__deploapi_8h_source"/>
+        <childnode refid="1044" relation="include">
+        </childnode>
+      </node>
+      <node id="1059">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_portregister.h</label>
+        <link refid="r__portregister_8h_source"/>
+      </node>
+      <node id="1042">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_responseport.h</label>
+        <link refid="r__responseport_8h_source"/>
+        <childnode refid="1039" relation="include">
+        </childnode>
+      </node>
+      <node id="1041">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_requestport.h</label>
+        <link refid="r__requestport_8h_source"/>
+        <childnode refid="1039" relation="include">
+        </childnode>
+      </node>
+      <node id="1040">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_queryport.h</label>
+        <link refid="r__queryport_8h_source"/>
+        <childnode refid="1039" relation="include">
+        </childnode>
+      </node>
+      <node id="1051">
+        <label>/home/istvan/work/riaps-core/include/discoveryd/r_riaps_actor.h</label>
+        <link refid="r__riaps__actor_8h_source"/>
+      </node>
+      <node id="1050">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_discoverdapi.h</label>
+        <link refid="r__discoverdapi_8h_source"/>
+        <childnode refid="1044" relation="include">
+        </childnode>
+        <childnode refid="1039" relation="include">
+        </childnode>
+        <childnode refid="1051" relation="include">
+        </childnode>
+      </node>
+      <node id="1061">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_subportgroup.h</label>
+        <link refid="r__subportgroup_8h_source"/>
+        <childnode refid="1048" relation="include">
+        </childnode>
+      </node>
+      <node id="1043">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_subscriberport.h</label>
+        <link refid="r__subscriberport_8h_source"/>
+        <childnode refid="1039" relation="include">
+        </childnode>
+      </node>
+      <node id="1038">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_answerport.h</label>
+        <link refid="r__answerport_8h_source"/>
+        <childnode refid="1039" relation="include">
+        </childnode>
+      </node>
+      <node id="1049">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_pubportgroup.h</label>
+        <link refid="r__pubportgroup_8h_source"/>
+        <childnode refid="1048" relation="include">
+        </childnode>
+      </node>
+      <node id="1046">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_peripheral.h</label>
+        <link refid="r__peripheral_8h_source"/>
+        <childnode refid="1044" relation="include">
+        </childnode>
+      </node>
+      <node id="1044">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_actor.h</label>
+        <link refid="r__actor_8h_source"/>
+        <childnode refid="1045" relation="include">
+        </childnode>
+        <childnode refid="1039" relation="include">
+        </childnode>
+        <childnode refid="1046" relation="include">
+        </childnode>
+        <childnode refid="1047" relation="include">
+        </childnode>
+        <childnode refid="1048" relation="include">
+        </childnode>
+      </node>
+      <node id="1062">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_oneshottimer.h</label>
+        <link refid="r__oneshottimer_8h_source"/>
+        <childnode refid="1039" relation="include">
+        </childnode>
+      </node>
+      <node id="1039">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_componentbase.h</label>
+        <link refid="r__componentbase_8h_source"/>
+        <childnode refid="1038" relation="include">
+        </childnode>
+        <childnode refid="1040" relation="include">
+        </childnode>
+        <childnode refid="1041" relation="include">
+        </childnode>
+        <childnode refid="1042" relation="include">
+        </childnode>
+        <childnode refid="1043" relation="include">
+        </childnode>
+        <childnode refid="1044" relation="include">
+        </childnode>
+        <childnode refid="1053" relation="include">
+        </childnode>
+        <childnode refid="1050" relation="include">
+        </childnode>
+      </node>
+      <node id="1063">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_periodictimer.h</label>
+        <link refid="r__periodictimer_8h_source"/>
+        <childnode refid="1039" relation="include">
+        </childnode>
+      </node>
+      <node id="1056">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/r_devicethread.h</label>
+        <link refid="r__devicethread_8h_source"/>
+      </node>
+      <node id="1058">
+        <label>/home/istvan/work/riaps-core/include/componentmodel/ports/r_publisherport.h</label>
+        <link refid="r__publisherport_8h_source"/>
+        <childnode refid="1039" relation="include">
+        </childnode>
+        <childnode refid="1059" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structport__config__base" prot="public">port_config_base</innerclass>
+    <innerclass refid="structgroup__port__config" prot="public">group_port_config</innerclass>
+    <innerclass refid="structcomponent__port__config" prot="public">component_port_config</innerclass>
+    <innerclass refid="structcomponent__port__clt" prot="public">component_port_clt</innerclass>
+    <innerclass refid="structcomponent__port__pub" prot="public">component_port_pub</innerclass>
+    <innerclass refid="structcomponent__port__req" prot="public">component_port_req</innerclass>
+    <innerclass refid="structcomponent__port__rep" prot="public">component_port_rep</innerclass>
+    <innerclass refid="structcomponent__port__srv" prot="public">component_port_srv</innerclass>
+    <innerclass refid="structcomponent__port__sub" prot="public">component_port_sub</innerclass>
+    <innerclass refid="structcomponent__port__tim" prot="public">component_port_tim</innerclass>
+    <innerclass refid="structcomponent__port__ins" prot="public">component_port_ins</innerclass>
+    <innerclass refid="structcomponent__port__qry" prot="public">component_port_qry</innerclass>
+    <innerclass refid="structcomponent__port__ans" prot="public">component_port_ans</innerclass>
+    <innerclass refid="structComponentPorts" prot="public">ComponentPorts</innerclass>
+    <innerclass refid="structgroupt__ports" prot="public">groupt_ports</innerclass>
+    <innerclass refid="structgroupt__conf" prot="public">groupt_conf</innerclass>
+    <innerclass refid="structcomponent__conf" prot="public">component_conf</innerclass>
+      <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="r__configuration_8h_1ae2d6bec39f4f8713125ae477b6a73c77" prot="public" static="no">
+        <type>struct <ref refid="structcomponent__port__pub" kindref="compound">component_port_pub</ref></type>
+        <definition>typedef struct component_port_pub group_port_pub</definition>
+        <argsstring></argsstring>
+        <name>group_port_pub</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>List of ports for group types Only pub/sub </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" line="456" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" bodystart="106" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="r__configuration_8h_1a1a62e5bf02ebcc88ac6144a57e789194" prot="public" static="no">
+        <type>struct <ref refid="structcomponent__port__sub" kindref="compound">component_port_sub</ref></type>
+        <definition>typedef struct component_port_sub group_port_sub</definition>
+        <argsstring></argsstring>
+        <name>group_port_sub</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" line="456" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" bodystart="107" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="r__configuration_8h_1ad3aa8ce9af5190610831d4f28ef5273d" prot="public" static="no">
+        <type>struct <ref refid="structcomponent__conf" kindref="compound">component_conf</ref></type>
+        <definition>typedef struct component_conf _component_conf</definition>
+        <argsstring></argsstring>
+        <name>_component_conf</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" line="456" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" bodystart="132" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Created<sp/>by<sp/>parallels<sp/>on<sp/>9/7/16.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>RIAPS_FW_R_CONFIGURATION_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>RIAPS_FW_R_CONFIGURATION_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;componentmodel/r_parameter.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;vector&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespaceriaps_1_1componentmodel" kindref="compound">riaps::componentmodel</ref>;</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18" refid="structport__config__base" refkind="compound"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structport__config__base" kindref="compound">port_config_base</ref><sp/>{</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/>std::string<sp/>portName;</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/>std::string<sp/>messageType;</highlight></codeline>
+<codeline lineno="21"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26" refid="structgroup__port__config" refkind="compound"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structgroup__port__config" kindref="compound">group_port_config</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="structport__config__base" kindref="compound">port_config_base</ref>{</highlight></codeline>
+<codeline lineno="27"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33" refid="structcomponent__port__config" refkind="compound"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcomponent__port__config" kindref="compound">component_port_config</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="structport__config__base" kindref="compound">port_config_base</ref><sp/>{</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>isLocal;</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>isTimed;</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structcomponent__port__config" kindref="compound">component_port_config</ref>(){</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>isLocal=</highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>isTimed=</highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="41"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44" refid="structcomponent__port__clt" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcomponent__port__clt" kindref="compound">component_port_clt</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="structcomponent__port__config" kindref="compound">component_port_config</ref><sp/>{};</highlight></codeline>
+<codeline lineno="45" refid="structcomponent__port__pub" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcomponent__port__pub" kindref="compound">component_port_pub</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="structcomponent__port__config" kindref="compound">component_port_config</ref><sp/>{};</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47" refid="structcomponent__port__req" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcomponent__port__req" kindref="compound">component_port_req</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="structcomponent__port__config" kindref="compound">component_port_config</ref><sp/>{</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/>component_port_req(){</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>isTimed<sp/>=<sp/>true;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/>}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/>std::string<sp/>req_type;</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/>std::string<sp/>rep_type;</highlight></codeline>
+<codeline lineno="54"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight></codeline>
+<codeline lineno="56" refid="structcomponent__port__rep" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcomponent__port__rep" kindref="compound">component_port_rep</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="structcomponent__port__config" kindref="compound">component_port_config</ref>{</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/>//DEBUG<sp/>todo:<sp/>remove</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/>component_port_rep(){</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>isTimed<sp/>=<sp/>true;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/>}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/>std::string<sp/>req_type;</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/>std::string<sp/>rep_type;</highlight></codeline>
+<codeline lineno="65"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="66" refid="structcomponent__port__srv" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcomponent__port__srv" kindref="compound">component_port_srv</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="structcomponent__port__config" kindref="compound">component_port_config</ref>{};</highlight></codeline>
+<codeline lineno="67" refid="structcomponent__port__sub" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcomponent__port__sub" kindref="compound">component_port_sub</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="structcomponent__port__config" kindref="compound">component_port_config</ref>{</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//std::string<sp/>messageType;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="70" refid="structcomponent__port__tim" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcomponent__port__tim" kindref="compound">component_port_tim</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="structcomponent__port__config" kindref="compound">component_port_config</ref><sp/>{</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/>ulong<sp/><sp/><sp/><sp/><sp/><sp/><sp/>period;</highlight></codeline>
+<codeline lineno="72"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="73" refid="structcomponent__port__ins" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcomponent__port__ins" kindref="compound">component_port_ins</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="structcomponent__port__config" kindref="compound">component_port_config</ref>{</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"></highlight></codeline>
+<codeline lineno="75"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight></codeline>
+<codeline lineno="77" refid="structcomponent__port__qry" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcomponent__port__qry" kindref="compound">component_port_qry</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="structcomponent__port__config" kindref="compound">component_port_config</ref><sp/>{</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/>std::string<sp/>qry_type;</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/>std::string<sp/>ans_type;</highlight></codeline>
+<codeline lineno="80"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"></highlight></codeline>
+<codeline lineno="82" refid="structcomponent__port__ans" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcomponent__port__ans" kindref="compound">component_port_ans</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="structcomponent__port__config" kindref="compound">component_port_config</ref>{</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/>std::string<sp/>qry_type;</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/>std::string<sp/>ans_type;</highlight></codeline>
+<codeline lineno="85"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"></highlight></codeline>
+<codeline lineno="87"><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight></codeline>
+<codeline lineno="89" refid="structComponentPorts" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structComponentPorts" kindref="compound">ComponentPorts</ref><sp/>{</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;component_port_clt&gt;<sp/>clts;<sp/></highlight><highlight class="comment">//<sp/>Client</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;component_port_srv&gt;<sp/>srvs;<sp/></highlight><highlight class="comment">//<sp/>Server</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;component_port_pub&gt;<sp/>pubs;<sp/></highlight><highlight class="comment">//<sp/>Publisher</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;component_port_sub&gt;<sp/>subs;<sp/></highlight><highlight class="comment">//<sp/>Subscribe</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;component_port_req&gt;<sp/>reqs;<sp/></highlight><highlight class="comment">//<sp/>Request</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;component_port_rep&gt;<sp/>reps;<sp/></highlight><highlight class="comment">//<sp/>Response</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;component_port_tim&gt;<sp/>tims;<sp/></highlight><highlight class="comment">//<sp/>Timer</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;component_port_ins&gt;<sp/>inss;<sp/></highlight><highlight class="comment">//<sp/>Inside</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;component_port_qry&gt;<sp/>qrys;<sp/></highlight><highlight class="comment">//<sp/>Query</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;component_port_ans&gt;<sp/>anss;<sp/></highlight><highlight class="comment">//<sp/>Answer</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="100"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"></highlight></codeline>
+<codeline lineno="106"><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcomponent__port__pub" kindref="compound">component_port_pub</ref><sp/>group_port_pub;</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcomponent__port__sub" kindref="compound">component_port_sub</ref><sp/>group_port_sub;</highlight></codeline>
+<codeline lineno="108" refid="structgroupt__ports" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structgroupt__ports" kindref="compound">groupt_ports</ref><sp/>{</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;group_port_pub&gt;<sp/>pubs;</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;group_port_sub&gt;<sp/>subs;</highlight></codeline>
+<codeline lineno="111"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"></highlight></codeline>
+<codeline lineno="116" refid="structgroupt__conf" refkind="compound"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structgroupt__conf" kindref="compound">groupt_conf</ref><sp/>{</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/>std::string<sp/><sp/><sp/>groupTypeId;</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structgroupt__ports" kindref="compound">groupt_ports</ref><sp/><sp/>groupTypePorts;</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>hasLeader;</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>hasConsensus;</highlight></codeline>
+<codeline lineno="121"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"></highlight></codeline>
+<codeline lineno="123"><highlight class="normal"></highlight></codeline>
+<codeline lineno="124" refid="structcomponent__conf" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcomponent__conf" kindref="compound">component_conf</ref><sp/>{</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/>std::string<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>component_name;</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/>std::string<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>component_type;</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structComponentPorts" kindref="compound">ComponentPorts</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>component_ports;</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classriaps_1_1componentmodel_1_1Parameters" kindref="compound">Parameters</ref><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>component_parameters;</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>isDevice;</highlight></codeline>
+<codeline lineno="130"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"></highlight></codeline>
+<codeline lineno="132"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcomponent__conf" kindref="compound">component_conf</ref><sp/>_component_conf;</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"></highlight></codeline>
+<codeline lineno="134"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/>//RIAPS_FW_R_CONFIGURATION_H</highlight></codeline>
+    </programlisting>
+    <location file="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h"/>
+  </compounddef>
+</doxygen>

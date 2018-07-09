@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="dir_b8f1e9694961d1c1cbce3681f38ce8bd" kind="dir">
+    <compoundname>/home/istvan/work/riaps-core/include/groups</compoundname>
+    <innerfile refid="r__group_8h">r_group.h</innerfile>
+    <innerfile refid="r__grouplead_8h">r_grouplead.h</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/istvan/work/riaps-core/include/groups/"/>
+  </compounddef>
+</doxygen>

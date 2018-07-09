@@ -1,0 +1,137 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="versions_8h" kind="file" language="C++">
+    <compoundname>versions.h</compoundname>
+    <includes local="no">string</includes>
+    <incdepgraph>
+      <node id="2027">
+        <label>string</label>
+      </node>
+      <node id="2026">
+        <label>/home/istvan/work/riaps-core/include/version/versions.h</label>
+        <link refid="versions.h"/>
+        <childnode refid="2027" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="versions_8h_1aa9cee77b16415008ab1cd0bb7caf887b" prot="public" static="no">
+        <name>RIAPS_DISCOVERY_VERSION_MAJOR</name>
+        <initializer>0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/version/versions.h" line="10" column="9" bodyfile="/home/istvan/work/riaps-core/include/version/versions.h" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="versions_8h_1a77505a989ef2c5082ad146e2353e7a8b" prot="public" static="no">
+        <name>RIAPS_DISCOVERY_VERSION_MINOR</name>
+        <initializer>8</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/version/versions.h" line="11" column="9" bodyfile="/home/istvan/work/riaps-core/include/version/versions.h" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="versions_8h_1add1b5338db1f177ed7942fc4e14ae7c2" prot="public" static="no">
+        <name>RIAPS_DISCOVERY_VERSION_PATCH</name>
+        <initializer>0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/version/versions.h" line="12" column="9" bodyfile="/home/istvan/work/riaps-core/include/version/versions.h" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="versions_8h_1a52c9f6f45fd599455b9fd8ffb8ca98d7" prot="public" static="no">
+        <name>RIAPS_MAKE_VERSION</name>
+        <param><defname>major</defname></param>
+        <param><defname>minor</defname></param>
+        <param><defname>patch</defname></param>
+        <initializer>((major) * 10000 + (minor) * 100 + (patch))</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/version/versions.h" line="14" column="9" bodyfile="/home/istvan/work/riaps-core/include/version/versions.h" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="versions_8h_1a73eb0426a063a6eb114fc6889e24bfaa" prot="public" static="no">
+        <name>RIAPS_MAKE_PRINTABLE_VERSION</name>
+        <param><defname>major</defname></param>
+        <param><defname>minor</defname></param>
+        <param><defname>patch</defname></param>
+        <initializer>&quot;v&quot; + std::to_string(major) + &quot;.&quot; + std::to_string(minor) + &quot;.&quot; + std::to_string(patch)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/version/versions.h" line="17" column="9" bodyfile="/home/istvan/work/riaps-core/include/version/versions.h" bodystart="17" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="versions_8h_1ab91708eb756edeeddc27ab196060a5cd" prot="public" static="no">
+        <name>RIAPS_DISCOVERY_VERSION</name>
+        <initializer>RIAPS_MAKE_VERSION(RIAPS_DISCOVERY_VERSION_MAJOR, RIAPS_DISCOVERY_VERSION_MINOR, RIAPS_DISCOVERY_VERSION_PATCH)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/version/versions.h" line="20" column="9" bodyfile="/home/istvan/work/riaps-core/include/version/versions.h" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="versions_8h_1a12336157fe27c4bef606280cfc463437" prot="public" static="no">
+        <name>RIAPS_DISCOVERY_PRINTABLE_VERSION</name>
+        <initializer>RIAPS_MAKE_PRINTABLE_VERSION(RIAPS_DISCOVERY_VERSION_MAJOR, RIAPS_DISCOVERY_VERSION_MINOR, RIAPS_DISCOVERY_VERSION_PATCH)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/version/versions.h" line="23" column="9" bodyfile="/home/istvan/work/riaps-core/include/version/versions.h" bodystart="23" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Created<sp/>by<sp/>istvan<sp/>on<sp/>2/22/17.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>RIAPS_CORE_VERSIONS_H_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>RIAPS_CORE_VERSIONS_H_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>RIAPS_DISCOVERY_VERSION_MAJOR<sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>RIAPS_DISCOVERY_VERSION_MINOR<sp/>8</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>RIAPS_DISCOVERY_VERSION_PATCH<sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>RIAPS_MAKE_VERSION(major,<sp/>minor,<sp/>patch)<sp/>\</highlight></codeline>
+<codeline lineno="15"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>((major)<sp/>*<sp/>10000<sp/>+<sp/>(minor)<sp/>*<sp/>100<sp/>+<sp/>(patch))</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>RIAPS_MAKE_PRINTABLE_VERSION(major,<sp/>minor,<sp/>patch)\</highlight></codeline>
+<codeline lineno="18"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>&quot;v&quot;<sp/>+<sp/>std::to_string(major)<sp/>+<sp/>&quot;.&quot;<sp/>+<sp/>std::to_string(minor)<sp/>+<sp/>&quot;.&quot;<sp/>+<sp/>std::to_string(patch)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>RIAPS_DISCOVERY_VERSION<sp/>\</highlight></codeline>
+<codeline lineno="21"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>RIAPS_MAKE_VERSION(RIAPS_DISCOVERY_VERSION_MAJOR,<sp/>RIAPS_DISCOVERY_VERSION_MINOR,<sp/>RIAPS_DISCOVERY_VERSION_PATCH)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>RIAPS_DISCOVERY_PRINTABLE_VERSION<sp/>\</highlight></codeline>
+<codeline lineno="24"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>RIAPS_MAKE_PRINTABLE_VERSION(RIAPS_DISCOVERY_VERSION_MAJOR,<sp/>RIAPS_DISCOVERY_VERSION_MINOR,<sp/>RIAPS_DISCOVERY_VERSION_PATCH)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/>//RIAPS_CORE_VERSIONS_H_H</highlight></codeline>
+    </programlisting>
+    <location file="/home/istvan/work/riaps-core/include/version/versions.h"/>
+  </compounddef>
+</doxygen>
