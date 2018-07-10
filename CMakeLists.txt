@@ -73,7 +73,7 @@ if (BUILD_TESTS)
     #add_subdirectory(tests/DC/leaderwiththree)
     # add_subdirectory(tests/TimedTest)
     # add_subdirectory(examples/EchoIO)
-    # add_subdirectory(tests/DistributedEstimatorPybind)
+    add_subdirectory(tests/DistributedEstimatorPybind)
 endif()
 
 
@@ -187,12 +187,12 @@ set(ACTOR_HEADERS
         include/messaging/deplo.capnp.h
         include/json.h)
 
-add_executable(start_actor
-        ${ACTOR_SOURCE}
-        ${ACTOR_HEADERS}
-        )
-target_link_libraries(start_actor czmq zmq riaps capnp pthread)
-install(TARGETS start_actor DESTINATION bin)
+#add_executable(start_actor
+#        ${ACTOR_SOURCE}
+#        ${ACTOR_HEADERS}
+#        )
+#target_link_libraries(start_actor czmq zmq riaps capnp pthread)
+#install(TARGETS start_actor DESTINATION bin)
 
 # rdiscoveryd source
 list(APPEND RDISCOVERYD_SOURCE
@@ -241,13 +241,13 @@ list(APPEND DEVICE_HEADERS
         )
 
 # start_device
-add_executable(start_device
-        ${DEVICE_SOURCE}
-        ${DEVICE_HEADERS}
-        )
-target_link_libraries(start_device czmq zmq opendht gnutls riaps capnp nettle hogweed gmp pthread)
+#add_executable(start_device
+#        ${DEVICE_SOURCE}
+#        ${DEVICE_HEADERS}
+#        )
+#target_link_libraries(start_device czmq zmq opendht gnutls riaps capnp nettle hogweed gmp pthread)
 
-install(TARGETS start_device DESTINATION bin)
+#install(TARGETS start_device DESTINATION bin)
 
 
 SET(MAJOR_VERSION "0")
