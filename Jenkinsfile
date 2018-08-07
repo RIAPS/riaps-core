@@ -10,6 +10,7 @@ pipeline {
             source version.sh
             ./fetch_linux_amd64 --repo="https://github.com/RIAPS/riaps-externals/" --tag=$externalsversion --release-asset="riaps-externals-amd64.deb" .
             sudo dpkg -i riaps-externals-amd64.deb
+            rm riaps-externals-amd64.deb
           '''
         }
       }
