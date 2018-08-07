@@ -1,5 +1,8 @@
 pipeline {
   agent any
+  options {
+    buildDiscarder logRotator(daysToKeepStr: '30', numToKeepStr: '30')
+  }
   stages {
     stage('Setup dependencies') {
       steps {
