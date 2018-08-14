@@ -8,10 +8,15 @@ namespace distributedestimator {
     namespace components {
 
 
-        LocalEstimator::LocalEstimator(const py::object *parent_actor, const py::dict type_spec, const std::string &name,
-                                       const std::string &type_name, const py::dict args,
-                                       const std::string &application_name, const std::string &actor_name)
-                : LocalEstimatorBase(parent_actor, type_spec, name, type_name, args, application_name,
+        LocalEstimator::LocalEstimator(const py::object *parent_actor,
+                                       const py::dict actor_spec, // Actor json config
+                                       const py::dict type_spec,  // component json config
+                                       const std::string &name,
+                                       const std::string &type_name,
+                                       const py::dict args,
+                                       const std::string &application_name,
+                                       const std::string &actor_name)
+                : LocalEstimatorBase(parent_actor, actor_spec, type_spec, name, type_name, args, application_name,
                                       actor_name) {
 
         }
@@ -73,10 +78,15 @@ namespace distributedestimator {
 //}
 
 std::unique_ptr<distributedestimator::components::LocalEstimator>
-create_component_py(const py::object *parent_actor, const py::dict type_spec, const std::string &name,
-                    const std::string &type_name, const py::dict args, const std::string &application_name,
+create_component_py(const py::object *parent_actor,
+                    const py::dict actor_spec,
+                    const py::dict type_spec,
+                    const std::string &name,
+                    const std::string &type_name,
+                    const py::dict args,
+                    const std::string &application_name,
                     const std::string &actor_name) {
-    auto ptr = new distributedestimator::components::LocalEstimator(parent_actor, type_spec, name, type_name, args,
+    auto ptr = new distributedestimator::components::LocalEstimator(parent_actor, actor_spec, type_spec, name, type_name, args,
                                                                      application_name,
                                                                      actor_name);
     return std::move(std::unique_ptr<distributedestimator::components::LocalEstimator>(ptr));
@@ -84,7 +94,7 @@ create_component_py(const py::object *parent_actor, const py::dict type_spec, co
 
 PYBIND11_MODULE(localestimator, m) {
     py::class_<distributedestimator::components::LocalEstimator> testClass(m, "LocalEstimator");
-    testClass.def(py::init<const py::object*, const py::dict, const std::string&, const std::string&, const py::dict, const std::string&, const std::string&>());
+    testClass.def(py::init<const py::object*, const py::dict, const py::dict, const std::string&, const std::string&, const py::dict, const std::string&, const std::string&>());
     testClass.def("setup", &distributedestimator::components::LocalEstimator::setup);
     testClass.def("activate", &distributedestimator::components::LocalEstimator::activate);
     testClass.def("handlePortUpdate", &distributedestimator::components::LocalEstimator::HandlePortUpdate);

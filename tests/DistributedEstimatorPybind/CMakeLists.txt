@@ -24,15 +24,13 @@ SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 include_directories(include)
 
-add_library(converter STATIC include/converter.h src/converter.cc)
-
 pybind11_add_module(globalestimator src/GlobalEstimator.cc
                                     src/base/GlobalEstimatorBase.cc
                                     include/messages/distributedestimator.capnp.c++
                                     include/base/GlobalEstimatorBase.h
                                     include/GlobalEstimator.h
                                     )
-target_link_libraries(globalestimator PRIVATE czmq riaps dl capnp kj converter)
+target_link_libraries(globalestimator PRIVATE czmq riaps dl capnp kj)
 
 pybind11_add_module(localestimator src/LocalEstimator.cc
         src/base/LocalEstimatorBase.cc
@@ -40,7 +38,7 @@ pybind11_add_module(localestimator src/LocalEstimator.cc
         include/base/LocalEstimatorBase.h
         include/LocalEstimator.h
         )
-target_link_libraries(localestimator PRIVATE czmq riaps dl capnp kj converter)
+target_link_libraries(localestimator PRIVATE czmq riaps dl capnp kj)
 
 pybind11_add_module(sensor src/Sensor.cc
         src/base/SensorBase.cc
@@ -48,7 +46,7 @@ pybind11_add_module(sensor src/Sensor.cc
         include/base/SensorBase.h
         include/Sensor.h
         )
-target_link_libraries(sensor PRIVATE czmq riaps dl capnp kj converter)
+target_link_libraries(sensor PRIVATE czmq riaps dl capnp kj)
 
 #pybind11_add_module(inh ./testinh/Child.cc ./testinh/Child.h)
 #target_link_libraries(inh PRIVATE parent)

@@ -9,10 +9,15 @@
 namespace distributedestimator {
     namespace components {
 
-        Sensor::Sensor(const py::object *parent_actor, const py::dict type_spec, const std::string &name,
-                                 const std::string &type_name, const py::dict args,
-                                 const std::string &application_name, const std::string &actor_name)
-                : SensorBase(parent_actor, type_spec, name, type_name, args, application_name,
+        Sensor::Sensor(const py::object *parent_actor,
+                       const py::dict actor_spec, // Actor json config
+                       const py::dict type_spec,  // component json config
+                       const std::string &name,
+                       const std::string &type_name,
+                       const py::dict args,
+                       const std::string &application_name,
+                       const std::string &actor_name)
+                : SensorBase(parent_actor, actor_spec, type_spec, name, type_name, args, application_name,
                                       actor_name) {
             _logger->set_level(spd::level::debug);
         }
@@ -71,10 +76,15 @@ namespace distributedestimator {
 //}
 
 std::unique_ptr<distributedestimator::components::Sensor>
-create_component_py(const py::object *parent_actor, const py::dict type_spec, const std::string &name,
-                    const std::string &type_name, const py::dict args, const std::string &application_name,
+create_component_py(const py::object *parent_actor,
+                    const py::dict actor_spec,
+                    const py::dict type_spec,
+                    const std::string &name,
+                    const std::string &type_name,
+                    const py::dict args,
+                    const std::string &application_name,
                     const std::string &actor_name) {
-    auto ptr = new distributedestimator::components::Sensor(parent_actor, type_spec, name, type_name, args,
+    auto ptr = new distributedestimator::components::Sensor(parent_actor, actor_spec, type_spec, name, type_name, args,
                                                                      application_name,
                                                                      actor_name);
     return std::move(std::unique_ptr<distributedestimator::components::Sensor>(ptr));
@@ -82,7 +92,7 @@ create_component_py(const py::object *parent_actor, const py::dict type_spec, co
 
 PYBIND11_MODULE(sensor, m) {
     py::class_<distributedestimator::components::Sensor> testClass(m, "Sensor");
-    testClass.def(py::init<const py::object*, const py::dict, const std::string&, const std::string&, const py::dict, const std::string&, const std::string&>());
+    testClass.def(py::init<const py::object*, const py::dict, const py::dict, const std::string&, const std::string&, const py::dict, const std::string&, const std::string&>());
     testClass.def("setup", &distributedestimator::components::Sensor::setup);
     testClass.def("activate", &distributedestimator::components::Sensor::activate);
     testClass.def("handlePortUpdate", &distributedestimator::components::Sensor::HandlePortUpdate);

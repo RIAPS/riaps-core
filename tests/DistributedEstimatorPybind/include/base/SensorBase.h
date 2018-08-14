@@ -27,9 +27,14 @@ namespace distributedestimator {
 
             //comp_sensorbase(_component_conf &config, riaps::Actor &actor);
 
-            SensorBase(const py::object *parent_actor, const py::dict type_spec,
-                            const std::string &name, const std::string &type_name, const py::dict args,
-                            const std::string &application_name, const std::string &actor_name);
+            SensorBase(const py::object *parent_actor,
+                       const py::dict actor_spec, // Actor json config
+                       const py::dict type_spec,  // component json config
+                       const std::string &name,
+                       const std::string &type_name,
+                       const py::dict args,
+                       const std::string &application_name,
+                       const std::string &actor_name);
 
             //virtual void RegisterHandlers();
 

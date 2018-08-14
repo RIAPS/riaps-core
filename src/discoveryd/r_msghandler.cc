@@ -1181,7 +1181,7 @@ namespace riaps{
 
         std::vector<std::string> keysToBeErased{clientKeyBase, clientKeyLocal, clientKeyGlobal};
 
-        m_logger->info("Unregister actor: ", clientKeyBase);
+        m_logger->info("Unregister actor: {}", clientKeyBase);
 
         int port = -1;
         if (m_clients.find(clientKeyBase)!=m_clients.end()){
