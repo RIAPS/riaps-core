@@ -6,22 +6,18 @@ set(CMAKE_SYSTEM_NAME Linux)
 
 set(riaps_prefix "/opt/riaps/" CACHE STRING "the riaps prefix")
 
-
-
-
-
 #Set the platform
 if (${arch} STREQUAL "armhf")
  set(TOOLCHAIN_PREFIX arm-linux-gnueabihf)
  set(CMAKE_C_COMPILER ${TOOLCHAIN_PREFIX}-gcc)
  set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}-g++-5)
  set(CMAKE_FIND_ROOT_PATH /usr/${TOOLCHAIN_PREFIX})
- set (CMAKE_CXX_FLAGS "-std=c++11 -g")
- set (CMAKE_C_FLAGS "-std=c99 -g")
+ set (CMAKE_CXX_FLAGS "-std=c++11")
+ set (CMAKE_C_FLAGS "-std=c99")
 else()
  set(CMAKE_C_COMPILER gcc-5)
  set(CMAKE_CXX_COMPILER g++-5)
- set (CMAKE_CXX_FLAGS "-std=c++11 -D_GLIBCXX_USE_CXX11_ABI=0")
+ set (CMAKE_CXX_FLAGS "-std=c++11")
  set (CMAKE_C_FLAGS "-std=c99")
 endif()
 
@@ -193,6 +189,7 @@ list(APPEND RDISCOVERYD_SOURCE
         src/discoveryd/r_riaps_actor.cc
         src/discoveryd/r_msghandler.cc
         src/discoveryd/r_dhttracker.cc
+        src/utils/r_lmdb.cc
         include/messaging/disco.capnp.c++
         )
 
@@ -205,6 +202,7 @@ list(APPEND RDISCOVERYD_HEADERS
         include/discoveryd/r_dhttracker.h
         include/framework/rfw_configuration.h
         include/framework/rfw_network_interfaces.h
+        include/utils/r_lmdb.h
         include/utils/r_utils.h
         include/messaging/disco.capnp.h
         include/groups/r_group.h
@@ -217,7 +215,7 @@ add_executable(rdiscoveryd
         ${RDISCOVERYD_SOURCE}
         ${RDISCOVERYD_HEADERS}
         )
-target_link_libraries(rdiscoveryd czmq zmq opendht gnutls riaps capnp nettle hogweed gmp pthread)
+target_link_libraries(rdiscoveryd czmq zmq opendht gnutls riaps capnp nettle hogweed gmp pthread lmdb)
 
 install(TARGETS rdiscoveryd DESTINATION bin)
 
