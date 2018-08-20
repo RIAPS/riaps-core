@@ -69,13 +69,13 @@ public:
      * Returns all key-value pairs from the database. Use for debug only!
      * @return
      */
-    std::vector<std::string>& GetAll();
+    std::unique_ptr<std::vector<std::tuple<std::string, std::string>>> GetAll();
 
     /**
      * @param skey The key of the value to be returned
      * @return All the values under skey
      */
-    std::vector<std::string>& Get(const std::string& skey);
+    std::unique_ptr<std::vector<std::string>> Get(const std::string& skey);
 
     /**
      * Deletes the key and all values from the DB
@@ -118,7 +118,6 @@ private:
     std::string dbdir_;
 
     static std::shared_ptr<Lmdb>              singleton_;
-    std::unique_ptr<std::vector<std::string>> results_;
 };
 
 #endif

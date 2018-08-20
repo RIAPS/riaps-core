@@ -3,6 +3,7 @@
 //
 
 #include <utils/r_lmdb.h>
+#include <sys/stat.h>
 
 using namespace std;
 
@@ -10,7 +11,7 @@ lmdb_error::lmdb_error(const std::string& msg) : runtime_error(msg) {
 }
 
 void if_lmdb_error(bool rc, const string& file, const int line) {
-    if_error<lmdb_error>(rc, "LMDB", file, line);
+    if_error<lmdb_error, false>(rc, "LMDB", file, line);
 }
 
 Lmdb::Lmdb()
@@ -38,28 +39,28 @@ void Lmdb::Put(const std::string& skey, const std::string& sval) {
     rc = mdb_txn_commit(get<0>(params));
 }
 
-vector<string>& Lmdb::GetAll() {
+std::unique_ptr<std::vector<std::tuple<std::string, std::string>>> Lmdb::GetAll() {
     auto        params = OpenTxn();
+    auto results = make_unique<vector<std::tuple<std::string, std::string>>>();
     MDB_cursor* cursor;
     int         rc = mdb_cursor_open(get<0>(params), get<1>(params), &cursor);
     if_lmdb_error(rc, __FILE__, __LINE__);
 
     MDB_val key, val;
 
-    results_ = unique_ptr<vector<string>>(new vector<string>());
     rc = mdb_cursor_get(cursor, &key, &val, MDB_FIRST);
     while (rc != MDB_NOTFOUND && rc != EINVAL) {
         string sv(static_cast<char*>(val.mv_data), val.mv_size);
         string sk(static_cast<char*>(key.mv_data), key.mv_size);
-        results_->push_back(fmt::format("{}:{}",sk, sv));
+        results->push_back(make_tuple(sk, sv));
         rc = mdb_cursor_get(cursor, &key, &val, MDB_NEXT);
     }
     mdb_cursor_close(cursor);
-    return *results_;
+    return results;
 }
 
-vector<string>& Lmdb::Get(const std::string& skey) {
-    results_ = unique_ptr<vector<string>>(new vector<string>());
+std::unique_ptr<std::vector<std::string>> Lmdb::Get(const std::string& skey) {
+    auto results = make_unique<vector<string>>();
     MDB_cursor* cursor;
 
     auto params = OpenTxn();
@@ -74,47 +75,55 @@ vector<string>& Lmdb::Get(const std::string& skey) {
     rc = mdb_cursor_get(cursor, &key, &val, MDB_SET_KEY);
 
     if (rc == MDB_NOTFOUND) {
-        return *results_;
+        return results;
     }
     else {
         string s(static_cast<char*>(val.mv_data), val.mv_size);
-        results_->push_back(s);
+        results->push_back(s);
     }
 
     while (rc != MDB_NOTFOUND && rc != EINVAL) {
         rc = mdb_cursor_get(cursor, &key, &val, MDB_NEXT_DUP);
         if (rc != MDB_NOTFOUND) {
-            results_->push_back(string(static_cast<char*>(val.mv_data), val.mv_size));
+            results->push_back(string(static_cast<char*>(val.mv_data), val.mv_size));
         }
     }
 
     mdb_cursor_close(cursor);
     mdb_txn_abort(get<0>(params));
 
-    return *results_;
+    return results;
 }
 
 void Lmdb::Init() {
-    auto riaps_apps_path = std::getenv(ENV_RIAPSAPPS);
+    auto riaps_apps_path = getenv(ENV_RIAPSAPPS);
 
     if (riaps_apps_path == nullptr || riaps_apps_path == "") {
         if_lmdb_error(1, __FILE__, __LINE__);
     }
 
-    std::string p = riaps_apps_path;
+    string p = riaps_apps_path;
     if (p.back() == '/')
         p.pop_back();
-    p+= "/" + string(DB_DIR);
+    p += "/" + string(DB_DIR);
+
+//    const int dir_err = mkdir(p.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+//    auto p = boost::filesystem::path(riaps_apps_path);
+//    p.append(DB_DIR);
+//    boost::filesystem::create_directories(p);
+
+    // NOTE: Not cool, but works. Alternatives: C++17, Boost
+    const int dir= system(fmt::format("mkdir -p {}", p).c_str());
 
     int rc = mdb_env_create(&env_);
     if_lmdb_error(rc, __FILE__, __LINE__);
     mdb_env_set_maxdbs(env_, 3);
 
-    rc = mdb_env_open(env_, dbdir_.c_str(), 0, 0644);
+    rc = mdb_env_open(env_, p.c_str(), 0, 0644);
     if_lmdb_error(rc, __FILE__, __LINE__);
 }
 
-void Lmdb::Del(const std::string& skey) {
+void Lmdb::Del(const string& skey) {
     MDB_cursor* cursor;
 
     auto params = OpenTxn();

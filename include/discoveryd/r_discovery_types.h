@@ -60,13 +60,14 @@ struct ClientDetails{
 struct ServiceCheckins {
     std::string key;
     std::string value;
-    pid_t pid;
+    //pid_t pid;
     //uint64_t lastCheckinTime;
     uint64_t createdTime;
     uint64_t timeout; // in millisec
 
     ServiceCheckins(){
         // 10 mins
+        // TODO: Riaps timeout
         timeout = 10*60*1000;
     }
 };

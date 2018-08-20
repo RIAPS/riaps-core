@@ -5,6 +5,7 @@ option(BUILD_TESTS  "Build tests" ON)
 set(CMAKE_SYSTEM_NAME Linux)
 
 set(riaps_prefix "/opt/riaps/" CACHE STRING "the riaps prefix")
+set(CMAKE_CXX_STANDARD 14)
 
 #Set the platform
 if (${arch} STREQUAL "armhf")
@@ -12,12 +13,12 @@ if (${arch} STREQUAL "armhf")
  set(CMAKE_C_COMPILER ${TOOLCHAIN_PREFIX}-gcc)
  set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}-g++-5)
  set(CMAKE_FIND_ROOT_PATH /usr/${TOOLCHAIN_PREFIX})
- set (CMAKE_CXX_FLAGS "-std=c++11")
+ #set (CMAKE_CXX_FLAGS "-std=c++11")
  set (CMAKE_C_FLAGS "-std=c99")
 else()
  set(CMAKE_C_COMPILER gcc-5)
  set(CMAKE_CXX_COMPILER g++-5)
- set (CMAKE_CXX_FLAGS "-std=c++11")
+ #set (CMAKE_CXX_FLAGS "-std=c++11")
  set (CMAKE_C_FLAGS "-std=c99")
 endif()
 
