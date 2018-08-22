@@ -13,12 +13,13 @@ namespace riaps{
           m_pipe(*pipe),
           m_serviceCheckPeriod((uint16_t)20000), // 20 sec in in msec.
           m_zombieCheckPeriod((uint16_t)600000), // 10 min in msec
-          m_zombieKey("/zombies"),
+          m_macAddress(riaps::framework::Network::GetMacAddressStripped()),
+          m_hostAddress(riaps::framework::Network::GetIPAddress()),
+          zombieglobalkey_("/zombie/globals"),
+          zombielocalkey_(fmt::format("/zombie/locals/{}", m_macAddress)),
           m_terminated(false),
           m_logger(logger),
-          m_repIdentity(nullptr),
-          m_macAddress(riaps::framework::Network::GetMacAddressStripped()),
-          m_hostAddress(riaps::framework::Network::GetIPAddress()){
+          m_repIdentity(nullptr) {
 
     }
 
@@ -39,13 +40,26 @@ namespace riaps{
         m_poller = zpoller_new(m_pipe, m_dhtUpdateSocket, m_riapsSocket, nullptr);
 
         m_lastServiceCheckin = m_lastZombieCheck = zclock_mono();
-        // Get current zombies, and listen to new zombies
-        m_dhtNode.get(m_zombieKey, [this](const std::vector<std::shared_ptr<dht::Value>> &values){
+
+        // Get current global zombies
+        m_dhtNode.get(zombieglobalkey_, [this](const std::vector<std::shared_ptr<dht::Value>> &values){
             std::async(std::launch::async, &DiscoveryMessageHandler::handleZombieUpdate, this, values);
             return true;
         });
+
+        // Get local zombies
+        m_dhtNode.get(zombielocalkey_, [this](const std::vector<std::shared_ptr<dht::Value>> &values){
+            std::async(std::launch::async, &DiscoveryMessageHandler::handleZombieUpdate, this, values);
+            return true;
+        });
+
         // Subscribe for further zombies
-        m_dhtNode.listen(m_zombieKey, [this](const std::vector<std::shared_ptr<dht::Value>> &values){
+        m_dhtNode.listen(zombieglobalkey_, [this](const std::vector<std::shared_ptr<dht::Value>> &values){
+            std::async(std::launch::async, &DiscoveryMessageHandler::handleZombieUpdate, this, values);
+            return true;
+        });
+
+        m_dhtNode.listen(zombielocalkey_, [this](const std::vector<std::shared_ptr<dht::Value>> &values){
             std::async(std::launch::async, &DiscoveryMessageHandler::handleZombieUpdate, this, values);
             return true;
         });
@@ -59,8 +73,12 @@ namespace riaps{
                 auto key = get<0>(service);
                 auto address = get<1>(service);
                 vector<uint8_t> opendht_data(address.begin(), address.end());
-                m_logger->debug("LMDB -> Zombie {}({})", key,address);
-                m_dhtNode.put(m_zombieKey, dht::Value(opendht_data));
+                m_logger->info("Mark service {}:{} as zombie", key,address);
+                if (address.find("127.0.0.1") != string::npos) {
+                    m_dhtNode.put(zombielocalkey_, dht::Value(opendht_data));
+                } else {
+                    m_dhtNode.put(zombieglobalkey_, dht::Value(opendht_data));
+                }
                 db->Del(key);
             }
         } catch(lmdb_error& e) {
@@ -317,7 +335,13 @@ namespace riaps{
             for (auto& service : m_serviceCheckins[servicePid]){
                 string service_address = service->value;
                 vector<uint8_t> opendht_data(service_address.begin(), service_address.end());
-                m_dhtNode.put(m_zombieKey, dht::Value(opendht_data));
+
+                if (service_address.find("127.0.0.1") != string::npos) {
+                    m_dhtNode.put(zombielocalkey_, dht::Value(opendht_data));
+                } else {
+                    m_dhtNode.put(zombieglobalkey_, dht::Value(opendht_data));
+                }
+                //m_dhtNode.put(m_zombieKey, dht::Value(opendht_data));
 
                 // Remove the service from the local db
                 try {
@@ -1152,9 +1176,16 @@ namespace riaps{
                  serviceIt++) {
 
                 // host:port
-                std::string serviceAddress = (*serviceIt)->value;
-                std::vector<uint8_t> opendht_data(serviceAddress.begin(), serviceAddress.end());
-                m_dhtNode.put(m_zombieKey, dht::Value(opendht_data));
+                string serviceAddress = (*serviceIt)->value;
+                vector<uint8_t> opendht_data(serviceAddress.begin(), serviceAddress.end());
+
+                if (serviceAddress.find("127.0.0.1") != string::npos) {
+                    m_dhtNode.put(zombielocalkey_, dht::Value(opendht_data));
+                } else {
+                    m_dhtNode.put(zombieglobalkey_, dht::Value(opendht_data));
+                }
+
+                //m_dhtNode.put(m_zombieKey, dht::Value(opendht_data));
             }
 
             m_serviceCheckins.erase(*it);
@@ -1170,7 +1201,7 @@ namespace riaps{
                     (*serviceIt)->createdTime = now;
 
                     // Reput key-value
-                    std::vector<uint8_t> opendht_data((*serviceIt)->value.begin(), (*serviceIt)->value.end());
+                    vector<uint8_t> opendht_data((*serviceIt)->value.begin(), (*serviceIt)->value.end());
                     auto keyhash = dht::InfoHash::get((*serviceIt)->key);
 
                     m_dhtNode.put(keyhash, dht::Value(opendht_data));
