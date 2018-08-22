@@ -31,6 +31,7 @@ pybind11_add_module(globalestimator src/GlobalEstimator.cc
                                     include/GlobalEstimator.h
                                     )
 target_link_libraries(globalestimator PRIVATE czmq riaps dl capnp kj)
+set_target_properties(globalestimator PROPERTIES PREFIX lib SUFFIX .so)
 
 pybind11_add_module(localestimator src/LocalEstimator.cc
         src/base/LocalEstimatorBase.cc
@@ -39,6 +40,7 @@ pybind11_add_module(localestimator src/LocalEstimator.cc
         include/LocalEstimator.h
         )
 target_link_libraries(localestimator PRIVATE czmq riaps dl capnp kj)
+set_target_properties(localestimator PROPERTIES PREFIX lib SUFFIX .so)
 
 pybind11_add_module(sensor src/Sensor.cc
         src/base/SensorBase.cc
@@ -47,6 +49,7 @@ pybind11_add_module(sensor src/Sensor.cc
         include/Sensor.h
         )
 target_link_libraries(sensor PRIVATE czmq riaps dl capnp kj)
+set_target_properties(sensor PROPERTIES PREFIX lib SUFFIX .so)
 
 #pybind11_add_module(inh ./testinh/Child.cc ./testinh/Child.h)
 #target_link_libraries(inh PRIVATE parent)

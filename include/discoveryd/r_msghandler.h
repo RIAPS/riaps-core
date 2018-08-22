@@ -22,21 +22,20 @@
 #include <czmq.h>
 #include <spdlog/spdlog.h>
 
-#define REGULAR_MAINTAIN_PERIOD 3000 //msec
-#define CMD_JOIN "JOIN"
-#define RIAPS_DHT_NODE_PORT 4222
+constexpr auto REGULAR_MAINTAIN_PERIOD = 3000; //msec
+constexpr auto CMD_JOIN                = "JOIN";
+constexpr auto RIAPS_DHT_NODE_PORT     = 4222;
+constexpr auto DHT_ROUTER_CHANNEL      = "ipc:///tmp/dhtrouterchannel";
 
-#define DHT_ROUTER_CHANNEL "ipc:///tmp/dhtrouterchannel"
-
-static std::map<riaps::discovery::Kind, std::string> kindMap =
-        {{riaps::discovery::Kind::PUB, "pub"},
-         {riaps::discovery::Kind::SUB, "sub"},
-         {riaps::discovery::Kind::CLT, "clt"},
-         {riaps::discovery::Kind::SRV, "srv"},
-         {riaps::discovery::Kind::REQ, "req"},
-         {riaps::discovery::Kind::REP, "rep"},
-         {riaps::discovery::Kind::QRY, "qry"},
-         {riaps::discovery::Kind::ANS, "ans"}};
+static const std::map<riaps::discovery::Kind, std::string> kindMap =
+            {{riaps::discovery::Kind::PUB, "pub"},
+             {riaps::discovery::Kind::SUB, "sub"},
+             {riaps::discovery::Kind::CLT, "clt"},
+             {riaps::discovery::Kind::SRV, "srv"},
+             {riaps::discovery::Kind::REQ, "req"},
+             {riaps::discovery::Kind::REP, "rep"},
+             {riaps::discovery::Kind::QRY, "qry"},
+             {riaps::discovery::Kind::ANS, "ans"}};
 
 namespace spd = spdlog;
 
@@ -107,7 +106,7 @@ namespace riaps{
 
         std::future<bool> waitForDht();
 
-        std::tuple<std::string, std::string> buildInsertKeyValuePair(
+        const std::tuple<const std::string, const std::string> buildInsertKeyValuePair(
                 const std::string&             appName,
                 const std::string&             msgType,
                 const riaps::discovery::Kind&  kind,
@@ -115,7 +114,7 @@ namespace riaps{
                 const std::string&             host,
                 const uint16_t                 port);
 
-        std::pair<std::string, std::string> buildLookupKey(
+        const std::pair<const std::string, const std::string> buildLookupKey(
                 const std::string&             appName,
                 const std::string&             msgType,
                 const riaps::discovery::Kind&  kind,
@@ -125,9 +124,6 @@ namespace riaps{
                 const std::string& clientInstanceName,
                 const std::string& clientPortName);
 
-
-
-        void maintainRenewalDepricated();
         void maintainRenewal();
         void maintainZombieList();
         int deregisterActor(const std::string& appName,

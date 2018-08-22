@@ -326,9 +326,9 @@ namespace riaps{
     }
 
     void DiscoveryMessageHandler::handleActorUnreg(riaps::discovery::ActorUnregReq::Reader &msgActorUnreg) {
-        string actorname = string(msgActorUnreg.getActorName().cStr());
-        string appname = string(msgActorUnreg.getAppName().cStr());
-        int servicePid = msgActorUnreg.getPid();
+        const string actorname = string(msgActorUnreg.getActorName().cStr());
+        const string appname = string(msgActorUnreg.getAppName().cStr());
+        const int servicePid = msgActorUnreg.getPid();
 
         // Mark actor's services as zombie
         if (m_serviceCheckins.find(servicePid)!=m_serviceCheckins.end()){
@@ -1132,83 +1132,83 @@ namespace riaps{
     }
 
     // Should be depriacated, riaps-deplo is needed to figure out what runs
-    void DiscoveryMessageHandler::maintainRenewalDepricated(){
-
-        std::set<pid_t> purgeServices;
-        std::set<pid_t> purgeGroups;
-
-        // Collect terminated component services (pub/rep ports)
-        for (auto it= m_serviceCheckins.begin(); it!=m_serviceCheckins.end(); it++){
-            // Check pid, mark the removable pids
-            if (!kill(it->first,0)==0){
-                purgeServices.insert(it->first);
-            }
-        }
-
-        // Collect groups with terminated parent component
-        for (auto it= m_groupServices.begin(); it!=m_groupServices.end(); it++){
-            // Check pid, mark the removable pids
-            if (!kill(it->first,0)==0){
-                m_logger->info("Remove group services with PID: {}", it->first);
-                purgeGroups.insert(it->first);
-            } else {
-                for(auto& groupService : m_groupServices[it->first]) {
-                    if (!groupService->timeout.IsTimeout()) continue;
-                    m_dhtNode.put(groupService->groupKey, groupService->services);
-                    groupService->timeout.Reset();
-                }
-            }
-        }
-
-
-        // Delete terminated groups from cache, keep the values in openDHT, just don't renew them
-        for (auto pid : purgeGroups) {
-            m_groupServices.erase(pid);
-        }
-
-        for (auto it = purgeServices.begin(); it!=purgeServices.end(); it++){
-            //std::cout << "Remove services with PID: " << *it << std::endl;
-            m_logger->info("Remove component services with PID: {}", *it);
-
-            // Put the service address into the zombies list in DHT
-            for (auto serviceIt  = m_serviceCheckins[*it].begin();
-                 serviceIt != m_serviceCheckins[*it].end();
-                 serviceIt++) {
-
-                // host:port
-                string serviceAddress = (*serviceIt)->value;
-                vector<uint8_t> opendht_data(serviceAddress.begin(), serviceAddress.end());
-
-                if (serviceAddress.find("127.0.0.1") != string::npos) {
-                    m_dhtNode.put(zombielocalkey_, dht::Value(opendht_data));
-                } else {
-                    m_dhtNode.put(zombieglobalkey_, dht::Value(opendht_data));
-                }
-
-                //m_dhtNode.put(m_zombieKey, dht::Value(opendht_data));
-            }
-
-            m_serviceCheckins.erase(*it);
-        }
-
-
-        int64_t now = zclock_mono();
-        for (auto pidIt= m_serviceCheckins.begin(); pidIt!=m_serviceCheckins.end(); pidIt++){
-            for(auto serviceIt = pidIt->second.begin(); serviceIt!=pidIt->second.end(); serviceIt++){
-
-                // Renew
-                if (now - (*serviceIt)->createdTime > (*serviceIt)->timeout){
-                    (*serviceIt)->createdTime = now;
-
-                    // Reput key-value
-                    vector<uint8_t> opendht_data((*serviceIt)->value.begin(), (*serviceIt)->value.end());
-                    auto keyhash = dht::InfoHash::get((*serviceIt)->key);
-
-                    m_dhtNode.put(keyhash, dht::Value(opendht_data));
-                }
-            }
-        }
-    }
+//    void DiscoveryMessageHandler::maintainRenewalDepricated(){
+//
+//        std::set<pid_t> purgeServices;
+//        std::set<pid_t> purgeGroups;
+//
+//        // Collect terminated component services (pub/rep ports)
+//        for (auto it= m_serviceCheckins.begin(); it!=m_serviceCheckins.end(); it++){
+//            // Check pid, mark the removable pids
+//            if (!kill(it->first,0)==0){
+//                purgeServices.insert(it->first);
+//            }
+//        }
+//
+//        // Collect groups with terminated parent component
+//        for (auto it= m_groupServices.begin(); it!=m_groupServices.end(); it++){
+//            // Check pid, mark the removable pids
+//            if (!kill(it->first,0)==0){
+//                m_logger->info("Remove group services with PID: {}", it->first);
+//                purgeGroups.insert(it->first);
+//            } else {
+//                for(auto& groupService : m_groupServices[it->first]) {
+//                    if (!groupService->timeout.IsTimeout()) continue;
+//                    m_dhtNode.put(groupService->groupKey, groupService->services);
+//                    groupService->timeout.Reset();
+//                }
+//            }
+//        }
+//
+//
+//        // Delete terminated groups from cache, keep the values in openDHT, just don't renew them
+//        for (auto pid : purgeGroups) {
+//            m_groupServices.erase(pid);
+//        }
+//
+//        for (auto it = purgeServices.begin(); it!=purgeServices.end(); it++){
+//            //std::cout << "Remove services with PID: " << *it << std::endl;
+//            m_logger->info("Remove component services with PID: {}", *it);
+//
+//            // Put the service address into the zombies list in DHT
+//            for (auto serviceIt  = m_serviceCheckins[*it].begin();
+//                 serviceIt != m_serviceCheckins[*it].end();
+//                 serviceIt++) {
+//
+//                // host:port
+//                string serviceAddress = (*serviceIt)->value;
+//                vector<uint8_t> opendht_data(serviceAddress.begin(), serviceAddress.end());
+//
+//                if (serviceAddress.find("127.0.0.1") != string::npos) {
+//                    m_dhtNode.put(zombielocalkey_, dht::Value(opendht_data));
+//                } else {
+//                    m_dhtNode.put(zombieglobalkey_, dht::Value(opendht_data));
+//                }
+//
+//                //m_dhtNode.put(m_zombieKey, dht::Value(opendht_data));
+//            }
+//
+//            m_serviceCheckins.erase(*it);
+//        }
+//
+//
+//        int64_t now = zclock_mono();
+//        for (auto pidIt= m_serviceCheckins.begin(); pidIt!=m_serviceCheckins.end(); pidIt++){
+//            for(auto serviceIt = pidIt->second.begin(); serviceIt!=pidIt->second.end(); serviceIt++){
+//
+//                // Renew
+//                if (now - (*serviceIt)->createdTime > (*serviceIt)->timeout){
+//                    (*serviceIt)->createdTime = now;
+//
+//                    // Reput key-value
+//                    vector<uint8_t> opendht_data((*serviceIt)->value.begin(), (*serviceIt)->value.end());
+//                    auto keyhash = dht::InfoHash::get((*serviceIt)->key);
+//
+//                    m_dhtNode.put(keyhash, dht::Value(opendht_data));
+//                }
+//            }
+//        }
+//    }
 
     void DiscoveryMessageHandler::maintainZombieList(){
         int64_t currentTime = zclock_mono();
@@ -1269,7 +1269,7 @@ namespace riaps{
         sleep(1);
     }
 
-    std::tuple<string, string> DiscoveryMessageHandler::buildInsertKeyValuePair(
+    const std::tuple<const string, const string> DiscoveryMessageHandler::buildInsertKeyValuePair(
             const string&             appName,
             const string&             msgType,
             const riaps::discovery::Kind&  kind,
@@ -1277,19 +1277,19 @@ namespace riaps{
             const string&             host,
             const uint16_t                 port) {
 
-        string key = fmt::format("/{}/{}/{}", appName, msgType, kindMap[kind]);
+        string key = fmt::format("/{}/{}/{}", appName, msgType, kindMap.at(kind));
 
         if (scope == riaps::discovery::Scope::LOCAL) {
             string mac_address = riaps::framework::Network::GetMacAddressStripped();
             key += mac_address;
         }
 
-        string value = fmt::format("{}:{}", host, to_string(port));
+        const string value = fmt::format("{}:{}", host, to_string(port));
 
         return make_tuple(key, value);
     }
 
-    std::pair<std::string, std::string> DiscoveryMessageHandler::buildLookupKey(
+    const pair<const string, const string> DiscoveryMessageHandler::buildLookupKey(
             const std::string& appName,
             const std::string& msgType,
             const riaps::discovery::Kind& kind,
@@ -1299,39 +1299,32 @@ namespace riaps{
             const std::string& clientInstanceName,
             const std::string& clientPortName) {
 
-
-        std::string key;
-
-        std::map<riaps::discovery::Kind, std::string> kindPairs = {
-                {riaps::discovery::Kind::SUB, kindMap[riaps::discovery::Kind::PUB]},
-                {riaps::discovery::Kind::CLT, kindMap[riaps::discovery::Kind::SRV]},
-                {riaps::discovery::Kind::REQ, kindMap[riaps::discovery::Kind::REP]},
-                {riaps::discovery::Kind::REP, kindMap[riaps::discovery::Kind::REQ]},
-                {riaps::discovery::Kind::QRY, kindMap[riaps::discovery::Kind::ANS]},
-                {riaps::discovery::Kind::ANS, kindMap[riaps::discovery::Kind::QRY]}
+        const map<riaps::discovery::Kind, std::string> kindPairs = {
+                {riaps::discovery::Kind::CLT, kindMap.at(riaps::discovery::Kind::SRV)},
+                {riaps::discovery::Kind::SUB, kindMap.at(riaps::discovery::Kind::PUB)},
+                {riaps::discovery::Kind::REQ, kindMap.at(riaps::discovery::Kind::REP)},
+                {riaps::discovery::Kind::REP, kindMap.at(riaps::discovery::Kind::REQ)},
+                {riaps::discovery::Kind::QRY, kindMap.at(riaps::discovery::Kind::ANS)},
+                {riaps::discovery::Kind::ANS, kindMap.at(riaps::discovery::Kind::QRY)}
         };
 
+        string key = fmt::format("/{}/{}/{}", appName, msgType, kindPairs.at(kind));
+//                "/" + appName
+//              + "/" + msgType
+//              + "/" + kindPairs[kind];
 
-        // TODO: Use fmt instead of the prehistoric string concat
-        key =   "/" + appName
-              + "/" + msgType
-              + "/" + kindPairs[kind];
-
-        //auto hostid = gethostid();
-
-        std::string hostid = riaps::framework::Network::GetMacAddressStripped();
-
+        const string hostid = riaps::framework::Network::GetMacAddressStripped();
 
         if (scope == riaps::discovery::Scope::LOCAL) {
             key += hostid;
         }
 
-        // TODO: Use fmt instead of the prehistoric string concat
-        std::string client =   '/' + appName
-                             + '/' + clientActorName
-                             + '/' + clientActorHost
-                             + '/' + clientInstanceName
-                             + '/' + clientPortName;
+        string client = fmt::format("/{}/{}/{}/{}/{}", appName, clientActorName, clientActorHost, clientInstanceName, clientPortName);
+//        std::string client =   '/' + appName
+//                             + '/' + clientActorName
+//                             + '/' + clientActorHost
+//                             + '/' + clientInstanceName
+//                             + '/' + clientPortName;
 
         if (scope == riaps::discovery::Scope::LOCAL) {
             client = client + ":" + hostid;

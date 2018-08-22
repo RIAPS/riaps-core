@@ -7,8 +7,9 @@ set(CMAKE_SYSTEM_NAME Linux)
 set(riaps_prefix "/opt/riaps/" CACHE STRING "the riaps prefix")
 set(CMAKE_CXX_STANDARD 14)
 
-#find_package(pybind11)
+set(PYBIND11_CPP_STANDARD -std=c++14)
 add_subdirectory(pybind11)
+
 
 #Set the platform
 if (${arch} STREQUAL "armhf")
@@ -75,7 +76,7 @@ if (BUILD_TESTS)
     #add_subdirectory(tests/DC/leaderwiththree)
     # add_subdirectory(tests/TimedTest)
     # add_subdirectory(examples/EchoIO)
-    add_subdirectory(tests/DistributedEstimatorPybind)
+    # add_subdirectory(tests/DistributedEstimatorPybind)
 endif()
 
 
