@@ -59,6 +59,7 @@ namespace riaps{
                 auto key = get<0>(service);
                 auto address = get<1>(service);
                 vector<uint8_t> opendht_data(address.begin(), address.end());
+                m_logger->debug("LMDB -> Zombie {}({})", key,address);
                 m_dhtNode.put(m_zombieKey, dht::Value(opendht_data));
                 db->Del(key);
             }
@@ -355,7 +356,6 @@ namespace riaps{
     }
 
     void DiscoveryMessageHandler::handleServiceReg(riaps::discovery::ServiceRegReq::Reader &msgServiceReg) {
-
         auto check_dht = waitForDht();
 
         auto msgPath           = msgServiceReg.getPath();

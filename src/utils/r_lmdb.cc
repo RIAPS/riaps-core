@@ -29,17 +29,23 @@ shared_ptr<Lmdb> Lmdb::db() {
 }
 
 void Lmdb::Put(const std::string& skey, const std::string& sval) {
+    logger_->debug("{} k:{} v:{}", __FUNCTION__, skey, sval);
     auto    params = OpenTxn();
+
     MDB_val key, val;
     key.mv_data = const_cast<char*>(skey.c_str());
     key.mv_size = skey.length();
     val.mv_data = const_cast<char*>(sval.c_str());
     val.mv_size = sval.length();
+
     int rc = mdb_put(get<0>(params), get<1>(params), &key, &val, 0);
+    if_lmdb_error(rc, __FILE__, __LINE__);
     rc = mdb_txn_commit(get<0>(params));
+    if_lmdb_error(rc, __FILE__, __LINE__);
 }
 
 std::unique_ptr<std::vector<std::tuple<std::string, std::string>>> Lmdb::GetAll() {
+    logger_->debug("{}", __FUNCTION__);
     auto        params = OpenTxn();
     auto results = make_unique<vector<std::tuple<std::string, std::string>>>();
     MDB_cursor* cursor;
@@ -52,14 +58,17 @@ std::unique_ptr<std::vector<std::tuple<std::string, std::string>>> Lmdb::GetAll(
     while (rc != MDB_NOTFOUND && rc != EINVAL) {
         string sv(static_cast<char*>(val.mv_data), val.mv_size);
         string sk(static_cast<char*>(key.mv_data), key.mv_size);
+        logger_->debug("{}:{}", sk, sv);
         results->push_back(make_tuple(sk, sv));
         rc = mdb_cursor_get(cursor, &key, &val, MDB_NEXT);
     }
     mdb_cursor_close(cursor);
+    mdb_txn_abort(get<0>(params));
     return results;
 }
 
 std::unique_ptr<std::vector<std::string>> Lmdb::Get(const std::string& skey) {
+    logger_->debug("{} k:{}", __FUNCTION__, skey);
     auto results = make_unique<vector<string>>();
     MDB_cursor* cursor;
 
@@ -96,6 +105,13 @@ std::unique_ptr<std::vector<std::string>> Lmdb::Get(const std::string& skey) {
 }
 
 void Lmdb::Init() {
+
+    logger_ = spd::get(LOG_LMDB_NAME);
+    if (logger_ == nullptr) {
+        logger_ = spd::stdout_color_mt(LOG_LMDB_NAME);
+        logger_->set_level(spd::level::info);
+    }
+
     auto riaps_apps_path = getenv(ENV_RIAPSAPPS);
 
     if (riaps_apps_path == nullptr || riaps_apps_path == "") {
@@ -124,6 +140,7 @@ void Lmdb::Init() {
 }
 
 void Lmdb::Del(const string& skey) {
+    logger_->debug("{} k:{}", __FUNCTION__, skey);
     MDB_cursor* cursor;
 
     auto params = OpenTxn();

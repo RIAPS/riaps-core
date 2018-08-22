@@ -9,11 +9,13 @@
 #include <vector>
 #include <lmdb.h>
 #include <spdlog/spdlog.h>
-#include "../spdlog/logger.h"
+#include <const/r_const.h>
 
-#define DB_NAME "disco"
-#define ENV_RIAPSAPPS "RIAPSAPPS"
-#define DB_DIR "riaps_disco.lmdb"
+constexpr auto DB_NAME = "disco";
+constexpr auto DB_DIR  = "riaps-disco.lmdb";
+constexpr auto LOG_LMDB_NAME = "lmdb";
+
+namespace spd = spdlog;
 
 /**
  * Generic RIAPS error handler. It is able to log the error or throw an exception
@@ -28,7 +30,7 @@ template <class T, bool log=true>
 void if_error(bool rc, const std::string& error_type, const std::string& file, const int line) {
     if (rc) {
         if (!log)
-            throw T(fmt::format("{} error, file: {} line: {} rc:{}", error_type, file, line-1, rc));
+            throw T(fmt::format("{} error, file: {} line: {} rc:{:d}", error_type, file, line-1, rc));
     }
 }
 
@@ -117,7 +119,10 @@ private:
      */
     std::string dbdir_;
 
-    static std::shared_ptr<Lmdb>              singleton_;
+    static std::shared_ptr<Lmdb> singleton_;
+
+    std::shared_ptr<spd::logger> logger_;
+
 };
 
 #endif
