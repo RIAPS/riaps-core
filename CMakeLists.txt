@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(riaps_core VERSION 0.7.62)
+project(riaps_core VERSION 0.7.72)
 option(arch "amd64/armhf" "amd64")
 option(BUILD_TESTS  "Build tests" ON)
 set(CMAKE_SYSTEM_NAME Linux)
 
 set(riaps_prefix "/opt/riaps/" CACHE STRING "the riaps prefix")
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
 
 #Set the platform
 if (${arch} STREQUAL "armhf")
