@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="dir_83443285122052e1a9eda09d5fe5f578" kind="dir">
+    <compoundname>/home/istvan/work/riaps-core/include/framework</compoundname>
+    <innerfile refid="rfw__configuration_8h">rfw_configuration.h</innerfile>
+    <innerfile refid="rfw__network__interfaces_8h">rfw_network_interfaces.h</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/istvan/work/riaps-core/include/framework/"/>
+  </compounddef>
+</doxygen>

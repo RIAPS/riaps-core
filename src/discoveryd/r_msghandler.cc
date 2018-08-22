@@ -1,12 +1,11 @@
-//
-// Created by istvan on 10/6/17.
-//
-
 #include <discoveryd/r_msghandler.h>
 #include <framework/rfw_configuration.h>
 #include <framework/rfw_network_interfaces.h>
-#include "../../include/discoveryd/r_msghandler.h"
+#include <discoveryd/r_msghandler.h>
 #include <discoveryd/r_dhttracker.h>
+#include <utils/r_lmdb.h>
+
+using namespace std;
 
 namespace riaps{
     DiscoveryMessageHandler::DiscoveryMessageHandler(dht::DhtRunner &dhtNode, zsock_t** pipe, std::shared_ptr<spdlog::logger> logger)
@@ -14,12 +13,13 @@ namespace riaps{
           m_pipe(*pipe),
           m_serviceCheckPeriod((uint16_t)20000), // 20 sec in in msec.
           m_zombieCheckPeriod((uint16_t)600000), // 10 min in msec
-          m_zombieKey("/zombies"),
+          m_macAddress(riaps::framework::Network::GetMacAddressStripped()),
+          m_hostAddress(riaps::framework::Network::GetIPAddress()),
+          zombieglobalkey_("/zombie/globals"),
+          zombielocalkey_(fmt::format("/zombie/locals/{}", m_macAddress)),
           m_terminated(false),
           m_logger(logger),
-          m_repIdentity(nullptr),
-          m_macAddress(riaps::framework::Network::GetMacAddressStripped()),
-          m_hostAddress(riaps::framework::Network::GetIPAddress()){
+          m_repIdentity(nullptr) {
 
     }
 
@@ -40,24 +40,50 @@ namespace riaps{
         m_poller = zpoller_new(m_pipe, m_dhtUpdateSocket, m_riapsSocket, nullptr);
 
         m_lastServiceCheckin = m_lastZombieCheck = zclock_mono();
-        // Get current zombies, and listen to new zombies
-        m_dhtNode.get(m_zombieKey, [this](const std::vector<std::shared_ptr<dht::Value>> &values){
+
+        // Get current global zombies
+        m_dhtNode.get(zombieglobalkey_, [this](const std::vector<std::shared_ptr<dht::Value>> &values){
             std::async(std::launch::async, &DiscoveryMessageHandler::handleZombieUpdate, this, values);
-//            std::thread t([values, this](){
-//                this->handleZombieUpdate(values);
-//            });
-//            t.detach();
             return true;
         });
+
+        // Get local zombies
+        m_dhtNode.get(zombielocalkey_, [this](const std::vector<std::shared_ptr<dht::Value>> &values){
+            std::async(std::launch::async, &DiscoveryMessageHandler::handleZombieUpdate, this, values);
+            return true;
+        });
+
         // Subscribe for further zombies
-        m_dhtNode.listen(m_zombieKey, [this](const std::vector<std::shared_ptr<dht::Value>> &values){
+        m_dhtNode.listen(zombieglobalkey_, [this](const std::vector<std::shared_ptr<dht::Value>> &values){
             std::async(std::launch::async, &DiscoveryMessageHandler::handleZombieUpdate, this, values);
-//            std::thread t([values, this]() {
-//                handleZombieUpdate(values);
-//            });
-//            t.detach();
             return true;
         });
+
+        m_dhtNode.listen(zombielocalkey_, [this](const std::vector<std::shared_ptr<dht::Value>> &values){
+            std::async(std::launch::async, &DiscoveryMessageHandler::handleZombieUpdate, this, values);
+            return true;
+        });
+
+        // The discovery service may be restarted, previously registered response ports are put under the zombie key
+        try{
+            auto db = Lmdb::db();
+            auto services = db->GetAll();
+
+            for (auto& service : *services) {
+                auto key = get<0>(service);
+                auto address = get<1>(service);
+                vector<uint8_t> opendht_data(address.begin(), address.end());
+                m_logger->info("Mark service {}:{} as zombie", key,address);
+                if (address.find("127.0.0.1") != string::npos) {
+                    m_dhtNode.put(zombielocalkey_, dht::Value(opendht_data));
+                } else {
+                    m_dhtNode.put(zombieglobalkey_, dht::Value(opendht_data));
+                }
+                db->Del(key);
+            }
+        } catch(lmdb_error& e) {
+            m_logger->error("{}", e.what());
+        }
     }
 
     std::future<bool> DiscoveryMessageHandler::waitForDht() {
@@ -86,7 +112,6 @@ namespace riaps{
         });
     }
 
-
     void DiscoveryMessageHandler::run() {
         while (!m_terminated){
             void *which = zpoller_wait(m_poller, REGULAR_MAINTAIN_PERIOD);
@@ -95,7 +120,6 @@ namespace riaps{
             // Reregister the too old services (OpenDHT ValueType settings, it is 10 minutes by default)
             int64_t loopStartTime = zclock_mono();
             if ((loopStartTime-m_lastServiceCheckin) > m_serviceCheckPeriod){
-
                 // Obsolote, riaps-deplo should be asked about the reneewal
                 maintainRenewal();
             }
@@ -117,7 +141,6 @@ namespace riaps{
                 size_t    size = zframe_size(capnpMsgBody);
                 byte*     data = zframe_data(capnpMsgBody);
 
-
                 try {
                     auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word *>(data), size / sizeof(capnp::word));
 
@@ -135,7 +158,7 @@ namespace riaps{
                     } else if (msgDhtUpdate.isZombieList()) {
                         auto zombieList = msgDhtUpdate.getZombieList();
                         for (int i =0; i< zombieList.size(); i++){
-                            std::string currentZombie = zombieList[i];
+                            string currentZombie = zombieList[i];
                             m_zombieServices[currentZombie] = zclock_mono();
                         }
                     } else if (msgDhtUpdate.isGroupUpdate()){
@@ -148,9 +171,7 @@ namespace riaps{
                 }
                 catch(kj::Exception& e){
                     m_logger->error("Couldn't deserialize message from DHT_ROUTER_SOCKET");
-
                     continue;
-
                 }
             }
 
@@ -218,7 +239,7 @@ namespace riaps{
         std::string actorname = std::string(msgActorReq.getActorName().cStr());
         std::string appname   = std::string(msgActorReq.getAppName().cStr());
 
-        std::string clientKeyBase = fmt::format("/{}/{}/",appname, actorname); //"/" + app_name + '/' + actorname + "/";
+        std::string clientKeyBase = fmt::format("/{}/{}/",appname, actorname);
         m_logger->info("Register actor with PID - {} : {}", msgActorReq.getPid(), clientKeyBase);
 
         auto registeredActorIt = m_clients.find(clientKeyBase);
@@ -236,7 +257,6 @@ namespace riaps{
             auto arepmsg = drepmsg.initActorReg();
             arepmsg.setPort(0);
             arepmsg.setStatus(riaps::discovery::Status::ERR);
-
 
             auto serializedMessage = capnp::messageToFlatArray(message);
 
@@ -259,7 +279,7 @@ namespace riaps{
             auto port = zsock_bind(actor_socket, "tcp://*:!");
 
             //_clients[clientKeyBase] = std::unique_ptr<actor_details_t>(new actor_details_t());
-            m_clients[clientKeyBase] =  std::make_shared<ActorDetails>();
+            m_clients[clientKeyBase] = std::make_shared<ActorDetails>();
             m_clients[clientKeyBase] -> socket  = actor_socket;
             m_clients[clientKeyBase] -> port    = port;
             m_clients[clientKeyBase] -> pid     = msgActorReq.getPid();
@@ -267,7 +287,7 @@ namespace riaps{
 
             // Subscribe to groups
             if (m_groupListeners.find(appname) == m_groupListeners.end()) {
-                std::string key = fmt::format("/groups/{}",appname);
+                string key = fmt::format("/groups/{}",appname);
                 m_groupListeners[appname] =
                         m_dhtNode.listen(key, [this](const std::vector<std::shared_ptr<dht::Value>> &values){
                             if (values.size() == 0) return true;
@@ -306,16 +326,30 @@ namespace riaps{
     }
 
     void DiscoveryMessageHandler::handleActorUnreg(riaps::discovery::ActorUnregReq::Reader &msgActorUnreg) {
-        std::string actorname = std::string(msgActorUnreg.getActorName().cStr());
-        std::string appname = std::string(msgActorUnreg.getAppName().cStr());
+        string actorname = string(msgActorUnreg.getActorName().cStr());
+        string appname = string(msgActorUnreg.getAppName().cStr());
         int servicePid = msgActorUnreg.getPid();
 
         // Mark actor's services as zombie
         if (m_serviceCheckins.find(servicePid)!=m_serviceCheckins.end()){
             for (auto& service : m_serviceCheckins[servicePid]){
-                std::string serviceAddress = service->value;
-                std::vector<uint8_t> opendht_data(serviceAddress.begin(), serviceAddress.end());
-                m_dhtNode.put(m_zombieKey, dht::Value(opendht_data));
+                string service_address = service->value;
+                vector<uint8_t> opendht_data(service_address.begin(), service_address.end());
+
+                if (service_address.find("127.0.0.1") != string::npos) {
+                    m_dhtNode.put(zombielocalkey_, dht::Value(opendht_data));
+                } else {
+                    m_dhtNode.put(zombieglobalkey_, dht::Value(opendht_data));
+                }
+                //m_dhtNode.put(m_zombieKey, dht::Value(opendht_data));
+
+                // Remove the service from the local db
+                try {
+                    auto db = Lmdb::db();
+                    db->Del(service->key);
+                } catch(lmdb_error& e){
+                    m_logger->error("{}", e.what());
+                }
             }
         }
 
@@ -346,7 +380,6 @@ namespace riaps{
     }
 
     void DiscoveryMessageHandler::handleServiceReg(riaps::discovery::ServiceRegReq::Reader &msgServiceReg) {
-
         auto check_dht = waitForDht();
 
         auto msgPath           = msgServiceReg.getPath();
@@ -361,8 +394,19 @@ namespace riaps{
                                                msgSock.getHost(),
                                                msgSock.getPort());
 
-        //std::cout << "Register service: " + std::get<0>(kv_pair) << std::endl;
-        m_logger->info("Register service: {}@{}:{}", std::get<0>(kv_pair), msgSock.getHost().cStr(), msgSock.getPort());
+        m_logger->info("Register service: {}@{}:{}", get<0>(kv_pair), msgSock.getHost().cStr(), msgSock.getPort());
+
+        // Save response port addresses into local database
+        // If the discovery service restarts because of failure, then it puts the response ports into zombie state.
+        // Previously registered ports don't work after restart.
+        if (msgServiceReg.getPath().getKind() == riaps::discovery::Kind::REP) {
+            try {
+                auto db = Lmdb::db();
+                db->Put(get<0>(kv_pair), get<1>(kv_pair));
+            } catch(lmdb_error& e) {
+                m_logger->error("{}", e.what());
+            }
+        }
 
         // New pid
         if (m_serviceCheckins.find(servicePid) == m_serviceCheckins.end()) {
@@ -374,7 +418,7 @@ namespace riaps{
         newItem->createdTime = zclock_mono();
         newItem->key         = std::get<0>(kv_pair);
         newItem->value       = std::get<1>(kv_pair);
-        newItem->pid         = servicePid;
+        //newItem->pid         = servicePid;
         m_serviceCheckins[servicePid].push_back(std::move(newItem));
 
         // Convert the value to bytes
@@ -386,7 +430,7 @@ namespace riaps{
             m_logger->error("DHT may be not ready");
         }
 
-        dhtPut(keyhash, std::get<0>(kv_pair), opendht_data, 0);
+        dhtPut(keyhash, get<0>(kv_pair), opendht_data, 0);
         zclock_sleep(500);
         //m_dhtNode.put(keyhash, dht::Value(opendht_data));
 
@@ -1132,9 +1176,16 @@ namespace riaps{
                  serviceIt++) {
 
                 // host:port
-                std::string serviceAddress = (*serviceIt)->value;
-                std::vector<uint8_t> opendht_data(serviceAddress.begin(), serviceAddress.end());
-                m_dhtNode.put(m_zombieKey, dht::Value(opendht_data));
+                string serviceAddress = (*serviceIt)->value;
+                vector<uint8_t> opendht_data(serviceAddress.begin(), serviceAddress.end());
+
+                if (serviceAddress.find("127.0.0.1") != string::npos) {
+                    m_dhtNode.put(zombielocalkey_, dht::Value(opendht_data));
+                } else {
+                    m_dhtNode.put(zombieglobalkey_, dht::Value(opendht_data));
+                }
+
+                //m_dhtNode.put(m_zombieKey, dht::Value(opendht_data));
             }
 
             m_serviceCheckins.erase(*it);
@@ -1150,7 +1201,7 @@ namespace riaps{
                     (*serviceIt)->createdTime = now;
 
                     // Reput key-value
-                    std::vector<uint8_t> opendht_data((*serviceIt)->value.begin(), (*serviceIt)->value.end());
+                    vector<uint8_t> opendht_data((*serviceIt)->value.begin(), (*serviceIt)->value.end());
                     auto keyhash = dht::InfoHash::get((*serviceIt)->key);
 
                     m_dhtNode.put(keyhash, dht::Value(opendht_data));
@@ -1175,11 +1226,11 @@ namespace riaps{
     int DiscoveryMessageHandler::deregisterActor(const std::string& appName,
                                                  const std::string& actorName){
 
-        std::string clientKeyBase = fmt::format("/{}/{}/",appName,actorName);
-        std::string clientKeyLocal = clientKeyBase + m_macAddress;
-        std::string clientKeyGlobal = clientKeyBase + m_hostAddress;
+        string clientKeyBase = fmt::format("/{}/{}/",appName,actorName);
+        string clientKeyLocal = clientKeyBase + m_macAddress;
+        string clientKeyGlobal = clientKeyBase + m_hostAddress;
 
-        std::vector<std::string> keysToBeErased{clientKeyBase, clientKeyLocal, clientKeyGlobal};
+        vector<string> keysToBeErased {clientKeyBase, clientKeyLocal, clientKeyGlobal};
 
         m_logger->info("Unregister actor: {}", clientKeyBase);
 
@@ -1194,7 +1245,6 @@ namespace riaps{
                 // erased elements
                 int erased = m_clients.erase(*it);
                 if (erased == 0) {
-                    //std::cout << "Couldn't find actor to unregister: " << *it << std::endl;
                     m_logger->error("Couldn't find actor to unregister: {}", *it);
                 }
             }
@@ -1219,31 +1269,24 @@ namespace riaps{
         sleep(1);
     }
 
-    std::tuple<std::string, std::string> DiscoveryMessageHandler::buildInsertKeyValuePair(
-            const std::string&             appName,
-            const std::string&             msgType,
+    std::tuple<string, string> DiscoveryMessageHandler::buildInsertKeyValuePair(
+            const string&             appName,
+            const string&             msgType,
             const riaps::discovery::Kind&  kind,
             const riaps::discovery::Scope& scope,
-            const std::string&             host,
+            const string&             host,
             const uint16_t                 port) {
 
-        std::string key;
-        key = "/" + appName
-              + "/" + msgType
-              + "/" + kindMap[kind];
+        string key = fmt::format("/{}/{}/{}", appName, msgType, kindMap[kind]);
 
         if (scope == riaps::discovery::Scope::LOCAL) {
-            // hostid
-            //auto hostid = gethostid();
-
-            std::string mac_address = riaps::framework::Network::GetMacAddressStripped();
-
+            string mac_address = riaps::framework::Network::GetMacAddressStripped();
             key += mac_address;
         }
 
-        std::string value = host + ":" + std::to_string(port);
+        string value = fmt::format("{}:{}", host, to_string(port));
 
-        return std::make_tuple(key, value);
+        return make_tuple(key, value);
     }
 
     std::pair<std::string, std::string> DiscoveryMessageHandler::buildLookupKey(

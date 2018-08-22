@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="namespaceriaps_1_1componentmodel" kind="namespace" language="C++">
+    <compoundname>riaps::componentmodel</compoundname>
+    <innerclass refid="classriaps_1_1componentmodel_1_1ComponentActual" prot="public">riaps::componentmodel::ComponentActual</innerclass>
+    <innerclass refid="classriaps_1_1componentmodel_1_1Parameter" prot="public">riaps::componentmodel::Parameter</innerclass>
+    <innerclass refid="classriaps_1_1componentmodel_1_1Parameters" prot="public">riaps::componentmodel::Parameters</innerclass>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/istvan/work/riaps-core/include/componentmodel/r_parameter.h" line="15" column="1"/>
+  </compounddef>
+</doxygen>

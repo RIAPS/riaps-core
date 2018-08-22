@@ -1,0 +1,163 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="classExpirable" kind="class" language="C++" prot="public">
+    <compoundname>Expirable</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename</type>
+        <declname>T</declname>
+        <defname>T</defname>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classExpirable_1a6826ce994b0f22f209cff3a0500db6cd" prot="private" static="no" mutable="no">
+        <type>T</type>
+        <definition>T Expirable&lt; T &gt;::_value</definition>
+        <argsstring></argsstring>
+        <name>_value</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_expirable.h" line="43" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_expirable.h" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classExpirable_1a110f2141314072bace0c0658cb7fa99b" prot="private" static="no" mutable="no">
+        <type>int64_t</type>
+        <definition>int64_t Expirable&lt; T &gt;::_lastTimestamp</definition>
+        <argsstring></argsstring>
+        <name>_lastTimestamp</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_expirable.h" line="44" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_expirable.h" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classExpirable_1a35393ec0c19a1af2105cd6769037ccc8" prot="private" static="no" mutable="no">
+        <type>int64_t</type>
+        <definition>int64_t Expirable&lt; T &gt;::_duration</definition>
+        <argsstring></argsstring>
+        <name>_duration</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_expirable.h" line="45" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_expirable.h" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classExpirable_1aa11610c62e7cd7ce6dff3496b77dc870" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Expirable&lt; T &gt;::Expirable</definition>
+        <argsstring>(const T &amp;value, const int64_t duration=1000)</argsstring>
+        <name>Expirable</name>
+        <param>
+          <type>const T &amp;</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type>const int64_t</type>
+          <declname>duration</declname>
+          <defval>1000</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_expirable.h" line="14" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_expirable.h" bodystart="14" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="function" id="classExpirable_1a0ce7850fcdf13a33aa40ee83c2a1a0e4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Expirable&lt; T &gt;::Expirable</definition>
+        <argsstring>(const Expirable&lt; T &gt; &amp;other)</argsstring>
+        <name>Expirable</name>
+        <param>
+          <type>const <ref refid="classExpirable" kindref="compound">Expirable</ref>&lt; T &gt; &amp;</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_expirable.h" line="19" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_expirable.h" bodystart="19" bodyend="23"/>
+      </memberdef>
+      <memberdef kind="function" id="classExpirable_1a582032a2220c9edf9bf68b3c1632007e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Expirable&lt; T &gt;::UpdateTimestamp</definition>
+        <argsstring>()</argsstring>
+        <name>UpdateTimestamp</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_expirable.h" line="25" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_expirable.h" bodystart="25" bodyend="27"/>
+      </memberdef>
+      <memberdef kind="function" id="classExpirable_1ae34225e9df5ae701e81075006106605a" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Expirable&lt; T &gt;::HasExpired</definition>
+        <argsstring>() const </argsstring>
+        <name>HasExpired</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_expirable.h" line="29" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_expirable.h" bodystart="29" bodyend="33"/>
+      </memberdef>
+      <memberdef kind="function" id="classExpirable_1af5fe327ad38ad257afb9d0a358b082f4" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const T &amp;</type>
+        <definition>const T&amp; Expirable&lt; T &gt;::GetValue</definition>
+        <argsstring>() const </argsstring>
+        <name>GetValue</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_expirable.h" line="35" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_expirable.h" bodystart="35" bodyend="37"/>
+      </memberdef>
+      <memberdef kind="function" id="classExpirable_1a0ce9ef03289957cd704977ad4321bbc3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Expirable&lt; T &gt;::~Expirable</definition>
+        <argsstring>()</argsstring>
+        <name>~Expirable</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_expirable.h" line="39" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_expirable.h" bodystart="39" bodyend="40"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/istvan/work/riaps-core/include/utils/r_expirable.h" line="12" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_expirable.h" bodystart="12" bodyend="46"/>
+    <listofallmembers>
+      <member refid="classExpirable_1a35393ec0c19a1af2105cd6769037ccc8" prot="private" virt="non-virtual"><scope>Expirable</scope><name>_duration</name></member>
+      <member refid="classExpirable_1a110f2141314072bace0c0658cb7fa99b" prot="private" virt="non-virtual"><scope>Expirable</scope><name>_lastTimestamp</name></member>
+      <member refid="classExpirable_1a6826ce994b0f22f209cff3a0500db6cd" prot="private" virt="non-virtual"><scope>Expirable</scope><name>_value</name></member>
+      <member refid="classExpirable_1aa11610c62e7cd7ce6dff3496b77dc870" prot="public" virt="non-virtual"><scope>Expirable</scope><name>Expirable</name></member>
+      <member refid="classExpirable_1a0ce7850fcdf13a33aa40ee83c2a1a0e4" prot="public" virt="non-virtual"><scope>Expirable</scope><name>Expirable</name></member>
+      <member refid="classExpirable_1af5fe327ad38ad257afb9d0a358b082f4" prot="public" virt="non-virtual"><scope>Expirable</scope><name>GetValue</name></member>
+      <member refid="classExpirable_1ae34225e9df5ae701e81075006106605a" prot="public" virt="non-virtual"><scope>Expirable</scope><name>HasExpired</name></member>
+      <member refid="classExpirable_1a582032a2220c9edf9bf68b3c1632007e" prot="public" virt="non-virtual"><scope>Expirable</scope><name>UpdateTimestamp</name></member>
+      <member refid="classExpirable_1a0ce9ef03289957cd704977ad4321bbc3" prot="public" virt="non-virtual"><scope>Expirable</scope><name>~Expirable</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

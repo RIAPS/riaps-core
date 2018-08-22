@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="dir_00639e50a5e06ba932c41b2ae621276d" kind="dir">
+    <compoundname>/home/istvan/work/riaps-core/include/device</compoundname>
+    <innerfile refid="r__deviceactor_8h">r_deviceactor.h</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/istvan/work/riaps-core/include/device/"/>
+  </compounddef>
+</doxygen>

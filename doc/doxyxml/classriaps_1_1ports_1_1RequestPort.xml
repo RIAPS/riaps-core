@@ -1,0 +1,322 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="classriaps_1_1ports_1_1RequestPort" kind="class" language="C++" prot="public">
+    <compoundname>riaps::ports::RequestPort</compoundname>
+    <basecompoundref refid="classriaps_1_1ports_1_1PortBase" prot="public" virt="non-virtual">riaps::ports::PortBase</basecompoundref>
+    <basecompoundref refid="classriaps_1_1ports_1_1SenderPort" prot="public" virt="non-virtual">riaps::ports::SenderPort</basecompoundref>
+    <basecompoundref refid="classriaps_1_1ports_1_1RecvPort" prot="public" virt="non-virtual">riaps::ports::RecvPort</basecompoundref>
+      <sectiondef kind="protected-attrib">
+      <memberdef kind="variable" id="classriaps_1_1ports_1_1RequestPort_1ac859b6932dd52ce44e424a9650f2064f" prot="protected" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool riaps::ports::RequestPort::m_isConnected</definition>
+        <argsstring></argsstring>
+        <name>m_isConnected</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_requestport.h" line="46" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/ports/r_requestport.h" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1ports_1_1RequestPort_1af49bb115d4c781ff16ed973f042465b6" prot="protected" static="no" mutable="no">
+        <type>timespec</type>
+        <definition>timespec riaps::ports::RequestPort::m_recvTimestamp</definition>
+        <argsstring></argsstring>
+        <name>m_recvTimestamp</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_requestport.h" line="48" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/ports/r_requestport.h" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1ports_1_1RequestPort_1a6e0b4e833c314411d52f9532642f2b7c" prot="protected" static="no" mutable="no">
+        <type>capnp::FlatArrayMessageReader</type>
+        <definition>capnp::FlatArrayMessageReader riaps::ports::RequestPort::m_capnpReader</definition>
+        <argsstring></argsstring>
+        <name>m_capnpReader</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_requestport.h" line="50" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/ports/r_requestport.h" bodystart="50" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classriaps_1_1ports_1_1RequestPort_1a760e5a78ceb7292b73a7b79268bcf50b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>riaps::ports::RequestPort::RequestPort</definition>
+        <argsstring>(const component_port_req &amp;config, const ComponentBase *parentComponent)</argsstring>
+        <name>RequestPort</name>
+        <param>
+          <type>const <ref refid="structcomponent__port__req" kindref="compound">component_port_req</ref> &amp;</type>
+          <declname>config</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classriaps_1_1ComponentBase" kindref="compound">ComponentBase</ref> *</type>
+          <declname>parentComponent</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_requestport.h" line="26" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1RequestPort_1ae9cdedb40738e3f0900d6fc867c9b1a8" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type>void</type>
+        <definition>virtual void riaps::ports::RequestPort::Init</definition>
+        <argsstring>()</argsstring>
+        <name>Init</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_requestport.h" line="27" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1RequestPort_1a1cb761cc1b16085e3c1ba515bca90cc0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool riaps::ports::RequestPort::ConnectToResponse</definition>
+        <argsstring>(const std::string &amp;rep_endpoint)</argsstring>
+        <name>ConnectToResponse</name>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>rep_endpoint</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_requestport.h" line="30" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1RequestPort_1a574082beb12ab3609d02fa6aff0b8435" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type>bool</type>
+        <definition>virtual bool riaps::ports::RequestPort::Recv</definition>
+        <argsstring>(capnp::FlatArrayMessageReader **messageReader)</argsstring>
+        <name>Recv</name>
+        <param>
+          <type>capnp::FlatArrayMessageReader **</type>
+          <declname>messageReader</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_requestport.h" line="32" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1RequestPort_1a2391f051f900a0f4b6f27059b20157f4" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type><ref refid="classriaps_1_1ports_1_1RequestPort" kindref="compound">RequestPort</ref> *</type>
+        <definition>virtual RequestPort* riaps::ports::RequestPort::AsRequestPort</definition>
+        <argsstring>()</argsstring>
+        <name>AsRequestPort</name>
+        <reimplements refid="classriaps_1_1ports_1_1PortBase_1a5772ee01b85721a9367d0b0602823a25">AsRequestPort</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_requestport.h" line="34" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1RequestPort_1a651539c456b3010c239704d75f4ca9f5" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type><ref refid="classriaps_1_1ports_1_1RecvPort" kindref="compound">RecvPort</ref> *</type>
+        <definition>virtual RecvPort* riaps::ports::RequestPort::AsRecvPort</definition>
+        <argsstring>()</argsstring>
+        <name>AsRecvPort</name>
+        <reimplements refid="classriaps_1_1ports_1_1PortBase_1a652f4b02a2f5fb806cd5f7b96c3b1f48">AsRecvPort</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_requestport.h" line="35" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1RequestPort_1a3375c1b4e5b1d1488569ac0204db984e" prot="public" static="no" const="yes" explicit="no" inline="no" virt="virtual">
+        <type>const <ref refid="structcomponent__port__req" kindref="compound">component_port_req</ref> *</type>
+        <definition>virtual const component_port_req* riaps::ports::RequestPort::GetConfig</definition>
+        <argsstring>() const </argsstring>
+        <name>GetConfig</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_requestport.h" line="38" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1RequestPort_1ac1fd69f311fd427d9e0903f94f135cdd" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>const timespec &amp;</type>
+        <definition>const timespec&amp; riaps::ports::RequestPort::GetRecvTimestamp</definition>
+        <argsstring>() const </argsstring>
+        <name>GetRecvTimestamp</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_requestport.h" line="40" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1RequestPort_1a5d057e5fdd34ef7b32e2ffa24302b580" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>riaps::ports::RequestPort::~RequestPort</definition>
+        <argsstring>() noexcept</argsstring>
+        <name>~RequestPort</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_requestport.h" line="44" column="1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="protected-func">
+      <memberdef kind="function" id="classriaps_1_1ports_1_1RequestPort_1af3e7829b80a1166eda053c14d33d34f9" prot="protected" static="no" const="yes" explicit="no" inline="no" virt="virtual">
+        <type>bool</type>
+        <definition>virtual bool riaps::ports::RequestPort::Send</definition>
+        <argsstring>(capnp::MallocMessageBuilder &amp;message) const </argsstring>
+        <name>Send</name>
+        <reimplements refid="classriaps_1_1ports_1_1SenderPort_1adbcc44b7faf971285d1c3266938fa1ee">Send</reimplements>
+        <param>
+          <type>capnp::MallocMessageBuilder &amp;</type>
+          <declname>message</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_requestport.h" line="52" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="609">
+        <label>riaps::ports::PortBase</label>
+        <link refid="classriaps_1_1ports_1_1PortBase"/>
+      </node>
+      <node id="611">
+        <label>riaps::ports::RecvPort</label>
+        <link refid="classriaps_1_1ports_1_1RecvPort"/>
+        <childnode refid="612" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="608">
+        <label>riaps::ports::RequestPort</label>
+        <link refid="classriaps_1_1ports_1_1RequestPort"/>
+        <childnode refid="609" relation="public-inheritance">
+        </childnode>
+        <childnode refid="610" relation="public-inheritance">
+        </childnode>
+        <childnode refid="611" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="612">
+        <label>riaps::ports::TimedPort</label>
+        <link refid="classriaps_1_1ports_1_1TimedPort"/>
+      </node>
+      <node id="610">
+        <label>riaps::ports::SenderPort</label>
+        <link refid="classriaps_1_1ports_1_1SenderPort"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="614">
+        <label>riaps::ports::PortBase</label>
+        <link refid="classriaps_1_1ports_1_1PortBase"/>
+      </node>
+      <node id="616">
+        <label>riaps::ports::RecvPort</label>
+        <link refid="classriaps_1_1ports_1_1RecvPort"/>
+        <childnode refid="617" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="613">
+        <label>riaps::ports::RequestPort</label>
+        <link refid="classriaps_1_1ports_1_1RequestPort"/>
+        <childnode refid="614" relation="public-inheritance">
+        </childnode>
+        <childnode refid="615" relation="public-inheritance">
+        </childnode>
+        <childnode refid="616" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="617">
+        <label>riaps::ports::TimedPort</label>
+        <link refid="classriaps_1_1ports_1_1TimedPort"/>
+      </node>
+      <node id="615">
+        <label>riaps::ports::SenderPort</label>
+        <link refid="classriaps_1_1ports_1_1SenderPort"/>
+      </node>
+    </collaborationgraph>
+    <location file="/home/istvan/work/riaps-core/include/componentmodel/ports/r_requestport.h" line="22" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/ports/r_requestport.h" bodystart="22" bodyend="53"/>
+    <listofallmembers>
+      <member refid="classriaps_1_1ports_1_1PortBase_1abdf423b8960ed3e0182dc0e397bdb067" prot="public" virt="virtual"><scope>riaps::ports::RequestPort</scope><name>AsAnswerPort</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a606bc38f681830c4525a4ab203840260" prot="public" virt="virtual"><scope>riaps::ports::RequestPort</scope><name>AsGroupPublishPort</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a90527a72d9c4edce850c49b43bf24834" prot="public" virt="virtual"><scope>riaps::ports::RequestPort</scope><name>AsGroupSubscriberPort</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a6605ebeb4a10da371b32dce46825af56" prot="public" virt="virtual"><scope>riaps::ports::RequestPort</scope><name>AsInsidePort</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a0c7881243184086c94d76334d68098e7" prot="public" virt="virtual"><scope>riaps::ports::RequestPort</scope><name>AsPublishPort</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a4bf856bf3fcbe292abf49c1d2d6ead4b" prot="public" virt="virtual"><scope>riaps::ports::RequestPort</scope><name>AsQueryPort</name></member>
+      <member refid="classriaps_1_1ports_1_1RequestPort_1a651539c456b3010c239704d75f4ca9f5" prot="public" virt="virtual"><scope>riaps::ports::RequestPort</scope><name>AsRecvPort</name></member>
+      <member refid="classriaps_1_1ports_1_1RequestPort_1a2391f051f900a0f4b6f27059b20157f4" prot="public" virt="virtual"><scope>riaps::ports::RequestPort</scope><name>AsRequestPort</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a133fe860a48361cd0b83f8ae891d6f62" prot="public" virt="virtual"><scope>riaps::ports::RequestPort</scope><name>AsResponsePort</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a19d7f0a48e2725a2778473ad0bbb0a98" prot="public" virt="virtual"><scope>riaps::ports::RequestPort</scope><name>AsSubscribePort</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a4924044fb72f752c6a366b38ac42c105" prot="public" virt="virtual"><scope>riaps::ports::RequestPort</scope><name>AsTimerPort</name></member>
+      <member refid="classriaps_1_1ports_1_1RequestPort_1a1cb761cc1b16085e3c1ba515bca90cc0" prot="public" virt="non-virtual"><scope>riaps::ports::RequestPort</scope><name>ConnectToResponse</name></member>
+      <member refid="classriaps_1_1ports_1_1RequestPort_1a3375c1b4e5b1d1488569ac0204db984e" prot="public" virt="virtual"><scope>riaps::ports::RequestPort</scope><name>GetConfig</name></member>
+      <member refid="classriaps_1_1ports_1_1TimedPort_1a11ecce443a0f66cdabca02f120d974a8" prot="public" virt="non-virtual"><scope>riaps::ports::RequestPort</scope><name>GetLastRecvTimestamp</name></member>
+      <member refid="classriaps_1_1ports_1_1TimedPort_1a833a7266cd56e3eb54a9277e80eace73" prot="public" virt="non-virtual"><scope>riaps::ports::RequestPort</scope><name>GetLastSendTimestamp</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a1d0c5bead7c8c0938a2a89285493735e" prot="public" virt="non-virtual"><scope>riaps::ports::RequestPort</scope><name>GetParentComponent</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a0db04f047fd5a60c903d0ad859f73a39" prot="public" virt="virtual"><scope>riaps::ports::RequestPort</scope><name>GetPortBaseConfig</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a9a1e459dcad1ee8de0b65bbb205c4018" prot="public" virt="virtual"><scope>riaps::ports::RequestPort</scope><name>GetPortName</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a457594248f0e87737fb762c3af4ab432" prot="public" virt="non-virtual"><scope>riaps::ports::RequestPort</scope><name>GetPortType</name></member>
+      <member refid="classriaps_1_1ports_1_1RequestPort_1ac1fd69f311fd427d9e0903f94f135cdd" prot="public" virt="non-virtual"><scope>riaps::ports::RequestPort</scope><name>GetRecvTimestamp</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a6383aa77a6ce27b786926d215b902b4d" prot="public" virt="virtual"><scope>riaps::ports::RequestPort</scope><name>GetSocket</name></member>
+      <member refid="classriaps_1_1ports_1_1RequestPort_1ae9cdedb40738e3f0900d6fc867c9b1a8" prot="public" virt="virtual"><scope>riaps::ports::RequestPort</scope><name>Init</name></member>
+      <member refid="classriaps_1_1ports_1_1RequestPort_1a6e0b4e833c314411d52f9532642f2b7c" prot="protected" virt="non-virtual"><scope>riaps::ports::RequestPort</scope><name>m_capnpReader</name></member>
+      <member refid="classriaps_1_1ports_1_1RequestPort_1ac859b6932dd52ce44e424a9650f2064f" prot="protected" virt="non-virtual"><scope>riaps::ports::RequestPort</scope><name>m_isConnected</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a76e350bc9cefa58cd2978aabc64ef1cb" prot="protected" virt="non-virtual"><scope>riaps::ports::RequestPort</scope><name>m_logger</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1aaeee614c0de553c6e1bc560c31930b5f" prot="protected" virt="non-virtual"><scope>riaps::ports::RequestPort</scope><name>m_port_socket</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1af558a31ff1bc2a35af92d92757971df9" prot="protected" virt="non-virtual"><scope>riaps::ports::RequestPort</scope><name>m_port_type</name></member>
+      <member refid="classriaps_1_1ports_1_1RequestPort_1af49bb115d4c781ff16ed973f042465b6" prot="protected" virt="non-virtual"><scope>riaps::ports::RequestPort</scope><name>m_recvTimestamp</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a884c1d1d23bc78b121633498bdd913ce" prot="public" virt="non-virtual"><scope>riaps::ports::RequestPort</scope><name>PortBase</name></member>
+      <member refid="classriaps_1_1ports_1_1RequestPort_1a574082beb12ab3609d02fa6aff0b8435" prot="public" virt="virtual"><scope>riaps::ports::RequestPort</scope><name>Recv</name></member>
+      <member refid="classriaps_1_1ports_1_1RecvPort_1a4ffc42917ccb62f02c24d582e21c3ba7" prot="public" virt="virtual" ambiguityscope="riaps::ports::RecvPort::"><scope>riaps::ports::RequestPort</scope><name>Recv</name></member>
+      <member refid="classriaps_1_1ports_1_1RecvPort_1a24f21b596ddfebf1b8eccc3a38ce3555" prot="public" virt="virtual" ambiguityscope="riaps::ports::RecvPort::"><scope>riaps::ports::RequestPort</scope><name>Recv</name></member>
+      <member refid="classriaps_1_1ports_1_1RecvPort_1a3411961d493fb1daa11f7f53257cfd70" prot="public" virt="virtual" ambiguityscope="riaps::ports::RecvPort::"><scope>riaps::ports::RequestPort</scope><name>Recv</name></member>
+      <member refid="classriaps_1_1ports_1_1RecvPort_1a19d2688a6446d4d813d9dd41a1c1606e" prot="public" virt="non-virtual"><scope>riaps::ports::RequestPort</scope><name>RecvPort</name></member>
+      <member refid="classriaps_1_1ports_1_1RequestPort_1a760e5a78ceb7292b73a7b79268bcf50b" prot="public" virt="non-virtual"><scope>riaps::ports::RequestPort</scope><name>RequestPort</name></member>
+      <member refid="classriaps_1_1ports_1_1RequestPort_1af3e7829b80a1166eda053c14d33d34f9" prot="protected" virt="virtual"><scope>riaps::ports::RequestPort</scope><name>Send</name></member>
+      <member refid="classriaps_1_1ports_1_1SenderPort_1a943a11ba23fa0306bfb4b9287f5974e2" prot="public" virt="virtual" ambiguityscope="riaps::ports::SenderPort::"><scope>riaps::ports::RequestPort</scope><name>Send</name></member>
+      <member refid="classriaps_1_1ports_1_1SenderPort_1a0f6aac8476e7ed7ec4d74095735107ba" prot="public" virt="non-virtual"><scope>riaps::ports::RequestPort</scope><name>SenderPort</name></member>
+      <member refid="classriaps_1_1ports_1_1TimedPort_1aa3f3a8207eae0051e8af2540aca7cd34" prot="protected" virt="non-virtual"><scope>riaps::ports::RequestPort</scope><name>SetRecvTimestamp</name></member>
+      <member refid="classriaps_1_1ports_1_1TimedPort_1a7d7ac92d308241edcb9d0e5f48f39f05" prot="protected" virt="non-virtual"><scope>riaps::ports::RequestPort</scope><name>SetRecvTimestamp</name></member>
+      <member refid="classriaps_1_1ports_1_1TimedPort_1a81a475f2e29c49357e7ec2453e74562c" prot="protected" virt="non-virtual"><scope>riaps::ports::RequestPort</scope><name>SetSendTimestamp</name></member>
+      <member refid="classriaps_1_1ports_1_1TimedPort_1a8a8f27004609916396b480eb96ea50c2" prot="protected" virt="non-virtual"><scope>riaps::ports::RequestPort</scope><name>SetSendTimestamp</name></member>
+      <member refid="classriaps_1_1ports_1_1TimedPort_1af27856196ca7777eb049ce8760abc411" prot="public" virt="non-virtual"><scope>riaps::ports::RequestPort</scope><name>TimedPort</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1ab88e9df5c9ec106946a2ee4519e2c1ac" prot="public" virt="virtual"><scope>riaps::ports::RequestPort</scope><name>~PortBase</name></member>
+      <member refid="classriaps_1_1ports_1_1RecvPort_1a86e66fd7329b75991e47f03477ca5277" prot="public" virt="virtual"><scope>riaps::ports::RequestPort</scope><name>~RecvPort</name></member>
+      <member refid="classriaps_1_1ports_1_1RequestPort_1a5d057e5fdd34ef7b32e2ffa24302b580" prot="public" virt="non-virtual"><scope>riaps::ports::RequestPort</scope><name>~RequestPort</name></member>
+      <member refid="classriaps_1_1ports_1_1SenderPort_1a3eb852c0821e539f809c7c824da85f08" prot="public" virt="virtual"><scope>riaps::ports::RequestPort</scope><name>~SenderPort</name></member>
+      <member refid="classriaps_1_1ports_1_1TimedPort_1a3e377079dcd26c57784b8e0f03df40df" prot="public" virt="non-virtual"><scope>riaps::ports::RequestPort</scope><name>~TimedPort</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

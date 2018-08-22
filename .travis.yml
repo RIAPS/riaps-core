@@ -30,14 +30,14 @@ script:
 - g++-5 -v
 - chmod +x build.sh package.sh
 - "./build.sh &&  ./package.sh"
-deploy:
-  provider: releases
-  overwrite: true
-  api_key:
-   secure: KnvBXovgqVHHeb4+A4eOfeYnRPKGyUTJfjcdNvtQfl7snT4CqhTNIBsvhJ0uOgEr0ohQWoq2uw+TRPVgt3smhlpqAszWKpSGdkXKvrz+CXzLmzarOGvQ17Jda888kuSgVzzuNsFkXYFcsFu15cbO+Csm5yk+ocE22gheDsnQkgTgJlTylSU1+/ki1/bo7fDM++O43eBWvbIO6YausELZVfo3xvn++y6FBwLeFGABaDBcASfmdagE1NrrLCMjkWkOYJjSGv75MwCCp4aGBM1D30cjI4RlIr1E7bUme120F9lk8A/krjuhm5BWZEHSp/9e8qgmoD9+4whCfn1KAdyXffFf6E060XwbOFSvwhPEiqaY+8HW6/J9OSCABUdPrC54Z/ngCZv8QNoSBP3IdAHdM6UjmBLh0nHtI7AOaEF2WnxB6GLqUTO1gP1Vr6NGj55x9NNJYkfqDlZ5du66ZDbmkn50Cszkct+AJvKSEWJA214RwlXX880f3s5CuRx/S+NA1AqVN5a+YJJ/o+LpmTC7D5mXai8iuKEV2G46i/O8x9YswAXQ/rgF3Tby3r2drqOPTu5Tczr4nlJf5b/iJ/W70pfrUxBklBSsQJoXL19hDMoErKPZkIZCgytJx+N7QQRzr2FvuQiqInBC6l1mYXeAhQcMCeWBWdLQp2WOHfyrmqc=
-  file:
-  - package/riaps-core-amd64.deb
-  - package/riaps-core-armhf.deb
-  skip_cleanup: true
-  on:
-    tags: true
+#deploy:
+#  provider: releases
+#  overwrite: true
+#  api_key:
+#   secure: KnvBXovgqVHHeb4+A4eOfeYnRPKGyUTJfjcdNvtQfl7snT4CqhTNIBsvhJ0uOgEr0ohQWoq2uw+TRPVgt3smhlpqAszWKpSGdkXKvrz+CXzLmzarOGvQ17Jda888kuSgVzzuNsFkXYFcsFu15cbO+Csm5yk+ocE22gheDsnQkgTgJlTylSU1+/ki1/bo7fDM++O43eBWvbIO6YausELZVfo3xvn++y6FBwLeFGABaDBcASfmdagE1NrrLCMjkWkOYJjSGv75MwCCp4aGBM1D30cjI4RlIr1E7bUme120F9lk8A/krjuhm5BWZEHSp/9e8qgmoD9+4whCfn1KAdyXffFf6E060XwbOFSvwhPEiqaY+8HW6/J9OSCABUdPrC54Z/ngCZv8QNoSBP3IdAHdM6UjmBLh0nHtI7AOaEF2WnxB6GLqUTO1gP1Vr6NGj55x9NNJYkfqDlZ5du66ZDbmkn50Cszkct+AJvKSEWJA214RwlXX880f3s5CuRx/S+NA1AqVN5a+YJJ/o+LpmTC7D5mXai8iuKEV2G46i/O8x9YswAXQ/rgF3Tby3r2drqOPTu5Tczr4nlJf5b/iJ/W70pfrUxBklBSsQJoXL19hDMoErKPZkIZCgytJx+N7QQRzr2FvuQiqInBC6l1mYXeAhQcMCeWBWdLQp2WOHfyrmqc=
+#  file:
+#  - package/riaps-core-amd64.deb
+#  - package/riaps-core-armhf.deb
+#  skip_cleanup: true
+#  on:
+#    tags: true

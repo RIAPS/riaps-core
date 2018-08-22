@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="structcomponent__conf" kind="struct" language="C++" prot="public">
+    <compoundname>component_conf</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structcomponent__conf_1ae2ff09c81d00fdfd75c2a8e2ecd8cb40" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string component_conf::component_name</definition>
+        <argsstring></argsstring>
+        <name>component_name</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" line="125" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" bodystart="125" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcomponent__conf_1a77e6fe515301b1de7c0ce05f7cb054d1" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string component_conf::component_type</definition>
+        <argsstring></argsstring>
+        <name>component_type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" line="126" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" bodystart="126" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcomponent__conf_1a8323fffc5dfe01d29e8bc30d7001a8f2" prot="public" static="no" mutable="no">
+        <type><ref refid="structComponentPorts" kindref="compound">ComponentPorts</ref></type>
+        <definition>ComponentPorts component_conf::component_ports</definition>
+        <argsstring></argsstring>
+        <name>component_ports</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" line="127" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" bodystart="127" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcomponent__conf_1a6ba81fa4e0300239b1dc95d3d6f5500d" prot="public" static="no" mutable="no">
+        <type><ref refid="classriaps_1_1componentmodel_1_1Parameters" kindref="compound">Parameters</ref></type>
+        <definition>Parameters component_conf::component_parameters</definition>
+        <argsstring></argsstring>
+        <name>component_parameters</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" line="128" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" bodystart="128" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcomponent__conf_1ae39aa3da2b06c1a7f0c6ac6050431ae8" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool component_conf::isDevice</definition>
+        <argsstring></argsstring>
+        <name>isDevice</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" line="129" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" bodystart="129" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="368">
+        <label>riaps::componentmodel::Parameters</label>
+        <link refid="classriaps_1_1componentmodel_1_1Parameters"/>
+      </node>
+      <node id="367">
+        <label>component_conf</label>
+        <link refid="structcomponent__conf"/>
+        <childnode refid="368" relation="usage">
+          <edgelabel>component_parameters</edgelabel>
+        </childnode>
+        <childnode refid="369" relation="usage">
+          <edgelabel>component_ports</edgelabel>
+        </childnode>
+      </node>
+      <node id="369">
+        <label>ComponentPorts</label>
+        <link refid="structComponentPorts"/>
+      </node>
+    </collaborationgraph>
+    <location file="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" line="124" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_configuration.h" bodystart="124" bodyend="130"/>
+    <listofallmembers>
+      <member refid="structcomponent__conf_1ae2ff09c81d00fdfd75c2a8e2ecd8cb40" prot="public" virt="non-virtual"><scope>component_conf</scope><name>component_name</name></member>
+      <member refid="structcomponent__conf_1a6ba81fa4e0300239b1dc95d3d6f5500d" prot="public" virt="non-virtual"><scope>component_conf</scope><name>component_parameters</name></member>
+      <member refid="structcomponent__conf_1a8323fffc5dfe01d29e8bc30d7001a8f2" prot="public" virt="non-virtual"><scope>component_conf</scope><name>component_ports</name></member>
+      <member refid="structcomponent__conf_1a77e6fe515301b1de7c0ce05f7cb054d1" prot="public" virt="non-virtual"><scope>component_conf</scope><name>component_type</name></member>
+      <member refid="structcomponent__conf_1ae39aa3da2b06c1a7f0c6ac6050431ae8" prot="public" virt="non-virtual"><scope>component_conf</scope><name>isDevice</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

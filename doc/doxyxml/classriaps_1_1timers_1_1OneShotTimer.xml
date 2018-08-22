@@ -1,0 +1,183 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="classriaps_1_1timers_1_1OneShotTimer" kind="class" language="C++" prot="public">
+    <compoundname>riaps::timers::OneShotTimer</compoundname>
+      <sectiondef kind="protected-attrib">
+      <memberdef kind="variable" id="classriaps_1_1timers_1_1OneShotTimer_1a230646b8b2a11a87c782510c842d8867" prot="protected" static="no" mutable="no">
+        <type>std::atomic&lt; bool &gt;</type>
+        <definition>std::atomic&lt;bool&gt; riaps::timers::OneShotTimer::_execute</definition>
+        <argsstring></argsstring>
+        <name>_execute</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_oneshottimer.h" line="35" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_oneshottimer.h" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1timers_1_1OneShotTimer_1a46d21f132673994fd0aa5cd701b63f56" prot="protected" static="no" mutable="no">
+        <type>std::thread</type>
+        <definition>std::thread riaps::timers::OneShotTimer::_thd</definition>
+        <argsstring></argsstring>
+        <name>_thd</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_oneshottimer.h" line="36" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_oneshottimer.h" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1timers_1_1OneShotTimer_1a3e0d2ed9e6a65b9cf0f80cc1c8a87cae" prot="protected" static="no" mutable="no">
+        <type>zsock_t *</type>
+        <definition>zsock_t* riaps::timers::OneShotTimer::_zsock_timer</definition>
+        <argsstring></argsstring>
+        <name>_zsock_timer</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_oneshottimer.h" line="37" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_oneshottimer.h" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1timers_1_1OneShotTimer_1a4fc3de1d95d6bfacf4988326dc65b9b6" prot="protected" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string riaps::timers::OneShotTimer::_timerid</definition>
+        <argsstring></argsstring>
+        <name>_timerid</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_oneshottimer.h" line="38" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_oneshottimer.h" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1timers_1_1OneShotTimer_1a9f06ea816bd16743fd007b2a3c585c90" prot="protected" static="no" mutable="no">
+        <type>timespec</type>
+        <definition>timespec riaps::timers::OneShotTimer::_wakeuptime</definition>
+        <argsstring></argsstring>
+        <name>_wakeuptime</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_oneshottimer.h" line="39" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_oneshottimer.h" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classriaps_1_1timers_1_1OneShotTimer_1a6189c3806e64e4e408be144d18e37277" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>riaps::timers::OneShotTimer::OneShotTimer</definition>
+        <argsstring>(const std::string &amp;timerresponsechannel, const std::string &amp;timerid, timespec &amp;wakeuptime)</argsstring>
+        <name>OneShotTimer</name>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>timerresponsechannel</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>timerid</declname>
+        </param>
+        <param>
+          <type>timespec &amp;</type>
+          <declname>wakeuptime</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_oneshottimer.h" line="22" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1timers_1_1OneShotTimer_1a765461d9423b41c3cabea3fadcc460ed" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>riaps::timers::OneShotTimer::~OneShotTimer</definition>
+        <argsstring>()</argsstring>
+        <name>~OneShotTimer</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_oneshottimer.h" line="26" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1timers_1_1OneShotTimer_1ace46cded2baddf03813bf936f5f21fe8" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>const std::string &amp;</type>
+        <definition>const std::string&amp; riaps::timers::OneShotTimer::GetTimerId</definition>
+        <argsstring>() const </argsstring>
+        <name>GetTimerId</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_oneshottimer.h" line="28" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1timers_1_1OneShotTimer_1a141e9b143dc832aa8a20d9c76fefacd8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void riaps::timers::OneShotTimer::stop</definition>
+        <argsstring>()</argsstring>
+        <name>stop</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_oneshottimer.h" line="30" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1timers_1_1OneShotTimer_1af14a17fb610908d8deb7052c9d5ade9c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void riaps::timers::OneShotTimer::start</definition>
+        <argsstring>()</argsstring>
+        <name>start</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_oneshottimer.h" line="31" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1timers_1_1OneShotTimer_1ad7f8181065115a10a4f98c4ba697a633" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool riaps::timers::OneShotTimer::is_running</definition>
+        <argsstring>() const noexcept</argsstring>
+        <name>is_running</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_oneshottimer.h" line="32" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/istvan/work/riaps-core/include/componentmodel/r_oneshottimer.h" line="20" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_oneshottimer.h" bodystart="20" bodyend="40"/>
+    <listofallmembers>
+      <member refid="classriaps_1_1timers_1_1OneShotTimer_1a230646b8b2a11a87c782510c842d8867" prot="protected" virt="non-virtual"><scope>riaps::timers::OneShotTimer</scope><name>_execute</name></member>
+      <member refid="classriaps_1_1timers_1_1OneShotTimer_1a46d21f132673994fd0aa5cd701b63f56" prot="protected" virt="non-virtual"><scope>riaps::timers::OneShotTimer</scope><name>_thd</name></member>
+      <member refid="classriaps_1_1timers_1_1OneShotTimer_1a4fc3de1d95d6bfacf4988326dc65b9b6" prot="protected" virt="non-virtual"><scope>riaps::timers::OneShotTimer</scope><name>_timerid</name></member>
+      <member refid="classriaps_1_1timers_1_1OneShotTimer_1a9f06ea816bd16743fd007b2a3c585c90" prot="protected" virt="non-virtual"><scope>riaps::timers::OneShotTimer</scope><name>_wakeuptime</name></member>
+      <member refid="classriaps_1_1timers_1_1OneShotTimer_1a3e0d2ed9e6a65b9cf0f80cc1c8a87cae" prot="protected" virt="non-virtual"><scope>riaps::timers::OneShotTimer</scope><name>_zsock_timer</name></member>
+      <member refid="classriaps_1_1timers_1_1OneShotTimer_1ace46cded2baddf03813bf936f5f21fe8" prot="public" virt="non-virtual"><scope>riaps::timers::OneShotTimer</scope><name>GetTimerId</name></member>
+      <member refid="classriaps_1_1timers_1_1OneShotTimer_1ad7f8181065115a10a4f98c4ba697a633" prot="public" virt="non-virtual"><scope>riaps::timers::OneShotTimer</scope><name>is_running</name></member>
+      <member refid="classriaps_1_1timers_1_1OneShotTimer_1a6189c3806e64e4e408be144d18e37277" prot="public" virt="non-virtual"><scope>riaps::timers::OneShotTimer</scope><name>OneShotTimer</name></member>
+      <member refid="classriaps_1_1timers_1_1OneShotTimer_1af14a17fb610908d8deb7052c9d5ade9c" prot="public" virt="non-virtual"><scope>riaps::timers::OneShotTimer</scope><name>start</name></member>
+      <member refid="classriaps_1_1timers_1_1OneShotTimer_1a141e9b143dc832aa8a20d9c76fefacd8" prot="public" virt="non-virtual"><scope>riaps::timers::OneShotTimer</scope><name>stop</name></member>
+      <member refid="classriaps_1_1timers_1_1OneShotTimer_1a765461d9423b41c3cabea3fadcc460ed" prot="public" virt="non-virtual"><scope>riaps::timers::OneShotTimer</scope><name>~OneShotTimer</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

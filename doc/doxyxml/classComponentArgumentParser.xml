@@ -1,0 +1,180 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="classComponentArgumentParser" kind="class" language="C++" prot="public">
+    <compoundname>ComponentArgumentParser</compoundname>
+    <basecompoundref refid="classArgumentParser" prot="public" virt="non-virtual">ArgumentParser</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classComponentArgumentParser_1a70d38c9281d66f4dccdefed9df73aa02" prot="private" static="no" mutable="no">
+        <type>nlohmann::json &amp;</type>
+        <definition>nlohmann::json&amp; ComponentArgumentParser::_json_actorconfig</definition>
+        <argsstring></argsstring>
+        <name>_json_actorconfig</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_argumentparser.h" line="60" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_argumentparser.h" bodystart="60" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classComponentArgumentParser_1abbe2f8b9cafc4a6b09ffb890ac37e328" prot="private" static="no" mutable="no">
+        <type>nlohmann::json &amp;</type>
+        <definition>nlohmann::json&amp; ComponentArgumentParser::_json_componentsconfig</definition>
+        <argsstring></argsstring>
+        <name>_json_componentsconfig</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_argumentparser.h" line="61" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_argumentparser.h" bodystart="61" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classComponentArgumentParser_1ab3f95041770a42c71ea4043b00d73b42" prot="private" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string ComponentArgumentParser::_actorname</definition>
+        <argsstring></argsstring>
+        <name>_actorname</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_argumentparser.h" line="62" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_argumentparser.h" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classComponentArgumentParser_1a8ca7e6a1bbd21e6c5bd7f9bad9f2384c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>ComponentArgumentParser::ComponentArgumentParser</definition>
+        <argsstring>(std::map&lt; std::string, std::string &gt; &amp;commandLineParams, nlohmann::json &amp;jsonActorConfig, nlohmann::json &amp;jsonComponentsConfig, const std::string &amp;actorName)</argsstring>
+        <name>ComponentArgumentParser</name>
+        <param>
+          <type>std::map&lt; std::string, std::string &gt; &amp;</type>
+          <declname>commandLineParams</declname>
+        </param>
+        <param>
+          <type>nlohmann::json &amp;</type>
+          <declname>jsonActorConfig</declname>
+        </param>
+        <param>
+          <type>nlohmann::json &amp;</type>
+          <declname>jsonComponentsConfig</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>actorName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_argumentparser.h" line="43" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classComponentArgumentParser_1aed13fb3aac7869f66390c05019cc4a85" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type><ref refid="classriaps_1_1componentmodel_1_1Parameters" kindref="compound">riaps::componentmodel::Parameters</ref></type>
+        <definition>riaps::componentmodel::Parameters ComponentArgumentParser::Parse</definition>
+        <argsstring>(const std::string &amp;name)</argsstring>
+        <name>Parse</name>
+        <reimplements refid="classArgumentParser_1ac9c99e739e989507f81ff8e041191ea4">Parse</reimplements>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>name</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Component or device name </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para></para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_argumentparser.h" line="48" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classComponentArgumentParser_1a865b7a1b44c8efe2732991dbd4cc31ac" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>ComponentArgumentParser::~ComponentArgumentParser</definition>
+        <argsstring>()</argsstring>
+        <name>~ComponentArgumentParser</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_argumentparser.h" line="52" column="1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="classComponentArgumentParser_1ac4d2be6c14c5af341c40c5055e2abc44" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::vector&lt; <ref refid="classriaps_1_1componentmodel_1_1ComponentActual" kindref="compound">riaps::componentmodel::ComponentActual</ref> &gt;</type>
+        <definition>std::vector&lt;riaps::componentmodel::ComponentActual&gt; ComponentArgumentParser::GetComponentActuals</definition>
+        <argsstring>(nlohmann::json &amp;json_componentactuals)</argsstring>
+        <name>GetComponentActuals</name>
+        <param>
+          <type>nlohmann::json &amp;</type>
+          <declname>json_componentactuals</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_argumentparser.h" line="58" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="447">
+        <label>ArgumentParser</label>
+        <link refid="classArgumentParser"/>
+      </node>
+      <node id="446">
+        <label>ComponentArgumentParser</label>
+        <link refid="classComponentArgumentParser"/>
+        <childnode refid="447" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="449">
+        <label>ArgumentParser</label>
+        <link refid="classArgumentParser"/>
+      </node>
+      <node id="448">
+        <label>ComponentArgumentParser</label>
+        <link refid="classComponentArgumentParser"/>
+        <childnode refid="449" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/home/istvan/work/riaps-core/include/componentmodel/r_argumentparser.h" line="41" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_argumentparser.h" bodystart="41" bodyend="64"/>
+    <listofallmembers>
+      <member refid="classComponentArgumentParser_1ab3f95041770a42c71ea4043b00d73b42" prot="private" virt="non-virtual"><scope>ComponentArgumentParser</scope><name>_actorname</name></member>
+      <member refid="classArgumentParser_1aa632b97824f39d9060cab61b9d1437dc" prot="protected" virt="non-virtual"><scope>ComponentArgumentParser</scope><name>_commandLineParams</name></member>
+      <member refid="classComponentArgumentParser_1a70d38c9281d66f4dccdefed9df73aa02" prot="private" virt="non-virtual"><scope>ComponentArgumentParser</scope><name>_json_actorconfig</name></member>
+      <member refid="classComponentArgumentParser_1abbe2f8b9cafc4a6b09ffb890ac37e328" prot="private" virt="non-virtual"><scope>ComponentArgumentParser</scope><name>_json_componentsconfig</name></member>
+      <member refid="classArgumentParser_1a88295aa8b6338163fca21ba1e5d40aba" prot="public" virt="non-virtual"><scope>ComponentArgumentParser</scope><name>ArgumentParser</name></member>
+      <member refid="classComponentArgumentParser_1a8ca7e6a1bbd21e6c5bd7f9bad9f2384c" prot="public" virt="non-virtual"><scope>ComponentArgumentParser</scope><name>ComponentArgumentParser</name></member>
+      <member refid="classComponentArgumentParser_1ac4d2be6c14c5af341c40c5055e2abc44" prot="private" virt="non-virtual"><scope>ComponentArgumentParser</scope><name>GetComponentActuals</name></member>
+      <member refid="classArgumentParser_1adc6125a30d9dc4a8689f126e567d0888" prot="protected" virt="non-virtual"><scope>ComponentArgumentParser</scope><name>GetComponentFormals</name></member>
+      <member refid="classComponentArgumentParser_1aed13fb3aac7869f66390c05019cc4a85" prot="public" virt="virtual"><scope>ComponentArgumentParser</scope><name>Parse</name></member>
+      <member refid="classArgumentParser_1a3deb63a455ed639b6600f09902a44347" prot="public" virt="virtual"><scope>ComponentArgumentParser</scope><name>~ArgumentParser</name></member>
+      <member refid="classComponentArgumentParser_1a865b7a1b44c8efe2732991dbd4cc31ac" prot="public" virt="non-virtual"><scope>ComponentArgumentParser</scope><name>~ComponentArgumentParser</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

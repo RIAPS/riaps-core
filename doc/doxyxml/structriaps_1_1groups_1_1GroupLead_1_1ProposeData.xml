@@ -1,0 +1,150 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="structriaps_1_1groups_1_1GroupLead_1_1ProposeData" kind="struct" language="C++" prot="public">
+    <compoundname>riaps::groups::GroupLead::ProposeData</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structriaps_1_1groups_1_1GroupLead_1_1ProposeData_1a43c98dbc36d95f9751639baa78a66ec1" prot="public" static="no" mutable="no">
+        <type>std::shared_ptr&lt; std::set&lt; std::string &gt; &gt;</type>
+        <definition>std::shared_ptr&lt;std::set&lt;std::string&gt; &gt; riaps::groups::GroupLead::ProposeData::nodesInVote</definition>
+        <argsstring></argsstring>
+        <name>nodesInVote</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="74" column="1" bodyfile="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" bodystart="74" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structriaps_1_1groups_1_1GroupLead_1_1ProposeData_1ae1ae244040eefe9c365c9d0d13e14308" prot="public" static="no" mutable="no">
+        <type>std::shared_ptr&lt; std::set&lt; std::string &gt; &gt;</type>
+        <definition>std::shared_ptr&lt;std::set&lt;std::string&gt; &gt; riaps::groups::GroupLead::ProposeData::nodesVoted</definition>
+        <argsstring></argsstring>
+        <name>nodesVoted</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="75" column="1" bodyfile="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" bodystart="75" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structriaps_1_1groups_1_1GroupLead_1_1ProposeData_1a434286fd34276c690859183d496da0c6" prot="public" static="no" mutable="no">
+        <type><ref refid="classriaps_1_1utils_1_1Timeout" kindref="compound">Timeout</ref>&lt; std::chrono::milliseconds &gt;</type>
+        <definition>Timeout&lt;std::chrono::milliseconds&gt; riaps::groups::GroupLead::ProposeData::proposeDeadline</definition>
+        <argsstring></argsstring>
+        <name>proposeDeadline</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="76" column="1" bodyfile="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" bodystart="76" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structriaps_1_1groups_1_1GroupLead_1_1ProposeData_1a71f26bf577ffb69b3d28528a72c52578" prot="public" static="no" mutable="no">
+        <type>uint16_t</type>
+        <definition>uint16_t riaps::groups::GroupLead::ProposeData::accepted</definition>
+        <argsstring></argsstring>
+        <name>accepted</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="77" column="1" bodyfile="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" bodystart="77" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structriaps_1_1groups_1_1GroupLead_1_1ProposeData_1ab83371bd8cc95e370c3d8c41fcf737da" prot="public" static="no" mutable="no">
+        <type>uint16_t</type>
+        <definition>uint16_t riaps::groups::GroupLead::ProposeData::rejected</definition>
+        <argsstring></argsstring>
+        <name>rejected</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="78" column="1" bodyfile="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" bodystart="78" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structriaps_1_1groups_1_1GroupLead_1_1ProposeData_1abb7f2085de576cbac57b4c2880affd6b" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool riaps::groups::GroupLead::ProposeData::isAction</definition>
+        <argsstring></argsstring>
+        <name>isAction</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="80" column="1" bodyfile="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" bodystart="80" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structriaps_1_1groups_1_1GroupLead_1_1ProposeData_1aa2a62904ef818129bccddd002162cd7f" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string riaps::groups::GroupLead::ProposeData::actionId</definition>
+        <argsstring></argsstring>
+        <name>actionId</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="81" column="1" bodyfile="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" bodystart="81" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="structriaps_1_1groups_1_1GroupLead_1_1ProposeData_1acc8960c9541995d7fea3d3ccec80b34a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>riaps::groups::GroupLead::ProposeData::ProposeData</definition>
+        <argsstring>(std::shared_ptr&lt; std::set&lt; std::string &gt;&gt; _knownNodes, Timeout&lt; std::chrono::milliseconds &gt; &amp;&amp;timeout)</argsstring>
+        <name>ProposeData</name>
+        <param>
+          <type>std::shared_ptr&lt; std::set&lt; std::string &gt;&gt;</type>
+          <declname>_knownNodes</declname>
+        </param>
+        <param>
+          <type><ref refid="classriaps_1_1utils_1_1Timeout" kindref="compound">Timeout</ref>&lt; std::chrono::milliseconds &gt; &amp;&amp;</type>
+          <declname>timeout</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="72" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="578">
+        <label>riaps::utils::Timeout&lt; std::chrono::milliseconds &gt;</label>
+        <link refid="classriaps_1_1utils_1_1Timeout"/>
+      </node>
+      <node id="577">
+        <label>riaps::groups::GroupLead::ProposeData</label>
+        <link refid="structriaps_1_1groups_1_1GroupLead_1_1ProposeData"/>
+        <childnode refid="578" relation="usage">
+          <edgelabel>proposeDeadline</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="71" column="1" bodyfile="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" bodystart="71" bodyend="82"/>
+    <listofallmembers>
+      <member refid="structriaps_1_1groups_1_1GroupLead_1_1ProposeData_1a71f26bf577ffb69b3d28528a72c52578" prot="public" virt="non-virtual"><scope>riaps::groups::GroupLead::ProposeData</scope><name>accepted</name></member>
+      <member refid="structriaps_1_1groups_1_1GroupLead_1_1ProposeData_1aa2a62904ef818129bccddd002162cd7f" prot="public" virt="non-virtual"><scope>riaps::groups::GroupLead::ProposeData</scope><name>actionId</name></member>
+      <member refid="structriaps_1_1groups_1_1GroupLead_1_1ProposeData_1abb7f2085de576cbac57b4c2880affd6b" prot="public" virt="non-virtual"><scope>riaps::groups::GroupLead::ProposeData</scope><name>isAction</name></member>
+      <member refid="structriaps_1_1groups_1_1GroupLead_1_1ProposeData_1a43c98dbc36d95f9751639baa78a66ec1" prot="public" virt="non-virtual"><scope>riaps::groups::GroupLead::ProposeData</scope><name>nodesInVote</name></member>
+      <member refid="structriaps_1_1groups_1_1GroupLead_1_1ProposeData_1ae1ae244040eefe9c365c9d0d13e14308" prot="public" virt="non-virtual"><scope>riaps::groups::GroupLead::ProposeData</scope><name>nodesVoted</name></member>
+      <member refid="structriaps_1_1groups_1_1GroupLead_1_1ProposeData_1acc8960c9541995d7fea3d3ccec80b34a" prot="public" virt="non-virtual"><scope>riaps::groups::GroupLead::ProposeData</scope><name>ProposeData</name></member>
+      <member refid="structriaps_1_1groups_1_1GroupLead_1_1ProposeData_1a434286fd34276c690859183d496da0c6" prot="public" virt="non-virtual"><scope>riaps::groups::GroupLead::ProposeData</scope><name>proposeDeadline</name></member>
+      <member refid="structriaps_1_1groups_1_1GroupLead_1_1ProposeData_1ab83371bd8cc95e370c3d8c41fcf737da" prot="public" virt="non-virtual"><scope>riaps::groups::GroupLead::ProposeData</scope><name>rejected</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

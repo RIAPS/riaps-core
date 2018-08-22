@@ -1,0 +1,225 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="classriaps_1_1utils_1_1Timeout" kind="class" language="C++" prot="public">
+    <compoundname>riaps::utils::Timeout</compoundname>
+    <templateparamlist>
+      <param>
+        <type>typename</type>
+        <declname>T</declname>
+        <defname>T</defname>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classriaps_1_1utils_1_1Timeout_1a8142b23856572023bb16da32398b72da" prot="private" static="no" mutable="no">
+        <type>steady_clock::time_point</type>
+        <definition>steady_clock::time_point riaps::utils::Timeout&lt; T &gt;::m_startPoint</definition>
+        <argsstring></argsstring>
+        <name>m_startPoint</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_timeout.h" line="72" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_timeout.h" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1utils_1_1Timeout_1aab8d1eadd191acf8df75e344c2e2d363" prot="private" static="no" mutable="no">
+        <type>T</type>
+        <definition>T riaps::utils::Timeout&lt; T &gt;::m_timeout</definition>
+        <argsstring></argsstring>
+        <name>m_timeout</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_timeout.h" line="73" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_timeout.h" bodystart="73" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1utils_1_1Timeout_1ab05e71227ee682396a5a382e48892349" prot="private" static="no" mutable="no">
+        <type>steady_clock::time_point</type>
+        <definition>steady_clock::time_point riaps::utils::Timeout&lt; T &gt;::m_endPoint</definition>
+        <argsstring></argsstring>
+        <name>m_endPoint</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_timeout.h" line="74" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_timeout.h" bodystart="74" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classriaps_1_1utils_1_1Timeout_1af79ed08efbb50af9e39ad6356e9d98ed" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>riaps::utils::Timeout&lt; T &gt;::Timeout</definition>
+        <argsstring>()</argsstring>
+        <name>Timeout</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Intitalizes with 0 timeout from now; </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_timeout.h" line="16" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_timeout.h" bodystart="19" bodyend="21"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1utils_1_1Timeout_1ab874c9be6851a9376f252b9938205d8a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>riaps::utils::Timeout&lt; T &gt;::Timeout</definition>
+        <argsstring>(T timeout)</argsstring>
+        <name>Timeout</name>
+        <param>
+          <type>T</type>
+          <declname>timeout</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Initializes the timeut structure from ::now() with the passed timeout <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>timeout</parametername>
+</parameternamelist>
+<parameterdescription>
+<para></para></parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_timeout.h" line="16" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_timeout.h" bodystart="27" bodyend="29"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1utils_1_1Timeout_1aede8deafe73fbbb72937a214501b8225" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>riaps::utils::Timeout&lt; T &gt;::Timeout</definition>
+        <argsstring>(int64_t timeout)</argsstring>
+        <name>Timeout</name>
+        <param>
+          <type>int64_t</type>
+          <declname>timeout</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_timeout.h" line="16" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_timeout.h" bodystart="31" bodyend="34"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1utils_1_1Timeout_1abd25168965820d5e0e5e8d295687c55c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void riaps::utils::Timeout&lt; T &gt;::Reset</definition>
+        <argsstring>()</argsstring>
+        <name>Reset</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Resets the start time point, doesn&apos;t touch the timeout </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_timeout.h" line="39" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_timeout.h" bodystart="39" bodyend="42"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1utils_1_1Timeout_1a055868c7b9e8dfddc6e573f79ef838a1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void riaps::utils::Timeout&lt; T &gt;::Reset</definition>
+        <argsstring>(T timeout)</argsstring>
+        <name>Reset</name>
+        <param>
+          <type>T</type>
+          <declname>timeout</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Resets the start point and the timeout value <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>timeout</parametername>
+</parameternamelist>
+<parameterdescription>
+<para></para></parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_timeout.h" line="48" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_timeout.h" bodystart="48" bodyend="51"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1utils_1_1Timeout_1ab258dfee1b3ca7345165ac9473f660d8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void riaps::utils::Timeout&lt; T &gt;::Reset</definition>
+        <argsstring>(int64_t timeout)</argsstring>
+        <name>Reset</name>
+        <param>
+          <type>int64_t</type>
+          <declname>timeout</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_timeout.h" line="53" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_timeout.h" bodystart="53" bodyend="55"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1utils_1_1Timeout_1a9b5ddbef80caa47f0d2e19385fbed356" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool riaps::utils::Timeout&lt; T &gt;::IsTimeout</definition>
+        <argsstring>()</argsstring>
+        <name>IsTimeout</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>If ::now()&gt;_endPoint <simplesect kind="return"><para></para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_timeout.h" line="61" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_timeout.h" bodystart="61" bodyend="64"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1utils_1_1Timeout_1a0e01a8b80583ff47ecee33bd43211b36" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>steady_clock::time_point</type>
+        <definition>steady_clock::time_point riaps::utils::Timeout&lt; T &gt;::GetEndTimePoint</definition>
+        <argsstring>()</argsstring>
+        <name>GetEndTimePoint</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_timeout.h" line="66" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_timeout.h" bodystart="66" bodyend="68"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1utils_1_1Timeout_1a8c452b50fd01eaab179fe962bffb8804" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>riaps::utils::Timeout&lt; T &gt;::~Timeout</definition>
+        <argsstring>()=default</argsstring>
+        <name>~Timeout</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/utils/r_timeout.h" line="70" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/istvan/work/riaps-core/include/utils/r_timeout.h" line="12" column="1" bodyfile="/home/istvan/work/riaps-core/include/utils/r_timeout.h" bodystart="12" bodyend="75"/>
+    <listofallmembers>
+      <member refid="classriaps_1_1utils_1_1Timeout_1a0e01a8b80583ff47ecee33bd43211b36" prot="public" virt="non-virtual"><scope>riaps::utils::Timeout</scope><name>GetEndTimePoint</name></member>
+      <member refid="classriaps_1_1utils_1_1Timeout_1a9b5ddbef80caa47f0d2e19385fbed356" prot="public" virt="non-virtual"><scope>riaps::utils::Timeout</scope><name>IsTimeout</name></member>
+      <member refid="classriaps_1_1utils_1_1Timeout_1ab05e71227ee682396a5a382e48892349" prot="private" virt="non-virtual"><scope>riaps::utils::Timeout</scope><name>m_endPoint</name></member>
+      <member refid="classriaps_1_1utils_1_1Timeout_1a8142b23856572023bb16da32398b72da" prot="private" virt="non-virtual"><scope>riaps::utils::Timeout</scope><name>m_startPoint</name></member>
+      <member refid="classriaps_1_1utils_1_1Timeout_1aab8d1eadd191acf8df75e344c2e2d363" prot="private" virt="non-virtual"><scope>riaps::utils::Timeout</scope><name>m_timeout</name></member>
+      <member refid="classriaps_1_1utils_1_1Timeout_1abd25168965820d5e0e5e8d295687c55c" prot="public" virt="non-virtual"><scope>riaps::utils::Timeout</scope><name>Reset</name></member>
+      <member refid="classriaps_1_1utils_1_1Timeout_1a055868c7b9e8dfddc6e573f79ef838a1" prot="public" virt="non-virtual"><scope>riaps::utils::Timeout</scope><name>Reset</name></member>
+      <member refid="classriaps_1_1utils_1_1Timeout_1ab258dfee1b3ca7345165ac9473f660d8" prot="public" virt="non-virtual"><scope>riaps::utils::Timeout</scope><name>Reset</name></member>
+      <member refid="classriaps_1_1utils_1_1Timeout_1af79ed08efbb50af9e39ad6356e9d98ed" prot="public" virt="non-virtual"><scope>riaps::utils::Timeout</scope><name>Timeout</name></member>
+      <member refid="classriaps_1_1utils_1_1Timeout_1ab874c9be6851a9376f252b9938205d8a" prot="public" virt="non-virtual"><scope>riaps::utils::Timeout</scope><name>Timeout</name></member>
+      <member refid="classriaps_1_1utils_1_1Timeout_1aede8deafe73fbbb72937a214501b8225" prot="public" virt="non-virtual"><scope>riaps::utils::Timeout</scope><name>Timeout</name></member>
+      <member refid="classriaps_1_1utils_1_1Timeout_1a8c452b50fd01eaab179fe962bffb8804" prot="public" virt="non-virtual"><scope>riaps::utils::Timeout</scope><name>~Timeout</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

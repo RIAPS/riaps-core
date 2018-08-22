@@ -1,0 +1,137 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="classriaps_1_1MessageBase" kind="class" language="C++" prot="public" abstract="yes">
+    <compoundname>riaps::MessageBase</compoundname>
+      <sectiondef kind="protected-attrib">
+      <memberdef kind="variable" id="classriaps_1_1MessageBase_1ac7418e0b152cdba0bb3c74f299374370" prot="protected" static="no" mutable="no">
+        <type>::capnp::MallocMessageBuilder</type>
+        <definition>::capnp::MallocMessageBuilder riaps::MessageBase::_message</definition>
+        <argsstring></argsstring>
+        <name>_message</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_messagebase.h" line="33" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_messagebase.h" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classriaps_1_1MessageBase_1ab79d809c888f63ada6552e7fd35ed805" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool riaps::MessageBase::_isBuilder</definition>
+        <argsstring></argsstring>
+        <name>_isBuilder</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_messagebase.h" line="38" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_messagebase.h" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classriaps_1_1MessageBase_1acd85f27df61ebd7d7a537d1473be6a79" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>riaps::MessageBase::MessageBase</definition>
+        <argsstring>()</argsstring>
+        <name>MessageBase</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_messagebase.h" line="16" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1MessageBase_1aff7d0a1b29cf4902bfae0abad250065c" prot="public" static="no" const="no" explicit="no" inline="no" virt="pure-virtual">
+        <type>void</type>
+        <definition>virtual void riaps::MessageBase::InitReader</definition>
+        <argsstring>(capnp::FlatArrayMessageReader *flatArrayMessageReader)=0</argsstring>
+        <name>InitReader</name>
+        <param>
+          <type>capnp::FlatArrayMessageReader *</type>
+          <declname>flatArrayMessageReader</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_messagebase.h" line="19" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1MessageBase_1ad3b92bda1d829af6600ce9976002143b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>zmsg_t *</type>
+        <definition>zmsg_t* riaps::MessageBase::AsZmqMessage</definition>
+        <argsstring>()</argsstring>
+        <name>AsZmqMessage</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_messagebase.h" line="25" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1MessageBase_1a00e979b4081d08214fe13b6d5dfc539e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>riaps::MessageBase::~MessageBase</definition>
+        <argsstring>()</argsstring>
+        <name>~MessageBase</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_messagebase.h" line="27" column="1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="protected-func">
+      <memberdef kind="function" id="classriaps_1_1MessageBase_1a758d7c1f705265ab27d6235b9e058bd3" prot="protected" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool riaps::MessageBase::IsBuilder</definition>
+        <argsstring>() const </argsstring>
+        <name>IsBuilder</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_messagebase.h" line="30" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1MessageBase_1a9fa2c2b27961acddf7298638a3f7368a" prot="protected" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void riaps::MessageBase::SetAsReader</definition>
+        <argsstring>()</argsstring>
+        <name>SetAsReader</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_messagebase.h" line="31" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/istvan/work/riaps-core/include/componentmodel/r_messagebase.h" line="14" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_messagebase.h" bodystart="14" bodyend="39"/>
+    <listofallmembers>
+      <member refid="classriaps_1_1MessageBase_1ab79d809c888f63ada6552e7fd35ed805" prot="private" virt="non-virtual"><scope>riaps::MessageBase</scope><name>_isBuilder</name></member>
+      <member refid="classriaps_1_1MessageBase_1ac7418e0b152cdba0bb3c74f299374370" prot="protected" virt="non-virtual"><scope>riaps::MessageBase</scope><name>_message</name></member>
+      <member refid="classriaps_1_1MessageBase_1ad3b92bda1d829af6600ce9976002143b" prot="public" virt="non-virtual"><scope>riaps::MessageBase</scope><name>AsZmqMessage</name></member>
+      <member refid="classriaps_1_1MessageBase_1aff7d0a1b29cf4902bfae0abad250065c" prot="public" virt="pure-virtual"><scope>riaps::MessageBase</scope><name>InitReader</name></member>
+      <member refid="classriaps_1_1MessageBase_1a758d7c1f705265ab27d6235b9e058bd3" prot="protected" virt="non-virtual"><scope>riaps::MessageBase</scope><name>IsBuilder</name></member>
+      <member refid="classriaps_1_1MessageBase_1acd85f27df61ebd7d7a537d1473be6a79" prot="public" virt="non-virtual"><scope>riaps::MessageBase</scope><name>MessageBase</name></member>
+      <member refid="classriaps_1_1MessageBase_1a9fa2c2b27961acddf7298638a3f7368a" prot="protected" virt="non-virtual"><scope>riaps::MessageBase</scope><name>SetAsReader</name></member>
+      <member refid="classriaps_1_1MessageBase_1a00e979b4081d08214fe13b6d5dfc539e" prot="public" virt="non-virtual"><scope>riaps::MessageBase</scope><name>~MessageBase</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

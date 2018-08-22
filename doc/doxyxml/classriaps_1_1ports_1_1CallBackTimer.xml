@@ -1,0 +1,218 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="classriaps_1_1ports_1_1CallBackTimer" kind="class" language="C++" prot="public">
+    <compoundname>riaps::ports::CallBackTimer</compoundname>
+    <basecompoundref refid="classriaps_1_1ports_1_1PortBase" prot="public" virt="non-virtual">riaps::ports::PortBase</basecompoundref>
+      <sectiondef kind="protected-attrib">
+      <memberdef kind="variable" id="classriaps_1_1ports_1_1CallBackTimer_1aca535f3d1226d0e5ec44c2b2d7290d3e" prot="protected" static="no" mutable="no">
+        <type>std::atomic&lt; bool &gt;</type>
+        <definition>std::atomic&lt;bool&gt; riaps::ports::CallBackTimer::_execute</definition>
+        <argsstring></argsstring>
+        <name>_execute</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_callbacktimer.h" line="37" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_callbacktimer.h" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1ports_1_1CallBackTimer_1a2fbab3a737a83ece2e6ddaa7d95040d6" prot="protected" static="no" mutable="no">
+        <type>std::thread</type>
+        <definition>std::thread riaps::ports::CallBackTimer::_thd</definition>
+        <argsstring></argsstring>
+        <name>_thd</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_callbacktimer.h" line="38" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_callbacktimer.h" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1ports_1_1CallBackTimer_1ac51af5aefadbdf6385afb4c6651b1bb1" prot="protected" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string riaps::ports::CallBackTimer::_timerresponsechannel</definition>
+        <argsstring></argsstring>
+        <name>_timerresponsechannel</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_callbacktimer.h" line="39" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_callbacktimer.h" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classriaps_1_1ports_1_1CallBackTimer_1ab58fa894b8540cf7e572ed6d82ca326a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>riaps::ports::CallBackTimer::CallBackTimer</definition>
+        <argsstring>(std::string &amp;timerresponsechannel, const _component_port_tim_j &amp;config)</argsstring>
+        <name>CallBackTimer</name>
+        <param>
+          <type>std::string &amp;</type>
+          <declname>timerresponsechannel</declname>
+        </param>
+        <param>
+          <type>const _component_port_tim_j &amp;</type>
+          <declname>config</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_callbacktimer.h" line="21" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1CallBackTimer_1a6f2a06f2df62afdf98f0902cbb3ddb86" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>riaps::ports::CallBackTimer::~CallBackTimer</definition>
+        <argsstring>()</argsstring>
+        <name>~CallBackTimer</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_callbacktimer.h" line="23" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1CallBackTimer_1a376a21068dc449f466fb24450095ae13" prot="public" static="no" const="yes" explicit="no" inline="no" virt="virtual">
+        <type>const zsock_t *</type>
+        <definition>virtual const zsock_t* riaps::ports::CallBackTimer::GetSocket</definition>
+        <argsstring>() const </argsstring>
+        <name>GetSocket</name>
+        <reimplements refid="classriaps_1_1ports_1_1PortBase_1a6383aa77a6ce27b786926d215b902b4d">GetSocket</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>The ip addres of the specified interface. (e.g.: &quot;eth0&quot;)</para></simplesect>
+<simplesect kind="return"><para>The ip address of the first ethernet interface </para></simplesect>
+<simplesect kind="return"><para>The associated ZMQ socket. </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_callbacktimer.h" line="25" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1CallBackTimer_1ab079648f32b9ee48d56c67d14472bf86" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void riaps::ports::CallBackTimer::stop</definition>
+        <argsstring>()</argsstring>
+        <name>stop</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_callbacktimer.h" line="27" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1CallBackTimer_1aac676829cae3d1bda72eaac75dd31ced" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void riaps::ports::CallBackTimer::start</definition>
+        <argsstring>(int interval)</argsstring>
+        <name>start</name>
+        <param>
+          <type>int</type>
+          <declname>interval</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_callbacktimer.h" line="30" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1CallBackTimer_1a6f68adabe0090c1fd678a94e5b2d60bc" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool riaps::ports::CallBackTimer::is_running</definition>
+        <argsstring>() const noexcept</argsstring>
+        <name>is_running</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_callbacktimer.h" line="32" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1ports_1_1CallBackTimer_1af5525d3dac41ddbc5aee184c64b9c452" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type><ref refid="classriaps_1_1ports_1_1CallBackTimer" kindref="compound">CallBackTimer</ref> *</type>
+        <definition>virtual CallBackTimer* riaps::ports::CallBackTimer::AsTimerPort</definition>
+        <argsstring>()</argsstring>
+        <name>AsTimerPort</name>
+        <reimplements refid="classriaps_1_1ports_1_1PortBase_1a4924044fb72f752c6a366b38ac42c105">AsTimerPort</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/componentmodel/r_callbacktimer.h" line="34" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="359">
+        <label>riaps::ports::PortBase</label>
+        <link refid="classriaps_1_1ports_1_1PortBase"/>
+      </node>
+      <node id="358">
+        <label>riaps::ports::CallBackTimer</label>
+        <link refid="classriaps_1_1ports_1_1CallBackTimer"/>
+        <childnode refid="359" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="361">
+        <label>riaps::ports::PortBase</label>
+        <link refid="classriaps_1_1ports_1_1PortBase"/>
+      </node>
+      <node id="360">
+        <label>riaps::ports::CallBackTimer</label>
+        <link refid="classriaps_1_1ports_1_1CallBackTimer"/>
+        <childnode refid="361" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/home/istvan/work/riaps-core/include/componentmodel/r_callbacktimer.h" line="19" column="1" bodyfile="/home/istvan/work/riaps-core/include/componentmodel/r_callbacktimer.h" bodystart="19" bodyend="41"/>
+    <listofallmembers>
+      <member refid="classriaps_1_1ports_1_1CallBackTimer_1aca535f3d1226d0e5ec44c2b2d7290d3e" prot="protected" virt="non-virtual"><scope>riaps::ports::CallBackTimer</scope><name>_execute</name></member>
+      <member refid="classriaps_1_1ports_1_1CallBackTimer_1a2fbab3a737a83ece2e6ddaa7d95040d6" prot="protected" virt="non-virtual"><scope>riaps::ports::CallBackTimer</scope><name>_thd</name></member>
+      <member refid="classriaps_1_1ports_1_1CallBackTimer_1ac51af5aefadbdf6385afb4c6651b1bb1" prot="protected" virt="non-virtual"><scope>riaps::ports::CallBackTimer</scope><name>_timerresponsechannel</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1abdf423b8960ed3e0182dc0e397bdb067" prot="public" virt="virtual"><scope>riaps::ports::CallBackTimer</scope><name>AsAnswerPort</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a606bc38f681830c4525a4ab203840260" prot="public" virt="virtual"><scope>riaps::ports::CallBackTimer</scope><name>AsGroupPublishPort</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a90527a72d9c4edce850c49b43bf24834" prot="public" virt="virtual"><scope>riaps::ports::CallBackTimer</scope><name>AsGroupSubscriberPort</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a6605ebeb4a10da371b32dce46825af56" prot="public" virt="virtual"><scope>riaps::ports::CallBackTimer</scope><name>AsInsidePort</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a0c7881243184086c94d76334d68098e7" prot="public" virt="virtual"><scope>riaps::ports::CallBackTimer</scope><name>AsPublishPort</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a4bf856bf3fcbe292abf49c1d2d6ead4b" prot="public" virt="virtual"><scope>riaps::ports::CallBackTimer</scope><name>AsQueryPort</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a652f4b02a2f5fb806cd5f7b96c3b1f48" prot="public" virt="virtual"><scope>riaps::ports::CallBackTimer</scope><name>AsRecvPort</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a5772ee01b85721a9367d0b0602823a25" prot="public" virt="virtual"><scope>riaps::ports::CallBackTimer</scope><name>AsRequestPort</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a133fe860a48361cd0b83f8ae891d6f62" prot="public" virt="virtual"><scope>riaps::ports::CallBackTimer</scope><name>AsResponsePort</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a19d7f0a48e2725a2778473ad0bbb0a98" prot="public" virt="virtual"><scope>riaps::ports::CallBackTimer</scope><name>AsSubscribePort</name></member>
+      <member refid="classriaps_1_1ports_1_1CallBackTimer_1af5525d3dac41ddbc5aee184c64b9c452" prot="public" virt="virtual"><scope>riaps::ports::CallBackTimer</scope><name>AsTimerPort</name></member>
+      <member refid="classriaps_1_1ports_1_1CallBackTimer_1ab58fa894b8540cf7e572ed6d82ca326a" prot="public" virt="non-virtual"><scope>riaps::ports::CallBackTimer</scope><name>CallBackTimer</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a1d0c5bead7c8c0938a2a89285493735e" prot="public" virt="non-virtual"><scope>riaps::ports::CallBackTimer</scope><name>GetParentComponent</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a0db04f047fd5a60c903d0ad859f73a39" prot="public" virt="virtual"><scope>riaps::ports::CallBackTimer</scope><name>GetPortBaseConfig</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a9a1e459dcad1ee8de0b65bbb205c4018" prot="public" virt="virtual"><scope>riaps::ports::CallBackTimer</scope><name>GetPortName</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a457594248f0e87737fb762c3af4ab432" prot="public" virt="non-virtual"><scope>riaps::ports::CallBackTimer</scope><name>GetPortType</name></member>
+      <member refid="classriaps_1_1ports_1_1CallBackTimer_1a376a21068dc449f466fb24450095ae13" prot="public" virt="virtual"><scope>riaps::ports::CallBackTimer</scope><name>GetSocket</name></member>
+      <member refid="classriaps_1_1ports_1_1CallBackTimer_1a6f68adabe0090c1fd678a94e5b2d60bc" prot="public" virt="non-virtual"><scope>riaps::ports::CallBackTimer</scope><name>is_running</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a76e350bc9cefa58cd2978aabc64ef1cb" prot="protected" virt="non-virtual"><scope>riaps::ports::CallBackTimer</scope><name>m_logger</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1aaeee614c0de553c6e1bc560c31930b5f" prot="protected" virt="non-virtual"><scope>riaps::ports::CallBackTimer</scope><name>m_port_socket</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1af558a31ff1bc2a35af92d92757971df9" prot="protected" virt="non-virtual"><scope>riaps::ports::CallBackTimer</scope><name>m_port_type</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1a884c1d1d23bc78b121633498bdd913ce" prot="public" virt="non-virtual"><scope>riaps::ports::CallBackTimer</scope><name>PortBase</name></member>
+      <member refid="classriaps_1_1ports_1_1CallBackTimer_1aac676829cae3d1bda72eaac75dd31ced" prot="public" virt="non-virtual"><scope>riaps::ports::CallBackTimer</scope><name>start</name></member>
+      <member refid="classriaps_1_1ports_1_1CallBackTimer_1ab079648f32b9ee48d56c67d14472bf86" prot="public" virt="non-virtual"><scope>riaps::ports::CallBackTimer</scope><name>stop</name></member>
+      <member refid="classriaps_1_1ports_1_1CallBackTimer_1a6f2a06f2df62afdf98f0902cbb3ddb86" prot="public" virt="non-virtual"><scope>riaps::ports::CallBackTimer</scope><name>~CallBackTimer</name></member>
+      <member refid="classriaps_1_1ports_1_1PortBase_1ab88e9df5c9ec106946a2ee4519e2c1ac" prot="public" virt="virtual"><scope>riaps::ports::CallBackTimer</scope><name>~PortBase</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

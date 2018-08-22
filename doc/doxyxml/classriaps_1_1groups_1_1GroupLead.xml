@@ -1,0 +1,599 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="classriaps_1_1groups_1_1GroupLead" kind="class" language="C++" prot="public">
+    <compoundname>riaps::groups::GroupLead</compoundname>
+    <innerclass refid="structriaps_1_1groups_1_1GroupLead_1_1ProposeData" prot="public">riaps::groups::GroupLead::ProposeData</innerclass>
+      <sectiondef kind="public-type">
+      <memberdef kind="enum" id="classriaps_1_1groups_1_1GroupLead_1afe1af854932be98057fb85c6013b1234" prot="public" static="no">
+        <name>NodeState</name>
+        <enumvalue id="classriaps_1_1groups_1_1GroupLead_1afe1af854932be98057fb85c6013b1234a56410c08258901dc46a481defbf7f387" prot="public">
+          <name>FOLLOWER</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="classriaps_1_1groups_1_1GroupLead_1afe1af854932be98057fb85c6013b1234ab457bfd5bb760e9430586f3b1dd2226a" prot="public">
+          <name>CANDIDATE</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="classriaps_1_1groups_1_1GroupLead_1afe1af854932be98057fb85c6013b1234a4f3ed5fcb8a73df3bc1c832806a486c8" prot="public">
+          <name>LEADER</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Follower: Expects hear form the leader. If no message arrives from the leader it becmoes a canidate. <verbatim>      [no message from leader]
+</verbatim> FOLLOWER -----------------------<mdash/>&gt; CANDIDATE </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="42" column="1" bodyfile="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" bodystart="42" bodyend="42"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classriaps_1_1groups_1_1GroupLead_1a2fb198d0bc8abb712c17a9f314903c9d" prot="private" static="no" mutable="no">
+        <type>std::random_device</type>
+        <definition>std::random_device riaps::groups::GroupLead::m_rd</definition>
+        <argsstring></argsstring>
+        <name>m_rd</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="91" column="1" bodyfile="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" bodystart="91" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1groups_1_1GroupLead_1a3a5e214b3fc00080f306db14e29fed7f" prot="private" static="no" mutable="no">
+        <type>std::mt19937</type>
+        <definition>std::mt19937 riaps::groups::GroupLead::m_generator</definition>
+        <argsstring></argsstring>
+        <name>m_generator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="92" column="1" bodyfile="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" bodystart="92" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1groups_1_1GroupLead_1acd8f91a885fea37eca6f3cda5593418a" prot="private" static="no" mutable="no">
+        <type>std::uniform_int_distribution&lt; int &gt;</type>
+        <definition>std::uniform_int_distribution&lt;int&gt; riaps::groups::GroupLead::m_distrElection</definition>
+        <argsstring></argsstring>
+        <name>m_distrElection</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="93" column="1" bodyfile="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" bodystart="93" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1groups_1_1GroupLead_1a1e9734848195a4b9d7c9730444bcf609" prot="private" static="no" mutable="no">
+        <type><ref refid="classriaps_1_1groups_1_1GroupLead_1afe1af854932be98057fb85c6013b1234" kindref="member">NodeState</ref></type>
+        <definition>NodeState riaps::groups::GroupLead::m_currentState</definition>
+        <argsstring></argsstring>
+        <name>m_currentState</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="96" column="1" bodyfile="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" bodystart="96" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1groups_1_1GroupLead_1a5a13945be648989303caf26602980c72" prot="private" static="no" mutable="no">
+        <type><ref refid="classriaps_1_1utils_1_1Timeout" kindref="compound">Timeout</ref>&lt; std::chrono::milliseconds &gt;</type>
+        <definition>Timeout&lt;std::chrono::milliseconds&gt; riaps::groups::GroupLead::m_electionTimeout</definition>
+        <argsstring></argsstring>
+        <name>m_electionTimeout</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="99" column="1" bodyfile="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" bodystart="99" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1groups_1_1GroupLead_1a8eb5f1c466557ad8a5dcc4dbd43d0052" prot="private" static="no" mutable="no">
+        <type><ref refid="classriaps_1_1utils_1_1Timeout" kindref="compound">Timeout</ref>&lt; std::chrono::milliseconds &gt;</type>
+        <definition>Timeout&lt;std::chrono::milliseconds&gt; riaps::groups::GroupLead::m_appEntryTimeout</definition>
+        <argsstring></argsstring>
+        <name>m_appEntryTimeout</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="100" column="1" bodyfile="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" bodystart="100" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1groups_1_1GroupLead_1ac416366b3fdc0d37af807c3221f27275" prot="private" static="no" mutable="no">
+        <type>uint32_t</type>
+        <definition>uint32_t riaps::groups::GroupLead::m_electionTerm</definition>
+        <argsstring></argsstring>
+        <name>m_electionTerm</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="101" column="1" bodyfile="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" bodystart="101" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1groups_1_1GroupLead_1a98dcd81c13d8bc21b0a1d0d0eab01840" prot="private" static="no" mutable="no">
+        <type>uint32_t</type>
+        <definition>uint32_t riaps::groups::GroupLead::m_numberOfNodesInVote</definition>
+        <argsstring></argsstring>
+        <name>m_numberOfNodesInVote</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="102" column="1" bodyfile="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" bodystart="102" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1groups_1_1GroupLead_1a92a893acebccd18d6a1b86b0e3b8e8b2" prot="private" static="no" mutable="no">
+        <type>std::unordered_map&lt; std::string, steady_clock::time_point &gt;</type>
+        <definition>std::unordered_map&lt;std::string, steady_clock::time_point&gt; riaps::groups::GroupLead::m_votes</definition>
+        <argsstring></argsstring>
+        <name>m_votes</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="107" column="1" bodyfile="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" bodystart="107" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1groups_1_1GroupLead_1a25389474acd7bccf1d73d06af70aa8f4" prot="private" static="no" mutable="no">
+        <type><ref refid="classriaps_1_1groups_1_1Group" kindref="compound">riaps::groups::Group</ref> *</type>
+        <definition>riaps::groups::Group* riaps::groups::GroupLead::m_group</definition>
+        <argsstring></argsstring>
+        <name>m_group</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="109" column="1" bodyfile="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" bodystart="109" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1groups_1_1GroupLead_1a6859979d869650468ddd2b956da4a80e" prot="private" static="no" mutable="no">
+        <type>std::shared_ptr&lt; spd::logger &gt;</type>
+        <definition>std::shared_ptr&lt;spd::logger&gt; riaps::groups::GroupLead::_logger</definition>
+        <argsstring></argsstring>
+        <name>_logger</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="119" column="1" bodyfile="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" bodystart="119" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1groups_1_1GroupLead_1a1e19f2f44b3e72f17c4e722a581b449b" prot="private" static="no" mutable="no">
+        <type>std::unordered_map&lt; std::string, <ref refid="classriaps_1_1utils_1_1Timeout" kindref="compound">Timeout</ref>&lt; std::chrono::milliseconds &gt; &gt; *</type>
+        <definition>std::unordered_map&lt;std::string, Timeout&lt;std::chrono::milliseconds&gt; &gt;* riaps::groups::GroupLead::m_knownNodes</definition>
+        <argsstring></argsstring>
+        <name>m_knownNodes</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="120" column="1" bodyfile="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" bodystart="120" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1groups_1_1GroupLead_1a5c92095d49aec5918cec4ba0e7f0a6a6" prot="private" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string riaps::groups::GroupLead::m_leaderId</definition>
+        <argsstring></argsstring>
+        <name>m_leaderId</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="122" column="1" bodyfile="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" bodystart="122" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1groups_1_1GroupLead_1ad445e48084642312fa7fa23bb7df03a3" prot="private" static="no" mutable="no">
+        <type>std::function&lt; void(const std::string &amp;)&gt;</type>
+        <definition>std::function&lt;void(const std::string&amp;)&gt; riaps::groups::GroupLead::m_onLeaderChanged</definition>
+        <argsstring></argsstring>
+        <name>m_onLeaderChanged</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="125" column="1" bodyfile="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" bodystart="125" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1groups_1_1GroupLead_1a01ba82f8e921b8fe883ec17d9ba7bde0" prot="private" static="no" mutable="no">
+        <type>std::unordered_map&lt; std::string, std::shared_ptr&lt; <ref refid="structriaps_1_1groups_1_1GroupLead_1_1ProposeData" kindref="compound">riaps::groups::GroupLead::ProposeData</ref> &gt; &gt;</type>
+        <definition>std::unordered_map&lt;std::string, std::shared_ptr&lt;riaps::groups::GroupLead::ProposeData&gt; &gt; riaps::groups::GroupLead::m_proposeData</definition>
+        <argsstring></argsstring>
+        <name>m_proposeData</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Active propseId-s with Timeouts, participating nodes and vote count </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="131" column="1" bodyfile="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" bodystart="131" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classriaps_1_1groups_1_1GroupLead_1a1b877a01e8935431cbbeb299d8220c3f" prot="private" static="no" mutable="no">
+        <type>std::unordered_map&lt; std::string, std::shared_ptr&lt; <ref refid="structriaps_1_1groups_1_1GroupLead_1_1ProposeData" kindref="compound">riaps::groups::GroupLead::ProposeData</ref> &gt; &gt;</type>
+        <definition>std::unordered_map&lt;std::string, std::shared_ptr&lt;riaps::groups::GroupLead::ProposeData&gt; &gt; riaps::groups::GroupLead::m_actionData</definition>
+        <argsstring></argsstring>
+        <name>m_actionData</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Active ActionId-s </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="136" column="1" bodyfile="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" bodystart="136" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classriaps_1_1groups_1_1GroupLead_1a8569c20fc3c07ac7747f90543164730c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>riaps::groups::GroupLead::GroupLead</definition>
+        <argsstring>(riaps::groups::Group *group, std::unordered_map&lt; std::string, Timeout&lt; std::chrono::milliseconds &gt;&gt; *knownNodes)</argsstring>
+        <name>GroupLead</name>
+        <param>
+          <type><ref refid="classriaps_1_1groups_1_1Group" kindref="compound">riaps::groups::Group</ref> *</type>
+          <declname>group</declname>
+        </param>
+        <param>
+          <type>std::unordered_map&lt; std::string, <ref refid="classriaps_1_1utils_1_1Timeout" kindref="compound">Timeout</ref>&lt; std::chrono::milliseconds &gt;&gt; *</type>
+          <declname>knownNodes</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="43" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1groups_1_1GroupLead_1a0b04d04868dd092942690d4d0a49a71c" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>const <ref refid="classriaps_1_1groups_1_1GroupLead_1afe1af854932be98057fb85c6013b1234" kindref="member">NodeState</ref></type>
+        <definition>const NodeState riaps::groups::GroupLead::GetNodeState</definition>
+        <argsstring>() const </argsstring>
+        <name>GetNodeState</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="44" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1groups_1_1GroupLead_1afe067d3801cf9667a21a54d6acbf488a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void riaps::groups::GroupLead::SetOnLeaderChanged</definition>
+        <argsstring>(std::function&lt; void(const std::string &amp;)&gt; handler)</argsstring>
+        <name>SetOnLeaderChanged</name>
+        <param>
+          <type>std::function&lt; void(const std::string &amp;)&gt;</type>
+          <declname>handler</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="46" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1groups_1_1GroupLead_1a7d6fab51130b36f306f3ea51c27b1e9d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void riaps::groups::GroupLead::Update</definition>
+        <argsstring>()</argsstring>
+        <name>Update</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Maintain the state whan no incoming message. </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="51" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1groups_1_1GroupLead_1afea136976a3cf91191d5dfaa0e7a148b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void riaps::groups::GroupLead::OnProposeFromClient</definition>
+        <argsstring>(riaps::distrcoord::Consensus::ProposeToLeader::Reader &amp;headerMessage, zframe_t **messageFrame)</argsstring>
+        <name>OnProposeFromClient</name>
+        <param>
+          <type>riaps::distrcoord::Consensus::ProposeToLeader::Reader &amp;</type>
+          <declname>headerMessage</declname>
+        </param>
+        <param>
+          <type>zframe_t **</type>
+          <declname>messageFrame</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="53" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1groups_1_1GroupLead_1a0eb1ecb1b9aacc0a0c7172224e6e99c7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void riaps::groups::GroupLead::OnActionProposeFromClient</definition>
+        <argsstring>(riaps::distrcoord::Consensus::ProposeToLeader::Reader &amp;headerMessage, riaps::distrcoord::Consensus::TimeSyncCoordA::Reader &amp;tscaMessage)</argsstring>
+        <name>OnActionProposeFromClient</name>
+        <param>
+          <type>riaps::distrcoord::Consensus::ProposeToLeader::Reader &amp;</type>
+          <declname>headerMessage</declname>
+        </param>
+        <param>
+          <type>riaps::distrcoord::Consensus::TimeSyncCoordA::Reader &amp;</type>
+          <declname>tscaMessage</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="56" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1groups_1_1GroupLead_1a38d11c9cc3167b008410449be02125a0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void riaps::groups::GroupLead::OnVote</definition>
+        <argsstring>(riaps::distrcoord::Consensus::Vote::Reader &amp;message, const std::string &amp;sourceComponentId)</argsstring>
+        <name>OnVote</name>
+        <param>
+          <type>riaps::distrcoord::Consensus::Vote::Reader &amp;</type>
+          <declname>message</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>sourceComponentId</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="59" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1groups_1_1GroupLead_1ad9c6bedaa860f74581aa9bb1ae370fa2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::string</type>
+        <definition>std::string riaps::groups::GroupLead::GetLeaderId</definition>
+        <argsstring>()</argsstring>
+        <name>GetLeaderId</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="62" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1groups_1_1GroupLead_1aeee2677b2b72db670b29beaa6c5b8a4c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void riaps::groups::GroupLead::Update</definition>
+        <argsstring>(riaps::distrcoord::LeaderElection::Reader &amp;internalMessage)</argsstring>
+        <name>Update</name>
+        <param>
+          <type>riaps::distrcoord::LeaderElection::Reader &amp;</type>
+          <declname>internalMessage</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Incoming message arrived, lets update the state <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>internalMessage</parametername>
+</parameternamelist>
+<parameterdescription>
+<para></para></parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="68" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1groups_1_1GroupLead_1a23cf921127193727c8e6e48f6e064ede" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>riaps::groups::GroupLead::~GroupLead</definition>
+        <argsstring>()</argsstring>
+        <name>~GroupLead</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="69" column="1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="classriaps_1_1groups_1_1GroupLead_1a2ce9f5a6ff51e89fe882f87170731b83" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int64_t</type>
+        <definition>int64_t riaps::groups::GroupLead::GenerateElectionTimeo</definition>
+        <argsstring>()</argsstring>
+        <name>GenerateElectionTimeo</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Generates a random election timeout between 150ms and 300ms (values are specified in RAFT) <simplesect kind="return"><para>Random value between 150-300ms </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="89" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1groups_1_1GroupLead_1a7f83a0a026103681835d22c9825ef8a2" prot="private" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>const std::string</type>
+        <definition>const std::string riaps::groups::GroupLead::GetComponentId</definition>
+        <argsstring>() const </argsstring>
+        <name>GetComponentId</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="94" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1groups_1_1GroupLead_1a13ea3ecb42f2f76f9545e396c9af81b8" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void riaps::groups::GroupLead::SendRequestForVote</definition>
+        <argsstring>()</argsstring>
+        <name>SendRequestForVote</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="113" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1groups_1_1GroupLead_1a622387b5f368882b7c39fd327f332fdb" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void riaps::groups::GroupLead::SendAppendEntry</definition>
+        <argsstring>()</argsstring>
+        <name>SendAppendEntry</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="114" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1groups_1_1GroupLead_1a27ca30b472b66ce172e501f63fb51897" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void riaps::groups::GroupLead::SendVote</definition>
+        <argsstring>(const std::string &amp;voteFor)</argsstring>
+        <name>SendVote</name>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>voteFor</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="115" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1groups_1_1GroupLead_1af4fc0f7c6bca665c6f042b66d40272bc" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void riaps::groups::GroupLead::Announce</definition>
+        <argsstring>(const std::string &amp;proposeId, riaps::distrcoord::Consensus::VoteResults result)</argsstring>
+        <name>Announce</name>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>proposeId</declname>
+        </param>
+        <param>
+          <type>riaps::distrcoord::Consensus::VoteResults</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="116" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1groups_1_1GroupLead_1a8764f61923ba8f7140b233d5e0e893cf" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>uint32_t</type>
+        <definition>uint32_t riaps::groups::GroupLead::GetNumberOfVotes</definition>
+        <argsstring>()</argsstring>
+        <name>GetNumberOfVotes</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="117" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="classriaps_1_1groups_1_1GroupLead_1a83f640ec9fbedcb39d51d6771d79a3fe" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void riaps::groups::GroupLead::ChangeLeader</definition>
+        <argsstring>(const std::string &amp;newLeader)</argsstring>
+        <name>ChangeLeader</name>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>newLeader</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="124" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" line="33" column="1" bodyfile="/home/istvan/work/riaps-core/include/groups/r_grouplead.h" bodystart="33" bodyend="137"/>
+    <listofallmembers>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1a6859979d869650468ddd2b956da4a80e" prot="private" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>_logger</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1af4fc0f7c6bca665c6f042b66d40272bc" prot="private" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>Announce</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1afe1af854932be98057fb85c6013b1234ab457bfd5bb760e9430586f3b1dd2226a" prot="public" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>CANDIDATE</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1a83f640ec9fbedcb39d51d6771d79a3fe" prot="private" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>ChangeLeader</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1afe1af854932be98057fb85c6013b1234a56410c08258901dc46a481defbf7f387" prot="public" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>FOLLOWER</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1a2ce9f5a6ff51e89fe882f87170731b83" prot="private" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>GenerateElectionTimeo</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1a7f83a0a026103681835d22c9825ef8a2" prot="private" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>GetComponentId</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1ad9c6bedaa860f74581aa9bb1ae370fa2" prot="public" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>GetLeaderId</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1a0b04d04868dd092942690d4d0a49a71c" prot="public" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>GetNodeState</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1a8764f61923ba8f7140b233d5e0e893cf" prot="private" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>GetNumberOfVotes</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1a8569c20fc3c07ac7747f90543164730c" prot="public" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>GroupLead</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1afe1af854932be98057fb85c6013b1234a4f3ed5fcb8a73df3bc1c832806a486c8" prot="public" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>LEADER</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1a1b877a01e8935431cbbeb299d8220c3f" prot="private" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>m_actionData</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1a8eb5f1c466557ad8a5dcc4dbd43d0052" prot="private" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>m_appEntryTimeout</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1a1e9734848195a4b9d7c9730444bcf609" prot="private" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>m_currentState</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1acd8f91a885fea37eca6f3cda5593418a" prot="private" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>m_distrElection</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1ac416366b3fdc0d37af807c3221f27275" prot="private" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>m_electionTerm</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1a5a13945be648989303caf26602980c72" prot="private" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>m_electionTimeout</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1a3a5e214b3fc00080f306db14e29fed7f" prot="private" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>m_generator</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1a25389474acd7bccf1d73d06af70aa8f4" prot="private" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>m_group</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1a1e19f2f44b3e72f17c4e722a581b449b" prot="private" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>m_knownNodes</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1a5c92095d49aec5918cec4ba0e7f0a6a6" prot="private" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>m_leaderId</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1a98dcd81c13d8bc21b0a1d0d0eab01840" prot="private" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>m_numberOfNodesInVote</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1ad445e48084642312fa7fa23bb7df03a3" prot="private" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>m_onLeaderChanged</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1a01ba82f8e921b8fe883ec17d9ba7bde0" prot="private" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>m_proposeData</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1a2fb198d0bc8abb712c17a9f314903c9d" prot="private" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>m_rd</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1a92a893acebccd18d6a1b86b0e3b8e8b2" prot="private" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>m_votes</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1afe1af854932be98057fb85c6013b1234" prot="public" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>NodeState</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1a0eb1ecb1b9aacc0a0c7172224e6e99c7" prot="public" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>OnActionProposeFromClient</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1afea136976a3cf91191d5dfaa0e7a148b" prot="public" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>OnProposeFromClient</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1a38d11c9cc3167b008410449be02125a0" prot="public" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>OnVote</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1a622387b5f368882b7c39fd327f332fdb" prot="private" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>SendAppendEntry</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1a13ea3ecb42f2f76f9545e396c9af81b8" prot="private" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>SendRequestForVote</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1a27ca30b472b66ce172e501f63fb51897" prot="private" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>SendVote</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1afe067d3801cf9667a21a54d6acbf488a" prot="public" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>SetOnLeaderChanged</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1a7d6fab51130b36f306f3ea51c27b1e9d" prot="public" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>Update</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1aeee2677b2b72db670b29beaa6c5b8a4c" prot="public" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>Update</name></member>
+      <member refid="classriaps_1_1groups_1_1GroupLead_1a23cf921127193727c8e6e48f6e064ede" prot="public" virt="non-virtual"><scope>riaps::groups::GroupLead</scope><name>~GroupLead</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

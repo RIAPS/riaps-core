@@ -147,7 +147,8 @@ namespace riaps{
         const uint16_t m_zombieCheckPeriod;
 
         // Key where the DHT stores zombie nodes
-        const std::string m_zombieKey;// = "/zombies";
+        const std::string zombieglobalkey_;// = "/zombies";
+        const std::string zombielocalkey_;
 
         dht::DhtRunner& m_dhtNode;
 
