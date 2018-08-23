@@ -14,7 +14,6 @@
 #include <componentmodel/r_discoverdapi.h>
 #include <componentmodel/r_configuration.h>
 #include <componentmodel/r_periodictimer.h>
-#include <componentmodel/r_actor.h>
 #include <componentmodel/r_messagebase.h>
 #include <componentmodel/r_oneshottimer.h>
 #include <componentmodel/r_payload.h>
@@ -44,8 +43,8 @@
 #include <componentmodel/ports/r_queryport.h>
 
 
-#define BILLION 1000000000l
-#define TIMER_ACCURACY (50*1000) // 50 microsec
+constexpr auto BILLION = 1000000000l;
+constexpr auto TIMER_ACCURACY = (50*1000); // 50 microsec
 
 namespace spd = spdlog;
 
@@ -157,7 +156,7 @@ namespace riaps {
          *
          * @return The component configuration.
          */
-        const component_conf& GetConfig() const;
+        const component_conf& config() const;
 
         /**
          *
@@ -173,11 +172,6 @@ namespace riaps {
          */
         virtual void PrintMessageOnPort(ports::PortBase* port, std::string message);
 
-        /**
-         * @brief For debugging. Prints all the commandline parameters of the component.
-         *
-         */
-        virtual void PrintParameters();
 
         /**
          * Resource management handlers
@@ -437,7 +431,7 @@ namespace riaps {
         // Note: disable for now, we need more tests.
         //timers::OneShotTimer*   _oneShotTimer;
 
-        component_conf configuration_;
+        component_conf config_;
 
 
         // All the component ports

@@ -8,17 +8,17 @@
 
 namespace riaps{
     namespace framework{
-        std::string Configuration::GetDiscoveryEndpoint() {
+        const std::string Configuration::GetDiscoveryEndpoint() {
             auto result = DISCOVERY_ENDPOINT;// + Network::GetMacAddressStripped();
             return result;
         }
 
-        std::string Configuration::GetDeviceManagerEndpoint(){
+        const std::string Configuration::GetDeviceManagerEndpoint(){
             auto result = DEVMANAGER_ENDPOINT;// + Network::GetMacAddressStripped();
             return result;
         }
 
-        std::string Configuration::GetDeploEndpoint() {
+        const std::string Configuration::GetDeploEndpoint() {
             auto result = DEPLO_ENDPOINT;// + Network::GetMacAddressStripped();
             return result;
         }

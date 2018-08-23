@@ -9,7 +9,7 @@
 #include <groups/r_group.h>
 #include <spdlog/spdlog.h>
 #include <utils/r_timeout.h>
-
+#include <czmq.h>
 #include <functional>
 #include <chrono>
 #include <random>

@@ -7,6 +7,7 @@
 
 using namespace riaps::groups;
 using namespace std::chrono;
+using namespace std;
 
 
 GroupLead::GroupLead(Group* group, std::unordered_map<std::string, Timeout<std::chrono::milliseconds>>* knownNodes)
@@ -28,7 +29,7 @@ GroupLead::GroupLead(Group* group, std::unordered_map<std::string, Timeout<std::
      */
     m_currentState = NodeState::FOLLOWER;
 
-    _logger = spd::get(group->parent_component()->GetConfig().component_name);
+    _logger = spd::get(group->parent_component()->config().component_name);
 }
 
 std::string GroupLead::GetLeaderId() {

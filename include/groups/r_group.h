@@ -5,7 +5,7 @@
 #ifndef RIAPS_CORE_R_GROUP_H_H
 #define RIAPS_CORE_R_GROUP_H_H
 
-#include <componentmodel/r_actor.h>
+#include <componentmodel/r_componentbase.h>
 #include <componentmodel/r_configuration.h>
 #include <groups/r_grouplead.h>
 #include <componentmodel/ports/r_pubportgroup.h>

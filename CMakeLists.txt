@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(riaps_core VERSION 0.8.0)
+project(riaps_core VERSION 0.8.1)
 option(arch "amd64/armhf" "amd64")
 option(BUILD_TESTS  "Build tests" ON)
 set(CMAKE_SYSTEM_NAME Linux)
@@ -76,7 +76,7 @@ if (BUILD_TESTS)
     #add_subdirectory(tests/DC/leaderwiththree)
     # add_subdirectory(tests/TimedTest)
     # add_subdirectory(examples/EchoIO)
-    # add_subdirectory(tests/DistributedEstimatorPybind)
+    add_subdirectory(tests/DistributedEstimatorPybind)
 endif()
 
 
@@ -99,7 +99,7 @@ list (APPEND riapslib_SOURCE
         src/componentmodel/ports/r_subportgroup.cc
         src/componentmodel/ports/r_subscriberport.cc
         src/componentmodel/ports/r_timedport.cc
-        src/componentmodel/r_actor.cc
+        #src/componentmodel/r_actor.cc
         src/componentmodel/r_pyactor.cc
         src/componentmodel/r_argumentparser.cc
         src/componentmodel/r_payload.cc
@@ -112,7 +112,7 @@ list (APPEND riapslib_SOURCE
         src/componentmodel/r_messagebase.cc
         src/componentmodel/r_parameter.cc
         src/componentmodel/r_periodictimer.cc
-        src/componentmodel/r_peripheral.cc
+        #src/componentmodel/r_peripheral.cc
         src/componentmodel/r_portregister.cc
         src/framework/rfw_configuration.cc
         src/framework/rfw_network_interfaces.cc
@@ -139,7 +139,7 @@ list (APPEND riapslib_HEADERS
         include/componentmodel/ports/r_subportgroup.h
         include/componentmodel/ports/r_subscriberport.h
         include/componentmodel/ports/r_timedport.h
-        include/componentmodel/r_actor.h
+        #include/componentmodel/r_actor.h
         include/componentmodel/r_pyactor.h
         include/componentmodel/r_payload.h
         include/componentmodel/r_commandlineparser.h
@@ -173,22 +173,22 @@ target_link_libraries(riaps PRIVATE czmq zmq dl capnp kj)
 install(TARGETS riaps DESTINATION lib)
 
 # start_actor
-set(ACTOR_SOURCE
-        src/componentmodel/r_actor_main.cc
-
-        include/messaging/deplo.capnp.c++
-        )
-
-set(ACTOR_HEADERS
-        include/componentmodel/r_actor.h
-        include/componentmodel/r_argumentparser.h
-        include/componentmodel/r_actor_main.h
-        include/groups/r_group.h
-        include/const/r_jsonmodel.h
-        include/const/r_const.h
-        include/messaging/disco.capnp.h
-        include/messaging/deplo.capnp.h
-        include/json.h)
+#set(ACTOR_SOURCE
+#        src/componentmodel/r_actor_main.cc
+#
+#        include/messaging/deplo.capnp.c++
+#        )
+#
+#set(ACTOR_HEADERS
+#        include/componentmodel/r_actor.h
+#        include/componentmodel/r_argumentparser.h
+#        include/componentmodel/r_actor_main.h
+#        include/groups/r_group.h
+#        include/const/r_jsonmodel.h
+#        include/const/r_const.h
+#        include/messaging/disco.capnp.h
+#        include/messaging/deplo.capnp.h
+#        include/json.h)
 
 #add_executable(start_actor
 #        ${ACTOR_SOURCE}
@@ -234,16 +234,16 @@ target_link_libraries(rdiscoveryd czmq zmq opendht gnutls riaps capnp nettle hog
 install(TARGETS rdiscoveryd DESTINATION bin)
 
 
-# start_device source
-list(APPEND DEVICE_SOURCE
-        src/device/r_deviceactor.cc
-        src/device/r_dmain.cc
-        )
-
-# start_device headers
-list(APPEND DEVICE_HEADERS
-        include/device/r_deviceactor.h
-        )
+## start_device source
+#list(APPEND DEVICE_SOURCE
+#        src/device/r_deviceactor.cc
+#        src/device/r_dmain.cc
+#        )
+#
+## start_device headers
+#list(APPEND DEVICE_HEADERS
+#        include/device/r_deviceactor.h
+#        )
 
 # start_device
 #add_executable(start_device
@@ -257,7 +257,7 @@ list(APPEND DEVICE_HEADERS
 
 SET(MAJOR_VERSION "0")
 SET(MINOR_VERSION "8")
-SET(PATCH_VERSION "0")
+SET(PATCH_VERSION "1")
 
 
 IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")

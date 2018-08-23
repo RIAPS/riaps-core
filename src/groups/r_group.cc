@@ -7,7 +7,7 @@
 #include <capnp/common.h>
 
 /*10s in msec*/
-#define PING_BASE_PERIOD 10*1000
+constexpr auto PING_BASE_PERIOD = 10*1000;
 
 namespace dc = riaps::distrcoord;
 
@@ -45,7 +45,7 @@ namespace riaps{
                 //_lastFrame(nullptr),
                 group_leader_(nullptr),
                 group_poller_(nullptr) {
-            logger_ = spd::get(parentComponent->GetConfig().component_name);
+            logger_ = spd::get(parentComponent->config().component_name);
             ping_timeout_ = Timeout<std::chrono::milliseconds>(PING_BASE_PERIOD);
 
             random_generator_ = std::mt19937(random_device_());

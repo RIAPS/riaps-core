@@ -1,17 +1,15 @@
-//
-// Created by parallels on 9/6/16.
-//
-
 #include <componentmodel/r_componentbase.h>
 #include <utils/r_utils.h>
 
+using namespace std;
 
 namespace riaps{
 
     void component_actor(zsock_t* pipe, void* args){
+
         ComponentBase* comp = (ComponentBase*)args;
 
-        zsock_t* pycontrol = zsock_new_pair(fmt::format("inproc://part_{}_control", comp->configuration_.component_name).c_str());
+        zsock_t* pycontrol = zsock_new_pair(fmt::format("inproc://part_{}_control", comp->config().component_name).c_str());
         assert(pycontrol);
 
         zsock_t* timerport = zsock_new_pull(comp->getTimerChannel().c_str());
@@ -56,7 +54,7 @@ namespace riaps{
             if (firstrun) {
                 firstrun = false;
 
-                const component_conf& comp_conf = comp->GetConfig();
+                const component_conf& comp_conf = comp->config();
 
                 // Add insider ports
                 for (auto it_insconf = comp_conf.component_ports.inss.begin();
@@ -171,13 +169,13 @@ namespace riaps{
                                 if (port_tobe_updated!=NULL){
                                     if (port_tobe_updated->GetPortType() == ports::PortTypes::Subscriber){
                                         // note: we assume that the publisher uses tcp://
-                                        std::string new_pub_endpoint = "tcp://" + std::string(host) + ":" + std::string(port);
+                                        const string new_pub_endpoint = fmt::format("tcp://{}:{}", host, port);
                                         ((ports::SubscriberPort*)port_tobe_updated)->ConnectToPublihser(new_pub_endpoint);
                                     } else if (port_tobe_updated->GetPortType() == ports::PortTypes::Request){
-                                        std::string new_rep_endpoint = "tcp://" + std::string(host) + ":" + std::string(port);
+                                        const string new_rep_endpoint = fmt::format("tcp://{}:{}", host, port);
                                         ((ports::RequestPort*)port_tobe_updated)->ConnectToResponse(new_rep_endpoint);
                                     } else if (port_tobe_updated->GetPortType() == ports::PortTypes::Query){
-                                        std::string new_ans_endpoint = "tcp://" + std::string(host) + ":" + std::string(port);
+                                        const string new_ans_endpoint = fmt::format("tcp://{}:{}", host, port);
                                         ((ports::QueryPort*)port_tobe_updated)->ConnectToResponse(new_ans_endpoint);
                                     }
                                 }
@@ -389,9 +387,9 @@ namespace riaps{
     void ComponentBase::StopComponent() {
         //_execute.store(false);
         // Stop timers
-        for (auto& config : GetConfig().component_ports.tims){
-            std::cout << "Stop timer: " << config.portName << std::endl;
-            m_ports[config.portName]->AsTimerPort()->stop();
+        for (auto& c : config().component_ports.tims){
+            _logger->info("Stop timer: {}", c.portName);
+            m_ports[c.portName]->AsTimerPort()->stop();
         }
 
         zactor_destroy(&m_zactorComponent);
@@ -451,14 +449,14 @@ namespace riaps{
     }
 
     void ComponentBase::OnScheduledTimer(uint64_t timerId) {
-        _logger->error("Scheduled timer is fired, but no handler is implemented. Implement OnSchedulerTimer() in component {}", GetConfig().component_name);
+        _logger->error("Scheduled timer is fired, but no handler is implemented. Implement OnSchedulerTimer() in component {}", config().component_name);
     }
     
     void ComponentBase::set_config(component_conf &c_conf) {
-        configuration_ = c_conf;
-        _logger = spd::get(configuration_.component_name);
+        config_ = c_conf;
+        _logger = spd::get(config_.component_name);
         if (_logger == nullptr)
-            _logger = spd::stdout_color_mt(configuration_.component_name);
+            _logger = spd::stdout_color_mt(config_.component_name);
         _logger->set_level(spd::level::debug);
     }
 
@@ -531,8 +529,8 @@ namespace riaps{
         return NULL;
     }
 
-    const component_conf& ComponentBase::GetConfig() const {
-        return configuration_;
+    const component_conf& ComponentBase::config() const {
+        return config_;
     }
 
     void ComponentBase::HandlePortUpdate(const std::string &port_name, const std::string &host,
@@ -729,7 +727,7 @@ namespace riaps{
 
     void ComponentBase::OnMessageFromLeader(const riaps::groups::GroupId &groupId,
                                             capnp::FlatArrayMessageReader &message) {
-        _logger->debug("Message from the leader arrived, but no OnMessageFromHandler() implementation has found in component: {}", GetConfig().component_name);
+        _logger->debug("Message from the leader arrived, but no OnMessageFromHandler() implementation has found in component: {}", config().component_name);
     }
 
     riaps::groups::Group* ComponentBase::getGroupById(const riaps::groups::GroupId &groupId) {
@@ -774,7 +772,7 @@ namespace riaps{
                                 "=> " : "<= ";
 
         std::cout << direction
-                  << GetConfig().component_type
+                  << config().component_type
                   << "::"
                   << port->GetPortBaseConfig()->portName
                   << ((port->GetPortBaseConfig()->messageType=="")?"":" -> " + port->GetPortBaseConfig()->messageType)
@@ -782,12 +780,6 @@ namespace riaps{
                   << std::endl;
     }
 
-    void ComponentBase::PrintParameters() {
-        auto parameters = configuration_.component_parameters.getParameterNames();
-        for (auto it = parameters.begin(); it!=parameters.end(); it++){
-            std::cout << *it << " : " << configuration_.component_parameters.getParam(*it)->getValueAsString() << std::endl;
-        }
-    }
 
     // TODO: Remove timeout parameter
     uint16_t ComponentBase::GetGroupMemberCount(const riaps::groups::GroupId &groupId, int64_t timeout) {
@@ -1017,11 +1009,11 @@ namespace riaps{
         _logger->info("Leader proposed an action, but no handler is implemented in component {}", GetComponentName());
     }
 
-    const std::string ComponentBase::GetComponentName() const {
-        return GetConfig().component_name;
+    const string ComponentBase::GetComponentName() const {
+        return config().component_name;
     }
 
-    std::string ComponentBase::SendPropose(const riaps::groups::GroupId &groupId, capnp::MallocMessageBuilder &message) {
+    string ComponentBase::SendPropose(const riaps::groups::GroupId &groupId, capnp::MallocMessageBuilder &message) {
         auto group = getGroupById(groupId);
         if (group == nullptr) return "";
 
@@ -1035,9 +1027,9 @@ namespace riaps{
         return "";
     }
 
-    std::string ComponentBase::ProposeAction(const riaps::groups::GroupId &groupId,
-                                             const std::string &actionId,
-                                             const timespec &absTime) {
+    string ComponentBase::ProposeAction(const riaps::groups::GroupId &groupId,
+                                        const std::string &actionId,
+                                        const timespec &absTime) {
         auto group = getGroupById(groupId);
         if (group == nullptr) return "";
 
