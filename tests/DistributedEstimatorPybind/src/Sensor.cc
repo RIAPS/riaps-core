@@ -19,7 +19,7 @@ namespace distributedestimator {
                        const std::string &actor_name)
                 : SensorBase(parent_actor, actor_spec, type_spec, name, type_name, args, application_name,
                                       actor_name) {
-            _logger->set_level(spd::level::debug);
+            _logger->set_level(spd::level::info);
         }
 
         void Sensor::OnClock(riaps::ports::PortBase *port) {
@@ -90,7 +90,7 @@ create_component_py(const py::object *parent_actor,
     return std::move(std::unique_ptr<distributedestimator::components::Sensor>(ptr));
 }
 
-PYBIND11_MODULE(sensor, m) {
+PYBIND11_MODULE(libsensor, m) {
     py::class_<distributedestimator::components::Sensor> testClass(m, "Sensor");
     testClass.def(py::init<const py::object*, const py::dict, const py::dict, const std::string&, const std::string&, const py::dict, const std::string&, const std::string&>());
     testClass.def("setup", &distributedestimator::components::Sensor::setup);

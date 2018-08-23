@@ -22,6 +22,7 @@ namespace distributedestimator {
             config.component_type = type_name;
             config.isDevice=false;
             set_config(config);
+
         }
 
         void LocalEstimatorBase::DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,

@@ -76,7 +76,7 @@ create_component_py(const py::object *parent_actor,
     return std::move(std::unique_ptr<distributedestimator::components::GlobalEstimator>(ptr));
 }
 
-PYBIND11_MODULE(globalestimator, m) {
+PYBIND11_MODULE(libglobalestimator, m) {
     py::class_<distributedestimator::components::GlobalEstimator> testClass(m, "GlobalEstimator");
     testClass.def(py::init<const py::object*, const py::dict, const py::dict, const std::string&, const std::string&, const py::dict, const std::string&, const std::string&>());
     testClass.def("setup", &distributedestimator::components::GlobalEstimator::setup);
