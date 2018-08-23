@@ -25,12 +25,10 @@
 #include <chrono>
 #include <set>
 
-#define INTERNAL_SUB_NAME "$SUB#"
-#define INTERNAL_PUB_NAME "$PUB#"
-#define INTERNAL_MESSAGETYPE "InternalGroupMessage"
+constexpr auto INTERNAL_SUB_NAME = "$SUB#";
+constexpr auto INTERNAL_PUB_NAME = "$PUB#";
+constexpr auto INTERNAL_MESSAGETYPE = "InternalGroupMessage";
 
-using namespace std::chrono;
-using namespace riaps::utils;
 
 namespace spd = spdlog;
 
@@ -171,13 +169,13 @@ namespace riaps {
              *  key   - component id (uuid, generated runtime, when the component starts
              *  value - timestamp of the last message from the given component
              */
-            std::unordered_map<std::string, Timeout<std::chrono::milliseconds>> known_nodes_;
+            std::unordered_map<std::string, riaps::utils::Timeout<std::chrono::milliseconds>> known_nodes_;
 
             zpoller_t* group_poller_;
 
             std::shared_ptr<spd::logger> logger_;
 
-            Timeout<std::chrono::milliseconds> ping_timeout_;
+            riaps::utils::Timeout<std::chrono::milliseconds> ping_timeout_;
 
 
             std::random_device random_device_;
@@ -191,4 +189,5 @@ namespace riaps {
 
     }
 }
+
 #endif //RIAPS_CORE_R_GROUP_H_H

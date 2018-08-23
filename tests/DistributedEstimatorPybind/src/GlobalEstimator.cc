@@ -12,12 +12,6 @@ namespace py = pybind11;
 
 namespace distributedestimator {
     namespace components {
-
-
-//        GlobalEstimator::GlobalEstimator(_component_conf &config, riaps::Actor &actor) : GlobalEstimatorBase(config,
-//                                                                                                             actor) {
-//        }
-
         GlobalEstimator::GlobalEstimator(const py::object *parent_actor,
                                          const py::dict actor_spec, // Actor json config
                                          const py::dict type_spec,  // component json config
@@ -33,13 +27,11 @@ namespace distributedestimator {
 
         void GlobalEstimator::OnEstimate(messages::Estimate::Reader &message,
                                          riaps::ports::PortBase *port) {
-            //PrintMessageOnPort(port);
-            _logger->info("GlobalEstimator::OnEstimate(): {}", message.getMsg().cStr());
+            component_logger()->info("GlobalEstimator::OnEstimate(): {}", message.getMsg().cStr());
         }
 
         void GlobalEstimator::OnWakeup(riaps::ports::PortBase *port) {
-            //PrintMessageOnPort(port);
-            _logger->info("GlobalEstimator::OnWakeUp(): {}", port->GetPortName());
+            component_logger()->info("GlobalEstimator::OnWakeUp(): {}", port->GetPortName());
         }
 
 
@@ -50,16 +42,6 @@ namespace distributedestimator {
     }
 
 }
-
-//riaps::ComponentBase *create_component(_component_conf &config, riaps::Actor &actor) {
-//    auto result = new distributedestimator::components::GlobalEstimator(config, actor);
-//    return result;
-//}
-//
-//void destroy_component(riaps::ComponentBase *comp) {
-//    delete comp;
-//}
-
 
 std::unique_ptr<distributedestimator::components::GlobalEstimator>
 create_component_py(const py::object *parent_actor,

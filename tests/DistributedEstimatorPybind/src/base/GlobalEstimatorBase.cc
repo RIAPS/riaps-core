@@ -24,11 +24,14 @@ namespace distributedestimator {
                                                  const std::string &actor_name)
                 : ComponentBase(application_name, actor_name) {
 
-            auto config = PyConfigConverter::convert(type_spec, actor_spec);
-            config.component_name = name;
-            config.component_type = type_name;
-            config.isDevice=false;
-            set_config(config);
+            auto conf = PyConfigConverter::convert(type_spec, actor_spec);
+            conf.component_name = name;
+            conf.component_type = type_name;
+            conf.isDevice=false;
+            set_config(conf);
+
+            // TODO: LOG LEVEL
+            create_component_logger(name);
         }
 
         void GlobalEstimatorBase::DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,

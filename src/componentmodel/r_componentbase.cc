@@ -38,9 +38,9 @@ namespace riaps{
         bool terminated = false;
         bool firstrun = true;
 
-        auto consoleLogger = comp->_logger;
-        consoleLogger->set_level(spd::level::debug);
-        consoleLogger->info("Component started");
+        auto compbase_logger = comp->riaps_logger_;
+        compbase_logger->set_level(spd::level::debug);
+        compbase_logger->info("Component started");
 
         // Register ZMQ Socket - riapsPort pairs. For the quick retrieve.
         std::unordered_map<const zsock_t*, const ports::PortBase*>   portSockets;
@@ -71,7 +71,7 @@ namespace riaps{
                 for (auto it_timconf = comp_conf.component_ports.tims.begin();
                           it_timconf != comp_conf.component_ports.tims.end();
                           it_timconf++){
-                    consoleLogger->debug("Register timer: {}", it_timconf->portName);
+                    compbase_logger->debug("Register timer: {}", it_timconf->portName);
                     // Don't put the zmqSocket into portSockets[zmqSocket], just one timer port exist in the component.
                     // Cannot differentiate timerports based on ZMQ Sockets.
                     comp->initTimerPort(*it_timconf);
@@ -81,7 +81,7 @@ namespace riaps{
                 for (auto it_pubconf = comp_conf.component_ports.pubs.begin();
                           it_pubconf != comp_conf.component_ports.pubs.end();
                           it_pubconf++){
-                    consoleLogger->debug("Register pub: {}", it_pubconf->portName);
+                    compbase_logger->debug("Register pub: {}", it_pubconf->portName);
                     const ports::PublisherPort* newPort = comp->initPublisherPort(*it_pubconf);
                     const zsock_t* zmqSocket = newPort->GetSocket();
 
@@ -92,7 +92,7 @@ namespace riaps{
                 for (auto it_repconf = comp_conf.component_ports.reps.begin();
                      it_repconf != comp_conf.component_ports.reps.end();
                      it_repconf++){
-                    consoleLogger->debug("Register REP: {}", it_repconf->portName);
+                    compbase_logger->debug("Register REP: {}", it_repconf->portName);
                     const ports::ResponsePort* newPort = comp->initResponsePort(*it_repconf);
                     const zsock_t* zmqSocket = newPort->GetSocket();
                     portSockets[zmqSocket] = newPort;
@@ -148,14 +148,14 @@ namespace riaps{
             if (which == pipe) {
                 zmsg_t *msg = zmsg_recv(which);
                 if (!msg) {
-                    consoleLogger->warn("No msg => interrupted");
+                    compbase_logger->warn("No msg => interrupted");
                     break;
                 }
 
                 char *command = zmsg_popstr(msg);
 
                 if (streq(command, "$TERM")) {
-                    consoleLogger->debug("$TERM arrived in component");
+                    compbase_logger->debug("$TERM arrived in component");
                     terminated = true;
                 } else if(streq(command, CMD_UPDATE_PORT)){
                     char* portname = zmsg_popstr(msg);
@@ -244,10 +244,10 @@ namespace riaps{
 
             }
             else if (which == pycontrol) {
-                comp->_logger->info("PYCONTORLL");
+                compbase_logger->info("PYCONTORLL");
             }
             else if(which){
-                    consoleLogger->debug("Message on other ports");
+                compbase_logger->debug("Message on other ports");
                     ports::PortBase *riapsPort = const_cast<ports::PortBase *>(portSockets[static_cast<zsock_t *>(which)]);
 
                     // If the port is async, the frames are different
@@ -273,13 +273,13 @@ namespace riaps{
                                 // Takes the ownership, deletes originId, messageId and timestamp
                                 params = std::shared_ptr<riaps::MessageParams>(new MessageParams(&originId, &messageId, &timestamp));
                             } else {
-                                comp->_logger->error("AnswerPort ({}) frames are incorrect.", riapsPort->GetPortName());
+                                compbase_logger->error("AnswerPort ({}) frames are incorrect.", riapsPort->GetPortName());
                             }
                         } else if (riapsPort->AsQueryPort()){
                             if (zsock_recv(which, "sff", &messageId, &body, &timestamp) == 0) {
                                 params = std::shared_ptr<riaps::MessageParams>(new MessageParams(&messageId, &timestamp));
                             } else {
-                                comp->_logger->error("QueryPort ({}) frames are incorrect.", riapsPort->GetPortName());
+                                compbase_logger->error("QueryPort ({}) frames are incorrect.", riapsPort->GetPortName());
                             }
                         }
 
@@ -311,7 +311,7 @@ namespace riaps{
                             //Note: new recv() implementation with timestamp processing
                             auto recvPort = riapsPort->AsRecvPort();
 
-                            auto cname = comp->GetComponentName();
+                            auto cname = comp->component_name();
                             auto portName = riapsPort->GetPortName();
 
                             auto capnpMessage = recvPort->Recv();
@@ -376,6 +376,16 @@ namespace riaps{
         zsock_destroy(&timerport);
     };
 
+    void ComponentBase::create_component_logger(const std::string &logger_name,
+                                                const spdlog::level::level_enum log_level) {
+        component_logger_ = spd::stdout_color_mt(logger_name);
+        component_logger_->set_level(log_level);
+    }
+
+    std::shared_ptr<spd::logger> ComponentBase::component_logger() {
+        return component_logger_;
+    }
+
     void ComponentBase::setup() {
 
     }
@@ -388,7 +398,7 @@ namespace riaps{
         //_execute.store(false);
         // Stop timers
         for (auto& c : config().component_ports.tims){
-            _logger->info("Stop timer: {}", c.portName);
+            riaps_logger_->info("Stop timer: {}", c.portName);
             m_ports[c.portName]->AsTimerPort()->stop();
         }
 
@@ -404,39 +414,39 @@ namespace riaps{
     }
 
     void ComponentBase::handleCPULimit() {
-        _logger->error("{} was violated, but {} is not implemented in component: {}::{}::{}"
+        riaps_logger_->error("{} was violated, but {} is not implemented in component: {}::{}::{}"
                 , "CPU limit"
                 , __func__
                 , actor()->application_name()
                 , actor()->actor_name()
-                , GetComponentName());
+                , component_name());
     }
 
     void ComponentBase::handleMemLimit() {
-        _logger->error("{} was violated, but {} is not implemented in component: {}::{}::{}"
+        riaps_logger_->error("{} was violated, but {} is not implemented in component: {}::{}::{}"
                 , "Memory limit"
                 , __func__
                 , actor()->application_name()
                 , actor()->actor_name()
-                , GetComponentName());
+                , component_name());
     }
 
     void ComponentBase::handleNetLimit() {
-        _logger->error("{} was violated, but {} is not implemented in component: {}::{}::{}"
+        riaps_logger_->error("{} was violated, but {} is not implemented in component: {}::{}::{}"
                 , "Net limit"
                 , __func__
                 , actor()->application_name()
                 , actor()->actor_name()
-                , GetComponentName());
+                , component_name());
     }
 
     void ComponentBase::handleSpcLimit() {
-        _logger->error("{} was violated, but {} is not implemented in component: {}::{}::{}"
+        riaps_logger_->error("{} was violated, but {} is not implemented in component: {}::{}::{}"
                 , "Space limit"
                 , __func__
                 , actor()->application_name()
                 , actor()->actor_name()
-                , GetComponentName());
+                , component_name());
 
     }
 
@@ -449,15 +459,18 @@ namespace riaps{
     }
 
     void ComponentBase::OnScheduledTimer(uint64_t timerId) {
-        _logger->error("Scheduled timer is fired, but no handler is implemented. Implement OnSchedulerTimer() in component {}", config().component_name);
+        riaps_logger_->error("Scheduled timer is fired, but no handler is implemented. Implement OnSchedulerTimer() in component {}", config().component_name);
     }
     
     void ComponentBase::set_config(component_conf &c_conf) {
         config_ = c_conf;
-        _logger = spd::get(config_.component_name);
-        if (_logger == nullptr)
-            _logger = spd::stdout_color_mt(config_.component_name);
-        _logger->set_level(spd::level::debug);
+        auto logger_name = fmt::format("RIAPS_BASE");
+        riaps_logger_ = spd::get(logger_name);
+        if (riaps_logger_ == nullptr)
+            riaps_logger_ = spd::stdout_color_mt(config_.component_name);
+
+        // TODO: pass the debug level by a parameter
+        riaps_logger_->set_level(spd::level::debug);
     }
 
     ComponentBase::ComponentBase(const std::string &application_name, const std::string &actor_name) {
@@ -510,13 +523,13 @@ namespace riaps{
 
     void ComponentBase::OnGroupMessage(const riaps::groups::GroupId &groupId,
                                        capnp::FlatArrayMessageReader &capnpreader, riaps::ports::PortBase *port) {
-        _logger->error("Group message arrived, but no handler implemented in the component");
+        riaps_logger()->error("Group message arrived, but no handler implemented in the component");
     }
 
     void ComponentBase::OnMessageToLeader(const riaps::groups::GroupId& groupId, capnp::FlatArrayMessageReader& message) {
-        _logger->error("Group message arrived to the leader, but {} is not implemented in component: {}",
+        riaps_logger()->error("Group message arrived to the leader, but {} is not implemented in component: {}",
                        __FUNCTION__,
-                       GetComponentName());
+                       component_name());
     }
 
     /// \param portName
@@ -535,7 +548,7 @@ namespace riaps{
 
     void ComponentBase::HandlePortUpdate(const std::string &port_name, const std::string &host,
                                          int port) {
-        _logger->debug("{}({},{},{})", __FUNCTION__, port_name, host, port);
+        riaps_logger()->debug("{}({},{},{})", __FUNCTION__, port_name, host, port);
         zmsg_t *msg_portupdate = zmsg_new();
 
         zmsg_addstr(msg_portupdate, CMD_UPDATE_PORT);
@@ -727,7 +740,7 @@ namespace riaps{
 
     void ComponentBase::OnMessageFromLeader(const riaps::groups::GroupId &groupId,
                                             capnp::FlatArrayMessageReader &message) {
-        _logger->debug("Message from the leader arrived, but no OnMessageFromHandler() implementation has found in component: {}", config().component_name);
+        riaps_logger()->debug("Message from the leader arrived, but no OnMessageFromHandler() implementation has found in component: {}", config().component_name);
     }
 
     riaps::groups::Group* ComponentBase::getGroupById(const riaps::groups::GroupId &groupId) {
@@ -994,23 +1007,27 @@ namespace riaps{
 
 
     void ComponentBase::OnAnnounce(const riaps::groups::GroupId &groupId, const std::string &proposeId, bool accepted) {
-        _logger->error("Vote result is announced, but no handler implemented in component {}", GetComponentName());
+        riaps_logger()->error("Vote result is announced, but no handler implemented in component {}", component_name());
     }
 
     void ComponentBase::OnPropose(riaps::groups::GroupId &groupId, const std::string &proposeId,
                                   capnp::FlatArrayMessageReader &message) {
-        _logger->error("Leader proposed a value but no handler is implemented in component {}", GetComponentName());
+        riaps_logger()->error("Leader proposed a value but no handler is implemented in component {}", component_name());
     }
 
     void ComponentBase::OnActionPropose(riaps::groups::GroupId &groupId,
                                         const std::string      &proposeId,
                                         const std::string      &actionId,
                                         const timespec         &timePoint) {
-        _logger->info("Leader proposed an action, but no handler is implemented in component {}", GetComponentName());
+        riaps_logger()->info("Leader proposed an action, but no handler is implemented in component {}", component_name());
     }
 
-    const string ComponentBase::GetComponentName() const {
+    const string ComponentBase::component_name() const {
         return config().component_name;
+    }
+
+    std::shared_ptr<spd::logger> ComponentBase::riaps_logger() {
+        return riaps_logger_;
     }
 
     string ComponentBase::SendPropose(const riaps::groups::GroupId &groupId, capnp::MallocMessageBuilder &message) {

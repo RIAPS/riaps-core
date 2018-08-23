@@ -184,7 +184,7 @@ namespace riaps {
         virtual ~ComponentBase();
 
     protected:
-        std::shared_ptr<spd::logger> _logger;
+
 
         // PYTHON STUFF //
         void set_config(component_conf& c_conf);
@@ -287,7 +287,7 @@ namespace riaps {
          */
         ports::PortBase* GetPortByName(const std::string&);
 
-        const std::string GetComponentName() const;
+        const std::string component_name() const;
 
         //std::shared_ptr<spd::logger> GetConsoleLogger();
 
@@ -404,7 +404,15 @@ namespace riaps {
 
 
         std::function<void(const uint64_t)> m_scheduledAction;
+
+        void create_component_logger(const std::string& logger_name,
+                                     const spd::level::level_enum log_level = spd::level::level_enum::info);
+
+        std::shared_ptr<spd::logger> component_logger();
+
     private:
+        std::shared_ptr<spd::logger> riaps_logger_;
+        std::shared_ptr<spd::logger> component_logger_;
 
         const ports::PublisherPort*  initPublisherPort  (const component_port_pub&);
         const ports::SubscriberPort* initSubscriberPort (const component_port_sub&);

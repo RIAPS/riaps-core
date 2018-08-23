@@ -60,10 +60,6 @@ namespace distributedestimator{
             virtual void DispatchInsideMessage(zmsg_t* zmsg,
                                                riaps::ports::PortBase* port);
 
-
-        private:
-            std::unique_ptr<std::uniform_real_distribution<double>> unif;
-            std::default_random_engine                              re;
         };
     }
 }

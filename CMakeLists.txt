@@ -118,7 +118,7 @@ list (APPEND riapslib_SOURCE
         src/framework/rfw_network_interfaces.cc
         src/groups/r_group.cc
         src/groups/r_grouplead.cc
-        src/utils/r_message.cc
+        #src/utils/r_message.cc
         src/utils/r_utils.cc
         )
 

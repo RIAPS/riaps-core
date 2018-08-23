@@ -19,12 +19,11 @@ namespace distributedestimator {
                        const std::string &actor_name)
                 : SensorBase(parent_actor, actor_spec, type_spec, name, type_name, args, application_name,
                                       actor_name) {
-            _logger->set_level(spd::level::info);
         }
 
         void Sensor::OnClock(riaps::ports::PortBase *port) {
             int64_t time = zclock_mono();
-            _logger->info("Sensor::OnClock(): {}", time);
+            component_logger()->info("Sensor::OnClock(): {}", time);
 
             capnp::MallocMessageBuilder messageBuilder;
             auto msgSensorReady = messageBuilder.initRoot<messages::SensorReady>();
@@ -36,10 +35,9 @@ namespace distributedestimator {
         void Sensor::OnRequest(const messages::SensorQuery::Reader &message,
                                     riaps::ports::PortBase *port) {
 
-            //PrintMessageOnPort(port);
             if (port->GetPortBaseConfig()->isTimed){
                 auto responsePort = port->AsResponsePort();
-                _logger->info_if(responsePort!=nullptr,
+                component_logger()->info_if(responsePort!=nullptr,
                                  "Sensor::OnRequest(): {}, sentTimestamp: {}.{}, recvTimestamp: {}.{}",
                                  message.getMsg().cStr(),
                                  responsePort->GetLastSendTimestamp().tv_sec ,
@@ -47,7 +45,7 @@ namespace distributedestimator {
                                  responsePort->GetLastRecvTimestamp().tv_sec ,
                                  responsePort->GetLastRecvTimestamp().tv_nsec);
             } else
-                _logger->info("Sensor::OnRequest(): {}", message.getMsg().cStr());
+                component_logger()->info("Sensor::OnRequest(): {}", message.getMsg().cStr());
 
             capnp::MallocMessageBuilder messageBuilder;
             messages::SensorValue::Builder msgSensorValue = messageBuilder.initRoot<messages::SensorValue>();
@@ -65,15 +63,6 @@ namespace distributedestimator {
         }
     }
 }
-//
-//riaps::ComponentBase* create_component(_component_conf& config, riaps::Actor& actor){
-//    auto result = new distributedestimator::components::comp_sensor(config, actor);
-//    return result;
-//}
-//
-//void destroy_component(riaps::ComponentBase* comp){
-//    delete comp;
-//}
 
 std::unique_ptr<distributedestimator::components::Sensor>
 create_component_py(const py::object *parent_actor,

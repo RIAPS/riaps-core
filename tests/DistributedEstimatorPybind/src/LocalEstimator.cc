@@ -24,9 +24,7 @@ namespace distributedestimator {
         void LocalEstimator::OnReady(const messages::SensorReady::Reader &message,
                                      riaps::ports::PortBase *port) {
 
-            //PrintMessageOnPort(port, message.getMsg().cStr());
-
-            _logger->info("LocalEstimator::OnReady(): {} {}", message.getMsg().cStr(), ::getpid());
+            component_logger()->info("LocalEstimator::OnReady(): {} {}", message.getMsg().cStr(), ::getpid());
 
             capnp::MallocMessageBuilder builderSensorQuery;
 
@@ -40,7 +38,7 @@ namespace distributedestimator {
                     if (GetPortByName(PORT_REQ_QUERY)->GetPortBaseConfig()->isTimed) {
                         auto recvPort = GetPortByName(PORT_REQ_QUERY)->AsRecvPort();
                         if (recvPort!=nullptr){
-                            _logger->info("LocalEstimator::OnQuery(): {};  sentTimestamp: {}.{}, recvTimestamp: {}.{}",
+                            component_logger()->info("LocalEstimator::OnQuery(): {};  sentTimestamp: {}.{}, recvTimestamp: {}.{}",
                                           sensorValue.getMsg().cStr(),
                                           recvPort->GetLastSendTimestamp().tv_sec ,
                                           recvPort->GetLastSendTimestamp().tv_nsec,
@@ -49,7 +47,7 @@ namespace distributedestimator {
                             );
                         }
                     } else {
-                        _logger->info("LocalEstimator::OnQuery(): {}", sensorValue.getMsg().cStr());
+                        component_logger()->info("LocalEstimator::OnQuery(): {}", sensorValue.getMsg().cStr());
                     }
 
                     capnp::MallocMessageBuilder builderEstimate;
@@ -67,15 +65,6 @@ namespace distributedestimator {
         }
         }
 }
-
-//riaps::ComponentBase *create_component(_component_conf &config, riaps::Actor &actor) {
-//    auto result = new distributedestimator::components::LocalEstimator(config, actor);
-//    return result;
-//}
-//
-//void destroy_component(riaps::ComponentBase *comp) {
-//    delete comp;
-//}
 
 std::unique_ptr<distributedestimator::components::LocalEstimator>
 create_component_py(const py::object *parent_actor,

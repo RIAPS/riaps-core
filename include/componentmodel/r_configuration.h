@@ -118,6 +118,4 @@ struct component_conf {
     bool                      isDevice;
 };
 
-typedef struct component_conf _component_conf;
-
 #endif //RIAPS_FW_R_CONFIGURATION_H
