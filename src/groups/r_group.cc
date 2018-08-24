@@ -45,7 +45,7 @@ namespace riaps{
                 //_lastFrame(nullptr),
                 group_leader_(nullptr),
                 group_poller_(nullptr) {
-            logger_ = spd::get(parentComponent->config().component_name);
+            logger_ = spd::get(parentComponent->component_config().component_name);
             ping_timeout_ = Timeout<std::chrono::milliseconds>(PING_BASE_PERIOD);
 
             random_generator_ = std::mt19937(random_device_());
@@ -105,7 +105,7 @@ namespace riaps{
             }
 
             bool hasJoined = joinGroup(parent_component_->actor()->application_name(),
-                                       parent_component_->GetCompUuid(),
+                                       parent_component_->ComponentUuid(),
                                        group_id_,
                                        initializedServices);
 
@@ -139,7 +139,7 @@ namespace riaps{
             capnp::MallocMessageBuilder builder;
             auto msgGroupInternals = builder.initRoot<riaps::distrcoord::GroupInternals>();
             auto msgHeader = msgGroupInternals.initMessageToLeader();
-            msgHeader.setSourceComponentId(parent_component()->GetCompUuid());
+            msgHeader.setSourceComponentId(parent_component()->ComponentUuid());
 
             zframe_t* header;
             header << builder;
@@ -222,7 +222,7 @@ namespace riaps{
             logger_->error_if(!rc, "ProposeActionToLeader() failed");
             logger_->debug_if(rc, "ProposeActionToLeader() proposeId: {}, leader_id: {}, srcComp: {}", proposeId,
                               leader_id(),
-                              parent_component()->GetCompUuid());
+                              parent_component()->ComponentUuid());
             return rc;
         }
 
@@ -387,7 +387,7 @@ namespace riaps{
             auto heartbeat = internal.initGroupHeartBeat();
 
             heartbeat.setHeartBeatType(type);
-            heartbeat.setSourceComponentId(this->parent_component_->GetCompUuid());
+            heartbeat.setSourceComponentId(this->parent_component_->ComponentUuid());
 
             return group_pubport_->Send(builder);
         }
@@ -397,7 +397,7 @@ namespace riaps{
         }
 
         const std::string Group::parent_component_id() const {
-            return parent_component()->GetCompUuid();
+            return parent_component()->ComponentUuid();
         }
 
         uint16_t Group::GetMemberCount() {
@@ -687,7 +687,7 @@ namespace riaps{
                         return;
                     } else if (internal.hasMessageToLeader()){
                         auto msgLeader = internal.getMessageToLeader();
-                        if (leader_id() != parent_component()->GetCompUuid()) return;
+                        if (leader_id() != parent_component()->ComponentUuid()) return;
 
                         zframe_t* leaderMsgFrame = zmsg_pop(msg);
                         if (!leaderMsgFrame) return;
@@ -788,7 +788,7 @@ namespace riaps{
             capnp::MallocMessageBuilder builder;
             auto msgInt = builder.initRoot<riaps::distrcoord::GroupInternals>();
             auto msgCons = msgInt.initConsensus();
-            msgCons.setSourceComponentId(parent_component()->GetCompUuid());
+            msgCons.setSourceComponentId(parent_component()->ComponentUuid());
             auto msgVote = msgCons.initVote();
             msgVote.setProposeId(propose_id);
             if (accept)

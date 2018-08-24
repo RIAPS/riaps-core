@@ -26,7 +26,7 @@ namespace riaps{
 
             auto results =
                     subscribeToService(parent_component()->actor()->application_name(),
-                                       parent_component()->config().component_name,
+                                       parent_component()->component_config().component_name,
                                        parent_component()->actor()->actor_name(),
                                          host,
                                          riaps::discovery::Kind::SUB,

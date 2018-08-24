@@ -61,8 +61,8 @@ create_component_py(const py::object *parent_actor,
 PYBIND11_MODULE(libglobalestimator, m) {
     py::class_<distributedestimator::components::GlobalEstimator> testClass(m, "GlobalEstimator");
     testClass.def(py::init<const py::object*, const py::dict, const py::dict, const std::string&, const std::string&, const py::dict, const std::string&, const std::string&>());
-    testClass.def("setup", &distributedestimator::components::GlobalEstimator::setup);
-    testClass.def("activate", &distributedestimator::components::GlobalEstimator::activate);
+    testClass.def("setup", &distributedestimator::components::GlobalEstimator::Setup);
+    testClass.def("activate", &distributedestimator::components::GlobalEstimator::Activate);
     testClass.def("handlePortUpdate", &distributedestimator::components::GlobalEstimator::HandlePortUpdate);
     m.def("create_component_py", &create_component_py, "Instantiates the component from python configuration");
 }

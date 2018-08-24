@@ -99,7 +99,6 @@ list (APPEND riapslib_SOURCE
         src/componentmodel/ports/r_subportgroup.cc
         src/componentmodel/ports/r_subscriberport.cc
         src/componentmodel/ports/r_timedport.cc
-        #src/componentmodel/r_actor.cc
         src/componentmodel/r_pyactor.cc
         src/componentmodel/r_argumentparser.cc
         src/componentmodel/r_payload.cc
@@ -107,18 +106,15 @@ list (APPEND riapslib_SOURCE
         src/componentmodel/r_componentbase.cc
         src/componentmodel/r_devicethread.cc
         src/componentmodel/r_devmapi.cc
-        src/componentmodel/r_deploapi.cc
         src/componentmodel/r_discoverdapi.cc
         src/componentmodel/r_messagebase.cc
         src/componentmodel/r_parameter.cc
         src/componentmodel/r_periodictimer.cc
-        #src/componentmodel/r_peripheral.cc
         src/componentmodel/r_portregister.cc
         src/framework/rfw_configuration.cc
         src/framework/rfw_network_interfaces.cc
         src/groups/r_group.cc
         src/groups/r_grouplead.cc
-        #src/utils/r_message.cc
         src/utils/r_utils.cc
         )
 
@@ -139,7 +135,6 @@ list (APPEND riapslib_HEADERS
         include/componentmodel/ports/r_subportgroup.h
         include/componentmodel/ports/r_subscriberport.h
         include/componentmodel/ports/r_timedport.h
-        #include/componentmodel/r_actor.h
         include/componentmodel/r_pyactor.h
         include/componentmodel/r_payload.h
         include/componentmodel/r_commandlineparser.h
@@ -147,7 +142,6 @@ list (APPEND riapslib_HEADERS
         include/componentmodel/r_configuration.h
         include/componentmodel/r_devicethread.h
         include/componentmodel/r_discoverdapi.h
-        include/componentmodel/r_deploapi.h
         include/componentmodel/r_messagebase.h
         include/componentmodel/r_parameter.h
         include/componentmodel/r_periodictimer.h

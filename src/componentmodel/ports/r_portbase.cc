@@ -29,7 +29,7 @@ namespace riaps {
                 std::string loggerName = fmt::format("{}::{}", loggerPrefix, config->portName);
                 m_logger = spd::stdout_color_mt(loggerName);
             } else {
-                m_logger = spd::get(parent_component_->config().component_name);
+                m_logger = spd::get(parent_component_->component_config().component_name);
             }
 
 

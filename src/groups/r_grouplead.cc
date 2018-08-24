@@ -29,7 +29,7 @@ GroupLead::GroupLead(Group* group, std::unordered_map<std::string, Timeout<std::
      */
     m_currentState = NodeState::FOLLOWER;
 
-    _logger = spd::get(group->parent_component()->config().component_name);
+    _logger = spd::get(group->parent_component()->component_config().component_name);
 }
 
 std::string GroupLead::GetLeaderId() {
@@ -131,7 +131,7 @@ void GroupLead::Update() {
 }
 
 const std::string GroupLead::GetComponentId() const {
-    return m_group->parent_component()->GetCompUuid();
+    return m_group->parent_component()->ComponentUuid();
 }
 
 void GroupLead::Update(riaps::distrcoord::LeaderElection::Reader &internalMessage) {

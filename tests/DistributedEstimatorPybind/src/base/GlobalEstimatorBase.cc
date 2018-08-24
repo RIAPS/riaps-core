@@ -29,9 +29,6 @@ namespace distributedestimator {
             conf.component_type = type_name;
             conf.isDevice=false;
             set_config(conf);
-
-            // TODO: LOG LEVEL
-            create_component_logger(name);
         }
 
         void GlobalEstimatorBase::DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
