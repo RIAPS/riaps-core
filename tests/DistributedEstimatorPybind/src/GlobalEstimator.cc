@@ -61,14 +61,16 @@ create_component_py(const py::object *parent_actor,
 PYBIND11_MODULE(libglobalestimator, m) {
     py::class_<distributedestimator::components::GlobalEstimator> testClass(m, "GlobalEstimator");
     testClass.def(py::init<const py::object*, const py::dict, const py::dict, const std::string&, const std::string&, const py::dict, const std::string&, const std::string&>());
-    testClass.def("setup", &distributedestimator::components::GlobalEstimator::Setup);
-    testClass.def("activate", &distributedestimator::components::GlobalEstimator::Activate);
-    testClass.def("handlePortUpdate", &distributedestimator::components::GlobalEstimator::HandlePortUpdate);
-    testClass.def("handleCPULimit", &distributedestimator::components::GlobalEstimator::HandleCPULimit);
-    testClass.def("handleMemLimit", &distributedestimator::components::GlobalEstimator::HandleMemLimit);
-    testClass.def("handleSpcLimit", &distributedestimator::components::GlobalEstimator::HandleSpcLimit);
-    testClass.def("handleNetLimit", &distributedestimator::components::GlobalEstimator::HandleNetLimit);
-    testClass.def("handleNICStateChange", &distributedestimator::components::GlobalEstimator::HandleNICStateChange);
-    testClass.def("handlePeerStateChange", &distributedestimator::components::GlobalEstimator::HandlePeerStateChange);
+
+    testClass.def("setup"                 , &distributedestimator::components::GlobalEstimator::Setup);
+    testClass.def("activate"              , &distributedestimator::components::GlobalEstimator::Activate);
+    testClass.def("handlePortUpdate"      , &distributedestimator::components::GlobalEstimator::HandlePortUpdate);
+    testClass.def("handleCPULimit"        , &distributedestimator::components::GlobalEstimator::HandleCPULimit);
+    testClass.def("handleMemLimit"        , &distributedestimator::components::GlobalEstimator::HandleMemLimit);
+    testClass.def("handleSpcLimit"        , &distributedestimator::components::GlobalEstimator::HandleSpcLimit);
+    testClass.def("handleNetLimit"        , &distributedestimator::components::GlobalEstimator::HandleNetLimit);
+    testClass.def("handleNICStateChange"  , &distributedestimator::components::GlobalEstimator::HandleNICStateChange);
+    testClass.def("handlePeerStateChange" , &distributedestimator::components::GlobalEstimator::HandlePeerStateChange);
+
     m.def("create_component_py", &create_component_py, "Instantiates the component from python configuration");
 }

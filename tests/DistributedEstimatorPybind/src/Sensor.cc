@@ -82,14 +82,16 @@ create_component_py(const py::object *parent_actor,
 PYBIND11_MODULE(libsensor, m) {
     py::class_<distributedestimator::components::Sensor> testClass(m, "Sensor");
     testClass.def(py::init<const py::object*, const py::dict, const py::dict, const std::string&, const std::string&, const py::dict, const std::string&, const std::string&>());
-    testClass.def("setup", &distributedestimator::components::Sensor::Setup);
-    testClass.def("activate", &distributedestimator::components::Sensor::Activate);
-    testClass.def("handlePortUpdate", &distributedestimator::components::Sensor::HandlePortUpdate);
-    testClass.def("handleCPULimit", &distributedestimator::components::Sensor::HandleCPULimit);
-    testClass.def("handleMemLimit", &distributedestimator::components::Sensor::HandleMemLimit);
-    testClass.def("handleSpcLimit", &distributedestimator::components::Sensor::HandleSpcLimit);
-    testClass.def("handleNetLimit", &distributedestimator::components::Sensor::HandleNetLimit);
-    testClass.def("handleNICStateChange", &distributedestimator::components::Sensor::HandleNICStateChange);
-    testClass.def("handlePeerStateChange", &distributedestimator::components::Sensor::HandlePeerStateChange);
+
+    testClass.def("setup"                 , &distributedestimator::components::Sensor::Setup);
+    testClass.def("activate"              , &distributedestimator::components::Sensor::Activate);
+    testClass.def("handlePortUpdate"      , &distributedestimator::components::Sensor::HandlePortUpdate);
+    testClass.def("handleCPULimit"        , &distributedestimator::components::Sensor::HandleCPULimit);
+    testClass.def("handleMemLimit"        , &distributedestimator::components::Sensor::HandleMemLimit);
+    testClass.def("handleSpcLimit"        , &distributedestimator::components::Sensor::HandleSpcLimit);
+    testClass.def("handleNetLimit"        , &distributedestimator::components::Sensor::HandleNetLimit);
+    testClass.def("handleNICStateChange"  , &distributedestimator::components::Sensor::HandleNICStateChange);
+    testClass.def("handlePeerStateChange" , &distributedestimator::components::Sensor::HandlePeerStateChange);
+
     m.def("create_component_py", &create_component_py, "Instantiates the component from python configuration");
 }
