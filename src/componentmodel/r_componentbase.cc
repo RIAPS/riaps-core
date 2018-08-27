@@ -414,12 +414,20 @@ namespace riaps{
 
     }
 
-//    std::shared_ptr<spd::logger> ComponentBase::GetConsoleLogger(){
-//        return m_logger;
-//    }
+    void ComponentBase::HandleNICStateChange(const std::string &state) {
+        riaps_logger_->error("{} is not implemented in component: {}::{}::{}"
+                , __func__
+                , actor()->application_name()
+                , actor()->actor_name()
+                , component_name());
+    }
 
-    void ComponentBase::SetDebugLevel(std::shared_ptr<spd::logger> logger, spd::level::level_enum level){
-        logger->set_level(level);
+    void ComponentBase::HandlePeerStateChange(const std::string &state, const std::string &uuid) {
+        riaps_logger_->error("{} is not implemented in component: {}::{}::{}"
+                , __func__
+                , actor()->application_name()
+                , actor()->actor_name()
+                , component_name());
     }
 
     void ComponentBase::OnScheduledTimer(uint64_t timerId) {
@@ -489,6 +497,12 @@ namespace riaps{
         ports::PortBase* portBase = GetPortByName(portName);
         if (portBase == nullptr) return nullptr;
         return portBase->AsResponsePort();
+    }
+
+    ports::SubscriberPort* ComponentBase::GetSubscriberPortByName(const std::string &portName) {
+        ports::PortBase* portBase = GetPortByName(portName);
+        if (portBase == nullptr) return nullptr;
+        return portBase->AsSubscribePort();
     }
 
     void ComponentBase::OnGroupMessage(const riaps::groups::GroupId &groupId,

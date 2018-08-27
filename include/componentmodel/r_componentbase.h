@@ -171,6 +171,8 @@ namespace riaps {
         virtual void HandleMemLimit();
         virtual void HandleSpcLimit();
         virtual void HandleNetLimit();
+        virtual void HandleNICStateChange(const std::string& state);
+        virtual void HandlePeerStateChange(const std::string& state, const std::string& uuid);
 
         virtual ~ComponentBase() = default;
 
@@ -234,9 +236,6 @@ namespace riaps {
          */
         bool IsLeader(const riaps::groups::GroupId& groupId);
 
-
-
-
         /**
          * Search publisher port with portName.
          *
@@ -279,10 +278,6 @@ namespace riaps {
         ports::PortBase* GetPortByName(const std::string&);
 
         const std::string component_name() const;
-
-        //std::shared_ptr<spd::logger> GetConsoleLogger();
-
-        void SetDebugLevel(std::shared_ptr<spd::logger> logger, spd::level::level_enum level);
 
         // Note: disable for now, we need more tests.
         //bool CreateOneShotTimer(const std::string& timerid, timespec& wakeuptime);
@@ -329,8 +324,6 @@ namespace riaps {
                                            ports::PortBase* port) = 0;
 
         timespec WaitUntil(const timespec& targetTimepoint);
-
-
 
         /**
          *

@@ -89,5 +89,7 @@ PYBIND11_MODULE(libsensor, m) {
     testClass.def("handleMemLimit", &distributedestimator::components::Sensor::HandleMemLimit);
     testClass.def("handleSpcLimit", &distributedestimator::components::Sensor::HandleSpcLimit);
     testClass.def("handleNetLimit", &distributedestimator::components::Sensor::HandleNetLimit);
+    testClass.def("handleNICStateChange", &distributedestimator::components::Sensor::HandleNICStateChange);
+    testClass.def("handlePeerStateChange", &distributedestimator::components::Sensor::HandlePeerStateChange);
     m.def("create_component_py", &create_component_py, "Instantiates the component from python configuration");
 }

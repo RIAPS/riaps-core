@@ -92,5 +92,7 @@ PYBIND11_MODULE(liblocalestimator, m) {
     testClass.def("handleMemLimit", &distributedestimator::components::LocalEstimator::HandleMemLimit);
     testClass.def("handleSpcLimit", &distributedestimator::components::LocalEstimator::HandleSpcLimit);
     testClass.def("handleNetLimit", &distributedestimator::components::LocalEstimator::HandleNetLimit);
+    testClass.def("handleNICStateChange", &distributedestimator::components::LocalEstimator::HandleNICStateChange);
+    testClass.def("handlePeerStateChange", &distributedestimator::components::LocalEstimator::HandlePeerStateChange);
     m.def("create_component_py", &create_component_py, "Instantiates the component from python configuration");
 }
