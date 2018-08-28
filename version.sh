@@ -1,2 +1,2 @@
-export externalsversion="0.6.4"
-export coreversion="0.7.62"
+export externalsversion="0.6.5"
+export coreversion="0.7.72"
