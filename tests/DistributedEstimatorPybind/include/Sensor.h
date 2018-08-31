@@ -24,10 +24,10 @@ namespace distributedestimator {
                    const std::string &actor_name);
 
 
-            virtual void OnClock(riaps::ports::PortBase *port);
+            virtual void OnClock(riaps::ports::PortBase *port) override;
 
             virtual void OnRequest(const messages::SensorQuery::Reader &message,
-                                   riaps::ports::PortBase *port);
+                                   riaps::ports::PortBase *port) override;
 
             virtual ~Sensor();
 

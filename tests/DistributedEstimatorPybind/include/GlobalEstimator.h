@@ -26,9 +26,9 @@ namespace distributedestimator {
                             const std::string &actor_name);
 
             virtual void OnEstimate(messages::Estimate::Reader &message,
-                                    riaps::ports::PortBase *port);
+                                    riaps::ports::PortBase *port) override;
 
-            virtual void OnWakeup(riaps::ports::PortBase *port);
+            virtual void OnWakeup(riaps::ports::PortBase *port) override;
 
 
             virtual ~GlobalEstimator();

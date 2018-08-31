@@ -21,9 +21,6 @@ namespace distributedestimator{
         class GlobalEstimatorBase : public riaps::ComponentBase {
 
         public:
-
-            //GlobalEstimatorBase(_component_conf& config, riaps::Actor& actor);
-
             GlobalEstimatorBase(const py::object *parent_actor,
                                 const py::dict actor_spec, // Actor json config
                                 const py::dict type_spec,  // component json config
@@ -38,27 +35,15 @@ namespace distributedestimator{
 
             virtual void OnWakeup(riaps::ports::PortBase* port)=0;
 
-            template<class T>
-            void printNames(std::vector<T>& ports){
-                auto kkk = spd::get("debuglogger");
-                for (auto& item : ports) {
-                    kkk->info("port: {}", item.portName);
-                    if (typeid(item) == typeid(component_port_tim)) {
-                        kkk->info("period: {}", ((component_port_tim&)item).period);
-                    }
-                }
-
-            };
-
             virtual ~GlobalEstimatorBase();
 
         protected:
             virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
                                          riaps::ports::PortBase*   port,
-                                         std::shared_ptr<riaps::MessageParams> params);
+                                         std::shared_ptr<riaps::MessageParams> params) final;
 
             virtual void DispatchInsideMessage(zmsg_t* zmsg,
-                                               riaps::ports::PortBase* port);
+                                               riaps::ports::PortBase* port) final;
 
         };
     }
