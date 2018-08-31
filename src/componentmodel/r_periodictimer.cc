@@ -54,7 +54,7 @@ namespace riaps {
                 void *which = zpoller_wait(poller, 0);
                 if (which == pipe) {
                     zmsg_t *msg = zmsg_recv(which);
-                    if (!msg) {
+                    if (msg == nullptr) {
                         std::cout << "No msg => interrupted" << std::endl;
                         break;
                     }
