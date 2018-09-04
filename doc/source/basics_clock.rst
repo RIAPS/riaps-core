@@ -78,3 +78,8 @@ Receive Messages on Subscribe Port
          }
       }
    }
+
+Define Message Types
+====================
+
+RIAPS is using `Cap'n Proto <https://capnproto.org/>`_ for defining messages.
