@@ -24,4 +24,6 @@ Download and install:
 Test the Install
 ================
 
-// TODO
+.. note::
+
+   Todo: Test the install

@@ -1,5 +1,4 @@
-Basics
-######
+
 
 Handling Timer Events
 =====================
@@ -73,8 +72,7 @@ Receive Messages on Subscribe Port
       namespace components {
          void LocalEstimator::OnReady(const messages::SensorReady::Reader &message,
                                       riaps::ports::PortBase *port) {
-            std::cout << "LocalEstimator::OnReady(): " << message.getMsg().cStr() << " " << ::getpid() << std::endl;
-            //TODO: NO cout, just spdlog
+            component_logger()->info("{}: {} {}", __func__, message.getMsg().cStr(), ::getpid());
          }
       }
    }
@@ -83,3 +81,20 @@ Define Message Types
 ====================
 
 RIAPS is using `Cap'n Proto <https://capnproto.org/>`_ for defining messages.
+
+**Cap'n Proto Schema for SensorReady**
+
+.. code-block:: capnp
+
+   using Cxx = import "/capnp/c++.capnp";
+   $Cxx.namespace("distributedestimator::messages");
+
+   struct SensorReady {
+      msg @0 : Text;
+   }
+
+**Generate C++ Code from Capn'p Schema**
+
+.. code-block:: shell
+
+   capnp compile ./filename.capnp -oc++:../

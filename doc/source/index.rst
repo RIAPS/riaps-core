@@ -7,16 +7,22 @@ Welcome to RIAPS C++'s documentation!
 =====================================
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Requirements
 
    requirements
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Basics
 
-   basics_clock
+   basics
+
+.. toctree::
+   :caption: Extra Information
+   :maxdepth: 1
+
+   faq
 
 
 Indices and tables
