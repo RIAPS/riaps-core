@@ -1968,256 +1968,187 @@ namespace riaps {
 namespace discovery {
 
 // ActorRegReq
-#ifndef _MSC_VER
 constexpr uint16_t ActorRegReq::_capnpPrivate::dataWordSize;
 constexpr uint16_t ActorRegReq::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind ActorRegReq::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* ActorRegReq::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* ActorRegReq::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 // ActorRegRep
-#ifndef _MSC_VER
 constexpr uint16_t ActorRegRep::_capnpPrivate::dataWordSize;
 constexpr uint16_t ActorRegRep::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind ActorRegRep::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* ActorRegRep::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* ActorRegRep::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 // ActorUnregReq
-#ifndef _MSC_VER
 constexpr uint16_t ActorUnregReq::_capnpPrivate::dataWordSize;
 constexpr uint16_t ActorUnregReq::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind ActorUnregReq::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* ActorUnregReq::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* ActorUnregReq::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 // ActorUnregRep
-#ifndef _MSC_VER
 constexpr uint16_t ActorUnregRep::_capnpPrivate::dataWordSize;
 constexpr uint16_t ActorUnregRep::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind ActorUnregRep::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* ActorUnregRep::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* ActorUnregRep::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 // Path
-#ifndef _MSC_VER
 constexpr uint16_t Path::_capnpPrivate::dataWordSize;
 constexpr uint16_t Path::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind Path::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* Path::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* Path::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 // Client
-#ifndef _MSC_VER
 constexpr uint16_t Client::_capnpPrivate::dataWordSize;
 constexpr uint16_t Client::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind Client::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* Client::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* Client::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 // Socket
-#ifndef _MSC_VER
 constexpr uint16_t Socket::_capnpPrivate::dataWordSize;
 constexpr uint16_t Socket::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind Socket::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* Socket::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* Socket::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 // ServiceRegReq
-#ifndef _MSC_VER
 constexpr uint16_t ServiceRegReq::_capnpPrivate::dataWordSize;
 constexpr uint16_t ServiceRegReq::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind ServiceRegReq::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* ServiceRegReq::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* ServiceRegReq::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 // ServiceRegRep
-#ifndef _MSC_VER
 constexpr uint16_t ServiceRegRep::_capnpPrivate::dataWordSize;
 constexpr uint16_t ServiceRegRep::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind ServiceRegRep::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* ServiceRegRep::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* ServiceRegRep::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 // ServiceLookupReq
-#ifndef _MSC_VER
 constexpr uint16_t ServiceLookupReq::_capnpPrivate::dataWordSize;
 constexpr uint16_t ServiceLookupReq::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind ServiceLookupReq::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* ServiceLookupReq::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* ServiceLookupReq::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 // ServiceLookupRep
-#ifndef _MSC_VER
 constexpr uint16_t ServiceLookupRep::_capnpPrivate::dataWordSize;
 constexpr uint16_t ServiceLookupRep::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind ServiceLookupRep::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* ServiceLookupRep::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* ServiceLookupRep::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 // PortUpd
-#ifndef _MSC_VER
 constexpr uint16_t PortUpd::_capnpPrivate::dataWordSize;
 constexpr uint16_t PortUpd::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind PortUpd::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* PortUpd::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* PortUpd::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 // DiscoUpd
-#ifndef _MSC_VER
 constexpr uint16_t DiscoUpd::_capnpPrivate::dataWordSize;
 constexpr uint16_t DiscoUpd::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind DiscoUpd::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* DiscoUpd::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* DiscoUpd::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 // DiscoReq
-#ifndef _MSC_VER
 constexpr uint16_t DiscoReq::_capnpPrivate::dataWordSize;
 constexpr uint16_t DiscoReq::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind DiscoReq::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* DiscoReq::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* DiscoReq::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 // DiscoRep
-#ifndef _MSC_VER
 constexpr uint16_t DiscoRep::_capnpPrivate::dataWordSize;
 constexpr uint16_t DiscoRep::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind DiscoRep::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* DiscoRep::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* DiscoRep::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 // GroupId
-#ifndef _MSC_VER
 constexpr uint16_t GroupId::_capnpPrivate::dataWordSize;
 constexpr uint16_t GroupId::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind GroupId::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* GroupId::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* GroupId::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 // GroupService
-#ifndef _MSC_VER
 constexpr uint16_t GroupService::_capnpPrivate::dataWordSize;
 constexpr uint16_t GroupService::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind GroupService::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* GroupService::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* GroupService::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 // GroupJoinReq
-#ifndef _MSC_VER
 constexpr uint16_t GroupJoinReq::_capnpPrivate::dataWordSize;
 constexpr uint16_t GroupJoinReq::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind GroupJoinReq::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* GroupJoinReq::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* GroupJoinReq::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 // GroupJoinRep
-#ifndef _MSC_VER
 constexpr uint16_t GroupJoinRep::_capnpPrivate::dataWordSize;
 constexpr uint16_t GroupJoinRep::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind GroupJoinRep::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* GroupJoinRep::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* GroupJoinRep::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 // ProviderListUpdate
-#ifndef _MSC_VER
 constexpr uint16_t ProviderListUpdate::_capnpPrivate::dataWordSize;
 constexpr uint16_t ProviderListUpdate::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind ProviderListUpdate::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* ProviderListUpdate::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* ProviderListUpdate::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 // ProviderListGet
-#ifndef _MSC_VER
 constexpr uint16_t ProviderListGet::_capnpPrivate::dataWordSize;
 constexpr uint16_t ProviderListGet::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind ProviderListGet::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* ProviderListGet::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* ProviderListGet::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 // GroupUpdate
-#ifndef _MSC_VER
 constexpr uint16_t GroupUpdate::_capnpPrivate::dataWordSize;
 constexpr uint16_t GroupUpdate::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind GroupUpdate::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* GroupUpdate::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* GroupUpdate::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 // DhtUpdate
-#ifndef _MSC_VER
 constexpr uint16_t DhtUpdate::_capnpPrivate::dataWordSize;
 constexpr uint16_t DhtUpdate::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind DhtUpdate::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* DhtUpdate::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* DhtUpdate::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 
