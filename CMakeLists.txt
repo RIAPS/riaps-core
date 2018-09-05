@@ -50,7 +50,29 @@ include_directories(include)
 include_directories(pybind11/include)
 include_directories(/usr/include/python3.5m/)
 
-#add_subdirectory(pybind11)
+# Regenerate capnp messages
+#add_custom_command(OUTPUT  "${CMAKE_SOURCE_DIR}/include/messaging/disco.capnp.c++"
+#        		DEPENDS "${CMAKE_SOURCE_DIR}/include/messaging/capnp/disco.capnp"
+#        		WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/include/messaging"
+#        		COMMAND ${CMAKE_COMMAND} -E env "PATH=/opt/riaps/amd64/bin" capnp compile -oc++ "${CMAKE_SOURCE_DIR}/include/messaging/capnp/disco.capnp" --import-path="${CMAKE_SOURCE_DIR}/include/messaging/"
+#        		)
+
+
+add_custom_command(
+        OUTPUT  "${CMAKE_SOURCE_DIR}/include/messaging/disco.capnp.c++"
+        DEPENDS "${CMAKE_SOURCE_DIR}/include/messaging/capnp/disco.capnp"
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/include/messaging/capnp"
+        COMMAND /opt/riaps/amd64/bin/capnp compile disco.capnp -oc++:../
+        COMMENT "=== Generating disco files ==="
+)
+
+add_custom_command(
+        OUTPUT  "${CMAKE_SOURCE_DIR}/include/messaging/distcoord.capnp.c++"
+        DEPENDS "${CMAKE_SOURCE_DIR}/include/messaging/capnp/distcoord.capnp"
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/include/messaging/capnp"
+        COMMAND /opt/riaps/amd64/bin/capnp compile distcoord.capnp -oc++:../
+        COMMENT "=== Generating distcoord files ==="
+        )
 
 if (BUILD_TESTS)
     include(CTest)
@@ -106,7 +128,6 @@ list (APPEND riapslib_SOURCE
         src/componentmodel/r_commandlineparser.cc
         src/componentmodel/r_componentbase.cc
         src/componentmodel/r_devicethread.cc
-        src/componentmodel/r_devmapi.cc
         src/componentmodel/r_discoverdapi.cc
         src/componentmodel/r_messagebase.cc
         src/componentmodel/r_parameter.cc
