@@ -18,18 +18,14 @@ if (${arch} STREQUAL "armhf")
  set(CMAKE_C_COMPILER ${TOOLCHAIN_PREFIX}-gcc)
  set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}-g++-7)
  set(CMAKE_FIND_ROOT_PATH /usr/${TOOLCHAIN_PREFIX})
- #set (CMAKE_CXX_FLAGS "-std=c++11")
  set (CMAKE_C_FLAGS "-std=c99")
 else()
  set(CMAKE_C_COMPILER gcc-7)
  set(CMAKE_CXX_COMPILER g++-7)
- #set (CMAKE_CXX_FLAGS "-std=c++11")
  set (CMAKE_C_FLAGS "-std=c99")
 endif()
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
-#set(pybind11_DIR ${CMAKE_HOME_DIRECTORY})
 
 set(CMAKE_INSTALL_PREFIX ${riaps_prefix}/${arch})
 
@@ -39,9 +35,6 @@ set (LIBALLPATH_LIB ${DEPENDENCIES}/${arch}/lib)
 include_directories(${LIBALLPATH_INCLUDE})
 link_directories(${LIBALLPATH_LIB})
 
-#set(PYTHON_EXECUTABLE /usr/bin/python3)
-
-
 # Debug binaries are to be copied into "./bin" directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_HOME_DIRECTORY}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_HOME_DIRECTORY}/bin)
@@ -50,20 +43,13 @@ include_directories(include)
 include_directories(pybind11/include)
 include_directories(/usr/include/python3.5m/)
 
-# Regenerate capnp messages
-#add_custom_command(OUTPUT  "${CMAKE_SOURCE_DIR}/include/messaging/disco.capnp.c++"
-#        		DEPENDS "${CMAKE_SOURCE_DIR}/include/messaging/capnp/disco.capnp"
-#        		WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/include/messaging"
-#        		COMMAND ${CMAKE_COMMAND} -E env "PATH=/opt/riaps/amd64/bin" capnp compile -oc++ "${CMAKE_SOURCE_DIR}/include/messaging/capnp/disco.capnp" --import-path="${CMAKE_SOURCE_DIR}/include/messaging/"
-#        		)
-
-
+# Process Cap'n Proto messages
 add_custom_command(
         OUTPUT  "${CMAKE_SOURCE_DIR}/include/messaging/disco.capnp.c++"
         DEPENDS "${CMAKE_SOURCE_DIR}/include/messaging/capnp/disco.capnp"
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/include/messaging/capnp"
         COMMAND /opt/riaps/amd64/bin/capnp compile disco.capnp -oc++:../
-        COMMENT "=== Generating disco files ==="
+        COMMENT "=== Processing cap'n p disco files ==="
 )
 
 add_custom_command(
@@ -71,7 +57,7 @@ add_custom_command(
         DEPENDS "${CMAKE_SOURCE_DIR}/include/messaging/capnp/distcoord.capnp"
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/include/messaging/capnp"
         COMMAND /opt/riaps/amd64/bin/capnp compile distcoord.capnp -oc++:../
-        COMMENT "=== Generating distcoord files ==="
+        COMMENT "=== Processing cap'n p distcoord files ==="
         )
 
 if (BUILD_TESTS)
@@ -184,34 +170,9 @@ add_library(riaps SHARED
         ${riapslib_SOURCE}
         ${riapslib_HEADERS}
         )
-#pybind11_add_module(riaps ${riapslib_SOURCE} ${riapslib_HEADERS})
+
 target_link_libraries(riaps PRIVATE czmq zmq dl capnp kj)
 install(TARGETS riaps DESTINATION lib)
-
-# start_actor
-#set(ACTOR_SOURCE
-#        src/componentmodel/r_actor_main.cc
-#
-#        include/messaging/deplo.capnp.c++
-#        )
-#
-#set(ACTOR_HEADERS
-#        include/componentmodel/r_actor.h
-#        include/componentmodel/r_argumentparser.h
-#        include/componentmodel/r_actor_main.h
-#        include/groups/r_group.h
-#        include/const/r_jsonmodel.h
-#        include/const/r_const.h
-#        include/messaging/disco.capnp.h
-#        include/messaging/deplo.capnp.h
-#        include/json.h)
-
-#add_executable(start_actor
-#        ${ACTOR_SOURCE}
-#        ${ACTOR_HEADERS}
-#        )
-#target_link_libraries(start_actor czmq zmq riaps capnp pthread)
-#install(TARGETS start_actor DESTINATION bin)
 
 # rdiscoveryd source
 list(APPEND RDISCOVERYD_SOURCE
@@ -248,28 +209,6 @@ add_executable(rdiscoveryd
 target_link_libraries(rdiscoveryd czmq zmq opendht gnutls riaps capnp nettle hogweed gmp pthread kj lmdb)
 
 install(TARGETS rdiscoveryd DESTINATION bin)
-
-
-## start_device source
-#list(APPEND DEVICE_SOURCE
-#        src/device/r_deviceactor.cc
-#        src/device/r_dmain.cc
-#        )
-#
-## start_device headers
-#list(APPEND DEVICE_HEADERS
-#        include/device/r_deviceactor.h
-#        )
-
-# start_device
-#add_executable(start_device
-#        ${DEVICE_SOURCE}
-#        ${DEVICE_HEADERS}
-#        )
-#target_link_libraries(start_device czmq zmq opendht gnutls riaps capnp nettle hogweed gmp pthread)
-
-#install(TARGETS start_device DESTINATION bin)
-
 
 SET(MAJOR_VERSION "0")
 SET(MINOR_VERSION "8")
