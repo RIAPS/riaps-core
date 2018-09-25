@@ -85,6 +85,7 @@ PYBIND11_MODULE(libsensor, m) {
 
     testClass.def("setup"                 , &distributedestimator::components::Sensor::Setup);
     testClass.def("activate"              , &distributedestimator::components::Sensor::Activate);
+    testClass.def("terminate"             , &distributedestimator::components::Sensor::Terminate);
     testClass.def("handlePortUpdate"      , &distributedestimator::components::Sensor::HandlePortUpdate);
     testClass.def("handleCPULimit"        , &distributedestimator::components::Sensor::HandleCPULimit);
     testClass.def("handleMemLimit"        , &distributedestimator::components::Sensor::HandleMemLimit);

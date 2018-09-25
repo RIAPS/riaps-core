@@ -147,7 +147,7 @@ namespace riaps {
          *   2) Destroys the component thread
          *   3) Deletes ports
          */
-        void StopComponent();
+        void Terminate();
 
         void UpdateGroup(riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
 

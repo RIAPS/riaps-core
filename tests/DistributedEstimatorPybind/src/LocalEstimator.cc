@@ -88,6 +88,7 @@ PYBIND11_MODULE(liblocalestimator, m) {
 
     testClass.def("setup"                 , &distributedestimator::components::LocalEstimator::Setup);
     testClass.def("activate"              , &distributedestimator::components::LocalEstimator::Activate);
+    testClass.def("terminate"             , &distributedestimator::components::LocalEstimator::Terminate);
     testClass.def("handlePortUpdate"      , &distributedestimator::components::LocalEstimator::HandlePortUpdate);
     testClass.def("handleCPULimit"        , &distributedestimator::components::LocalEstimator::HandleCPULimit);
     testClass.def("handleMemLimit"        , &distributedestimator::components::LocalEstimator::HandleMemLimit);

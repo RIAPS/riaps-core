@@ -134,7 +134,7 @@ namespace riaps{
                 char *command = zmsg_popstr(msg);
 
                 if (streq(command, "$TERM")) {
-                    compbase_logger->debug("$TERM arrived in component");
+                    compbase_logger->debug("$TERM arrived");
                     terminated = true;
                 } else if(streq(command, CMD_UPDATE_PORT)){
                     char* portname = zmsg_popstr(msg);
@@ -359,7 +359,7 @@ namespace riaps{
         component_zactor_ = zactor_new(component_actor, this);
     }
 
-    void ComponentBase::StopComponent() {
+    void ComponentBase::Terminate() {
         // Stop timers
         for (auto& c : component_config().component_ports.tims){
             riaps_logger_->info("Stop timer: {}", c.portName);

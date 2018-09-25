@@ -26,8 +26,8 @@
 #define CMD_DISC_GET_SERVICES                    "$GETSERVICES"
 #define CMD_DISC_PING                            "$PING$"
 
-#define CMD_UPDATE_PORT                          "portUpdate"
-#define CMD_UPDATE_GROUP                         "groupUpdate"
+constexpr auto CMD_UPDATE_PORT  = "portUpdate" ;
+constexpr auto CMD_UPDATE_GROUP = "groupUpdate";
 
 //#define MSG_SERVICE_LIST_HEADER                  "$SERVICES$"
 

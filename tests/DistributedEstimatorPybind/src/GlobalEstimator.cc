@@ -64,6 +64,7 @@ PYBIND11_MODULE(libglobalestimator, m) {
 
     testClass.def("setup"                 , &distributedestimator::components::GlobalEstimator::Setup);
     testClass.def("activate"              , &distributedestimator::components::GlobalEstimator::Activate);
+    testClass.def("terminate"             , &distributedestimator::components::GlobalEstimator::Terminate);
     testClass.def("handlePortUpdate"      , &distributedestimator::components::GlobalEstimator::HandlePortUpdate);
     testClass.def("handleCPULimit"        , &distributedestimator::components::GlobalEstimator::HandleCPULimit);
     testClass.def("handleMemLimit"        , &distributedestimator::components::GlobalEstimator::HandleMemLimit);
