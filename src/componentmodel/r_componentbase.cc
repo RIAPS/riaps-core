@@ -4,10 +4,11 @@
 
 using namespace std;
 
+
+
 namespace riaps{
 
     void component_actor(zsock_t* pipe, void* args){
-
         auto comp = (ComponentBase*)args;
 
         zsock_t* pycontrol = zsock_new_pair(fmt::format("inproc://part_{}_control", comp->component_config().component_name).c_str());
@@ -24,7 +25,7 @@ namespace riaps{
         assert(poller);
 
         // New api is czmq, ignore_interrupts is obsolote
-        zpoller_set_nonstop(poller, true);
+        //zpoller_set_nonstop(poller, true);
         zsock_signal (pipe, 0);
 
         int rc = zpoller_add(poller, timerport);
@@ -49,6 +50,7 @@ namespace riaps{
         //std::map<const zsock_t*, const ports::InsidePort*> insidePorts;
 
         // TODO: If leader election is enabled use dynamic timeout in the poller
+        zsys_handler_reset();
         while (!terminated) {
             void *which = zpoller_wait(poller, 10);
             if (firstrun) {
@@ -360,6 +362,7 @@ namespace riaps{
     }
 
     void ComponentBase::Terminate() {
+        riaps_logger_->debug("Terminate component: {}", component_name());
         // Stop timers
         for (auto& c : component_config().component_ports.tims){
             riaps_logger_->info("Stop timer: {}", c.portName);
@@ -442,7 +445,7 @@ namespace riaps{
             riaps_logger_ = spd::stdout_color_mt(logger_name);
 
         // TODO: pass the debug level by a parameter
-        riaps_logger_->set_level(spd::level::debug);
+        //riaps_logger_->set_level(spd::level::debug);
 
         logger_name = fmt::format("{}",component_config_.component_name);
         component_logger_ = spd::get(logger_name);
@@ -455,25 +458,6 @@ namespace riaps{
         actor_ = std::make_shared<PyActor>(application_name, actor_name);
         component_uuid_ = zuuid_new();
     }
-
-//    ComponentBase::ComponentBase(component_conf& config, Actor& actor)
-//            : m_actor(&actor),
-//              m_timerCounter(0)
-//    {
-//        configuration_ = config;
-//        setup();
-//
-//
-//        size_t q_size = 2048; //queue size must be power of 2
-//        spd::set_async_mode(q_size);
-//
-//        logger_ = spd::get(configuration_.component_name);
-//        if (logger_ == nullptr)
-//            logger_ = spd::stdout_color_mt(configuration_.component_name);
-//
-//
-//    }
-
 
     ports::PublisherPort* ComponentBase::GetPublisherPortByName(const std::string &portName) {
         ports::PortBase* portBase = GetPortByName(portName);
