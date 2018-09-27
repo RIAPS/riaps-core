@@ -6,12 +6,11 @@
 #define RIAPS_CORE_TEMPSENSOR_H
 
 #include "componentmodel/r_componentbase.h"
-//#include "messages/weathermonitor.capnp.h"
 #include "messages/TempData.capnp.h"
 
 // Name of the ports from the model file
-#define PORT_TIMER_CLOCK "clock"
-#define PORT_PUB_READY "ready"
+constexpr auto PORT_TIMER_CLOCK = "clock";
+constexpr auto PORT_PUB_READY   = "ready";
 
 #include <pybind11/stl.h>
 #include <pybind11/pybind11.h>
@@ -37,7 +36,7 @@ namespace weathermonitor {
     		
     		virtual bool SendReady(capnp::MallocMessageBuilder& messageBuilder, messages::TempData::Builder& message);
     		
-    	    virtual ~TempSensorBase();
+    	    virtual ~TempSensorBase() = default;
     	protected:
 			virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
 										 riaps::ports::PortBase*   port,

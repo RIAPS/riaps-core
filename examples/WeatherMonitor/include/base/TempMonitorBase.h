@@ -12,7 +12,7 @@
 #include <pybind11/pybind11.h>
 
 // Name of the ports from the model file
-#define PORT_SUB_TEMPUPDATE "tempupdate"
+constexpr auto PORT_SUB_TEMPUPDATE = "tempupdate";
 
 
 
@@ -35,7 +35,7 @@ namespace weathermonitor {
     		
     		virtual void OnTempupdate (const messages::TempData::Reader &message, riaps::ports::PortBase *port)=0;
     		
-    	    virtual ~TempMonitorBase();
+    	    virtual ~TempMonitorBase() = default;
     	protected:
 			virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
 										 riaps::ports::PortBase*   port,
