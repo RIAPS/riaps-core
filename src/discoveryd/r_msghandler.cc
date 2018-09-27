@@ -1131,99 +1131,13 @@ namespace riaps{
         }
     }
 
-    // Should be depriacated, riaps-deplo is needed to figure out what runs
-//    void DiscoveryMessageHandler::maintainRenewalDepricated(){
-//
-//        std::set<pid_t> purgeServices;
-//        std::set<pid_t> purgeGroups;
-//
-//        // Collect terminated component services (pub/rep ports)
-//        for (auto it= m_serviceCheckins.begin(); it!=m_serviceCheckins.end(); it++){
-//            // Check pid, mark the removable pids
-//            if (!kill(it->first,0)==0){
-//                purgeServices.insert(it->first);
-//            }
-//        }
-//
-//        // Collect groups with terminated parent component
-//        for (auto it= m_groupServices.begin(); it!=m_groupServices.end(); it++){
-//            // Check pid, mark the removable pids
-//            if (!kill(it->first,0)==0){
-//                m_logger->info("Remove group services with PID: {}", it->first);
-//                purgeGroups.insert(it->first);
-//            } else {
-//                for(auto& groupService : m_groupServices[it->first]) {
-//                    if (!groupService->timeout.IsTimeout()) continue;
-//                    m_dhtNode.put(groupService->groupKey, groupService->services);
-//                    groupService->timeout.Reset();
-//                }
-//            }
-//        }
-//
-//
-//        // Delete terminated groups from cache, keep the values in openDHT, just don't renew them
-//        for (auto pid : purgeGroups) {
-//            m_groupServices.erase(pid);
-//        }
-//
-//        for (auto it = purgeServices.begin(); it!=purgeServices.end(); it++){
-//            //std::cout << "Remove services with PID: " << *it << std::endl;
-//            m_logger->info("Remove component services with PID: {}", *it);
-//
-//            // Put the service address into the zombies list in DHT
-//            for (auto serviceIt  = m_serviceCheckins[*it].begin();
-//                 serviceIt != m_serviceCheckins[*it].end();
-//                 serviceIt++) {
-//
-//                // host:port
-//                string serviceAddress = (*serviceIt)->value;
-//                vector<uint8_t> opendht_data(serviceAddress.begin(), serviceAddress.end());
-//
-//                if (serviceAddress.find("127.0.0.1") != string::npos) {
-//                    m_dhtNode.put(zombielocalkey_, dht::Value(opendht_data));
-//                } else {
-//                    m_dhtNode.put(zombieglobalkey_, dht::Value(opendht_data));
-//                }
-//
-//                //m_dhtNode.put(m_zombieKey, dht::Value(opendht_data));
-//            }
-//
-//            m_serviceCheckins.erase(*it);
-//        }
-//
-//
-//        int64_t now = zclock_mono();
-//        for (auto pidIt= m_serviceCheckins.begin(); pidIt!=m_serviceCheckins.end(); pidIt++){
-//            for(auto serviceIt = pidIt->second.begin(); serviceIt!=pidIt->second.end(); serviceIt++){
-//
-//                // Renew
-//                if (now - (*serviceIt)->createdTime > (*serviceIt)->timeout){
-//                    (*serviceIt)->createdTime = now;
-//
-//                    // Reput key-value
-//                    vector<uint8_t> opendht_data((*serviceIt)->value.begin(), (*serviceIt)->value.end());
-//                    auto keyhash = dht::InfoHash::get((*serviceIt)->key);
-//
-//                    m_dhtNode.put(keyhash, dht::Value(opendht_data));
-//                }
-//            }
-//        }
-//    }
-
     void DiscoveryMessageHandler::maintainZombieList(){
         int64_t currentTime = zclock_mono();
 
-//        for (auto it = m_zombieServices.begin(); it!=m_zombieServices.end(); it++){
-//            // 10 min timeout
-//            if ((currentTime - it->second) > 60*10*1000) {
-//                m_logger->info("Purge zombie from cache: {}", it->first);
-//                it = m_zombieServices.erase(it);
-//            }
-//        }
-
         auto it = m_zombieServices.begin();
         while (it != m_zombieServices.end()) {
-            if ((currentTime - it->second) > 60*10*1000) {
+            // Purge zombies after 15 minutes
+            if ((currentTime - it->second) > 60*15*1000) {
                 m_logger->info("Purge zombie from cache: {}", it->first);
                 it = m_zombieServices.erase(it);
             } else {
