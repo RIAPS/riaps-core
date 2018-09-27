@@ -10,7 +10,12 @@
             },
             "internals":[],
             "locals":[],
-            "wires":[]
+            "usage":{
+                "cpu":{},
+                "mem":{},
+                "net":{},
+                "spc":{}
+            }
         },
         "WeatherReceiver":{
             "formals":[],
@@ -22,7 +27,12 @@
             },
             "internals":[],
             "locals":[],
-            "wires":[]
+            "usage":{
+                "cpu":{},
+                "mem":{},
+                "net":{},
+                "spc":{}
+            }
         }
     },
     "components":{
@@ -30,14 +40,18 @@
             "formals":[],
             "name":"TempMonitor",
             "ports":{
+                "anss":{},
                 "clts":{},
                 "inss":{},
                 "pubs":{},
+                "qrys":{},
                 "reps":{},
                 "reqs":{},
                 "srvs":{},
                 "subs":{
                     "tempupdate":{
+                        "deadline":0,
+                        "timed":false,
                         "type":"TempData"
                     }
                 },
@@ -48,20 +62,24 @@
             "formals":[],
             "name":"TempSensor",
             "ports":{
+                "anss":{},
                 "clts":{},
                 "inss":{},
                 "pubs":{
                     "ready":{
+                        "timed":false,
                         "type":"TempData"
                     }
                 },
+                "qrys":{},
                 "reps":{},
                 "reqs":{},
                 "srvs":{},
                 "subs":{},
                 "tims":{
                     "clock":{
-                        "period":50
+                        "deadline":0,
+                        "period":5000
                     }
                 }
             }
