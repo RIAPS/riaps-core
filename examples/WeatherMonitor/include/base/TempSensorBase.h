@@ -13,13 +13,25 @@
 #define PORT_TIMER_CLOCK "clock"
 #define PORT_PUB_READY "ready"
 
+#include <pybind11/stl.h>
+#include <pybind11/pybind11.h>
+
+namespace py = pybind11;
+
 namespace weathermonitor {
     namespace components {
     	
     	class TempSensorBase : public riaps::ComponentBase {
     		
     	public:
-    		TempSensorBase(_component_conf_j &config, riaps::Actor &actor);
+    		TempSensorBase(const py::object *parent_actor,
+						   const py::dict actor_spec, // Actor json config
+						   const py::dict type_spec,  // component json config
+						   const std::string &name,
+						   const std::string &type_name,
+						   const py::dict args,
+						   const std::string &application_name,
+						   const std::string &actor_name);
     		
     		virtual void OnClock(riaps::ports::PortBase *port)=0;
     		
@@ -27,7 +39,12 @@ namespace weathermonitor {
     		
     	    virtual ~TempSensorBase();
     	protected:
-    		virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader, riaps::ports::PortBase *port);
+			virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
+										 riaps::ports::PortBase*   port,
+										 std::shared_ptr<riaps::MessageParams> params) final;
+
+			virtual void DispatchInsideMessage(zmsg_t* zmsg,
+											   riaps::ports::PortBase* port) final;
         };
     }
 }
