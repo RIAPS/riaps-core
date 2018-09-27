@@ -1213,12 +1213,21 @@ namespace riaps{
     void DiscoveryMessageHandler::maintainZombieList(){
         int64_t currentTime = zclock_mono();
 
-        for (auto it = m_zombieServices.begin(); it!=m_zombieServices.end(); it++){
-            // 10 min timeout
+//        for (auto it = m_zombieServices.begin(); it!=m_zombieServices.end(); it++){
+//            // 10 min timeout
+//            if ((currentTime - it->second) > 60*10*1000) {
+//                m_logger->info("Purge zombie from cache: {}", it->first);
+//                it = m_zombieServices.erase(it);
+//            }
+//        }
+
+        auto it = m_zombieServices.begin();
+        while (it != m_zombieServices.end()) {
             if ((currentTime - it->second) > 60*10*1000) {
-                //std::cout << "Purge zombie from cache: " << it->first << std::endl;
                 m_logger->info("Purge zombie from cache: {}", it->first);
                 it = m_zombieServices.erase(it);
+            } else {
+                ++it;
             }
         }
     }
