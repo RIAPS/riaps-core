@@ -13,36 +13,37 @@ namespace riaps{
             SenderPort(this),
             RecvPort(this)
         {
-            m_port_socket = zsock_new(ZMQ_REP);
-            zsock_set_linger(m_port_socket, 500);
-            zsock_set_sndtimeo(m_port_socket, 500);
-            zsock_set_rcvtimeo(m_port_socket, 500);
+            port_socket_ = zsock_new(ZMQ_REP);
+            zsock_set_linger(port_socket_, 500);
+            zsock_set_sndtimeo(port_socket_, 500);
+            zsock_set_rcvtimeo(port_socket_, 500);
 
             if (GetConfig()->isLocal){
-                m_host = "127.0.0.1";
+                host_ = "127.0.0.1";
             } else {
-                m_host = riaps::framework::Network::GetIPAddress();
+                host_ = riaps::framework::Network::GetIPAddress();
             }
 
-            if (m_host == "") {
+            if (host_ == "") {
                 throw std::runtime_error("Response cannot be initiated. Cannot find  available network interface.");
             }
 
-            std::string rep_endpoint = fmt::format("tcp://{}:!", m_host);//"tcp://" + _host + ":!";
-            m_port = zsock_bind(m_port_socket, "%s", rep_endpoint.c_str());
+            std::string rep_endpoint = fmt::format("tcp://{}:!", host_);//"tcp://" + _host + ":!";
+            m_port = zsock_bind(port_socket_, "%s", rep_endpoint.c_str());
 
 
             if (m_port == -1) {
                 throw std::runtime_error("Couldn't bind response port.");
             }
 
-            std::cout << "Response is created on : " << m_host << ":" << m_port << std::endl;
+            std::cout << "Response is created on : " << host_ << ":" << m_port << std::endl;
 
 
-            if (!registerService(riaps::Actor::GetRunningActor()->getApplicationName(),
-                                 riaps::Actor::GetRunningActor()->getActorName(),
+            m_logger->debug("{}.host_ = {}", __FUNCTION__, host_);
+            if (!registerService(parent_component()->actor()->application_name(),
+                                 parent_component()->actor()->actor_name(),
                                   config.messageType,
-                                  m_host,
+                                  host_,
                                   m_port,
                                   riaps::discovery::Kind::REP,
                                   (config.isLocal?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),

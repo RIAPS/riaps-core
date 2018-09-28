@@ -37,7 +37,7 @@ namespace riaps {
 
         protected:
             int m_port;
-            std::string m_host;
+            std::string host_;
             std::string m_endpoint;
         };
     }

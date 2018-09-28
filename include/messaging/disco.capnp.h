@@ -6,7 +6,7 @@
 
 #include <capnp/generated-header-support.h>
 
-#if CAPNP_VERSION != 5003
+#if CAPNP_VERSION != 6001
 #error "Version mismatch between generated code and library headers.  You must use the same version of the Cap'n Proto compiler and library."
 #endif
 
@@ -86,7 +86,7 @@ struct ActorRegReq {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(8b33c3d71493aa7e, 1, 3)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -101,7 +101,7 @@ struct ActorRegRep {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(8a4ac5818ef6840a, 1, 0)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -116,7 +116,7 @@ struct ActorUnregReq {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(f0ada0a8407a1dfc, 1, 3)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -131,7 +131,7 @@ struct ActorUnregRep {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(bdabc8092ffdc630, 1, 0)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -146,7 +146,7 @@ struct Path {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(84b21f978b1fdf49, 1, 3)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -161,7 +161,7 @@ struct Client {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(c448d0f61a137ce6, 0, 4)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -176,7 +176,7 @@ struct Socket {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(d19aca0c3c774262, 1, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -191,7 +191,7 @@ struct ServiceRegReq {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(ded1e5c2e92062b0, 1, 2)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -206,7 +206,7 @@ struct ServiceRegRep {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(8976e48f2d7f8f36, 1, 0)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -221,7 +221,7 @@ struct ServiceLookupReq {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(dd7d98d2d2d81406, 0, 2)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -236,7 +236,7 @@ struct ServiceLookupRep {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(cbc342ab58d149c5, 1, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -251,7 +251,7 @@ struct PortUpd {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(84a7e0e5c34ca2b8, 1, 2)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -270,7 +270,7 @@ struct DiscoUpd {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(e0b61d43b0aaea51, 1, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -292,7 +292,7 @@ struct DiscoReq {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(c5c00415475f9f91, 1, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -314,7 +314,7 @@ struct DiscoRep {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(bb3e73b2a350ce4e, 1, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -329,7 +329,7 @@ struct GroupId {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(c73e29979b5d1ebd, 0, 2)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -344,7 +344,7 @@ struct GroupService {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(9b8cb2dbdd851482, 0, 2)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -359,7 +359,7 @@ struct GroupJoinReq {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(8cf2e8426e6996b1, 1, 4)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -374,7 +374,7 @@ struct GroupJoinRep {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(ceed43cf9a251472, 1, 0)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -389,7 +389,7 @@ struct ProviderListUpdate {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(df60e0f885b07faa, 0, 2)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -404,7 +404,7 @@ struct ProviderListGet {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(eaf54029bfb3e6dc, 0, 3)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -419,7 +419,7 @@ struct GroupUpdate {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(e52b3a5f7242a4f5, 0, 4)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -440,7 +440,7 @@ struct DhtUpdate {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(fb2dbb7b7e32fd8e, 1, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -460,7 +460,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -566,7 +566,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -647,7 +647,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -753,7 +753,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -834,7 +834,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -945,7 +945,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1056,7 +1056,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1142,7 +1142,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1240,7 +1240,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1316,7 +1316,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1409,7 +1409,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1495,7 +1495,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1593,7 +1593,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1690,7 +1690,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1823,7 +1823,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1956,7 +1956,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -2047,7 +2047,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -2138,7 +2138,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -2255,7 +2255,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -2331,7 +2331,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -2423,7 +2423,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -2527,7 +2527,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -2639,7 +2639,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -2751,592 +2751,622 @@ private:
 // =======================================================================================
 
 inline bool ActorRegReq::Reader::hasAppName() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool ActorRegReq::Builder::hasAppName() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader ActorRegReq::Reader::getAppName() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder ActorRegReq::Builder::getAppName() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void ActorRegReq::Builder::setAppName( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder ActorRegReq::Builder::initAppName(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), size);
 }
 inline void ActorRegReq::Builder::adoptAppName(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> ActorRegReq::Builder::disownAppName() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool ActorRegReq::Reader::hasVersion() const {
-  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline bool ActorRegReq::Builder::hasVersion() {
-  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader ActorRegReq::Reader::getVersion() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder ActorRegReq::Builder::getVersion() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline void ActorRegReq::Builder::setVersion( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(1 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder ActorRegReq::Builder::initVersion(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(1 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), size);
 }
 inline void ActorRegReq::Builder::adoptVersion(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> ActorRegReq::Builder::disownVersion() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 
 inline bool ActorRegReq::Reader::hasActorName() const {
-  return !_reader.getPointerField(2 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS).isNull();
 }
 inline bool ActorRegReq::Builder::hasActorName() {
-  return !_builder.getPointerField(2 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader ActorRegReq::Reader::getActorName() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(2 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder ActorRegReq::Builder::getActorName() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(2 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
 }
 inline void ActorRegReq::Builder::setActorName( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(2 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder ActorRegReq::Builder::initActorName(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(2 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), size);
 }
 inline void ActorRegReq::Builder::adoptActorName(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(2 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> ActorRegReq::Builder::disownActorName() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(2 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
 }
 
 inline  ::int32_t ActorRegReq::Reader::getPid() const {
   return _reader.getDataField< ::int32_t>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 
 inline  ::int32_t ActorRegReq::Builder::getPid() {
   return _builder.getDataField< ::int32_t>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 inline void ActorRegReq::Builder::setPid( ::int32_t value) {
   _builder.setDataField< ::int32_t>(
-      0 * ::capnp::ELEMENTS, value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, value);
 }
 
 inline  ::riaps::discovery::Status ActorRegRep::Reader::getStatus() const {
   return _reader.getDataField< ::riaps::discovery::Status>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 
 inline  ::riaps::discovery::Status ActorRegRep::Builder::getStatus() {
   return _builder.getDataField< ::riaps::discovery::Status>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 inline void ActorRegRep::Builder::setStatus( ::riaps::discovery::Status value) {
   _builder.setDataField< ::riaps::discovery::Status>(
-      0 * ::capnp::ELEMENTS, value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, value);
 }
 
 inline  ::int32_t ActorRegRep::Reader::getPort() const {
   return _reader.getDataField< ::int32_t>(
-      1 * ::capnp::ELEMENTS);
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS);
 }
 
 inline  ::int32_t ActorRegRep::Builder::getPort() {
   return _builder.getDataField< ::int32_t>(
-      1 * ::capnp::ELEMENTS);
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS);
 }
 inline void ActorRegRep::Builder::setPort( ::int32_t value) {
   _builder.setDataField< ::int32_t>(
-      1 * ::capnp::ELEMENTS, value);
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS, value);
 }
 
 inline bool ActorUnregReq::Reader::hasAppName() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool ActorUnregReq::Builder::hasAppName() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader ActorUnregReq::Reader::getAppName() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder ActorUnregReq::Builder::getAppName() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void ActorUnregReq::Builder::setAppName( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder ActorUnregReq::Builder::initAppName(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), size);
 }
 inline void ActorUnregReq::Builder::adoptAppName(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> ActorUnregReq::Builder::disownAppName() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool ActorUnregReq::Reader::hasVersion() const {
-  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline bool ActorUnregReq::Builder::hasVersion() {
-  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader ActorUnregReq::Reader::getVersion() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder ActorUnregReq::Builder::getVersion() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline void ActorUnregReq::Builder::setVersion( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(1 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder ActorUnregReq::Builder::initVersion(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(1 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), size);
 }
 inline void ActorUnregReq::Builder::adoptVersion(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> ActorUnregReq::Builder::disownVersion() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 
 inline bool ActorUnregReq::Reader::hasActorName() const {
-  return !_reader.getPointerField(2 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS).isNull();
 }
 inline bool ActorUnregReq::Builder::hasActorName() {
-  return !_builder.getPointerField(2 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader ActorUnregReq::Reader::getActorName() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(2 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder ActorUnregReq::Builder::getActorName() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(2 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
 }
 inline void ActorUnregReq::Builder::setActorName( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(2 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder ActorUnregReq::Builder::initActorName(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(2 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), size);
 }
 inline void ActorUnregReq::Builder::adoptActorName(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(2 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> ActorUnregReq::Builder::disownActorName() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(2 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
 }
 
 inline  ::int32_t ActorUnregReq::Reader::getPid() const {
   return _reader.getDataField< ::int32_t>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 
 inline  ::int32_t ActorUnregReq::Builder::getPid() {
   return _builder.getDataField< ::int32_t>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 inline void ActorUnregReq::Builder::setPid( ::int32_t value) {
   _builder.setDataField< ::int32_t>(
-      0 * ::capnp::ELEMENTS, value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, value);
 }
 
 inline  ::riaps::discovery::Status ActorUnregRep::Reader::getStatus() const {
   return _reader.getDataField< ::riaps::discovery::Status>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 
 inline  ::riaps::discovery::Status ActorUnregRep::Builder::getStatus() {
   return _builder.getDataField< ::riaps::discovery::Status>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 inline void ActorUnregRep::Builder::setStatus( ::riaps::discovery::Status value) {
   _builder.setDataField< ::riaps::discovery::Status>(
-      0 * ::capnp::ELEMENTS, value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, value);
 }
 
 inline  ::int32_t ActorUnregRep::Reader::getPort() const {
   return _reader.getDataField< ::int32_t>(
-      1 * ::capnp::ELEMENTS);
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS);
 }
 
 inline  ::int32_t ActorUnregRep::Builder::getPort() {
   return _builder.getDataField< ::int32_t>(
-      1 * ::capnp::ELEMENTS);
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS);
 }
 inline void ActorUnregRep::Builder::setPort( ::int32_t value) {
   _builder.setDataField< ::int32_t>(
-      1 * ::capnp::ELEMENTS, value);
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS, value);
 }
 
 inline bool Path::Reader::hasAppName() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool Path::Builder::hasAppName() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader Path::Reader::getAppName() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder Path::Builder::getAppName() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void Path::Builder::setAppName( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder Path::Builder::initAppName(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), size);
 }
 inline void Path::Builder::adoptAppName(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> Path::Builder::disownAppName() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool Path::Reader::hasActorName() const {
-  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline bool Path::Builder::hasActorName() {
-  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader Path::Reader::getActorName() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder Path::Builder::getActorName() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline void Path::Builder::setActorName( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(1 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder Path::Builder::initActorName(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(1 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), size);
 }
 inline void Path::Builder::adoptActorName(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> Path::Builder::disownActorName() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 
 inline bool Path::Reader::hasMsgType() const {
-  return !_reader.getPointerField(2 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS).isNull();
 }
 inline bool Path::Builder::hasMsgType() {
-  return !_builder.getPointerField(2 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader Path::Reader::getMsgType() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(2 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder Path::Builder::getMsgType() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(2 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
 }
 inline void Path::Builder::setMsgType( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(2 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder Path::Builder::initMsgType(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(2 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), size);
 }
 inline void Path::Builder::adoptMsgType(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(2 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> Path::Builder::disownMsgType() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(2 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
 }
 
 inline  ::riaps::discovery::Kind Path::Reader::getKind() const {
   return _reader.getDataField< ::riaps::discovery::Kind>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 
 inline  ::riaps::discovery::Kind Path::Builder::getKind() {
   return _builder.getDataField< ::riaps::discovery::Kind>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 inline void Path::Builder::setKind( ::riaps::discovery::Kind value) {
   _builder.setDataField< ::riaps::discovery::Kind>(
-      0 * ::capnp::ELEMENTS, value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, value);
 }
 
 inline  ::riaps::discovery::Scope Path::Reader::getScope() const {
   return _reader.getDataField< ::riaps::discovery::Scope>(
-      1 * ::capnp::ELEMENTS);
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS);
 }
 
 inline  ::riaps::discovery::Scope Path::Builder::getScope() {
   return _builder.getDataField< ::riaps::discovery::Scope>(
-      1 * ::capnp::ELEMENTS);
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS);
 }
 inline void Path::Builder::setScope( ::riaps::discovery::Scope value) {
   _builder.setDataField< ::riaps::discovery::Scope>(
-      1 * ::capnp::ELEMENTS, value);
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS, value);
 }
 
 inline bool Client::Reader::hasActorHost() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool Client::Builder::hasActorHost() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader Client::Reader::getActorHost() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder Client::Builder::getActorHost() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void Client::Builder::setActorHost( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder Client::Builder::initActorHost(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), size);
 }
 inline void Client::Builder::adoptActorHost(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> Client::Builder::disownActorHost() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool Client::Reader::hasActorName() const {
-  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline bool Client::Builder::hasActorName() {
-  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader Client::Reader::getActorName() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder Client::Builder::getActorName() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline void Client::Builder::setActorName( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(1 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder Client::Builder::initActorName(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(1 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), size);
 }
 inline void Client::Builder::adoptActorName(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> Client::Builder::disownActorName() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 
 inline bool Client::Reader::hasInstanceName() const {
-  return !_reader.getPointerField(2 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS).isNull();
 }
 inline bool Client::Builder::hasInstanceName() {
-  return !_builder.getPointerField(2 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader Client::Reader::getInstanceName() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(2 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder Client::Builder::getInstanceName() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(2 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
 }
 inline void Client::Builder::setInstanceName( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(2 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder Client::Builder::initInstanceName(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(2 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), size);
 }
 inline void Client::Builder::adoptInstanceName(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(2 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> Client::Builder::disownInstanceName() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(2 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
 }
 
 inline bool Client::Reader::hasPortName() const {
-  return !_reader.getPointerField(3 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS).isNull();
 }
 inline bool Client::Builder::hasPortName() {
-  return !_builder.getPointerField(3 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader Client::Reader::getPortName() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(3 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder Client::Builder::getPortName() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(3 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS));
 }
 inline void Client::Builder::setPortName( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(3 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder Client::Builder::initPortName(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(3 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS), size);
 }
 inline void Client::Builder::adoptPortName(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(3 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> Client::Builder::disownPortName() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(3 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS));
 }
 
 inline bool Socket::Reader::hasHost() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool Socket::Builder::hasHost() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader Socket::Reader::getHost() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder Socket::Builder::getHost() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void Socket::Builder::setHost( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder Socket::Builder::initHost(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), size);
 }
 inline void Socket::Builder::adoptHost(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> Socket::Builder::disownHost() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline  ::int32_t Socket::Reader::getPort() const {
   return _reader.getDataField< ::int32_t>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 
 inline  ::int32_t Socket::Builder::getPort() {
   return _builder.getDataField< ::int32_t>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 inline void Socket::Builder::setPort( ::int32_t value) {
   _builder.setDataField< ::int32_t>(
-      0 * ::capnp::ELEMENTS, value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, value);
 }
 
 inline bool ServiceRegReq::Reader::hasPath() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool ServiceRegReq::Builder::hasPath() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::discovery::Path::Reader ServiceRegReq::Reader::getPath() const {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::riaps::discovery::Path::Builder ServiceRegReq::Builder::getPath() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
 inline  ::riaps::discovery::Path::Pipeline ServiceRegReq::Pipeline::getPath() {
@@ -3344,36 +3374,38 @@ inline  ::riaps::discovery::Path::Pipeline ServiceRegReq::Pipeline::getPath() {
 }
 #endif  // !CAPNP_LITE
 inline void ServiceRegReq::Builder::setPath( ::riaps::discovery::Path::Reader value) {
-  ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::discovery::Path::Builder ServiceRegReq::Builder::initPath() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void ServiceRegReq::Builder::adoptPath(
     ::capnp::Orphan< ::riaps::discovery::Path>&& value) {
-  ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::discovery::Path> ServiceRegReq::Builder::disownPath() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool ServiceRegReq::Reader::hasSocket() const {
-  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline bool ServiceRegReq::Builder::hasSocket() {
-  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::discovery::Socket::Reader ServiceRegReq::Reader::getSocket() const {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::get(
-      _reader.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::get(_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline  ::riaps::discovery::Socket::Builder ServiceRegReq::Builder::getSocket() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::get(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::get(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
 inline  ::riaps::discovery::Socket::Pipeline ServiceRegReq::Pipeline::getSocket() {
@@ -3381,64 +3413,66 @@ inline  ::riaps::discovery::Socket::Pipeline ServiceRegReq::Pipeline::getSocket(
 }
 #endif  // !CAPNP_LITE
 inline void ServiceRegReq::Builder::setSocket( ::riaps::discovery::Socket::Reader value) {
-  ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::set(
-      _builder.getPointerField(1 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::set(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::discovery::Socket::Builder ServiceRegReq::Builder::initSocket() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::init(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::init(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline void ServiceRegReq::Builder::adoptSocket(
     ::capnp::Orphan< ::riaps::discovery::Socket>&& value) {
-  ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::adopt(
-      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::adopt(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::discovery::Socket> ServiceRegReq::Builder::disownSocket() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::disown(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::disown(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 
 inline  ::int32_t ServiceRegReq::Reader::getPid() const {
   return _reader.getDataField< ::int32_t>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 
 inline  ::int32_t ServiceRegReq::Builder::getPid() {
   return _builder.getDataField< ::int32_t>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 inline void ServiceRegReq::Builder::setPid( ::int32_t value) {
   _builder.setDataField< ::int32_t>(
-      0 * ::capnp::ELEMENTS, value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, value);
 }
 
 inline  ::riaps::discovery::Status ServiceRegRep::Reader::getStatus() const {
   return _reader.getDataField< ::riaps::discovery::Status>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 
 inline  ::riaps::discovery::Status ServiceRegRep::Builder::getStatus() {
   return _builder.getDataField< ::riaps::discovery::Status>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 inline void ServiceRegRep::Builder::setStatus( ::riaps::discovery::Status value) {
   _builder.setDataField< ::riaps::discovery::Status>(
-      0 * ::capnp::ELEMENTS, value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, value);
 }
 
 inline bool ServiceLookupReq::Reader::hasPath() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool ServiceLookupReq::Builder::hasPath() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::discovery::Path::Reader ServiceLookupReq::Reader::getPath() const {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::riaps::discovery::Path::Builder ServiceLookupReq::Builder::getPath() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
 inline  ::riaps::discovery::Path::Pipeline ServiceLookupReq::Pipeline::getPath() {
@@ -3446,36 +3480,38 @@ inline  ::riaps::discovery::Path::Pipeline ServiceLookupReq::Pipeline::getPath()
 }
 #endif  // !CAPNP_LITE
 inline void ServiceLookupReq::Builder::setPath( ::riaps::discovery::Path::Reader value) {
-  ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::discovery::Path::Builder ServiceLookupReq::Builder::initPath() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void ServiceLookupReq::Builder::adoptPath(
     ::capnp::Orphan< ::riaps::discovery::Path>&& value) {
-  ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::discovery::Path> ServiceLookupReq::Builder::disownPath() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool ServiceLookupReq::Reader::hasClient() const {
-  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline bool ServiceLookupReq::Builder::hasClient() {
-  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::discovery::Client::Reader ServiceLookupReq::Reader::getClient() const {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::get(
-      _reader.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::get(_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline  ::riaps::discovery::Client::Builder ServiceLookupReq::Builder::getClient() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::get(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::get(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
 inline  ::riaps::discovery::Client::Pipeline ServiceLookupReq::Pipeline::getClient() {
@@ -3483,82 +3519,86 @@ inline  ::riaps::discovery::Client::Pipeline ServiceLookupReq::Pipeline::getClie
 }
 #endif  // !CAPNP_LITE
 inline void ServiceLookupReq::Builder::setClient( ::riaps::discovery::Client::Reader value) {
-  ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::set(
-      _builder.getPointerField(1 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::set(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::discovery::Client::Builder ServiceLookupReq::Builder::initClient() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::init(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::init(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline void ServiceLookupReq::Builder::adoptClient(
     ::capnp::Orphan< ::riaps::discovery::Client>&& value) {
-  ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::adopt(
-      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::adopt(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::discovery::Client> ServiceLookupReq::Builder::disownClient() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::disown(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::disown(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 
 inline  ::riaps::discovery::Status ServiceLookupRep::Reader::getStatus() const {
   return _reader.getDataField< ::riaps::discovery::Status>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 
 inline  ::riaps::discovery::Status ServiceLookupRep::Builder::getStatus() {
   return _builder.getDataField< ::riaps::discovery::Status>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 inline void ServiceLookupRep::Builder::setStatus( ::riaps::discovery::Status value) {
   _builder.setDataField< ::riaps::discovery::Status>(
-      0 * ::capnp::ELEMENTS, value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, value);
 }
 
 inline bool ServiceLookupRep::Reader::hasSockets() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool ServiceLookupRep::Builder::hasSockets() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::List< ::riaps::discovery::Socket>::Reader ServiceLookupRep::Reader::getSockets() const {
-  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::Socket>>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::Socket>>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::capnp::List< ::riaps::discovery::Socket>::Builder ServiceLookupRep::Builder::getSockets() {
-  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::Socket>>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::Socket>>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void ServiceLookupRep::Builder::setSockets( ::capnp::List< ::riaps::discovery::Socket>::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::Socket>>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::Socket>>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::List< ::riaps::discovery::Socket>::Builder ServiceLookupRep::Builder::initSockets(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::Socket>>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::Socket>>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), size);
 }
 inline void ServiceLookupRep::Builder::adoptSockets(
     ::capnp::Orphan< ::capnp::List< ::riaps::discovery::Socket>>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::Socket>>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::Socket>>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::List< ::riaps::discovery::Socket>> ServiceLookupRep::Builder::disownSockets() {
-  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::Socket>>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::Socket>>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool PortUpd::Reader::hasClient() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool PortUpd::Builder::hasClient() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::discovery::Client::Reader PortUpd::Reader::getClient() const {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::riaps::discovery::Client::Builder PortUpd::Builder::getClient() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
 inline  ::riaps::discovery::Client::Pipeline PortUpd::Pipeline::getClient() {
@@ -3566,50 +3606,52 @@ inline  ::riaps::discovery::Client::Pipeline PortUpd::Pipeline::getClient() {
 }
 #endif  // !CAPNP_LITE
 inline void PortUpd::Builder::setClient( ::riaps::discovery::Client::Reader value) {
-  ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::discovery::Client::Builder PortUpd::Builder::initClient() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void PortUpd::Builder::adoptClient(
     ::capnp::Orphan< ::riaps::discovery::Client>&& value) {
-  ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::discovery::Client> PortUpd::Builder::disownClient() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline  ::riaps::discovery::Scope PortUpd::Reader::getScope() const {
   return _reader.getDataField< ::riaps::discovery::Scope>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 
 inline  ::riaps::discovery::Scope PortUpd::Builder::getScope() {
   return _builder.getDataField< ::riaps::discovery::Scope>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 inline void PortUpd::Builder::setScope( ::riaps::discovery::Scope value) {
   _builder.setDataField< ::riaps::discovery::Scope>(
-      0 * ::capnp::ELEMENTS, value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, value);
 }
 
 inline bool PortUpd::Reader::hasSocket() const {
-  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline bool PortUpd::Builder::hasSocket() {
-  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::discovery::Socket::Reader PortUpd::Reader::getSocket() const {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::get(
-      _reader.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::get(_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline  ::riaps::discovery::Socket::Builder PortUpd::Builder::getSocket() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::get(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::get(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
 inline  ::riaps::discovery::Socket::Pipeline PortUpd::Pipeline::getSocket() {
@@ -3617,28 +3659,30 @@ inline  ::riaps::discovery::Socket::Pipeline PortUpd::Pipeline::getSocket() {
 }
 #endif  // !CAPNP_LITE
 inline void PortUpd::Builder::setSocket( ::riaps::discovery::Socket::Reader value) {
-  ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::set(
-      _builder.getPointerField(1 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::set(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::discovery::Socket::Builder PortUpd::Builder::initSocket() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::init(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::init(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline void PortUpd::Builder::adoptSocket(
     ::capnp::Orphan< ::riaps::discovery::Socket>&& value) {
-  ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::adopt(
-      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::adopt(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::discovery::Socket> PortUpd::Builder::disownSocket() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::disown(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Socket>::disown(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 
 inline  ::riaps::discovery::DiscoUpd::Which DiscoUpd::Reader::which() const {
-  return _reader.getDataField<Which>(0 * ::capnp::ELEMENTS);
+  return _reader.getDataField<Which>(
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 inline  ::riaps::discovery::DiscoUpd::Which DiscoUpd::Builder::which() {
-  return _builder.getDataField<Which>(0 * ::capnp::ELEMENTS);
+  return _builder.getDataField<Which>(
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 
 inline bool DiscoUpd::Reader::isPortUpdate() const {
@@ -3649,48 +3693,50 @@ inline bool DiscoUpd::Builder::isPortUpdate() {
 }
 inline bool DiscoUpd::Reader::hasPortUpdate() const {
   if (which() != DiscoUpd::PORT_UPDATE) return false;
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool DiscoUpd::Builder::hasPortUpdate() {
   if (which() != DiscoUpd::PORT_UPDATE) return false;
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::discovery::PortUpd::Reader DiscoUpd::Reader::getPortUpdate() const {
-  KJ_IREQUIRE(which() == DiscoUpd::PORT_UPDATE,
+  KJ_IREQUIRE((which() == DiscoUpd::PORT_UPDATE),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::PortUpd>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::PortUpd>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::riaps::discovery::PortUpd::Builder DiscoUpd::Builder::getPortUpdate() {
-  KJ_IREQUIRE(which() == DiscoUpd::PORT_UPDATE,
+  KJ_IREQUIRE((which() == DiscoUpd::PORT_UPDATE),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::PortUpd>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::PortUpd>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DiscoUpd::Builder::setPortUpdate( ::riaps::discovery::PortUpd::Reader value) {
   _builder.setDataField<DiscoUpd::Which>(
-      0 * ::capnp::ELEMENTS, DiscoUpd::PORT_UPDATE);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::PortUpd>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoUpd::PORT_UPDATE);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::PortUpd>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::discovery::PortUpd::Builder DiscoUpd::Builder::initPortUpdate() {
   _builder.setDataField<DiscoUpd::Which>(
-      0 * ::capnp::ELEMENTS, DiscoUpd::PORT_UPDATE);
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::PortUpd>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoUpd::PORT_UPDATE);
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::PortUpd>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DiscoUpd::Builder::adoptPortUpdate(
     ::capnp::Orphan< ::riaps::discovery::PortUpd>&& value) {
   _builder.setDataField<DiscoUpd::Which>(
-      0 * ::capnp::ELEMENTS, DiscoUpd::PORT_UPDATE);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::PortUpd>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoUpd::PORT_UPDATE);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::PortUpd>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::discovery::PortUpd> DiscoUpd::Builder::disownPortUpdate() {
-  KJ_IREQUIRE(which() == DiscoUpd::PORT_UPDATE,
+  KJ_IREQUIRE((which() == DiscoUpd::PORT_UPDATE),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::PortUpd>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::PortUpd>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool DiscoUpd::Reader::isGroupUpdate() const {
@@ -3701,55 +3747,59 @@ inline bool DiscoUpd::Builder::isGroupUpdate() {
 }
 inline bool DiscoUpd::Reader::hasGroupUpdate() const {
   if (which() != DiscoUpd::GROUP_UPDATE) return false;
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool DiscoUpd::Builder::hasGroupUpdate() {
   if (which() != DiscoUpd::GROUP_UPDATE) return false;
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::discovery::GroupUpdate::Reader DiscoUpd::Reader::getGroupUpdate() const {
-  KJ_IREQUIRE(which() == DiscoUpd::GROUP_UPDATE,
+  KJ_IREQUIRE((which() == DiscoUpd::GROUP_UPDATE),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::riaps::discovery::GroupUpdate::Builder DiscoUpd::Builder::getGroupUpdate() {
-  KJ_IREQUIRE(which() == DiscoUpd::GROUP_UPDATE,
+  KJ_IREQUIRE((which() == DiscoUpd::GROUP_UPDATE),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DiscoUpd::Builder::setGroupUpdate( ::riaps::discovery::GroupUpdate::Reader value) {
   _builder.setDataField<DiscoUpd::Which>(
-      0 * ::capnp::ELEMENTS, DiscoUpd::GROUP_UPDATE);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoUpd::GROUP_UPDATE);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::discovery::GroupUpdate::Builder DiscoUpd::Builder::initGroupUpdate() {
   _builder.setDataField<DiscoUpd::Which>(
-      0 * ::capnp::ELEMENTS, DiscoUpd::GROUP_UPDATE);
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoUpd::GROUP_UPDATE);
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DiscoUpd::Builder::adoptGroupUpdate(
     ::capnp::Orphan< ::riaps::discovery::GroupUpdate>&& value) {
   _builder.setDataField<DiscoUpd::Which>(
-      0 * ::capnp::ELEMENTS, DiscoUpd::GROUP_UPDATE);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoUpd::GROUP_UPDATE);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::discovery::GroupUpdate> DiscoUpd::Builder::disownGroupUpdate() {
-  KJ_IREQUIRE(which() == DiscoUpd::GROUP_UPDATE,
+  KJ_IREQUIRE((which() == DiscoUpd::GROUP_UPDATE),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline  ::riaps::discovery::DiscoReq::Which DiscoReq::Reader::which() const {
-  return _reader.getDataField<Which>(0 * ::capnp::ELEMENTS);
+  return _reader.getDataField<Which>(
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 inline  ::riaps::discovery::DiscoReq::Which DiscoReq::Builder::which() {
-  return _builder.getDataField<Which>(0 * ::capnp::ELEMENTS);
+  return _builder.getDataField<Which>(
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 
 inline bool DiscoReq::Reader::isActorReg() const {
@@ -3760,48 +3810,50 @@ inline bool DiscoReq::Builder::isActorReg() {
 }
 inline bool DiscoReq::Reader::hasActorReg() const {
   if (which() != DiscoReq::ACTOR_REG) return false;
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool DiscoReq::Builder::hasActorReg() {
   if (which() != DiscoReq::ACTOR_REG) return false;
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::discovery::ActorRegReq::Reader DiscoReq::Reader::getActorReg() const {
-  KJ_IREQUIRE(which() == DiscoReq::ACTOR_REG,
+  KJ_IREQUIRE((which() == DiscoReq::ACTOR_REG),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegReq>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegReq>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::riaps::discovery::ActorRegReq::Builder DiscoReq::Builder::getActorReg() {
-  KJ_IREQUIRE(which() == DiscoReq::ACTOR_REG,
+  KJ_IREQUIRE((which() == DiscoReq::ACTOR_REG),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegReq>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegReq>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DiscoReq::Builder::setActorReg( ::riaps::discovery::ActorRegReq::Reader value) {
   _builder.setDataField<DiscoReq::Which>(
-      0 * ::capnp::ELEMENTS, DiscoReq::ACTOR_REG);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegReq>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoReq::ACTOR_REG);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegReq>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::discovery::ActorRegReq::Builder DiscoReq::Builder::initActorReg() {
   _builder.setDataField<DiscoReq::Which>(
-      0 * ::capnp::ELEMENTS, DiscoReq::ACTOR_REG);
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegReq>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoReq::ACTOR_REG);
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegReq>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DiscoReq::Builder::adoptActorReg(
     ::capnp::Orphan< ::riaps::discovery::ActorRegReq>&& value) {
   _builder.setDataField<DiscoReq::Which>(
-      0 * ::capnp::ELEMENTS, DiscoReq::ACTOR_REG);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegReq>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoReq::ACTOR_REG);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegReq>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::discovery::ActorRegReq> DiscoReq::Builder::disownActorReg() {
-  KJ_IREQUIRE(which() == DiscoReq::ACTOR_REG,
+  KJ_IREQUIRE((which() == DiscoReq::ACTOR_REG),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegReq>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegReq>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool DiscoReq::Reader::isServiceReg() const {
@@ -3812,48 +3864,50 @@ inline bool DiscoReq::Builder::isServiceReg() {
 }
 inline bool DiscoReq::Reader::hasServiceReg() const {
   if (which() != DiscoReq::SERVICE_REG) return false;
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool DiscoReq::Builder::hasServiceReg() {
   if (which() != DiscoReq::SERVICE_REG) return false;
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::discovery::ServiceRegReq::Reader DiscoReq::Reader::getServiceReg() const {
-  KJ_IREQUIRE(which() == DiscoReq::SERVICE_REG,
+  KJ_IREQUIRE((which() == DiscoReq::SERVICE_REG),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegReq>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegReq>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::riaps::discovery::ServiceRegReq::Builder DiscoReq::Builder::getServiceReg() {
-  KJ_IREQUIRE(which() == DiscoReq::SERVICE_REG,
+  KJ_IREQUIRE((which() == DiscoReq::SERVICE_REG),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegReq>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegReq>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DiscoReq::Builder::setServiceReg( ::riaps::discovery::ServiceRegReq::Reader value) {
   _builder.setDataField<DiscoReq::Which>(
-      0 * ::capnp::ELEMENTS, DiscoReq::SERVICE_REG);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegReq>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoReq::SERVICE_REG);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegReq>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::discovery::ServiceRegReq::Builder DiscoReq::Builder::initServiceReg() {
   _builder.setDataField<DiscoReq::Which>(
-      0 * ::capnp::ELEMENTS, DiscoReq::SERVICE_REG);
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegReq>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoReq::SERVICE_REG);
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegReq>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DiscoReq::Builder::adoptServiceReg(
     ::capnp::Orphan< ::riaps::discovery::ServiceRegReq>&& value) {
   _builder.setDataField<DiscoReq::Which>(
-      0 * ::capnp::ELEMENTS, DiscoReq::SERVICE_REG);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegReq>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoReq::SERVICE_REG);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegReq>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::discovery::ServiceRegReq> DiscoReq::Builder::disownServiceReg() {
-  KJ_IREQUIRE(which() == DiscoReq::SERVICE_REG,
+  KJ_IREQUIRE((which() == DiscoReq::SERVICE_REG),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegReq>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegReq>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool DiscoReq::Reader::isServiceLookup() const {
@@ -3864,48 +3918,50 @@ inline bool DiscoReq::Builder::isServiceLookup() {
 }
 inline bool DiscoReq::Reader::hasServiceLookup() const {
   if (which() != DiscoReq::SERVICE_LOOKUP) return false;
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool DiscoReq::Builder::hasServiceLookup() {
   if (which() != DiscoReq::SERVICE_LOOKUP) return false;
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::discovery::ServiceLookupReq::Reader DiscoReq::Reader::getServiceLookup() const {
-  KJ_IREQUIRE(which() == DiscoReq::SERVICE_LOOKUP,
+  KJ_IREQUIRE((which() == DiscoReq::SERVICE_LOOKUP),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupReq>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupReq>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::riaps::discovery::ServiceLookupReq::Builder DiscoReq::Builder::getServiceLookup() {
-  KJ_IREQUIRE(which() == DiscoReq::SERVICE_LOOKUP,
+  KJ_IREQUIRE((which() == DiscoReq::SERVICE_LOOKUP),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupReq>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupReq>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DiscoReq::Builder::setServiceLookup( ::riaps::discovery::ServiceLookupReq::Reader value) {
   _builder.setDataField<DiscoReq::Which>(
-      0 * ::capnp::ELEMENTS, DiscoReq::SERVICE_LOOKUP);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupReq>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoReq::SERVICE_LOOKUP);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupReq>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::discovery::ServiceLookupReq::Builder DiscoReq::Builder::initServiceLookup() {
   _builder.setDataField<DiscoReq::Which>(
-      0 * ::capnp::ELEMENTS, DiscoReq::SERVICE_LOOKUP);
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupReq>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoReq::SERVICE_LOOKUP);
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupReq>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DiscoReq::Builder::adoptServiceLookup(
     ::capnp::Orphan< ::riaps::discovery::ServiceLookupReq>&& value) {
   _builder.setDataField<DiscoReq::Which>(
-      0 * ::capnp::ELEMENTS, DiscoReq::SERVICE_LOOKUP);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupReq>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoReq::SERVICE_LOOKUP);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupReq>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::discovery::ServiceLookupReq> DiscoReq::Builder::disownServiceLookup() {
-  KJ_IREQUIRE(which() == DiscoReq::SERVICE_LOOKUP,
+  KJ_IREQUIRE((which() == DiscoReq::SERVICE_LOOKUP),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupReq>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupReq>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool DiscoReq::Reader::isActorUnreg() const {
@@ -3916,48 +3972,50 @@ inline bool DiscoReq::Builder::isActorUnreg() {
 }
 inline bool DiscoReq::Reader::hasActorUnreg() const {
   if (which() != DiscoReq::ACTOR_UNREG) return false;
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool DiscoReq::Builder::hasActorUnreg() {
   if (which() != DiscoReq::ACTOR_UNREG) return false;
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::discovery::ActorUnregReq::Reader DiscoReq::Reader::getActorUnreg() const {
-  KJ_IREQUIRE(which() == DiscoReq::ACTOR_UNREG,
+  KJ_IREQUIRE((which() == DiscoReq::ACTOR_UNREG),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregReq>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregReq>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::riaps::discovery::ActorUnregReq::Builder DiscoReq::Builder::getActorUnreg() {
-  KJ_IREQUIRE(which() == DiscoReq::ACTOR_UNREG,
+  KJ_IREQUIRE((which() == DiscoReq::ACTOR_UNREG),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregReq>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregReq>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DiscoReq::Builder::setActorUnreg( ::riaps::discovery::ActorUnregReq::Reader value) {
   _builder.setDataField<DiscoReq::Which>(
-      0 * ::capnp::ELEMENTS, DiscoReq::ACTOR_UNREG);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregReq>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoReq::ACTOR_UNREG);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregReq>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::discovery::ActorUnregReq::Builder DiscoReq::Builder::initActorUnreg() {
   _builder.setDataField<DiscoReq::Which>(
-      0 * ::capnp::ELEMENTS, DiscoReq::ACTOR_UNREG);
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregReq>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoReq::ACTOR_UNREG);
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregReq>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DiscoReq::Builder::adoptActorUnreg(
     ::capnp::Orphan< ::riaps::discovery::ActorUnregReq>&& value) {
   _builder.setDataField<DiscoReq::Which>(
-      0 * ::capnp::ELEMENTS, DiscoReq::ACTOR_UNREG);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregReq>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoReq::ACTOR_UNREG);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregReq>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::discovery::ActorUnregReq> DiscoReq::Builder::disownActorUnreg() {
-  KJ_IREQUIRE(which() == DiscoReq::ACTOR_UNREG,
+  KJ_IREQUIRE((which() == DiscoReq::ACTOR_UNREG),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregReq>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregReq>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool DiscoReq::Reader::isGroupJoin() const {
@@ -3968,55 +4026,59 @@ inline bool DiscoReq::Builder::isGroupJoin() {
 }
 inline bool DiscoReq::Reader::hasGroupJoin() const {
   if (which() != DiscoReq::GROUP_JOIN) return false;
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool DiscoReq::Builder::hasGroupJoin() {
   if (which() != DiscoReq::GROUP_JOIN) return false;
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::discovery::GroupJoinReq::Reader DiscoReq::Reader::getGroupJoin() const {
-  KJ_IREQUIRE(which() == DiscoReq::GROUP_JOIN,
+  KJ_IREQUIRE((which() == DiscoReq::GROUP_JOIN),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinReq>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinReq>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::riaps::discovery::GroupJoinReq::Builder DiscoReq::Builder::getGroupJoin() {
-  KJ_IREQUIRE(which() == DiscoReq::GROUP_JOIN,
+  KJ_IREQUIRE((which() == DiscoReq::GROUP_JOIN),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinReq>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinReq>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DiscoReq::Builder::setGroupJoin( ::riaps::discovery::GroupJoinReq::Reader value) {
   _builder.setDataField<DiscoReq::Which>(
-      0 * ::capnp::ELEMENTS, DiscoReq::GROUP_JOIN);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinReq>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoReq::GROUP_JOIN);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinReq>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::discovery::GroupJoinReq::Builder DiscoReq::Builder::initGroupJoin() {
   _builder.setDataField<DiscoReq::Which>(
-      0 * ::capnp::ELEMENTS, DiscoReq::GROUP_JOIN);
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinReq>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoReq::GROUP_JOIN);
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinReq>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DiscoReq::Builder::adoptGroupJoin(
     ::capnp::Orphan< ::riaps::discovery::GroupJoinReq>&& value) {
   _builder.setDataField<DiscoReq::Which>(
-      0 * ::capnp::ELEMENTS, DiscoReq::GROUP_JOIN);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinReq>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoReq::GROUP_JOIN);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinReq>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::discovery::GroupJoinReq> DiscoReq::Builder::disownGroupJoin() {
-  KJ_IREQUIRE(which() == DiscoReq::GROUP_JOIN,
+  KJ_IREQUIRE((which() == DiscoReq::GROUP_JOIN),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinReq>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinReq>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline  ::riaps::discovery::DiscoRep::Which DiscoRep::Reader::which() const {
-  return _reader.getDataField<Which>(0 * ::capnp::ELEMENTS);
+  return _reader.getDataField<Which>(
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 inline  ::riaps::discovery::DiscoRep::Which DiscoRep::Builder::which() {
-  return _builder.getDataField<Which>(0 * ::capnp::ELEMENTS);
+  return _builder.getDataField<Which>(
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 
 inline bool DiscoRep::Reader::isActorReg() const {
@@ -4027,48 +4089,50 @@ inline bool DiscoRep::Builder::isActorReg() {
 }
 inline bool DiscoRep::Reader::hasActorReg() const {
   if (which() != DiscoRep::ACTOR_REG) return false;
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool DiscoRep::Builder::hasActorReg() {
   if (which() != DiscoRep::ACTOR_REG) return false;
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::discovery::ActorRegRep::Reader DiscoRep::Reader::getActorReg() const {
-  KJ_IREQUIRE(which() == DiscoRep::ACTOR_REG,
+  KJ_IREQUIRE((which() == DiscoRep::ACTOR_REG),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegRep>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegRep>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::riaps::discovery::ActorRegRep::Builder DiscoRep::Builder::getActorReg() {
-  KJ_IREQUIRE(which() == DiscoRep::ACTOR_REG,
+  KJ_IREQUIRE((which() == DiscoRep::ACTOR_REG),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegRep>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegRep>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DiscoRep::Builder::setActorReg( ::riaps::discovery::ActorRegRep::Reader value) {
   _builder.setDataField<DiscoRep::Which>(
-      0 * ::capnp::ELEMENTS, DiscoRep::ACTOR_REG);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegRep>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoRep::ACTOR_REG);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegRep>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::discovery::ActorRegRep::Builder DiscoRep::Builder::initActorReg() {
   _builder.setDataField<DiscoRep::Which>(
-      0 * ::capnp::ELEMENTS, DiscoRep::ACTOR_REG);
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegRep>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoRep::ACTOR_REG);
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegRep>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DiscoRep::Builder::adoptActorReg(
     ::capnp::Orphan< ::riaps::discovery::ActorRegRep>&& value) {
   _builder.setDataField<DiscoRep::Which>(
-      0 * ::capnp::ELEMENTS, DiscoRep::ACTOR_REG);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegRep>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoRep::ACTOR_REG);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegRep>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::discovery::ActorRegRep> DiscoRep::Builder::disownActorReg() {
-  KJ_IREQUIRE(which() == DiscoRep::ACTOR_REG,
+  KJ_IREQUIRE((which() == DiscoRep::ACTOR_REG),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegRep>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorRegRep>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool DiscoRep::Reader::isServiceReg() const {
@@ -4079,48 +4143,50 @@ inline bool DiscoRep::Builder::isServiceReg() {
 }
 inline bool DiscoRep::Reader::hasServiceReg() const {
   if (which() != DiscoRep::SERVICE_REG) return false;
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool DiscoRep::Builder::hasServiceReg() {
   if (which() != DiscoRep::SERVICE_REG) return false;
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::discovery::ServiceRegRep::Reader DiscoRep::Reader::getServiceReg() const {
-  KJ_IREQUIRE(which() == DiscoRep::SERVICE_REG,
+  KJ_IREQUIRE((which() == DiscoRep::SERVICE_REG),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegRep>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegRep>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::riaps::discovery::ServiceRegRep::Builder DiscoRep::Builder::getServiceReg() {
-  KJ_IREQUIRE(which() == DiscoRep::SERVICE_REG,
+  KJ_IREQUIRE((which() == DiscoRep::SERVICE_REG),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegRep>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegRep>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DiscoRep::Builder::setServiceReg( ::riaps::discovery::ServiceRegRep::Reader value) {
   _builder.setDataField<DiscoRep::Which>(
-      0 * ::capnp::ELEMENTS, DiscoRep::SERVICE_REG);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegRep>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoRep::SERVICE_REG);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegRep>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::discovery::ServiceRegRep::Builder DiscoRep::Builder::initServiceReg() {
   _builder.setDataField<DiscoRep::Which>(
-      0 * ::capnp::ELEMENTS, DiscoRep::SERVICE_REG);
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegRep>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoRep::SERVICE_REG);
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegRep>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DiscoRep::Builder::adoptServiceReg(
     ::capnp::Orphan< ::riaps::discovery::ServiceRegRep>&& value) {
   _builder.setDataField<DiscoRep::Which>(
-      0 * ::capnp::ELEMENTS, DiscoRep::SERVICE_REG);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegRep>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoRep::SERVICE_REG);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegRep>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::discovery::ServiceRegRep> DiscoRep::Builder::disownServiceReg() {
-  KJ_IREQUIRE(which() == DiscoRep::SERVICE_REG,
+  KJ_IREQUIRE((which() == DiscoRep::SERVICE_REG),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegRep>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceRegRep>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool DiscoRep::Reader::isServiceLookup() const {
@@ -4131,48 +4197,50 @@ inline bool DiscoRep::Builder::isServiceLookup() {
 }
 inline bool DiscoRep::Reader::hasServiceLookup() const {
   if (which() != DiscoRep::SERVICE_LOOKUP) return false;
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool DiscoRep::Builder::hasServiceLookup() {
   if (which() != DiscoRep::SERVICE_LOOKUP) return false;
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::discovery::ServiceLookupRep::Reader DiscoRep::Reader::getServiceLookup() const {
-  KJ_IREQUIRE(which() == DiscoRep::SERVICE_LOOKUP,
+  KJ_IREQUIRE((which() == DiscoRep::SERVICE_LOOKUP),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupRep>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupRep>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::riaps::discovery::ServiceLookupRep::Builder DiscoRep::Builder::getServiceLookup() {
-  KJ_IREQUIRE(which() == DiscoRep::SERVICE_LOOKUP,
+  KJ_IREQUIRE((which() == DiscoRep::SERVICE_LOOKUP),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupRep>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupRep>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DiscoRep::Builder::setServiceLookup( ::riaps::discovery::ServiceLookupRep::Reader value) {
   _builder.setDataField<DiscoRep::Which>(
-      0 * ::capnp::ELEMENTS, DiscoRep::SERVICE_LOOKUP);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupRep>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoRep::SERVICE_LOOKUP);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupRep>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::discovery::ServiceLookupRep::Builder DiscoRep::Builder::initServiceLookup() {
   _builder.setDataField<DiscoRep::Which>(
-      0 * ::capnp::ELEMENTS, DiscoRep::SERVICE_LOOKUP);
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupRep>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoRep::SERVICE_LOOKUP);
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupRep>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DiscoRep::Builder::adoptServiceLookup(
     ::capnp::Orphan< ::riaps::discovery::ServiceLookupRep>&& value) {
   _builder.setDataField<DiscoRep::Which>(
-      0 * ::capnp::ELEMENTS, DiscoRep::SERVICE_LOOKUP);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupRep>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoRep::SERVICE_LOOKUP);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupRep>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::discovery::ServiceLookupRep> DiscoRep::Builder::disownServiceLookup() {
-  KJ_IREQUIRE(which() == DiscoRep::SERVICE_LOOKUP,
+  KJ_IREQUIRE((which() == DiscoRep::SERVICE_LOOKUP),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupRep>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ServiceLookupRep>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool DiscoRep::Reader::isActorUnreg() const {
@@ -4183,48 +4251,50 @@ inline bool DiscoRep::Builder::isActorUnreg() {
 }
 inline bool DiscoRep::Reader::hasActorUnreg() const {
   if (which() != DiscoRep::ACTOR_UNREG) return false;
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool DiscoRep::Builder::hasActorUnreg() {
   if (which() != DiscoRep::ACTOR_UNREG) return false;
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::discovery::ActorUnregRep::Reader DiscoRep::Reader::getActorUnreg() const {
-  KJ_IREQUIRE(which() == DiscoRep::ACTOR_UNREG,
+  KJ_IREQUIRE((which() == DiscoRep::ACTOR_UNREG),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregRep>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregRep>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::riaps::discovery::ActorUnregRep::Builder DiscoRep::Builder::getActorUnreg() {
-  KJ_IREQUIRE(which() == DiscoRep::ACTOR_UNREG,
+  KJ_IREQUIRE((which() == DiscoRep::ACTOR_UNREG),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregRep>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregRep>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DiscoRep::Builder::setActorUnreg( ::riaps::discovery::ActorUnregRep::Reader value) {
   _builder.setDataField<DiscoRep::Which>(
-      0 * ::capnp::ELEMENTS, DiscoRep::ACTOR_UNREG);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregRep>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoRep::ACTOR_UNREG);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregRep>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::discovery::ActorUnregRep::Builder DiscoRep::Builder::initActorUnreg() {
   _builder.setDataField<DiscoRep::Which>(
-      0 * ::capnp::ELEMENTS, DiscoRep::ACTOR_UNREG);
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregRep>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoRep::ACTOR_UNREG);
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregRep>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DiscoRep::Builder::adoptActorUnreg(
     ::capnp::Orphan< ::riaps::discovery::ActorUnregRep>&& value) {
   _builder.setDataField<DiscoRep::Which>(
-      0 * ::capnp::ELEMENTS, DiscoRep::ACTOR_UNREG);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregRep>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoRep::ACTOR_UNREG);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregRep>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::discovery::ActorUnregRep> DiscoRep::Builder::disownActorUnreg() {
-  KJ_IREQUIRE(which() == DiscoRep::ACTOR_UNREG,
+  KJ_IREQUIRE((which() == DiscoRep::ACTOR_UNREG),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregRep>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ActorUnregRep>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool DiscoRep::Reader::isGroupJoin() const {
@@ -4235,223 +4305,237 @@ inline bool DiscoRep::Builder::isGroupJoin() {
 }
 inline bool DiscoRep::Reader::hasGroupJoin() const {
   if (which() != DiscoRep::GROUP_JOIN) return false;
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool DiscoRep::Builder::hasGroupJoin() {
   if (which() != DiscoRep::GROUP_JOIN) return false;
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::discovery::GroupJoinRep::Reader DiscoRep::Reader::getGroupJoin() const {
-  KJ_IREQUIRE(which() == DiscoRep::GROUP_JOIN,
+  KJ_IREQUIRE((which() == DiscoRep::GROUP_JOIN),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinRep>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinRep>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::riaps::discovery::GroupJoinRep::Builder DiscoRep::Builder::getGroupJoin() {
-  KJ_IREQUIRE(which() == DiscoRep::GROUP_JOIN,
+  KJ_IREQUIRE((which() == DiscoRep::GROUP_JOIN),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinRep>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinRep>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DiscoRep::Builder::setGroupJoin( ::riaps::discovery::GroupJoinRep::Reader value) {
   _builder.setDataField<DiscoRep::Which>(
-      0 * ::capnp::ELEMENTS, DiscoRep::GROUP_JOIN);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinRep>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoRep::GROUP_JOIN);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinRep>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::discovery::GroupJoinRep::Builder DiscoRep::Builder::initGroupJoin() {
   _builder.setDataField<DiscoRep::Which>(
-      0 * ::capnp::ELEMENTS, DiscoRep::GROUP_JOIN);
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinRep>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoRep::GROUP_JOIN);
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinRep>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DiscoRep::Builder::adoptGroupJoin(
     ::capnp::Orphan< ::riaps::discovery::GroupJoinRep>&& value) {
   _builder.setDataField<DiscoRep::Which>(
-      0 * ::capnp::ELEMENTS, DiscoRep::GROUP_JOIN);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinRep>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DiscoRep::GROUP_JOIN);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinRep>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::discovery::GroupJoinRep> DiscoRep::Builder::disownGroupJoin() {
-  KJ_IREQUIRE(which() == DiscoRep::GROUP_JOIN,
+  KJ_IREQUIRE((which() == DiscoRep::GROUP_JOIN),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinRep>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupJoinRep>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool GroupId::Reader::hasGroupType() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool GroupId::Builder::hasGroupType() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader GroupId::Reader::getGroupType() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder GroupId::Builder::getGroupType() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void GroupId::Builder::setGroupType( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder GroupId::Builder::initGroupType(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), size);
 }
 inline void GroupId::Builder::adoptGroupType(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> GroupId::Builder::disownGroupType() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool GroupId::Reader::hasGroupName() const {
-  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline bool GroupId::Builder::hasGroupName() {
-  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader GroupId::Reader::getGroupName() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder GroupId::Builder::getGroupName() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline void GroupId::Builder::setGroupName( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(1 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder GroupId::Builder::initGroupName(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(1 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), size);
 }
 inline void GroupId::Builder::adoptGroupName(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> GroupId::Builder::disownGroupName() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 
 inline bool GroupService::Reader::hasMessageType() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool GroupService::Builder::hasMessageType() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader GroupService::Reader::getMessageType() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder GroupService::Builder::getMessageType() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void GroupService::Builder::setMessageType( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder GroupService::Builder::initMessageType(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), size);
 }
 inline void GroupService::Builder::adoptMessageType(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> GroupService::Builder::disownMessageType() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool GroupService::Reader::hasAddress() const {
-  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline bool GroupService::Builder::hasAddress() {
-  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader GroupService::Reader::getAddress() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder GroupService::Builder::getAddress() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline void GroupService::Builder::setAddress( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(1 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder GroupService::Builder::initAddress(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(1 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), size);
 }
 inline void GroupService::Builder::adoptAddress(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> GroupService::Builder::disownAddress() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 
 inline bool GroupJoinReq::Reader::hasAppName() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool GroupJoinReq::Builder::hasAppName() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader GroupJoinReq::Reader::getAppName() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder GroupJoinReq::Builder::getAppName() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void GroupJoinReq::Builder::setAppName( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder GroupJoinReq::Builder::initAppName(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), size);
 }
 inline void GroupJoinReq::Builder::adoptAppName(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> GroupJoinReq::Builder::disownAppName() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool GroupJoinReq::Reader::hasGroupId() const {
-  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline bool GroupJoinReq::Builder::hasGroupId() {
-  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::discovery::GroupId::Reader GroupJoinReq::Reader::getGroupId() const {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::get(
-      _reader.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::get(_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline  ::riaps::discovery::GroupId::Builder GroupJoinReq::Builder::getGroupId() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::get(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::get(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
 inline  ::riaps::discovery::GroupId::Pipeline GroupJoinReq::Pipeline::getGroupId() {
@@ -4459,196 +4543,206 @@ inline  ::riaps::discovery::GroupId::Pipeline GroupJoinReq::Pipeline::getGroupId
 }
 #endif  // !CAPNP_LITE
 inline void GroupJoinReq::Builder::setGroupId( ::riaps::discovery::GroupId::Reader value) {
-  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::set(
-      _builder.getPointerField(1 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::set(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::discovery::GroupId::Builder GroupJoinReq::Builder::initGroupId() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::init(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::init(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline void GroupJoinReq::Builder::adoptGroupId(
     ::capnp::Orphan< ::riaps::discovery::GroupId>&& value) {
-  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::adopt(
-      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::adopt(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::discovery::GroupId> GroupJoinReq::Builder::disownGroupId() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::disown(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::disown(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 
 inline bool GroupJoinReq::Reader::hasServices() const {
-  return !_reader.getPointerField(2 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS).isNull();
 }
 inline bool GroupJoinReq::Builder::hasServices() {
-  return !_builder.getPointerField(2 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::List< ::riaps::discovery::GroupService>::Reader GroupJoinReq::Reader::getServices() const {
-  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::get(
-      _reader.getPointerField(2 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::get(_reader.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
 }
 inline  ::capnp::List< ::riaps::discovery::GroupService>::Builder GroupJoinReq::Builder::getServices() {
-  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::get(
-      _builder.getPointerField(2 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::get(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
 }
 inline void GroupJoinReq::Builder::setServices( ::capnp::List< ::riaps::discovery::GroupService>::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::set(
-      _builder.getPointerField(2 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::set(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::List< ::riaps::discovery::GroupService>::Builder GroupJoinReq::Builder::initServices(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::init(
-      _builder.getPointerField(2 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::init(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), size);
 }
 inline void GroupJoinReq::Builder::adoptServices(
     ::capnp::Orphan< ::capnp::List< ::riaps::discovery::GroupService>>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::adopt(
-      _builder.getPointerField(2 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::adopt(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::List< ::riaps::discovery::GroupService>> GroupJoinReq::Builder::disownServices() {
-  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::disown(
-      _builder.getPointerField(2 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::disown(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
 }
 
 inline bool GroupJoinReq::Reader::hasComponentId() const {
-  return !_reader.getPointerField(3 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS).isNull();
 }
 inline bool GroupJoinReq::Builder::hasComponentId() {
-  return !_builder.getPointerField(3 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader GroupJoinReq::Reader::getComponentId() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(3 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder GroupJoinReq::Builder::getComponentId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(3 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS));
 }
 inline void GroupJoinReq::Builder::setComponentId( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(3 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder GroupJoinReq::Builder::initComponentId(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(3 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS), size);
 }
 inline void GroupJoinReq::Builder::adoptComponentId(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(3 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> GroupJoinReq::Builder::disownComponentId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(3 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS));
 }
 
 inline  ::int32_t GroupJoinReq::Reader::getPid() const {
   return _reader.getDataField< ::int32_t>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 
 inline  ::int32_t GroupJoinReq::Builder::getPid() {
   return _builder.getDataField< ::int32_t>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 inline void GroupJoinReq::Builder::setPid( ::int32_t value) {
   _builder.setDataField< ::int32_t>(
-      0 * ::capnp::ELEMENTS, value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, value);
 }
 
 inline  ::riaps::discovery::Status GroupJoinRep::Reader::getStatus() const {
   return _reader.getDataField< ::riaps::discovery::Status>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 
 inline  ::riaps::discovery::Status GroupJoinRep::Builder::getStatus() {
   return _builder.getDataField< ::riaps::discovery::Status>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 inline void GroupJoinRep::Builder::setStatus( ::riaps::discovery::Status value) {
   _builder.setDataField< ::riaps::discovery::Status>(
-      0 * ::capnp::ELEMENTS, value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, value);
 }
 
 inline bool ProviderListUpdate::Reader::hasProviderpath() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool ProviderListUpdate::Builder::hasProviderpath() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader ProviderListUpdate::Reader::getProviderpath() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder ProviderListUpdate::Builder::getProviderpath() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void ProviderListUpdate::Builder::setProviderpath( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder ProviderListUpdate::Builder::initProviderpath(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), size);
 }
 inline void ProviderListUpdate::Builder::adoptProviderpath(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> ProviderListUpdate::Builder::disownProviderpath() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool ProviderListUpdate::Reader::hasNewvalues() const {
-  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline bool ProviderListUpdate::Builder::hasNewvalues() {
-  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::List< ::capnp::Text>::Reader ProviderListUpdate::Reader::getNewvalues() const {
-  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::get(
-      _reader.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::get(_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline  ::capnp::List< ::capnp::Text>::Builder ProviderListUpdate::Builder::getNewvalues() {
-  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::get(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::get(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline void ProviderListUpdate::Builder::setNewvalues( ::capnp::List< ::capnp::Text>::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::set(
-      _builder.getPointerField(1 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::set(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), value);
 }
 inline void ProviderListUpdate::Builder::setNewvalues(::kj::ArrayPtr<const  ::capnp::Text::Reader> value) {
-  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::set(
-      _builder.getPointerField(1 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::set(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::List< ::capnp::Text>::Builder ProviderListUpdate::Builder::initNewvalues(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::init(
-      _builder.getPointerField(1 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::init(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), size);
 }
 inline void ProviderListUpdate::Builder::adoptNewvalues(
     ::capnp::Orphan< ::capnp::List< ::capnp::Text>>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::adopt(
-      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::adopt(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::List< ::capnp::Text>> ProviderListUpdate::Builder::disownNewvalues() {
-  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::disown(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::disown(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 
 inline bool ProviderListGet::Reader::hasPath() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool ProviderListGet::Builder::hasPath() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::discovery::Path::Reader ProviderListGet::Reader::getPath() const {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::riaps::discovery::Path::Builder ProviderListGet::Builder::getPath() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
 inline  ::riaps::discovery::Path::Pipeline ProviderListGet::Pipeline::getPath() {
@@ -4656,36 +4750,38 @@ inline  ::riaps::discovery::Path::Pipeline ProviderListGet::Pipeline::getPath() 
 }
 #endif  // !CAPNP_LITE
 inline void ProviderListGet::Builder::setPath( ::riaps::discovery::Path::Reader value) {
-  ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::discovery::Path::Builder ProviderListGet::Builder::initPath() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void ProviderListGet::Builder::adoptPath(
     ::capnp::Orphan< ::riaps::discovery::Path>&& value) {
-  ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::discovery::Path> ProviderListGet::Builder::disownPath() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Path>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool ProviderListGet::Reader::hasClient() const {
-  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline bool ProviderListGet::Builder::hasClient() {
-  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::discovery::Client::Reader ProviderListGet::Reader::getClient() const {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::get(
-      _reader.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::get(_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline  ::riaps::discovery::Client::Builder ProviderListGet::Builder::getClient() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::get(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::get(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
 inline  ::riaps::discovery::Client::Pipeline ProviderListGet::Pipeline::getClient() {
@@ -4693,104 +4789,110 @@ inline  ::riaps::discovery::Client::Pipeline ProviderListGet::Pipeline::getClien
 }
 #endif  // !CAPNP_LITE
 inline void ProviderListGet::Builder::setClient( ::riaps::discovery::Client::Reader value) {
-  ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::set(
-      _builder.getPointerField(1 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::set(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::discovery::Client::Builder ProviderListGet::Builder::initClient() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::init(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::init(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline void ProviderListGet::Builder::adoptClient(
     ::capnp::Orphan< ::riaps::discovery::Client>&& value) {
-  ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::adopt(
-      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::adopt(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::discovery::Client> ProviderListGet::Builder::disownClient() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::disown(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::Client>::disown(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 
 inline bool ProviderListGet::Reader::hasResults() const {
-  return !_reader.getPointerField(2 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS).isNull();
 }
 inline bool ProviderListGet::Builder::hasResults() {
-  return !_builder.getPointerField(2 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::List< ::capnp::Text>::Reader ProviderListGet::Reader::getResults() const {
-  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::get(
-      _reader.getPointerField(2 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::get(_reader.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
 }
 inline  ::capnp::List< ::capnp::Text>::Builder ProviderListGet::Builder::getResults() {
-  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::get(
-      _builder.getPointerField(2 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::get(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
 }
 inline void ProviderListGet::Builder::setResults( ::capnp::List< ::capnp::Text>::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::set(
-      _builder.getPointerField(2 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::set(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), value);
 }
 inline void ProviderListGet::Builder::setResults(::kj::ArrayPtr<const  ::capnp::Text::Reader> value) {
-  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::set(
-      _builder.getPointerField(2 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::set(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::List< ::capnp::Text>::Builder ProviderListGet::Builder::initResults(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::init(
-      _builder.getPointerField(2 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::init(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), size);
 }
 inline void ProviderListGet::Builder::adoptResults(
     ::capnp::Orphan< ::capnp::List< ::capnp::Text>>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::adopt(
-      _builder.getPointerField(2 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::adopt(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::List< ::capnp::Text>> ProviderListGet::Builder::disownResults() {
-  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::disown(
-      _builder.getPointerField(2 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::disown(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
 }
 
 inline bool GroupUpdate::Reader::hasAppName() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool GroupUpdate::Builder::hasAppName() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader GroupUpdate::Reader::getAppName() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder GroupUpdate::Builder::getAppName() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void GroupUpdate::Builder::setAppName( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder GroupUpdate::Builder::initAppName(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), size);
 }
 inline void GroupUpdate::Builder::adoptAppName(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> GroupUpdate::Builder::disownAppName() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool GroupUpdate::Reader::hasGroupId() const {
-  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline bool GroupUpdate::Builder::hasGroupId() {
-  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::discovery::GroupId::Reader GroupUpdate::Reader::getGroupId() const {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::get(
-      _reader.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::get(_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline  ::riaps::discovery::GroupId::Builder GroupUpdate::Builder::getGroupId() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::get(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::get(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
 inline  ::riaps::discovery::GroupId::Pipeline GroupUpdate::Pipeline::getGroupId() {
@@ -4798,92 +4900,98 @@ inline  ::riaps::discovery::GroupId::Pipeline GroupUpdate::Pipeline::getGroupId(
 }
 #endif  // !CAPNP_LITE
 inline void GroupUpdate::Builder::setGroupId( ::riaps::discovery::GroupId::Reader value) {
-  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::set(
-      _builder.getPointerField(1 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::set(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::discovery::GroupId::Builder GroupUpdate::Builder::initGroupId() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::init(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::init(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline void GroupUpdate::Builder::adoptGroupId(
     ::capnp::Orphan< ::riaps::discovery::GroupId>&& value) {
-  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::adopt(
-      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::adopt(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::discovery::GroupId> GroupUpdate::Builder::disownGroupId() {
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::disown(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupId>::disown(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 
 inline bool GroupUpdate::Reader::hasComponentId() const {
-  return !_reader.getPointerField(2 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS).isNull();
 }
 inline bool GroupUpdate::Builder::hasComponentId() {
-  return !_builder.getPointerField(2 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader GroupUpdate::Reader::getComponentId() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(2 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder GroupUpdate::Builder::getComponentId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(2 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
 }
 inline void GroupUpdate::Builder::setComponentId( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(2 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder GroupUpdate::Builder::initComponentId(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(2 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), size);
 }
 inline void GroupUpdate::Builder::adoptComponentId(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(2 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> GroupUpdate::Builder::disownComponentId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(2 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
 }
 
 inline bool GroupUpdate::Reader::hasServices() const {
-  return !_reader.getPointerField(3 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS).isNull();
 }
 inline bool GroupUpdate::Builder::hasServices() {
-  return !_builder.getPointerField(3 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::List< ::riaps::discovery::GroupService>::Reader GroupUpdate::Reader::getServices() const {
-  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::get(
-      _reader.getPointerField(3 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::get(_reader.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS));
 }
 inline  ::capnp::List< ::riaps::discovery::GroupService>::Builder GroupUpdate::Builder::getServices() {
-  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::get(
-      _builder.getPointerField(3 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::get(_builder.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS));
 }
 inline void GroupUpdate::Builder::setServices( ::capnp::List< ::riaps::discovery::GroupService>::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::set(
-      _builder.getPointerField(3 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::set(_builder.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::List< ::riaps::discovery::GroupService>::Builder GroupUpdate::Builder::initServices(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::init(
-      _builder.getPointerField(3 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::init(_builder.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS), size);
 }
 inline void GroupUpdate::Builder::adoptServices(
     ::capnp::Orphan< ::capnp::List< ::riaps::discovery::GroupService>>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::adopt(
-      _builder.getPointerField(3 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::adopt(_builder.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::List< ::riaps::discovery::GroupService>> GroupUpdate::Builder::disownServices() {
-  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::disown(
-      _builder.getPointerField(3 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::riaps::discovery::GroupService>>::disown(_builder.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS));
 }
 
 inline  ::riaps::discovery::DhtUpdate::Which DhtUpdate::Reader::which() const {
-  return _reader.getDataField<Which>(0 * ::capnp::ELEMENTS);
+  return _reader.getDataField<Which>(
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 inline  ::riaps::discovery::DhtUpdate::Which DhtUpdate::Builder::which() {
-  return _builder.getDataField<Which>(0 * ::capnp::ELEMENTS);
+  return _builder.getDataField<Which>(
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 
 inline bool DhtUpdate::Reader::isProviderUpdate() const {
@@ -4894,48 +5002,50 @@ inline bool DhtUpdate::Builder::isProviderUpdate() {
 }
 inline bool DhtUpdate::Reader::hasProviderUpdate() const {
   if (which() != DhtUpdate::PROVIDER_UPDATE) return false;
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool DhtUpdate::Builder::hasProviderUpdate() {
   if (which() != DhtUpdate::PROVIDER_UPDATE) return false;
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::discovery::ProviderListUpdate::Reader DhtUpdate::Reader::getProviderUpdate() const {
-  KJ_IREQUIRE(which() == DhtUpdate::PROVIDER_UPDATE,
+  KJ_IREQUIRE((which() == DhtUpdate::PROVIDER_UPDATE),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListUpdate>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListUpdate>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::riaps::discovery::ProviderListUpdate::Builder DhtUpdate::Builder::getProviderUpdate() {
-  KJ_IREQUIRE(which() == DhtUpdate::PROVIDER_UPDATE,
+  KJ_IREQUIRE((which() == DhtUpdate::PROVIDER_UPDATE),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListUpdate>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListUpdate>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DhtUpdate::Builder::setProviderUpdate( ::riaps::discovery::ProviderListUpdate::Reader value) {
   _builder.setDataField<DhtUpdate::Which>(
-      0 * ::capnp::ELEMENTS, DhtUpdate::PROVIDER_UPDATE);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListUpdate>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DhtUpdate::PROVIDER_UPDATE);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListUpdate>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::discovery::ProviderListUpdate::Builder DhtUpdate::Builder::initProviderUpdate() {
   _builder.setDataField<DhtUpdate::Which>(
-      0 * ::capnp::ELEMENTS, DhtUpdate::PROVIDER_UPDATE);
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListUpdate>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DhtUpdate::PROVIDER_UPDATE);
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListUpdate>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DhtUpdate::Builder::adoptProviderUpdate(
     ::capnp::Orphan< ::riaps::discovery::ProviderListUpdate>&& value) {
   _builder.setDataField<DhtUpdate::Which>(
-      0 * ::capnp::ELEMENTS, DhtUpdate::PROVIDER_UPDATE);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListUpdate>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DhtUpdate::PROVIDER_UPDATE);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListUpdate>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::discovery::ProviderListUpdate> DhtUpdate::Builder::disownProviderUpdate() {
-  KJ_IREQUIRE(which() == DhtUpdate::PROVIDER_UPDATE,
+  KJ_IREQUIRE((which() == DhtUpdate::PROVIDER_UPDATE),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListUpdate>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListUpdate>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool DhtUpdate::Reader::isProviderGet() const {
@@ -4946,48 +5056,50 @@ inline bool DhtUpdate::Builder::isProviderGet() {
 }
 inline bool DhtUpdate::Reader::hasProviderGet() const {
   if (which() != DhtUpdate::PROVIDER_GET) return false;
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool DhtUpdate::Builder::hasProviderGet() {
   if (which() != DhtUpdate::PROVIDER_GET) return false;
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::discovery::ProviderListGet::Reader DhtUpdate::Reader::getProviderGet() const {
-  KJ_IREQUIRE(which() == DhtUpdate::PROVIDER_GET,
+  KJ_IREQUIRE((which() == DhtUpdate::PROVIDER_GET),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListGet>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListGet>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::riaps::discovery::ProviderListGet::Builder DhtUpdate::Builder::getProviderGet() {
-  KJ_IREQUIRE(which() == DhtUpdate::PROVIDER_GET,
+  KJ_IREQUIRE((which() == DhtUpdate::PROVIDER_GET),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListGet>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListGet>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DhtUpdate::Builder::setProviderGet( ::riaps::discovery::ProviderListGet::Reader value) {
   _builder.setDataField<DhtUpdate::Which>(
-      0 * ::capnp::ELEMENTS, DhtUpdate::PROVIDER_GET);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListGet>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DhtUpdate::PROVIDER_GET);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListGet>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::discovery::ProviderListGet::Builder DhtUpdate::Builder::initProviderGet() {
   _builder.setDataField<DhtUpdate::Which>(
-      0 * ::capnp::ELEMENTS, DhtUpdate::PROVIDER_GET);
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListGet>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DhtUpdate::PROVIDER_GET);
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListGet>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DhtUpdate::Builder::adoptProviderGet(
     ::capnp::Orphan< ::riaps::discovery::ProviderListGet>&& value) {
   _builder.setDataField<DhtUpdate::Which>(
-      0 * ::capnp::ELEMENTS, DhtUpdate::PROVIDER_GET);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListGet>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DhtUpdate::PROVIDER_GET);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListGet>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::discovery::ProviderListGet> DhtUpdate::Builder::disownProviderGet() {
-  KJ_IREQUIRE(which() == DhtUpdate::PROVIDER_GET,
+  KJ_IREQUIRE((which() == DhtUpdate::PROVIDER_GET),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListGet>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::ProviderListGet>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool DhtUpdate::Reader::isZombieList() const {
@@ -4998,54 +5110,56 @@ inline bool DhtUpdate::Builder::isZombieList() {
 }
 inline bool DhtUpdate::Reader::hasZombieList() const {
   if (which() != DhtUpdate::ZOMBIE_LIST) return false;
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool DhtUpdate::Builder::hasZombieList() {
   if (which() != DhtUpdate::ZOMBIE_LIST) return false;
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::List< ::capnp::Text>::Reader DhtUpdate::Reader::getZombieList() const {
-  KJ_IREQUIRE(which() == DhtUpdate::ZOMBIE_LIST,
+  KJ_IREQUIRE((which() == DhtUpdate::ZOMBIE_LIST),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::capnp::List< ::capnp::Text>::Builder DhtUpdate::Builder::getZombieList() {
-  KJ_IREQUIRE(which() == DhtUpdate::ZOMBIE_LIST,
+  KJ_IREQUIRE((which() == DhtUpdate::ZOMBIE_LIST),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DhtUpdate::Builder::setZombieList( ::capnp::List< ::capnp::Text>::Reader value) {
   _builder.setDataField<DhtUpdate::Which>(
-      0 * ::capnp::ELEMENTS, DhtUpdate::ZOMBIE_LIST);
-  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DhtUpdate::ZOMBIE_LIST);
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline void DhtUpdate::Builder::setZombieList(::kj::ArrayPtr<const  ::capnp::Text::Reader> value) {
   _builder.setDataField<DhtUpdate::Which>(
-      0 * ::capnp::ELEMENTS, DhtUpdate::ZOMBIE_LIST);
-  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DhtUpdate::ZOMBIE_LIST);
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::List< ::capnp::Text>::Builder DhtUpdate::Builder::initZombieList(unsigned int size) {
   _builder.setDataField<DhtUpdate::Which>(
-      0 * ::capnp::ELEMENTS, DhtUpdate::ZOMBIE_LIST);
-  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DhtUpdate::ZOMBIE_LIST);
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), size);
 }
 inline void DhtUpdate::Builder::adoptZombieList(
     ::capnp::Orphan< ::capnp::List< ::capnp::Text>>&& value) {
   _builder.setDataField<DhtUpdate::Which>(
-      0 * ::capnp::ELEMENTS, DhtUpdate::ZOMBIE_LIST);
-  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DhtUpdate::ZOMBIE_LIST);
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::List< ::capnp::Text>> DhtUpdate::Builder::disownZombieList() {
-  KJ_IREQUIRE(which() == DhtUpdate::ZOMBIE_LIST,
+  KJ_IREQUIRE((which() == DhtUpdate::ZOMBIE_LIST),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::Text>>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool DhtUpdate::Reader::isGroupUpdate() const {
@@ -5056,48 +5170,50 @@ inline bool DhtUpdate::Builder::isGroupUpdate() {
 }
 inline bool DhtUpdate::Reader::hasGroupUpdate() const {
   if (which() != DhtUpdate::GROUP_UPDATE) return false;
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool DhtUpdate::Builder::hasGroupUpdate() {
   if (which() != DhtUpdate::GROUP_UPDATE) return false;
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::discovery::GroupUpdate::Reader DhtUpdate::Reader::getGroupUpdate() const {
-  KJ_IREQUIRE(which() == DhtUpdate::GROUP_UPDATE,
+  KJ_IREQUIRE((which() == DhtUpdate::GROUP_UPDATE),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::riaps::discovery::GroupUpdate::Builder DhtUpdate::Builder::getGroupUpdate() {
-  KJ_IREQUIRE(which() == DhtUpdate::GROUP_UPDATE,
+  KJ_IREQUIRE((which() == DhtUpdate::GROUP_UPDATE),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DhtUpdate::Builder::setGroupUpdate( ::riaps::discovery::GroupUpdate::Reader value) {
   _builder.setDataField<DhtUpdate::Which>(
-      0 * ::capnp::ELEMENTS, DhtUpdate::GROUP_UPDATE);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DhtUpdate::GROUP_UPDATE);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::discovery::GroupUpdate::Builder DhtUpdate::Builder::initGroupUpdate() {
   _builder.setDataField<DhtUpdate::Which>(
-      0 * ::capnp::ELEMENTS, DhtUpdate::GROUP_UPDATE);
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DhtUpdate::GROUP_UPDATE);
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void DhtUpdate::Builder::adoptGroupUpdate(
     ::capnp::Orphan< ::riaps::discovery::GroupUpdate>&& value) {
   _builder.setDataField<DhtUpdate::Which>(
-      0 * ::capnp::ELEMENTS, DhtUpdate::GROUP_UPDATE);
-  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, DhtUpdate::GROUP_UPDATE);
+  ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::discovery::GroupUpdate> DhtUpdate::Builder::disownGroupUpdate() {
-  KJ_IREQUIRE(which() == DhtUpdate::GROUP_UPDATE,
+  KJ_IREQUIRE((which() == DhtUpdate::GROUP_UPDATE),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::discovery::GroupUpdate>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 }  // namespace

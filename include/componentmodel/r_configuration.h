@@ -45,27 +45,16 @@ struct component_port_clt : public component_port_config {};
 struct component_port_pub : public component_port_config {};
 
 struct component_port_req : public component_port_config {
-//    component_port_req(){
-//        isTimed = true;
-//    }
-
     std::string req_type;
     std::string rep_type;
 };
 
 struct component_port_rep : public component_port_config{
-
-//    //DEBUG todo: remove
-//    component_port_rep(){
-//        isTimed = true;
-//    }
-
     std::string req_type;
     std::string rep_type;
 };
 struct component_port_srv : public component_port_config{};
 struct component_port_sub : public component_port_config{
-    //std::string messageType;
 };
 struct component_port_tim : public component_port_config {
     ulong       period;
@@ -128,7 +117,5 @@ struct component_conf {
     Parameters                component_parameters;
     bool                      isDevice;
 };
-
-typedef struct component_conf _component_conf;
 
 #endif //RIAPS_FW_R_CONFIGURATION_H

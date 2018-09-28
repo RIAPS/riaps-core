@@ -22,23 +22,24 @@
 #include <czmq.h>
 #include <spdlog/spdlog.h>
 
-#define REGULAR_MAINTAIN_PERIOD 3000 //msec
-#define CMD_JOIN "JOIN"
-#define RIAPS_DHT_NODE_PORT 4222
+constexpr auto REGULAR_MAINTAIN_PERIOD = 3000; //msec
+constexpr auto CMD_JOIN                = "JOIN";
+constexpr auto RIAPS_DHT_NODE_PORT     = 4222;
+constexpr auto DHT_ROUTER_CHANNEL      = "ipc:///tmp/dhtrouterchannel";
 
-#define DHT_ROUTER_CHANNEL "ipc:///tmp/dhtrouterchannel"
-
-static std::map<riaps::discovery::Kind, std::string> kindMap =
-        {{riaps::discovery::Kind::PUB, "pub"},
-         {riaps::discovery::Kind::SUB, "sub"},
-         {riaps::discovery::Kind::CLT, "clt"},
-         {riaps::discovery::Kind::SRV, "srv"},
-         {riaps::discovery::Kind::REQ, "req"},
-         {riaps::discovery::Kind::REP, "rep"},
-         {riaps::discovery::Kind::QRY, "qry"},
-         {riaps::discovery::Kind::ANS, "ans"}};
+static const std::map<riaps::discovery::Kind, std::string> kindMap =
+            {{riaps::discovery::Kind::PUB, "pub"},
+             {riaps::discovery::Kind::SUB, "sub"},
+             {riaps::discovery::Kind::CLT, "clt"},
+             {riaps::discovery::Kind::SRV, "srv"},
+             {riaps::discovery::Kind::REQ, "req"},
+             {riaps::discovery::Kind::REP, "rep"},
+             {riaps::discovery::Kind::QRY, "qry"},
+             {riaps::discovery::Kind::ANS, "ans"}};
 
 namespace spd = spdlog;
+
+
 
 namespace riaps{
     class DiscoveryMessageHandler{
@@ -107,7 +108,7 @@ namespace riaps{
 
         std::future<bool> waitForDht();
 
-        std::tuple<std::string, std::string> buildInsertKeyValuePair(
+        const std::tuple<const std::string, const std::string> buildInsertKeyValuePair(
                 const std::string&             appName,
                 const std::string&             msgType,
                 const riaps::discovery::Kind&  kind,
@@ -115,7 +116,7 @@ namespace riaps{
                 const std::string&             host,
                 const uint16_t                 port);
 
-        std::pair<std::string, std::string> buildLookupKey(
+        const std::pair<const std::string, const std::string> buildLookupKey(
                 const std::string&             appName,
                 const std::string&             msgType,
                 const riaps::discovery::Kind&  kind,
@@ -125,75 +126,72 @@ namespace riaps{
                 const std::string& clientInstanceName,
                 const std::string& clientPortName);
 
-
-
-        void maintainRenewalDepricated();
         void maintainRenewal();
         void maintainZombieList();
         int deregisterActor(const std::string& appName,
                             const std::string& actorName);
 
-        std::string m_macAddress;
-        std::string m_hostAddress;
+        std::string mac_address_;
+        std::string host_address_;
 
 
         void dhtPut(dht::InfoHash keyhash, const std::string key, std::vector<uint8_t> data, uint8_t callLevel);
         void dhtGet(const std::string lookupKey, ClientDetails clientDetails, uint8_t callLevel);
 
-        int64_t m_lastServiceCheckin;
-        int64_t m_lastZombieCheck;
+        int64_t last_service_checkin_;
+        int64_t last_zombie_check_;
 
-        const uint16_t m_serviceCheckPeriod;
-        const uint16_t m_zombieCheckPeriod;
+        const uint16_t service_check_period_;
+        const uint16_t zombie_check_period_;
 
         // Key where the DHT stores zombie nodes
         const std::string zombieglobalkey_;// = "/zombies";
         const std::string zombielocalkey_;
 
-        dht::DhtRunner& m_dhtNode;
+        dht::DhtRunner& dht_node_;
 
-        std::shared_ptr<spdlog::logger> m_logger;
+        std::shared_ptr<spdlog::logger> logger_;
 
         /**
          * ZMQ socket for DHT communication
          */
-        zsock_t* m_dhtUpdateSocket;
+        zsock_t* dht_update_socket_;
 
         /**
          * ZMQ socket for actor communication
          */
-        zsock_t*   m_riapsSocket;
+        zsock_t*   riaps_socket_;
 
-        zpoller_t* m_poller;
-        zsock_t*   m_pipe;
+        zpoller_t* poller_;
+        zsock_t*   pipe_;
 
         zactor_t* dht_tracker_;
 
-        std::shared_ptr<zframe_t> m_repIdentity;
+        std::shared_ptr<zframe_t> rep_identity_;
 
-        bool m_terminated;
+        bool terminated_;
 
         // Stores pair sockets for actor communication
-        std::map<std::string, std::shared_ptr<ActorDetails>> m_clients;
+        std::map<std::string, std::shared_ptr<ActorDetails>> clients_;
 
         // Stores addresses of zombie services
         // A service is zombie, if the related socket is not able to respond, but it is still in the DHT
         // The int64 argument is a timestamp. Old zombies are removed from the set after 10 minutes.
-        std::map<std::string, int64_t> m_zombieServices;
+        std::map<std::string, int64_t> zombie_services_;
 
         // Client subscriptions to messageTypes
-        std::map<std::string, std::vector<std::unique_ptr<ClientDetails>>> m_clientSubscriptions;
+        std::map<std::string, std::vector<std::unique_ptr<ClientDetails>>> client_subscriptions_;
 
         // Subscribe for group changes
         // AppName - future<>
-        std::map<std::string, std::future<size_t>> m_groupListeners;
+        std::map<std::string, std::future<size_t>> group_listeners_;
 
         // Registered OpenDHT listeners. Every key can be registered only once.
-        std::map<std::string, std::future<size_t>> m_registeredListeners;
+        std::map<std::string, std::future<size_t>> registered_listeners_;
 
         // Registered services, with PID-s. We are using this local cache for renew services in the OpenDHT.
         // Checking the registered services in every 20th seconds.
-        std::map<pid_t, std::vector<std::unique_ptr<ServiceCheckins>>> m_serviceCheckins;
+        std::map<pid_t, std::vector<std::unique_ptr<ServiceCheckins>>> service_checkins_;
 
         struct RegisteredGroup {
             std::string groupKey;
@@ -202,7 +200,7 @@ namespace riaps{
             Timeout<std::chrono::minutes> timeout;
         };
 
-        std::unordered_map<pid_t, std::vector<std::shared_ptr<RegisteredGroup>>> m_groupServices;
+        std::unordered_map<pid_t, std::vector<std::shared_ptr<RegisteredGroup>>> group_services_;
     };
 }
 

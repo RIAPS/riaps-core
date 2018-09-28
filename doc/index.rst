@@ -1,1 +1,0 @@
-.. doxygenclass:: riaps::ComponentBase

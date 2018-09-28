@@ -36,12 +36,10 @@ struct LeaderElection {
         }
 }
 
-// From group members -> leader
 struct MessageToLeader {
     sourceComponentId @0 : Text;
 }
 
-// From leader -> group members
 struct LeaderMessage {
     sourceComponentId @0 : Text;
 }

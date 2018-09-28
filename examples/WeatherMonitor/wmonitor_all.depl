@@ -1,0 +1,5 @@
+// Deploy on all BBB
+app WeatherMonitor {
+	on all WeatherIndicator;
+	on all WeatherReceiver;
+}

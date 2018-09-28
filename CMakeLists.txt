@@ -1,28 +1,31 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(riaps_core VERSION 0.7.74)
+project(riaps_core VERSION 0.8.3)
 option(arch "amd64/armhf" "amd64")
 option(BUILD_TESTS  "Build tests" ON)
 set(CMAKE_SYSTEM_NAME Linux)
 
 set(riaps_prefix "/opt/riaps/" CACHE STRING "the riaps prefix")
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_FLAGS "-Wno-psabi")
+
+set(PYBIND11_CPP_STANDARD -std=c++14)
+add_subdirectory(pybind11)
+
 
 #Set the platform
 if (${arch} STREQUAL "armhf")
- set(TOOLCHAIN_PREFIX arm-linux-gnueabihf)
+ set(TOOLCHAIN_PREFIX /usr/bin/arm-linux-gnueabihf)
  set(CMAKE_C_COMPILER ${TOOLCHAIN_PREFIX}-gcc)
- set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}-g++-5)
+ set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}-g++-7)
  set(CMAKE_FIND_ROOT_PATH /usr/${TOOLCHAIN_PREFIX})
- #set (CMAKE_CXX_FLAGS "-std=c++11")
  set (CMAKE_C_FLAGS "-std=c99")
 else()
- set(CMAKE_C_COMPILER gcc-5)
- set(CMAKE_CXX_COMPILER g++-5)
- #set (CMAKE_CXX_FLAGS "-std=c++11")
+ set(CMAKE_C_COMPILER gcc-7)
+ set(CMAKE_CXX_COMPILER g++-7)
  set (CMAKE_C_FLAGS "-std=c99")
 endif()
 
-#set(pybind11_DIR ${CMAKE_HOME_DIRECTORY})
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 set(CMAKE_INSTALL_PREFIX ${riaps_prefix}/${arch})
 
@@ -32,20 +35,35 @@ set (LIBALLPATH_LIB ${DEPENDENCIES}/${arch}/lib)
 include_directories(${LIBALLPATH_INCLUDE})
 link_directories(${LIBALLPATH_LIB})
 
-#set(PYTHON_EXECUTABLE /usr/bin/python3)
-
-
 # Debug binaries are to be copied into "./bin" directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_HOME_DIRECTORY}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_HOME_DIRECTORY}/bin)
 
 include_directories(include)
+include_directories(pybind11/include)
+include_directories(/usr/include/python3.5m/)
+
+# Process Cap'n Proto messages
+add_custom_command(
+        OUTPUT  "${CMAKE_SOURCE_DIR}/include/messaging/disco.capnp.c++"
+        DEPENDS "${CMAKE_SOURCE_DIR}/include/messaging/capnp/disco.capnp"
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/include/messaging/capnp"
+        COMMAND /opt/riaps/amd64/bin/capnp compile disco.capnp -oc++:../
+        COMMENT "=== Processing cap'n p disco files ==="
+)
+
+add_custom_command(
+        OUTPUT  "${CMAKE_SOURCE_DIR}/include/messaging/distcoord.capnp.c++"
+        DEPENDS "${CMAKE_SOURCE_DIR}/include/messaging/capnp/distcoord.capnp"
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/include/messaging/capnp"
+        COMMAND /opt/riaps/amd64/bin/capnp compile distcoord.capnp -oc++:../
+        COMMENT "=== Processing cap'n p distcoord files ==="
+        )
 
 if (BUILD_TESTS)
     include(CTest)
     enable_testing()
     # Tests
-    # add_subdirectory(examples/DistributedEstimatorPy)
     #add_subdirectory(examples/DistributedEstimator)
     #add_subdirectory(examples/DistributedEstimatorGroup)
     #add_subdirectory(examples/LeaderElection)
@@ -67,6 +85,8 @@ if (BUILD_TESTS)
     #add_subdirectory(tests/DC/leaderwiththree)
     # add_subdirectory(tests/TimedTest)
     # add_subdirectory(examples/EchoIO)
+    #add_subdirectory(examples/WeatherMonitor)
+    #add_subdirectory(tests/DistributedEstimatorPybind)
 endif()
 
 
@@ -89,25 +109,19 @@ list (APPEND riapslib_SOURCE
         src/componentmodel/ports/r_subportgroup.cc
         src/componentmodel/ports/r_subscriberport.cc
         src/componentmodel/ports/r_timedport.cc
-        src/componentmodel/r_actor.cc
-        src/componentmodel/r_argumentparser.cc
+        src/componentmodel/r_pyactor.cc
         src/componentmodel/r_payload.cc
-        src/componentmodel/r_commandlineparser.cc
         src/componentmodel/r_componentbase.cc
         src/componentmodel/r_devicethread.cc
-        src/componentmodel/r_devmapi.cc
-        src/componentmodel/r_deploapi.cc
         src/componentmodel/r_discoverdapi.cc
         src/componentmodel/r_messagebase.cc
         src/componentmodel/r_parameter.cc
         src/componentmodel/r_periodictimer.cc
-        src/componentmodel/r_peripheral.cc
         src/componentmodel/r_portregister.cc
         src/framework/rfw_configuration.cc
         src/framework/rfw_network_interfaces.cc
         src/groups/r_group.cc
         src/groups/r_grouplead.cc
-        src/utils/r_message.cc
         src/utils/r_utils.cc
         )
 
@@ -128,14 +142,12 @@ list (APPEND riapslib_HEADERS
         include/componentmodel/ports/r_subportgroup.h
         include/componentmodel/ports/r_subscriberport.h
         include/componentmodel/ports/r_timedport.h
-        include/componentmodel/r_actor.h
+        include/componentmodel/r_pyactor.h
         include/componentmodel/r_payload.h
-        include/componentmodel/r_commandlineparser.h
         include/componentmodel/r_componentbase.h
         include/componentmodel/r_configuration.h
         include/componentmodel/r_devicethread.h
         include/componentmodel/r_discoverdapi.h
-        include/componentmodel/r_deploapi.h
         include/componentmodel/r_messagebase.h
         include/componentmodel/r_parameter.h
         include/componentmodel/r_periodictimer.h
@@ -156,33 +168,9 @@ add_library(riaps SHARED
         ${riapslib_SOURCE}
         ${riapslib_HEADERS}
         )
-target_link_libraries(riaps czmq zmq dl capnp kj)
+
+target_link_libraries(riaps PRIVATE czmq zmq dl capnp kj)
 install(TARGETS riaps DESTINATION lib)
-
-# start_actor
-set(ACTOR_SOURCE
-        src/componentmodel/r_actor_main.cc
-
-        include/messaging/deplo.capnp.c++
-        )
-
-set(ACTOR_HEADERS
-        include/componentmodel/r_actor.h
-        include/componentmodel/r_argumentparser.h
-        include/componentmodel/r_actor_main.h
-        include/groups/r_group.h
-        include/const/r_jsonmodel.h
-        include/const/r_const.h
-        include/messaging/disco.capnp.h
-        include/messaging/deplo.capnp.h
-        include/json.h)
-
-add_executable(start_actor
-        ${ACTOR_SOURCE}
-        ${ACTOR_HEADERS}
-        )
-target_link_libraries(start_actor czmq zmq riaps capnp pthread)
-install(TARGETS start_actor DESTINATION bin)
 
 # rdiscoveryd source
 list(APPEND RDISCOVERYD_SOURCE
@@ -216,35 +204,13 @@ add_executable(rdiscoveryd
         ${RDISCOVERYD_SOURCE}
         ${RDISCOVERYD_HEADERS}
         )
-target_link_libraries(rdiscoveryd czmq zmq opendht gnutls riaps capnp nettle hogweed gmp pthread lmdb)
+target_link_libraries(rdiscoveryd czmq zmq opendht gnutls riaps capnp nettle hogweed gmp pthread kj lmdb)
 
 install(TARGETS rdiscoveryd DESTINATION bin)
 
-
-# start_device source
-list(APPEND DEVICE_SOURCE
-        src/device/r_deviceactor.cc
-        src/device/r_dmain.cc
-        )
-
-# start_device headers
-list(APPEND DEVICE_HEADERS
-        include/device/r_deviceactor.h
-        )
-
-# start_device
-add_executable(start_device
-        ${DEVICE_SOURCE}
-        ${DEVICE_HEADERS}
-        )
-target_link_libraries(start_device czmq zmq opendht gnutls riaps capnp nettle hogweed gmp pthread)
-
-install(TARGETS start_device DESTINATION bin)
-
-
 SET(MAJOR_VERSION "0")
-SET(MINOR_VERSION "7")
-SET(PATCH_VERSION "62")
+SET(MINOR_VERSION "8")
+SET(PATCH_VERSION "3")
 
 
 IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")

@@ -5,50 +5,50 @@
 #ifndef RIAPS_CORE_R_JSONMODEL_H_H
 #define RIAPS_CORE_R_JSONMODEL_H_H
 
-#define J_NAME         "name"
-#define J_ACTORS       "actors"
-#define J_COMPONENTS   "components"
-#define J_DEVICES      "devices"
+constexpr auto J_NAME         = "name";
+constexpr auto J_ACTORS       = "actors";
+constexpr auto J_COMPONENTS   = "components";
+constexpr auto J_DEVICES      = "devices";
 
-#define J_INSTANCES    "instances"
-#define J_INTERNALS    "internals"
-#define J_LOCALS       "locals"
+constexpr auto J_INSTANCES    = "instances";
+constexpr auto J_INTERNALS    = "internals";
+constexpr auto J_LOCALS       = "locals";
 
-#define J_FORMALS      "formals"
-#define J_FORMAL_NAME  "name"
-#define J_FORMAL_DEF   "default"
+constexpr auto J_FORMALS      = "formals";
+constexpr auto J_FORMAL_NAME  = "name";
+constexpr auto J_FORMAL_DEF   = "default";
 
-#define J_ACTUALS      "actuals"
-#define J_ACTUAL_NAME  "name"
-#define J_ACTUAL_PARAM "param"
-#define J_ACTUAL_VALUE "value"
+constexpr auto J_ACTUALS      = "actuals";
+constexpr auto J_ACTUAL_NAME  = "name";
+constexpr auto J_ACTUAL_PARAM = "param";
+constexpr auto J_ACTUAL_VALUE = "value";
 
-#define J_PORTS        "ports"
-#define J_PORTS_CLTS   "clts"
-#define J_PORTS_INSS   "inss"
-#define J_PORTS_PUBS   "pubs"
-#define J_PORTS_REPS   "reps"
-#define J_PORTS_REQS   "reqs"
-#define J_PORTS_SRVS   "srvs"
-#define J_PORTS_SUBS   "subs"
-#define J_PORTS_TIMS   "tims"
-#define J_PORTS_INSS   "inss"
-#define J_PORTS_QRYS   "qrys"
-#define J_PORTS_ANSS   "anss"
+constexpr auto J_PORTS        = "ports";
+constexpr auto J_PORTS_CLTS   = "clts";
+constexpr auto J_PORTS_INSS   = "inss";
+constexpr auto J_PORTS_PUBS   = "pubs";
+constexpr auto J_PORTS_REPS   = "reps";
+constexpr auto J_PORTS_REQS   = "reqs";
+constexpr auto J_PORTS_SRVS   = "srvs";
+constexpr auto J_PORTS_SUBS   = "subs";
+constexpr auto J_PORTS_TIMS   = "tims";
+constexpr auto J_PORTS_QRYS   = "qrys";
+constexpr auto J_PORTS_ANSS   = "anss";
 
-#define J_PORT_REQTYPE "req_type"
-#define J_PORT_REPTYPE "rep_type"
+constexpr auto J_PORT_REQTYPE = "req_type";
+constexpr auto J_PORT_REPTYPE = "rep_type";
 
-#define J_PORT_QRYTYPE "qry_type"
-#define J_PORT_ANSTYPE "ans_type"
+constexpr auto J_PORT_QRYTYPE = "qry_type";
+constexpr auto J_PORT_ANSTYPE = "ans_type";
 
-#define J_PORT_TIMED "timed"
+constexpr auto J_PORT_TIMED   = "timed";
+constexpr auto J_PORT_PERIOD  = "period";
 
-#define J_TYPE         "type"
+constexpr auto J_TYPE         = "type";
 
-#define J_GROUPS          "groups"
-#define J_GROUP_LEADER    "leader"
-#define J_GROUP_CONSENSUS "consensus"
-#define J_GROUP_MESSAGES  "groupMessages"
+constexpr auto J_GROUPS          = "groups";
+constexpr auto J_GROUP_LEADER    = "leader";
+constexpr auto J_GROUP_CONSENSUS = "consensus";
+constexpr auto J_GROUP_MESSAGES  = "groupMessages";
 
 #endif //RIAPS_CORE_R_JSONMODEL_H_H

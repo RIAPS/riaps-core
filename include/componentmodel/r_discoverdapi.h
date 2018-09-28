@@ -35,6 +35,7 @@ extern std::vector<service_lookup_result>
 subscribeToService(const std::string&      app_name   ,
                      const std::string&      part_name  , // instance_name
                      const std::string&      actor_name ,
+                     const std::string&      ip_address,
                      riaps::discovery::Kind  kind       ,
                      riaps::discovery::Scope scope      ,
                      const std::string&      port_name  ,

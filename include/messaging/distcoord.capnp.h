@@ -6,7 +6,7 @@
 
 #include <capnp/generated-header-support.h>
 
-#if CAPNP_VERSION != 5003
+#if CAPNP_VERSION != 6001
 #error "Version mismatch between generated code and library headers.  You must use the same version of the Cap'n Proto compiler and library."
 #endif
 
@@ -26,6 +26,7 @@ CAPNP_DECLARE_SCHEMA(8a6b413c94c9717c);
 CAPNP_DECLARE_SCHEMA(fa67eeb730a5df5e);
 CAPNP_DECLARE_SCHEMA(f5b471e04470e3c4);
 CAPNP_DECLARE_SCHEMA(f8333cb31aa809fa);
+CAPNP_DECLARE_SCHEMA(a0db9864a01ffc74);
 CAPNP_DECLARE_SCHEMA(934fe15762c71e76);
 CAPNP_DECLARE_SCHEMA(880a4d64a0fb8286);
 CAPNP_DECLARE_SCHEMA(a9afe0029ed6bdf8);
@@ -66,7 +67,7 @@ struct GroupHeartBeat {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(c7426d39bcaf282b, 1, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -84,7 +85,7 @@ struct LeaderElection {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(f33d21662bc326c4, 0, 3)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -99,7 +100,7 @@ struct LeaderElection::AppendEntry {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(8a6b413c94c9717c, 1, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -114,7 +115,7 @@ struct LeaderElection::RequestForVoteReq {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(fa67eeb730a5df5e, 1, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -129,7 +130,7 @@ struct LeaderElection::RequestForVoteRep {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(f5b471e04470e3c4, 1, 2)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -144,7 +145,22 @@ struct MessageToLeader {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(f8333cb31aa809fa, 0, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
+    #endif  // !CAPNP_LITE
+  };
+};
+
+struct LeaderMessage {
+  LeaderMessage() = delete;
+
+  class Reader;
+  class Builder;
+  class Pipeline;
+
+  struct _capnpPrivate {
+    CAPNP_DECLARE_STRUCT_HEADER(a0db9864a01ffc74, 0, 1)
+    #if !CAPNP_LITE
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -174,7 +190,7 @@ struct Consensus {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(934fe15762c71e76, 1, 3)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -189,7 +205,7 @@ struct Consensus::ProposeToLeader {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(880a4d64a0fb8286, 0, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -204,7 +220,7 @@ struct Consensus::ProposeToClients {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(a9afe0029ed6bdf8, 0, 2)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -219,7 +235,7 @@ struct Consensus::Vote {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(83e8ac73bacab398, 1, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -234,7 +250,7 @@ struct Consensus::Announce {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(c31d0cfd5f7ff32a, 1, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -250,7 +266,7 @@ struct Consensus::TimeSyncCoordA {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(ab26f9059c4c21f2, 0, 2)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -265,7 +281,7 @@ struct Consensus::TimeSyncCoordA::TimeSpec {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(ca8b82245ff35cf7, 1, 0)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -280,7 +296,7 @@ struct GroupMessage {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(da85eb41ae25b2c9, 0, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -297,12 +313,13 @@ struct GroupInternals {
     MESSAGE_TO_LEADER,
     CONSENSUS,
     GROUP_MESSAGE,
+    LEADER_MESSAGE,
   };
 
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(8a25ecc657bf2ed3, 1, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
   };
 };
@@ -322,7 +339,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -408,7 +425,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -512,7 +529,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -598,7 +615,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -684,7 +701,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -780,7 +797,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -848,6 +865,87 @@ private:
 };
 #endif  // !CAPNP_LITE
 
+class LeaderMessage::Reader {
+public:
+  typedef LeaderMessage Reads;
+
+  Reader() = default;
+  inline explicit Reader(::capnp::_::StructReader base): _reader(base) {}
+
+  inline ::capnp::MessageSize totalSize() const {
+    return _reader.totalSize().asPublic();
+  }
+
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const {
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
+  }
+#endif  // !CAPNP_LITE
+
+  inline bool hasSourceComponentId() const;
+  inline  ::capnp::Text::Reader getSourceComponentId() const;
+
+private:
+  ::capnp::_::StructReader _reader;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::List;
+  friend class ::capnp::MessageBuilder;
+  friend class ::capnp::Orphanage;
+};
+
+class LeaderMessage::Builder {
+public:
+  typedef LeaderMessage Builds;
+
+  Builder() = delete;  // Deleted to discourage incorrect usage.
+                       // You can explicitly initialize to nullptr instead.
+  inline Builder(decltype(nullptr)) {}
+  inline explicit Builder(::capnp::_::StructBuilder base): _builder(base) {}
+  inline operator Reader() const { return Reader(_builder.asReader()); }
+  inline Reader asReader() const { return *this; }
+
+  inline ::capnp::MessageSize totalSize() const { return asReader().totalSize(); }
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const { return asReader().toString(); }
+#endif  // !CAPNP_LITE
+
+  inline bool hasSourceComponentId();
+  inline  ::capnp::Text::Builder getSourceComponentId();
+  inline void setSourceComponentId( ::capnp::Text::Reader value);
+  inline  ::capnp::Text::Builder initSourceComponentId(unsigned int size);
+  inline void adoptSourceComponentId(::capnp::Orphan< ::capnp::Text>&& value);
+  inline ::capnp::Orphan< ::capnp::Text> disownSourceComponentId();
+
+private:
+  ::capnp::_::StructBuilder _builder;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  friend class ::capnp::Orphanage;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+};
+
+#if !CAPNP_LITE
+class LeaderMessage::Pipeline {
+public:
+  typedef LeaderMessage Pipelines;
+
+  inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
+  inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
+      : _typeless(kj::mv(typeless)) {}
+
+private:
+  ::capnp::AnyPointer::Pipeline _typeless;
+  friend class ::capnp::PipelineHook;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+};
+#endif  // !CAPNP_LITE
+
 class Consensus::Reader {
 public:
   typedef Consensus Reads;
@@ -861,7 +959,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1008,7 +1106,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1089,7 +1187,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1180,7 +1278,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1266,7 +1364,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1352,7 +1450,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1444,7 +1542,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1525,7 +1623,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1606,7 +1704,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1630,6 +1728,10 @@ public:
   inline bool isGroupMessage() const;
   inline bool hasGroupMessage() const;
   inline  ::riaps::distrcoord::GroupMessage::Reader getGroupMessage() const;
+
+  inline bool isLeaderMessage() const;
+  inline bool hasLeaderMessage() const;
+  inline  ::riaps::distrcoord::LeaderMessage::Reader getLeaderMessage() const;
 
 private:
   ::capnp::_::StructReader _reader;
@@ -1700,6 +1802,14 @@ public:
   inline void adoptGroupMessage(::capnp::Orphan< ::riaps::distrcoord::GroupMessage>&& value);
   inline ::capnp::Orphan< ::riaps::distrcoord::GroupMessage> disownGroupMessage();
 
+  inline bool isLeaderMessage();
+  inline bool hasLeaderMessage();
+  inline  ::riaps::distrcoord::LeaderMessage::Builder getLeaderMessage();
+  inline void setLeaderMessage( ::riaps::distrcoord::LeaderMessage::Reader value);
+  inline  ::riaps::distrcoord::LeaderMessage::Builder initLeaderMessage();
+  inline void adoptLeaderMessage(::capnp::Orphan< ::riaps::distrcoord::LeaderMessage>&& value);
+  inline ::capnp::Orphan< ::riaps::distrcoord::LeaderMessage> disownLeaderMessage();
+
 private:
   ::capnp::_::StructBuilder _builder;
   template <typename, ::capnp::Kind>
@@ -1730,63 +1840,67 @@ private:
 
 inline  ::riaps::distrcoord::HeartBeatType GroupHeartBeat::Reader::getHeartBeatType() const {
   return _reader.getDataField< ::riaps::distrcoord::HeartBeatType>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 
 inline  ::riaps::distrcoord::HeartBeatType GroupHeartBeat::Builder::getHeartBeatType() {
   return _builder.getDataField< ::riaps::distrcoord::HeartBeatType>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 inline void GroupHeartBeat::Builder::setHeartBeatType( ::riaps::distrcoord::HeartBeatType value) {
   _builder.setDataField< ::riaps::distrcoord::HeartBeatType>(
-      0 * ::capnp::ELEMENTS, value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, value);
 }
 
 inline bool GroupHeartBeat::Reader::hasSourceComponentId() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool GroupHeartBeat::Builder::hasSourceComponentId() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader GroupHeartBeat::Reader::getSourceComponentId() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder GroupHeartBeat::Builder::getSourceComponentId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void GroupHeartBeat::Builder::setSourceComponentId( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder GroupHeartBeat::Builder::initSourceComponentId(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), size);
 }
 inline void GroupHeartBeat::Builder::adoptSourceComponentId(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> GroupHeartBeat::Builder::disownSourceComponentId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool LeaderElection::Reader::hasAppendEntry() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool LeaderElection::Builder::hasAppendEntry() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::distrcoord::LeaderElection::AppendEntry::Reader LeaderElection::Reader::getAppendEntry() const {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::AppendEntry>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::AppendEntry>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::riaps::distrcoord::LeaderElection::AppendEntry::Builder LeaderElection::Builder::getAppendEntry() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::AppendEntry>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::AppendEntry>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
 inline  ::riaps::distrcoord::LeaderElection::AppendEntry::Pipeline LeaderElection::Pipeline::getAppendEntry() {
@@ -1794,36 +1908,38 @@ inline  ::riaps::distrcoord::LeaderElection::AppendEntry::Pipeline LeaderElectio
 }
 #endif  // !CAPNP_LITE
 inline void LeaderElection::Builder::setAppendEntry( ::riaps::distrcoord::LeaderElection::AppendEntry::Reader value) {
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::AppendEntry>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::AppendEntry>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::distrcoord::LeaderElection::AppendEntry::Builder LeaderElection::Builder::initAppendEntry() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::AppendEntry>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::AppendEntry>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void LeaderElection::Builder::adoptAppendEntry(
     ::capnp::Orphan< ::riaps::distrcoord::LeaderElection::AppendEntry>&& value) {
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::AppendEntry>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::AppendEntry>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::distrcoord::LeaderElection::AppendEntry> LeaderElection::Builder::disownAppendEntry() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::AppendEntry>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::AppendEntry>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool LeaderElection::Reader::hasRequestForVoteReq() const {
-  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline bool LeaderElection::Builder::hasRequestForVoteReq() {
-  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::distrcoord::LeaderElection::RequestForVoteReq::Reader LeaderElection::Reader::getRequestForVoteReq() const {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::RequestForVoteReq>::get(
-      _reader.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::RequestForVoteReq>::get(_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline  ::riaps::distrcoord::LeaderElection::RequestForVoteReq::Builder LeaderElection::Builder::getRequestForVoteReq() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::RequestForVoteReq>::get(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::RequestForVoteReq>::get(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
 inline  ::riaps::distrcoord::LeaderElection::RequestForVoteReq::Pipeline LeaderElection::Pipeline::getRequestForVoteReq() {
@@ -1831,36 +1947,38 @@ inline  ::riaps::distrcoord::LeaderElection::RequestForVoteReq::Pipeline LeaderE
 }
 #endif  // !CAPNP_LITE
 inline void LeaderElection::Builder::setRequestForVoteReq( ::riaps::distrcoord::LeaderElection::RequestForVoteReq::Reader value) {
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::RequestForVoteReq>::set(
-      _builder.getPointerField(1 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::RequestForVoteReq>::set(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::distrcoord::LeaderElection::RequestForVoteReq::Builder LeaderElection::Builder::initRequestForVoteReq() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::RequestForVoteReq>::init(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::RequestForVoteReq>::init(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline void LeaderElection::Builder::adoptRequestForVoteReq(
     ::capnp::Orphan< ::riaps::distrcoord::LeaderElection::RequestForVoteReq>&& value) {
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::RequestForVoteReq>::adopt(
-      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::RequestForVoteReq>::adopt(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::distrcoord::LeaderElection::RequestForVoteReq> LeaderElection::Builder::disownRequestForVoteReq() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::RequestForVoteReq>::disown(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::RequestForVoteReq>::disown(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 
 inline bool LeaderElection::Reader::hasRequestForVoteRep() const {
-  return !_reader.getPointerField(2 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS).isNull();
 }
 inline bool LeaderElection::Builder::hasRequestForVoteRep() {
-  return !_builder.getPointerField(2 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::distrcoord::LeaderElection::RequestForVoteRep::Reader LeaderElection::Reader::getRequestForVoteRep() const {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::RequestForVoteRep>::get(
-      _reader.getPointerField(2 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::RequestForVoteRep>::get(_reader.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
 }
 inline  ::riaps::distrcoord::LeaderElection::RequestForVoteRep::Builder LeaderElection::Builder::getRequestForVoteRep() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::RequestForVoteRep>::get(
-      _builder.getPointerField(2 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::RequestForVoteRep>::get(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
 inline  ::riaps::distrcoord::LeaderElection::RequestForVoteRep::Pipeline LeaderElection::Pipeline::getRequestForVoteRep() {
@@ -1868,276 +1986,324 @@ inline  ::riaps::distrcoord::LeaderElection::RequestForVoteRep::Pipeline LeaderE
 }
 #endif  // !CAPNP_LITE
 inline void LeaderElection::Builder::setRequestForVoteRep( ::riaps::distrcoord::LeaderElection::RequestForVoteRep::Reader value) {
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::RequestForVoteRep>::set(
-      _builder.getPointerField(2 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::RequestForVoteRep>::set(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::distrcoord::LeaderElection::RequestForVoteRep::Builder LeaderElection::Builder::initRequestForVoteRep() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::RequestForVoteRep>::init(
-      _builder.getPointerField(2 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::RequestForVoteRep>::init(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
 }
 inline void LeaderElection::Builder::adoptRequestForVoteRep(
     ::capnp::Orphan< ::riaps::distrcoord::LeaderElection::RequestForVoteRep>&& value) {
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::RequestForVoteRep>::adopt(
-      _builder.getPointerField(2 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::RequestForVoteRep>::adopt(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::distrcoord::LeaderElection::RequestForVoteRep> LeaderElection::Builder::disownRequestForVoteRep() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::RequestForVoteRep>::disown(
-      _builder.getPointerField(2 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection::RequestForVoteRep>::disown(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
 }
 
 inline bool LeaderElection::AppendEntry::Reader::hasSourceComponentId() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool LeaderElection::AppendEntry::Builder::hasSourceComponentId() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader LeaderElection::AppendEntry::Reader::getSourceComponentId() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder LeaderElection::AppendEntry::Builder::getSourceComponentId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void LeaderElection::AppendEntry::Builder::setSourceComponentId( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder LeaderElection::AppendEntry::Builder::initSourceComponentId(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), size);
 }
 inline void LeaderElection::AppendEntry::Builder::adoptSourceComponentId(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> LeaderElection::AppendEntry::Builder::disownSourceComponentId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline  ::uint32_t LeaderElection::AppendEntry::Reader::getElectionTerm() const {
   return _reader.getDataField< ::uint32_t>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 
 inline  ::uint32_t LeaderElection::AppendEntry::Builder::getElectionTerm() {
   return _builder.getDataField< ::uint32_t>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 inline void LeaderElection::AppendEntry::Builder::setElectionTerm( ::uint32_t value) {
   _builder.setDataField< ::uint32_t>(
-      0 * ::capnp::ELEMENTS, value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, value);
 }
 
 inline bool LeaderElection::RequestForVoteReq::Reader::hasSourceComponentId() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool LeaderElection::RequestForVoteReq::Builder::hasSourceComponentId() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader LeaderElection::RequestForVoteReq::Reader::getSourceComponentId() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder LeaderElection::RequestForVoteReq::Builder::getSourceComponentId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void LeaderElection::RequestForVoteReq::Builder::setSourceComponentId( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder LeaderElection::RequestForVoteReq::Builder::initSourceComponentId(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), size);
 }
 inline void LeaderElection::RequestForVoteReq::Builder::adoptSourceComponentId(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> LeaderElection::RequestForVoteReq::Builder::disownSourceComponentId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline  ::uint32_t LeaderElection::RequestForVoteReq::Reader::getElectionTerm() const {
   return _reader.getDataField< ::uint32_t>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 
 inline  ::uint32_t LeaderElection::RequestForVoteReq::Builder::getElectionTerm() {
   return _builder.getDataField< ::uint32_t>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 inline void LeaderElection::RequestForVoteReq::Builder::setElectionTerm( ::uint32_t value) {
   _builder.setDataField< ::uint32_t>(
-      0 * ::capnp::ELEMENTS, value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, value);
 }
 
 inline bool LeaderElection::RequestForVoteRep::Reader::hasSourceComponentId() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool LeaderElection::RequestForVoteRep::Builder::hasSourceComponentId() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader LeaderElection::RequestForVoteRep::Reader::getSourceComponentId() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder LeaderElection::RequestForVoteRep::Builder::getSourceComponentId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void LeaderElection::RequestForVoteRep::Builder::setSourceComponentId( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder LeaderElection::RequestForVoteRep::Builder::initSourceComponentId(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), size);
 }
 inline void LeaderElection::RequestForVoteRep::Builder::adoptSourceComponentId(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> LeaderElection::RequestForVoteRep::Builder::disownSourceComponentId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool LeaderElection::RequestForVoteRep::Reader::hasVoteForId() const {
-  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline bool LeaderElection::RequestForVoteRep::Builder::hasVoteForId() {
-  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader LeaderElection::RequestForVoteRep::Reader::getVoteForId() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder LeaderElection::RequestForVoteRep::Builder::getVoteForId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline void LeaderElection::RequestForVoteRep::Builder::setVoteForId( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(1 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder LeaderElection::RequestForVoteRep::Builder::initVoteForId(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(1 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), size);
 }
 inline void LeaderElection::RequestForVoteRep::Builder::adoptVoteForId(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> LeaderElection::RequestForVoteRep::Builder::disownVoteForId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 
 inline  ::uint32_t LeaderElection::RequestForVoteRep::Reader::getElectionTerm() const {
   return _reader.getDataField< ::uint32_t>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 
 inline  ::uint32_t LeaderElection::RequestForVoteRep::Builder::getElectionTerm() {
   return _builder.getDataField< ::uint32_t>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 inline void LeaderElection::RequestForVoteRep::Builder::setElectionTerm( ::uint32_t value) {
   _builder.setDataField< ::uint32_t>(
-      0 * ::capnp::ELEMENTS, value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, value);
 }
 
 inline bool MessageToLeader::Reader::hasSourceComponentId() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool MessageToLeader::Builder::hasSourceComponentId() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader MessageToLeader::Reader::getSourceComponentId() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder MessageToLeader::Builder::getSourceComponentId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void MessageToLeader::Builder::setSourceComponentId( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder MessageToLeader::Builder::initSourceComponentId(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), size);
 }
 inline void MessageToLeader::Builder::adoptSourceComponentId(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> MessageToLeader::Builder::disownSourceComponentId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
+}
+
+inline bool LeaderMessage::Reader::hasSourceComponentId() const {
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
+}
+inline bool LeaderMessage::Builder::hasSourceComponentId() {
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::Text::Reader LeaderMessage::Reader::getSourceComponentId() const {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
+}
+inline  ::capnp::Text::Builder LeaderMessage::Builder::getSourceComponentId() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
+}
+inline void LeaderMessage::Builder::setSourceComponentId( ::capnp::Text::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
+}
+inline  ::capnp::Text::Builder LeaderMessage::Builder::initSourceComponentId(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), size);
+}
+inline void LeaderMessage::Builder::adoptSourceComponentId(
+    ::capnp::Orphan< ::capnp::Text>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::Text> LeaderMessage::Builder::disownSourceComponentId() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline  ::riaps::distrcoord::Consensus::Which Consensus::Reader::which() const {
-  return _reader.getDataField<Which>(1 * ::capnp::ELEMENTS);
+  return _reader.getDataField<Which>(
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS);
 }
 inline  ::riaps::distrcoord::Consensus::Which Consensus::Builder::which() {
-  return _builder.getDataField<Which>(1 * ::capnp::ELEMENTS);
+  return _builder.getDataField<Which>(
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS);
 }
 
 inline bool Consensus::Reader::hasSourceComponentId() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool Consensus::Builder::hasSourceComponentId() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader Consensus::Reader::getSourceComponentId() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder Consensus::Builder::getSourceComponentId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void Consensus::Builder::setSourceComponentId( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder Consensus::Builder::initSourceComponentId(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), size);
 }
 inline void Consensus::Builder::adoptSourceComponentId(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> Consensus::Builder::disownSourceComponentId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline  ::riaps::distrcoord::Consensus::VoteType Consensus::Reader::getVoteType() const {
   return _reader.getDataField< ::riaps::distrcoord::Consensus::VoteType>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 
 inline  ::riaps::distrcoord::Consensus::VoteType Consensus::Builder::getVoteType() {
   return _builder.getDataField< ::riaps::distrcoord::Consensus::VoteType>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 inline void Consensus::Builder::setVoteType( ::riaps::distrcoord::Consensus::VoteType value) {
   _builder.setDataField< ::riaps::distrcoord::Consensus::VoteType>(
-      0 * ::capnp::ELEMENTS, value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, value);
 }
 
 inline bool Consensus::Reader::isProposeToLeader() const {
@@ -2148,48 +2314,50 @@ inline bool Consensus::Builder::isProposeToLeader() {
 }
 inline bool Consensus::Reader::hasProposeToLeader() const {
   if (which() != Consensus::PROPOSE_TO_LEADER) return false;
-  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline bool Consensus::Builder::hasProposeToLeader() {
   if (which() != Consensus::PROPOSE_TO_LEADER) return false;
-  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::distrcoord::Consensus::ProposeToLeader::Reader Consensus::Reader::getProposeToLeader() const {
-  KJ_IREQUIRE(which() == Consensus::PROPOSE_TO_LEADER,
+  KJ_IREQUIRE((which() == Consensus::PROPOSE_TO_LEADER),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToLeader>::get(
-      _reader.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToLeader>::get(_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline  ::riaps::distrcoord::Consensus::ProposeToLeader::Builder Consensus::Builder::getProposeToLeader() {
-  KJ_IREQUIRE(which() == Consensus::PROPOSE_TO_LEADER,
+  KJ_IREQUIRE((which() == Consensus::PROPOSE_TO_LEADER),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToLeader>::get(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToLeader>::get(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline void Consensus::Builder::setProposeToLeader( ::riaps::distrcoord::Consensus::ProposeToLeader::Reader value) {
   _builder.setDataField<Consensus::Which>(
-      1 * ::capnp::ELEMENTS, Consensus::PROPOSE_TO_LEADER);
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToLeader>::set(
-      _builder.getPointerField(1 * ::capnp::POINTERS), value);
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS, Consensus::PROPOSE_TO_LEADER);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToLeader>::set(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::distrcoord::Consensus::ProposeToLeader::Builder Consensus::Builder::initProposeToLeader() {
   _builder.setDataField<Consensus::Which>(
-      1 * ::capnp::ELEMENTS, Consensus::PROPOSE_TO_LEADER);
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToLeader>::init(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS, Consensus::PROPOSE_TO_LEADER);
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToLeader>::init(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline void Consensus::Builder::adoptProposeToLeader(
     ::capnp::Orphan< ::riaps::distrcoord::Consensus::ProposeToLeader>&& value) {
   _builder.setDataField<Consensus::Which>(
-      1 * ::capnp::ELEMENTS, Consensus::PROPOSE_TO_LEADER);
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToLeader>::adopt(
-      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS, Consensus::PROPOSE_TO_LEADER);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToLeader>::adopt(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::distrcoord::Consensus::ProposeToLeader> Consensus::Builder::disownProposeToLeader() {
-  KJ_IREQUIRE(which() == Consensus::PROPOSE_TO_LEADER,
+  KJ_IREQUIRE((which() == Consensus::PROPOSE_TO_LEADER),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToLeader>::disown(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToLeader>::disown(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 
 inline bool Consensus::Reader::isProposeToClients() const {
@@ -2200,48 +2368,50 @@ inline bool Consensus::Builder::isProposeToClients() {
 }
 inline bool Consensus::Reader::hasProposeToClients() const {
   if (which() != Consensus::PROPOSE_TO_CLIENTS) return false;
-  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline bool Consensus::Builder::hasProposeToClients() {
   if (which() != Consensus::PROPOSE_TO_CLIENTS) return false;
-  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::distrcoord::Consensus::ProposeToClients::Reader Consensus::Reader::getProposeToClients() const {
-  KJ_IREQUIRE(which() == Consensus::PROPOSE_TO_CLIENTS,
+  KJ_IREQUIRE((which() == Consensus::PROPOSE_TO_CLIENTS),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToClients>::get(
-      _reader.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToClients>::get(_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline  ::riaps::distrcoord::Consensus::ProposeToClients::Builder Consensus::Builder::getProposeToClients() {
-  KJ_IREQUIRE(which() == Consensus::PROPOSE_TO_CLIENTS,
+  KJ_IREQUIRE((which() == Consensus::PROPOSE_TO_CLIENTS),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToClients>::get(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToClients>::get(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline void Consensus::Builder::setProposeToClients( ::riaps::distrcoord::Consensus::ProposeToClients::Reader value) {
   _builder.setDataField<Consensus::Which>(
-      1 * ::capnp::ELEMENTS, Consensus::PROPOSE_TO_CLIENTS);
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToClients>::set(
-      _builder.getPointerField(1 * ::capnp::POINTERS), value);
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS, Consensus::PROPOSE_TO_CLIENTS);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToClients>::set(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::distrcoord::Consensus::ProposeToClients::Builder Consensus::Builder::initProposeToClients() {
   _builder.setDataField<Consensus::Which>(
-      1 * ::capnp::ELEMENTS, Consensus::PROPOSE_TO_CLIENTS);
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToClients>::init(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS, Consensus::PROPOSE_TO_CLIENTS);
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToClients>::init(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline void Consensus::Builder::adoptProposeToClients(
     ::capnp::Orphan< ::riaps::distrcoord::Consensus::ProposeToClients>&& value) {
   _builder.setDataField<Consensus::Which>(
-      1 * ::capnp::ELEMENTS, Consensus::PROPOSE_TO_CLIENTS);
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToClients>::adopt(
-      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS, Consensus::PROPOSE_TO_CLIENTS);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToClients>::adopt(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::distrcoord::Consensus::ProposeToClients> Consensus::Builder::disownProposeToClients() {
-  KJ_IREQUIRE(which() == Consensus::PROPOSE_TO_CLIENTS,
+  KJ_IREQUIRE((which() == Consensus::PROPOSE_TO_CLIENTS),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToClients>::disown(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::ProposeToClients>::disown(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 
 inline bool Consensus::Reader::isVote() const {
@@ -2252,48 +2422,50 @@ inline bool Consensus::Builder::isVote() {
 }
 inline bool Consensus::Reader::hasVote() const {
   if (which() != Consensus::VOTE) return false;
-  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline bool Consensus::Builder::hasVote() {
   if (which() != Consensus::VOTE) return false;
-  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::distrcoord::Consensus::Vote::Reader Consensus::Reader::getVote() const {
-  KJ_IREQUIRE(which() == Consensus::VOTE,
+  KJ_IREQUIRE((which() == Consensus::VOTE),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Vote>::get(
-      _reader.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Vote>::get(_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline  ::riaps::distrcoord::Consensus::Vote::Builder Consensus::Builder::getVote() {
-  KJ_IREQUIRE(which() == Consensus::VOTE,
+  KJ_IREQUIRE((which() == Consensus::VOTE),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Vote>::get(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Vote>::get(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline void Consensus::Builder::setVote( ::riaps::distrcoord::Consensus::Vote::Reader value) {
   _builder.setDataField<Consensus::Which>(
-      1 * ::capnp::ELEMENTS, Consensus::VOTE);
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Vote>::set(
-      _builder.getPointerField(1 * ::capnp::POINTERS), value);
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS, Consensus::VOTE);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Vote>::set(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::distrcoord::Consensus::Vote::Builder Consensus::Builder::initVote() {
   _builder.setDataField<Consensus::Which>(
-      1 * ::capnp::ELEMENTS, Consensus::VOTE);
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Vote>::init(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS, Consensus::VOTE);
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Vote>::init(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline void Consensus::Builder::adoptVote(
     ::capnp::Orphan< ::riaps::distrcoord::Consensus::Vote>&& value) {
   _builder.setDataField<Consensus::Which>(
-      1 * ::capnp::ELEMENTS, Consensus::VOTE);
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Vote>::adopt(
-      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS, Consensus::VOTE);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Vote>::adopt(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::distrcoord::Consensus::Vote> Consensus::Builder::disownVote() {
-  KJ_IREQUIRE(which() == Consensus::VOTE,
+  KJ_IREQUIRE((which() == Consensus::VOTE),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Vote>::disown(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Vote>::disown(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 
 inline bool Consensus::Reader::isAnnounce() const {
@@ -2304,63 +2476,67 @@ inline bool Consensus::Builder::isAnnounce() {
 }
 inline bool Consensus::Reader::hasAnnounce() const {
   if (which() != Consensus::ANNOUNCE) return false;
-  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline bool Consensus::Builder::hasAnnounce() {
   if (which() != Consensus::ANNOUNCE) return false;
-  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::distrcoord::Consensus::Announce::Reader Consensus::Reader::getAnnounce() const {
-  KJ_IREQUIRE(which() == Consensus::ANNOUNCE,
+  KJ_IREQUIRE((which() == Consensus::ANNOUNCE),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Announce>::get(
-      _reader.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Announce>::get(_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline  ::riaps::distrcoord::Consensus::Announce::Builder Consensus::Builder::getAnnounce() {
-  KJ_IREQUIRE(which() == Consensus::ANNOUNCE,
+  KJ_IREQUIRE((which() == Consensus::ANNOUNCE),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Announce>::get(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Announce>::get(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline void Consensus::Builder::setAnnounce( ::riaps::distrcoord::Consensus::Announce::Reader value) {
   _builder.setDataField<Consensus::Which>(
-      1 * ::capnp::ELEMENTS, Consensus::ANNOUNCE);
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Announce>::set(
-      _builder.getPointerField(1 * ::capnp::POINTERS), value);
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS, Consensus::ANNOUNCE);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Announce>::set(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::distrcoord::Consensus::Announce::Builder Consensus::Builder::initAnnounce() {
   _builder.setDataField<Consensus::Which>(
-      1 * ::capnp::ELEMENTS, Consensus::ANNOUNCE);
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Announce>::init(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS, Consensus::ANNOUNCE);
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Announce>::init(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline void Consensus::Builder::adoptAnnounce(
     ::capnp::Orphan< ::riaps::distrcoord::Consensus::Announce>&& value) {
   _builder.setDataField<Consensus::Which>(
-      1 * ::capnp::ELEMENTS, Consensus::ANNOUNCE);
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Announce>::adopt(
-      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS, Consensus::ANNOUNCE);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Announce>::adopt(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::distrcoord::Consensus::Announce> Consensus::Builder::disownAnnounce() {
-  KJ_IREQUIRE(which() == Consensus::ANNOUNCE,
+  KJ_IREQUIRE((which() == Consensus::ANNOUNCE),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Announce>::disown(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::Announce>::disown(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 
 inline bool Consensus::Reader::hasTsyncCoordA() const {
-  return !_reader.getPointerField(2 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS).isNull();
 }
 inline bool Consensus::Builder::hasTsyncCoordA() {
-  return !_builder.getPointerField(2 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::distrcoord::Consensus::TimeSyncCoordA::Reader Consensus::Reader::getTsyncCoordA() const {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA>::get(
-      _reader.getPointerField(2 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA>::get(_reader.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
 }
 inline  ::riaps::distrcoord::Consensus::TimeSyncCoordA::Builder Consensus::Builder::getTsyncCoordA() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA>::get(
-      _builder.getPointerField(2 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA>::get(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
 inline  ::riaps::distrcoord::Consensus::TimeSyncCoordA::Pipeline Consensus::Pipeline::getTsyncCoordA() {
@@ -2368,256 +2544,270 @@ inline  ::riaps::distrcoord::Consensus::TimeSyncCoordA::Pipeline Consensus::Pipe
 }
 #endif  // !CAPNP_LITE
 inline void Consensus::Builder::setTsyncCoordA( ::riaps::distrcoord::Consensus::TimeSyncCoordA::Reader value) {
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA>::set(
-      _builder.getPointerField(2 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA>::set(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::distrcoord::Consensus::TimeSyncCoordA::Builder Consensus::Builder::initTsyncCoordA() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA>::init(
-      _builder.getPointerField(2 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA>::init(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
 }
 inline void Consensus::Builder::adoptTsyncCoordA(
     ::capnp::Orphan< ::riaps::distrcoord::Consensus::TimeSyncCoordA>&& value) {
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA>::adopt(
-      _builder.getPointerField(2 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA>::adopt(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::distrcoord::Consensus::TimeSyncCoordA> Consensus::Builder::disownTsyncCoordA() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA>::disown(
-      _builder.getPointerField(2 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA>::disown(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
 }
 
 inline bool Consensus::ProposeToLeader::Reader::hasProposeId() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool Consensus::ProposeToLeader::Builder::hasProposeId() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader Consensus::ProposeToLeader::Reader::getProposeId() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder Consensus::ProposeToLeader::Builder::getProposeId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void Consensus::ProposeToLeader::Builder::setProposeId( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder Consensus::ProposeToLeader::Builder::initProposeId(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), size);
 }
 inline void Consensus::ProposeToLeader::Builder::adoptProposeId(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> Consensus::ProposeToLeader::Builder::disownProposeId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool Consensus::ProposeToClients::Reader::hasProposeId() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool Consensus::ProposeToClients::Builder::hasProposeId() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader Consensus::ProposeToClients::Reader::getProposeId() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder Consensus::ProposeToClients::Builder::getProposeId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void Consensus::ProposeToClients::Builder::setProposeId( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder Consensus::ProposeToClients::Builder::initProposeId(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), size);
 }
 inline void Consensus::ProposeToClients::Builder::adoptProposeId(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> Consensus::ProposeToClients::Builder::disownProposeId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool Consensus::ProposeToClients::Reader::hasLeaderId() const {
-  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline bool Consensus::ProposeToClients::Builder::hasLeaderId() {
-  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader Consensus::ProposeToClients::Reader::getLeaderId() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder Consensus::ProposeToClients::Builder::getLeaderId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline void Consensus::ProposeToClients::Builder::setLeaderId( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(1 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder Consensus::ProposeToClients::Builder::initLeaderId(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(1 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), size);
 }
 inline void Consensus::ProposeToClients::Builder::adoptLeaderId(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> Consensus::ProposeToClients::Builder::disownLeaderId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 
 inline bool Consensus::Vote::Reader::hasProposeId() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool Consensus::Vote::Builder::hasProposeId() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader Consensus::Vote::Reader::getProposeId() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder Consensus::Vote::Builder::getProposeId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void Consensus::Vote::Builder::setProposeId( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder Consensus::Vote::Builder::initProposeId(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), size);
 }
 inline void Consensus::Vote::Builder::adoptProposeId(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> Consensus::Vote::Builder::disownProposeId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline  ::riaps::distrcoord::Consensus::VoteResults Consensus::Vote::Reader::getVoteResult() const {
   return _reader.getDataField< ::riaps::distrcoord::Consensus::VoteResults>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 
 inline  ::riaps::distrcoord::Consensus::VoteResults Consensus::Vote::Builder::getVoteResult() {
   return _builder.getDataField< ::riaps::distrcoord::Consensus::VoteResults>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 inline void Consensus::Vote::Builder::setVoteResult( ::riaps::distrcoord::Consensus::VoteResults value) {
   _builder.setDataField< ::riaps::distrcoord::Consensus::VoteResults>(
-      0 * ::capnp::ELEMENTS, value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, value);
 }
 
 inline bool Consensus::Announce::Reader::hasProposeId() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool Consensus::Announce::Builder::hasProposeId() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader Consensus::Announce::Reader::getProposeId() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder Consensus::Announce::Builder::getProposeId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void Consensus::Announce::Builder::setProposeId( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder Consensus::Announce::Builder::initProposeId(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), size);
 }
 inline void Consensus::Announce::Builder::adoptProposeId(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> Consensus::Announce::Builder::disownProposeId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline  ::riaps::distrcoord::Consensus::VoteResults Consensus::Announce::Reader::getVoteResult() const {
   return _reader.getDataField< ::riaps::distrcoord::Consensus::VoteResults>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 
 inline  ::riaps::distrcoord::Consensus::VoteResults Consensus::Announce::Builder::getVoteResult() {
   return _builder.getDataField< ::riaps::distrcoord::Consensus::VoteResults>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 inline void Consensus::Announce::Builder::setVoteResult( ::riaps::distrcoord::Consensus::VoteResults value) {
   _builder.setDataField< ::riaps::distrcoord::Consensus::VoteResults>(
-      0 * ::capnp::ELEMENTS, value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, value);
 }
 
 inline bool Consensus::TimeSyncCoordA::Reader::hasActionId() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool Consensus::TimeSyncCoordA::Builder::hasActionId() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader Consensus::TimeSyncCoordA::Reader::getActionId() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder Consensus::TimeSyncCoordA::Builder::getActionId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void Consensus::TimeSyncCoordA::Builder::setActionId( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder Consensus::TimeSyncCoordA::Builder::initActionId(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), size);
 }
 inline void Consensus::TimeSyncCoordA::Builder::adoptActionId(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> Consensus::TimeSyncCoordA::Builder::disownActionId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool Consensus::TimeSyncCoordA::Reader::hasTime() const {
-  return !_reader.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline bool Consensus::TimeSyncCoordA::Builder::hasTime() {
-  return !_builder.getPointerField(1 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec::Reader Consensus::TimeSyncCoordA::Reader::getTime() const {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec>::get(
-      _reader.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec>::get(_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline  ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec::Builder Consensus::TimeSyncCoordA::Builder::getTime() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec>::get(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec>::get(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 #if !CAPNP_LITE
 inline  ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec::Pipeline Consensus::TimeSyncCoordA::Pipeline::getTime() {
@@ -2625,88 +2815,92 @@ inline  ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec::Pipeline Conse
 }
 #endif  // !CAPNP_LITE
 inline void Consensus::TimeSyncCoordA::Builder::setTime( ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec::Reader value) {
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec>::set(
-      _builder.getPointerField(1 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec>::set(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec::Builder Consensus::TimeSyncCoordA::Builder::initTime() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec>::init(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec>::init(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 inline void Consensus::TimeSyncCoordA::Builder::adoptTime(
     ::capnp::Orphan< ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec>&& value) {
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec>::adopt(
-      _builder.getPointerField(1 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec>::adopt(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec> Consensus::TimeSyncCoordA::Builder::disownTime() {
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec>::disown(
-      _builder.getPointerField(1 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus::TimeSyncCoordA::TimeSpec>::disown(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
 }
 
 inline  ::int32_t Consensus::TimeSyncCoordA::TimeSpec::Reader::getTvSec() const {
   return _reader.getDataField< ::int32_t>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 
 inline  ::int32_t Consensus::TimeSyncCoordA::TimeSpec::Builder::getTvSec() {
   return _builder.getDataField< ::int32_t>(
-      0 * ::capnp::ELEMENTS);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 inline void Consensus::TimeSyncCoordA::TimeSpec::Builder::setTvSec( ::int32_t value) {
   _builder.setDataField< ::int32_t>(
-      0 * ::capnp::ELEMENTS, value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, value);
 }
 
 inline  ::int32_t Consensus::TimeSyncCoordA::TimeSpec::Reader::getTvNsec() const {
   return _reader.getDataField< ::int32_t>(
-      1 * ::capnp::ELEMENTS);
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS);
 }
 
 inline  ::int32_t Consensus::TimeSyncCoordA::TimeSpec::Builder::getTvNsec() {
   return _builder.getDataField< ::int32_t>(
-      1 * ::capnp::ELEMENTS);
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS);
 }
 inline void Consensus::TimeSyncCoordA::TimeSpec::Builder::setTvNsec( ::int32_t value) {
   _builder.setDataField< ::int32_t>(
-      1 * ::capnp::ELEMENTS, value);
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS, value);
 }
 
 inline bool GroupMessage::Reader::hasSourceComponentId() const {
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool GroupMessage::Builder::hasSourceComponentId() {
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::capnp::Text::Reader GroupMessage::Reader::getSourceComponentId() const {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::capnp::Text::Builder GroupMessage::Builder::getSourceComponentId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void GroupMessage::Builder::setSourceComponentId( ::capnp::Text::Reader value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::capnp::Text::Builder GroupMessage::Builder::initSourceComponentId(unsigned int size) {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS), size);
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), size);
 }
 inline void GroupMessage::Builder::adoptSourceComponentId(
     ::capnp::Orphan< ::capnp::Text>&& value) {
-  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::capnp::Text> GroupMessage::Builder::disownSourceComponentId() {
-  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline  ::riaps::distrcoord::GroupInternals::Which GroupInternals::Reader::which() const {
-  return _reader.getDataField<Which>(0 * ::capnp::ELEMENTS);
+  return _reader.getDataField<Which>(
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 inline  ::riaps::distrcoord::GroupInternals::Which GroupInternals::Builder::which() {
-  return _builder.getDataField<Which>(0 * ::capnp::ELEMENTS);
+  return _builder.getDataField<Which>(
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
 }
 
 inline bool GroupInternals::Reader::isGroupHeartBeat() const {
@@ -2717,48 +2911,50 @@ inline bool GroupInternals::Builder::isGroupHeartBeat() {
 }
 inline bool GroupInternals::Reader::hasGroupHeartBeat() const {
   if (which() != GroupInternals::GROUP_HEART_BEAT) return false;
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool GroupInternals::Builder::hasGroupHeartBeat() {
   if (which() != GroupInternals::GROUP_HEART_BEAT) return false;
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::distrcoord::GroupHeartBeat::Reader GroupInternals::Reader::getGroupHeartBeat() const {
-  KJ_IREQUIRE(which() == GroupInternals::GROUP_HEART_BEAT,
+  KJ_IREQUIRE((which() == GroupInternals::GROUP_HEART_BEAT),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupHeartBeat>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupHeartBeat>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::riaps::distrcoord::GroupHeartBeat::Builder GroupInternals::Builder::getGroupHeartBeat() {
-  KJ_IREQUIRE(which() == GroupInternals::GROUP_HEART_BEAT,
+  KJ_IREQUIRE((which() == GroupInternals::GROUP_HEART_BEAT),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupHeartBeat>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupHeartBeat>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void GroupInternals::Builder::setGroupHeartBeat( ::riaps::distrcoord::GroupHeartBeat::Reader value) {
   _builder.setDataField<GroupInternals::Which>(
-      0 * ::capnp::ELEMENTS, GroupInternals::GROUP_HEART_BEAT);
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupHeartBeat>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, GroupInternals::GROUP_HEART_BEAT);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupHeartBeat>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::distrcoord::GroupHeartBeat::Builder GroupInternals::Builder::initGroupHeartBeat() {
   _builder.setDataField<GroupInternals::Which>(
-      0 * ::capnp::ELEMENTS, GroupInternals::GROUP_HEART_BEAT);
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupHeartBeat>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, GroupInternals::GROUP_HEART_BEAT);
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupHeartBeat>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void GroupInternals::Builder::adoptGroupHeartBeat(
     ::capnp::Orphan< ::riaps::distrcoord::GroupHeartBeat>&& value) {
   _builder.setDataField<GroupInternals::Which>(
-      0 * ::capnp::ELEMENTS, GroupInternals::GROUP_HEART_BEAT);
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupHeartBeat>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, GroupInternals::GROUP_HEART_BEAT);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupHeartBeat>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::distrcoord::GroupHeartBeat> GroupInternals::Builder::disownGroupHeartBeat() {
-  KJ_IREQUIRE(which() == GroupInternals::GROUP_HEART_BEAT,
+  KJ_IREQUIRE((which() == GroupInternals::GROUP_HEART_BEAT),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupHeartBeat>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupHeartBeat>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool GroupInternals::Reader::isLeaderElection() const {
@@ -2769,48 +2965,50 @@ inline bool GroupInternals::Builder::isLeaderElection() {
 }
 inline bool GroupInternals::Reader::hasLeaderElection() const {
   if (which() != GroupInternals::LEADER_ELECTION) return false;
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool GroupInternals::Builder::hasLeaderElection() {
   if (which() != GroupInternals::LEADER_ELECTION) return false;
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::distrcoord::LeaderElection::Reader GroupInternals::Reader::getLeaderElection() const {
-  KJ_IREQUIRE(which() == GroupInternals::LEADER_ELECTION,
+  KJ_IREQUIRE((which() == GroupInternals::LEADER_ELECTION),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::riaps::distrcoord::LeaderElection::Builder GroupInternals::Builder::getLeaderElection() {
-  KJ_IREQUIRE(which() == GroupInternals::LEADER_ELECTION,
+  KJ_IREQUIRE((which() == GroupInternals::LEADER_ELECTION),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void GroupInternals::Builder::setLeaderElection( ::riaps::distrcoord::LeaderElection::Reader value) {
   _builder.setDataField<GroupInternals::Which>(
-      0 * ::capnp::ELEMENTS, GroupInternals::LEADER_ELECTION);
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, GroupInternals::LEADER_ELECTION);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::distrcoord::LeaderElection::Builder GroupInternals::Builder::initLeaderElection() {
   _builder.setDataField<GroupInternals::Which>(
-      0 * ::capnp::ELEMENTS, GroupInternals::LEADER_ELECTION);
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, GroupInternals::LEADER_ELECTION);
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void GroupInternals::Builder::adoptLeaderElection(
     ::capnp::Orphan< ::riaps::distrcoord::LeaderElection>&& value) {
   _builder.setDataField<GroupInternals::Which>(
-      0 * ::capnp::ELEMENTS, GroupInternals::LEADER_ELECTION);
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, GroupInternals::LEADER_ELECTION);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::distrcoord::LeaderElection> GroupInternals::Builder::disownLeaderElection() {
-  KJ_IREQUIRE(which() == GroupInternals::LEADER_ELECTION,
+  KJ_IREQUIRE((which() == GroupInternals::LEADER_ELECTION),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderElection>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool GroupInternals::Reader::isMessageToLeader() const {
@@ -2821,48 +3019,50 @@ inline bool GroupInternals::Builder::isMessageToLeader() {
 }
 inline bool GroupInternals::Reader::hasMessageToLeader() const {
   if (which() != GroupInternals::MESSAGE_TO_LEADER) return false;
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool GroupInternals::Builder::hasMessageToLeader() {
   if (which() != GroupInternals::MESSAGE_TO_LEADER) return false;
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::distrcoord::MessageToLeader::Reader GroupInternals::Reader::getMessageToLeader() const {
-  KJ_IREQUIRE(which() == GroupInternals::MESSAGE_TO_LEADER,
+  KJ_IREQUIRE((which() == GroupInternals::MESSAGE_TO_LEADER),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::MessageToLeader>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::MessageToLeader>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::riaps::distrcoord::MessageToLeader::Builder GroupInternals::Builder::getMessageToLeader() {
-  KJ_IREQUIRE(which() == GroupInternals::MESSAGE_TO_LEADER,
+  KJ_IREQUIRE((which() == GroupInternals::MESSAGE_TO_LEADER),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::MessageToLeader>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::MessageToLeader>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void GroupInternals::Builder::setMessageToLeader( ::riaps::distrcoord::MessageToLeader::Reader value) {
   _builder.setDataField<GroupInternals::Which>(
-      0 * ::capnp::ELEMENTS, GroupInternals::MESSAGE_TO_LEADER);
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::MessageToLeader>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, GroupInternals::MESSAGE_TO_LEADER);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::MessageToLeader>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::distrcoord::MessageToLeader::Builder GroupInternals::Builder::initMessageToLeader() {
   _builder.setDataField<GroupInternals::Which>(
-      0 * ::capnp::ELEMENTS, GroupInternals::MESSAGE_TO_LEADER);
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::MessageToLeader>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, GroupInternals::MESSAGE_TO_LEADER);
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::MessageToLeader>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void GroupInternals::Builder::adoptMessageToLeader(
     ::capnp::Orphan< ::riaps::distrcoord::MessageToLeader>&& value) {
   _builder.setDataField<GroupInternals::Which>(
-      0 * ::capnp::ELEMENTS, GroupInternals::MESSAGE_TO_LEADER);
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::MessageToLeader>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, GroupInternals::MESSAGE_TO_LEADER);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::MessageToLeader>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::distrcoord::MessageToLeader> GroupInternals::Builder::disownMessageToLeader() {
-  KJ_IREQUIRE(which() == GroupInternals::MESSAGE_TO_LEADER,
+  KJ_IREQUIRE((which() == GroupInternals::MESSAGE_TO_LEADER),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::MessageToLeader>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::MessageToLeader>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool GroupInternals::Reader::isConsensus() const {
@@ -2873,48 +3073,50 @@ inline bool GroupInternals::Builder::isConsensus() {
 }
 inline bool GroupInternals::Reader::hasConsensus() const {
   if (which() != GroupInternals::CONSENSUS) return false;
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool GroupInternals::Builder::hasConsensus() {
   if (which() != GroupInternals::CONSENSUS) return false;
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::distrcoord::Consensus::Reader GroupInternals::Reader::getConsensus() const {
-  KJ_IREQUIRE(which() == GroupInternals::CONSENSUS,
+  KJ_IREQUIRE((which() == GroupInternals::CONSENSUS),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::riaps::distrcoord::Consensus::Builder GroupInternals::Builder::getConsensus() {
-  KJ_IREQUIRE(which() == GroupInternals::CONSENSUS,
+  KJ_IREQUIRE((which() == GroupInternals::CONSENSUS),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void GroupInternals::Builder::setConsensus( ::riaps::distrcoord::Consensus::Reader value) {
   _builder.setDataField<GroupInternals::Which>(
-      0 * ::capnp::ELEMENTS, GroupInternals::CONSENSUS);
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, GroupInternals::CONSENSUS);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::distrcoord::Consensus::Builder GroupInternals::Builder::initConsensus() {
   _builder.setDataField<GroupInternals::Which>(
-      0 * ::capnp::ELEMENTS, GroupInternals::CONSENSUS);
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, GroupInternals::CONSENSUS);
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void GroupInternals::Builder::adoptConsensus(
     ::capnp::Orphan< ::riaps::distrcoord::Consensus>&& value) {
   _builder.setDataField<GroupInternals::Which>(
-      0 * ::capnp::ELEMENTS, GroupInternals::CONSENSUS);
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, GroupInternals::CONSENSUS);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::distrcoord::Consensus> GroupInternals::Builder::disownConsensus() {
-  KJ_IREQUIRE(which() == GroupInternals::CONSENSUS,
+  KJ_IREQUIRE((which() == GroupInternals::CONSENSUS),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::Consensus>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 inline bool GroupInternals::Reader::isGroupMessage() const {
@@ -2925,48 +3127,104 @@ inline bool GroupInternals::Builder::isGroupMessage() {
 }
 inline bool GroupInternals::Reader::hasGroupMessage() const {
   if (which() != GroupInternals::GROUP_MESSAGE) return false;
-  return !_reader.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline bool GroupInternals::Builder::hasGroupMessage() {
   if (which() != GroupInternals::GROUP_MESSAGE) return false;
-  return !_builder.getPointerField(0 * ::capnp::POINTERS).isNull();
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
 }
 inline  ::riaps::distrcoord::GroupMessage::Reader GroupInternals::Reader::getGroupMessage() const {
-  KJ_IREQUIRE(which() == GroupInternals::GROUP_MESSAGE,
+  KJ_IREQUIRE((which() == GroupInternals::GROUP_MESSAGE),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupMessage>::get(
-      _reader.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupMessage>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline  ::riaps::distrcoord::GroupMessage::Builder GroupInternals::Builder::getGroupMessage() {
-  KJ_IREQUIRE(which() == GroupInternals::GROUP_MESSAGE,
+  KJ_IREQUIRE((which() == GroupInternals::GROUP_MESSAGE),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupMessage>::get(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupMessage>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void GroupInternals::Builder::setGroupMessage( ::riaps::distrcoord::GroupMessage::Reader value) {
   _builder.setDataField<GroupInternals::Which>(
-      0 * ::capnp::ELEMENTS, GroupInternals::GROUP_MESSAGE);
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupMessage>::set(
-      _builder.getPointerField(0 * ::capnp::POINTERS), value);
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, GroupInternals::GROUP_MESSAGE);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupMessage>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
 }
 inline  ::riaps::distrcoord::GroupMessage::Builder GroupInternals::Builder::initGroupMessage() {
   _builder.setDataField<GroupInternals::Which>(
-      0 * ::capnp::ELEMENTS, GroupInternals::GROUP_MESSAGE);
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupMessage>::init(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, GroupInternals::GROUP_MESSAGE);
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupMessage>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 inline void GroupInternals::Builder::adoptGroupMessage(
     ::capnp::Orphan< ::riaps::distrcoord::GroupMessage>&& value) {
   _builder.setDataField<GroupInternals::Which>(
-      0 * ::capnp::ELEMENTS, GroupInternals::GROUP_MESSAGE);
-  ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupMessage>::adopt(
-      _builder.getPointerField(0 * ::capnp::POINTERS), kj::mv(value));
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, GroupInternals::GROUP_MESSAGE);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupMessage>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
 }
 inline ::capnp::Orphan< ::riaps::distrcoord::GroupMessage> GroupInternals::Builder::disownGroupMessage() {
-  KJ_IREQUIRE(which() == GroupInternals::GROUP_MESSAGE,
+  KJ_IREQUIRE((which() == GroupInternals::GROUP_MESSAGE),
               "Must check which() before get()ing a union member.");
-  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupMessage>::disown(
-      _builder.getPointerField(0 * ::capnp::POINTERS));
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::GroupMessage>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
+}
+
+inline bool GroupInternals::Reader::isLeaderMessage() const {
+  return which() == GroupInternals::LEADER_MESSAGE;
+}
+inline bool GroupInternals::Builder::isLeaderMessage() {
+  return which() == GroupInternals::LEADER_MESSAGE;
+}
+inline bool GroupInternals::Reader::hasLeaderMessage() const {
+  if (which() != GroupInternals::LEADER_MESSAGE) return false;
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
+}
+inline bool GroupInternals::Builder::hasLeaderMessage() {
+  if (which() != GroupInternals::LEADER_MESSAGE) return false;
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
+}
+inline  ::riaps::distrcoord::LeaderMessage::Reader GroupInternals::Reader::getLeaderMessage() const {
+  KJ_IREQUIRE((which() == GroupInternals::LEADER_MESSAGE),
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderMessage>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
+}
+inline  ::riaps::distrcoord::LeaderMessage::Builder GroupInternals::Builder::getLeaderMessage() {
+  KJ_IREQUIRE((which() == GroupInternals::LEADER_MESSAGE),
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderMessage>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
+}
+inline void GroupInternals::Builder::setLeaderMessage( ::riaps::distrcoord::LeaderMessage::Reader value) {
+  _builder.setDataField<GroupInternals::Which>(
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, GroupInternals::LEADER_MESSAGE);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderMessage>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
+}
+inline  ::riaps::distrcoord::LeaderMessage::Builder GroupInternals::Builder::initLeaderMessage() {
+  _builder.setDataField<GroupInternals::Which>(
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, GroupInternals::LEADER_MESSAGE);
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderMessage>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
+}
+inline void GroupInternals::Builder::adoptLeaderMessage(
+    ::capnp::Orphan< ::riaps::distrcoord::LeaderMessage>&& value) {
+  _builder.setDataField<GroupInternals::Which>(
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, GroupInternals::LEADER_MESSAGE);
+  ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderMessage>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::riaps::distrcoord::LeaderMessage> GroupInternals::Builder::disownLeaderMessage() {
+  KJ_IREQUIRE((which() == GroupInternals::LEADER_MESSAGE),
+              "Must check which() before get()ing a union member.");
+  return ::capnp::_::PointerHelpers< ::riaps::distrcoord::LeaderMessage>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
 }
 
 }  // namespace

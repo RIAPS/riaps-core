@@ -83,42 +83,6 @@ bool registerService(const std::string&              appName     ,
     zsock_destroy(&client);
 
     return result;
-
-    /*
-   // Create ZMQ message for RIAPS discovery service 
-   // Create frames:
-   zmsg_t* msg = zmsg_new();
-   zmsg_addstr(msg, CMD_DISC_REGISTER_SERVICE);
-
-    // Id and the name are the same now
-   zmsg_addstr(msg, message_type.c_str());
-   zmsg_addstr(msg, message_type.c_str());
-   zmsg_addstr(msg, ip_address.c_str());
-   zmsg_addstr(msg, port.c_str());
-
-    // Todo: Indo separate frame (as a submessage)
-   zmsg_addstr(msg, "$TAGS$");
-
-   // Adding tag frames
-   for (auto it = tags.begin(); it!=tags.end(); it++){
-       zmsg_addstr(msg, it->c_str());
-   }
-
-   // Create the socket and send the register command
-   zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC);
-   assert(client);
-
-   // TODO check return value
-   zmsg_send(&msg, client);
-
-   // Wait for the OK response
-   // TODO: Specify OK response, error handling
-   auto result = zstr_recv(client);
-   std::cout << result;
-   // TODO: if (result == somethingsomething) {}
-
-   // release ZMQ socket
-   zsock_destroy(&client);*/
 }
 
 
@@ -127,6 +91,7 @@ std::vector<service_lookup_result>
 subscribeToService(const std::string&      app_name  ,
                    const std::string&      part_name , // instance_name
                    const std::string&      actor_name,
+                   const std::string&      ip_address,
                    riaps::discovery::Kind  kind      ,
                    riaps::discovery::Scope scope     ,
                    const std::string&      port_name ,
@@ -152,14 +117,13 @@ subscribeToService(const std::string&      app_name  ,
     clientBuilder.setActorName(actor_name);
     clientBuilder.setInstanceName(part_name);
     clientBuilder.setPortName(port_name);
-    //clientBuilder.setActorHost()
+    clientBuilder.setActorHost(ip_address);
 
     auto serializedMessage = capnp::messageToFlatArray(message);
 
     zmsg_t* msg = zmsg_new();
     zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
 
-    //zsock_t * client = zsock_new_req (DISCOVERY_SERVICE_IPC(mac_address));
     zsock_t * client = zsock_new_req (riaps::framework::Configuration::GetDiscoveryEndpoint().c_str());
     assert(client);
 
@@ -343,12 +307,12 @@ joinGroup(const std::string& appName,
     msgGroupJoin.setComponentId(componentId);
     msgGroupJoin.setAppName(appName);
     msgGroupJoin.setPid(getpid());
-    msgGroupId.setGroupType(groupId.groupTypeId);
-    msgGroupId.setGroupName(groupId.groupName);
+    msgGroupId.setGroupType(groupId.group_type_id);
+    msgGroupId.setGroupName(groupId.group_name);
 
     for (int i = 0; i< groupServices.size(); i++){
         msgGroupServices[i].setAddress(groupServices[i].address);
-        msgGroupServices[i].setMessageType(groupServices[i].messageType);
+        msgGroupServices[i].setMessageType(groupServices[i].message_type);
     }
 
     auto serializedMessage = capnp::messageToFlatArray(message);

@@ -19,8 +19,8 @@ namespace riaps{
             virtual ~PublisherPortBase();
 
         protected:
-            int m_port;
-            std::string m_host;
+            int port_;
+            std::string host_;
             std::string m_endpoint;
 
             //virtual bool Send(zmsg_t** zmessage) const;

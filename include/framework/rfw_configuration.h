@@ -13,9 +13,9 @@ namespace riaps {
     namespace framework {
         class Configuration{
         public:
-            static std::string GetDiscoveryEndpoint();
-            static std::string GetDeviceManagerEndpoint();
-            static std::string GetDeploEndpoint();
+            static const std::string GetDiscoveryEndpoint();
+            static const std::string GetDeviceManagerEndpoint();
+            static const std::string GetDeploEndpoint();
         };
     }
 }

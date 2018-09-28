@@ -39,7 +39,7 @@ namespace riaps {
 
                 char* cRequestId = nullptr;
                 zframe_t *bodyFrame = nullptr, *timestampFrame = nullptr;
-                if (zsock_recv(m_port_socket, "sff", &cRequestId, &bodyFrame, &timestampFrame)==0){
+                if (zsock_recv(port_socket_, "sff", &cRequestId, &bodyFrame, &timestampFrame)==0){
                     std::string socketId = zuuid_str(m_socketId);
                     params.reset(new riaps::MessageParams(socketId, &cRequestId, &timestampFrame));
                     message.reset(new RiapsMessage<R, T>(&bodyFrame));
