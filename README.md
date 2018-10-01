@@ -21,7 +21,7 @@ sudo apt install libpython3.5-dev
 Clone riaps-core
 
 ```sh
-git clone -b pybindcomponents https://github.com/RIAPS/riaps-core.git
+git clone https://github.com/RIAPS/riaps-core.git
 ```
 
 Build riaps-core and DistributedEstimatorPybind
