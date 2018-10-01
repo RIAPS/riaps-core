@@ -6,7 +6,7 @@ This branch contains experiment code. Don't use it in production!
 
 # Requirements
 
-Download and install [riaps-externals](https://github.com/RIAPS/riaps-externals/releases/tag/0.6.4)
+Download and install [riaps-externals](https://github.com/RIAPS/riaps-externals/releases/tag/0.7.3)
 
 ```sh
 sudo dpkg -i riaps-externals-amd64.deb
@@ -39,9 +39,9 @@ The built components are in riaps-core/bin directory:
 
 ```
 ls -x ../bin
-globalestimator.cpython-35m-x86_64-linux-gnu.so
-localestimator.cpython-35m-x86_64-linux-gnu.so
-sensor.cpython-35m-x86_64-linux-gnu.so 
+globalestimator.so
+localestimator.so
+sensor.so 
 ```
 
 
