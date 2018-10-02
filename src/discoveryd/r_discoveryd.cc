@@ -80,18 +80,6 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-//    zmsg_t* zactorMsg = zactor_recv(r_actor);
-//    char* pipeReturn = zmsg_popstr(zactorMsg);
-//    if (*pipeReturn == '1') {
-//        console->info("DHT thread is initialized, starts beaconing.");
-//        zclock_sleep(500);
-//    } else {
-//        console->error("Unable to initialize DHT thread, exiting.");
-//        zactor_destroy(&r_actor);
-//        zclock_sleep(500);
-//        return -1;
-//    }
-
     zsock_t * control = zsock_new_router(CONTROL_SOCKET);
 
     // zbeacon for sending UDP beacons
