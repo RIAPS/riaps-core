@@ -37,7 +37,9 @@ namespace riaps{
         dht_tracker_ = zactor_new(dht_tracker, &dht_node_);
 
         zsock_bind(riaps_socket_, "%s", riaps::framework::Configuration::GetDiscoveryEndpoint().c_str());
+
         poller_ = zpoller_new(pipe_, dht_update_socket_, riaps_socket_, nullptr);
+        zpoller_set_nonstop(poller_, true);
 
         last_service_checkin_ = last_zombie_check_ = zclock_mono();
 
@@ -334,6 +336,7 @@ namespace riaps{
         if (service_checkins_.find(servicePid)!=service_checkins_.end()){
             for (auto& service : service_checkins_[servicePid]){
                 string service_address = service->value;
+
                 vector<uint8_t> opendht_data(service_address.begin(), service_address.end());
 
                 if (service_address.find("127.0.0.1") != string::npos) {
@@ -540,10 +543,12 @@ namespace riaps{
             auto logger = logger_;
             registered_listeners_[lookupkeyhash.toString()] =
                     dht_node_.listen(lookupkeyhash,
-                                     [lookupkey, logger](const std::vector<std::shared_ptr<dht::Value>> &values) {
-                                           std::vector<std::string> update_results;
+                                     [lookupkey, logger](const vector<shared_ptr<dht::Value>> &values) {
+
+                                           // TODO: Put unto std::async()
+                                           vector<string> update_results;
                                            for (const auto &value :values) {
-                                               std::string result = std::string(
+                                               string result = string(
                                                        value->data.begin(),
                                                        value->data.end());
                                                logger->debug("OpenDHT.Listen() returns: {}", result);
@@ -812,16 +817,12 @@ namespace riaps{
             terminated_ = true;
         }
         else {
-
             char *command = zmsg_popstr(msg);
 
             if (streq(command, "$TERM")) {
-                //std::cout << std::endl << "$TERMINATE arrived, discovery service is stopping..." << std::endl;
                 logger_->info("$TERMINATE arrived, discovery service is stopping.");
                 terminated_ = true;
             } else if (streq(command, CMD_JOIN)) {
-                //std::cout << "New peer on the network. Join()" << std::endl;
-
                 bool hasMoreMsg = true;
 
                 while (hasMoreMsg) {
@@ -884,12 +885,12 @@ namespace riaps{
         auto msgGetResults = msgProviderGet.getResults();
 
         for (int idx = 0; idx < msgGetResults.size(); idx++) {
-            std::string resultEndpoint = std::string(msgGetResults[idx].cStr());
+            string resultEndpoint = string(msgGetResults[idx].cStr());
 
             if (zombie_services_.find(resultEndpoint)!=zombie_services_.end()) continue;
 
             auto pos = resultEndpoint.find(':');
-            if (pos == std::string::npos) {
+            if (pos == string::npos) {
                 continue;
             }
 
@@ -931,15 +932,13 @@ namespace riaps{
             zmsg_pushmem(msg, serializedMessage.asBytes().begin(),
                          serializedMessage.asBytes().size());
 
-            std::string clientKeyBase =    "/" + std::string(msgProviderGet.getPath().getAppName().cStr())
-                                         + "/" + std::string(msgProviderGet.getClient().getActorName().cStr())
-                                         + "/";
+            string clientKeyBase = fmt::format("/{}/{}/",
+                                               msgProviderGet.getPath().getAppName().cStr(),
+                                               msgProviderGet.getClient().getActorName().cStr());
 
             // Client might gone while the DHT was looking for the values
             if (clients.find(clientKeyBase) != clients.end()) {
                 zmsg_send(&msg, clients.at(clientKeyBase)->socket);
-                //std::cout << "Get results were sent to the client: " << clientKeyBase << std::endl;
-                //m_logger->info("Get() results were sent to the client: {}", clientKeyBase);
                 logger_->info("Get() returns {}@{}:{} to {}",
                                msgProviderGet.getClient().getPortName().cStr(),
                                host,
@@ -949,7 +948,6 @@ namespace riaps{
             } else {
                 zmsg_destroy(&msg);
                 logger_->warn("Get returned with values, but client has gone.");
-                //std::cout << "Get returned with values, but client has gone. " << std::endl;
             }
         }
     }
@@ -960,9 +958,9 @@ namespace riaps{
 /// \param clientSubscriptions List of current key subscribtions.
 /// \param clients  Holds the ZMQ sockets of the client actors.
     void DiscoveryMessageHandler::handleDhtUpdate(const riaps::discovery::ProviderListUpdate::Reader& msgProviderUpdate,
-                      const std::map<std::string, std::vector<std::unique_ptr<ClientDetails>>>& clientSubscriptions){
+                      const map<string, vector<unique_ptr<ClientDetails>>>& clientSubscriptions){
 
-        std::string provider_key = std::string(msgProviderUpdate.getProviderpath().cStr());
+        string provider_key = string(msgProviderUpdate.getProviderpath().cStr());
 
         auto msg_newproviders = msgProviderUpdate.getNewvalues();
 
@@ -1003,11 +1001,6 @@ namespace riaps{
 
                     logger_->info("Search for registered actor: {}", clientKeyBase);
 
-                    // Python reference:
-                    // TODO: Figure out, de we really need for this. I don't think so...
-                    //if self.hostAddress != actorHost:
-                    //continue
-
                     // If the client port saved before
                     if (clients_.find(clientKeyBase) != clients_.end()) {
                         const ActorDetails *clientSocket = clients_.at(clientKeyBase).get();
@@ -1038,8 +1031,6 @@ namespace riaps{
 
                             zmsg_send(&msg, clientSocket->socket);
 
-                            //std::cout << "Port update sent to the client: " << clientKeyBase << std::endl;
-                            //m_logger->info("Port update sent to the client: {}", clientKeyBase);
                             logger_->info("Update() returns {}@{}:{} to {}", subscribedClient->portname, host, portNum, clientKeyBase);
                         }
                     }
@@ -1100,7 +1091,7 @@ namespace riaps{
                     (*serviceIt)->createdTime = now;
 
                     // Reput key-value
-                    std::vector<uint8_t> opendht_data((*serviceIt)->value.begin(), (*serviceIt)->value.end());
+                    vector<uint8_t> opendht_data((*serviceIt)->value.begin(), (*serviceIt)->value.end());
                     auto keyhash = dht::InfoHash::get((*serviceIt)->key);
 
                     dht_node_.put(keyhash, dht::Value(opendht_data));
@@ -1210,10 +1201,6 @@ namespace riaps{
         };
 
         string key = fmt::format("/{}/{}/{}", appName, msgType, kindPairs.at(kind));
-//                "/" + appName
-//              + "/" + msgType
-//              + "/" + kindPairs[kind];
-
         const string hostid = riaps::framework::Network::GetMacAddressStripped();
 
         if (scope == riaps::discovery::Scope::LOCAL) {
@@ -1221,11 +1208,6 @@ namespace riaps{
         }
 
         string client = fmt::format("/{}/{}/{}/{}/{}", appName, clientActorName, clientActorHost, clientInstanceName, clientPortName);
-//        std::string client =   '/' + appName
-//                             + '/' + clientActorName
-//                             + '/' + clientActorHost
-//                             + '/' + clientInstanceName
-//                             + '/' + clientPortName;
 
         if (scope == riaps::discovery::Scope::LOCAL) {
             client = client + ":" + hostid;
