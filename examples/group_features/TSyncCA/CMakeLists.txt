@@ -14,13 +14,13 @@
 #include_directories(${CMAKE_SOURCE_DIR}/cpp/include)
 
 # Creating Libraries for Component edu.vanderbilt.riaps.app.impl.ComponentImpl@1389af23 (name: Tsca) (language: python, realtime: false)
-add_library(tscagpio
-			SHARED ${CMAKE_CURRENT_SOURCE_DIR}/cpp/TscaGpio.cc
-			${CMAKE_CURRENT_SOURCE_DIR}/cpp/TscaGpioBase.cc
-		${CMAKE_CURRENT_SOURCE_DIR}/cpp/include/TscaGpioBase.h
-		${CMAKE_CURRENT_SOURCE_DIR}/cpp/include/TscaGpio.h
+add_library(tsca
+			SHARED cpp/Tsca.cc
+        cpp/TscaBase.cc
+        cpp/include/TscaBase.h
+        cpp/include/Tsca.h
 			)
 			
-target_link_libraries(tscagpio czmq riaps dl capnp kj soc)
-install(TARGETS tscagpio DESTINATION lib)
+target_link_libraries(tsca czmq riaps dl capnp kj)
+install(TARGETS tsca DESTINATION lib)
 

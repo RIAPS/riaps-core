@@ -5,7 +5,7 @@
 #ifndef RIAPS_CORE_IODEVICE_H
 #define RIAPS_CORE_IODEVICE_H
 
-#include <base/IODeviceBase.h>
+#include "base/IODeviceBase.h"
 #include "IODeviceThread.h"
 
 namespace echoio {

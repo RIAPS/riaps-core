@@ -27,23 +27,23 @@ include_directories(include)
 add_custom_command(
         OUTPUT  "include/messages/distributedestimator.capnp.c++"
         DEPENDS "include/messages/capnp/distributedestimator.capnp"
-        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/messages/capnp"
+        WORKING_DIRECTORY "include/messages/capnp"
         COMMAND /opt/riaps/amd64/bin/capnp compile distributedestimator.capnp -oc++:../
         COMMENT "=== Generating capnp ==="
 )
 
 pybind11_add_module(globalestimator src/GlobalEstimator.cc
-                                    src/base/GlobalEstimatorBase.cc
-                                    ${CMAKE_CURRENT_SOURCE_DIR}/include/messages/distributedestimator.capnp.c++
-                                    include/base/GlobalEstimatorBase.h
-                                    include/GlobalEstimator.h
+        src/base/GlobalEstimatorBase.cc
+        include/messages/distributedestimator.capnp.c++
+        include/base/GlobalEstimatorBase.h
+        include/GlobalEstimator.h
                                     )
 target_link_libraries(globalestimator PRIVATE czmq riaps dl capnp kj)
 set_target_properties(globalestimator PROPERTIES PREFIX lib SUFFIX .so)
 
 pybind11_add_module(localestimator src/LocalEstimator.cc
         src/base/LocalEstimatorBase.cc
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/messages/distributedestimator.capnp.c++
+        include/messages/distributedestimator.capnp.c++
         include/base/LocalEstimatorBase.h
         include/LocalEstimator.h
         )
@@ -52,7 +52,7 @@ set_target_properties(localestimator PROPERTIES PREFIX lib SUFFIX .so)
 
 pybind11_add_module(sensor src/Sensor.cc
         src/base/SensorBase.cc
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/messages/distributedestimator.capnp.c++
+        include/messages/distributedestimator.capnp.c++
         include/base/SensorBase.h
         include/Sensor.h
         )

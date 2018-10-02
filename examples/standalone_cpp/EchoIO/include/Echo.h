@@ -5,7 +5,7 @@
 #ifndef RIAPS_CORE_ECHO_H
 #define RIAPS_CORE_ECHO_H
 
-#include <base/EchoBase.h>
+#include "base/EchoBase.h"
 
 namespace echoio{
     namespace components{
