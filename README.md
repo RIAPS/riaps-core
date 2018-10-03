@@ -56,7 +56,7 @@ sudo apt-get install crossbuild-essential-armhf gdb-multiarch build-essential cm
 autoconf autogen 
 ```
 
-Some of the dependencies are available from the apt repos, install them:
+Some of the RIAPS dependencies are available from the apt repos, install them:
 
 ```sh
 sudo apt-get install libreadline-dev libreadline-dev:armhf byacc flex libpcap-dev libpcap-dev:armhf \
@@ -66,7 +66,7 @@ libncurses5-dev libncurses5-dev:armhf nettle-dev nettle-dev:armhf
 
 ## Install riaps dependencies
 
-Download and install [riaps-externals](https://github.com/RIAPS/riaps-externals/releases).
+Some of the dependencies are not available (or no multiarch support) in the apt repositories. Download and install [riaps-externals](https://github.com/RIAPS/riaps-externals/releases).
 It contains both the armhf and amd64 dependencies of RIAPS. The externals package is installed under
 the `/opt/riaps/{arch}/ directory.`
 
@@ -86,6 +86,8 @@ Download and install [riaps-core](https://github.com/RIAPS/riaps-core/releases).
 sudo dpkg -i riaps-core-amd64.deb
 ```
 
+You can start develop RIAPS applications in C++. :exclamation: LINK :exclamation:
+
 # Build riaps-core
 
 
@@ -95,7 +97,7 @@ Clone the repository
 git clone -b pybindcomponents https://github.com/RIAPS/riaps-core.git
 ```
 
-Build riaps-core and DistributedEstimatorPybind
+Build riaps-core
 
 ```
 mkdir riaps-core/build && cd riaps-core/build
@@ -106,13 +108,37 @@ cp ./rdiscoveryd /opt/riaps/amd64/bin/
 cp ./libriaps.so /opt/riaps/amd64/lib/
 ```
 
-The built components are in riaps-core/bin directory:
+# Build riaps-core & examples
 
+In the riaps-core directory edit the `CMakeLists.txt`. In the tests section (starts with `if (BUILD_TESTS)`), uncomment
+the example to be built. E.g.:
+
+```cmake
+ if (BUILD_TESTS)
+     include(CTest)
+     enable_testing()
+     # Tests
+     add_subdirectory(examples/pybind/DistributedEstimatorPybind)
+ endif()
 ```
+
+Build:
+
+```sh
+mkdir riaps-core/build && cd riaps-core/build
+cmake -Darch=amd64 ../
+make -j4
+```
+
+The built components are in the `riaps-core/bin` directory:
+
+```sh
 ls -x ../bin
-globalestimator.cpython-35m-x86_64-linux-gnu.so
-localestimator.cpython-35m-x86_64-linux-gnu.so
-sensor.cpython-35m-x86_64-linux-gnu.so 
+globalestimator.so
+localestimator.so
+sensor.so 
 ```
 
+# Run the application
 
+:exclamation: LINK :exclamation:

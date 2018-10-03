@@ -86,7 +86,7 @@ if (BUILD_TESTS)
     # add_subdirectory(tests/TimedTest)
     # add_subdirectory(examples/EchoIO)
     #add_subdirectory(examples/WeatherMonitor)
-    #add_subdirectory(tests/DistributedEstimatorPybind)
+    add_subdirectory(examples/pybind/DistributedEstimatorPybind)
 endif()
 
 

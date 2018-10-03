@@ -24,13 +24,13 @@ SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 include_directories(include)
 
-add_custom_command(
-        OUTPUT  "include/messages/distributedestimator.capnp.c++"
-        DEPENDS "include/messages/capnp/distributedestimator.capnp"
-        WORKING_DIRECTORY "include/messages/capnp"
-        COMMAND /opt/riaps/amd64/bin/capnp compile distributedestimator.capnp -oc++:../
-        COMMENT "=== Generating capnp ==="
-)
+#add_custom_command(
+#        OUTPUT  "include/messages/distributedestimator.capnp.c++"
+#        DEPENDS "include/messages/capnp/distributedestimator.capnp"
+#        WORKING_DIRECTORY "include/messages/capnp"
+#        COMMAND /opt/riaps/amd64/bin/capnp compile distributedestimator.capnp -oc++:../
+#        COMMENT "=== Generating capnp ==="
+#)
 
 pybind11_add_module(globalestimator src/GlobalEstimator.cc
         src/base/GlobalEstimatorBase.cc
