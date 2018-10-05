@@ -9,7 +9,7 @@ This repository contains two major parts of the RIAPS framework:
 
 ## Install `riaps-core`
 
-For detailed instructions please check the [wiki](https://github.com/RIAPS/riaps-core/wiki).
+You can install the `riaps-core` and all dependencies from our apt repository. The instructions to setup of the apt repository is located [here](https://github.com/RIAPS/riaps.github.io/blob/develop/distro.md). If you prefer to install the `riaps-core` manually please read the [wiki](https://github.com/RIAPS/riaps-core/wiki/Build-and-Install-riaps-core).
  
 ## The Discovery Service
 
@@ -26,5 +26,11 @@ The component framework provides a base class (`ComponentBase`) for your compone
 
 * Registers services in the discovery service. It happens automatically, based on the application model file :exclamation: LINK :exclamation:
 * Connects the components to the available services. (Also happens automatically, based on the application model file).
-* Provides message loop and dispatcher functionality. The incoming messages are automatically dispatched to the component handler (based on the message type).
-* Provides `
+* Dispatcher: the incoming messages are automatically dispatched to the component message handler (based on the message type).
+* Messaging patterns: publish-subscribe, request-response, query-answer.
+* Dynamic group formation: components are able to form groups dynamically.
+* Messaging between group members.
+* Leader election: group members are able to elect a leader component using modified [RAFT](https://raft.github.io/) leader election.
+* Messaging between the leader and the group members.
+* Consensus: components can propose values to the leader, other components can agree/disagree with the proposed values. Leader announces the result of the voting.
+* Time-synchronized coordinated action: components are agreeing on executing an action at the proposed time, each component schedules the action and executes.
