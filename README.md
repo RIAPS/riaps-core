@@ -1,4 +1,4 @@
-# RIAPS C++ Component Framework
+# RIAPS C++ components with pybind11
 
 ## About
 
