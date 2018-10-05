@@ -22,4 +22,9 @@ The discovery service is responsible to save/maintain/retrieve the registered RI
 
 ## The C++ component framework
 
-The component framework provides a base class (`ComponentBase`) for your components. The `ComponentBase` implements functions which cover several use cases in distributed systems.
+The component framework provides a base class (`ComponentBase`) for your components. The `ComponentBase` implements functions which cover several use cases in distributed systems. The following main functions and services are available:
+
+* Registers services in the discovery service. It happens automatically, based on the application model file :exclamation: LINK :exclamation:
+* Connects the components to the available services. (Also happens automatically, based on the application model file).
+* Provides message loop and dispatcher functionality. The incoming messages are automatically dispatched to the component handler (based on the message type).
+* Provides `
