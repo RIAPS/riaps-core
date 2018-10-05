@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_FLAGS "-Wno-psabi")
 
 set(PYBIND11_CPP_STANDARD -std=c++14)
-add_subdirectory(pybind11)
+add_subdirectory(include/pybind11)
 
 
 #Set the platform
@@ -40,7 +40,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_HOME_DIRECTORY}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_HOME_DIRECTORY}/bin)
 
 include_directories(include)
-include_directories(pybind11/include)
+include_directories(include/pybind11/include)
 include_directories(/usr/include/python3.5m/)
 
 # Process Cap'n Proto messages
@@ -86,7 +86,7 @@ if (BUILD_TESTS)
     # add_subdirectory(tests/TimedTest)
     # add_subdirectory(examples/EchoIO)
     #add_subdirectory(examples/WeatherMonitor)
-    #add_subdirectory(tests/DistributedEstimatorPybind)
+    # add_subdirectory(examples/pybind/DistributedEstimatorPybind)
 endif()
 
 

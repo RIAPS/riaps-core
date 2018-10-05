@@ -18,7 +18,6 @@ riaps_actor (zsock_t *pipe, void *args)
     std::string host_address = riaps::framework::Network::GetIPAddress();
 
     console->info("Starting DHT node on {}:{} ({})", host_address, RIAPS_DHT_NODE_PORT, mac_address);
-    //console->info("Starting DHT backup node.");
     dht::DhtRunner dhtNode;
     dht::DhtRunner backupNode;
 
@@ -33,40 +32,22 @@ riaps_actor (zsock_t *pipe, void *args)
         backupNode.run(RIAPS_DHT_NODE_PORT-1, {}, true);
         backupNode.bootstrap(host_address, std::to_string(RIAPS_DHT_NODE_PORT));
         zsock_send(pipe, "1", 1);
-        //char* pipeReturn = "1";
-        //zstr_send(pipe, pipeReturn);
     } catch (dht::DhtException& e){
         console->error("DHT threw an exception: {}", e.what());
         zsock_send(pipe, "1", 0);
-        //char* pipeReturn = "0";
-        //zstr_send(pipe, pipeReturn);
         zclock_sleep(500);
         return;
     }
 
-
-
-    //backupNode.run(RIAPS_DHT_NODE_PORT-1, {}, true);
-
-    //console->info("Backup Node is connecting to: {}:{}",host_address, RIAPS_DHT_NODE_PORT);
-    //backupNode.bootstrap(host_address, std::to_string(RIAPS_DHT_NODE_PORT));
-
-    //console->info("DHT is initialized on {}:{}({})", host_address, RIAPS_DHT_NODE_PORT, mac_address);
-
-    //std::cout << "DHT node started." <<std::endl;
-
     std::srand(std::time(0));
-
     riaps::DiscoveryMessageHandler msgHandler(dhtNode, &pipe, console);
     msgHandler.init();
     msgHandler.run();
-    dhtNode.join();
-    backupNode.join();
     dhtNode.shutdown([console](){
-        console->info("DHT stopped");
+        console->info("Public DHT stopped");
     });
     backupNode.shutdown([console](){
-        console->info("Secondary DHT stopped");
+        console->info("Backup DHT stopped");
     });
 
     zclock_sleep(100);
