@@ -9,7 +9,7 @@ This repository contains two major parts of the RIAPS framework:
 
 ## Install `riaps-core`
 
-For detailed instructions please check the [wiki](https://github.com/RIAPS/riaps-core/wiki).
+For detailed instructions please check the [wiki](https://github.com/RIAPS/riaps-core/wiki/Build-and-Install-riaps-core).
  
 ## The Discovery Service
 
