@@ -34,3 +34,11 @@ The component framework provides a base class (`ComponentBase`) for your compone
 * Messaging between the leader and the group members.
 * Consensus: components can propose values to the leader, other components can agree/disagree with the proposed values. Leader announces the result of the voting.
 * Time-synchronized coordinated action: components are agreeing on executing an action at the proposed time, each component schedules the action and executes it.
+
+## Contributing
+
+You are welcome to help us, fixable areas in the code: 
+
+* [TODO](https://github.com/RIAPS/riaps-core/search?q=TODO) : for general problems.
+* [FIXME](https://github.com/RIAPS/riaps-core/search?q=FIXME) : for critical bugs.
+* [REFACTORME](https://github.com/RIAPS/riaps-core/search?q=REFACTORME) : for cleanups, fix naming convention mistakes.
