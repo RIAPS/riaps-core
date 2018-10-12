@@ -1,10 +1,8 @@
 /**
- * Message handler functions for the commands of discovery service. Uses capnp message buffers,
- * the messages are defined in disco.capnp
+ * Message handler functions for the commands of discovery service. Uses capnp, messages are defined in disco.capnp
  *
  * The discovery service listens for incoming connections on ASYNC REP port (ZMQ ROUTER), on the following addres:
  * @code riaps::framework::Configuration::GetDiscoveryServiceIpc().
- *
  *
  *
  * @author Istvan Madari

@@ -11,6 +11,8 @@ namespace riaps{
     void component_actor(zsock_t* pipe, void* args){
         auto comp = (ComponentBase*)args;
 
+        // PAIR socket to the python actor
+        // TODO: we may not need for pycontrol anymore
         zsock_t* pycontrol = zsock_new_pair(fmt::format("inproc://part_{}_control", comp->component_config().component_name).c_str());
         assert(pycontrol);
 
@@ -24,7 +26,7 @@ namespace riaps{
         zpoller_t* poller = zpoller_new(pipe, NULL);
         assert(poller);
 
-        // New api is czmq, ignore_interrupts is obsolote
+        // Ignore interrupts zactor owner has to destroy the zactor
         zpoller_set_nonstop(poller, true);
         zsock_signal (pipe, 0);
 
@@ -138,7 +140,9 @@ namespace riaps{
                 if (streq(command, "$TERM")) {
                     compbase_logger->debug("$TERM arrived");
                     terminated = true;
-                } else if(streq(command, CMD_UPDATE_PORT)){
+                }
+                // New endpoint arrived, notifiy the component and join
+                else if(streq(command, CMD_UPDATE_PORT)){
                     char* portname = zmsg_popstr(msg);
                     if (portname){
                         char* host = zmsg_popstr(msg);
@@ -168,6 +172,7 @@ namespace riaps{
                         zstr_free(&portname);
                     }
                 }
+                // Forward group update messages
                 else if(streq(command, CMD_UPDATE_GROUP)){
                     zframe_t* capnp_msgbody = zmsg_pop(msg);
                     size_t    size = zframe_size(capnp_msgbody);
@@ -186,6 +191,8 @@ namespace riaps{
                 zstr_free(&command);
                 zmsg_destroy(&msg);
             }
+
+            // Messages from the periodic timers
             else if (which == timerport) {
                 zmsg_t *msg = zmsg_recv(which);
 
@@ -218,9 +225,8 @@ namespace riaps{
                 zmsg_destroy(&msg);
                 zframe_destroy(&idframe);
             }
-            else if (which == pycontrol) {
-                compbase_logger->info("PYCONTORLL");
-            }
+
+            // TODO: ROUTER-DEALER may not compatible with the python version. Make it compatible.
             else if(which){
                 compbase_logger->debug("Message on other ports");
                     ports::PortBase *riapsPort = const_cast<ports::PortBase *>(portSockets[static_cast<zsock_t *>(which)]);
@@ -319,31 +325,16 @@ namespace riaps{
                 // just poll timeout
             }
 
-            // The group messages
+            // Process group messages
             if (!comp->groups_.empty()){
 
                 // Handle all group messages
                 for (auto& grp : comp->groups_){
                     grp.second->SendPingWithPeriod();
-
-                    //std::shared_ptr<capnp::FlatArrayMessageReader> groupMessage(nullptr);
-
-                    //std::string originComponentId;
-                    //ports::GroupSubscriberPort* groupRecvPort = it->second->FetchNextMessage(groupMessage);
                     grp.second->FetchNextMessage();
-
-                    //if (groupRecvPort != nullptr)
-                        //comp->OnGroupMessage(it->first, *groupMessage, groupRecvPort);
                 }
             }
         }
-
-//        if (comp->_oneShotTimer!=NULL){
-//            comp->_oneShotTimer->stop();
-//            delete comp->_oneShotTimer;
-//            comp->_oneShotTimer = NULL;
-//        }
-
         zpoller_destroy(&poller);
         zsock_destroy(&timerportOneShot);
         zsock_destroy(&timerport);
@@ -500,8 +491,10 @@ namespace riaps{
                        component_name());
     }
 
-    /// \param portName
-    /// \return Pointer to the RIAPS port with the given name. NULL if the port was not found.
+    /**
+     *  @param portName
+     *  @return Pointer to the RIAPS port with the given name or nullptr if no port with that name.
+     */
     ports::PortBase* ComponentBase::GetPortByName(const std::string & portName) {
         if (ports_.find(portName)!=ports_.end()){
             return ports_[portName].get();
@@ -527,11 +520,6 @@ namespace riaps{
         zmsg_send(&msg_portupdate, component_zactor_);
     }
 
-//    const Actor* ComponentBase::GetActor() const{
-//        return m_actor;
-//    }
-
-
     std::shared_ptr<PyActor> ComponentBase::actor() const{
         return actor_;
     }
@@ -546,9 +534,7 @@ namespace riaps{
     bool ComponentBase::SendMessageOnPort(zmsg_t** message, const std::string& portName) {
         auto port = GetPortByName(portName);
         if (port == nullptr) return false;
-
         auto insidePort = port->AsInsidePort();
-
         return insidePort->Send(message);
     }
 
@@ -717,16 +703,6 @@ namespace riaps{
         return groups_[groupId].get();
     }
 
-
-//    const ports::PortBase* ComponentBase::GetPort(std::string portName) const {
-//        auto port_it = _ports.find(portName);
-//        if (port_it!=_ports.end()){
-//            return port_it->second.get();
-//        }
-//        return nullptr;
-//    }
-
-
     std::string ComponentBase::getTimerChannel() {
         return fmt::format("inproc://timer{}", ComponentUuid());
     }
@@ -744,7 +720,7 @@ namespace riaps{
         return component_zactor_;
     }
 
-    // TODO: Remove timeout parameter
+    // TODO: Remove timeout parameter, too low level parameter.
     uint16_t ComponentBase::GetGroupMemberCount(const riaps::groups::GroupId &groupId, int64_t timeout) {
         if (groups_.find(groupId)==groups_.end())
             return 0;
@@ -766,12 +742,6 @@ namespace riaps{
     bool ComponentBase::JoinGroup(riaps::groups::GroupId &groupId) {
         if (groups_.find(groupId)!=groups_.end())
             return false;
-
-//        auto newGroupPtr = new riaps::groups::Group(groupId, this);
-//        auto newGroup = unique_ptr<riaps::groups::Group>(
-//                newGroupPtr
-//        );
-
         auto new_group = make_unique<riaps::groups::Group>(groupId, this);
 
         if (new_group->InitGroup()) {
@@ -883,8 +853,6 @@ namespace riaps{
             zmsg_t* msg = zmsg_new();
 
             zmsg_addmem(msg, &timerId, sizeof(decltype(timerId)));
-
-
 
             clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &earlyWakeup, nullptr);
             zmsg_send(&msg, ptr.get());

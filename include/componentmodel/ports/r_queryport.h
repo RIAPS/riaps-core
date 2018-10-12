@@ -1,13 +1,8 @@
-//
-// Created by parallels on 9/29/16.
-//
-
 #ifndef RIAPS_FW_R_QUERYPORT_H
 #define RIAPS_FW_R_QUERYPORT_H
 
 #include <componentmodel/r_componentbase.h>
 #include <componentmodel/r_configuration.h>
-#include <componentmodel/r_messagebase.h>
 #include <componentmodel/ports/r_senderport.h>
 #include <componentmodel/r_riapsmessage.h>
 

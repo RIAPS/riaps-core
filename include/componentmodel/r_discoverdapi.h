@@ -20,7 +20,7 @@
 #include <czmq.h>
 #include <iostream>
 
-
+// TODO: Discvery API should be in a class
 
 struct _service_lookup_result {
     std::string part_name; // instance name

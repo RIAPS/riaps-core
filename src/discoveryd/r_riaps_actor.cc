@@ -23,7 +23,6 @@ riaps_actor (zsock_t *pipe, void *args)
 
     // Launch a dht node on a new thread, using a
     // generated RSA key pair, and listen on port 4222.
-
     //dht_node.run(RIAPS_DHT_NODE_PORT, dht::crypto::generateIdentity(), true);
 
     zsock_signal (pipe, 0);

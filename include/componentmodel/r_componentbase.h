@@ -14,7 +14,6 @@
 #include <componentmodel/r_discoverdapi.h>
 #include <componentmodel/r_configuration.h>
 #include <componentmodel/r_periodictimer.h>
-#include <componentmodel/r_messagebase.h>
 #include <componentmodel/r_oneshottimer.h>
 #include <componentmodel/r_payload.h>
 #include <groups/r_group.h>

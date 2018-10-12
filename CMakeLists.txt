@@ -114,10 +114,8 @@ list (APPEND riapslib_SOURCE
         src/componentmodel/r_componentbase.cc
         src/componentmodel/r_devicethread.cc
         src/componentmodel/r_discoverdapi.cc
-        src/componentmodel/r_messagebase.cc
         src/componentmodel/r_parameter.cc
         src/componentmodel/r_periodictimer.cc
-        src/componentmodel/r_portregister.cc
         src/framework/rfw_configuration.cc
         src/framework/rfw_network_interfaces.cc
         src/groups/r_group.cc
@@ -148,10 +146,8 @@ list (APPEND riapslib_HEADERS
         include/componentmodel/r_configuration.h
         include/componentmodel/r_devicethread.h
         include/componentmodel/r_discoverdapi.h
-        include/componentmodel/r_messagebase.h
         include/componentmodel/r_parameter.h
         include/componentmodel/r_periodictimer.h
-        include/componentmodel/r_portregister.h
         include/componentmodel/r_riapsmessage.h
         include/const/r_const.h
         include/groups/r_group.h

@@ -16,8 +16,6 @@ bool registerService(const std::string&              appName     ,
 
     bool result = false;
 
-    //std::string mac_address = GetMacAddressStripped();
-
     /////
     /// Request
     /////
