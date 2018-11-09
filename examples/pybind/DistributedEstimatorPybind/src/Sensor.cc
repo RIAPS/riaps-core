@@ -21,39 +21,39 @@ namespace distributedestimator {
                                       actor_name) {
         }
 
-        void Sensor::OnClock(riaps::ports::PortBase *port) {
-            int64_t time = zclock_mono();
-            component_logger()->info("Sensor::OnClock(): {}", time);
-
-            capnp::MallocMessageBuilder messageBuilder;
-            auto msgSensorReady = messageBuilder.initRoot<messages::SensorReady>();
-            msgSensorReady.setMsg("data_ready");
-
-            SendReady(messageBuilder, msgSensorReady);
+        void Sensor::OnClock() {
+            RecvClock();
+//            int64_t time = zclock_mono();
+//            component_logger()->info("Sensor::OnClock(): {}", time);
+//
+//            capnp::MallocMessageBuilder messageBuilder;
+//            auto msgSensorReady = messageBuilder.initRoot<messages::SensorReady>();
+//            msgSensorReady.setMsg("data_ready");
+//
+//            SendReady(messageBuilder, msgSensorReady);
         }
 
-        void Sensor::OnRequest(const messages::SensorQuery::Reader &message,
-                                    riaps::ports::PortBase *port) {
+        void Sensor::OnRequest() {
 
-            if (port->GetPortBaseConfig()->isTimed){
-                auto responsePort = port->AsResponsePort();
-                component_logger()->info_if(responsePort!=nullptr,
-                                 "Sensor::OnRequest(): {}, sentTimestamp: {}.{}, recvTimestamp: {}.{}",
-                                 message.getMsg().cStr(),
-                                 responsePort->GetLastSendTimestamp().tv_sec ,
-                                 responsePort->GetLastSendTimestamp().tv_nsec,
-                                 responsePort->GetLastRecvTimestamp().tv_sec ,
-                                 responsePort->GetLastRecvTimestamp().tv_nsec);
-            } else
-                component_logger()->info("Sensor::OnRequest(): {}", message.getMsg().cStr());
-
-            capnp::MallocMessageBuilder messageBuilder;
-            messages::SensorValue::Builder msgSensorValue = messageBuilder.initRoot<messages::SensorValue>();
-            msgSensorValue.setMsg("sensor_rep");
-
-            if (!SendRequest(messageBuilder, msgSensorValue)){
-                // Couldn't send the response
-            }
+//            if (port->GetPortBaseConfig()->isTimed){
+//                auto responsePort = port->AsResponsePort();
+//                component_logger()->info_if(responsePort!=nullptr,
+//                                 "Sensor::OnRequest(): {}, sentTimestamp: {}.{}, recvTimestamp: {}.{}",
+//                                 message.getMsg().cStr(),
+//                                 responsePort->GetLastSendTimestamp().tv_sec ,
+//                                 responsePort->GetLastSendTimestamp().tv_nsec,
+//                                 responsePort->GetLastRecvTimestamp().tv_sec ,
+//                                 responsePort->GetLastRecvTimestamp().tv_nsec);
+//            } else
+//                component_logger()->info("Sensor::OnRequest(): {}", message.getMsg().cStr());
+//
+//            capnp::MallocMessageBuilder messageBuilder;
+//            messages::SensorValue::Builder msgSensorValue = messageBuilder.initRoot<messages::SensorValue>();
+//            msgSensorValue.setMsg("sensor_rep");
+//
+//            if (!SendRequest(messageBuilder, msgSensorValue)){
+//                // Couldn't send the response
+//            }
         }
 
 

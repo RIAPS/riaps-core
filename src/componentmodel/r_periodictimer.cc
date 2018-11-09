@@ -81,7 +81,7 @@ namespace riaps {
                 : PortBase(PortTypes::Timer,
                   (component_port_config * ) & config,
                   parentComponent),
-                  _timerresponsechannel(timerresponsechannel) {
+                  _timerresponsechannel(timerresponsechannel),RecvPort(this) {
             _interval = config.period;
             _periodicTimerActor = zactor_new(ptimeractor, this);
         }

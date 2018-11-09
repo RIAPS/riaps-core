@@ -38,9 +38,7 @@ namespace distributedestimator{
             virtual ~GlobalEstimatorBase();
 
         protected:
-            virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
-                                         riaps::ports::PortBase*   port,
-                                         std::shared_ptr<riaps::MessageParams> params) final;
+            virtual void DispatchMessage(riaps::ports::RecvPort& port) final;
 
             virtual void DispatchInsideMessage(zmsg_t* zmsg,
                                                riaps::ports::PortBase* port) final;

@@ -24,15 +24,16 @@ namespace distributedestimator {
             set_config(config);
         }
 
-        void SensorBase::DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
-                                              riaps::ports::PortBase *port,
-                                              std::shared_ptr<riaps::MessageParams> params) {
+        void SensorBase::RecvClock() {
+            auto port = GetPortByName<riaps::ports::PeriodicTimer>(PORT_TIMER_CLOCK);
+        }
+
+        void SensorBase::DispatchMessage(riaps::ports::PortBase* port) {
             auto portName = port->GetPortName();
             if (portName == PORT_TIMER_CLOCK) {
-                OnClock(port);
+                OnClock();
             } else if (portName == PORT_REP_REQUEST) {
-                auto sensorQuery = capnpreader->getRoot<messages::SensorQuery>();
-                OnRequest(sensorQuery, port);
+                OnRequest();
             }
 
         }

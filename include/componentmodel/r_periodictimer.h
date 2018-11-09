@@ -1,14 +1,9 @@
-//
-// Created by istvan on 5/2/17.
-//
-
 #ifndef RIAPS_CORE_R_PERIODIC_TIMER_H
 #define RIAPS_CORE_R_PERIODIC_TIMER_H
 
 #include <componentmodel/ports/r_portbase.h>
-
+#include <componentmodel/ports/r_recvport.h>
 #include <czmq.h>
-
 #include <string>
 
 
@@ -20,7 +15,7 @@ namespace riaps {
 
         void ptimeractor(zsock_t* pipe, void* args);
 
-        class PeriodicTimer : public PortBase {
+        class PeriodicTimer : public PortBase, RecvPort {
         public:
             PeriodicTimer(std::string &timerresponsechannel, const component_port_tim& config, const ComponentBase* parentComponent);
 

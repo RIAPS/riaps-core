@@ -276,6 +276,9 @@ namespace riaps {
          */
         ports::PortBase* GetPortByName(const std::string&);
 
+        template<class T>
+        T* GetPortByName(const std::string&);
+
         const std::string component_name() const;
 
         // Note: disable for now, we need more tests.
@@ -310,9 +313,7 @@ namespace riaps {
          * @param capnpreader The capnp buffer holding the incoming message
          * @param port The port where the message arrived.
          */
-        virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
-                                     ports::PortBase* port,
-                                     std::shared_ptr<MessageParams> params = nullptr) = 0;
+        virtual void DispatchMessage(ports::PortBase* port) = 0;
 
         /**
          * Forwards the given ZMQ message to the appropriate handler. Used for inside ports only in device components.
@@ -450,6 +451,13 @@ namespace riaps {
 
 
     };
+
+    template<class T>
+    T* ComponentBase::GetPortByName(const std::string& portName) {
+        ports::PortBase* portBase = GetPortByName(portName);
+        if (portBase == nullptr) return nullptr;
+        return dynamic_cast<T*>(portBase);
+    }
 }
 
 

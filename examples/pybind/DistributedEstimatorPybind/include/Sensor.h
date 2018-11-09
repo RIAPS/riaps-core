@@ -24,17 +24,12 @@ namespace distributedestimator {
                    const std::string &actor_name);
 
             Sensor(const Sensor&) = delete;
-            Sensor() = delete;
+            Sensor()              = delete;
 
-
-            virtual void OnClock(riaps::ports::PortBase *port) override;
-
-            virtual void OnRequest(const messages::SensorQuery::Reader &message,
-                                   riaps::ports::PortBase *port) override;
+            virtual void OnClock() override;
+            virtual void OnRequest() override;
 
             virtual ~Sensor();
-
-
         private:
             std::unique_ptr<std::uniform_real_distribution<double>> unif;
             std::default_random_engine re;

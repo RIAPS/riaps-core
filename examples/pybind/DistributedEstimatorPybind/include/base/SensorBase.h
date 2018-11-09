@@ -36,9 +36,11 @@ namespace distributedestimator {
                        const std::string &application_name,
                        const std::string &actor_name);
 
+
             //virtual void RegisterHandlers();
 
-            virtual void OnClock(riaps::ports::PortBase *port)=0;
+            virtual void OnClock()=0;
+            virtual void RecvClock();
 
             // No handler for publisher
             // But send function for publisher, request, response makes sense, maybe easier for the developer
@@ -46,8 +48,7 @@ namespace distributedestimator {
             //                     std::vector<std::string>& msgFields,
             //                     riaps::ports::PortBase* port)=0;
 
-            virtual void OnRequest(const messages::SensorQuery::Reader &message,
-                                   riaps::ports::PortBase *port)=0;
+            virtual void OnRequest()=0;
 
             virtual bool SendRequest(capnp::MallocMessageBuilder&    messageBuilder,
                                      messages::SensorValue::Builder& message);
@@ -60,9 +61,7 @@ namespace distributedestimator {
 
         protected:
 
-            virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
-                                         riaps::ports::PortBase *port,
-                                         std::shared_ptr<riaps::MessageParams> params) final;
+            virtual void DispatchMessage(riaps::ports::PortBase *port) final;
 
             virtual void DispatchInsideMessage(zmsg_t* zmsg,
                                                riaps::ports::PortBase* port) final;

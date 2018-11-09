@@ -194,18 +194,9 @@ namespace riaps{
 
             // Messages from the periodic timers
             else if (which == timerport) {
-                zmsg_t *msg = zmsg_recv(which);
-
-                if (msg) {
-                    char *portName = zmsg_popstr(msg);
-                    ports::PeriodicTimer* timerPort = (ports::PeriodicTimer*)comp->GetPortByName(portName);
-                    vector<string> fields;
-
-                    if (!terminated) {
-                        comp->DispatchMessage(nullptr, timerPort);
-                    }
-                    zstr_free(&portName);
-                    zmsg_destroy(&msg);
+                ports::PortBase *riapsPort = const_cast<ports::PortBase *>(portSockets[static_cast<zsock_t *>(which)]);
+                if (!terminated) {
+                    comp->DispatchMessage(riapsPort);
                 }
             }
             // Message from one shot timer
@@ -267,10 +258,11 @@ namespace riaps{
                         /**
                          * Convert to capnp buffer only if the recv() was successful
                          */
-                        if (body!=nullptr && !terminated) {
-                            (*body) >> capnpReader;
-                            comp->DispatchMessage(capnpReader, riapsPort, params);
-                        }
+                         // TODO: refactor this part to the new dispatch
+//                        if (body!=nullptr && !terminated) {
+//                            (*body) >> capnpReader;
+//                            comp->DispatchMessage(capnpReader, riapsPort, params);
+//                        }
 
                         //if (capnpReader != nullptr)
                         //    delete capnpReader;
@@ -289,35 +281,28 @@ namespace riaps{
                     } else {
 
                         if (riapsPort->AsRecvPort()!= nullptr) {
-                            //Note: new recv() implementation with timestamp processing
-                            auto recvPort = riapsPort->AsRecvPort();
-
-                            auto cname = comp->component_name();
-                            auto portName = riapsPort->GetPortName();
-
-                            auto capnpMessage = recvPort->Recv();
                             if (!terminated)
-                                comp->DispatchMessage(capnpMessage.get(), riapsPort);
+                                comp->DispatchMessage(riapsPort);
                         } else {
-
-                            // Note: this is the old style, timestamps are not read
-                            zmsg_t* msg = zmsg_recv(which);
-                            zframe_t* bodyFrame = zmsg_pop(msg);
-
-                            auto msgPtr = new std::shared_ptr<zmsg_t>(msg, [](zmsg_t* z){zmsg_destroy(&z);});
-                            auto framePtr = new std::shared_ptr<zframe_t>(bodyFrame, [](zframe_t* z){zframe_destroy(&z);});
-
-                            // zmsg_pop transfers the ownership, the frame is removed from the zmsg.
-                            // Both of them must be explicitly deleted.
-                            auto capnpReader = make_unique<capnp::FlatArrayMessageReader>(nullptr);
-
-                            (*bodyFrame) >> capnpReader;
-
-                            if (!terminated)
-                                comp->DispatchMessage(capnpReader.get(), riapsPort);
-
-                            zframe_destroy(&bodyFrame);
-                            zmsg_destroy(&msg);
+                            compbase_logger->error("Else not handled!");
+//                            // Note: this is the old style, timestamps are not read
+//                            zmsg_t* msg = zmsg_recv(which);
+//                            zframe_t* bodyFrame = zmsg_pop(msg);
+//
+//                            auto msgPtr = new std::shared_ptr<zmsg_t>(msg, [](zmsg_t* z){zmsg_destroy(&z);});
+//                            auto framePtr = new std::shared_ptr<zframe_t>(bodyFrame, [](zframe_t* z){zframe_destroy(&z);});
+//
+//                            // zmsg_pop transfers the ownership, the frame is removed from the zmsg.
+//                            // Both of them must be explicitly deleted.
+//                            auto capnpReader = make_unique<capnp::FlatArrayMessageReader>(nullptr);
+//
+//                            (*bodyFrame) >> capnpReader;
+//
+//                            if (!terminated)
+//                                comp->DispatchMessage(capnpReader.get(), riapsPort);
+//
+//                            zframe_destroy(&bodyFrame);
+//                            zmsg_destroy(&msg);
                         }
                     }
             }
