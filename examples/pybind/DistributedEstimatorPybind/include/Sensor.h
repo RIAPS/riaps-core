@@ -23,6 +23,9 @@ namespace distributedestimator {
                    const std::string &application_name,
                    const std::string &actor_name);
 
+            Sensor(const Sensor&) = delete;
+            Sensor() = delete;
+
 
             virtual void OnClock(riaps::ports::PortBase *port) override;
 

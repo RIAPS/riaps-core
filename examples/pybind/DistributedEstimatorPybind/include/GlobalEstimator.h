@@ -25,6 +25,9 @@ namespace distributedestimator {
                             const std::string &application_name,
                             const std::string &actor_name);
 
+            GlobalEstimator(const GlobalEstimator&) = delete;
+            GlobalEstimator() = delete;
+
             virtual void OnEstimate(messages::Estimate::Reader &message,
                                     riaps::ports::PortBase *port) override;
 
