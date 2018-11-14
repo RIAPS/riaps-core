@@ -13,7 +13,6 @@
 #include <componentmodel/r_pyactor.h>
 #include <componentmodel/r_discoverdapi.h>
 #include <componentmodel/r_configuration.h>
-#include <componentmodel/r_periodictimer.h>
 #include <componentmodel/r_oneshottimer.h>
 #include <componentmodel/r_payload.h>
 #include <groups/r_group.h>
@@ -40,6 +39,7 @@
 #include <componentmodel/ports/r_insideport.h>
 #include <componentmodel/ports/r_answerport.h>
 #include <componentmodel/ports/r_queryport.h>
+#include <componentmodel/ports/r_periodictimer.h>
 
 
 constexpr auto BILLION = 1000000000l;
@@ -276,8 +276,8 @@ namespace riaps {
          */
         ports::PortBase* GetPortByName(const std::string&);
 
-        template<class T>
-        T* GetPortByName(const std::string&);
+//        template<class T>
+//        T* GetPortByName(const std::string&);
 
         const std::string component_name() const;
 
@@ -413,7 +413,7 @@ namespace riaps {
 
 
 
-        std::string             getTimerChannel();
+        //std::string             getTimerChannel();
         std::string             getOneShotTimerChannel();
 
         // TODO: uniqueptr
@@ -452,12 +452,12 @@ namespace riaps {
 
     };
 
-    template<class T>
-    T* ComponentBase::GetPortByName(const std::string& portName) {
-        ports::PortBase* portBase = GetPortByName(portName);
-        if (portBase == nullptr) return nullptr;
-        return dynamic_cast<T*>(portBase);
-    }
+//    template<class T>
+//    T* ComponentBase::GetPortByName(const std::string& portName) {
+//        ports::PortBase* portBase = GetPortByName(portName);
+//        if (portBase == nullptr) return nullptr;
+//        return dynamic_cast<T*>(portBase);
+//    }
 }
 
 

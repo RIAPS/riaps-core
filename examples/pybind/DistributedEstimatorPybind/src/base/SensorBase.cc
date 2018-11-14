@@ -5,6 +5,8 @@
 #include <base/SensorBase.h>
 #include <componentmodel/r_pyconfigconverter.h>
 
+using namespace std;
+
 namespace distributedestimator {
     namespace components {
 
@@ -24,12 +26,27 @@ namespace distributedestimator {
             set_config(config);
         }
 
-        void SensorBase::RecvClock() {
-            auto port = GetPortByName<riaps::ports::PeriodicTimer>(PORT_TIMER_CLOCK);
+        string SensorBase::RecvClock() {
+            component_logger()->debug("{}", __func__);
+            auto port = (riaps::ports::PeriodicTimer*)GetPortByName(PORT_TIMER_CLOCK);
+            component_logger()->debug("GetPortByName()");
+            auto rport = port->AsRecvPort();
+            component_logger()->debug("AsRecvPort()");
+            return rport->RecvAsString();
+        }
+
+        messages::SensorQuery::Reader SensorBase::RecvRequest() {
+            auto port = GetResponsePortByName(PORT_REP_REQUEST);
+            auto reader = port->Recv();
+            return reader->getRoot<messages::SensorQuery>();
+
         }
 
         void SensorBase::DispatchMessage(riaps::ports::PortBase* port) {
+            component_logger()->debug("{}", __func__);
+            component_logger()->error_if(port == nullptr, "port is null");
             auto portName = port->GetPortName();
+            component_logger()->debug("Portname: {} macroname: {}", portName, PORT_TIMER_CLOCK);
             if (portName == PORT_TIMER_CLOCK) {
                 OnClock();
             } else if (portName == PORT_REP_REQUEST) {

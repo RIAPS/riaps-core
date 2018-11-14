@@ -2,12 +2,14 @@
 // Created by istvan on 5/2/17.
 //
 
-#include <componentmodel/r_periodictimer.h>
+#include <componentmodel/ports/r_periodictimer.h>
 
 #include <chrono>
 #include <thread>
 #include <functional>
 #include <atomic>
+
+using namespace std;
 
 namespace riaps {
 
@@ -27,13 +29,13 @@ namespace riaps {
             bool terminated = false;
             bool started    = false;
 
-            zsock_t* _zsock_timer = zsock_new_push(periodicTimer->GetTimerResponseChannel().c_str());
+            zsock_t* _zsock_timer = zsock_new_push(periodicTimer->TimerChannel().c_str());
             int lingerValue = 0;
             int sendtimeout = 0; // 0 - returns immediately with EAGAIN if the message cannot be sent
             zmq_setsockopt(_zsock_timer, ZMQ_LINGER,   &lingerValue, sizeof(int));
             zmq_setsockopt(_zsock_timer, ZMQ_SNDTIMEO, &sendtimeout, sizeof(int));
 
-            auto now = std::chrono::high_resolution_clock::now();
+            auto now = chrono::high_resolution_clock::now();
 
             while (!terminated) {
 
@@ -43,12 +45,12 @@ namespace riaps {
                     auto portName = periodicTimer->GetPortName();
                     zmsg_addstr(msg, portName.c_str());
 
-                    auto diff = std::chrono::milliseconds(periodicTimer->GetInterval());
+                    auto diff = chrono::milliseconds(periodicTimer->interval());
                     now += diff;
-                    std::this_thread::sleep_until(now);
+                    this_thread::sleep_until(now);
                     zmsg_send(&msg, _zsock_timer);
                 } else{
-                    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+                    this_thread::sleep_for(chrono::milliseconds(10));
                 }
 
                 void *which = zpoller_wait(poller, 0);
@@ -62,11 +64,11 @@ namespace riaps {
                     char *command = zmsg_popstr(msg);
 
                     if (streq(command, "$TERM")) {
-                        std::cout << "$TERM arrived in periodic timer" << std::endl;
+                        cout << "$TERM arrived in periodic timer" << std::endl;
                         terminated = true;
                     } else if (streq(command, "$START")){
                         started = true;
-                        now = std::chrono::high_resolution_clock::now();
+                        now = chrono::high_resolution_clock::now();
                     }
                     zstr_free(&command);
                     zmsg_destroy(&msg);
@@ -77,37 +79,41 @@ namespace riaps {
         }
 
 
-        PeriodicTimer::PeriodicTimer(std::string &timerresponsechannel, const component_port_tim &config, const ComponentBase* parentComponent)
+        PeriodicTimer::PeriodicTimer(const component_port_tim &config, const ComponentBase* parentComponent)
                 : PortBase(PortTypes::Timer,
-                  (component_port_config * ) & config,
+                  (component_port_config*)&config,
                   parentComponent),
-                  _timerresponsechannel(timerresponsechannel),RecvPort(this) {
-            _interval = config.period;
-            _periodicTimerActor = zactor_new(ptimeractor, this);
+                  RecvPort(this) {
+            interval_ = config.period;
+            timer_actor_ = zactor_new(ptimeractor, this);
         }
 
-        std::string& PeriodicTimer::GetTimerResponseChannel() {
-            return _timerresponsechannel;
+        void PeriodicTimer::Init() {
+            port_socket_ = zsock_new_pull(TimerChannel().c_str());
         }
 
-        int PeriodicTimer::GetInterval() {
-            return _interval;
+        std::string PeriodicTimer::TimerChannel() {
+            return fmt::format("inproc://timer_{}", GetPortName());
         }
 
-        void PeriodicTimer::start() {
+        int PeriodicTimer::interval() {
+            return interval_;
+        }
+
+        void PeriodicTimer::Start() {
             zmsg_t* msg = zmsg_new();
 
             zmsg_addstr(msg,"$START");
-            zactor_send(_periodicTimerActor, &msg);
+            zactor_send(timer_actor_, &msg);
 
         }
 
-        void PeriodicTimer::stop() {
-            zactor_destroy(&_periodicTimerActor);
+        void PeriodicTimer::Stop() {
+            zactor_destroy(&timer_actor_);
         }
 
         const zsock_t* PeriodicTimer::GetSocket() const {
-            return NULL;
+            return port_socket_;
         }
 
         PeriodicTimer* PeriodicTimer::AsTimerPort() {

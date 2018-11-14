@@ -21,41 +21,46 @@ namespace distributedestimator {
 
         }
 
-        void LocalEstimator::OnReady(const messages::SensorReady::Reader &message,
-                                     riaps::ports::PortBase *port) {
+        void LocalEstimator::OnQuery() {
+            component_logger()->info("{}", __func__);
+            auto msg = RecvQuery();
+        }
 
-            component_logger()->info("LocalEstimator::OnReady(): {} {}", message.getMsg().cStr(), ::getpid());
-
-            capnp::MallocMessageBuilder builderSensorQuery;
-
-            messages::SensorQuery::Builder queryMsg = builderSensorQuery.initRoot<messages::SensorQuery>();
-
-            queryMsg.setMsg("sensor_query");
-            auto result = SendQuery(builderSensorQuery, queryMsg);
-            if (result) {
-                messages::SensorValue::Reader sensorValue;
-                if (RecvQuery(sensorValue)) {
-                    if (GetPortByName(PORT_REQ_QUERY)->GetPortBaseConfig()->isTimed) {
-                        auto recvPort = GetPortByName(PORT_REQ_QUERY)->AsRecvPort();
-                        if (recvPort!=nullptr){
-                            component_logger()->info("LocalEstimator::OnQuery(): {};  sentTimestamp: {}.{}, recvTimestamp: {}.{}",
-                                          sensorValue.getMsg().cStr(),
-                                          recvPort->GetLastSendTimestamp().tv_sec ,
-                                          recvPort->GetLastSendTimestamp().tv_nsec,
-                                          recvPort->GetLastRecvTimestamp().tv_sec ,
-                                          recvPort->GetLastRecvTimestamp().tv_nsec
-                            );
-                        }
-                    } else {
-                        component_logger()->info("LocalEstimator::OnQuery(): {}", sensorValue.getMsg().cStr());
-                    }
-
-                    capnp::MallocMessageBuilder builderEstimate;
-                    auto estimateMsg = builderEstimate.initRoot<messages::Estimate>();
-                    estimateMsg.setMsg("local_est(" + std::to_string(::getpid()) + ")");
-                    SendEstimate(builderEstimate, estimateMsg);
-                }
-            }
+        void LocalEstimator::OnReady() {
+            component_logger()->info("{}", __func__);
+            RecvReady();
+//            component_logger()->info("LocalEstimator::OnReady(): {} {}", message.getMsg().cStr(), ::getpid());
+//
+//            capnp::MallocMessageBuilder builderSensorQuery;
+//
+//            messages::SensorQuery::Builder queryMsg = builderSensorQuery.initRoot<messages::SensorQuery>();
+//
+//            queryMsg.setMsg("sensor_query");
+//            auto result = SendQuery(builderSensorQuery, queryMsg);
+//            if (result) {
+//                messages::SensorValue::Reader sensorValue;
+//                if (RecvQuery(sensorValue)) {
+//                    if (GetPortByName(PORT_REQ_QUERY)->GetPortBaseConfig()->isTimed) {
+//                        auto recvPort = GetPortByName(PORT_REQ_QUERY)->AsRecvPort();
+//                        if (recvPort!=nullptr){
+//                            component_logger()->info("LocalEstimator::OnQuery(): {};  sentTimestamp: {}.{}, recvTimestamp: {}.{}",
+//                                          sensorValue.getMsg().cStr(),
+//                                          recvPort->GetLastSendTimestamp().tv_sec ,
+//                                          recvPort->GetLastSendTimestamp().tv_nsec,
+//                                          recvPort->GetLastRecvTimestamp().tv_sec ,
+//                                          recvPort->GetLastRecvTimestamp().tv_nsec
+//                            );
+//                        }
+//                    } else {
+//                        component_logger()->info("LocalEstimator::OnQuery(): {}", sensorValue.getMsg().cStr());
+//                    }
+//
+//                    capnp::MallocMessageBuilder builderEstimate;
+//                    auto estimateMsg = builderEstimate.initRoot<messages::Estimate>();
+//                    estimateMsg.setMsg("local_est(" + std::to_string(::getpid()) + ")");
+//                    SendEstimate(builderEstimate, estimateMsg);
+//                }
+//            }
         }
 
 
@@ -63,7 +68,7 @@ namespace distributedestimator {
         LocalEstimator::~LocalEstimator() {
 
         }
-        }
+    }
 }
 
 std::unique_ptr<distributedestimator::components::LocalEstimator>
@@ -81,7 +86,6 @@ create_component_py(const py::object *parent_actor,
     return std::move(std::unique_ptr<distributedestimator::components::LocalEstimator>(ptr));
 }
 
-//TODO: generate with templates?
 PYBIND11_MODULE(liblocalestimator, m) {
     py::class_<distributedestimator::components::LocalEstimator> testClass(m, "LocalEstimator");
     testClass.def(py::init<const py::object*, const py::dict, const py::dict, const std::string&, const std::string&, const py::dict, const std::string&, const std::string&>());

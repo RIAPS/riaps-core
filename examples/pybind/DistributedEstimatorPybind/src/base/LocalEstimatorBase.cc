@@ -24,12 +24,13 @@ namespace distributedestimator {
             set_config(config);
         }
 
-        void LocalEstimatorBase::DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
-                                                 riaps::ports::PortBase *port,
-                                                 std::shared_ptr<riaps::MessageParams> params) {
-            if (port->GetPortName() == PORT_SUB_READY) {
-                messages::SensorReady::Reader sensorReady = capnpreader->getRoot<messages::SensorReady>();
-                OnReady(sensorReady, port);
+        void LocalEstimatorBase::DispatchMessage(riaps::ports::PortBase* port) {
+            auto port_name = port->GetPortName();
+            if (port_name == PORT_SUB_READY) {
+                OnReady();
+            }
+            if (port_name == PORT_REQ_QUERY) {
+                OnQuery();
             }
         }
 
@@ -38,19 +39,27 @@ namespace distributedestimator {
             return SendMessageOnPort(messageBuilder, PORT_REQ_QUERY);
         }
 
-        bool LocalEstimatorBase::RecvQuery(messages::SensorValue::Reader &message) {
+        messages::SensorValue::Reader LocalEstimatorBase::RecvQuery() {
             auto port = GetRequestPortByName(PORT_REQ_QUERY);
-            if (port == NULL) return false;
+            auto reader = port->AsRecvPort()->Recv();
+            return reader->getRoot<messages::SensorValue>();
+//            capnp::FlatArrayMessageReader* messageReader;
+//
+//            if (port->Recv(&messageReader)){
+//                message = messageReader->getRoot<messages::SensorValue>();
+//                return true;
+//            }
+//
+//            return false;
+        }
 
-            // TODO: with share_ptr it would be better, DSML update is also required
-            capnp::FlatArrayMessageReader* messageReader;
-
-            if (port->Recv(&messageReader)){
-                message = messageReader->getRoot<messages::SensorValue>();
-                return true;
-            }
-
-            return false;
+        messages::SensorReady::Reader LocalEstimatorBase::RecvReady() {
+            component_logger()->debug("{}", __func__);
+            auto port = GetRequestPortByName(PORT_REQ_QUERY);
+            component_logger()->debug("after getrequest");
+            auto reader = port->AsRecvPort()->Recv();
+            component_logger()->debug("after recv");
+            return reader->getRoot<messages::SensorReady>();
         }
 
         void LocalEstimatorBase::DispatchInsideMessage(zmsg_t *zmsg, riaps::ports::PortBase *port) {
@@ -62,8 +71,6 @@ namespace distributedestimator {
             return SendMessageOnPort(messageBuilder, PORT_PUB_ESTIMATE);
         }
 
-        LocalEstimatorBase::~LocalEstimatorBase() {
 
-        }
     }
 }

@@ -22,6 +22,7 @@ namespace distributedestimator {
         }
 
         void Sensor::OnClock() {
+            component_logger()->info("{}", __func__);
             RecvClock();
 //            int64_t time = zclock_mono();
 //            component_logger()->info("Sensor::OnClock(): {}", time);
@@ -34,7 +35,17 @@ namespace distributedestimator {
         }
 
         void Sensor::OnRequest() {
+            component_logger()->info("{}", __func__);
+            auto msg = RecvRequest();
+            component_logger()->info("{}: {}", __func__, msg.getMsg().cStr());
 
+            capnp::MallocMessageBuilder messageBuilder;
+            messages::SensorValue::Builder msgSensorValue = messageBuilder.initRoot<messages::SensorValue>();
+            msgSensorValue.setMsg("sensor_rep");
+            if (!SendRequest(messageBuilder, msgSensorValue)){
+                // Couldn't send the response
+                component_logger()->warn("Couldn't send message");
+            }
 //            if (port->GetPortBaseConfig()->isTimed){
 //                auto responsePort = port->AsResponsePort();
 //                component_logger()->info_if(responsePort!=nullptr,

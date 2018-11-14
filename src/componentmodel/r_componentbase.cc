@@ -16,8 +16,8 @@ namespace riaps{
         zsock_t* pycontrol = zsock_new_pair(fmt::format("inproc://part_{}_control", comp->component_config().component_name).c_str());
         assert(pycontrol);
 
-        zsock_t* timerport = zsock_new_pull(comp->getTimerChannel().c_str());
-        assert(timerport);
+        //zsock_t* timerport = zsock_new_pull(comp->getTimerChannel().c_str());
+        //assert(timerport);
 
 
         zsock_t* timerportOneShot = zsock_new_pull(comp->getOneShotTimerChannel().c_str());
@@ -30,10 +30,10 @@ namespace riaps{
         zpoller_set_nonstop(poller, true);
         zsock_signal (pipe, 0);
 
-        int rc = zpoller_add(poller, timerport);
-        assert(rc==0);
+        //int rc = zpoller_add(poller, timerport);
+        //assert(rc==0);
 
-        rc = zpoller_add(poller, timerportOneShot);
+        int rc = zpoller_add(poller, timerportOneShot);
         assert(rc==0);
 
         rc = zpoller_add(poller, pycontrol);
@@ -71,9 +71,11 @@ namespace riaps{
                 // Add and start timers
                 for (auto& timconf : comp_conf.component_ports.tims) {
                     compbase_logger->debug("Register timer: {}", timconf.portName);
-                    // Don't put the zmqSocket into portSockets[zmqSocket], just one timer port exist in the component.
-                    // Cannot differentiate timerports based on ZMQ Sockets.
-                    comp->InitTimerPort(timconf);
+                    auto newPort = comp->InitTimerPort(timconf);
+                    auto zmq_socket = newPort->GetSocket();
+                    portSockets[zmq_socket] = newPort;
+                    zpoller_add(poller, (void*)zmq_socket);
+                    const_cast<riaps::ports::PeriodicTimer*>(newPort)->Start();
                 }
 
                 // Add and start publishers
@@ -193,12 +195,13 @@ namespace riaps{
             }
 
             // Messages from the periodic timers
-            else if (which == timerport) {
-                ports::PortBase *riapsPort = const_cast<ports::PortBase *>(portSockets[static_cast<zsock_t *>(which)]);
-                if (!terminated) {
-                    comp->DispatchMessage(riapsPort);
-                }
-            }
+//            else if (which == timerport) {
+//                compbase_logger->debug("message on timerport");
+//                ports::PortBase *riapsPort = const_cast<ports::PortBase *>(portSockets[static_cast<zsock_t *>(which)]);
+//                if (!terminated) {
+//                    comp->DispatchMessage(riapsPort);
+//                }
+//            }
             // Message from one shot timer
             else if ((which == timerportOneShot) && !terminated){
 
@@ -322,7 +325,7 @@ namespace riaps{
         }
         zpoller_destroy(&poller);
         zsock_destroy(&timerportOneShot);
-        zsock_destroy(&timerport);
+        //zsock_destroy(&timerport);
     };
 
     shared_ptr<spd::logger> ComponentBase::component_logger() {
@@ -342,7 +345,7 @@ namespace riaps{
         // Stop timers
         for (auto& c : component_config().component_ports.tims){
             riaps_logger_->info("Stop timer: {}", c.portName);
-            ports_[c.portName]->AsTimerPort()->stop();
+            ports_[c.portName]->AsTimerPort()->Stop();
         }
 
         zactor_destroy(&component_zactor_);
@@ -421,13 +424,14 @@ namespace riaps{
             riaps_logger_ = spd::stdout_color_mt(logger_name);
 
         // TODO: pass the debug level by a parameter
-        //riaps_logger_->set_level(spd::level::debug);
+        riaps_logger_->set_level(spd::level::debug);
 
         logger_name = fmt::format("{}",component_config_.component_name);
         component_logger_ = spd::get(logger_name);
         if (component_logger_ == nullptr)
             component_logger_ = spd::stdout_color_mt(logger_name);
 
+        component_logger()->set_level(spd::level::debug);
     }
 
     ComponentBase::ComponentBase(const std::string &application_name, const std::string &actor_name) {
@@ -579,12 +583,8 @@ namespace riaps{
     }
 
     const ports::PeriodicTimer* ComponentBase::InitTimerPort(const component_port_tim& config) {
-        std::string timerchannel = getTimerChannel();
-        std::unique_ptr<ports::PeriodicTimer> newtimer(new ports::PeriodicTimer(timerchannel, config, this));
-        newtimer->start();
-
+        std::unique_ptr<ports::PeriodicTimer> newtimer(new ports::PeriodicTimer(config, this));
         auto result = newtimer.get();
-
         ports_[config.portName] = std::move(newtimer);
         return result;
     }
@@ -688,9 +688,9 @@ namespace riaps{
         return groups_[groupId].get();
     }
 
-    std::string ComponentBase::getTimerChannel() {
-        return fmt::format("inproc://timer{}", ComponentUuid());
-    }
+//    std::string ComponentBase::getTimerChannel() {
+//        return fmt::format("inproc://timer{}", ComponentUuid());
+//    }
 
     string ComponentBase::getOneShotTimerChannel() {
         return fmt::format("inproc://oneshottimer{}",ComponentUuid());

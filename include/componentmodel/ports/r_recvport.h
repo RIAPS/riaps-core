@@ -23,6 +23,7 @@ namespace riaps{
         public:
             RecvPort(PortBase* portBase);
 
+            virtual std::string RecvAsString();
             virtual std::shared_ptr<capnp::FlatArrayMessageReader> Recv();
             virtual std::shared_ptr<capnp::FlatArrayMessageReader> Recv(zsock_t* socket);
             virtual std::shared_ptr<capnp::FlatArrayMessageReader> Recv(zmsg_t* msg);
