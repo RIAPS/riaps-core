@@ -29,7 +29,7 @@ namespace riaps{
                 throw std::runtime_error("Couldn't bind response port.");
             }
 
-            m_logger->info("Answerport is created on: {}:{}", m_host, m_port);
+            logger_->info("Answerport is created on: {}:{}", m_host, m_port);
 
 
             if (!registerService(parent_component->actor()->application_name(),

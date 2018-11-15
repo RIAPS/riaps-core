@@ -9,27 +9,26 @@
 #include <capnp/message.h>
 #include <fmt/format.h>
 
+using namespace std;
+
 namespace riaps {
-
-
     namespace ports {
 
-
-        PortBase::PortBase(PortTypes portType,
+        PortBase::PortBase(PortTypes port_type,
                            const component_port_config* config,
-                           const ComponentBase* parentComponent)
-                : parent_component_(parentComponent) {
-            m_port_type = portType;
-            m_config = config;
+                           const ComponentBase* parent_component)
+                : parent_component_(parent_component) {
+            port_type_ = port_type;
+            config_ = config;
             port_socket_ = nullptr;
 
             // InsidePorts have no parent components
-            if (parentComponent == nullptr) {
-                std::string loggerPrefix = portType == PortTypes::Inside?"InsidePort":"NullParent";
-                std::string loggerName = fmt::format("{}::{}", loggerPrefix, config->portName);
-                m_logger = spd::stdout_color_mt(loggerName);
+            if (parent_component == nullptr) {
+                string logger_prefix = port_type_ == PortTypes::Inside?"InsidePort":"NullParent";
+                string logger_name = fmt::format("{}::{}", logger_prefix, config->portName);
+                logger_ = spd::stdout_color_mt(logger_name);
             } else {
-                m_logger = spd::get(parent_component_->component_config().component_name);
+                logger_ = spd::get(parent_component_->component_config().component_name);
             }
 
 
@@ -72,16 +71,16 @@ namespace riaps {
         }
 
         const component_port_config* PortBase::GetPortBaseConfig() const {
-            return m_config;
+            return config_;
         }
 
 
-        const PortTypes& PortBase::GetPortType() const {
-            return m_port_type;
+        const PortTypes& PortBase::PortType() const {
+            return port_type_;
         }
 
         const std::string PortBase::GetPortName() const {
-            return m_config->portName;
+            return config_->portName;
         }
 
         RequestPort* PortBase::AsRequestPort()  {

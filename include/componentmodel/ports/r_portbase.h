@@ -41,9 +41,9 @@ namespace riaps {
     public:
         //PortBase(const ComponentBase* parentComponent);
 
-        PortBase(PortTypes portType,
+        PortBase(PortTypes port_type,
                  const component_port_config* config,
-                 const ComponentBase* parentComponent);
+                 const ComponentBase* parent_component);
 
         /// \return The ip addres of the specified interface. (e.g.: "eth0")
         //virtual std::string GetInterfaceAddress(std::string ifacename);
@@ -62,7 +62,7 @@ namespace riaps {
         const ComponentBase* parent_component();
 
 
-        const PortTypes& GetPortType() const;
+        const PortTypes& PortType() const;
 
         virtual const component_port_config* GetPortBaseConfig() const;
 
@@ -81,20 +81,28 @@ namespace riaps {
         virtual InsidePort*          AsInsidePort()         ;
         virtual RecvPort*            AsRecvPort()           ;
 
+        template<class T>
+        T* GetPortAs();
+
 
         virtual ~PortBase() noexcept ;
 
     protected:
 
-        PortTypes                    m_port_type;
+        PortTypes                    port_type_;
         zsock_t*                     port_socket_;
-        std::shared_ptr<spd::logger> m_logger;
+        std::shared_ptr<spd::logger> logger_;
 
 
     private:
-        const component_port_config* m_config;
+        const component_port_config* config_;
         const ComponentBase* parent_component_;
     };
+
+    template<class T>
+    T* PortBase::GetPortAs() {
+        return dynamic_cast<T*>(this);
+    }
 }
 }
 

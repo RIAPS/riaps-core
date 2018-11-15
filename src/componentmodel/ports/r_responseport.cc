@@ -39,7 +39,7 @@ namespace riaps{
             std::cout << "Response is created on : " << host_ << ":" << m_port << std::endl;
 
 
-            m_logger->debug("{}.host_ = {}", __FUNCTION__, host_);
+            logger_->debug("{}.host_ = {}", __FUNCTION__, host_);
             if (!registerService(parent_component()->actor()->application_name(),
                                  parent_component()->actor()->actor_name(),
                                   config.messageType,

@@ -5,6 +5,7 @@
 #include <componentmodel/ports/r_recvport.h>
 #include <czmq.h>
 #include <string>
+#include <functional>
 
 
 
@@ -15,12 +16,13 @@ namespace riaps {
 
         void ptimeractor(zsock_t* pipe, void* args);
 
-        class PeriodicTimer : public PortBase, RecvPort {
+        class PeriodicTimer : public PortBase {
         public:
-            PeriodicTimer(const component_port_tim& config, const ComponentBase* parentComponent);
+            PeriodicTimer(const component_port_tim& config, const ComponentBase* parent_component);
 
             void Init();
 
+            std::string Recv();
 
             virtual const zsock_t* GetSocket() const;
 
@@ -33,11 +35,12 @@ namespace riaps {
             virtual PeriodicTimer* AsTimerPort() override;
             std::string TimerChannel();
 
-            virtual ~PeriodicTimer();
+            virtual ~PeriodicTimer() = default;
         protected:
-            std::string timer_channel_;
-            zactor_t*   timer_actor_;
-            ulong       interval_;
+            std::string             timer_channel_;
+            zactor_t*               timer_actor_;
+            ulong                   interval_;
+            std::unique_ptr<zmsg_t, std::function<void(zmsg_t*)>> last_zmsg_;
         };
     }
 }

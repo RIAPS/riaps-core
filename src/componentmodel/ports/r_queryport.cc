@@ -16,22 +16,14 @@ namespace riaps {
                   m_capnpReader(capnp::FlatArrayMessageReader(nullptr)) {
             port_socket_ = zsock_new(ZMQ_DEALER);
             m_socketId = zuuid_new();
-
-            //auto i = zsock_rcvtimeo (_port_socket);
-
             int timeout = 500;//msec
             int lingerValue = 0;
             int connectTimeout = 1000; //msec
             zmq_setsockopt(port_socket_, ZMQ_SNDTIMEO, &timeout , sizeof(int));
             zmq_setsockopt(port_socket_, ZMQ_LINGER, &lingerValue, sizeof(int));
             zsock_set_identity(port_socket_, zuuid_str(m_socketId));
-
-            //i = zsock_rcvtimeo (_port_socket);
-
             m_isConnected = false;
         }
-
-
 
         void QueryPort::Init() {
 
@@ -59,12 +51,12 @@ namespace riaps {
             int rc = zsock_connect(port_socket_, "%s", ansEndpoint.c_str());
 
             if (rc != 0) {
-                m_logger->error("Queryport {} couldn't connect to {}", GetConfig()->portName, ansEndpoint);
+                logger_->error("Queryport {} couldn't connect to {}", GetConfig()->portName, ansEndpoint);
                 return false;
             }
 
             m_isConnected = true;
-            m_logger->info("Queryport connected to: {}", ansEndpoint);
+            logger_->info("Queryport connected to: {}", ansEndpoint);
             return true;
         }
 
@@ -75,25 +67,6 @@ namespace riaps {
         QueryPort* QueryPort::AsQueryPort() {
             return this;
         }
-
-//        bool QueryPort::RecvQuery(std::shared_ptr<capnp::FlatArrayMessageReader>& messageReader,
-//                                  std::shared_ptr<riaps::MessageParams>& params) {
-//            /**
-//             * |RequestId|Message|Timestamp|
-//             */
-//
-//            char* cRequestId = nullptr;
-//            zframe_t *bodyFrame = nullptr, *timestampFrame = nullptr;
-//            if (zsock_recv(_port_socket, "sff", &cRequestId, &bodyFrame, &timestampFrame)==0){
-//                std::string socketId = zuuid_str(_socketId);
-//                params.reset(new riaps::MessageParams(socketId, &cRequestId, &timestampFrame));
-//            } else {
-//                m_logger->error("Wrong incoming message format on port: {}", GetPortName());
-//            }
-//
-//            return false;
-//        }
-
 
         bool QueryPort::SendQuery(capnp::MallocMessageBuilder &message,std::string& requestId, bool addTimestamp) const {
             if (port_socket_ == nullptr || !m_isConnected){
@@ -110,24 +83,6 @@ namespace riaps {
             } else{
                 tsFrame = zframe_new_empty();
             }
-
-
-            // Create the timestamp
-            //capnp::MallocMessageBuilder tsBuilder;
-            //auto msgTimestamp = tsBuilder.initRoot<riaps::distrcoord::RiapsTimestamp>();
-
-            // Build the timestamp
-            //msgTimestamp.setValue(zclock_mono());
-            //zmsg_t* zmsgTimestamp;
-            //zmsgTimestamp << tsBuilder;
-
-            // Create expiration time
-            //capnp::MallocMessageBuilder expBuilder;
-            //auto msgExpire = expBuilder.initRoot<riaps::distrcoord::RiapsTimestamp>();
-            //msgExpire.setValue(expiration);
-            //zmsg_t* zmsgExpiration;
-            //zmsgExpiration << expBuilder;
-
             // Generate uniqueId
             std::string msgId;
             {
@@ -141,8 +96,7 @@ namespace riaps {
                                 msgId.c_str() ,
                                 userFrame,
                                 tsFrame
-                                )
-            ;
+                                );
 
             zframe_destroy(&userFrame);
             zframe_destroy(&tsFrame);

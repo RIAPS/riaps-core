@@ -39,7 +39,7 @@ namespace riaps {
                     params.reset(new riaps::MessageParams(socketId, &cRequestId, &timestampFrame));
                     message.reset(new RiapsMessage<R, T>(&bodyFrame));
                 } else {
-                    m_logger->error("Wrong incoming message format on port: {}", GetPortName());
+                    logger_->error("Wrong incoming message format on port: {}", GetPortName());
                 }
 
                 return false;

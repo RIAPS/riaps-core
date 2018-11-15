@@ -28,7 +28,7 @@ namespace riaps {
                 return false;
             }
 
-            m_logger->debug("Subscriber connected to: {} [{}]", pubEndpoint, GetConfig()->messageType);
+            logger_->debug("Subscriber connected to: {} [{}]", pubEndpoint, GetConfig()->messageType);
 //            std::cout << "Subscriber connected to: " << pubEndpoint << std::endl;
             return true;
         }

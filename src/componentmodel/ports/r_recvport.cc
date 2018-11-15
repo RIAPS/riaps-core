@@ -24,7 +24,7 @@ namespace riaps{
         }
 
         shared_ptr<capnp::FlatArrayMessageReader> RecvPort::Recv(zmsg_t*msg) {
-            auto results = std::shared_ptr<capnp::FlatArrayMessageReader>(new capnp::FlatArrayMessageReader(nullptr));
+            auto results = shared_ptr<capnp::FlatArrayMessageReader>(new capnp::FlatArrayMessageReader(nullptr));
             if (msg){
                 zframe_t* last_frame = zmsg_pop(msg);
 
