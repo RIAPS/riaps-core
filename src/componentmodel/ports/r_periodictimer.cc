@@ -12,28 +12,26 @@
 using namespace std;
 
 namespace riaps {
-
     namespace ports {
 
         void ptimeractor(zsock_t* pipe, void* args){
-            PeriodicTimer* periodicTimer = (PeriodicTimer*)args;
+            PeriodicTimer* periodic_timer = (PeriodicTimer*)args;
 
             zpoller_t* poller = zpoller_new(pipe, NULL);
             assert(poller);
 
             zpoller_set_nonstop(poller, true);
-            //zpoller_ignore_interrupts (poller);
 
             zsock_signal (pipe, 0);
 
             bool terminated = false;
             bool started    = false;
 
-            zsock_t* _zsock_timer = zsock_new_push(periodicTimer->TimerChannel().c_str());
-            int lingerValue = 0;
-            int sendtimeout = 0; // 0 - returns immediately with EAGAIN if the message cannot be sent
-            zmq_setsockopt(_zsock_timer, ZMQ_LINGER,   &lingerValue, sizeof(int));
-            zmq_setsockopt(_zsock_timer, ZMQ_SNDTIMEO, &sendtimeout, sizeof(int));
+            zsock_t* zsock_timer = zsock_new_push(periodic_timer->TimerChannel().c_str());
+            int linger_value = 0;
+            int send_timeout = 0; // 0 - returns immediately with EAGAIN if the message cannot be sent
+            zmq_setsockopt(zsock_timer, ZMQ_LINGER,   &linger_value, sizeof(int));
+            zmq_setsockopt(zsock_timer, ZMQ_SNDTIMEO, &send_timeout, sizeof(int));
 
             auto now = chrono::high_resolution_clock::now();
 
@@ -42,13 +40,13 @@ namespace riaps {
                 if (started) {
                     // Send FIRE message
                     zmsg_t *msg = zmsg_new();
-                    auto portName = periodicTimer->GetPortName();
-                    zmsg_addstr(msg, portName.c_str());
+                    auto port_name = periodic_timer->GetPortName();
+                    zmsg_addstr(msg, port_name.c_str());
 
-                    auto diff = chrono::milliseconds(periodicTimer->interval());
+                    auto diff = chrono::milliseconds(periodic_timer->interval());
                     now += diff;
                     this_thread::sleep_until(now);
-                    zmsg_send(&msg, _zsock_timer);
+                    zmsg_send(&msg, zsock_timer);
                 } else{
                     this_thread::sleep_for(chrono::milliseconds(10));
                 }
@@ -74,16 +72,13 @@ namespace riaps {
                     zmsg_destroy(&msg);
                 }
             }
-            zsock_destroy(&_zsock_timer);
+            zsock_destroy(&zsock_timer);
             zpoller_destroy(&poller);
         }
 
 
-        PeriodicTimer::PeriodicTimer(const component_port_tim &config, const ComponentBase* parentComponent)
-                : PortBase(PortTypes::Timer,
-                  (component_port_config*)&config,
-                  parentComponent),
-                  RecvPort(this) {
+        PeriodicTimer::PeriodicTimer(const component_port_tim &config, const ComponentBase* parent_component)
+                : PortBase(PortTypes::Timer, (component_port_config*)&config, parent_component) {
             interval_ = config.period;
             timer_actor_ = zactor_new(ptimeractor, this);
         }
@@ -92,7 +87,17 @@ namespace riaps {
             port_socket_ = zsock_new_pull(TimerChannel().c_str());
         }
 
-        std::string PeriodicTimer::TimerChannel() {
+        string PeriodicTimer::Recv() {
+            zmsg_t *msg = zmsg_recv(const_cast<zsock_t*>(GetSocket()));
+            if (msg) {
+                last_zmsg_ = unique_ptr<zmsg_t, function<void(zmsg_t*)>>(msg, [](zmsg_t *z) { zmsg_destroy(&z); });
+                auto str = zmsg_popstr(last_zmsg_.get());
+                return str;
+            }
+            return "";
+        }
+
+        string PeriodicTimer::TimerChannel() {
             return fmt::format("inproc://timer_{}", GetPortName());
         }
 
@@ -102,10 +107,8 @@ namespace riaps {
 
         void PeriodicTimer::Start() {
             zmsg_t* msg = zmsg_new();
-
             zmsg_addstr(msg,"$START");
             zactor_send(timer_actor_, &msg);
-
         }
 
         void PeriodicTimer::Stop() {
@@ -118,10 +121,6 @@ namespace riaps {
 
         PeriodicTimer* PeriodicTimer::AsTimerPort() {
             return this;
-        }
-
-        PeriodicTimer::~PeriodicTimer(){
-
         }
     }
 }

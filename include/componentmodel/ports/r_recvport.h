@@ -19,11 +19,9 @@ namespace riaps{
         class PortBase;
 
         class RecvPort : public riaps::ports::TimedPort {
-            //static_assert(std::is_base_of<PortBase, T>::value, "T must extend PortBase");
         public:
             RecvPort(PortBase* portBase);
 
-            virtual std::string RecvAsString();
             virtual std::shared_ptr<capnp::FlatArrayMessageReader> Recv();
             virtual std::shared_ptr<capnp::FlatArrayMessageReader> Recv(zsock_t* socket);
             virtual std::shared_ptr<capnp::FlatArrayMessageReader> Recv(zmsg_t* msg);
@@ -32,10 +30,10 @@ namespace riaps{
 
 
         private:
-            PortBase*                 m_port;
-            std::shared_ptr<zmsg_t>   m_lastZmsg;
-            std::shared_ptr<zframe_t> m_lastFrm;
-            std::shared_ptr<capnp::FlatArrayMessageReader> m_lastCapnpReader;
+            PortBase*                 port_;
+            std::shared_ptr<zmsg_t>   last_zmsg_;
+            std::shared_ptr<zframe_t> last_frm_;
+            std::shared_ptr<capnp::FlatArrayMessageReader> last_reader_;
 
         };
     }
