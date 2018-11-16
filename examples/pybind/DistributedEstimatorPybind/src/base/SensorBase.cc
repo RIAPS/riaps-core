@@ -22,31 +22,25 @@ namespace distributedestimator {
             auto config = PyConfigConverter::convert(type_spec, actor_spec);
             config.component_name = name;
             config.component_type = type_name;
-            config.isDevice=false;
+            config.is_device=false;
             set_config(config);
+            set_debug_level(spd::level::info);
         }
 
         string SensorBase::RecvClock() {
-            component_logger()->debug("{}", __func__);
-            auto port = (riaps::ports::PeriodicTimer*)GetPortByName(PORT_TIMER_CLOCK);
-            component_logger()->debug("GetPortByName()");
-            auto rport = port->AsRecvPort();
-            component_logger()->debug("AsRecvPort()");
-            return rport->RecvAsString();
+            auto port = GetPortAs<riaps::ports::PeriodicTimer>(PORT_TIMER_CLOCK);
+            return port->Recv();
         }
 
         messages::SensorQuery::Reader SensorBase::RecvRequest() {
-            auto port = GetResponsePortByName(PORT_REP_REQUEST);
+            auto port = GetPortAs<riaps::ports::ResponsePort>(PORT_REP_REQUEST);
             auto reader = port->Recv();
             return reader->getRoot<messages::SensorQuery>();
 
         }
 
         void SensorBase::DispatchMessage(riaps::ports::PortBase* port) {
-            component_logger()->debug("{}", __func__);
-            component_logger()->error_if(port == nullptr, "port is null");
-            auto portName = port->GetPortName();
-            component_logger()->debug("Portname: {} macroname: {}", portName, PORT_TIMER_CLOCK);
+            auto portName = port->port_name();
             if (portName == PORT_TIMER_CLOCK) {
                 OnClock();
             } else if (portName == PORT_REP_REQUEST) {

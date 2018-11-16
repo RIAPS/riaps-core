@@ -22,20 +22,16 @@ namespace distributedestimator {
         }
 
         void Sensor::OnClock() {
-            component_logger()->info("{}", __func__);
-            RecvClock();
-//            int64_t time = zclock_mono();
-//            component_logger()->info("Sensor::OnClock(): {}", time);
-//
-//            capnp::MallocMessageBuilder messageBuilder;
-//            auto msgSensorReady = messageBuilder.initRoot<messages::SensorReady>();
-//            msgSensorReady.setMsg("data_ready");
-//
-//            SendReady(messageBuilder, msgSensorReady);
+            auto s = RecvClock();
+            component_logger()->info("{}:{}", __func__, s);
+
+            capnp::MallocMessageBuilder messageBuilder;
+            auto msgSensorReady = messageBuilder.initRoot<messages::SensorReady>();
+            msgSensorReady.setMsg("data_ready");
+            SendReady(messageBuilder, msgSensorReady);
         }
 
         void Sensor::OnRequest() {
-            component_logger()->info("{}", __func__);
             auto msg = RecvRequest();
             component_logger()->info("{}: {}", __func__, msg.getMsg().cStr());
 

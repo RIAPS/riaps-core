@@ -22,22 +22,24 @@ namespace distributedestimator {
         }
 
         void LocalEstimator::OnQuery() {
-            component_logger()->info("{}", __func__);
             auto msg = RecvQuery();
+            component_logger()->info("{}: [{}]", msg.getMsg().cStr(), ::getpid());
         }
 
         void LocalEstimator::OnReady() {
-            component_logger()->info("{}", __func__);
-            RecvReady();
-//            component_logger()->info("LocalEstimator::OnReady(): {} {}", message.getMsg().cStr(), ::getpid());
-//
-//            capnp::MallocMessageBuilder builderSensorQuery;
-//
-//            messages::SensorQuery::Builder queryMsg = builderSensorQuery.initRoot<messages::SensorQuery>();
-//
-//            queryMsg.setMsg("sensor_query");
-//            auto result = SendQuery(builderSensorQuery, queryMsg);
-//            if (result) {
+            auto msg = RecvReady();
+            component_logger()->info("{}: {} {}", __func__, msg.getMsg().cStr(), ::getpid());
+
+            capnp::MallocMessageBuilder builderSensorQuery;
+            messages::SensorQuery::Builder queryMsg = builderSensorQuery.initRoot<messages::SensorQuery>();
+            queryMsg.setMsg("sensor_query");
+            auto result = SendQuery(builderSensorQuery, queryMsg);
+            if (result) {
+                auto value = RecvQuery();
+                capnp::MallocMessageBuilder builderEstimate;
+                auto estimateMsg = builderEstimate.initRoot<messages::Estimate>();
+                estimateMsg.setMsg(fmt::format("local_est({})", ::getpid()));
+                SendEstimate(builderEstimate, estimateMsg);
 //                messages::SensorValue::Reader sensorValue;
 //                if (RecvQuery(sensorValue)) {
 //                    if (GetPortByName(PORT_REQ_QUERY)->GetPortBaseConfig()->isTimed) {
@@ -60,10 +62,10 @@ namespace distributedestimator {
 //                    estimateMsg.setMsg("local_est(" + std::to_string(::getpid()) + ")");
 //                    SendEstimate(builderEstimate, estimateMsg);
 //                }
-//            }
+            } else {
+                component_logger()->error("Error sending query");
+            }
         }
-
-
 
         LocalEstimator::~LocalEstimator() {
 

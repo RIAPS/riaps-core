@@ -35,16 +35,15 @@ namespace distributedestimator {
                                const std::string &actor_name);
 
             virtual void OnReady()=0;
-            virtual messages::SensorReady::Reader RecvReady() final;
-
-
             virtual void OnQuery() = 0;
-            bool SendQuery(capnp::MallocMessageBuilder&    messageBuilder,
-                           messages::SensorQuery::Builder& message);
+
+            virtual messages::SensorReady::Reader RecvReady() final;
             virtual messages::SensorValue::Reader RecvQuery() final;
 
             bool SendEstimate(capnp::MallocMessageBuilder& messageBuilder,
                               messages::Estimate::Builder& message);
+            bool SendQuery(capnp::MallocMessageBuilder&    messageBuilder,
+                           messages::SensorQuery::Builder& message);
 
             virtual ~LocalEstimatorBase() = default;
 

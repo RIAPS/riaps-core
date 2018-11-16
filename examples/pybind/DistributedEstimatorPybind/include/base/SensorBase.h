@@ -25,30 +25,19 @@ namespace distributedestimator {
 
         public:
 
-            //comp_sensorbase(_component_conf &config, riaps::Actor &actor);
-
             SensorBase(const py::object *parent_actor,
-                       const py::dict actor_spec, // Actor json config
-                       const py::dict type_spec,  // component json config
+                       const py::dict actor_spec,
+                       const py::dict type_spec,
                        const std::string &name,
                        const std::string &type_name,
                        const py::dict args,
                        const std::string &application_name,
                        const std::string &actor_name);
 
-
-            //virtual void RegisterHandlers();
-
             virtual void OnClock()=0;
-            virtual std::string RecvClock() final;
-
-            // No handler for publisher
-            // But send function for publisher, request, response makes sense, maybe easier for the developer
-            //virtual void OnReady(const std::string& messagetype,
-            //                     std::vector<std::string>& msgFields,
-            //                     riaps::ports::PortBase* port)=0;
-
             virtual void OnRequest()=0;
+
+            virtual std::string RecvClock() final;
             virtual messages::SensorQuery::Reader RecvRequest() final;
 
             virtual bool SendRequest(capnp::MallocMessageBuilder&    messageBuilder,
@@ -57,17 +46,13 @@ namespace distributedestimator {
             virtual bool SendReady(capnp::MallocMessageBuilder&    messageBuilder,
                                    messages::SensorReady::Builder& message);
 
-
             virtual ~SensorBase();
 
         protected:
 
             virtual void DispatchMessage(riaps::ports::PortBase *port) final;
-
             virtual void DispatchInsideMessage(zmsg_t* zmsg,
                                                riaps::ports::PortBase* port) final;
-
-
         };
     }
 }

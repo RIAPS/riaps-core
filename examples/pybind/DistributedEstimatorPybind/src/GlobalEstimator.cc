@@ -25,22 +25,20 @@ namespace distributedestimator {
 
         }
 
-        void GlobalEstimator::OnEstimate(messages::Estimate::Reader &message,
-                                         riaps::ports::PortBase *port) {
-            component_logger()->info("GlobalEstimator::OnEstimate(): {}", message.getMsg().cStr());
+        void GlobalEstimator::OnEstimate() {
+            auto msg = RecvEstimate();
+            component_logger()->info("{}:{}", __func__, msg.getMsg().cStr());
         }
 
-        void GlobalEstimator::OnWakeup(riaps::ports::PortBase *port) {
-            component_logger()->info("GlobalEstimator::OnWakeUp(): {}", port->GetPortName());
+        void GlobalEstimator::OnWakeup() {
+            component_logger()->info("{}", __func__);
+            auto msg = RecvWakeup();
         }
-
-
 
         GlobalEstimator::~GlobalEstimator() {
 
         }
     }
-
 }
 
 std::unique_ptr<distributedestimator::components::GlobalEstimator>

@@ -13,8 +13,8 @@
 
 namespace py = pybind11;
 
-#define PORT_SUB_ESTIMATE "estimate"
-#define PORT_TIMER_WAKEUP "wakeup"
+constexpr auto PORT_SUB_ESTIMATE = "estimate";
+constexpr auto PORT_TIMER_WAKEUP = "wakeup";
 
 namespace distributedestimator{
     namespace components{
@@ -30,15 +30,16 @@ namespace distributedestimator{
                                 const std::string &application_name,
                                 const std::string &actor_name);
 
-            virtual void OnEstimate(messages::Estimate::Reader& message,
-                                    riaps::ports::PortBase* port)=0;
+            virtual void OnEstimate()=0;
+            virtual void OnWakeup()=0;
 
-            virtual void OnWakeup(riaps::ports::PortBase* port)=0;
+            virtual messages::Estimate::Reader RecvEstimate() final;
+            virtual std::string RecvWakeup() final;
 
-            virtual ~GlobalEstimatorBase();
+            virtual ~GlobalEstimatorBase() = default;
 
         protected:
-            virtual void DispatchMessage(riaps::ports::RecvPort& port) final;
+            virtual void DispatchMessage(riaps::ports::PortBase* port) final;
 
             virtual void DispatchInsideMessage(zmsg_t* zmsg,
                                                riaps::ports::PortBase* port) final;

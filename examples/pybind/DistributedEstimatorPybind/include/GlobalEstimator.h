@@ -28,11 +28,8 @@ namespace distributedestimator {
             GlobalEstimator(const GlobalEstimator&) = delete;
             GlobalEstimator() = delete;
 
-            virtual void OnEstimate(messages::Estimate::Reader &message,
-                                    riaps::ports::PortBase *port) override;
-
-            virtual void OnWakeup(riaps::ports::PortBase *port) override;
-
+            virtual void OnEstimate() override;
+            virtual void OnWakeup() override;
 
             virtual ~GlobalEstimator();
 

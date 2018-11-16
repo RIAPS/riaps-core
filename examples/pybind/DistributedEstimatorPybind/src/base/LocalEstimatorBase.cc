@@ -20,12 +20,13 @@ namespace distributedestimator {
             auto config = PyConfigConverter::convert(type_spec, actor_spec);
             config.component_name = name;
             config.component_type = type_name;
-            config.isDevice=false;
+            config.is_device=false;
             set_config(config);
+            set_debug_level(spd::level::info);
         }
 
         void LocalEstimatorBase::DispatchMessage(riaps::ports::PortBase* port) {
-            auto port_name = port->GetPortName();
+            auto port_name = port->port_name();
             if (port_name == PORT_SUB_READY) {
                 OnReady();
             }
@@ -55,11 +56,13 @@ namespace distributedestimator {
 
         messages::SensorReady::Reader LocalEstimatorBase::RecvReady() {
             component_logger()->debug("{}", __func__);
-            auto port = GetRequestPortByName(PORT_REQ_QUERY);
-            component_logger()->debug("after getrequest");
-            auto reader = port->AsRecvPort()->Recv();
+            auto port = GetPortAs<riaps::ports::SubscriberPort>(PORT_SUB_READY);
+            component_logger()->debug("after getportas");
+            auto reader = port->Recv();
             component_logger()->debug("after recv");
-            return reader->getRoot<messages::SensorReady>();
+            auto r = reader->getRoot<messages::SensorReady>();
+            component_logger()->debug("after getRoot");
+            return r;
         }
 
         void LocalEstimatorBase::DispatchInsideMessage(zmsg_t *zmsg, riaps::ports::PortBase *port) {
