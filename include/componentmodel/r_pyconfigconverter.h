@@ -12,7 +12,7 @@ class PyConfigConverter {
 public:
     static component_conf convert(const py::dict& py_comp_config, const py::dict& py_actor) {
         component_conf result;
-        result.isDevice = false;
+        result.is_device = false;
 
         auto json_ports  = py_comp_config[J_PORTS];
         auto json_locals = py_actor[J_LOCALS];
@@ -37,8 +37,8 @@ private:
     static void parse_pub_sub(const py::dict& ports, std::vector<T>& conf_container) {
         for (auto it = ports.begin(); it!=ports.end(); it++){
             T port;
-            port.portName    = it->first.cast<std::string>();
-            port.messageType = it->second.cast<py::dict>()[J_TYPE].cast<std::string>();
+            port.port_name    = it->first.cast<std::string>();
+            port.message_type = it->second.cast<py::dict>()[J_TYPE].cast<std::string>();
             conf_container.push_back(port);
         }
     };
@@ -50,8 +50,8 @@ private:
 
             port.req_type = it->second[J_PORT_REQTYPE].cast<std::string>();
             port.rep_type = it->second[J_PORT_REPTYPE].cast<std::string>();
-            port.portName    = it->first.cast<std::string>();
-            port.messageType = port.req_type + "#" + port.rep_type;
+            port.port_name    = it->first.cast<std::string>();
+            port.message_type = port.req_type + "#" + port.rep_type;
             conf_container.push_back(port);
         }
     };
@@ -62,7 +62,7 @@ private:
             component_port_tim port;
 
             port.period = it->second[J_PORT_PERIOD].cast<ulong>();
-            port.portName    = it->first.cast<std::string>();
+            port.port_name    = it->first.cast<std::string>();
             conf_container.push_back(port);
         }
     }

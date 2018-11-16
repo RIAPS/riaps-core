@@ -25,7 +25,7 @@ namespace riaps {
             // InsidePorts have no parent components
             if (parent_component == nullptr) {
                 string logger_prefix = port_type_ == PortTypes::Inside?"InsidePort":"NullParent";
-                string logger_name = fmt::format("{}::{}", logger_prefix, config->portName);
+                string logger_name = fmt::format("{}::{}", logger_prefix, config->port_name);
                 logger_ = spd::stdout_color_mt(logger_name);
             } else {
                 logger_ = spd::get(parent_component_->component_config().component_name);
@@ -75,12 +75,12 @@ namespace riaps {
         }
 
 
-        const PortTypes& PortBase::PortType() const {
+        const PortTypes& PortBase::port_type() const {
             return port_type_;
         }
 
-        const std::string PortBase::GetPortName() const {
-            return config_->portName;
+        const std::string PortBase::port_name() const {
+            return config_->port_name;
         }
 
         RequestPort* PortBase::AsRequestPort()  {

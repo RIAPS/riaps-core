@@ -16,17 +16,12 @@
 namespace riaps {
 
     class ComponentBase;
-    //class PortBase;
 
     namespace ports {
 
-        //class PortBase;
-
         class AnswerPort : public PortBase, public SenderPort {
         public:
-            //using PortBase::Send;
-
-            AnswerPort(const component_port_ans &config, const ComponentBase *parent_component);
+            AnswerPort(const component_port_ans &config, const ComponentBase* parent);
             virtual const component_port_ans* GetConfig() const;
 
             bool SendAnswer(capnp::MallocMessageBuilder& builder, std::shared_ptr<MessageParams> params);
@@ -34,14 +29,10 @@ namespace riaps {
             virtual AnswerPort* AsAnswerPort() ;
 
             ~AnswerPort() noexcept ;
-
-
         protected:
-            int m_port;
-            std::string m_host;
-            std::string m_endpoint;
-
-            //virtual bool Send(zmsg_t** zmessage) const;
+            int         port_;
+            std::string host_;
+            std::string endpoint_;
         };
     }
 }

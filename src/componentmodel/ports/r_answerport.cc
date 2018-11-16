@@ -1,9 +1,7 @@
-//
-// Created by parallels on 9/29/16.
-//
-
 #include <framework/rfw_network_interfaces.h>
 #include <componentmodel/ports/r_answerport.h>
+
+using namespace std;
 
 namespace riaps{
     namespace ports{
@@ -14,31 +12,31 @@ namespace riaps{
             SenderPort(this)
         {
             port_socket_ = zsock_new(ZMQ_ROUTER);
-            m_host = riaps::framework::Network::GetIPAddress();
+            host_ = riaps::framework::Network::GetIPAddress();
 
 
-            if (m_host == "") {
+            if (host_ == "") {
                 throw std::runtime_error("Response cannot be initiated. Cannot find  available network interface.");
             }
 
-            std::string ansEndpoint = "tcp://" + m_host + ":!";
-            m_port = zsock_bind(port_socket_, "%s", ansEndpoint.c_str());
+            string end_point = fmt::format("tcp://{}:!", host_);
+            port_ = zsock_bind(port_socket_, "%s", end_point.c_str());
 
 
-            if (m_port == -1) {
+            if (port_ == -1) {
                 throw std::runtime_error("Couldn't bind response port.");
             }
 
-            logger_->info("Answerport is created on: {}:{}", m_host, m_port);
+            logger_->info("Answerport is created on: {}:{}", host_, port_);
 
 
             if (!registerService(parent_component->actor()->application_name(),
                                  parent_component->actor()->actor_name(),
-                                  config.messageType,
-                                  m_host,
-                                  m_port,
+                                  config.message_type,
+                                  host_,
+                                  port_,
                                   riaps::discovery::Kind::ANS,
-                                  (config.isLocal?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
+                                  (config.is_local?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
                                   {})) {
                 throw std::runtime_error("Answerport couldn't be registered.");
             }
@@ -72,14 +70,6 @@ namespace riaps{
             }
             return Send(&msg);
         }
-
-
-//        bool ResponsePort::Send(zmsg_t** msg) const {
-//            //zmsg_pushstr(*msg, GetConfig()->rep_type.c_str());
-//
-//            int rc = zmsg_send(msg, _port_socket);
-//            return rc == 0;
-//        }
 
         AnswerPort* AnswerPort::AsAnswerPort() {
             return this;

@@ -40,7 +40,7 @@ namespace riaps {
                 if (started) {
                     // Send FIRE message
                     zmsg_t *msg = zmsg_new();
-                    auto port_name = periodic_timer->GetPortName();
+                    auto port_name = periodic_timer->port_name();
                     zmsg_addstr(msg, port_name.c_str());
 
                     auto diff = chrono::milliseconds(periodic_timer->interval());
@@ -98,7 +98,7 @@ namespace riaps {
         }
 
         string PeriodicTimer::TimerChannel() {
-            return fmt::format("inproc://timer_{}", GetPortName());
+            return fmt::format("inproc://timer_{}", port_name());
         }
 
         int PeriodicTimer::interval() {

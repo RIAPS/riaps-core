@@ -1,48 +1,43 @@
-//
-// Created by istvan on 9/30/16.
-//
-
 #include <componentmodel/ports/r_requestport.h>
 #include <framework/rfw_network_interfaces.h>
 
+using namespace std;
 
 namespace riaps {
     namespace ports {
 
-        RequestPort::RequestPort(const component_port_req &config, const ComponentBase *parentComponent)
-                : PortBase(PortTypes::Request, (component_port_config*)(&config), parentComponent),
+        RequestPort::RequestPort(const component_port_req &config, const ComponentBase *parent)
+                : PortBase(PortTypes::Request, (component_port_config*)(&config), parent),
                   SenderPort(this),
                   RecvPort(this),
                   capnp_reader_(capnp::FlatArrayMessageReader(nullptr)) {
             port_socket_ = zsock_new(ZMQ_REQ);
             int timeout = 500;//msec
-            int lingerValue = 0;
-            int connectTimeout = 1000; //msec
+            int linger = 0;
+            int connect_timeout = 1000; //msec
             zmq_setsockopt(port_socket_, ZMQ_SNDTIMEO, &timeout , sizeof(int));
-            zmq_setsockopt(port_socket_, ZMQ_LINGER, &lingerValue, sizeof(int));
+            zmq_setsockopt(port_socket_, ZMQ_LINGER, &linger, sizeof(int));
 
             is_connected_ = false;
         }
 
-
-
         void RequestPort::Init() {
 
             const component_port_req* current_config = GetConfig();
-            const std::string host = (current_config->isLocal) ? "127.0.0.1" : riaps::framework::Network::GetIPAddress();
+            const string host = (current_config->is_local) ? "127.0.0.1" : riaps::framework::Network::GetIPAddress();
 
             auto results =
                     subscribeToService(parent_component()->actor()->application_name(),
                                        parent_component()->component_config().component_name,
                                        parent_component()->actor()->actor_name(),
-                                         host,
-                                         riaps::discovery::Kind::REQ,
-                                         (current_config->isLocal?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
-                                         current_config->portName, // Subscriber name
-                                         current_config->messageType);
+                                       host,
+                                       riaps::discovery::Kind::REQ,
+                                       (current_config->is_local?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
+                                        current_config->port_name,
+                                        current_config->message_type);
 
             for (auto& result : results) {
-                std::string endpoint = "tcp://" + result.host_name + ":" + std::to_string(result.port);
+                string endpoint = fmt::format("tcp://{}:{}", result.host_name, result.port);
                 ConnectToResponse(endpoint);
             }
         }
@@ -50,13 +45,15 @@ namespace riaps {
         bool RequestPort::ConnectToResponse(const std::string &rep_endpoint) {
             int rc = zsock_connect(port_socket_, "%s", rep_endpoint.c_str());
 
+            // TODO: with spdlog
             if (rc != 0) {
-                std::cout << "Request '" + GetConfig()->portName + "' couldn't connect to " + rep_endpoint
+                std::cout << "Request '" + GetConfig()->port_name + "' couldn't connect to " + rep_endpoint
                           << std::endl;
                 return false;
             }
 
             is_connected_ = true;
+            // TODO: spdlog
             std::cout << "Request port connected to: " << rep_endpoint << std::endl;
             return true;
         }
@@ -70,16 +67,15 @@ namespace riaps {
         }
 
         const timespec& RequestPort::GetRecvTimestamp() const {
-            return m_recvTimestamp;
+            return recv_timestamp_;
         }
 
         // TODO: return shared_ptr instead of pointer
         bool RequestPort::Recv(capnp::FlatArrayMessageReader** messageReader) {
-            auto capnpMessage = RecvPort::Recv();
-            if (capnpMessage == nullptr) return false;
+            auto capnp_message = RecvPort::Recv();
+            if (capnp_message == nullptr) return false;
 
-
-            *messageReader = capnpMessage.get();
+            *messageReader = capnp_message.get();
             return true;
 
 //            zmsg_t* msg = zmsg_recv((void*)GetSocket());
@@ -130,12 +126,6 @@ namespace riaps {
             }
 
             return SenderPort::Send(message);
-
-//            zmsg_t* zmsg;
-//            zmsg << message;
-//
-//            int rc = zmsg_send(&zmsg, const_cast<zsock_t*>(GetSocket()));
-//            return rc==0;
         }
 
         RequestPort::~RequestPort() noexcept {

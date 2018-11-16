@@ -1,7 +1,3 @@
-//
-// Created by parallels on 9/29/16.
-//
-
 #ifndef RIAPS_FW_R_RESPONSEPORT_H
 #define RIAPS_FW_R_RESPONSEPORT_H
 
@@ -17,16 +13,13 @@
 namespace riaps {
 
     class ComponentBase;
-    //class PortBase;
 
     namespace ports {
-
-        //class PortBase;
 
         class ResponsePort : public PortBase, public SenderPort, public RecvPort {
         public:
 
-            ResponsePort(const component_port_rep &config, const ComponentBase *parent_component);
+            ResponsePort(const component_port_rep &config, const ComponentBase *parent);
             virtual const component_port_rep* GetConfig() const;
 
             virtual ResponsePort* AsResponsePort() ;
@@ -36,9 +29,9 @@ namespace riaps {
 
 
         protected:
-            int m_port;
+            int port_;
             std::string host_;
-            std::string m_endpoint;
+            std::string endpoint_;
         };
     }
 }

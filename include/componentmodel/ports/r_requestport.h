@@ -16,9 +16,8 @@ namespace riaps {
     namespace ports {
         class RequestPort : public PortBase, public SenderPort, public RecvPort {
         public:
-            //using PortBase::Send;
 
-            RequestPort(const component_port_req &config, const ComponentBase *parentComponent);
+            RequestPort(const component_port_req &config, const ComponentBase *parent);
             virtual void Init();
 
             // Returns false, if the request port couldn't connect
@@ -40,7 +39,7 @@ namespace riaps {
         protected:
             bool is_connected_;
 
-            timespec m_recvTimestamp;
+            timespec recv_timestamp_;
 
             capnp::FlatArrayMessageReader capnp_reader_;
 

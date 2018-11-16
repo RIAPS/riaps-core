@@ -70,7 +70,7 @@ namespace riaps{
 
                 // Add and start timers
                 for (auto& timconf : comp_conf.component_ports.tims) {
-                    compbase_logger->debug("Register timer: {}", timconf.portName);
+                    compbase_logger->debug("Register timer: {}", timconf.port_name);
                     auto newPort = comp->InitTimerPort(timconf);
                     auto zmq_socket = newPort->GetSocket();
                     portSockets[zmq_socket] = newPort;
@@ -80,7 +80,7 @@ namespace riaps{
 
                 // Add and start publishers
                 for (auto& pubconf : comp_conf.component_ports.pubs){
-                    compbase_logger->debug("Register pub: {}", pubconf.portName);
+                    compbase_logger->debug("Register pub: {}", pubconf.port_name);
                     const ports::PublisherPort* newPort = comp->InitPublisherPort(pubconf);
                     const zsock_t* zmqSocket = newPort->GetSocket();
                     portSockets[zmqSocket] = newPort;
@@ -88,7 +88,7 @@ namespace riaps{
 
                 // Add and start response ports
                 for (auto& repconf : comp_conf.component_ports.reps) {
-                    compbase_logger->debug("Register REP: {}", repconf.portName);
+                    compbase_logger->debug("Register REP: {}", repconf.port_name);
                     const ports::ResponsePort* newPort = comp->InitResponsePort(repconf);
                     const zsock_t* zmqSocket = newPort->GetSocket();
                     portSockets[zmqSocket] = newPort;
@@ -154,14 +154,14 @@ namespace riaps{
                                 auto port_tobe_updated = comp->GetPortByName(portname);
 
                                 if (port_tobe_updated != nullptr) {
-                                    if (port_tobe_updated->GetPortType() == ports::PortTypes::Subscriber){
+                                    if (port_tobe_updated->port_type() == ports::PortTypes::Subscriber){
                                         // note: we assume that the publisher uses tcp://
                                         const string new_pub_endpoint = fmt::format("tcp://{}:{}", host, port);
                                         ((ports::SubscriberPort*)port_tobe_updated)->ConnectToPublihser(new_pub_endpoint);
-                                    } else if (port_tobe_updated->GetPortType() == ports::PortTypes::Request){
+                                    } else if (port_tobe_updated->port_type() == ports::PortTypes::Request){
                                         const string new_rep_endpoint = fmt::format("tcp://{}:{}", host, port);
                                         ((ports::RequestPort*)port_tobe_updated)->ConnectToResponse(new_rep_endpoint);
-                                    } else if (port_tobe_updated->GetPortType() == ports::PortTypes::Query){
+                                    } else if (port_tobe_updated->port_type() == ports::PortTypes::Query){
                                         const string new_ans_endpoint = fmt::format("tcp://{}:{}", host, port);
                                         ((ports::QueryPort*)port_tobe_updated)->ConnectToResponse(new_ans_endpoint);
                                     }
@@ -248,13 +248,13 @@ namespace riaps{
                                 // Takes the ownership, deletes originId, messageId and timestamp
                                 params = make_shared<riaps::MessageParams>(&originId, &messageId, &timestamp);
                             } else {
-                                compbase_logger->error("AnswerPort ({}) frames are incorrect.", riapsPort->GetPortName());
+                                compbase_logger->error("AnswerPort ({}) frames are incorrect.", riapsPort->port_name());
                             }
                         } else if (riapsPort->AsQueryPort()){
                             if (zsock_recv(which, "sff", &messageId, &body, &timestamp) == 0) {
                                 params = make_shared<riaps::MessageParams>(&messageId, &timestamp);
                             } else {
-                                compbase_logger->error("QueryPort ({}) frames are incorrect.", riapsPort->GetPortName());
+                                compbase_logger->error("QueryPort ({}) frames are incorrect.", riapsPort->port_name());
                             }
                         }
 
@@ -283,11 +283,11 @@ namespace riaps{
                         }
                     } else {
 
-                        if (riapsPort->AsRecvPort()!= nullptr) {
+                        if (riapsPort->GetPortAs<riaps::ports::RecvPort>()!= nullptr || riapsPort->AsTimerPort()!=nullptr) {
                             if (!terminated)
                                 comp->DispatchMessage(riapsPort);
                         } else {
-                            compbase_logger->error("Else not handled!");
+                            compbase_logger->error("Else not handled, port: {}", riapsPort->port_name());
 //                            // Note: this is the old style, timestamps are not read
 //                            zmsg_t* msg = zmsg_recv(which);
 //                            zframe_t* bodyFrame = zmsg_pop(msg);
@@ -344,8 +344,8 @@ namespace riaps{
         riaps_logger_->debug("Terminate component: {}", component_name());
         // Stop timers
         for (auto& c : component_config().component_ports.tims){
-            riaps_logger_->info("Stop timer: {}", c.portName);
-            ports_[c.portName]->AsTimerPort()->Stop();
+            riaps_logger_->info("Stop timer: {}", c.port_name);
+            ports_[c.port_name]->AsTimerPort()->Stop();
         }
 
         zactor_destroy(&component_zactor_);
@@ -418,20 +418,24 @@ namespace riaps{
     
     void ComponentBase::set_config(component_conf &c_conf) {
         component_config_ = c_conf;
+
+        // TODO: Create loggers somewhere else
         auto logger_name = fmt::format("::{}", component_config_.component_name);
         riaps_logger_ = spd::get(logger_name);
         if (riaps_logger_ == nullptr)
             riaps_logger_ = spd::stdout_color_mt(logger_name);
-
-        // TODO: pass the debug level by a parameter
-        riaps_logger_->set_level(spd::level::debug);
 
         logger_name = fmt::format("{}",component_config_.component_name);
         component_logger_ = spd::get(logger_name);
         if (component_logger_ == nullptr)
             component_logger_ = spd::stdout_color_mt(logger_name);
 
-        component_logger()->set_level(spd::level::debug);
+    }
+
+    void ComponentBase::set_debug_level(spd::level::level_enum component_level,
+                                        spdlog::level::level_enum framework_level) {
+        riaps_logger_->set_level(framework_level);
+        component_logger()->set_level(component_level);
     }
 
     ComponentBase::ComponentBase(const std::string &application_name, const std::string &actor_name) {
@@ -516,7 +520,7 @@ namespace riaps{
     const ports::PublisherPort* ComponentBase::InitPublisherPort(const component_port_pub& config) {
         auto result = new ports::PublisherPort(config, this);
         std::unique_ptr<ports::PortBase> newport(result);
-        ports_[config.portName] = std::move(newport);
+        ports_[config.port_name] = std::move(newport);
         return result;
     }
 
@@ -541,14 +545,14 @@ namespace riaps{
         std::unique_ptr<ports::SubscriberPort> newport(new ports::SubscriberPort(config, this));
         auto result = newport.get();
         newport->Init();
-        ports_[config.portName] = std::move(newport);
+        ports_[config.port_name] = std::move(newport);
         return result;
     }
 
     const ports::ResponsePort* ComponentBase::InitResponsePort(const component_port_rep & config) {
         auto result = new ports::ResponsePort(config, this);
         std::unique_ptr<ports::PortBase> newport(result);
-        ports_[config.portName] = std::move(newport);
+        ports_[config.port_name] = std::move(newport);
         return result;
     }
 
@@ -556,14 +560,14 @@ namespace riaps{
         std::unique_ptr<ports::RequestPort> newport(new ports::RequestPort(config, this));
         auto result = newport.get();
         newport->Init();
-        ports_[config.portName] = std::move(newport);
+        ports_[config.port_name] = std::move(newport);
         return result;
     }
 
     const ports::AnswerPort* ComponentBase::InitAnswerPort(const component_port_ans & config) {
         auto result = new ports::AnswerPort(config, this);
         std::unique_ptr<ports::PortBase> newport(result);
-        ports_[config.portName] = std::move(newport);
+        ports_[config.port_name] = std::move(newport);
         return result;
     }
 
@@ -571,21 +575,22 @@ namespace riaps{
         std::unique_ptr<ports::QueryPort> newport(new ports::QueryPort(config, this));
         auto result = newport.get();
         newport->Init();
-        ports_[config.portName] = std::move(newport);
+        ports_[config.port_name] = std::move(newport);
         return result;
     }
 
     const ports::InsidePort* ComponentBase::InitInsidePort(const component_port_ins& config) {
         auto result = new ports::InsidePort(config, riaps::ports::InsidePortMode::BIND, this);
         std::unique_ptr<ports::PortBase> newport(result);
-        ports_[config.portName] = std::move(newport);
+        ports_[config.port_name] = std::move(newport);
         return result;
     }
 
     const ports::PeriodicTimer* ComponentBase::InitTimerPort(const component_port_tim& config) {
         std::unique_ptr<ports::PeriodicTimer> newtimer(new ports::PeriodicTimer(config, this));
+        newtimer->Init();
         auto result = newtimer.get();
-        ports_[config.portName] = std::move(newtimer);
+        ports_[config.port_name] = std::move(newtimer);
         return result;
     }
 

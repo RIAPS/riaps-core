@@ -16,8 +16,8 @@ using namespace riaps::componentmodel;
  * Baseclass for component and group ports. Contains portName - messageType mapping.
  */
 struct port_config_base {
-    std::string portName;
-    std::string messageType;
+    std::string port_name;
+    std::string message_type;
 };
 
 /**
@@ -31,12 +31,12 @@ struct group_port_config : public port_config_base{
  * Component port can be local.
  */
 struct component_port_config : public port_config_base {
-    bool        isLocal;
-    bool        isTimed;
+    bool        is_local;
+    bool        is_timed;
 
     component_port_config(){
-        isLocal=false;
-        isTimed=false;
+        is_local=false;
+        is_timed=false;
     }
 };
 
@@ -115,7 +115,7 @@ struct component_conf {
     std::string               component_type;
     ComponentPorts            component_ports;
     Parameters                component_parameters;
-    bool                      isDevice;
+    bool                      is_device;
 };
 
 #endif //RIAPS_FW_R_CONFIGURATION_H

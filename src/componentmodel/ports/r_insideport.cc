@@ -14,7 +14,7 @@ namespace riaps{
               SenderPort(this)//,
               //_capnpReader(nullptr)
         {
-            _endpoint = "inproc://inside_" + config.portName;
+            _endpoint = "inproc://inside_" + config.port_name;
 
             if (mode == InsidePortMode::CONNECT){
                 port_socket_ = zsock_new_pair(_endpoint.c_str());
@@ -38,11 +38,6 @@ namespace riaps{
         InsidePort* InsidePort::AsInsidePort() {
             return this;
         }
-
-//        bool InsidePort::Send(zmsg_t **zmessage) const {
-//            int rc = zmsg_send(zmessage, (void*)GetSocket());
-//            return rc == 0;
-//        }
 
         bool InsidePort::Recv(zmsg_t** insideMessage) {
             *insideMessage = zmsg_recv((void*)GetSocket());

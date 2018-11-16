@@ -39,7 +39,7 @@ subscribeToService(const std::string&      app_name   ,
                      riaps::discovery::Kind  kind       ,
                      riaps::discovery::Scope scope      ,
                      const std::string&      port_name  ,
-                     const std::string&      msg_type     // PortType
+                     const std::string&      msg_type     // port_type
                      );
 extern bool
 registerService(const std::string&              appName     ,

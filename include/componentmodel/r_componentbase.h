@@ -179,7 +179,6 @@ namespace riaps {
 
 
         // PYTHON STUFF //
-        void set_config(component_conf& c_conf);
         //////////////////
 
         /**
@@ -276,8 +275,8 @@ namespace riaps {
          */
         ports::PortBase* GetPortByName(const std::string&);
 
-//        template<class T>
-//        T* GetPortByName(const std::string&);
+        template<class T>
+        T* GetPortAs(const std::string&);
 
         const std::string component_name() const;
 
@@ -391,6 +390,10 @@ namespace riaps {
 
         std::shared_ptr<spd::logger> component_logger();
 
+        void set_config(component_conf& c_conf);
+        void set_debug_level(spd::level::level_enum component_level,
+                             spd::level::level_enum framework_level = spd::level::info);
+
     private:
         std::shared_ptr<spd::logger> riaps_logger_;
         std::shared_ptr<spd::logger> component_logger_;
@@ -452,12 +455,12 @@ namespace riaps {
 
     };
 
-//    template<class T>
-//    T* ComponentBase::GetPortByName(const std::string& portName) {
-//        ports::PortBase* portBase = GetPortByName(portName);
-//        if (portBase == nullptr) return nullptr;
-//        return dynamic_cast<T*>(portBase);
-//    }
+    template<class T>
+    T* ComponentBase::GetPortAs(const std::string& portName) {
+        ports::PortBase* portBase = GetPortByName(portName);
+        if (portBase == nullptr) return nullptr;
+        return dynamic_cast<T*>(portBase);
+    }
 }
 
 

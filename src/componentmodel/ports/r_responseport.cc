@@ -5,11 +5,13 @@
 #include <framework/rfw_network_interfaces.h>
 #include <componentmodel/ports/r_responseport.h>
 
+using namespace std;
+
 namespace riaps{
     namespace ports{
 
-        ResponsePort::ResponsePort(const component_port_rep &config, const ComponentBase *parentComponent) :
-            PortBase(PortTypes::Response, (component_port_config*)&config, parentComponent),
+        ResponsePort::ResponsePort(const component_port_rep &config, const ComponentBase *parent) :
+            PortBase(PortTypes::Response, (component_port_config*)&config, parent),
             SenderPort(this),
             RecvPort(this)
         {
@@ -18,7 +20,7 @@ namespace riaps{
             zsock_set_sndtimeo(port_socket_, 500);
             zsock_set_rcvtimeo(port_socket_, 500);
 
-            if (GetConfig()->isLocal){
+            if (GetConfig()->is_local){
                 host_ = "127.0.0.1";
             } else {
                 host_ = riaps::framework::Network::GetIPAddress();
@@ -28,40 +30,34 @@ namespace riaps{
                 throw std::runtime_error("Response cannot be initiated. Cannot find  available network interface.");
             }
 
-            std::string rep_endpoint = fmt::format("tcp://{}:!", host_);//"tcp://" + _host + ":!";
-            m_port = zsock_bind(port_socket_, "%s", rep_endpoint.c_str());
+            string rep_endpoint = fmt::format("tcp://{}:!", host_);
+            port_ = zsock_bind(port_socket_, "%s", rep_endpoint.c_str());
 
 
-            if (m_port == -1) {
+            if (port_ == -1) {
                 throw std::runtime_error("Couldn't bind response port.");
             }
 
-            std::cout << "Response is created on : " << host_ << ":" << m_port << std::endl;
+            // TODO: spd logger
+            cout << "Response is created on : " << host_ << ":" << port_ << std::endl;
 
 
             logger_->debug("{}.host_ = {}", __FUNCTION__, host_);
             if (!registerService(parent_component()->actor()->application_name(),
                                  parent_component()->actor()->actor_name(),
-                                  config.messageType,
+                                  config.message_type,
                                   host_,
-                                  m_port,
+                                  port_,
                                   riaps::discovery::Kind::REP,
-                                  (config.isLocal?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
+                                  (config.is_local?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
                                   {})) {
-                throw std::runtime_error("Response port couldn't be registered.");
+                throw runtime_error("Response port couldn't be registered.");
             }
         }
 
         const component_port_rep* ResponsePort::GetConfig() const{
             return (component_port_rep*)GetPortBaseConfig();
         }
-
-//        bool ResponsePort::Send(zmsg_t** msg) const {
-//            //zmsg_pushstr(*msg, GetConfig()->rep_type.c_str());
-//
-//            int rc = zmsg_send(msg, _port_socket);
-//            return rc == 0;
-//        }
 
         ResponsePort* ResponsePort::AsResponsePort() {
             return this;

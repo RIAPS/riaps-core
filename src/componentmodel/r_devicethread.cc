@@ -45,7 +45,7 @@ namespace riaps{
 
                 auto newPortPtr = new ports::InsidePort(*it_insconf, riaps::ports::InsidePortMode::CONNECT, NULL);
                 std::unique_ptr<ports::PortBase> newport(newPortPtr);
-                _insidePorts[it_insconf->portName] = std::move(newport);
+                _insidePorts[it_insconf->port_name] = std::move(newport);
 
                 AddSocketToPoller(newPortPtr->GetSocket());
             }

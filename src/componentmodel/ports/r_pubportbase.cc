@@ -8,8 +8,8 @@
 namespace riaps{
     namespace ports{
 
-        PublisherPortBase::PublisherPortBase(const component_port_config* config, const ComponentBase* parentComponent)
-                : PortBase(PortTypes::Publisher, config, parentComponent),
+        PublisherPortBase::PublisherPortBase(const component_port_config* config, const ComponentBase* parent)
+                : PortBase(PortTypes::Publisher, config, parent),
                   SenderPort(this) {
 
         }
@@ -21,7 +21,7 @@ namespace riaps{
         void PublisherPortBase::InitSocket() {
             port_socket_ = zsock_new(ZMQ_PUB);
 
-            if (GetConfig()->isLocal){
+            if (GetConfig()->is_local){
                 host_ = "127.0.0.1";
             } else {
                 host_ = riaps::framework::Network::GetIPAddress();
@@ -39,7 +39,7 @@ namespace riaps{
                 throw std::runtime_error("Couldn't bind publisher port.");
             }
 
-            logger_->debug("Publisher is created on {}:{} [{}]", host_, port_, GetConfig()->messageType);
+            logger_->debug("Publisher is created on {}:{} [{}]", host_, port_, GetConfig()->message_type);
         }
 
         const component_port_pub* PublisherPortBase::GetConfig() const {
@@ -52,14 +52,5 @@ namespace riaps{
             }
             return "";
         }
-
-//        bool PublisherPortBase::Send(zmsg_t** zmessage) const {
-//            //const _component_port_pub_j* currentConfig = GetConfig();
-//            //std::string message_type = currentConfig->message_type;
-//            //zmsg_pushstr(*zmessage, message_type.c_str());
-//
-//            int rc = zmsg_send(zmessage, _port_socket);
-//            return rc == 0;
-//        }
     }
 }

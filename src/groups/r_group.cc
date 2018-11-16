@@ -11,6 +11,8 @@ constexpr auto PING_BASE_PERIOD = 10*1000;
 
 namespace dc = riaps::distrcoord;
 
+using namespace std;
+
 namespace riaps{
 
     class ComponentBase;
@@ -64,11 +66,11 @@ namespace riaps{
 
             // Default port for the group. Reserved for RIAPS internal communication protocols
             group_port_pub internalPubConfig;
-            internalPubConfig.messageType = INTERNAL_MESSAGETYPE;
-            internalPubConfig.isLocal     = false;
-            internalPubConfig.portName    = INTERNAL_PUB_NAME;
+            internalPubConfig.message_type = INTERNAL_MESSAGETYPE;
+            internalPubConfig.is_local     = false;
+            internalPubConfig.port_name    = INTERNAL_PUB_NAME;
 
-            std::vector<GroupService> initializedServices;
+            vector<GroupService> initializedServices;
 
             group_pubport_ = std::shared_ptr<ports::GroupPublisherPort>(new ports::GroupPublisherPort(internalPubConfig, parent_component_));
             initializedServices.push_back(group_pubport_->GetGroupService());
@@ -76,14 +78,12 @@ namespace riaps{
 
 
             group_port_sub internalSubConfig;
-            internalSubConfig.messageType = INTERNAL_MESSAGETYPE;
-            internalSubConfig.isLocal     = false;
-            internalSubConfig.portName    = INTERNAL_SUB_NAME;
+            internalSubConfig.message_type = INTERNAL_MESSAGETYPE;
+            internalSubConfig.is_local     = false;
+            internalSubConfig.port_name    = INTERNAL_SUB_NAME;
 
-            group_subport_ = std::shared_ptr<ports::GroupSubscriberPort>(new ports::GroupSubscriberPort(internalSubConfig, parent_component_));
+            group_subport_ = shared_ptr<ports::GroupSubscriberPort>(new ports::GroupSubscriberPort(internalSubConfig, parent_component_));
             group_ports_[group_subport_->GetSocket()] = group_subport_;
-
-
 
             // Initialize the zpoller and add the group sub port
             group_poller_ = zpoller_new(const_cast<zsock_t*>(group_subport_->GetSocket()), nullptr);
@@ -98,7 +98,7 @@ namespace riaps{
 
             // Initialize user defined subscribers
             for(auto& portDeclaration : group_type_conf_.groupTypePorts.subs){
-                auto newSubPort = std::shared_ptr<ports::GroupSubscriberPort>(new ports::GroupSubscriberPort(portDeclaration, parent_component_));
+                auto newSubPort = shared_ptr<ports::GroupSubscriberPort>(new ports::GroupSubscriberPort(portDeclaration, parent_component_));
                 zpoller_add(group_poller_, const_cast<zsock_t*>(newSubPort->GetSocket()));
                 group_ports_[newSubPort->GetSocket()] = std::move(newSubPort);
 
@@ -254,7 +254,7 @@ namespace riaps{
                 for (auto it = group_ports_.begin(); it!=group_ports_.end(); it++){
                     auto currentPort = it->second->AsGroupPublishPort();
                     if (currentPort == nullptr) continue;
-                    if (currentPort->GetConfig()->portName != portName) continue;
+                    if (currentPort->GetConfig()->port_name != portName) continue;
 
                     return currentPort->Send(message);
 
@@ -285,7 +285,7 @@ namespace riaps{
             for (auto it = group_ports_.begin(); it!=group_ports_.end(); it++){
                 auto currentPort = it->second->AsGroupPublishPort();
                 if (currentPort == nullptr) continue;
-                if (currentPort->GetConfig()->portName != portName) continue;
+                if (currentPort->GetConfig()->port_name != portName) continue;
 
                 return currentPort->Send(message);
 
@@ -313,7 +313,7 @@ namespace riaps{
 
         void Group::ConnectToNewServices(riaps::discovery::GroupUpdate::Reader &msgGroupUpdate) {
             for (int i =0; i<msgGroupUpdate.getServices().size(); i++){
-                std::string messageType = msgGroupUpdate.getServices()[i].getMessageType().cStr();
+                string message_type = msgGroupUpdate.getServices()[i].getMessageType().cStr();
 
 //                // RIAPS port
 //                if (message_type == INTERNAL_MESSAGETYPE){
@@ -326,7 +326,7 @@ namespace riaps{
                 for (auto& groupPort : group_ports_){
                     auto subscriberPort = groupPort.second->AsGroupSubscriberPort();
                     if (subscriberPort == nullptr) continue;
-                    if (subscriberPort->GetConfig()->messageType == messageType){
+                    if (subscriberPort->GetConfig()->message_type == message_type){
                         std::string address = msgGroupUpdate.getServices()[i].getAddress().cStr();
                         address = "tcp://" + address;
                         subscriberPort->ConnectToPublihser(address);

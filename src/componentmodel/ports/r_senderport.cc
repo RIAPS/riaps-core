@@ -1,7 +1,3 @@
-//
-// Created by istvan on 10/18/17.
-//
-
 #include <componentmodel/ports/r_senderport.h>
 #include <componentmodel/ports/r_requestport.h>
 #include <utils/r_utils.h>
@@ -9,17 +5,11 @@
 
 namespace riaps{
     namespace ports{
-
-
         SenderPort::SenderPort(PortBase* portBase) : m_port(portBase) {
 
         }
 
-
-
-
         bool SenderPort::Send(capnp::MallocMessageBuilder &message) const {
-
             zmsg_t* msg = nullptr;
             msg << message;
 
@@ -27,7 +17,7 @@ namespace riaps{
         }
         
         bool SenderPort::Send(zmsg_t **message) const {
-            if (m_port->GetPortBaseConfig()->isTimed){
+            if (m_port->GetPortBaseConfig()->is_timed){
                 timespec t;
                 clock_gettime(CLOCK_REALTIME, &t);
                 double tdouble = (float)t.tv_sec + (((float)t.tv_nsec)/1000000000.0);

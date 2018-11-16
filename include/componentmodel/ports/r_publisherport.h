@@ -21,14 +21,12 @@ namespace riaps {
 
        class PublisherPort : public PublisherPortBase {
        public:
-           //using PortBase::Send;
-
            /**
             * Component publisher port, the port registers itself in the discovery service
             * @param config
             * @param parent_component
             */
-           PublisherPort(const component_port_pub& config, const ComponentBase* parentComponent);
+           PublisherPort(const component_port_pub& config, const ComponentBase* parent);
 
            virtual PublisherPort*  AsPublishPort() ;
 
