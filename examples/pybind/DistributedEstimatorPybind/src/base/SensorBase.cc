@@ -36,7 +36,6 @@ namespace distributedestimator {
             auto port = GetPortAs<riaps::ports::ResponsePort>(PORT_REP_REQUEST);
             auto reader = port->Recv();
             return reader->getRoot<messages::SensorQuery>();
-
         }
 
         void SensorBase::DispatchMessage(riaps::ports::PortBase* port) {
