@@ -22,8 +22,8 @@ namespace riaps {
             ResponsePort(const component_port_rep &config, const ComponentBase *parent);
             virtual const component_port_rep* GetConfig() const;
 
-            virtual ResponsePort* AsResponsePort() ;
-            virtual RecvPort*     AsRecvPort()     ;
+            //virtual ResponsePort* AsResponsePort() ;
+            //virtual RecvPort*     AsRecvPort()     ;
 
             ~ResponsePort() noexcept ;
 

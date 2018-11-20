@@ -43,7 +43,7 @@ namespace riaps{
         }
 
         const component_port_pub* PublisherPortBase::GetConfig() const {
-            return (component_port_pub*)GetPortBaseConfig();
+            return (component_port_pub*) config();
         }
 
         std::string PublisherPortBase::GetEndpoint() {

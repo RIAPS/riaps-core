@@ -44,31 +44,25 @@ namespace riaps {
                  const component_port_config* config,
                  const ComponentBase* parent_component);
 
-        virtual const zsock_t* GetSocket() const;
-
-
-        const ComponentBase* parent_component();
-
-
-        const PortTypes& port_type() const;
-
-        virtual const component_port_config* GetPortBaseConfig() const;
-
-        virtual const std::string port_name() const;
+        virtual const zsock_t*       port_socket()      const;
+        const ComponentBase*         parent_component()      ;
+        const PortTypes&             port_type()        const;
+        const component_port_config* config()           const;
+        const std::string            port_name()        const;
 
         // Return NULL if the called conversion is unavailable or invalid
         // TODO: Remove these, GetPortAs() does the job
-        virtual RequestPort*         AsRequestPort()        ;
-        virtual QueryPort*           AsQueryPort()          ;
-        virtual PublisherPort*       AsPublishPort()        ;
-        virtual GroupPublisherPort*  AsGroupPublishPort()   ;
-        virtual GroupSubscriberPort* AsGroupSubscriberPort();
-        virtual ResponsePort*        AsResponsePort()       ;
-        virtual AnswerPort*          AsAnswerPort()         ;
-        virtual SubscriberPort*      AsSubscribePort()      ;
-        virtual PeriodicTimer*       AsTimerPort()          ;
-        virtual InsidePort*          AsInsidePort()         ;
-        virtual RecvPort*            AsRecvPort()           ;
+        RequestPort*         AsRequestPort()        ;
+        QueryPort*           AsQueryPort()          ;
+        PublisherPort*       AsPublishPort()        ;
+        GroupPublisherPort*  AsGroupPublishPort()   ;
+        GroupSubscriberPort* AsGroupSubscriberPort();
+        ResponsePort*        AsResponsePort()       ;
+        AnswerPort*          AsAnswerPort()         ;
+        SubscriberPort*      AsSubscribePort()      ;
+        PeriodicTimer*       AsTimerPort()          ;
+        InsidePort*          AsInsidePort()         ;
+        RecvPort*            AsRecvPort()           ;
 
         template<class T>
         T* GetPortAs();

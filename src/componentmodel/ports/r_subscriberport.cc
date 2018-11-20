@@ -28,14 +28,6 @@ namespace riaps{
                 ConnectToPublihser(endpoint);
             }
         }
-
-        SubscriberPort* SubscriberPort::AsSubscribePort() {
-            return this;
-        }
-
-        SubscriberPort::~SubscriberPort() {
-
-        }
     }
 
 }

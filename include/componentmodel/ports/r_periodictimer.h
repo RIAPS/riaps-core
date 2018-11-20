@@ -7,11 +7,7 @@
 #include <string>
 #include <functional>
 
-
-
 namespace riaps {
-
-
     namespace ports {
 
         void ptimeractor(zsock_t* pipe, void* args);
@@ -21,18 +17,17 @@ namespace riaps {
             PeriodicTimer(const component_port_tim& config, const ComponentBase* parent_component);
 
             void Init();
-
             std::string Recv();
-
-            virtual const zsock_t* GetSocket() const;
 
             int interval();
             void Stop();
             void Start();
 
             bool is_running() const noexcept;
+            virtual const zsock_t* port_socket() const;
 
-            virtual PeriodicTimer* AsTimerPort() override;
+
+            //virtual PeriodicTimer* AsTimerPort() override;
             std::string TimerChannel();
 
             virtual ~PeriodicTimer() = default;

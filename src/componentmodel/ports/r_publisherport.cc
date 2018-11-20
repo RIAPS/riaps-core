@@ -18,16 +18,9 @@ namespace riaps{
                                  riaps::discovery::Kind::PUB,
                                  (config.is_local?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
                                  {})) {
-                throw std::runtime_error("Publisher port couldn't be registered.");
+
+                logger_->error("Publisher port couldn't be registered.");
             }
-
-        }
-
-        PublisherPort* PublisherPort::AsPublishPort() {
-            return this;
-        }
-
-        PublisherPort::~PublisherPort() {
         }
     }
 }

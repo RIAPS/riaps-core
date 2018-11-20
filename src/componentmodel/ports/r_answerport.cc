@@ -43,7 +43,7 @@ namespace riaps{
         }
 
         const component_port_ans* AnswerPort::GetConfig() const{
-            return (component_port_ans*)GetPortBaseConfig();
+            return (component_port_ans*) config();
         }
 
         bool AnswerPort::SendAnswer(capnp::MallocMessageBuilder& builder, std::shared_ptr<MessageParams> params) {
@@ -69,10 +69,6 @@ namespace riaps{
                 zmsg_addmem(msg, nullptr, 0);
             }
             return Send(&msg);
-        }
-
-        AnswerPort* AnswerPort::AsAnswerPort() {
-            return this;
         }
 
         AnswerPort::~AnswerPort() noexcept {

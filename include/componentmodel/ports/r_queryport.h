@@ -68,7 +68,7 @@ namespace riaps {
 
             bool SendQuery(capnp::MallocMessageBuilder& message, std::string& requestId, bool addTimestamp = false) const;
 
-            virtual QueryPort* AsQueryPort() ;
+            //virtual QueryPort* AsQueryPort() ;
 
             virtual const component_port_qry* GetConfig() const;
 

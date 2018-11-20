@@ -22,26 +22,15 @@ namespace riaps {
 
         class InsidePort : public PortBase, public SenderPort {
         public:
-            //using PortBase::Send;
-
             InsidePort(const component_port_ins &config, InsidePortMode mode, const ComponentBase *parent_component);
-
             const std::string& GetEndpoint();
-
             virtual const component_port_ins* GetConfig() const;
-            virtual InsidePort*  AsInsidePort() ;
-
-            //virtual bool Send(zmsg_t** zmessage) const;
-            //virtual bool Recv(riaps::ports::InsideMessage::Reader** insideMessage);
             virtual bool Recv(zmsg_t** insideMessage);
 
             ~InsidePort() noexcept ;
 
         protected:
-            std::string _endpoint;
-            //capnp::FlatArrayMessageReader       _capnpReader;
-            //riaps::ports::InsideMessage::Reader _insideMessageReader;
-
+            std::string endpoint_;
         };
     }
 }

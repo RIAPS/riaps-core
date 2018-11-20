@@ -19,13 +19,8 @@ namespace riaps {
         public:
 
             SubscriberPort(const component_port_sub &config, const ComponentBase *parentComponent);
-
             virtual void Init();
-
-            virtual SubscriberPort* AsSubscribePort() ;
-
-            ~SubscriberPort();
-
+            virtual ~SubscriberPort() = default;
         };
     }
 

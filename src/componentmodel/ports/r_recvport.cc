@@ -13,7 +13,7 @@ namespace riaps{
         }
 
         shared_ptr<capnp::FlatArrayMessageReader> RecvPort::Recv() {
-            auto socket = port_->GetSocket();
+            auto socket = port_->port_socket();
             return Recv(const_cast<zsock_t*>(socket));
         }
 
@@ -32,7 +32,7 @@ namespace riaps{
                 last_frm_ = shared_ptr<zframe_t>(last_frame, [](zframe_t* f){zframe_destroy(&f);});
                 (*last_frm_) >> results;
 
-                if (port_->GetPortBaseConfig()->is_timed){
+                if (port_->config()->is_timed){
                     zframe_t* frm_timestamp = zmsg_pop(msg);
                     if (frm_timestamp!=nullptr) {
                         auto data = zframe_data(frm_timestamp);

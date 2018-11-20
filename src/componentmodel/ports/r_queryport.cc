@@ -62,11 +62,7 @@ namespace riaps {
         }
 
         const component_port_qry* QueryPort::GetConfig() const{
-            return (component_port_qry*)GetPortBaseConfig();
-        }
-
-        QueryPort* QueryPort::AsQueryPort() {
-            return this;
+            return (component_port_qry*) config();
         }
 
         bool QueryPort::SendQuery(capnp::MallocMessageBuilder &message,std::string& requestId, bool addTimestamp) const {
@@ -92,7 +88,7 @@ namespace riaps {
                 zuuid_destroy(&id);
             }
 
-            int rc = zsock_send(const_cast<zsock_t*>(GetSocket()),
+            int rc = zsock_send(const_cast<zsock_t*>(port_socket()),
                                 "sff",
                                 msgId.c_str() ,
                                 userFrame,

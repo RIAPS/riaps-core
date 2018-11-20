@@ -56,15 +56,7 @@ namespace riaps{
         }
 
         const component_port_rep* ResponsePort::GetConfig() const{
-            return (component_port_rep*)GetPortBaseConfig();
-        }
-
-        ResponsePort* ResponsePort::AsResponsePort() {
-            return this;
-        }
-
-        RecvPort* ResponsePort::AsRecvPort() {
-            return this;
+            return (component_port_rep*) config();
         }
 
         ResponsePort::~ResponsePort() noexcept {

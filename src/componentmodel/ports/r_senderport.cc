@@ -17,7 +17,7 @@ namespace riaps{
         }
         
         bool SenderPort::Send(zmsg_t **message) const {
-            if (m_port->GetPortBaseConfig()->is_timed){
+            if (m_port->config()->is_timed){
                 timespec t;
                 clock_gettime(CLOCK_REALTIME, &t);
                 double tdouble = (float)t.tv_sec + (((float)t.tv_nsec)/1000000000.0);
@@ -25,7 +25,7 @@ namespace riaps{
                 memcpy(buffer, &tdouble, sizeof(tdouble));
                 zmsg_addmem(*message, buffer, sizeof(double));
             }
-            int rc = zmsg_send(message, const_cast<zsock_t*>(m_port->GetSocket()));
+            int rc = zmsg_send(message, const_cast<zsock_t*>(m_port->port_socket()));
             return rc == 0;
         }
 

@@ -25,7 +25,7 @@ namespace riaps {
 
             if (rc != 0) {
                 // TODO: spd logger
-                cout << "Subscriber '" + GetPortBaseConfig()->port_name + "' couldn't connect to " + endpoint
+                cout << "Subscriber '" + config()->port_name + "' couldn't connect to " + endpoint
                           << endl;
                 return false;
             }
@@ -35,7 +35,7 @@ namespace riaps {
         }
 
         const component_port_sub* SubscriberPortBase::GetConfig() const{
-            return (component_port_sub*)GetPortBaseConfig();
+            return (component_port_sub*) config();
         }
 
         SubscriberPortBase::~SubscriberPortBase() {

@@ -26,7 +26,7 @@ namespace riaps {
 
             bool SendAnswer(capnp::MallocMessageBuilder& builder, std::shared_ptr<MessageParams> params);
 
-            virtual AnswerPort* AsAnswerPort() ;
+            //virtual AnswerPort* AsAnswerPort() ;
 
             ~AnswerPort() noexcept ;
         protected:

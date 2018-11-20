@@ -35,34 +35,7 @@ namespace riaps {
 
         }
 
-//        bool PortBase::Send(capnp::MallocMessageBuilder &message) const {
-//            return false;
-//        }
-
-
-//        bool PortBase::Send(zmsg_t** zmessage) const {
-//            return false;
-//            //throw std::runtime_error("ZMQ message cannot be sent on this port port : " + GetPortBaseConfig()->portName);
-//        }
-//
-//        bool PortBase::Send(std::string message) const{
-//            zmsg_t* zmsg = zmsg_new();
-//            zmsg_addstr(zmsg, message.c_str());
-//
-//            return Send(&zmsg);
-//        }
-//
-//        bool PortBase::Send(std::vector<std::string>& fields) const {
-//            zmsg_t* zmsg = zmsg_new();
-//
-//            for (auto it = fields.begin(); it!=fields.end(); it++){
-//                zmsg_addstr(zmsg, it->c_str());
-//            }
-//
-//            return Send(&zmsg);
-//        }
-
-        const zsock_t *PortBase::GetSocket() const {
+        const zsock_t *PortBase::port_socket() const {
             return port_socket_;
         }
 
@@ -70,7 +43,7 @@ namespace riaps {
             return parent_component_;
         }
 
-        const component_port_config* PortBase::GetPortBaseConfig() const {
+        const component_port_config* PortBase::config() const {
             return config_;
         }
 
@@ -84,47 +57,47 @@ namespace riaps {
         }
 
         RequestPort* PortBase::AsRequestPort()  {
-            return nullptr;
+            return GetPortAs<RequestPort>();
         }
 
         PublisherPort* PortBase::AsPublishPort()  {
-            return nullptr;
+            return GetPortAs<PublisherPort>();
         }
 
         GroupPublisherPort* PortBase::AsGroupPublishPort() {
-            return nullptr;
+            return GetPortAs<GroupPublisherPort>();
         }
 
         GroupSubscriberPort* PortBase::AsGroupSubscriberPort() {
-            return nullptr;
+            return GetPortAs<GroupSubscriberPort>();
         }
 
         ResponsePort* PortBase::AsResponsePort()  {
-            return nullptr;
+            return GetPortAs<ResponsePort>();
         }
 
         SubscriberPort* PortBase::AsSubscribePort()  {
-            return nullptr;
+            return GetPortAs<SubscriberPort>();
         }
 
         PeriodicTimer* PortBase::AsTimerPort()  {
-            return nullptr;
+            return GetPortAs<PeriodicTimer>();
         }
 
         InsidePort* PortBase::AsInsidePort()  {
-            return nullptr;
+            return GetPortAs<InsidePort>();
         }
 
         QueryPort* PortBase::AsQueryPort() {
-            return nullptr;
+            return GetPortAs<QueryPort>();
         }
 
         AnswerPort* PortBase::AsAnswerPort() {
-            return nullptr;
+            return GetPortAs<AnswerPort>();
         }
 
         RecvPort* PortBase::AsRecvPort() {
-            return nullptr;
+            return GetPortAs<RecvPort>();
         }
 
         PortBase::~PortBase() {

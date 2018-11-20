@@ -23,26 +23,15 @@ namespace riaps {
             // Returns false, if the request port couldn't connect
             bool ConnectToResponse(const std::string& rep_endpoint);
 
-            virtual bool Recv(capnp::FlatArrayMessageReader** messageReader);
-
-            virtual RequestPort* AsRequestPort();
-            virtual RecvPort*    AsRecvPort()   ;
-
-
+            //virtual bool Recv(capnp::FlatArrayMessageReader** messageReader);
             virtual const component_port_req* GetConfig() const;
-
-            const timespec& GetRecvTimestamp() const;
-
-
+            const timespec& recv_timestamp() const;
 
             ~RequestPort() noexcept ;
         protected:
             bool is_connected_;
-
             timespec recv_timestamp_;
-
             capnp::FlatArrayMessageReader capnp_reader_;
-
             virtual bool Send(capnp::MallocMessageBuilder& message) const;
         };
     }

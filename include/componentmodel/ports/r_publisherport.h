@@ -27,11 +27,7 @@ namespace riaps {
             * @param parent_component
             */
            PublisherPort(const component_port_pub& config, const ComponentBase* parent);
-
-           virtual PublisherPort*  AsPublishPort() ;
-
-           ~PublisherPort();
-
+           ~PublisherPort() = default;
        };
    }
 }

@@ -63,16 +63,16 @@ namespace riaps{
                 // Add insider ports
                 for (auto& insconf : comp_conf.component_ports.inss) {
                     const ports::InsidePort* newPort = comp->InitInsidePort(insconf);
-                    const zsock_t* zmqSocket = newPort->GetSocket();
+                    const zsock_t* zmqSocket = newPort->port_socket();
                     portSockets[zmqSocket] = newPort;
-                    zpoller_add(poller, (void*)newPort->GetSocket());
+                    zpoller_add(poller, (void*) newPort->port_socket());
                 }
 
                 // Add and start timers
                 for (auto& timconf : comp_conf.component_ports.tims) {
                     compbase_logger->debug("Register timer: {}", timconf.port_name);
                     auto newPort = comp->InitTimerPort(timconf);
-                    auto zmq_socket = newPort->GetSocket();
+                    auto zmq_socket = newPort->port_socket();
                     portSockets[zmq_socket] = newPort;
                     zpoller_add(poller, (void*)zmq_socket);
                     const_cast<riaps::ports::PeriodicTimer*>(newPort)->Start();
@@ -82,7 +82,7 @@ namespace riaps{
                 for (auto& pubconf : comp_conf.component_ports.pubs){
                     compbase_logger->debug("Register pub: {}", pubconf.port_name);
                     const ports::PublisherPort* newPort = comp->InitPublisherPort(pubconf);
-                    const zsock_t* zmqSocket = newPort->GetSocket();
+                    const zsock_t* zmqSocket = newPort->port_socket();
                     portSockets[zmqSocket] = newPort;
                 }
 
@@ -90,17 +90,17 @@ namespace riaps{
                 for (auto& repconf : comp_conf.component_ports.reps) {
                     compbase_logger->debug("Register REP: {}", repconf.port_name);
                     const ports::ResponsePort* newPort = comp->InitResponsePort(repconf);
-                    const zsock_t* zmqSocket = newPort->GetSocket();
+                    const zsock_t* zmqSocket = newPort->port_socket();
                     portSockets[zmqSocket] = newPort;
-                    zpoller_add(poller, (void*)newPort->GetSocket());
+                    zpoller_add(poller, (void*) newPort->port_socket());
                 }
 
                 // Add and start answer ports
                 for (auto& ansconf : comp_conf.component_ports.anss) {
                     const ports::AnswerPort* newPort = comp->InitAnswerPort(ansconf);
-                    const zsock_t* zmqSocket = newPort->GetSocket();
+                    const zsock_t* zmqSocket = newPort->port_socket();
                     portSockets[zmqSocket] = newPort;
-                    zpoller_add(poller, (void*)newPort->GetSocket());
+                    zpoller_add(poller, (void*) newPort->port_socket());
                 }
 
                 // Add RequestPorts
@@ -108,25 +108,25 @@ namespace riaps{
                 // (and support the not really "async" behavior)
                 for (auto& reqconf : comp_conf.component_ports.reqs) {
                     const ports::RequestPort* newPort = comp->InitRequestPort(reqconf);
-                    const zsock_t* zmqSocket = newPort->GetSocket();
+                    const zsock_t* zmqSocket = newPort->port_socket();
                     portSockets[zmqSocket] = newPort;
-                    zpoller_add(poller, (void*)newPort->GetSocket());
+                    zpoller_add(poller, (void*) newPort->port_socket());
                 }
 
                 // Add query ports
                 for (auto& qryconf : comp_conf.component_ports.qrys) {
                     const ports::QueryPort* newPort = comp->InitQueryPort(qryconf);
-                    const zsock_t* zmqSocket = newPort->GetSocket();
+                    const zsock_t* zmqSocket = newPort->port_socket();
                     portSockets[zmqSocket] = newPort;
-                    zpoller_add(poller, (void*)newPort->GetSocket());
+                    zpoller_add(poller, (void*) newPort->port_socket());
                 }
 
                 // Add and start subscribers
                 for (auto& subconf : comp_conf.component_ports.subs) {
                     const ports::SubscriberPort* newPort = comp->InitSubscriberPort(subconf);
-                    const zsock_t* zmqSocket = newPort->GetSocket();
+                    const zsock_t* zmqSocket = newPort->port_socket();
                     portSockets[zmqSocket] = newPort;
-                    zpoller_add(poller, (void*)newPort->GetSocket());
+                    zpoller_add(poller, (void*) newPort->port_socket());
                 }
             }
 

@@ -74,7 +74,7 @@ namespace riaps{
 
             group_pubport_ = std::shared_ptr<ports::GroupPublisherPort>(new ports::GroupPublisherPort(internalPubConfig, parent_component_));
             initializedServices.push_back(group_pubport_->GetGroupService());
-            group_ports_[group_pubport_->GetSocket()] = group_pubport_;
+            group_ports_[group_pubport_->port_socket()] = group_pubport_;
 
 
             group_port_sub internalSubConfig;
@@ -83,24 +83,24 @@ namespace riaps{
             internalSubConfig.port_name    = INTERNAL_SUB_NAME;
 
             group_subport_ = shared_ptr<ports::GroupSubscriberPort>(new ports::GroupSubscriberPort(internalSubConfig, parent_component_));
-            group_ports_[group_subport_->GetSocket()] = group_subport_;
+            group_ports_[group_subport_->port_socket()] = group_subport_;
 
             // Initialize the zpoller and add the group sub port
-            group_poller_ = zpoller_new(const_cast<zsock_t*>(group_subport_->GetSocket()), nullptr);
+            group_poller_ = zpoller_new(const_cast<zsock_t*>(group_subport_->port_socket()), nullptr);
 
             // Initialize user defined publishers
             for(auto& portDeclaration : group_type_conf_.groupTypePorts.pubs){
                 auto newPubPort = std::shared_ptr<ports::GroupPublisherPort>(new ports::GroupPublisherPort(portDeclaration, parent_component_));
                 initializedServices.push_back(newPubPort->GetGroupService());
-                group_ports_[newPubPort->GetSocket()]=std::move(newPubPort);
+                group_ports_[newPubPort->port_socket()]=std::move(newPubPort);
 
             }
 
             // Initialize user defined subscribers
             for(auto& portDeclaration : group_type_conf_.groupTypePorts.subs){
                 auto newSubPort = shared_ptr<ports::GroupSubscriberPort>(new ports::GroupSubscriberPort(portDeclaration, parent_component_));
-                zpoller_add(group_poller_, const_cast<zsock_t*>(newSubPort->GetSocket()));
-                group_ports_[newSubPort->GetSocket()] = std::move(newSubPort);
+                zpoller_add(group_poller_, const_cast<zsock_t*>(newSubPort->port_socket()));
+                group_ports_[newSubPort->port_socket()] = std::move(newSubPort);
 
             }
 
@@ -625,7 +625,7 @@ namespace riaps{
 //                _lastFrame = nullptr;
 //            };
 
-            zmsg_t* msg = zmsg_recv(const_cast<zsock_t*>(subscriberPort->GetSocket()));
+            zmsg_t* msg = zmsg_recv(const_cast<zsock_t*>(subscriberPort->port_socket()));
             zframe_t* firstFrame;
             capnp::FlatArrayMessageReader frmReader(nullptr);
 

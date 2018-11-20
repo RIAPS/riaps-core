@@ -88,7 +88,7 @@ namespace riaps {
         }
 
         string PeriodicTimer::Recv() {
-            zmsg_t *msg = zmsg_recv(const_cast<zsock_t*>(GetSocket()));
+            zmsg_t *msg = zmsg_recv(const_cast<zsock_t*>(port_socket()));
             if (msg) {
                 last_zmsg_ = unique_ptr<zmsg_t, function<void(zmsg_t*)>>(msg, [](zmsg_t *z) { zmsg_destroy(&z); });
                 auto str = zmsg_popstr(last_zmsg_.get());
@@ -115,12 +115,8 @@ namespace riaps {
             zactor_destroy(&timer_actor_);
         }
 
-        const zsock_t* PeriodicTimer::GetSocket() const {
+        const zsock_t* PeriodicTimer::port_socket() const {
             return port_socket_;
-        }
-
-        PeriodicTimer* PeriodicTimer::AsTimerPort() {
-            return this;
         }
     }
 }
