@@ -157,6 +157,7 @@ list (APPEND riapslib_HEADERS
         include/utils/r_expirable.h
         include/utils/r_expirablelist.h
         include/utils/r_timeout.h
+        include/componentmodel/r_messagebuilder.h
         )
 
 # libriaps
