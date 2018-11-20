@@ -15,9 +15,9 @@
 namespace py = pybind11;
 
 // Name of the ports from the model file
-#define PORT_TIMER_CLOCK "clock"
-#define PORT_PUB_READY   "ready"
-#define PORT_REP_REQUEST "request"
+constexpr auto PORT_TIMER_CLOCK = "clock";
+constexpr auto PORT_PUB_READY   = "ready";
+constexpr auto PORT_REP_REQUEST = "request";
 
 namespace distributedestimator {
     namespace components {
