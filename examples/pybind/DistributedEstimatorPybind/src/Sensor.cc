@@ -25,20 +25,24 @@ namespace distributedestimator {
             auto s = RecvClock();
             component_logger()->info("{}:{}", __func__, s);
 
-            capnp::MallocMessageBuilder messageBuilder;
-            auto msgSensorReady = messageBuilder.initRoot<messages::SensorReady>();
-            msgSensorReady.setMsg("data_ready");
-            SendReady(messageBuilder, msgSensorReady);
+//            capnp::MallocMessageBuilder messageBuilder;
+//            auto msgSensorReady = messageBuilder.initRoot<messages::SensorReady>();
+//            msgSensorReady.setMsg("data_ready");
+
+            MessageBuilder<messages::SensorReady> builder;
+            builder->setMsg("data_ready");
+            SendReady(builder);
         }
 
         void Sensor::OnRequest() {
             auto msg = RecvRequest();
             component_logger()->info("{}: {}", __func__, msg.getMsg().cStr());
 
-            capnp::MallocMessageBuilder messageBuilder;
-            messages::SensorValue::Builder msgSensorValue = messageBuilder.initRoot<messages::SensorValue>();
-            msgSensorValue.setMsg("sensor_rep");
-            if (!SendRequest(messageBuilder, msgSensorValue)){
+//            capnp::MallocMessageBuilder messageBuilder;
+//            messages::SensorValue::Builder msgSensorValue = messageBuilder.initRoot<messages::SensorValue>();
+            MessageBuilder<messages::SensorValue> msg_sensor_value;
+            msg_sensor_value->setMsg("sensor_rep");
+            if (!SendRequest(msg_sensor_value)){
                 // Couldn't send the response
                 component_logger()->warn("Couldn't send message");
             }

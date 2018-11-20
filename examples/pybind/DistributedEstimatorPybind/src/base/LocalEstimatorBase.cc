@@ -35,9 +35,8 @@ namespace distributedestimator {
             }
         }
 
-        bool LocalEstimatorBase::SendQuery(capnp::MallocMessageBuilder &messageBuilder,
-                                           messages::SensorQuery::Builder &message) {
-            return SendMessageOnPort(messageBuilder, PORT_REQ_QUERY);
+        bool LocalEstimatorBase::SendQuery(MessageBuilder<messages::SensorQuery>& message) {
+            return SendMessageOnPort(message.capnp_builder(), PORT_REQ_QUERY);
         }
 
         messages::SensorValue::Reader LocalEstimatorBase::RecvQuery() {
@@ -55,13 +54,9 @@ namespace distributedestimator {
         }
 
         messages::SensorReady::Reader LocalEstimatorBase::RecvReady() {
-            component_logger()->debug("{}", __func__);
             auto port = GetPortAs<riaps::ports::SubscriberPort>(PORT_SUB_READY);
-            component_logger()->debug("after getportas");
             auto reader = port->Recv();
-            component_logger()->debug("after recv");
             auto r = reader->getRoot<messages::SensorReady>();
-            component_logger()->debug("after getRoot");
             return r;
         }
 
@@ -69,9 +64,8 @@ namespace distributedestimator {
 
         }
 
-        bool LocalEstimatorBase::SendEstimate(capnp::MallocMessageBuilder &messageBuilder,
-                                              messages::Estimate::Builder &message) {
-            return SendMessageOnPort(messageBuilder, PORT_PUB_ESTIMATE);
+        bool LocalEstimatorBase::SendEstimate(MessageBuilder<messages::Estimate>& message) {
+            return SendMessageOnPort(message.capnp_builder(), PORT_PUB_ESTIMATE);
         }
 
 

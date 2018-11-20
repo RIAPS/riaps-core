@@ -52,14 +52,12 @@ namespace distributedestimator {
 
         }
 
-        bool SensorBase::SendRequest(capnp::MallocMessageBuilder&    messageBuilder,
-                                          messages::SensorValue::Builder& message) {
-            return SendMessageOnPort(messageBuilder, PORT_REP_REQUEST);
+        bool SensorBase::SendRequest(MessageBuilder<messages::SensorValue>& message) {
+            return SendMessageOnPort(message.capnp_builder(), PORT_REP_REQUEST);
         }
 
-        bool SensorBase::SendReady(capnp::MallocMessageBuilder&    messageBuilder,
-                                        messages::SensorReady::Builder& message) {
-            return SendMessageOnPort(messageBuilder, PORT_PUB_READY);
+        bool SensorBase::SendReady(MessageBuilder<messages::SensorReady>& builder) {
+            return SendMessageOnPort(builder.capnp_builder(), PORT_PUB_READY);
         }
 
         SensorBase::~SensorBase() {

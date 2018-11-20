@@ -30,16 +30,20 @@ namespace distributedestimator {
             auto msg = RecvReady();
             component_logger()->info("{}: {} {}", __func__, msg.getMsg().cStr(), ::getpid());
 
-            capnp::MallocMessageBuilder builderSensorQuery;
-            messages::SensorQuery::Builder queryMsg = builderSensorQuery.initRoot<messages::SensorQuery>();
-            queryMsg.setMsg("sensor_query");
-            auto result = SendQuery(builderSensorQuery, queryMsg);
+//            capnp::MallocMessageBuilder builderSensorQuery;
+//            messages::SensorQuery::Builder queryMsg = builderSensorQuery.initRoot<messages::SensorQuery>();
+//            queryMsg.setMsg("sensor_query");
+
+            MessageBuilder<messages::SensorQuery> builder;
+            builder->setMsg("sensor_query");
+            auto result = SendQuery(builder);
             if (result) {
                 auto value = RecvQuery();
-                capnp::MallocMessageBuilder builderEstimate;
-                auto estimateMsg = builderEstimate.initRoot<messages::Estimate>();
-                estimateMsg.setMsg(fmt::format("local_est({})", ::getpid()));
-                SendEstimate(builderEstimate, estimateMsg);
+//                capnp::MallocMessageBuilder builderEstimate;
+//                auto estimateMsg = builderEstimate.initRoot<messages::Estimate>();
+                MessageBuilder<messages::Estimate> msg_estimate;
+                msg_estimate->setMsg(fmt::format("local_est({})", ::getpid()));
+                SendEstimate(msg_estimate);
 //                messages::SensorValue::Reader sensorValue;
 //                if (RecvQuery(sensorValue)) {
 //                    if (GetPortByName(PORT_REQ_QUERY)->GetPortBaseConfig()->isTimed) {
