@@ -2,7 +2,7 @@
 // Created by istvan on 11/11/16.
 //
 
-
+#include <componentmodel/r_riapsmessage.h>
 #include <GlobalEstimator.h>
 
 #include <pybind11/stl.h>
@@ -28,6 +28,7 @@ namespace distributedestimator {
         void GlobalEstimator::OnEstimate() {
             auto msg = RecvEstimate();
             component_logger()->info("{}:{}", __func__, msg.getMsg().cStr());
+
         }
 
         void GlobalEstimator::OnWakeup() {

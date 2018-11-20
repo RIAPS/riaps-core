@@ -7,6 +7,7 @@
 
 #include "componentmodel/r_componentbase.h"
 #include "messages/distributedestimator.capnp.h"
+#include "componentmodel/r_messagebuilder.h"
 
 #include <pybind11/stl.h>
 #include <pybind11/pybind11.h>
@@ -40,11 +41,8 @@ namespace distributedestimator {
             virtual std::string RecvClock() final;
             virtual messages::SensorQuery::Reader RecvRequest() final;
 
-            virtual bool SendRequest(capnp::MallocMessageBuilder&    messageBuilder,
-                                     messages::SensorValue::Builder& message);
-
-            virtual bool SendReady(capnp::MallocMessageBuilder&    messageBuilder,
-                                   messages::SensorReady::Builder& message);
+            virtual bool SendRequest(MessageBuilder<messages::SensorValue>& message);
+            virtual bool SendReady(MessageBuilder<messages::SensorReady>& builder);
 
             virtual ~SensorBase();
 
