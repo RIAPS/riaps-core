@@ -7,8 +7,8 @@ namespace riaps{
     namespace ports{
 
         // TODO: Do not thrwo exception from the constructor
-        AnswerPort::AnswerPort(const component_port_ans &config, const ComponentBase *parent_component) :
-            PortBase(PortTypes::Answer, (component_port_config*)&config, parent_component),
+        AnswerPort::AnswerPort(const ComponentPortAns &config, const ComponentBase *parent_component) :
+            PortBase(PortTypes::Answer, (ComponentPortConfig*)&config, parent_component),
             SenderPort(this)
         {
             port_socket_ = zsock_new(ZMQ_ROUTER);
@@ -42,8 +42,8 @@ namespace riaps{
             }
         }
 
-        const component_port_ans* AnswerPort::GetConfig() const{
-            return (component_port_ans*) config();
+        const ComponentPortAns* AnswerPort::GetConfig() const{
+            return (ComponentPortAns*) config();
         }
 
         bool AnswerPort::SendAnswer(capnp::MallocMessageBuilder& builder, std::shared_ptr<MessageParams> params) {

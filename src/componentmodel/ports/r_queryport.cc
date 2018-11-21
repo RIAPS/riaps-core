@@ -13,7 +13,7 @@ namespace riaps {
 
         QueryPort::QueryPort(const component_port_qry &config, const ComponentBase *component)
                 : PortBase(PortTypes::Query,
-                           (component_port_config*)(&config),
+                           (ComponentPortConfig*)(&config),
                            component),
                   m_capnpReader(capnp::FlatArrayMessageReader(nullptr)) {
             port_socket_ = zsock_new(ZMQ_DEALER);

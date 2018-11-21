@@ -41,17 +41,15 @@ namespace riaps {
     public:
 
         PortBase(PortTypes port_type,
-                 const component_port_config* config,
+                 const ComponentPortConfig* config,
                  const ComponentBase* parent_component);
 
         virtual const zsock_t*       port_socket()      const;
         const ComponentBase*         parent_component()      ;
         const PortTypes&             port_type()        const;
-        const component_port_config* config()           const;
+        const ComponentPortConfig* config()           const;
         const std::string            port_name()        const;
 
-        // Return NULL if the called conversion is unavailable or invalid
-        // TODO: Remove these, GetPortAs() does the job
         RequestPort*         AsRequestPort()        ;
         QueryPort*           AsQueryPort()          ;
         PublisherPort*       AsPublishPort()        ;
@@ -70,15 +68,13 @@ namespace riaps {
         virtual ~PortBase() noexcept ;
 
     protected:
-
         PortTypes                    port_type_;
         zsock_t*                     port_socket_;
         std::shared_ptr<spd::logger> logger_;
 
-
     private:
-        const component_port_config* config_;
-        const ComponentBase* parent_component_;
+        const ComponentPortConfig* config_;
+        const ComponentBase*       parent_component_;
     };
 
     template<class T>

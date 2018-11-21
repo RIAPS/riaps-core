@@ -14,9 +14,9 @@ namespace riaps{
     namespace ports{
         class SubscriberPortBase : public PortBase, public RecvPort{
         public:
-            SubscriberPortBase(const component_port_config* config, const ComponentBase* parent);
+            SubscriberPortBase(const ComponentPortConfig* config, const ComponentBase* parent);
 
-            virtual const component_port_sub* GetConfig() const;
+            virtual const ComponentPortSub* GetConfig() const;
 
             // Returns false, if the subscriber couldn't connect
             bool ConnectToPublihser(const std::string& endpoint);

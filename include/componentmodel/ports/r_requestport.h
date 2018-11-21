@@ -17,14 +17,14 @@ namespace riaps {
         class RequestPort : public PortBase, public SenderPort, public RecvPort {
         public:
 
-            RequestPort(const component_port_req &config, const ComponentBase *parent);
+            RequestPort(const ComponentPortReq &config, const ComponentBase *parent);
             virtual void Init();
 
             // Returns false, if the request port couldn't connect
             bool ConnectToResponse(const std::string& rep_endpoint);
 
             //virtual bool Recv(capnp::FlatArrayMessageReader** messageReader);
-            virtual const component_port_req* GetConfig() const;
+            virtual const ComponentPortReq* GetConfig() const;
             const timespec& recv_timestamp() const;
 
             ~RequestPort() noexcept ;

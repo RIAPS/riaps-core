@@ -5,16 +5,14 @@
 #include <componentmodel/ports/r_pubportbase.h>
 #include <framework/rfw_network_interfaces.h>
 
+using namespace std;
+
 namespace riaps{
     namespace ports{
 
-        PublisherPortBase::PublisherPortBase(const component_port_config* config, const ComponentBase* parent)
+        PublisherPortBase::PublisherPortBase(const ComponentPortConfig* config, const ComponentBase* parent)
                 : PortBase(PortTypes::Publisher, config, parent),
                   SenderPort(this) {
-
-        }
-
-        PublisherPortBase::~PublisherPortBase(){
 
         }
 
@@ -28,25 +26,23 @@ namespace riaps{
             }
 
             if (host_ == "") {
-                throw std::runtime_error("Publisher cannot be initiated. Cannot find  available network interface.");
+                logger_->error("Publisher cannot be initiated. Cannot find  available network interface.");
             }
 
-            std::string pub_endpoint = "tcp://" + host_ + ":!";
+            string pub_endpoint = fmt::format("tcp://{}:!",host_);
             port_ = zsock_bind(port_socket_, "%s", pub_endpoint.c_str());
 
-
             if (port_ == -1) {
-                throw std::runtime_error("Couldn't bind publisher port.");
-            }
-
-            logger_->debug("Publisher is created on {}:{} [{}]", host_, port_, GetConfig()->message_type);
+                logger_->error("Couldn't bind publisher port: {}", port_name());
+            } else
+                logger_->debug("Publisher is created on {}:{} [{}]", host_, port_, GetConfig()->message_type);
         }
 
-        const component_port_pub* PublisherPortBase::GetConfig() const {
-            return (component_port_pub*) config();
+        const ComponentPortPub* PublisherPortBase::GetConfig() const {
+            return (ComponentPortPub*) config();
         }
 
-        std::string PublisherPortBase::GetEndpoint() {
+        std::string PublisherPortBase::endpoint() {
             if (port_socket_) {
                 return std::string(zsock_endpoint(port_socket_));
             }

@@ -13,25 +13,19 @@ namespace riaps {
         public:
             TimedPort();
             ~TimedPort() = default;
-
-            const timespec GetLastRecvTimestamp();
-            const timespec GetLastSendTimestamp();
-
-
-
+            const timespec LastRecvTimestamp();
+            const timespec LastSendTimestamp();
 
         protected:
-            void SetRecvTimestamp(double t_recvTimestamp);
-            void SetSendTimestamp(double t_sentTimestamp);
+            void SetRecvTimestamp(double recv_timestamp);
+            void SetSendTimestamp(double sent_timestamp);
 
-            void SetRecvTimestamp(timespec t_recvTimestamp);
-            void SetSendTimestamp(timespec t_sentTimestamp);
-
-
+            void SetRecvTimestamp(timespec recv_timestamp);
+            void SetSendTimestamp(timespec sent_timestamp);
 
         private:
-            timespec m_recvTimestamp;
-            timespec m_sentTimestamp;
+            timespec recv_timestamp_;
+            timespec sent_timestamp_;
         };
     }
 }

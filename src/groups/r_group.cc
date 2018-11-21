@@ -33,7 +33,7 @@ namespace riaps{
         }
 
         std::string Group::leader_id() const {
-            if (group_type_conf_.hasLeader && group_leader_ != nullptr){
+            if (group_type_conf_.has_leader && group_leader_ != nullptr){
                 return group_leader_->GetLeaderId();
             }
             return "";
@@ -65,7 +65,7 @@ namespace riaps{
 
 
             // Default port for the group. Reserved for RIAPS internal communication protocols
-            group_port_pub internalPubConfig;
+            GroupPortPub internalPubConfig;
             internalPubConfig.message_type = INTERNAL_MESSAGETYPE;
             internalPubConfig.is_local     = false;
             internalPubConfig.port_name    = INTERNAL_PUB_NAME;
@@ -77,7 +77,7 @@ namespace riaps{
             group_ports_[group_pubport_->port_socket()] = group_pubport_;
 
 
-            group_port_sub internalSubConfig;
+            GroupPortSub internalSubConfig;
             internalSubConfig.message_type = INTERNAL_MESSAGETYPE;
             internalSubConfig.is_local     = false;
             internalSubConfig.port_name    = INTERNAL_SUB_NAME;
@@ -89,7 +89,7 @@ namespace riaps{
             group_poller_ = zpoller_new(const_cast<zsock_t*>(group_subport_->port_socket()), nullptr);
 
             // Initialize user defined publishers
-            for(auto& portDeclaration : group_type_conf_.groupTypePorts.pubs){
+            for(auto& portDeclaration : group_type_conf_.group_type_ports.pubs){
                 auto newPubPort = std::shared_ptr<ports::GroupPublisherPort>(new ports::GroupPublisherPort(portDeclaration, parent_component_));
                 initializedServices.push_back(newPubPort->GetGroupService());
                 group_ports_[newPubPort->port_socket()]=std::move(newPubPort);
@@ -97,7 +97,7 @@ namespace riaps{
             }
 
             // Initialize user defined subscribers
-            for(auto& portDeclaration : group_type_conf_.groupTypePorts.subs){
+            for(auto& portDeclaration : group_type_conf_.group_type_ports.subs){
                 auto newSubPort = shared_ptr<ports::GroupSubscriberPort>(new ports::GroupSubscriberPort(portDeclaration, parent_component_));
                 zpoller_add(group_poller_, const_cast<zsock_t*>(newSubPort->port_socket()));
                 group_ports_[newSubPort->port_socket()] = std::move(newSubPort);
@@ -110,7 +110,7 @@ namespace riaps{
                                        initializedServices);
 
             // Setup leader election
-            if (hasJoined && group_type_conf_.hasLeader) {
+            if (hasJoined && group_type_conf_.has_leader) {
                 group_leader_ = std::unique_ptr<riaps::groups::GroupLead>(
                         new GroupLead(this, &known_nodes_)
                 );
@@ -425,7 +425,7 @@ namespace riaps{
 //            void* which = zpoller_wait(group_poller_, 1);
 //            if (which == nullptr){
 //                // No incoming message, update the leader
-//                if (_groupTypeConf.hasLeader) {
+//                if (_groupTypeConf.has_leader) {
 //                    group_leader_->Update();
 //                }
 //                return nullptr;
@@ -509,7 +509,7 @@ namespace riaps{
 //                        logger_->debug("Message to the leader arrived!");
 //
 //                        return nullptr;
-//                    } else if (internal.hasConsensus()) {
+//                    } else if (internal.has_consensus()) {
 //                        auto msgCons = internal.getConsensus();
 //                       // logger_->debug("DC message arrived from {}", msgDistCoord.getSourceComponentId().cStr());
 //
@@ -600,7 +600,7 @@ namespace riaps{
             void* which = zpoller_wait(group_poller_, 1);
             if (which == nullptr){
                 // No incoming message, update the leader
-                if (group_type_conf_.hasLeader) {
+                if (group_type_conf_.has_leader) {
                     group_leader_->Update();
                 }
                 return;

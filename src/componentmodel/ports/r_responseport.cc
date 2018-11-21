@@ -10,8 +10,8 @@ using namespace std;
 namespace riaps{
     namespace ports{
 
-        ResponsePort::ResponsePort(const component_port_rep &config, const ComponentBase *parent) :
-            PortBase(PortTypes::Response, (component_port_config*)&config, parent),
+        ResponsePort::ResponsePort(const ComponentPortRep &config, const ComponentBase *parent) :
+            PortBase(PortTypes::Response, (ComponentPortConfig*)&config, parent),
             SenderPort(this),
             RecvPort(this)
         {
@@ -55,8 +55,8 @@ namespace riaps{
             }
         }
 
-        const component_port_rep* ResponsePort::GetConfig() const{
-            return (component_port_rep*) config();
+        const ComponentPortRep* ResponsePort::GetConfig() const{
+            return (ComponentPortRep*) config();
         }
 
         ResponsePort::~ResponsePort() noexcept {

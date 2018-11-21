@@ -4,7 +4,7 @@ using namespace std;
 
 namespace riaps {
     namespace ports{
-        SubscriberPortBase::SubscriberPortBase(const component_port_config *config, const ComponentBase* parent)
+        SubscriberPortBase::SubscriberPortBase(const ComponentPortConfig *config, const ComponentBase* parent)
                 : PortBase(PortTypes::Subscriber, config, parent), RecvPort(this) {
            InitSocket();
         }
@@ -34,8 +34,8 @@ namespace riaps {
             return true;
         }
 
-        const component_port_sub* SubscriberPortBase::GetConfig() const{
-            return (component_port_sub*) config();
+        const ComponentPortSub* SubscriberPortBase::GetConfig() const{
+            return (ComponentPortSub*) config();
         }
 
         SubscriberPortBase::~SubscriberPortBase() {

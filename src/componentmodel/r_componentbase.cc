@@ -58,7 +58,7 @@ namespace riaps{
             if (firstrun) {
                 firstrun = false;
 
-                const component_conf& comp_conf = comp->component_config();
+                const ComponentConf& comp_conf = comp->component_config();
 
                 // Add insider ports
                 for (auto& insconf : comp_conf.component_ports.inss) {
@@ -416,7 +416,7 @@ namespace riaps{
         riaps_logger_->error("Scheduled timer is fired, but no handler is implemented. Implement OnSchedulerTimer() in component {}", component_config().component_name);
     }
     
-    void ComponentBase::set_config(component_conf &c_conf) {
+    void ComponentBase::set_config(ComponentConf &c_conf) {
         component_config_ = c_conf;
 
         // TODO: Create loggers somewhere else
@@ -496,7 +496,7 @@ namespace riaps{
         return nullptr;
     }
 
-    const component_conf& ComponentBase::component_config() const {
+    const ComponentConf& ComponentBase::component_config() const {
         return component_config_;
     }
 
@@ -517,7 +517,7 @@ namespace riaps{
         return actor_;
     }
 
-    const ports::PublisherPort* ComponentBase::InitPublisherPort(const component_port_pub& config) {
+    const ports::PublisherPort* ComponentBase::InitPublisherPort(const ComponentPortPub& config) {
         auto result = new ports::PublisherPort(config, this);
         std::unique_ptr<ports::PortBase> newport(result);
         ports_[config.port_name] = std::move(newport);
@@ -541,7 +541,7 @@ namespace riaps{
 
 
 
-    const ports::SubscriberPort* ComponentBase::InitSubscriberPort(const component_port_sub& config) {
+    const ports::SubscriberPort* ComponentBase::InitSubscriberPort(const ComponentPortSub& config) {
         std::unique_ptr<ports::SubscriberPort> newport(new ports::SubscriberPort(config, this));
         auto result = newport.get();
         newport->Init();
@@ -549,14 +549,14 @@ namespace riaps{
         return result;
     }
 
-    const ports::ResponsePort* ComponentBase::InitResponsePort(const component_port_rep & config) {
+    const ports::ResponsePort* ComponentBase::InitResponsePort(const ComponentPortRep & config) {
         auto result = new ports::ResponsePort(config, this);
         std::unique_ptr<ports::PortBase> newport(result);
         ports_[config.port_name] = std::move(newport);
         return result;
     }
 
-    const ports::RequestPort*   ComponentBase::InitRequestPort(const component_port_req& config){
+    const ports::RequestPort*   ComponentBase::InitRequestPort(const ComponentPortReq& config){
         std::unique_ptr<ports::RequestPort> newport(new ports::RequestPort(config, this));
         auto result = newport.get();
         newport->Init();
@@ -564,7 +564,7 @@ namespace riaps{
         return result;
     }
 
-    const ports::AnswerPort* ComponentBase::InitAnswerPort(const component_port_ans & config) {
+    const ports::AnswerPort* ComponentBase::InitAnswerPort(const ComponentPortAns & config) {
         auto result = new ports::AnswerPort(config, this);
         std::unique_ptr<ports::PortBase> newport(result);
         ports_[config.port_name] = std::move(newport);
@@ -579,14 +579,14 @@ namespace riaps{
         return result;
     }
 
-    const ports::InsidePort* ComponentBase::InitInsidePort(const component_port_ins& config) {
+    const ports::InsidePort* ComponentBase::InitInsidePort(const ComponentPortIns& config) {
         auto result = new ports::InsidePort(config, riaps::ports::InsidePortMode::BIND, this);
         std::unique_ptr<ports::PortBase> newport(result);
         ports_[config.port_name] = std::move(newport);
         return result;
     }
 
-    const ports::PeriodicTimer* ComponentBase::InitTimerPort(const component_port_tim& config) {
+    const ports::PeriodicTimer* ComponentBase::InitTimerPort(const ComponentPortTim& config) {
         std::unique_ptr<ports::PeriodicTimer> newtimer(new ports::PeriodicTimer(config, this));
         newtimer->Init();
         auto result = newtimer.get();

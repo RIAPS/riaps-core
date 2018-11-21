@@ -15,7 +15,7 @@ public:
     const std::string& application_name() const;
     const std::string& actor_name() const;
 
-    const groupt_conf* GetGroupType(const std::string &groupTypeId) const;
+    const GroupTypeConf* GetGroupType(const std::string &groupTypeId) const;
 
     ~PyActor() = default;
 
@@ -23,7 +23,7 @@ private:
     std::string application_name_;
     std::string actor_name_;
 
-    std::vector<groupt_conf> grouptype_configurations_;
+    std::vector<GroupTypeConf> grouptype_configurations_;
 
 };
 

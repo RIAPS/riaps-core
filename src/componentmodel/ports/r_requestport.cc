@@ -6,8 +6,8 @@ using namespace std;
 namespace riaps {
     namespace ports {
 
-        RequestPort::RequestPort(const component_port_req &config, const ComponentBase *parent)
-                : PortBase(PortTypes::Request, (component_port_config*)(&config), parent),
+        RequestPort::RequestPort(const ComponentPortReq &config, const ComponentBase *parent)
+                : PortBase(PortTypes::Request, (ComponentPortConfig*)(&config), parent),
                   SenderPort(this),
                   RecvPort(this),
                   capnp_reader_(capnp::FlatArrayMessageReader(nullptr)) {
@@ -22,7 +22,7 @@ namespace riaps {
         }
 
         void RequestPort::Init() {
-            const component_port_req* current_config = GetConfig();
+            const ComponentPortReq* current_config = GetConfig();
             const string host = (current_config->is_local) ? "127.0.0.1" : riaps::framework::Network::GetIPAddress();
 
             auto results =
@@ -57,8 +57,8 @@ namespace riaps {
             return true;
         }
 
-        const component_port_req* RequestPort::GetConfig() const{
-            return (component_port_req*) config();
+        const ComponentPortReq* RequestPort::GetConfig() const{
+            return (ComponentPortReq*) config();
         }
 
 //        RequestPort* RequestPort::AsRequestPort() {

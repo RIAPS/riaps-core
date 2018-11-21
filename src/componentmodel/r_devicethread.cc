@@ -10,7 +10,7 @@ namespace riaps{
     namespace components{
 
 
-        DeviceThread::DeviceThread(const component_conf& deviceConfig)
+        DeviceThread::DeviceThread(const ComponentConf& deviceConfig)
                 : _deviceConfig(deviceConfig){
             _isTerminated.store(false);
             _poller = NULL;

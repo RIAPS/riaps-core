@@ -5,7 +5,6 @@
 #ifndef RIAPS_R_PUBLISHERPORT_H
 #define RIAPS_R_PUBLISHERPORT_H
 
-
 #include <componentmodel/r_configuration.h>
 #include <componentmodel/ports/r_pubportbase.h>
 
@@ -26,7 +25,7 @@ namespace riaps {
             * @param config
             * @param parent_component
             */
-           PublisherPort(const component_port_pub& config, const ComponentBase* parent);
+           PublisherPort(const ComponentPortPub& config, const ComponentBase* parent);
            ~PublisherPort() = default;
        };
    }

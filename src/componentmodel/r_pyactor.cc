@@ -18,9 +18,9 @@ PyActor::PyActor(const std::string &application_name, const std::string &actor_n
 
 }
 
-const groupt_conf* PyActor::GetGroupType(const std::string &groupTypeId) const {
+const GroupTypeConf* PyActor::GetGroupType(const std::string &groupTypeId) const {
     for (auto it = grouptype_configurations_.begin(); it != grouptype_configurations_.end(); it++) {
-        if (it->groupTypeId == groupTypeId)
+        if (it->group_type_id == groupTypeId)
             return &(*it);
     }
     return nullptr;

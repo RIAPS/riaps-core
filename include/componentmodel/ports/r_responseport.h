@@ -19,8 +19,8 @@ namespace riaps {
         class ResponsePort : public PortBase, public SenderPort, public RecvPort {
         public:
 
-            ResponsePort(const component_port_rep &config, const ComponentBase *parent);
-            virtual const component_port_rep* GetConfig() const;
+            ResponsePort(const ComponentPortRep &config, const ComponentBase *parent);
+            virtual const ComponentPortRep* GetConfig() const;
 
             //virtual ResponsePort* AsResponsePort() ;
             //virtual RecvPort*     AsRecvPort()     ;

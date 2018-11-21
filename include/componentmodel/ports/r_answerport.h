@@ -21,8 +21,8 @@ namespace riaps {
 
         class AnswerPort : public PortBase, public SenderPort {
         public:
-            AnswerPort(const component_port_ans &config, const ComponentBase* parent);
-            virtual const component_port_ans* GetConfig() const;
+            AnswerPort(const ComponentPortAns &config, const ComponentBase* parent);
+            virtual const ComponentPortAns* GetConfig() const;
 
             bool SendAnswer(capnp::MallocMessageBuilder& builder, std::shared_ptr<MessageParams> params);
 

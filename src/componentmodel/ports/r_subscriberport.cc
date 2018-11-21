@@ -5,13 +5,13 @@ using namespace std;
 
 namespace riaps{
     namespace ports {
-        SubscriberPort::SubscriberPort(const component_port_sub &config, const ComponentBase *parentComponent)
-                : SubscriberPortBase((component_port_config*)&config, parentComponent) {
+        SubscriberPort::SubscriberPort(const ComponentPortSub &config, const ComponentBase *parentComponent)
+                : SubscriberPortBase((ComponentPortConfig*)&config, parentComponent) {
 
         }
 
         void SubscriberPort::Init() {
-            component_port_sub* current_config = (component_port_sub*)GetConfig();
+            ComponentPortSub* current_config = (ComponentPortSub*)GetConfig();
             const string host = (current_config->is_local) ? "127.0.0.1" : riaps::framework::Network::GetIPAddress();
 
             auto results =

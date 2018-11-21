@@ -15,7 +15,7 @@ namespace riaps {
     namespace ports {
 
         PortBase::PortBase(PortTypes port_type,
-                           const component_port_config* config,
+                           const ComponentPortConfig* config,
                            const ComponentBase* parent_component)
                 : parent_component_(parent_component) {
             port_type_ = port_type;
@@ -43,7 +43,7 @@ namespace riaps {
             return parent_component_;
         }
 
-        const component_port_config* PortBase::config() const {
+        const ComponentPortConfig* PortBase::config() const {
             return config_;
         }
 

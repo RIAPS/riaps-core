@@ -77,8 +77,8 @@ namespace riaps {
         }
 
 
-        PeriodicTimer::PeriodicTimer(const component_port_tim &config, const ComponentBase* parent_component)
-                : PortBase(PortTypes::Timer, (component_port_config*)&config, parent_component) {
+        PeriodicTimer::PeriodicTimer(const ComponentPortTim &config, const ComponentBase* parent_component)
+                : PortBase(PortTypes::Timer, (ComponentPortConfig*)&config, parent_component) {
             interval_ = config.period;
             timer_actor_ = zactor_new(ptimeractor, this);
         }

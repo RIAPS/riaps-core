@@ -5,8 +5,8 @@
 namespace riaps{
     namespace ports {
 
-        PublisherPort::PublisherPort(const component_port_pub &config, const ComponentBase* parent)
-            : PublisherPortBase((component_port_config*)&config, parent)
+        PublisherPort::PublisherPort(const ComponentPortPub &config, const ComponentBase* parent)
+            : PublisherPortBase((ComponentPortConfig*)&config, parent)
 
         {
             InitSocket();

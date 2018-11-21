@@ -23,7 +23,7 @@ namespace riaps {
         class DeviceThread {
         public:
 
-            DeviceThread(const component_conf& deviceConfig);
+            DeviceThread(const ComponentConf& deviceConfig);
 
             riaps::ports::InsidePort* GetInsidePortByName(const std::string& portName);
 
@@ -61,7 +61,7 @@ namespace riaps {
 
         private:
             std::thread                 _deviceThread;
-            const component_conf&    _deviceConfig;
+            const ComponentConf&    _deviceConfig;
             std::map<std::string, std::unique_ptr<ports::PortBase>> _insidePorts;
             std::atomic<bool> _isTerminated;
 

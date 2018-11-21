@@ -72,7 +72,7 @@ namespace riaps {
 
         /// @param config Configuration, parsed from the model file.
         /// @param actor Parent actor, the owner the component.
-        //ComponentBase(component_conf& config, Actor& actor);
+        //ComponentBase(ComponentConf& config, Actor& actor);
 
 
         ///////////////////// PYTHON PART ///////////////////////
@@ -155,7 +155,7 @@ namespace riaps {
          *
          * @return The component configuration.
          */
-        const component_conf& component_config() const;
+        const ComponentConf& component_config() const;
 
         /**
          *
@@ -390,7 +390,7 @@ namespace riaps {
 
         std::shared_ptr<spd::logger> component_logger();
 
-        void set_config(component_conf& c_conf);
+        void set_config(ComponentConf& c_conf);
         void set_debug_level(spd::level::level_enum component_level,
                              spd::level::level_enum framework_level = spd::level::info);
 
@@ -398,14 +398,14 @@ namespace riaps {
         std::shared_ptr<spd::logger> riaps_logger_;
         std::shared_ptr<spd::logger> component_logger_;
 
-        const ports::PublisherPort*  InitPublisherPort  (const component_port_pub&);
-        const ports::SubscriberPort* InitSubscriberPort (const component_port_sub&);
-        const ports::ResponsePort*   InitResponsePort   (const component_port_rep&);
-        const ports::RequestPort*    InitRequestPort    (const component_port_req&);
+        const ports::PublisherPort*  InitPublisherPort  (const ComponentPortPub&);
+        const ports::SubscriberPort* InitSubscriberPort (const ComponentPortSub&);
+        const ports::ResponsePort*   InitResponsePort   (const ComponentPortRep&);
+        const ports::RequestPort*    InitRequestPort    (const ComponentPortReq&);
         const ports::QueryPort*      InitQueryPort      (const component_port_qry&);
-        const ports::AnswerPort*     InitAnswerPort     (const component_port_ans&);
-        const ports::PeriodicTimer*  InitTimerPort      (const component_port_tim&);
-        const ports::InsidePort*     InitInsidePort     (const component_port_ins&);
+        const ports::AnswerPort*     InitAnswerPort     (const ComponentPortAns&);
+        const ports::PeriodicTimer*  InitTimerPort      (const ComponentPortTim&);
+        const ports::InsidePort*     InitInsidePort     (const ComponentPortIns&);
 
         /**
          * Is the current component the leader?
@@ -423,7 +423,7 @@ namespace riaps {
         // Note: disable for now, we need more tests.
         //timers::OneShotTimer*   _oneShotTimer;
 
-        component_conf component_config_;
+        ComponentConf component_config_;
 
 
         // All the component ports
