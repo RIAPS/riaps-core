@@ -2,11 +2,11 @@
 #include <componentmodel/ports/r_answerport.h>
 
 using namespace std;
+using namespace riaps::discovery;
 
 namespace riaps{
     namespace ports{
 
-        // TODO: Do not thrwo exception from the constructor
         AnswerPort::AnswerPort(const ComponentPortAns &config, const ComponentBase *parent_component) :
             PortBase(PortTypes::Answer, (ComponentPortConfig*)&config, parent_component),
             SenderPort(this)
@@ -16,7 +16,7 @@ namespace riaps{
 
 
             if (host_ == "") {
-                throw std::runtime_error("Response cannot be initiated. Cannot find  available network interface.");
+                logger_->error("Response cannot be initiated. Cannot find  available network interface.");
             }
 
             string end_point = fmt::format("tcp://{}:!", host_);
@@ -24,21 +24,22 @@ namespace riaps{
 
 
             if (port_ == -1) {
-                throw std::runtime_error("Couldn't bind response port.");
+                logger_->error("Couldn't bind response port.");
             }
 
             logger_->info("Answerport is created on: {}:{}", host_, port_);
 
 
-            if (!registerService(parent_component->actor()->application_name(),
-                                 parent_component->actor()->actor_name(),
-                                  config.message_type,
-                                  host_,
-                                  port_,
-                                  riaps::discovery::Kind::ANS,
-                                  (config.is_local?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
-                                  {})) {
-                throw std::runtime_error("Answerport couldn't be registered.");
+            if (!Disco::RegisterService(
+                    parent_component->actor()->application_name(),
+                    parent_component->actor()->actor_name(),
+                    config.message_type,
+                    host_,
+                    port_,
+                    riaps::discovery::Kind::ANS,
+                    (config.is_local ? riaps::discovery::Scope::LOCAL : riaps::discovery::Scope::GLOBAL),
+                    {})) {
+                logger_->error("Answerport couldn't be registered.");
             }
         }
 

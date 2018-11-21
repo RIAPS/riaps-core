@@ -2,6 +2,8 @@
 #include <framework/rfw_network_interfaces.h>
 #include <componentmodel/r_discoverdapi.h>
 
+using namespace riaps::discovery;
+
 namespace riaps{
     namespace ports {
 
@@ -10,14 +12,15 @@ namespace riaps{
 
         {
             InitSocket();
-            if (!registerService(parent_component()->actor()->application_name(),
-                                 parent_component()->actor()->actor_name(),
-                                 config.message_type,
-                                 host_,
-                                 port_,
-                                 riaps::discovery::Kind::PUB,
-                                 (config.is_local?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
-                                 {})) {
+            if (!Disco::RegisterService(
+                    parent_component()->actor()->application_name(),
+                    parent_component()->actor()->actor_name(),
+                    config.message_type,
+                    host_,
+                    port_,
+                    riaps::discovery::Kind::PUB,
+                    (config.is_local ? riaps::discovery::Scope::LOCAL : riaps::discovery::Scope::GLOBAL),
+                    {})) {
 
                 logger_->error("Publisher port couldn't be registered.");
             }

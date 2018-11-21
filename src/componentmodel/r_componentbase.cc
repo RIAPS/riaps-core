@@ -571,7 +571,7 @@ namespace riaps{
         return result;
     }
 
-    const ports::QueryPort* ComponentBase::InitQueryPort(const component_port_qry & config) {
+    const ports::QueryPort* ComponentBase::InitQueryPort(const ComponentPortQry & config) {
         std::unique_ptr<ports::QueryPort> newport(new ports::QueryPort(config, this));
         auto result = newport.get();
         newport->Init();

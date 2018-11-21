@@ -402,7 +402,7 @@ namespace riaps {
         const ports::SubscriberPort* InitSubscriberPort (const ComponentPortSub&);
         const ports::ResponsePort*   InitResponsePort   (const ComponentPortRep&);
         const ports::RequestPort*    InitRequestPort    (const ComponentPortReq&);
-        const ports::QueryPort*      InitQueryPort      (const component_port_qry&);
+        const ports::QueryPort*      InitQueryPort      (const ComponentPortQry&);
         const ports::AnswerPort*     InitAnswerPort     (const ComponentPortAns&);
         const ports::PeriodicTimer*  InitTimerPort      (const ComponentPortTim&);
         const ports::InsidePort*     InitInsidePort     (const ComponentPortIns&);

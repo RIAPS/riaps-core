@@ -1,8 +1,6 @@
 #ifndef R_DISCOVERD_API
 #define R_DISCOVERD_API
 
-
-//#include <utils/r_message.h>
 #include <componentmodel/r_riaps_actor_commands.h>
 #include <componentmodel/r_componentbase.h>
 #include <groups/r_group.h>
@@ -11,66 +9,66 @@
 #include <capnp/message.h>
 #include <capnp/serialize.h>
 #include <capnp/serialize-packed.h>
-
 #include <json.h>
-
 
 #include <string>
 #include <vector>
 #include <czmq.h>
 #include <iostream>
 
-// TODO: Discvery API should be in class
+namespace riaps {
 
-struct _service_lookup_result {
-    std::string part_name; // instance name
-    std::string port_name;
-    std::string host_name;
-    uint16_t    port;
-};
-
-typedef struct _service_lookup_result service_lookup_result;
-
-extern std::vector<service_lookup_result>
-subscribeToService(const std::string&      app_name   ,
-                     const std::string&      part_name  , // instance_name
-                     const std::string&      actor_name ,
-                     const std::string&      ip_address,
-                     riaps::discovery::Kind  kind       ,
-                     riaps::discovery::Scope scope      ,
-                     const std::string&      port_name  ,
-                     const std::string&      msg_type     // port_type
-                     );
-extern bool
-registerService(const std::string&              appName     ,
-                const std::string&              actorName   ,
-                const std::string&              messageType ,
-                const std::string&              ipAddress   ,
-                const uint16_t&                 port        ,
-                riaps::discovery::Kind          kind        ,
-                riaps::discovery::Scope         scope       ,
-                const std::vector<std::string>& tags
-);
-
-namespace riaps{
     namespace groups{
         struct GroupId;
         struct GroupService;
     }
+
+    namespace discovery {
+
+        struct ServiceLookupResult {
+            std::string part_name; // instance name
+            std::string port_name;
+            std::string host_name;
+            uint16_t    port;
+        };
+
+        class Disco {
+        public :
+            static std::vector<ServiceLookupResult> SubscribeToService(const std::string &app_name,
+                                                                       const std::string &part_name, // instance_name
+                                                                       const std::string &actor_name,
+                                                                       const std::string &ip_address,
+                                                                       riaps::discovery::Kind kind,
+                                                                       riaps::discovery::Scope scope,
+                                                                       const std::string &port_name,
+                                                                       const std::string &msg_type     // port_type
+            );
+
+            static bool RegisterService(const std::string             &app_name     ,
+                                        const std::string              &actor_name  ,
+                                        const std::string              &message_type,
+                                        const std::string              &ip_address  ,
+                                        const uint16_t                 &port        ,
+                                        riaps::discovery::Kind         kind         ,
+                                        riaps::discovery::Scope        scope        ,
+                                        const std::vector<std::string> &tags
+            );
+
+            static bool JoinGroup(const std::string &app_name,
+                                  const std::string &component_id,
+                                  const riaps::groups::GroupId &group_id,
+                                  const std::vector<riaps::groups::GroupService> &group_services
+            );
+
+            static zsock_t* RegisterActor(const std::string& app_name, const std::string& actor_name);
+
+            static void DeregisterActor(const std::string& actor_name, const std::string& app_name);
+        };
+    }
 }
 
-extern bool
-joinGroup(const std::string& appName,
-          const std::string& componentId,
-          const riaps::groups::GroupId& groupId,
-          const std::vector<riaps::groups::GroupService>& groupServices
-);
 
 
-extern zsock_t*
-registerActor(const std::string& appname, const std::string& actorname);
 
-extern void
-deregisterActor(const std::string& actorName, const std::string& appName);
 
 #endif

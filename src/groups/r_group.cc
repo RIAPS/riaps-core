@@ -12,6 +12,7 @@ constexpr auto PING_BASE_PERIOD = 10*1000;
 namespace dc = riaps::distrcoord;
 
 using namespace std;
+using namespace riaps::discovery;
 
 namespace riaps{
 
@@ -104,10 +105,11 @@ namespace riaps{
 
             }
 
-            bool hasJoined = joinGroup(parent_component_->actor()->application_name(),
-                                       parent_component_->ComponentUuid(),
-                                       group_id_,
-                                       initializedServices);
+            bool hasJoined = Disco::JoinGroup(
+                    parent_component_->actor()->application_name(),
+                    parent_component_->ComponentUuid(),
+                    group_id_,
+                    initializedServices);
 
             // Setup leader election
             if (hasJoined && group_type_conf_.has_leader) {

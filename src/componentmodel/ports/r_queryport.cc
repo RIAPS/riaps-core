@@ -7,11 +7,12 @@
 #include <framework/rfw_network_interfaces.h>
 
 using namespace std;
+using namespace riaps::discovery;
 
 namespace riaps {
     namespace ports {
 
-        QueryPort::QueryPort(const component_port_qry &config, const ComponentBase *component)
+        QueryPort::QueryPort(const ComponentPortQry &config, const ComponentBase *component)
                 : PortBase(PortTypes::Query,
                            (ComponentPortConfig*)(&config),
                            component),
@@ -29,18 +30,20 @@ namespace riaps {
 
         void QueryPort::Init() {
 
-            const component_port_qry* current_config = GetConfig();
-            const std::string host = (current_config->is_local) ? "127.0.0.1" : riaps::framework::Network::GetIPAddress();
+            const ComponentPortQry* current_config = GetConfig();
+            const string host = (current_config->is_local) ? "127.0.0.1" : riaps::framework::Network::GetIPAddress();
 
             auto results =
-                    subscribeToService(parent_component()->actor()->application_name(),
-                                       parent_component()->component_config().component_name,
-                                       parent_component()->actor()->actor_name(),
-                                       host,
-                                       riaps::discovery::Kind::QRY,
-                                       (current_config->is_local?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
-                                       current_config->port_name, // Subscriber name
-                                       current_config->message_type);
+                    Disco::SubscribeToService(
+                            parent_component()->actor()->application_name(),
+                            parent_component()->component_config().component_name,
+                            parent_component()->actor()->actor_name(),
+                            host,
+                            riaps::discovery::Kind::QRY,
+                            (current_config->is_local ? riaps::discovery::Scope::LOCAL
+                                                      : riaps::discovery::Scope::GLOBAL),
+                            current_config->port_name, // Subscriber name
+                            current_config->message_type);
 
             for (auto result : results) {
                 string endpoint = fmt::format("tcp://{0}:{1}", result.host_name, result.port);
@@ -61,8 +64,8 @@ namespace riaps {
             return true;
         }
 
-        const component_port_qry* QueryPort::GetConfig() const{
-            return (component_port_qry*) config();
+        const ComponentPortQry* QueryPort::GetConfig() const{
+            return (ComponentPortQry*) config();
         }
 
         bool QueryPort::SendQuery(capnp::MallocMessageBuilder &message,std::string& requestId, bool addTimestamp) const {

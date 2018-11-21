@@ -6,6 +6,7 @@
 #include <componentmodel/ports/r_responseport.h>
 
 using namespace std;
+using namespace riaps::discovery;
 
 namespace riaps{
     namespace ports{
@@ -39,19 +40,20 @@ namespace riaps{
             }
 
             // TODO: spd logger
-            cout << "Response is created on : " << host_ << ":" << port_ << std::endl;
+            logger_->debug("Response is created on {}:{}", host_, port_);
 
 
             logger_->debug("{}.host_ = {}", __FUNCTION__, host_);
-            if (!registerService(parent_component()->actor()->application_name(),
-                                 parent_component()->actor()->actor_name(),
-                                  config.message_type,
-                                  host_,
-                                  port_,
-                                  riaps::discovery::Kind::REP,
-                                  (config.is_local?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
-                                  {})) {
-                throw runtime_error("Response port couldn't be registered.");
+            if (!Disco::RegisterService(
+                    parent_component()->actor()->application_name(),
+                    parent_component()->actor()->actor_name(),
+                    config.message_type,
+                    host_,
+                    port_,
+                    riaps::discovery::Kind::REP,
+                    (config.is_local ? riaps::discovery::Scope::LOCAL : riaps::discovery::Scope::GLOBAL),
+                    {})) {
+                logger_->error("Response port couldn't be registered.");
             }
         }
 

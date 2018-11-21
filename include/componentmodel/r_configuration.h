@@ -63,7 +63,7 @@ struct ComponentPortIns : public ComponentPortConfig{
 
 };
 
-struct component_port_qry : public ComponentPortConfig {
+struct ComponentPortQry : public ComponentPortConfig {
     std::string qry_type;
     std::string ans_type;
 };
@@ -84,7 +84,7 @@ struct ComponentPorts {
     std::vector<ComponentPortRep> reps; // Response
     std::vector<ComponentPortTim> tims; // Timer
     std::vector<ComponentPortIns> inss; // Inside
-    std::vector<component_port_qry> qrys; // Query
+    std::vector<ComponentPortQry> qrys; // Query
     std::vector<ComponentPortAns> anss; // Answer
 };
 

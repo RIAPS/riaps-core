@@ -19,7 +19,7 @@ namespace riaps {
         class QueryPort : public PortBase {
         public:
 
-            QueryPort(const component_port_qry &config, const ComponentBase *component);
+            QueryPort(const ComponentPortQry &config, const ComponentBase *component);
             virtual void Init();
 
             // Returns false, if the request port couldn't connect
@@ -70,7 +70,7 @@ namespace riaps {
 
             //virtual QueryPort* AsQueryPort() ;
 
-            virtual const component_port_qry* GetConfig() const;
+            virtual const ComponentPortQry* GetConfig() const;
 
             ~QueryPort() noexcept ;
         protected:
