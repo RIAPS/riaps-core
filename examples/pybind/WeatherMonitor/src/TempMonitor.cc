@@ -15,7 +15,8 @@ namespace weathermonitor {
                                 actor_name) {
         }
 
-		void TempMonitor::OnTempupdate(const messages::TempData::Reader &message, riaps::ports::PortBase *port) {
+		void TempMonitor::OnTempupdate() {
+            auto message = RecvTempupdate();
             component_logger()->info("{}: {}", __func__, message.getTempature());
 		}
     }

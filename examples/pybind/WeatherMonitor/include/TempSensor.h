@@ -22,7 +22,7 @@ namespace weathermonitor {
 					   const std::string &application_name,
 					   const std::string &actor_name);
 
-            virtual void OnClock(riaps::ports::PortBase *port);
+            virtual void OnClock();
 
             virtual ~TempSensor() = default;
 

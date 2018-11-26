@@ -17,15 +17,15 @@ namespace weathermonitor {
 			this->temperature = 65;
         }
 
-		void TempSensor::OnClock(riaps::ports::PortBase *port) {
+		void TempSensor::OnClock() {
+        	auto msg = RecvClock();
         	component_logger()->info("{}", __func__);
 
 			this->temperature += 1;
-			capnp::MallocMessageBuilder messageBuilder;
-			auto msgTempData = messageBuilder.initRoot<messages::TempData>();
-			msgTempData.setTempature(this->temperature);
+			MessageBuilder<messages::TempData> builder;
+			builder->setTempature(this->temperature);
 			
-			if (!SendReady(messageBuilder, msgTempData)){
+			if (!SendReady(builder)){
 				component_logger()->error("{}: Unable to publish temperature!", __func__);
             }
 		}

@@ -4,6 +4,9 @@
 #include <base/TempSensorBase.h>
 #include <componentmodel/r_pyconfigconverter.h>
 
+using namespace std;
+using namespace riaps;
+
 namespace weathermonitor {
     namespace components {
     	
@@ -18,23 +21,24 @@ namespace weathermonitor {
 			auto conf = PyConfigConverter::convert(type_spec, actor_spec);
 			conf.component_name = name;
 			conf.component_type = type_name;
-			conf.isDevice=false;
+			conf.is_device=false;
 			set_config(conf);
     	}
     	
-    	void TempSensorBase::DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
-											 riaps::ports::PortBase*   port,
-											 std::shared_ptr<riaps::MessageParams> params) {
-    		auto portName = port->GetPortName();
+    	void TempSensorBase::DispatchMessage(riaps::ports::PortBase*   port) {
+    		auto portName = port->port_name();
 			if (portName == PORT_TIMER_CLOCK) {
-				OnClock(port);
+				OnClock();
 			}
-			
-			
+    	}
+
+    	std::string TempSensorBase::RecvClock() {
+            auto port = GetPortAs<riaps::ports::PeriodicTimer>(PORT_TIMER_CLOCK);
+            return port->Recv();
     	}
     	
-    	bool TempSensorBase::SendReady(capnp::MallocMessageBuilder &messageBuilder, messages::TempData::Builder &message) {
-    	    return SendMessageOnPort(messageBuilder, PORT_PUB_READY);
+    	bool TempSensorBase::SendReady(MessageBuilder<weathermonitor::messages::TempData>& message) {
+    	    return SendMessageOnPort(message.capnp_builder(), PORT_PUB_READY);
     	}
 
         void TempSensorBase::DispatchInsideMessage(zmsg_t* zmsg, riaps::ports::PortBase* port) {
