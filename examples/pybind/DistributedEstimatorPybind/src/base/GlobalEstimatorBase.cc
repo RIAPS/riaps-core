@@ -27,14 +27,16 @@ namespace distributedestimator {
             set_debug_level(spd::level::info);
         }
 
-        string GlobalEstimatorBase::RecvWakeup() {
+        timespec GlobalEstimatorBase::RecvWakeup() {
             auto port = GetPortAs<riaps::ports::PeriodicTimer>(PORT_TIMER_WAKEUP);
             return port->Recv();
         }
 
-        messages::Estimate::Reader GlobalEstimatorBase::RecvEstimate() {
+        boost::optional<messages::Estimate::Reader> GlobalEstimatorBase::RecvEstimate() {
             auto port = GetPortAs<riaps::ports::SubscriberPort>(PORT_SUB_ESTIMATE);
             auto reader = port->Recv();
+            if (reader == nullptr)
+                return boost::optional<messages::Estimate::Reader>{};
             return reader->getRoot<messages::Estimate>();
         }
 

@@ -32,7 +32,7 @@ namespace weathermonitor {
 			}
     	}
 
-    	std::string TempSensorBase::RecvClock() {
+    	timespec TempSensorBase::RecvClock() {
             auto port = GetPortAs<riaps::ports::PeriodicTimer>(PORT_TIMER_CLOCK);
             return port->Recv();
     	}

@@ -5,7 +5,7 @@
 
 namespace riaps{
     namespace ports{
-        SenderPort::SenderPort(PortBase* portBase) : m_port(portBase) {
+        SenderPort::SenderPort(PortBase* port_base) : port_(port_base) {
 
         }
 
@@ -17,7 +17,7 @@ namespace riaps{
         }
         
         bool SenderPort::Send(zmsg_t **message) const {
-            if (m_port->config()->is_timed){
+            if (port_->config()->is_timed){
                 timespec t;
                 clock_gettime(CLOCK_REALTIME, &t);
                 double tdouble = (float)t.tv_sec + (((float)t.tv_nsec)/1000000000.0);
@@ -25,12 +25,8 @@ namespace riaps{
                 memcpy(buffer, &tdouble, sizeof(tdouble));
                 zmsg_addmem(*message, buffer, sizeof(double));
             }
-            int rc = zmsg_send(message, const_cast<zsock_t*>(m_port->port_socket()));
+            int rc = zmsg_send(message, const_cast<zsock_t*>(port_->port_socket()));
             return rc == 0;
-        }
-
-        SenderPort::~SenderPort() {
-
         }
     }
 }

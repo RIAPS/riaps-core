@@ -27,7 +27,7 @@ namespace distributedestimator {
             set_debug_level(spd::level::info);
         }
 
-        string SensorBase::RecvClock() {
+        timespec SensorBase::RecvClock() {
             auto port = GetPortAs<riaps::ports::PeriodicTimer>(PORT_TIMER_CLOCK);
             return port->Recv();
         }

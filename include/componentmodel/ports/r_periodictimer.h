@@ -17,7 +17,7 @@ namespace riaps {
             PeriodicTimer(const ComponentPortTim& config, const ComponentBase* parent_component);
 
             void Init();
-            std::string Recv();
+            timespec Recv();
 
             int interval();
             void Stop();

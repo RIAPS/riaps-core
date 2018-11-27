@@ -34,7 +34,7 @@ namespace weathermonitor {
 						   const std::string &actor_name);
     		
     		virtual void OnClock()=0;
-            virtual std::string RecvClock() final;
+            virtual timespec RecvClock() final;
     		
     		virtual bool SendReady(MessageBuilder<weathermonitor::messages::TempData>& message);
     		

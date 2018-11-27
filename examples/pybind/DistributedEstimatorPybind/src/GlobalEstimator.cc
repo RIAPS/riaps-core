@@ -27,7 +27,7 @@ namespace distributedestimator {
 
         void GlobalEstimator::OnEstimate() {
             auto msg = RecvEstimate();
-            component_logger()->info("{}:{}", __func__, msg.getMsg().cStr());
+            component_logger()->info("{}:{}", __func__, msg->getMsg().cStr());
 
         }
 

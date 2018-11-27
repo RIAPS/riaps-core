@@ -19,6 +19,8 @@ namespace riaps{
 
         shared_ptr<capnp::FlatArrayMessageReader> RecvPort::Recv(zsock_t *socket) {
             zmsg_t* msg = zmsg_recv(socket);
+            if (msg == nullptr)
+                return last_reader_;
             last_zmsg_ = shared_ptr<zmsg_t>(msg, [](zmsg_t* z){zmsg_destroy(&z);});
             return Recv(msg);
         }
@@ -38,13 +40,13 @@ namespace riaps{
                         auto data = zframe_data(frm_timestamp);
                         double send_timestamp;
                         memcpy(&send_timestamp, data, sizeof(double));
-                        SetSendTimestamp(send_timestamp);
+                        set_send_timestamp(send_timestamp);
                         zframe_destroy(&frm_timestamp);
                     }
 
                     timespec recv_timestamp;;
                     clock_gettime(CLOCK_REALTIME, &recv_timestamp);
-                    SetRecvTimestamp(recv_timestamp);
+                    set_recv_timestamp(recv_timestamp);
                 }
             }
             last_reader_ = results;

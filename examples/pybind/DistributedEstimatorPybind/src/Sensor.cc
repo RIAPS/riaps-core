@@ -23,7 +23,7 @@ namespace distributedestimator {
 
         void Sensor::OnClock() {
             auto s = RecvClock();
-            component_logger()->info("{}:{}", __func__, s);
+            component_logger()->info("{}:{}/{}", __func__, s.tv_sec, s.tv_sec);
 
 //            capnp::MallocMessageBuilder messageBuilder;
 //            auto msgSensorReady = messageBuilder.initRoot<messages::SensorReady>();

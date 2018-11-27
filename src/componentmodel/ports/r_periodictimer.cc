@@ -29,24 +29,43 @@ namespace riaps {
 
             zsock_t* zsock_timer = zsock_new_push(periodic_timer->TimerChannel().c_str());
             int linger_value = 0;
-            int send_timeout = 0; // 0 - returns immediately with EAGAIN if the message cannot be sent
+            int send_timeout = 0;
             zmq_setsockopt(zsock_timer, ZMQ_LINGER,   &linger_value, sizeof(int));
             zmq_setsockopt(zsock_timer, ZMQ_SNDTIMEO, &send_timeout, sizeof(int));
 
-            auto now = chrono::high_resolution_clock::now();
+            //auto now = chrono::high_resolution_clock::now();
+            timespec now;
+            clock_gettime(CLOCK_REALTIME, &now);
+
+            const timespec period {
+                    periodic_timer->interval()/1000,
+                    (periodic_timer->interval()%1000)*1000000
+            };
 
             while (!terminated) {
-
                 if (started) {
                     // Send FIRE message
-                    zmsg_t *msg = zmsg_new();
-                    auto port_name = periodic_timer->port_name();
-                    zmsg_addstr(msg, port_name.c_str());
 
-                    auto diff = chrono::milliseconds(periodic_timer->interval());
-                    now += diff;
-                    this_thread::sleep_until(now);
-                    zmsg_send(&msg, zsock_timer);
+                    //auto port_name = periodic_timer->port_name();
+                    //zmsg_addstr(msg, port_name.c_str());
+
+                    //auto diff = chrono::milliseconds(periodic_timer->interval());
+                    //now += diff;
+                    //this_thread::sleep_until(now);
+
+                    now.tv_sec+=period.tv_sec;
+                    if (now.tv_nsec + period.tv_nsec >= 1E9) {
+                        now.tv_nsec = now.tv_nsec + period.tv_nsec - 1E9;
+                        now.tv_sec++;
+                    }
+                    else
+                        now.tv_nsec+=period.tv_nsec;
+
+                    zframe_t *msg = zframe_new(&now, sizeof(timespec));
+
+                    clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &now, NULL);
+
+                    zframe_send(&msg, zsock_timer, ZFRAME_DONTWAIT);
                 } else{
                     this_thread::sleep_for(chrono::milliseconds(10));
                 }
@@ -66,7 +85,8 @@ namespace riaps {
                         terminated = true;
                     } else if (streq(command, "$START")){
                         started = true;
-                        now = chrono::high_resolution_clock::now();
+                        //now = chrono::high_resolution_clock::now();
+                        clock_gettime(CLOCK_REALTIME, &now);
                     }
                     zstr_free(&command);
                     zmsg_destroy(&msg);
@@ -87,14 +107,22 @@ namespace riaps {
             port_socket_ = zsock_new_pull(TimerChannel().c_str());
         }
 
-        string PeriodicTimer::Recv() {
-            zmsg_t *msg = zmsg_recv(const_cast<zsock_t*>(port_socket()));
+        timespec PeriodicTimer::Recv() {
+            timespec result {0,0};
+            zframe_t* msg = zframe_recv(const_cast<zsock_t*>(port_socket()));
             if (msg) {
-                last_zmsg_ = unique_ptr<zmsg_t, function<void(zmsg_t*)>>(msg, [](zmsg_t *z) { zmsg_destroy(&z); });
-                auto str = zmsg_popstr(last_zmsg_.get());
-                return str;
+                byte* data = zframe_data(msg);
+                memcpy(&result, data, sizeof(timespec));
+                zframe_destroy(&msg);
             }
-            return "";
+            return result;
+//            zmsg_t *msg = zmsg_recv(const_cast<zsock_t*>(port_socket()));
+//            if (msg) {
+//                last_zmsg_ = unique_ptr<zmsg_t, function<void(zmsg_t*)>>(msg, [](zmsg_t *z) { zmsg_destroy(&z); });
+//                auto str = zmsg_popstr(last_zmsg_.get());
+//                return str;
+//            }
+//            return "";
         }
 
         string PeriodicTimer::TimerChannel() {

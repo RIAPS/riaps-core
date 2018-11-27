@@ -11,30 +11,30 @@ namespace riaps {
             recv_timestamp_.tv_sec  = recv_timestamp_.tv_nsec = 0;
         }
 
-        const timespec TimedPort::LastSendTimestamp() {
+        const timespec TimedPort::send_timestamp() {
             return sent_timestamp_;
         }
 
-        const timespec TimedPort::LastRecvTimestamp() {
+        const timespec TimedPort::recv_timestamp() {
             return recv_timestamp_;
         }
 
-        void TimedPort::SetRecvTimestamp(timespec recv_timestamp) {
+        void TimedPort::set_recv_timestamp(timespec recv_timestamp) {
             recv_timestamp_ = recv_timestamp;
         }
 
-        void TimedPort::SetSendTimestamp(timespec sent_timestamp) {
+        void TimedPort::set_send_timestamp(timespec sent_timestamp) {
             sent_timestamp_ = sent_timestamp;
         }
 
-        void TimedPort::SetSendTimestamp(double sent_timestamp) {
+        void TimedPort::set_send_timestamp(double sent_timestamp) {
             timespec t;
             t.tv_sec = sent_timestamp;
             t.tv_nsec = (sent_timestamp - t.tv_sec)*1000000000.0;
             sent_timestamp_ = t;
         }
 
-        void TimedPort::SetRecvTimestamp(double recv_timestamp) {
+        void TimedPort::set_recv_timestamp(double recv_timestamp) {
             timespec t;
             t.tv_sec = recv_timestamp;
             t.tv_nsec = (recv_timestamp-t.tv_sec)*1000000000.0;

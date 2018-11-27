@@ -38,7 +38,7 @@ namespace distributedestimator {
             virtual void OnClock()=0;
             virtual void OnRequest()=0;
 
-            virtual std::string RecvClock() final;
+            virtual timespec RecvClock() final;
             virtual messages::SensorQuery::Reader RecvRequest() final;
 
             virtual bool SendRequest(MessageBuilder<messages::SensorValue>& message);

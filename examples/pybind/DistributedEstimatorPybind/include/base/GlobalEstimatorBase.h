@@ -11,6 +11,7 @@
 
 #include <pybind11/stl.h>
 #include <pybind11/pybind11.h>
+#include <boost/optional.hpp>
 
 namespace py = pybind11;
 
@@ -34,8 +35,8 @@ namespace distributedestimator{
             virtual void OnEstimate()=0;
             virtual void OnWakeup()=0;
 
-            virtual messages::Estimate::Reader RecvEstimate() final;
-            virtual std::string RecvWakeup() final;
+            virtual boost::optional<messages::Estimate::Reader> RecvEstimate() final;
+            virtual timespec RecvWakeup() final;
 
             virtual ~GlobalEstimatorBase() = default;
 
