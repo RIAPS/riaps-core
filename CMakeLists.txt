@@ -99,6 +99,7 @@ list (APPEND riapslib_SOURCE
         src/componentmodel/ports/r_insideport.cc
         src/componentmodel/ports/r_periodictimer.cc
         src/componentmodel/ports/r_portbase.cc
+        src/componentmodel/ports/r_portresult.cc
         src/componentmodel/ports/r_publisherport.cc
         src/componentmodel/ports/r_pubportbase.cc
         src/componentmodel/ports/r_pubportgroup.cc
@@ -130,6 +131,7 @@ list (APPEND riapslib_HEADERS
         include/componentmodel/ports/r_insideport.h
         include/componentmodel/ports/r_periodictimer.h
         include/componentmodel/ports/r_portbase.h
+        include/componentmodel/ports/r_portresult.h
         include/componentmodel/ports/r_publisherport.h
         include/componentmodel/ports/r_pubportbase.h
         include/componentmodel/ports/r_pubportgroup.h

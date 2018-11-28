@@ -32,7 +32,7 @@ namespace riaps {
             bool is_connected_;
             timespec recv_timestamp_;
             capnp::FlatArrayMessageReader capnp_reader_;
-            virtual bool Send(capnp::MallocMessageBuilder& message) const;
+            virtual PortResult Send(capnp::MallocMessageBuilder& message) const;
         };
     }
 }

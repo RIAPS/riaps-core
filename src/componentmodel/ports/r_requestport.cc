@@ -115,7 +115,7 @@ namespace riaps {
 ////            return false;
 //        }
 
-        bool RequestPort::Send(capnp::MallocMessageBuilder &message) const {
+        PortResult RequestPort::Send(capnp::MallocMessageBuilder &message) const {
             if (port_socket_ == nullptr || !is_connected_){
                 return false;
             }

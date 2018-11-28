@@ -9,14 +9,14 @@ namespace riaps{
 
         }
 
-        bool SenderPort::Send(capnp::MallocMessageBuilder &message) const {
+        PortResult SenderPort::Send(capnp::MallocMessageBuilder &message) const {
             zmsg_t* msg = nullptr;
             msg << message;
 
             return Send(&msg);
         }
-        
-        bool SenderPort::Send(zmsg_t **message) const {
+
+        PortResult SenderPort::Send(zmsg_t **message) const {
             if (port_->config()->is_timed){
                 timespec t;
                 clock_gettime(CLOCK_REALTIME, &t);
@@ -26,7 +26,22 @@ namespace riaps{
                 zmsg_addmem(*message, buffer, sizeof(double));
             }
             int rc = zmsg_send(message, const_cast<zsock_t*>(port_->port_socket()));
-            return rc == 0;
+            return PortResult(rc);
+        }
+
+
+        /**
+         * Sends the byte array, doesn't destroy the message, it is the caller's responsibility.
+         * @param message The byte array to be sent.
+         * @param size  Size of the array.
+         * @return
+         */
+        PortResult SenderPort::Send(byte* message, size_t size) const {
+            zmsg_t* zmsg = zmsg_new();
+
+            // Copies the byte array
+            zmsg_addmem(zmsg, message, size);
+            return Send(&zmsg);
         }
     }
 }
