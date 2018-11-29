@@ -106,25 +106,25 @@ namespace riaps {
          * @param portName The message is sent on this port. Available names are declared in the riaps model.
          * @return True if the message is sent.
          */
-        bool SendMessageOnPort(capnp::MallocMessageBuilder& message,
-                               const std::string& portName);
+        riaps::ports::PortError SendMessageOnPort(capnp::MallocMessageBuilder& message,
+                               const std::string& port_name);
 
         /**
          * Sends message on answer port
          *
          * @return
          */
-        bool SendMessageOnPort(capnp::MallocMessageBuilder& message,
-                               const std::string& portName,
+        riaps::ports::PortError SendMessageOnPort(capnp::MallocMessageBuilder& message,
+                               const std::string& port_name,
                                std::shared_ptr<riaps::MessageParams> params);
 
         /**
          * Sends a message on query port
          *
          */
-        bool SendMessageOnPort(capnp::MallocMessageBuilder& message,
-                               const std::string&           portName,
-                               std::string&                 requestId);
+        riaps::ports::PortError SendMessageOnPort(capnp::MallocMessageBuilder& message,
+                               const std::string&           port_name,
+                               std::string&                 request_id);
 
 
 

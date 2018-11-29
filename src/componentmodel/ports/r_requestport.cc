@@ -16,8 +16,9 @@ namespace riaps {
             int timeout = 500;//msec
             int linger = 0;
             int connect_timeout = 1000; //msec
-            zmq_setsockopt(port_socket_, ZMQ_SNDTIMEO, &timeout , sizeof(int));
-            zmq_setsockopt(port_socket_, ZMQ_LINGER, &linger, sizeof(int));
+            zsock_set_sndtimeo(port_socket_, timeout);
+            zsock_set_rcvtimeo(port_socket_, timeout);
+            zsock_set_linger(port_socket_, linger);
 
             is_connected_ = false;
         }
@@ -61,64 +62,15 @@ namespace riaps {
             return (ComponentPortReq*) config();
         }
 
-//        RequestPort* RequestPort::AsRequestPort() {
-//            return this;
+//        const timespec& RequestPort::recv_timestamp() const {
+//            return recv_timestamp_;
 //        }
 
-        const timespec& RequestPort::recv_timestamp() const {
-            return recv_timestamp_;
-        }
-
-        // TODO: return shared_ptr instead of pointer
-//        bool RequestPort::Recv(capnp::FlatArrayMessageReader** messageReader) {
-//            auto capnp_message = RecvPort::Recv();
-//            if (capnp_message == nullptr) return false;
-//
-//            *messageReader = capnp_message.get();
-//            return true;
-//
-////            zmsg_t* msg = zmsg_recv((void*)GetSocket());
-////
-////            if (msg){
-////                //char* msgType = zmsg_popstr(msg);
-////                //message_type = msgType;
-////                //if (msgType!=NULL){
-////                zframe_t* bodyFrame = zmsg_pop(msg);
-////                size_t size = zframe_size(bodyFrame);
-////                byte* data = zframe_data(bodyFrame);
-////
-////                auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
-////                capnp_reader_ = capnp::FlatArrayMessageReader(capnp_data);
-////                *messageReader = &capnp_reader_;
-////
-////                zframe_destroy(&bodyFrame);
-////
-////                if (GetConfig()->isTimed){
-////                    auto timeFrame = zmsg_pop(msg);
-////                    if (timeFrame) {
-////                        auto buffer = zframe_data(timeFrame);
-////                        double dTime;
-////                        memcpy(&dTime, buffer, sizeof(double));
-////                        m_recvTimestamp.tv_sec  = dTime;
-////                        m_recvTimestamp.tv_nsec = (dTime-m_recvTimestamp.tv_sec)*BILLION;
-////                        zframe_destroy(&timeFrame);
-////                    }
-////                }
-////
-////
-////                return true;
-////                //}
-////                //return false;
-////            }
-////            zmsg_destroy(&msg);
-////
-////            return false;
-//        }
-
-        PortResult RequestPort::Send(capnp::MallocMessageBuilder &message) const {
-            if (port_socket_ == nullptr || !is_connected_){
-                return false;
-            }
+        PortError RequestPort::Send(capnp::MallocMessageBuilder &message) const {
+//            if (port_socket_ == nullptr || !is_connected_){
+//                return false;
+//            }
+            logger_->error_if(port_socket_ == nullptr, "Port socket ({}) is null: {} ", port_name(), __func__);
 
             return SenderPort::Send(message);
         }

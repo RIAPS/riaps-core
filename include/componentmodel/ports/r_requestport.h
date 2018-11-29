@@ -25,14 +25,14 @@ namespace riaps {
 
             //virtual bool Recv(capnp::FlatArrayMessageReader** messageReader);
             virtual const ComponentPortReq* GetConfig() const;
-            const timespec& recv_timestamp() const;
+            //const timespec& recv_timestamp() const;
 
             ~RequestPort() noexcept ;
         protected:
             bool is_connected_;
             timespec recv_timestamp_;
             capnp::FlatArrayMessageReader capnp_reader_;
-            virtual PortResult Send(capnp::MallocMessageBuilder& message) const;
+            virtual PortError Send(capnp::MallocMessageBuilder& message) const override;
         };
     }
 }

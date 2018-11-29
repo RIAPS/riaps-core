@@ -68,10 +68,10 @@ namespace riaps {
             return (ComponentPortQry*) config();
         }
 
-        bool QueryPort::SendQuery(capnp::MallocMessageBuilder &message,std::string& requestId, bool addTimestamp) const {
-            if (port_socket_ == nullptr || !m_isConnected){
-                return false;
-            }
+        PortError QueryPort::SendQuery(capnp::MallocMessageBuilder &message,std::string& requestId, bool addTimestamp) const {
+//            if (port_socket_ == nullptr || !m_isConnected){
+//                return false;
+//            }
 
             zframe_t* userFrame;
             userFrame << message;
@@ -102,9 +102,8 @@ namespace riaps {
             zframe_destroy(&tsFrame);
             if (rc == 0) {
                 requestId = msgId;
-                return true;
             }
-            return false;
+            return PortError(rc);
         }
 
         QueryPort::~QueryPort() noexcept {

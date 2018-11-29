@@ -111,7 +111,7 @@ namespace riaps {
             timespec result {0,0};
             zframe_t* msg = zframe_recv(const_cast<zsock_t*>(port_socket()));
             if (msg) {
-                byte* data = zframe_data(msg);
+                unsigned char* data = zframe_data(msg);
                 memcpy(&result, data, sizeof(timespec));
                 zframe_destroy(&msg);
             }

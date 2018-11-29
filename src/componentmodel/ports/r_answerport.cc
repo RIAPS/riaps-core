@@ -47,7 +47,7 @@ namespace riaps{
             return (ComponentPortAns*) config();
         }
 
-        bool AnswerPort::SendAnswer(capnp::MallocMessageBuilder& builder, std::shared_ptr<MessageParams> params) {
+        PortError AnswerPort::SendAnswer(capnp::MallocMessageBuilder& builder, std::shared_ptr<MessageParams> params) {
             zmsg_t* msg = zmsg_new();
 
             // Message to query port, first frame must be the SocketId

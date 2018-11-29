@@ -5,7 +5,7 @@ option(BUILD_TESTS  "Build tests" ON)
 set(CMAKE_SYSTEM_NAME Linux)
 
 set(riaps_prefix "/opt/riaps/" CACHE STRING "the riaps prefix")
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "-Wno-psabi")
 
 set(PYBIND11_CPP_STANDARD -std=c++14)
@@ -99,7 +99,7 @@ list (APPEND riapslib_SOURCE
         src/componentmodel/ports/r_insideport.cc
         src/componentmodel/ports/r_periodictimer.cc
         src/componentmodel/ports/r_portbase.cc
-        src/componentmodel/ports/r_portresult.cc
+        src/componentmodel/ports/r_porterror.cc
         src/componentmodel/ports/r_publisherport.cc
         src/componentmodel/ports/r_pubportbase.cc
         src/componentmodel/ports/r_pubportgroup.cc
@@ -116,6 +116,7 @@ list (APPEND riapslib_SOURCE
         src/componentmodel/r_componentbase.cc
         src/componentmodel/r_devicethread.cc
         src/componentmodel/r_discoverdapi.cc
+        src/componentmodel/r_messagereader.cc
         src/componentmodel/r_parameter.cc
         src/framework/rfw_configuration.cc
         src/framework/rfw_network_interfaces.cc
@@ -131,7 +132,7 @@ list (APPEND riapslib_HEADERS
         include/componentmodel/ports/r_insideport.h
         include/componentmodel/ports/r_periodictimer.h
         include/componentmodel/ports/r_portbase.h
-        include/componentmodel/ports/r_portresult.h
+        include/componentmodel/ports/r_porterror.h
         include/componentmodel/ports/r_publisherport.h
         include/componentmodel/ports/r_pubportbase.h
         include/componentmodel/ports/r_pubportgroup.h
@@ -143,6 +144,8 @@ list (APPEND riapslib_HEADERS
         include/componentmodel/ports/r_subportgroup.h
         include/componentmodel/ports/r_subscriberport.h
         include/componentmodel/ports/r_timedport.h
+        include/componentmodel/r_messagebuilder.h
+        include/componentmodel/r_messagereader.h
         include/componentmodel/r_pyactor.h
         include/componentmodel/r_payload.h
         include/componentmodel/r_componentbase.h
@@ -159,7 +162,7 @@ list (APPEND riapslib_HEADERS
         include/utils/r_expirable.h
         include/utils/r_expirablelist.h
         include/utils/r_timeout.h
-        include/componentmodel/r_messagebuilder.h
+
         )
 
 # libriaps

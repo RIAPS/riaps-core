@@ -2,7 +2,6 @@
 #define RIAPS_CORE_R_PERIODIC_TIMER_H
 
 #include <componentmodel/ports/r_portbase.h>
-#include <componentmodel/ports/r_recvport.h>
 #include <czmq.h>
 #include <string>
 #include <functional>

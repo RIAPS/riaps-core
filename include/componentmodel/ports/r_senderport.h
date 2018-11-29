@@ -5,7 +5,7 @@
 #ifndef RIAPS_CORE_R_SENDERPORT_H
 #define RIAPS_CORE_R_SENDERPORT_H
 
-#include "r_portresult.h"
+#include "r_porterror.h"
 
 #include <capnp/message.h>
 #include <capnp/serialize.h>
@@ -24,11 +24,11 @@ namespace riaps{
         public:
             SenderPort(PortBase* portBase);
 
-            virtual PortResult Send(capnp::MallocMessageBuilder& message) const;
+            virtual PortError Send(capnp::MallocMessageBuilder& message) const;
 
             // TODO: Redesign. We don't want to expose this to the developers.
-            virtual PortResult Send(zmsg_t** message) const;
-            virtual PortResult Send(byte* message, size_t size) const;
+            virtual PortError Send(zmsg_t** message) const;
+            virtual PortError Send(byte* message, size_t size) const;
 
 
             virtual ~SenderPort() = default;
