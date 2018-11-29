@@ -6,5 +6,5 @@ $Cxx.namespace("weathermonitor::messages");
 
 struct TempData
 {
-    tempature @0: Float64;
+    temperature @0: Float64;
 }

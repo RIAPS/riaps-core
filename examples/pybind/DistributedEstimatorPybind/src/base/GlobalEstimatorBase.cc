@@ -6,6 +6,7 @@
 #include <componentmodel/r_pyconfigconverter.h>
 
 using namespace std;
+using namespace riaps::ports;
 
 namespace distributedestimator {
     namespace components {
@@ -32,12 +33,11 @@ namespace distributedestimator {
             return port->Recv();
         }
 
-        boost::optional<messages::Estimate::Reader> GlobalEstimatorBase::RecvEstimate() {
+        tuple<MessageReader<messages::Estimate>, PortError> GlobalEstimatorBase::RecvEstimate() {
             auto port = GetPortAs<riaps::ports::SubscriberPort>(PORT_SUB_ESTIMATE);
-            auto reader = port->Recv();
-            if (reader == nullptr)
-                return boost::optional<messages::Estimate::Reader>{};
-            return reader->getRoot<messages::Estimate>();
+            auto [msg_bytes, error] = port->Recv();
+            MessageReader<messages::Estimate> reader(msg_bytes);
+            return make_tuple(reader, error);
         }
 
         void GlobalEstimatorBase::DispatchMessage(riaps::ports::PortBase *port) {

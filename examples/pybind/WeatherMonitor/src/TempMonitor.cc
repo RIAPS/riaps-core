@@ -16,9 +16,12 @@ namespace weathermonitor {
         }
 
 		void TempMonitor::OnTempupdate() {
-            auto message = RecvTempupdate();
-            component_logger()->info("{}: {}", __func__, message.getTempature());
-		}
+            auto [message, error] = RecvTempupdate();
+            if (!error)
+                component_logger()->info("{}: {}", __func__, message->getTempature());
+		    else
+		        component_logger()->warn("Recv() indicates error in: {}, errorcode: {}", __func__, error.error_code());
+        }
     }
 }
 

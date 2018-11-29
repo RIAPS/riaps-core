@@ -8,6 +8,7 @@
 #include "componentmodel/r_componentbase.h"
 #include "messages/distributedestimator.capnp.h"
 #include "componentmodel/r_messagebuilder.h"
+#include <componentmodel/r_messagereader.h>
 
 
 #include <pybind11/stl.h>
@@ -39,11 +40,11 @@ namespace distributedestimator {
             virtual void OnReady()=0;
             virtual void OnQuery() = 0;
 
-            virtual messages::SensorReady::Reader RecvReady() final;
-            virtual messages::SensorValue::Reader RecvQuery() final;
+            virtual std::tuple<MessageReader<messages::SensorReady>, riaps::ports::PortError> RecvReady() final;
+            virtual std::tuple<MessageReader<messages::SensorValue>, riaps::ports::PortError> RecvQuery() final;
 
-            bool SendEstimate(MessageBuilder<messages::Estimate>& message);
-            bool SendQuery(MessageBuilder<messages::SensorQuery>& message);
+            riaps::ports::PortError SendEstimate(MessageBuilder<messages::Estimate>& message);
+            riaps::ports::PortError SendQuery(MessageBuilder<messages::SensorQuery>& message);
 
             virtual ~LocalEstimatorBase() = default;
 

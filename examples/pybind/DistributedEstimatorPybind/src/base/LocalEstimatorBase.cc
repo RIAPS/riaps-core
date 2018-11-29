@@ -5,6 +5,9 @@
 #include <base/LocalEstimatorBase.h>
 #include <componentmodel/r_pyconfigconverter.h>
 
+using namespace std;
+using namespace riaps::ports;
+
 namespace distributedestimator {
     namespace components {
 
@@ -35,28 +38,29 @@ namespace distributedestimator {
             }
         }
 
-        bool LocalEstimatorBase::SendQuery(MessageBuilder<messages::SensorQuery>& message) {
+        riaps::ports::PortError LocalEstimatorBase::SendQuery(MessageBuilder<messages::SensorQuery>& message) {
             return SendMessageOnPort(message.capnp_builder(), PORT_REQ_QUERY);
         }
 
-        messages::SensorValue::Reader LocalEstimatorBase::RecvQuery() {
+        std::tuple<MessageReader<messages::SensorValue>, riaps::ports::PortError> LocalEstimatorBase::RecvQuery() {
             auto port = GetRequestPortByName(PORT_REQ_QUERY);
-            auto reader = port->Recv();
-            return reader->getRoot<messages::SensorValue>();
+            auto [msg_bytes, error] = port->Recv();
+            MessageReader<messages::SensorValue> reader(msg_bytes);
+            return make_tuple(reader, error);
         }
 
-        messages::SensorReady::Reader LocalEstimatorBase::RecvReady() {
+        std::tuple<MessageReader<messages::SensorReady>, riaps::ports::PortError> LocalEstimatorBase::RecvReady() {
             auto port = GetPortAs<riaps::ports::SubscriberPort>(PORT_SUB_READY);
-            auto reader = port->Recv();
-            auto r = reader->getRoot<messages::SensorReady>();
-            return r;
+            auto [msg_bytes, error] = port->Recv();
+            MessageReader<messages::SensorReady> reader(msg_bytes);
+            return make_tuple(reader, error);
         }
 
         void LocalEstimatorBase::DispatchInsideMessage(zmsg_t *zmsg, riaps::ports::PortBase *port) {
 
         }
 
-        bool LocalEstimatorBase::SendEstimate(MessageBuilder<messages::Estimate>& message) {
+        riaps::ports::PortError LocalEstimatorBase::SendEstimate(MessageBuilder<messages::Estimate>& message) {
             return SendMessageOnPort(message.capnp_builder(), PORT_PUB_ESTIMATE);
         }
 

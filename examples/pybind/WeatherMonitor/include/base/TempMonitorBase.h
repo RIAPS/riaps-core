@@ -32,7 +32,7 @@ namespace weathermonitor {
 							const std::string &actor_name);
     		
     		virtual void OnTempupdate ()=0;
-            virtual messages::TempData::Reader RecvTempupdate() final;
+            virtual std::tuple<MessageReader<messages::TempData>, riaps::ports::PortError> RecvTempupdate() final;
     		
     	    virtual ~TempMonitorBase() = default;
     	protected:

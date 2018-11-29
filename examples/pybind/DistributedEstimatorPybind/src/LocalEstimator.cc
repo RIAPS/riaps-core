@@ -18,32 +18,33 @@ namespace distributedestimator {
                                        const std::string &actor_name)
                 : LocalEstimatorBase(parent_actor, actor_spec, type_spec, name, type_name, args, application_name,
                                       actor_name) {
-
+            //set_debug_level(spd::level::debug);
         }
 
         void LocalEstimator::OnQuery() {
-            auto msg = RecvQuery();
-            component_logger()->info("{}: [{}]", msg.getMsg().cStr(), ::getpid());
+            auto [msg_query, query_error] = RecvQuery();
+
+            if (!query_error)
+                component_logger()->info("{}: [{}]", msg_query->getMsg().cStr(), ::getpid());
+            else
+                component_logger()->warn("Recv() error in {}, errorcode: {}", __func__, query_error.error_code());
         }
 
         void LocalEstimator::OnReady() {
-            auto msg = RecvReady();
-            component_logger()->info("{}: {} {}", __func__, msg.getMsg().cStr(), ::getpid());
+            auto [msg_ready, error_ready] = RecvReady();
+            component_logger()->info("{}: {} {}", __func__, msg_ready->getMsg().cStr(), ::getpid());
 
-//            capnp::MallocMessageBuilder builderSensorQuery;
-//            messages::SensorQuery::Builder queryMsg = builderSensorQuery.initRoot<messages::SensorQuery>();
-//            queryMsg.setMsg("sensor_query");
-
-            MessageBuilder<messages::SensorQuery> builder;
-            builder->setMsg("sensor_query");
-            auto result = SendQuery(builder);
-            if (result) {
-                auto value = RecvQuery();
-//                capnp::MallocMessageBuilder builderEstimate;
-//                auto estimateMsg = builderEstimate.initRoot<messages::Estimate>();
+            MessageBuilder<messages::SensorQuery> query_builder;
+            query_builder->setMsg("sensor_query");
+            auto query_error = SendQuery(query_builder);
+            if (!query_error) {
+                auto [query_reader, query_error] = RecvQuery();
                 MessageBuilder<messages::Estimate> msg_estimate;
                 msg_estimate->setMsg(fmt::format("local_est({})", ::getpid()));
-                SendEstimate(msg_estimate);
+                auto estimate_error = SendEstimate(msg_estimate);
+                if (estimate_error) {
+                    component_logger()->warn("Error sending message: {}, errorcode: {}", __func__, estimate_error.error_code());
+                }
 //                messages::SensorValue::Reader sensorValue;
 //                if (RecvQuery(sensorValue)) {
 //                    if (GetPortByName(PORT_REQ_QUERY)->GetPortBaseConfig()->isTimed) {
@@ -67,7 +68,7 @@ namespace distributedestimator {
 //                    SendEstimate(builderEstimate, estimateMsg);
 //                }
             } else {
-                component_logger()->error("Error sending query");
+                component_logger()->warn("Error sending message: {}, errorcode: {}", __func__, query_error.error_code());
             }
         }
 

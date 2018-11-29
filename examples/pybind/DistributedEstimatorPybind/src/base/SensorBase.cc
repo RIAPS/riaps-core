@@ -6,6 +6,7 @@
 #include <componentmodel/r_pyconfigconverter.h>
 
 using namespace std;
+using namespace riaps::ports;
 
 namespace distributedestimator {
     namespace components {
@@ -32,10 +33,19 @@ namespace distributedestimator {
             return port->Recv();
         }
 
-        messages::SensorQuery::Reader SensorBase::RecvRequest() {
+        tuple<MessageReader<messages::SensorQuery>, PortError> SensorBase::RecvRequest() {
             auto port = GetPortAs<riaps::ports::ResponsePort>(PORT_REP_REQUEST);
-            auto reader = port->Recv();
-            return reader->getRoot<messages::SensorQuery>();
+            auto [msg_bytes, error] = port->Recv();
+            MessageReader<messages::SensorQuery> reader(msg_bytes);
+            return make_tuple(reader, error);
+        }
+
+        PortError SensorBase::SendRequest(MessageBuilder<messages::SensorValue>& message) {
+            return SendMessageOnPort(message.capnp_builder(), PORT_REP_REQUEST);
+        }
+
+        PortError SensorBase::SendReady(MessageBuilder<messages::SensorReady>& builder) {
+            return SendMessageOnPort(builder.capnp_builder(), PORT_PUB_READY);
         }
 
         void SensorBase::DispatchMessage(riaps::ports::PortBase* port) {
@@ -50,18 +60,5 @@ namespace distributedestimator {
         void SensorBase::DispatchInsideMessage(zmsg_t *zmsg, riaps::ports::PortBase *port) {
 
         }
-
-        bool SensorBase::SendRequest(MessageBuilder<messages::SensorValue>& message) {
-            return SendMessageOnPort(message.capnp_builder(), PORT_REP_REQUEST);
-        }
-
-        bool SensorBase::SendReady(MessageBuilder<messages::SensorReady>& builder) {
-            return SendMessageOnPort(builder.capnp_builder(), PORT_PUB_READY);
-        }
-
-        SensorBase::~SensorBase() {
-
-        }
-
     }
 }

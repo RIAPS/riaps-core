@@ -8,6 +8,7 @@
 #include "componentmodel/r_componentbase.h"
 #include "messages/distributedestimator.capnp.h"
 #include "componentmodel/r_messagebuilder.h"
+#include <componentmodel/r_messagereader.h>
 
 #include <pybind11/stl.h>
 #include <pybind11/pybind11.h>
@@ -35,7 +36,7 @@ namespace distributedestimator{
             virtual void OnEstimate()=0;
             virtual void OnWakeup()=0;
 
-            virtual boost::optional<messages::Estimate::Reader> RecvEstimate() final;
+            virtual std::tuple<MessageReader<messages::Estimate>, riaps::ports::PortError> RecvEstimate() final;
             virtual timespec RecvWakeup() final;
 
             virtual ~GlobalEstimatorBase() = default;

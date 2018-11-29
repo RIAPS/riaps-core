@@ -22,30 +22,29 @@ namespace distributedestimator {
         }
 
         void Sensor::OnClock() {
-            auto s = RecvClock();
-            component_logger()->info("{}:{}/{}", __func__, s.tv_sec, s.tv_sec);
-
-//            capnp::MallocMessageBuilder messageBuilder;
-//            auto msgSensorReady = messageBuilder.initRoot<messages::SensorReady>();
-//            msgSensorReady.setMsg("data_ready");
+            auto time = RecvClock();
+            component_logger()->info("{}:{}/{}", __func__, time.tv_sec, time.tv_sec);
 
             MessageBuilder<messages::SensorReady> builder;
             builder->setMsg("data_ready");
-            SendReady(builder);
+            auto error = SendReady(builder);
+            if (error) {
+                component_logger()->warn("Error sending message: {}, errorcode: {}", __func__, error.error_code());
+            }
         }
 
         void Sensor::OnRequest() {
-            auto msg = RecvRequest();
-            component_logger()->info("{}: {}", __func__, msg.getMsg().cStr());
+            auto [msg, error] = RecvRequest();
+            component_logger()->info("{}: {}", __func__, msg->getMsg().cStr());
 
-//            capnp::MallocMessageBuilder messageBuilder;
-//            messages::SensorValue::Builder msgSensorValue = messageBuilder.initRoot<messages::SensorValue>();
             MessageBuilder<messages::SensorValue> msg_sensor_value;
             msg_sensor_value->setMsg("sensor_rep");
-            if (!SendRequest(msg_sensor_value)){
-                // Couldn't send the response
-                component_logger()->warn("Couldn't send message");
+            auto send_error = SendRequest(msg_sensor_value);
+            if (send_error){
+                component_logger()->warn("Error sending message: {}, errorcode: {}", __func__, send_error.error_code());
             }
+
+
 //            if (port->GetPortBaseConfig()->isTimed){
 //                auto responsePort = port->AsResponsePort();
 //                component_logger()->info_if(responsePort!=nullptr,

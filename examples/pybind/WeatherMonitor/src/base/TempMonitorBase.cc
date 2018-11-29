@@ -25,10 +25,13 @@ namespace weathermonitor {
 			set_config(conf);
     	}
 
-    	messages::TempData::Reader TempMonitorBase::RecvTempupdate() {
+		tuple<MessageReader<messages::TempData>, ports::PortError> TempMonitorBase::RecvTempupdate() {
     	    auto port = GetPortAs<ports::SubscriberPort>(PORT_SUB_TEMPUPDATE);
-    	    auto reader = port->Recv();
-    	    reader->getRoot<messages::TempData>();
+    	    auto [msg_bytes, error] = port->Recv();
+
+    	    // Message reader takes the ownership of msg_bytes
+    	    MessageReader<messages::TempData> reader(msg_bytes);
+    	    return make_tuple(reader, error);
     	}
     	
     	void TempMonitorBase::DispatchMessage(riaps::ports::PortBase *port) {

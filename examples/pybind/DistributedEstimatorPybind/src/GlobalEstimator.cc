@@ -26,14 +26,16 @@ namespace distributedestimator {
         }
 
         void GlobalEstimator::OnEstimate() {
-            auto msg = RecvEstimate();
-            component_logger()->info("{}:{}", __func__, msg->getMsg().cStr());
-
+            auto [msg, error] = RecvEstimate();
+            if (!error)
+                component_logger()->info("{}:{}", __func__, msg->getMsg().cStr());
+            else
+                component_logger()->warn("Recv() error in {}, errorcode: {}", __func__, error.error_code());
         }
 
         void GlobalEstimator::OnWakeup() {
             component_logger()->info("{}", __func__);
-            auto msg = RecvWakeup();
+            auto time = RecvWakeup();
         }
 
         GlobalEstimator::~GlobalEstimator() {
