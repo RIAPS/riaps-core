@@ -23,7 +23,10 @@ namespace distributedestimator {
 
         void Sensor::OnClock() {
             auto time = RecvClock();
-            component_logger()->info("{}:{}/{}", __func__, time.tv_sec, time.tv_sec);
+
+            char buffer[80];
+            std::strftime(buffer, 80, "%T", std::localtime(&time.tv_sec));
+            component_logger()->info("{}: {}:{}", __func__, buffer, time.tv_nsec/1000);
 
             MessageBuilder<messages::SensorReady> builder;
             builder->setMsg("data_ready");
