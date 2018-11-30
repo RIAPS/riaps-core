@@ -25,8 +25,7 @@ namespace riaps{
                 memcpy(buffer, &tdouble, sizeof(tdouble));
                 zmsg_addmem(*message, buffer, sizeof(double));
             }
-            int rc = zmsg_send(message, const_cast<zsock_t*>(port_->port_socket()));
-            if (rc == 0)
+            if (zmsg_send(message, const_cast<zsock_t*>(port_->port_socket())) == 0)
                 return PortError(true);
             return PortError(false, zmq_errno());
         }
