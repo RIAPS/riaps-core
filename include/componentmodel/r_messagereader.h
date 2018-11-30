@@ -15,6 +15,9 @@
 class MessageReaderArray {
 public:
     MessageReaderArray(zframe_t* msg_frame);
+    MessageReaderArray( const MessageReaderArray& )            = delete; // non construction-copyable
+    MessageReaderArray& operator=( const MessageReaderArray& ) = delete; // non copyable
+
 
     kj::ArrayPtr<const capnp::word> capnp_data() const;
 
