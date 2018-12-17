@@ -276,9 +276,11 @@ int main(int argc, char* argv[])
             }
 
             zframe_t *content = zframe_recv (listener);
-            assert (zframe_size (content) == 2);
-            assert (zframe_data (content) [0] == 0xCA);
-            assert (zframe_data (content) [1] == 0xFE);
+            if (zframe_size (content) != 2)
+                console->warn("Invalid beacon package received");
+            else
+                console->warn_if(zframe_data (content) [0] != 0xCA || zframe_data (content) [1] == 0xFE, "Invalid beacon content");
+
             zframe_destroy (&content);
             zstr_free (&ipaddress);
         } else{
