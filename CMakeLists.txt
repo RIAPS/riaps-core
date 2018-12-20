@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(riaps_core VERSION 0.8.3)
+project(riaps_core VERSION 1.1.10)
 option(arch "amd64/armhf" "amd64")
 option(BUILD_TESTS  "Build tests" ON)
 set(CMAKE_SYSTEM_NAME Linux)
@@ -210,9 +210,9 @@ target_link_libraries(rdiscoveryd czmq zmq opendht gnutls riaps capnp nettle hog
 
 install(TARGETS rdiscoveryd DESTINATION bin)
 
-SET(MAJOR_VERSION "0")
-SET(MINOR_VERSION "8")
-SET(PATCH_VERSION "3")
+SET(MAJOR_VERSION "1")
+SET(MINOR_VERSION "1")
+SET(PATCH_VERSION "10")
 
 
 IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
