@@ -39,62 +39,48 @@ namespace riaps {
     class PortBase {
 
     public:
-        //PortBase(const ComponentBase* parentComponent);
 
-        PortBase(PortTypes portType,
-                 const component_port_config* config,
-                 const ComponentBase* parentComponent);
+        PortBase(PortTypes port_type,
+                 const ComponentPortConfig* config,
+                 const ComponentBase* parent_component);
 
-        /// \return The ip addres of the specified interface. (e.g.: "eth0")
-        //virtual std::string GetInterfaceAddress(std::string ifacename);
-        ///
-        /// \return The ip address of the first ethernet interface
-        //virtual std::string GetInterfaceAddress();
+        virtual const zsock_t*       port_socket()      const;
+        const ComponentBase*         parent_component()      ;
+        const PortTypes&             port_type()        const;
+        const ComponentPortConfig* config()           const;
+        const std::string            port_name()        const;
 
-        /// \return The associated ZMQ socket.
-        virtual const zsock_t* GetSocket() const;
+        RequestPort*         AsRequestPort()        ;
+        QueryPort*           AsQueryPort()          ;
+        PublisherPort*       AsPublishPort()        ;
+        GroupPublisherPort*  AsGroupPublishPort()   ;
+        GroupSubscriberPort* AsGroupSubscriberPort();
+        ResponsePort*        AsResponsePort()       ;
+        AnswerPort*          AsAnswerPort()         ;
+        SubscriberPort*      AsSubscribePort()      ;
+        PeriodicTimer*       AsTimerPort()          ;
+        InsidePort*          AsInsidePort()         ;
+        RecvPort*            AsRecvPort()           ;
 
-
-        //bool Send(std::string message) const;
-        //bool Send(std::vector<std::string>& fields) const;
-        //virtual bool Send(zmsg_t** zmessage) const;
-
-        const ComponentBase* parent_component();
-
-
-        const PortTypes& GetPortType() const;
-
-        virtual const component_port_config* GetPortBaseConfig() const;
-
-        virtual const std::string GetPortName() const;
-
-        // Return NULL if the called conversion is unavailable or invalid
-        virtual RequestPort*         AsRequestPort()        ;
-        virtual QueryPort*           AsQueryPort()          ;
-        virtual PublisherPort*       AsPublishPort()        ;
-        virtual GroupPublisherPort*  AsGroupPublishPort()   ;
-        virtual GroupSubscriberPort* AsGroupSubscriberPort();
-        virtual ResponsePort*        AsResponsePort()       ;
-        virtual AnswerPort*          AsAnswerPort()         ;
-        virtual SubscriberPort*      AsSubscribePort()      ;
-        virtual PeriodicTimer*       AsTimerPort()          ;
-        virtual InsidePort*          AsInsidePort()         ;
-        virtual RecvPort*            AsRecvPort()           ;
-
+        template<class T>
+        T* GetPortAs();
 
         virtual ~PortBase() noexcept ;
 
     protected:
-
-        PortTypes                    m_port_type;
+        PortTypes                    port_type_;
         zsock_t*                     port_socket_;
-        std::shared_ptr<spd::logger> m_logger;
-
+        std::shared_ptr<spd::logger> logger_;
 
     private:
-        const component_port_config* m_config;
-        const ComponentBase* parent_component_;
+        const ComponentPortConfig* config_;
+        const ComponentBase*       parent_component_;
     };
+
+    template<class T>
+    T* PortBase::GetPortAs() {
+        return dynamic_cast<T*>(this);
+    }
 }
 }
 

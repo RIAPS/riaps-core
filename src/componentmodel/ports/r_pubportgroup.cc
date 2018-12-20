@@ -2,37 +2,19 @@
 
 namespace riaps{
     namespace ports{
-        GroupPublisherPort::GroupPublisherPort(const group_port_pub &config, const ComponentBase* parentComponent)
-                : m_groupPortConfig(config),
-                  PublisherPortBase(&m_groupPortConfig, parentComponent) {
+        GroupPublisherPort::GroupPublisherPort(const GroupPortPub &config, const ComponentBase* parentComponent)
+                : group_port_config_(config),
+                  PublisherPortBase(&group_port_config_, parentComponent) {
             InitSocket();
         }
 
         riaps::groups::GroupService GroupPublisherPort::GetGroupService() {
             riaps::groups::GroupService result;
 
-            result.address     = host_ + ":" + std::to_string(port_);
-            result.message_type = GetConfig()->messageType;
+            result.address     = fmt::format("{}:{}",host_,port_);
+            result.message_type = GetConfig()->message_type;
 
             return result;
-        }
-
-//        bool GroupPublisherPort::Send(capnp::MallocMessageBuilder &message) const {
-//            zmsg_t* msg = nullptr;
-//            msg << message;
-//
-//            // Add the component_id as the first frame of the message
-//            zmsg_pushstr(msg, _componentId.c_str());
-//
-//            return Send(&msg);
-//        }
-
-        GroupPublisherPort* GroupPublisherPort::AsGroupPublishPort() {
-            return this;
-        }
-
-        GroupPublisherPort::~GroupPublisherPort() {
-
         }
     }
 }

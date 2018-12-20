@@ -21,39 +21,52 @@ namespace distributedestimator {
                                       actor_name) {
         }
 
-        void Sensor::OnClock(riaps::ports::PortBase *port) {
-            int64_t time = zclock_mono();
-            component_logger()->info("Sensor::OnClock(): {}", time);
+        void Sensor::OnClock() {
+            auto time = RecvClock();
 
-            capnp::MallocMessageBuilder messageBuilder;
-            auto msgSensorReady = messageBuilder.initRoot<messages::SensorReady>();
-            msgSensorReady.setMsg("data_ready");
+            char buffer[80];
+            std::strftime(buffer, 80, "%T", std::localtime(&time.tv_sec));
+            component_logger()->info("{}: {}:{}", __func__, buffer, time.tv_nsec/1000);
 
-            SendReady(messageBuilder, msgSensorReady);
+            MessageBuilder<messages::SensorReady> builder;
+            builder->setMsg("data_ready");
+            auto error = SendReady(builder);
+            if (error) {
+                component_logger()->warn("Error sending message: {}, errorcode: {}", __func__, error.error_code());
+            }
         }
 
-        void Sensor::OnRequest(const messages::SensorQuery::Reader &message,
-                                    riaps::ports::PortBase *port) {
+        void Sensor::OnRequest() {
+            auto [msg, error] = RecvRequest();
+            component_logger()->info("{}: {}", __func__, msg->getMsg().cStr());
 
-            if (port->GetPortBaseConfig()->isTimed){
-                auto responsePort = port->AsResponsePort();
-                component_logger()->info_if(responsePort!=nullptr,
-                                 "Sensor::OnRequest(): {}, sentTimestamp: {}.{}, recvTimestamp: {}.{}",
-                                 message.getMsg().cStr(),
-                                 responsePort->GetLastSendTimestamp().tv_sec ,
-                                 responsePort->GetLastSendTimestamp().tv_nsec,
-                                 responsePort->GetLastRecvTimestamp().tv_sec ,
-                                 responsePort->GetLastRecvTimestamp().tv_nsec);
-            } else
-                component_logger()->info("Sensor::OnRequest(): {}", message.getMsg().cStr());
-
-            capnp::MallocMessageBuilder messageBuilder;
-            messages::SensorValue::Builder msgSensorValue = messageBuilder.initRoot<messages::SensorValue>();
-            msgSensorValue.setMsg("sensor_rep");
-
-            if (!SendRequest(messageBuilder, msgSensorValue)){
-                // Couldn't send the response
+            MessageBuilder<messages::SensorValue> msg_sensor_value;
+            msg_sensor_value->setMsg("sensor_rep");
+            auto send_error = SendRequest(msg_sensor_value);
+            if (send_error){
+                component_logger()->warn("Error sending message: {}, errorcode: {}", __func__, send_error.error_code());
             }
+
+
+//            if (port->GetPortBaseConfig()->isTimed){
+//                auto responsePort = port->AsResponsePort();
+//                component_logger()->info_if(responsePort!=nullptr,
+//                                 "Sensor::OnRequest(): {}, sentTimestamp: {}.{}, recvTimestamp: {}.{}",
+//                                 message.getMsg().cStr(),
+//                                 responsePort->GetLastSendTimestamp().tv_sec ,
+//                                 responsePort->GetLastSendTimestamp().tv_nsec,
+//                                 responsePort->GetLastRecvTimestamp().tv_sec ,
+//                                 responsePort->GetLastRecvTimestamp().tv_nsec);
+//            } else
+//                component_logger()->info("Sensor::OnRequest(): {}", message.getMsg().cStr());
+//
+//            capnp::MallocMessageBuilder messageBuilder;
+//            messages::SensorValue::Builder msgSensorValue = messageBuilder.initRoot<messages::SensorValue>();
+//            msgSensorValue.setMsg("sensor_rep");
+//
+//            if (!SendRequest(messageBuilder, msgSensorValue)){
+//                // Couldn't send the response
+//            }
         }
 
 
@@ -93,6 +106,7 @@ PYBIND11_MODULE(libsensor, m) {
     testClass.def("handleNetLimit"        , &distributedestimator::components::Sensor::HandleNetLimit);
     testClass.def("handleNICStateChange"  , &distributedestimator::components::Sensor::HandleNICStateChange);
     testClass.def("handlePeerStateChange" , &distributedestimator::components::Sensor::HandlePeerStateChange);
+    testClass.def("handleReinstate"       , &distributedestimator::components::Sensor::HandleReinstate);
 
     m.def("create_component_py", &create_component_py, "Instantiates the component from python configuration");
 }

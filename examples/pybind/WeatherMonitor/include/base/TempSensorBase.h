@@ -5,7 +5,8 @@
 #ifndef RIAPS_CORE_TEMPSENSOR_H
 #define RIAPS_CORE_TEMPSENSOR_H
 
-#include "componentmodel/r_componentbase.h"
+#include <componentmodel/r_messagebuilder.h>
+#include <componentmodel/r_componentbase.h>
 #include "messages/TempData.capnp.h"
 
 // Name of the ports from the model file
@@ -32,15 +33,14 @@ namespace weathermonitor {
 						   const std::string &application_name,
 						   const std::string &actor_name);
     		
-    		virtual void OnClock(riaps::ports::PortBase *port)=0;
+    		virtual void OnClock()=0;
+            virtual timespec RecvClock() final;
     		
-    		virtual bool SendReady(capnp::MallocMessageBuilder& messageBuilder, messages::TempData::Builder& message);
+    		virtual bool SendReady(MessageBuilder<weathermonitor::messages::TempData>& message);
     		
     	    virtual ~TempSensorBase() = default;
     	protected:
-			virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
-										 riaps::ports::PortBase*   port,
-										 std::shared_ptr<riaps::MessageParams> params) final;
+			virtual void DispatchMessage(riaps::ports::PortBase* port) final;
 
 			virtual void DispatchInsideMessage(zmsg_t* zmsg,
 											   riaps::ports::PortBase* port) final;

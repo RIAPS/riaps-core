@@ -149,7 +149,7 @@ namespace riaps {
             bool SendHeartBeat(riaps::distrcoord::HeartBeatType type);
 
             GroupId     group_id_;
-            groupt_conf group_type_conf_;
+            GroupTypeConf group_type_conf_;
 
             /**
              * Always store the communication ports in shart_ptr

@@ -1,7 +1,3 @@
-//
-// Created by istvan on 10/18/17.
-//
-
 #include <componentmodel/ports/r_senderport.h>
 #include <componentmodel/ports/r_requestport.h>
 #include <utils/r_utils.h>
@@ -9,25 +5,19 @@
 
 namespace riaps{
     namespace ports{
-
-
-        SenderPort::SenderPort(PortBase* portBase) : m_port(portBase) {
+        SenderPort::SenderPort(PortBase* port_base) : port_(port_base) {
 
         }
 
-
-
-
-        bool SenderPort::Send(capnp::MallocMessageBuilder &message) const {
-
+        PortError SenderPort::Send(capnp::MallocMessageBuilder &message) const {
             zmsg_t* msg = nullptr;
             msg << message;
 
             return Send(&msg);
         }
-        
-        bool SenderPort::Send(zmsg_t **message) const {
-            if (m_port->GetPortBaseConfig()->isTimed){
+
+        PortError SenderPort::Send(zmsg_t **message) const {
+            if (port_->config()->is_timed){
                 timespec t;
                 clock_gettime(CLOCK_REALTIME, &t);
                 double tdouble = (float)t.tv_sec + (((float)t.tv_nsec)/1000000000.0);
@@ -35,12 +25,23 @@ namespace riaps{
                 memcpy(buffer, &tdouble, sizeof(tdouble));
                 zmsg_addmem(*message, buffer, sizeof(double));
             }
-            int rc = zmsg_send(message, const_cast<zsock_t*>(m_port->GetSocket()));
-            return rc == 0;
+            if (zmsg_send(message, const_cast<zsock_t*>(port_->port_socket())) == 0)
+                return PortError(true);
+            return PortError(false, zmq_errno());
         }
 
-        SenderPort::~SenderPort() {
+        /**
+         * Sends the byte array, doesn't destroy the message, it is the caller's responsibility.
+         * @param message The byte array to be sent.
+         * @param size  Size of the array.
+         * @return
+         */
+        PortError SenderPort::Send(byte* message, size_t size) const {
+            zmsg_t* zmsg = zmsg_new();
 
+            // Copies the byte array
+            zmsg_addmem(zmsg, message, size);
+            return Send(&zmsg);
         }
     }
 }

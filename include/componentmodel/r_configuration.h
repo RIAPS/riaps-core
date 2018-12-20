@@ -15,60 +15,60 @@ using namespace riaps::componentmodel;
 /**
  * Baseclass for component and group ports. Contains portName - messageType mapping.
  */
-struct port_config_base {
-    std::string portName;
-    std::string messageType;
+struct PortConfigBase {
+    std::string port_name;
+    std::string message_type;
 };
 
 /**
  * Port-message type mapping for groups
  */
-struct group_port_config : public port_config_base{
+struct GroupPortConfig : public PortConfigBase{
 };
 
 /**
  * Port-message type mapping for groups
  * Component port can be local.
  */
-struct component_port_config : public port_config_base {
-    bool        isLocal;
-    bool        isTimed;
+struct ComponentPortConfig : public PortConfigBase {
+    bool        is_local;
+    bool        is_timed;
 
-    component_port_config(){
-        isLocal=false;
-        isTimed=false;
+    ComponentPortConfig(){
+        is_local=false;
+        is_timed=false;
     }
 };
 
 
-struct component_port_clt : public component_port_config {};
-struct component_port_pub : public component_port_config {};
+struct ComponentPortClt : public ComponentPortConfig {};
+struct ComponentPortPub : public ComponentPortConfig {};
 
-struct component_port_req : public component_port_config {
+struct ComponentPortReq : public ComponentPortConfig {
     std::string req_type;
     std::string rep_type;
 };
 
-struct component_port_rep : public component_port_config{
+struct ComponentPortRep : public ComponentPortConfig{
     std::string req_type;
     std::string rep_type;
 };
-struct component_port_srv : public component_port_config{};
-struct component_port_sub : public component_port_config{
+struct ComponentPortSrv : public ComponentPortConfig{};
+struct ComponentPortSub : public ComponentPortConfig{
 };
-struct component_port_tim : public component_port_config {
-    ulong       period;
+struct ComponentPortTim : public ComponentPortConfig {
+    ulong period;
 };
-struct component_port_ins : public component_port_config{
+struct ComponentPortIns : public ComponentPortConfig{
 
 };
 
-struct component_port_qry : public component_port_config {
+struct ComponentPortQry : public ComponentPortConfig {
     std::string qry_type;
     std::string ans_type;
 };
 
-struct component_port_ans : public component_port_config{
+struct ComponentPortAns : public ComponentPortConfig{
     std::string qry_type;
     std::string ans_type;
 };
@@ -76,46 +76,46 @@ struct component_port_ans : public component_port_config{
 
 
 struct ComponentPorts {
-    std::vector<component_port_clt> clts; // Client
-    std::vector<component_port_srv> srvs; // Server
-    std::vector<component_port_pub> pubs; // Publisher
-    std::vector<component_port_sub> subs; // Subscribe
-    std::vector<component_port_req> reqs; // Request
-    std::vector<component_port_rep> reps; // Response
-    std::vector<component_port_tim> tims; // Timer
-    std::vector<component_port_ins> inss; // Inside
-    std::vector<component_port_qry> qrys; // Query
-    std::vector<component_port_ans> anss; // Answer
+    std::vector<ComponentPortClt> clts; // Client
+    std::vector<ComponentPortSrv> srvs; // Server
+    std::vector<ComponentPortPub> pubs; // Publisher
+    std::vector<ComponentPortSub> subs; // Subscribe
+    std::vector<ComponentPortReq> reqs; // Request
+    std::vector<ComponentPortRep> reps; // Response
+    std::vector<ComponentPortTim> tims; // Timer
+    std::vector<ComponentPortIns> inss; // Inside
+    std::vector<ComponentPortQry> qrys; // Query
+    std::vector<ComponentPortAns> anss; // Answer
 };
 
 /**
  * List of ports for group types
  * Only pub/sub
  */
-typedef struct component_port_pub group_port_pub;
-typedef struct component_port_sub group_port_sub;
+typedef struct ComponentPortPub GroupPortPub;
+typedef struct ComponentPortSub GroupPortSub;
 struct groupt_ports {
-    std::vector<group_port_pub> pubs;
-    std::vector<group_port_sub> subs;
+    std::vector<GroupPortPub> pubs;
+    std::vector<GroupPortSub> subs;
 };
 
 /**
  * Grouptype configuration
  */
-struct groupt_conf {
-    std::string   groupTypeId;
-    groupt_ports  groupTypePorts;
-    bool          hasLeader;
-    bool          hasConsensus;
+struct GroupTypeConf {
+    std::string   group_type_id;
+    groupt_ports  group_type_ports;
+    bool          has_leader;
+    bool          has_consensus;
 };
 
 
-struct component_conf {
+struct ComponentConf {
     std::string               component_name;
     std::string               component_type;
     ComponentPorts            component_ports;
     Parameters                component_parameters;
-    bool                      isDevice;
+    bool                      is_device;
 };
 
 #endif //RIAPS_FW_R_CONFIGURATION_H

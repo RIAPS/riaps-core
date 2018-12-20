@@ -1,12 +1,17 @@
 include_directories(include)
 
-add_custom_command(
-        OUTPUT  "include/messages/TempData.capnp.c++"
-        DEPENDS "include/messages/TempData.capnp"
-        WORKING_DIRECTORY "include/messages"
-        COMMAND /opt/riaps/amd64/bin/capnp compile TempData.capnp -oc++:./
-        COMMENT "=== Generating capnp ==="
-)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+
+SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+
+#add_custom_command(
+#        OUTPUT  "include/messages/TempData.capnp.c++"
+#        DEPENDS "include/messages/TempData.capnp"
+#        WORKING_DIRECTORY "include/messages"
+#        COMMAND /opt/riaps/amd64/bin/capnp compile TempData.capnp -oc++:./
+#        COMMENT "=== Generating capnp ==="
+#)
 
 pybind11_add_module(tempsensor src/TempSensor.cc
         src/base/TempSensorBase.cc

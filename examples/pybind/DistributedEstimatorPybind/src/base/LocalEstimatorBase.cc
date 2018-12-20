@@ -5,6 +5,9 @@
 #include <base/LocalEstimatorBase.h>
 #include <componentmodel/r_pyconfigconverter.h>
 
+using namespace std;
+using namespace riaps::ports;
+
 namespace distributedestimator {
     namespace components {
 
@@ -20,50 +23,47 @@ namespace distributedestimator {
             auto config = PyConfigConverter::convert(type_spec, actor_spec);
             config.component_name = name;
             config.component_type = type_name;
-            config.isDevice=false;
+            config.is_device=false;
             set_config(config);
+            set_debug_level(spd::level::info);
         }
 
-        void LocalEstimatorBase::DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
-                                                 riaps::ports::PortBase *port,
-                                                 std::shared_ptr<riaps::MessageParams> params) {
-            if (port->GetPortName() == PORT_SUB_READY) {
-                messages::SensorReady::Reader sensorReady = capnpreader->getRoot<messages::SensorReady>();
-                OnReady(sensorReady, port);
+        void LocalEstimatorBase::DispatchMessage(riaps::ports::PortBase* port) {
+            auto port_name = port->port_name();
+            if (port_name == PORT_SUB_READY) {
+                OnReady();
+            }
+            if (port_name == PORT_REQ_QUERY) {
+                OnQuery();
             }
         }
 
-        bool LocalEstimatorBase::SendQuery(capnp::MallocMessageBuilder &messageBuilder,
-                                           messages::SensorQuery::Builder &message) {
-            return SendMessageOnPort(messageBuilder, PORT_REQ_QUERY);
+        riaps::ports::PortError LocalEstimatorBase::SendQuery(MessageBuilder<messages::SensorQuery>& message) {
+            return SendMessageOnPort(message.capnp_builder(), PORT_REQ_QUERY);
         }
 
-        bool LocalEstimatorBase::RecvQuery(messages::SensorValue::Reader &message) {
+        std::tuple<MessageReader<messages::SensorValue>, riaps::ports::PortError> LocalEstimatorBase::RecvQuery() {
             auto port = GetRequestPortByName(PORT_REQ_QUERY);
-            if (port == NULL) return false;
+            auto [msg_bytes, error] = port->Recv();
+            MessageReader<messages::SensorValue> reader(msg_bytes);
+            return make_tuple(reader, error);
+        }
 
-            // TODO: with share_ptr it would be better, DSML update is also required
-            capnp::FlatArrayMessageReader* messageReader;
-
-            if (port->Recv(&messageReader)){
-                message = messageReader->getRoot<messages::SensorValue>();
-                return true;
-            }
-
-            return false;
+        std::tuple<MessageReader<messages::SensorReady>, riaps::ports::PortError> LocalEstimatorBase::RecvReady() {
+            auto port = GetPortAs<riaps::ports::SubscriberPort>(PORT_SUB_READY);
+            auto [msg_bytes, error] = port->Recv();
+            MessageReader<messages::SensorReady> reader(msg_bytes);
+            return make_tuple(reader, error);
         }
 
         void LocalEstimatorBase::DispatchInsideMessage(zmsg_t *zmsg, riaps::ports::PortBase *port) {
 
         }
 
-        bool LocalEstimatorBase::SendEstimate(capnp::MallocMessageBuilder &messageBuilder,
-                                              messages::Estimate::Builder &message) {
-            return SendMessageOnPort(messageBuilder, PORT_PUB_ESTIMATE);
+        riaps::ports::PortError LocalEstimatorBase::SendEstimate(MessageBuilder<messages::Estimate>& message) {
+            return SendMessageOnPort(message.capnp_builder(), PORT_PUB_ESTIMATE);
         }
 
-        LocalEstimatorBase::~LocalEstimatorBase() {
 
-        }
     }
 }

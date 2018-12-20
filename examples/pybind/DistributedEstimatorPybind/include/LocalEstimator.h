@@ -24,8 +24,11 @@ namespace distributedestimator {
                            const std::string &application_name,
                            const std::string &actor_name);
 
-            virtual void OnReady(const messages::SensorReady::Reader &message,
-                                 riaps::ports::PortBase *port) override;
+            LocalEstimator(const LocalEstimator&) = delete;
+            LocalEstimator()                      = delete;
+
+            virtual void OnReady() override;
+            virtual void OnQuery() override;
 
             virtual ~LocalEstimator();
 

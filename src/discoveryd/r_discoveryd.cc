@@ -235,21 +235,17 @@ int main(int argc, char* argv[])
 
         // If UDP package was received
         if (ipaddress) {
+            zframe_t *content = zframe_recv (listener);
+            if (zframe_size (content) != 2)
+                console->warn("Invalid beacon package received");
+            else
+                console->warn_if(zframe_data (content) [0] != 0xCA || zframe_data (content) [1] == 0xFE, "Invalid beacon content");
 
             // Pass the ip addres to the dht tracker to check its stability
             // DHT must be stable for at least 3 seconds before the registration happens
             zsock_send(dhtTracker, "ss", CMD_BEACON_IP, ipaddress);
 
             if (strcmp(ipaddress,address.c_str()) != 0) {
-
-                //LOG(INFO) << "Beacon arrived";
-
-                // Recalculate (delay) the next announcement
-                //int nextDiff = dis(gen)*1000;
-
-                // Calculate the next announcment
-                //nextAnnouncement = zclock_mono() + nextDiff;
-
                 // Check if the item already in the map
                 bool is_newitem = ipcache.find(std::string(ipaddress)) == ipcache.end();
 
@@ -275,10 +271,8 @@ int main(int argc, char* argv[])
                 }
             }
 
-            zframe_t *content = zframe_recv (listener);
-            assert (zframe_size (content) == 2);
-            assert (zframe_data (content) [0] == 0xCA);
-            assert (zframe_data (content) [1] == 0xFE);
+
+
             zframe_destroy (&content);
             zstr_free (&ipaddress);
         } else{

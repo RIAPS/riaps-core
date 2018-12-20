@@ -14,17 +14,17 @@ namespace riaps{
     namespace ports{
         class SubscriberPortBase : public PortBase, public RecvPort{
         public:
-            SubscriberPortBase(const component_port_config* config, const ComponentBase* parentComponent);
+            SubscriberPortBase(const ComponentPortConfig* config, const ComponentBase* parent);
 
-            virtual const component_port_sub* GetConfig() const;
+            virtual const ComponentPortSub* GetConfig() const;
 
             // Returns false, if the subscriber couldn't connect
-            bool ConnectToPublihser(const std::string& pub_endpoint);
+            bool ConnectToPublihser(const std::string& endpoint);
 
             virtual ~SubscriberPortBase();
 
         protected:
-            std::vector<std::string> _endpoints;
+            std::vector<std::string> endpoints_;
 
             virtual void InitSocket();
         };

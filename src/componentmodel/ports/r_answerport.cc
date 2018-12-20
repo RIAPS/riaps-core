@@ -1,54 +1,53 @@
-//
-// Created by parallels on 9/29/16.
-//
-
 #include <framework/rfw_network_interfaces.h>
 #include <componentmodel/ports/r_answerport.h>
+
+using namespace std;
+using namespace riaps::discovery;
 
 namespace riaps{
     namespace ports{
 
-        // TODO: Do not thrwo exception from the constructor
-        AnswerPort::AnswerPort(const component_port_ans &config, const ComponentBase *parent_component) :
-            PortBase(PortTypes::Answer, (component_port_config*)&config, parent_component),
+        AnswerPort::AnswerPort(const ComponentPortAns &config, const ComponentBase *parent_component) :
+            PortBase(PortTypes::Answer, (ComponentPortConfig*)&config, parent_component),
             SenderPort(this)
         {
             port_socket_ = zsock_new(ZMQ_ROUTER);
-            m_host = riaps::framework::Network::GetIPAddress();
+            host_ = riaps::framework::Network::GetIPAddress();
 
 
-            if (m_host == "") {
-                throw std::runtime_error("Response cannot be initiated. Cannot find  available network interface.");
+            if (host_ == "") {
+                logger_->error("Response cannot be initiated. Cannot find  available network interface.");
             }
 
-            std::string ansEndpoint = "tcp://" + m_host + ":!";
-            m_port = zsock_bind(port_socket_, "%s", ansEndpoint.c_str());
+            string end_point = fmt::format("tcp://{}:!", host_);
+            port_ = zsock_bind(port_socket_, "%s", end_point.c_str());
 
 
-            if (m_port == -1) {
-                throw std::runtime_error("Couldn't bind response port.");
+            if (port_ == -1) {
+                logger_->error("Couldn't bind response port.");
             }
 
-            m_logger->info("Answerport is created on: {}:{}", m_host, m_port);
+            logger_->info("Answerport is created on: {}:{}", host_, port_);
 
 
-            if (!registerService(parent_component->actor()->application_name(),
-                                 parent_component->actor()->actor_name(),
-                                  config.messageType,
-                                  m_host,
-                                  m_port,
-                                  riaps::discovery::Kind::ANS,
-                                  (config.isLocal?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
-                                  {})) {
-                throw std::runtime_error("Answerport couldn't be registered.");
+            if (!Disco::RegisterService(
+                    parent_component->actor()->application_name(),
+                    parent_component->actor()->actor_name(),
+                    config.message_type,
+                    host_,
+                    port_,
+                    riaps::discovery::Kind::ANS,
+                    (config.is_local ? riaps::discovery::Scope::LOCAL : riaps::discovery::Scope::GLOBAL),
+                    {})) {
+                logger_->error("Answerport couldn't be registered.");
             }
         }
 
-        const component_port_ans* AnswerPort::GetConfig() const{
-            return (component_port_ans*)GetPortBaseConfig();
+        const ComponentPortAns* AnswerPort::GetConfig() const{
+            return (ComponentPortAns*) config();
         }
 
-        bool AnswerPort::SendAnswer(capnp::MallocMessageBuilder& builder, std::shared_ptr<MessageParams> params) {
+        PortError AnswerPort::SendAnswer(capnp::MallocMessageBuilder& builder, std::shared_ptr<MessageParams> params) {
             zmsg_t* msg = zmsg_new();
 
             // Message to query port, first frame must be the SocketId
@@ -71,18 +70,6 @@ namespace riaps{
                 zmsg_addmem(msg, nullptr, 0);
             }
             return Send(&msg);
-        }
-
-
-//        bool ResponsePort::Send(zmsg_t** msg) const {
-//            //zmsg_pushstr(*msg, GetConfig()->rep_type.c_str());
-//
-//            int rc = zmsg_send(msg, _port_socket);
-//            return rc == 0;
-//        }
-
-        AnswerPort* AnswerPort::AsAnswerPort() {
-            return this;
         }
 
         AnswerPort::~AnswerPort() noexcept {

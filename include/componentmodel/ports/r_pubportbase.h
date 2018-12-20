@@ -12,18 +12,15 @@ namespace riaps{
     namespace ports{
         class PublisherPortBase : public PortBase, public SenderPort {
         public:
-            PublisherPortBase(const component_port_config* config, const ComponentBase* parentComponent);
-            std::string GetEndpoint();
+            PublisherPortBase(const ComponentPortConfig* config, const ComponentBase* parent);
+            std::string endpoint();
 
-            virtual const component_port_pub* GetConfig() const;
-            virtual ~PublisherPortBase();
+            virtual const ComponentPortPub* GetConfig() const;
+            virtual ~PublisherPortBase() = default;
 
         protected:
             int port_;
             std::string host_;
-            std::string m_endpoint;
-
-            //virtual bool Send(zmsg_t** zmessage) const;
             virtual void InitSocket();
         };
     }

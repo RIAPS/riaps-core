@@ -15,9 +15,13 @@ namespace weathermonitor {
                                 actor_name) {
         }
 
-		void TempMonitor::OnTempupdate(const messages::TempData::Reader &message, riaps::ports::PortBase *port) {
-            component_logger()->info("{}: {}", __func__, message.getTempature());
-		}
+		void TempMonitor::OnTempupdate() {
+            auto [message, error] = RecvTempupdate();
+            if (!error)
+                component_logger()->info("{}: {}", __func__, message->getTempature());
+		    else
+		        component_logger()->warn("Recv() indicates error in: {}, errorcode: {}", __func__, error.error_code());
+        }
     }
 }
 
@@ -50,6 +54,7 @@ testClass.def("handleSpcLimit"        , &weathermonitor::components::TempMonitor
 testClass.def("handleNetLimit"        , &weathermonitor::components::TempMonitor::HandleNetLimit);
 testClass.def("handleNICStateChange"  , &weathermonitor::components::TempMonitor::HandleNICStateChange);
 testClass.def("handlePeerStateChange" , &weathermonitor::components::TempMonitor::HandlePeerStateChange);
+testClass.def("handleReinstate"       , &weathermonitor::components::TempMonitor::HandleReinstate);
 
 m.def("create_component_py", &create_component_py, "Instantiates the component from python configuration");
 }

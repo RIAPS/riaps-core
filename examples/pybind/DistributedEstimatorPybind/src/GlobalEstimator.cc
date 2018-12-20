@@ -2,7 +2,7 @@
 // Created by istvan on 11/11/16.
 //
 
-
+#include <componentmodel/r_riapsmessage.h>
 #include <GlobalEstimator.h>
 
 #include <pybind11/stl.h>
@@ -25,22 +25,26 @@ namespace distributedestimator {
 
         }
 
-        void GlobalEstimator::OnEstimate(messages::Estimate::Reader &message,
-                                         riaps::ports::PortBase *port) {
-            component_logger()->info("GlobalEstimator::OnEstimate(): {}", message.getMsg().cStr());
+        void GlobalEstimator::OnEstimate() {
+            auto [msg, error] = RecvEstimate();
+            if (!error)
+                component_logger()->info("{}:{}", __func__, msg->getMsg().cStr());
+            else
+                component_logger()->warn("Recv() error in {}, errorcode: {}", __func__, error.error_code());
         }
 
-        void GlobalEstimator::OnWakeup(riaps::ports::PortBase *port) {
-            component_logger()->info("GlobalEstimator::OnWakeUp(): {}", port->GetPortName());
+        void GlobalEstimator::OnWakeup() {
+            auto time = RecvWakeup();
+
+            char buffer[80];
+            std::strftime(buffer, 80, "%T", std::localtime(&time.tv_sec));
+            component_logger()->info("{}: {}:{}", __func__, buffer, time.tv_nsec/1000);
         }
-
-
 
         GlobalEstimator::~GlobalEstimator() {
 
         }
     }
-
 }
 
 std::unique_ptr<distributedestimator::components::GlobalEstimator>
@@ -72,6 +76,7 @@ PYBIND11_MODULE(libglobalestimator, m) {
     testClass.def("handleNetLimit"        , &distributedestimator::components::GlobalEstimator::HandleNetLimit);
     testClass.def("handleNICStateChange"  , &distributedestimator::components::GlobalEstimator::HandleNICStateChange);
     testClass.def("handlePeerStateChange" , &distributedestimator::components::GlobalEstimator::HandlePeerStateChange);
+    testClass.def("handleReinstate"       , &distributedestimator::components::GlobalEstimator::HandleReinstate);
 
     m.def("create_component_py", &create_component_py, "Instantiates the component from python configuration");
 }

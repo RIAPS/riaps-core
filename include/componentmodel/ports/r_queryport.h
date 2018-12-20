@@ -1,13 +1,8 @@
-//
-// Created by parallels on 9/29/16.
-//
-
 #ifndef RIAPS_FW_R_QUERYPORT_H
 #define RIAPS_FW_R_QUERYPORT_H
 
 #include <componentmodel/r_componentbase.h>
 #include <componentmodel/r_configuration.h>
-#include <componentmodel/r_messagebase.h>
 #include <componentmodel/ports/r_senderport.h>
 #include <componentmodel/r_riapsmessage.h>
 
@@ -24,7 +19,7 @@ namespace riaps {
         class QueryPort : public PortBase {
         public:
 
-            QueryPort(const component_port_qry &config, const ComponentBase *component);
+            QueryPort(const ComponentPortQry &config, const ComponentBase *component);
             virtual void Init();
 
             // Returns false, if the request port couldn't connect
@@ -44,7 +39,7 @@ namespace riaps {
                     params.reset(new riaps::MessageParams(socketId, &cRequestId, &timestampFrame));
                     message.reset(new RiapsMessage<R, T>(&bodyFrame));
                 } else {
-                    m_logger->error("Wrong incoming message format on port: {}", GetPortName());
+                    logger_->error("Wrong incoming message format on port: {}", port_name());
                 }
 
                 return false;
@@ -71,11 +66,11 @@ namespace riaps {
              *
              */
 
-            bool SendQuery(capnp::MallocMessageBuilder& message, std::string& requestId, bool addTimestamp = false) const;
+            PortError SendQuery(capnp::MallocMessageBuilder& message, std::string& requestId, bool addTimestamp = false) const;
 
-            virtual QueryPort* AsQueryPort() ;
+            //virtual QueryPort* AsQueryPort() ;
 
-            virtual const component_port_qry* GetConfig() const;
+            virtual const ComponentPortQry* GetConfig() const;
 
             ~QueryPort() noexcept ;
         protected:

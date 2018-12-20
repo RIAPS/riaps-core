@@ -5,6 +5,9 @@
 #include <base/SensorBase.h>
 #include <componentmodel/r_pyconfigconverter.h>
 
+using namespace std;
+using namespace riaps::ports;
+
 namespace distributedestimator {
     namespace components {
 
@@ -20,40 +23,42 @@ namespace distributedestimator {
             auto config = PyConfigConverter::convert(type_spec, actor_spec);
             config.component_name = name;
             config.component_type = type_name;
-            config.isDevice=false;
+            config.is_device=false;
             set_config(config);
+            set_debug_level(spd::level::info);
         }
 
-        void SensorBase::DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
-                                              riaps::ports::PortBase *port,
-                                              std::shared_ptr<riaps::MessageParams> params) {
-            auto portName = port->GetPortName();
-            if (portName == PORT_TIMER_CLOCK) {
-                OnClock(port);
-            } else if (portName == PORT_REP_REQUEST) {
-                auto sensorQuery = capnpreader->getRoot<messages::SensorQuery>();
-                OnRequest(sensorQuery, port);
-            }
+        timespec SensorBase::RecvClock() {
+            auto port = GetPortAs<riaps::ports::PeriodicTimer>(PORT_TIMER_CLOCK);
+            return port->Recv();
+        }
 
+        tuple<MessageReader<messages::SensorQuery>, PortError> SensorBase::RecvRequest() {
+            auto port = GetPortAs<riaps::ports::ResponsePort>(PORT_REP_REQUEST);
+            auto [msg_bytes, error] = port->Recv();
+            MessageReader<messages::SensorQuery> reader(msg_bytes);
+            return make_tuple(reader, error);
+        }
+
+        PortError SensorBase::SendRequest(MessageBuilder<messages::SensorValue>& message) {
+            return SendMessageOnPort(message.capnp_builder(), PORT_REP_REQUEST);
+        }
+
+        PortError SensorBase::SendReady(MessageBuilder<messages::SensorReady>& builder) {
+            return SendMessageOnPort(builder.capnp_builder(), PORT_PUB_READY);
+        }
+
+        void SensorBase::DispatchMessage(riaps::ports::PortBase* port) {
+            auto portName = port->port_name();
+            if (portName == PORT_TIMER_CLOCK) {
+                OnClock();
+            } else if (portName == PORT_REP_REQUEST) {
+                OnRequest();
+            }
         }
 
         void SensorBase::DispatchInsideMessage(zmsg_t *zmsg, riaps::ports::PortBase *port) {
 
         }
-
-        bool SensorBase::SendRequest(capnp::MallocMessageBuilder&    messageBuilder,
-                                          messages::SensorValue::Builder& message) {
-            return SendMessageOnPort(messageBuilder, PORT_REP_REQUEST);
-        }
-
-        bool SensorBase::SendReady(capnp::MallocMessageBuilder&    messageBuilder,
-                                        messages::SensorReady::Builder& message) {
-            return SendMessageOnPort(messageBuilder, PORT_PUB_READY);
-        }
-
-        SensorBase::~SensorBase() {
-
-        }
-
     }
 }

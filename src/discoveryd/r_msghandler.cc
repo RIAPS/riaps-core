@@ -141,7 +141,7 @@ namespace riaps{
 
                 zframe_t* capnpMsgBody = zmsg_pop(msgResponse);
                 size_t    size = zframe_size(capnpMsgBody);
-                byte*     data = zframe_data(capnpMsgBody);
+                unsigned char* data = zframe_data(capnpMsgBody);
 
                 try {
                     auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word *>(data), size / sizeof(capnp::word));
@@ -205,7 +205,7 @@ namespace riaps{
 
             zframe_t *capnp_msgbody = zmsg_pop(riapsMessage);
             size_t size = zframe_size(capnp_msgbody);
-            byte *data = zframe_data(capnp_msgbody);
+            unsigned char* data = zframe_data(capnp_msgbody);
 
             riaps::discovery::DiscoReq::Reader msgDiscoReq;
 

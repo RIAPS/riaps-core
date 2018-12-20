@@ -22,7 +22,7 @@ namespace weathermonitor {
                         const std::string &application_name,
                         const std::string &actor_name);
 
-            virtual void OnTempupdate(const messages::TempData::Reader &message, riaps::ports::PortBase *port);
+            virtual void OnTempupdate();
             virtual ~TempMonitor() = default;
         };
     }

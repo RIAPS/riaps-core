@@ -7,6 +7,8 @@
 
 #include "componentmodel/r_componentbase.h"
 #include "messages/distributedestimator.capnp.h"
+#include "componentmodel/r_messagebuilder.h"
+#include <componentmodel/r_messagereader.h>
 
 #include <pybind11/stl.h>
 #include <pybind11/pybind11.h>
@@ -14,9 +16,9 @@
 namespace py = pybind11;
 
 // Name of the ports from the model file
-#define PORT_TIMER_CLOCK "clock"
-#define PORT_PUB_READY   "ready"
-#define PORT_REP_REQUEST "request"
+constexpr auto PORT_TIMER_CLOCK = "clock";
+constexpr auto PORT_PUB_READY   = "ready";
+constexpr auto PORT_REP_REQUEST = "request";
 
 namespace distributedestimator {
     namespace components {
@@ -25,49 +27,31 @@ namespace distributedestimator {
 
         public:
 
-            //comp_sensorbase(_component_conf &config, riaps::Actor &actor);
-
             SensorBase(const py::object *parent_actor,
-                       const py::dict actor_spec, // Actor json config
-                       const py::dict type_spec,  // component json config
+                       const py::dict actor_spec,
+                       const py::dict type_spec,
                        const std::string &name,
                        const std::string &type_name,
                        const py::dict args,
                        const std::string &application_name,
                        const std::string &actor_name);
 
-            //virtual void RegisterHandlers();
+            virtual void OnClock()=0;
+            virtual void OnRequest()=0;
 
-            virtual void OnClock(riaps::ports::PortBase *port)=0;
+            virtual timespec RecvClock() final;
+            virtual std::tuple<MessageReader<messages::SensorQuery>, riaps::ports::PortError> RecvRequest() final;
 
-            // No handler for publisher
-            // But send function for publisher, request, response makes sense, maybe easier for the developer
-            //virtual void OnReady(const std::string& messagetype,
-            //                     std::vector<std::string>& msgFields,
-            //                     riaps::ports::PortBase* port)=0;
+            virtual riaps::ports::PortError SendRequest(MessageBuilder<messages::SensorValue>& message);
+            virtual riaps::ports::PortError SendReady(MessageBuilder<messages::SensorReady>& builder);
 
-            virtual void OnRequest(const messages::SensorQuery::Reader &message,
-                                   riaps::ports::PortBase *port)=0;
-
-            virtual bool SendRequest(capnp::MallocMessageBuilder&    messageBuilder,
-                                     messages::SensorValue::Builder& message);
-
-            virtual bool SendReady(capnp::MallocMessageBuilder&    messageBuilder,
-                                   messages::SensorReady::Builder& message);
-
-
-            virtual ~SensorBase();
+            virtual ~SensorBase() = default;
 
         protected:
 
-            virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
-                                         riaps::ports::PortBase *port,
-                                         std::shared_ptr<riaps::MessageParams> params) final;
-
+            virtual void DispatchMessage(riaps::ports::PortBase *port) final;
             virtual void DispatchInsideMessage(zmsg_t* zmsg,
                                                riaps::ports::PortBase* port) final;
-
-
         };
     }
 }

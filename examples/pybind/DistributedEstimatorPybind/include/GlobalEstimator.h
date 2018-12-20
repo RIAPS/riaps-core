@@ -10,6 +10,8 @@
 namespace distributedestimator {
     namespace components {
 
+
+
         class GlobalEstimator : public GlobalEstimatorBase {
 
         public:
@@ -25,11 +27,11 @@ namespace distributedestimator {
                             const std::string &application_name,
                             const std::string &actor_name);
 
-            virtual void OnEstimate(messages::Estimate::Reader &message,
-                                    riaps::ports::PortBase *port) override;
+            GlobalEstimator(const GlobalEstimator&) = delete;
+            GlobalEstimator() = delete;
 
-            virtual void OnWakeup(riaps::ports::PortBase *port) override;
-
+            virtual void OnEstimate() override;
+            virtual void OnWakeup() override;
 
             virtual ~GlobalEstimator();
 

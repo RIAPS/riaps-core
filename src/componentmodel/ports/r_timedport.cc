@@ -7,27 +7,38 @@
 namespace riaps {
     namespace ports {
         TimedPort::TimedPort() {
-            m_sentTimestamp.tv_nsec = m_sentTimestamp.tv_sec  = 0;
-            m_recvTimestamp.tv_sec  = m_recvTimestamp.tv_nsec = 0;
+            sent_timestamp_.tv_nsec = sent_timestamp_.tv_sec  = 0;
+            recv_timestamp_.tv_sec  = recv_timestamp_.tv_nsec = 0;
         }
-        const timespec TimedPort::GetLastSendTimestamp() {return m_sentTimestamp; }
-        const timespec TimedPort::GetLastRecvTimestamp() {return m_recvTimestamp; }
-        void TimedPort::SetRecvTimestamp(timespec t_recvTimestamp) {m_recvTimestamp = t_recvTimestamp;}
-        void TimedPort::SetSendTimestamp(timespec t_sentTimestamp) {m_sentTimestamp = t_sentTimestamp;}
-        void TimedPort::SetSendTimestamp(double t_sentTimestamp) {
+
+        const timespec TimedPort::send_timestamp() {
+            return sent_timestamp_;
+        }
+
+        const timespec TimedPort::recv_timestamp() {
+            return recv_timestamp_;
+        }
+
+        void TimedPort::set_recv_timestamp(timespec recv_timestamp) {
+            recv_timestamp_ = recv_timestamp;
+        }
+
+        void TimedPort::set_send_timestamp(timespec sent_timestamp) {
+            sent_timestamp_ = sent_timestamp;
+        }
+
+        void TimedPort::set_send_timestamp(double sent_timestamp) {
             timespec t;
-            t.tv_sec = t_sentTimestamp;
-            t.tv_nsec = (t_sentTimestamp - t.tv_sec)*1000000000.0;
-            m_sentTimestamp = t;
+            t.tv_sec = sent_timestamp;
+            t.tv_nsec = (sent_timestamp - t.tv_sec)*1000000000.0;
+            sent_timestamp_ = t;
         }
 
-        void TimedPort::SetRecvTimestamp(double t_recvTimestamp) {
+        void TimedPort::set_recv_timestamp(double recv_timestamp) {
             timespec t;
-            t.tv_sec = t_recvTimestamp;
-            t.tv_nsec = (t_recvTimestamp-t.tv_sec)*1000000000.0;
-            m_recvTimestamp = t;
+            t.tv_sec = recv_timestamp;
+            t.tv_nsec = (recv_timestamp-t.tv_sec)*1000000000.0;
+            recv_timestamp_ = t;
         }
-
-
     }
 }

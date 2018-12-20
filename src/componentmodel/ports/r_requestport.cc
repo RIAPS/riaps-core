@@ -1,48 +1,46 @@
-//
-// Created by istvan on 9/30/16.
-//
-
 #include <componentmodel/ports/r_requestport.h>
 #include <framework/rfw_network_interfaces.h>
 
+using namespace std;
+using namespace riaps::discovery;
 
 namespace riaps {
     namespace ports {
 
-        RequestPort::RequestPort(const component_port_req &config, const ComponentBase *parentComponent)
-                : PortBase(PortTypes::Request, (component_port_config*)(&config), parentComponent),
+        RequestPort::RequestPort(const ComponentPortReq &config, const ComponentBase *parent)
+                : PortBase(PortTypes::Request, (ComponentPortConfig*)(&config), parent),
                   SenderPort(this),
                   RecvPort(this),
                   capnp_reader_(capnp::FlatArrayMessageReader(nullptr)) {
             port_socket_ = zsock_new(ZMQ_REQ);
             int timeout = 500;//msec
-            int lingerValue = 0;
-            int connectTimeout = 1000; //msec
-            zmq_setsockopt(port_socket_, ZMQ_SNDTIMEO, &timeout , sizeof(int));
-            zmq_setsockopt(port_socket_, ZMQ_LINGER, &lingerValue, sizeof(int));
+            int linger = 0;
+            int connect_timeout = 1000; //msec
+            zsock_set_sndtimeo(port_socket_, timeout);
+            zsock_set_rcvtimeo(port_socket_, timeout);
+            zsock_set_linger(port_socket_, linger);
 
             is_connected_ = false;
         }
 
-
-
         void RequestPort::Init() {
-
-            const component_port_req* current_config = GetConfig();
-            const std::string host = (current_config->isLocal) ? "127.0.0.1" : riaps::framework::Network::GetIPAddress();
+            const ComponentPortReq* current_config = GetConfig();
+            const string host = (current_config->is_local) ? "127.0.0.1" : riaps::framework::Network::GetIPAddress();
 
             auto results =
-                    subscribeToService(parent_component()->actor()->application_name(),
-                                       parent_component()->component_config().component_name,
-                                       parent_component()->actor()->actor_name(),
-                                         host,
-                                         riaps::discovery::Kind::REQ,
-                                         (current_config->isLocal?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
-                                         current_config->portName, // Subscriber name
-                                         current_config->messageType);
+                    Disco::SubscribeToService(
+                            parent_component()->actor()->application_name(),
+                            parent_component()->component_config().component_name,
+                            parent_component()->actor()->actor_name(),
+                            host,
+                            riaps::discovery::Kind::REQ,
+                            (current_config->is_local ? riaps::discovery::Scope::LOCAL
+                                                      : riaps::discovery::Scope::GLOBAL),
+                            current_config->port_name,
+                            current_config->message_type);
 
             for (auto& result : results) {
-                std::string endpoint = "tcp://" + result.host_name + ":" + std::to_string(result.port);
+                string endpoint = fmt::format("tcp://{}:{}", result.host_name, result.port);
                 ConnectToResponse(endpoint);
             }
         }
@@ -51,91 +49,30 @@ namespace riaps {
             int rc = zsock_connect(port_socket_, "%s", rep_endpoint.c_str());
 
             if (rc != 0) {
-                std::cout << "Request '" + GetConfig()->portName + "' couldn't connect to " + rep_endpoint
-                          << std::endl;
+                logger_->error("Request '{}' couldn't connect to ", GetConfig()->port_name, rep_endpoint);
                 return false;
             }
 
             is_connected_ = true;
-            std::cout << "Request port connected to: " << rep_endpoint << std::endl;
+            logger_->debug("Request port connected to: {}", rep_endpoint);
             return true;
         }
 
-        const component_port_req* RequestPort::GetConfig() const{
-            return (component_port_req*)GetPortBaseConfig();
+        const ComponentPortReq* RequestPort::GetConfig() const{
+            return (ComponentPortReq*) config();
         }
 
-        RequestPort* RequestPort::AsRequestPort() {
-            return this;
-        }
+//        const timespec& RequestPort::recv_timestamp() const {
+//            return recv_timestamp_;
+//        }
 
-        const timespec& RequestPort::GetRecvTimestamp() const {
-            return m_recvTimestamp;
-        }
-
-        // TODO: return shared_ptr instead of pointer
-        bool RequestPort::Recv(capnp::FlatArrayMessageReader** messageReader) {
-            auto capnpMessage = RecvPort::Recv();
-            if (capnpMessage == nullptr) return false;
-
-
-            *messageReader = capnpMessage.get();
-            return true;
-
-//            zmsg_t* msg = zmsg_recv((void*)GetSocket());
-//
-//            if (msg){
-//                //char* msgType = zmsg_popstr(msg);
-//                //message_type = msgType;
-//                //if (msgType!=NULL){
-//                zframe_t* bodyFrame = zmsg_pop(msg);
-//                size_t size = zframe_size(bodyFrame);
-//                byte* data = zframe_data(bodyFrame);
-//
-//                auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
-//                capnp_reader_ = capnp::FlatArrayMessageReader(capnp_data);
-//                *messageReader = &capnp_reader_;
-//
-//                zframe_destroy(&bodyFrame);
-//
-//                if (GetConfig()->isTimed){
-//                    auto timeFrame = zmsg_pop(msg);
-//                    if (timeFrame) {
-//                        auto buffer = zframe_data(timeFrame);
-//                        double dTime;
-//                        memcpy(&dTime, buffer, sizeof(double));
-//                        m_recvTimestamp.tv_sec  = dTime;
-//                        m_recvTimestamp.tv_nsec = (dTime-m_recvTimestamp.tv_sec)*BILLION;
-//                        zframe_destroy(&timeFrame);
-//                    }
-//                }
-//
-//
-//                return true;
-//                //}
-//                //return false;
+        PortError RequestPort::Send(capnp::MallocMessageBuilder &message) const {
+//            if (port_socket_ == nullptr || !is_connected_){
+//                return false;
 //            }
-//            zmsg_destroy(&msg);
-//
-//            return false;
-        }
-
-        RecvPort* RequestPort::AsRecvPort() {
-            return this;
-        }
-
-        bool RequestPort::Send(capnp::MallocMessageBuilder &message) const {
-            if (port_socket_ == nullptr || !is_connected_){
-                return false;
-            }
+            logger_->error_if(port_socket_ == nullptr, "Port socket ({}) is null: {} ", port_name(), __func__);
 
             return SenderPort::Send(message);
-
-//            zmsg_t* zmsg;
-//            zmsg << message;
-//
-//            int rc = zmsg_send(&zmsg, const_cast<zsock_t*>(GetSocket()));
-//            return rc==0;
         }
 
         RequestPort::~RequestPort() noexcept {

@@ -6,6 +6,7 @@
 #define RIAPS_CORE_R_RECVPORT_H
 
 #include "r_timedport.h"
+#include <componentmodel/r_messagereader.h>
 
 #include <capnp/message.h>
 #include <capnp/serialize.h>
@@ -19,22 +20,25 @@ namespace riaps{
         class PortBase;
 
         class RecvPort : public riaps::ports::TimedPort {
-            //static_assert(std::is_base_of<PortBase, T>::value, "T must extend PortBase");
         public:
             RecvPort(PortBase* portBase);
 
-            virtual std::shared_ptr<capnp::FlatArrayMessageReader> Recv();
-            virtual std::shared_ptr<capnp::FlatArrayMessageReader> Recv(zsock_t* socket);
-            virtual std::shared_ptr<capnp::FlatArrayMessageReader> Recv(zmsg_t* msg);
+//            virtual std::shared_ptr<capnp::FlatArrayMessageReader> Recv();
+//            virtual std::shared_ptr<capnp::FlatArrayMessageReader> Recv(zsock_t* socket);
+//            virtual std::shared_ptr<capnp::FlatArrayMessageReader> Recv(zmsg_t* msg);
+
+            virtual std::tuple<std::unique_ptr<MessageReaderArray>, PortError> Recv();
+            virtual std::tuple<std::unique_ptr<MessageReaderArray>, PortError> Recv(zsock_t* socket);
+            virtual std::tuple<std::unique_ptr<MessageReaderArray>, PortError> Recv(zmsg_t* msg);
 
             virtual ~RecvPort() = default;
 
 
         private:
-            PortBase*                 m_port;
-            std::shared_ptr<zmsg_t>   m_lastZmsg;
-            std::shared_ptr<zframe_t> m_lastFrm;
-            std::shared_ptr<capnp::FlatArrayMessageReader> m_lastCapnpReader;
+            PortBase*                 port_;
+            //std::shared_ptr<zmsg_t>   last_zmsg_;
+            //std::shared_ptr<zframe_t> last_frm_;
+            //std::shared_ptr<capnp::FlatArrayMessageReader> last_reader_;
 
         };
     }

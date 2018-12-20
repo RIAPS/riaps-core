@@ -13,8 +13,6 @@
 #include <componentmodel/r_pyactor.h>
 #include <componentmodel/r_discoverdapi.h>
 #include <componentmodel/r_configuration.h>
-#include <componentmodel/r_periodictimer.h>
-#include <componentmodel/r_messagebase.h>
 #include <componentmodel/r_oneshottimer.h>
 #include <componentmodel/r_payload.h>
 #include <groups/r_group.h>
@@ -41,6 +39,7 @@
 #include <componentmodel/ports/r_insideport.h>
 #include <componentmodel/ports/r_answerport.h>
 #include <componentmodel/ports/r_queryport.h>
+#include <componentmodel/ports/r_periodictimer.h>
 
 
 constexpr auto BILLION = 1000000000l;
@@ -73,7 +72,7 @@ namespace riaps {
 
         /// @param config Configuration, parsed from the model file.
         /// @param actor Parent actor, the owner the component.
-        //ComponentBase(component_conf& config, Actor& actor);
+        //ComponentBase(ComponentConf& config, Actor& actor);
 
 
         ///////////////////// PYTHON PART ///////////////////////
@@ -107,25 +106,25 @@ namespace riaps {
          * @param portName The message is sent on this port. Available names are declared in the riaps model.
          * @return True if the message is sent.
          */
-        bool SendMessageOnPort(capnp::MallocMessageBuilder& message,
-                               const std::string& portName);
+        riaps::ports::PortError SendMessageOnPort(capnp::MallocMessageBuilder& message,
+                               const std::string& port_name);
 
         /**
          * Sends message on answer port
          *
          * @return
          */
-        bool SendMessageOnPort(capnp::MallocMessageBuilder& message,
-                               const std::string& portName,
+        riaps::ports::PortError SendMessageOnPort(capnp::MallocMessageBuilder& message,
+                               const std::string& port_name,
                                std::shared_ptr<riaps::MessageParams> params);
 
         /**
          * Sends a message on query port
          *
          */
-        bool SendMessageOnPort(capnp::MallocMessageBuilder& message,
-                               const std::string&           portName,
-                               std::string&                 requestId);
+        riaps::ports::PortError SendMessageOnPort(capnp::MallocMessageBuilder& message,
+                               const std::string&           port_name,
+                               std::string&                 request_id);
 
 
 
@@ -156,7 +155,7 @@ namespace riaps {
          *
          * @return The component configuration.
          */
-        const component_conf& component_config() const;
+        const ComponentConf& component_config() const;
 
         /**
          *
@@ -167,6 +166,7 @@ namespace riaps {
         /**
          * Resource management handlers
          */
+        void HandleReinstate();
         virtual void HandleCPULimit();
         virtual void HandleMemLimit();
         virtual void HandleSpcLimit();
@@ -180,7 +180,6 @@ namespace riaps {
 
 
         // PYTHON STUFF //
-        void set_config(component_conf& c_conf);
         //////////////////
 
         /**
@@ -277,6 +276,9 @@ namespace riaps {
          */
         ports::PortBase* GetPortByName(const std::string&);
 
+        template<class T>
+        T* GetPortAs(const std::string&);
+
         const std::string component_name() const;
 
         // Note: disable for now, we need more tests.
@@ -311,9 +313,7 @@ namespace riaps {
          * @param capnpreader The capnp buffer holding the incoming message
          * @param port The port where the message arrived.
          */
-        virtual void DispatchMessage(capnp::FlatArrayMessageReader* capnpreader,
-                                     ports::PortBase* port,
-                                     std::shared_ptr<MessageParams> params = nullptr) = 0;
+        virtual void DispatchMessage(ports::PortBase* port) = 0;
 
         /**
          * Forwards the given ZMQ message to the appropriate handler. Used for inside ports only in device components.
@@ -391,18 +391,22 @@ namespace riaps {
 
         std::shared_ptr<spd::logger> component_logger();
 
+        void set_config(ComponentConf& c_conf);
+        void set_debug_level(spd::level::level_enum component_level,
+                             spd::level::level_enum framework_level = spd::level::info);
+
     private:
         std::shared_ptr<spd::logger> riaps_logger_;
         std::shared_ptr<spd::logger> component_logger_;
 
-        const ports::PublisherPort*  InitPublisherPort  (const component_port_pub&);
-        const ports::SubscriberPort* InitSubscriberPort (const component_port_sub&);
-        const ports::ResponsePort*   InitResponsePort   (const component_port_rep&);
-        const ports::RequestPort*    InitRequestPort    (const component_port_req&);
-        const ports::QueryPort*      InitQueryPort      (const component_port_qry&);
-        const ports::AnswerPort*     InitAnswerPort     (const component_port_ans&);
-        const ports::PeriodicTimer*  InitTimerPort      (const component_port_tim&);
-        const ports::InsidePort*     InitInsidePort     (const component_port_ins&);
+        const ports::PublisherPort*  InitPublisherPort  (const ComponentPortPub&);
+        const ports::SubscriberPort* InitSubscriberPort (const ComponentPortSub&);
+        const ports::ResponsePort*   InitResponsePort   (const ComponentPortRep&);
+        const ports::RequestPort*    InitRequestPort    (const ComponentPortReq&);
+        const ports::QueryPort*      InitQueryPort      (const ComponentPortQry&);
+        const ports::AnswerPort*     InitAnswerPort     (const ComponentPortAns&);
+        const ports::PeriodicTimer*  InitTimerPort      (const ComponentPortTim&);
+        const ports::InsidePort*     InitInsidePort     (const ComponentPortIns&);
 
         /**
          * Is the current component the leader?
@@ -413,14 +417,14 @@ namespace riaps {
 
 
 
-        std::string             getTimerChannel();
+        //std::string             getTimerChannel();
         std::string             getOneShotTimerChannel();
 
         // TODO: uniqueptr
         // Note: disable for now, we need more tests.
         //timers::OneShotTimer*   _oneShotTimer;
 
-        component_conf component_config_;
+        ComponentConf component_config_;
 
 
         // All the component ports
@@ -451,6 +455,13 @@ namespace riaps {
 
 
     };
+
+    template<class T>
+    T* ComponentBase::GetPortAs(const std::string& portName) {
+        ports::PortBase* portBase = GetPortByName(portName);
+        if (portBase == nullptr) return nullptr;
+        return dynamic_cast<T*>(portBase);
+    }
 }
 
 

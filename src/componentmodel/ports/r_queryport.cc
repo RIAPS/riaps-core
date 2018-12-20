@@ -6,51 +6,47 @@
 #include <fmt/format.h>
 #include <framework/rfw_network_interfaces.h>
 
+using namespace std;
+using namespace riaps::discovery;
+
 namespace riaps {
     namespace ports {
 
-        QueryPort::QueryPort(const component_port_qry &config, const ComponentBase *component)
+        QueryPort::QueryPort(const ComponentPortQry &config, const ComponentBase *component)
                 : PortBase(PortTypes::Query,
-                           (component_port_config*)(&config),
+                           (ComponentPortConfig*)(&config),
                            component),
                   m_capnpReader(capnp::FlatArrayMessageReader(nullptr)) {
             port_socket_ = zsock_new(ZMQ_DEALER);
             m_socketId = zuuid_new();
-
-            //auto i = zsock_rcvtimeo (_port_socket);
-
             int timeout = 500;//msec
             int lingerValue = 0;
             int connectTimeout = 1000; //msec
             zmq_setsockopt(port_socket_, ZMQ_SNDTIMEO, &timeout , sizeof(int));
             zmq_setsockopt(port_socket_, ZMQ_LINGER, &lingerValue, sizeof(int));
             zsock_set_identity(port_socket_, zuuid_str(m_socketId));
-
-            //i = zsock_rcvtimeo (_port_socket);
-
             m_isConnected = false;
         }
 
-
-
         void QueryPort::Init() {
 
-            const component_port_qry* current_config = GetConfig();
-            const std::string host = (current_config->isLocal) ? "127.0.0.1" : riaps::framework::Network::GetIPAddress();
+            const ComponentPortQry* current_config = GetConfig();
+            const string host = (current_config->is_local) ? "127.0.0.1" : riaps::framework::Network::GetIPAddress();
 
             auto results =
-                    subscribeToService(parent_component()->actor()->application_name(),
-                                       parent_component()->component_config().component_name,
-                                       parent_component()->actor()->actor_name(),
-                                       host,
-                                       riaps::discovery::Kind::QRY,
-                                       (current_config->isLocal?riaps::discovery::Scope::LOCAL:riaps::discovery::Scope::GLOBAL),
-                                       current_config->portName, // Subscriber name
-                                       current_config->messageType);
+                    Disco::SubscribeToService(
+                            parent_component()->actor()->application_name(),
+                            parent_component()->component_config().component_name,
+                            parent_component()->actor()->actor_name(),
+                            host,
+                            riaps::discovery::Kind::QRY,
+                            (current_config->is_local ? riaps::discovery::Scope::LOCAL
+                                                      : riaps::discovery::Scope::GLOBAL),
+                            current_config->port_name, // Subscriber name
+                            current_config->message_type);
 
             for (auto result : results) {
-                std::string endpoint = fmt::format("tcp://{0}:{1}", result.host_name, result.port);
-                //std::string endpoint = "tcp://" + result.host_name + ":" + std::to_string(result.port);
+                string endpoint = fmt::format("tcp://{0}:{1}", result.host_name, result.port);
                 ConnectToResponse(endpoint);
             }
         }
@@ -59,46 +55,23 @@ namespace riaps {
             int rc = zsock_connect(port_socket_, "%s", ansEndpoint.c_str());
 
             if (rc != 0) {
-                m_logger->error("Queryport {} couldn't connect to {}", GetConfig()->portName, ansEndpoint);
+                logger_->error("Queryport {} couldn't connect to {}", GetConfig()->port_name, ansEndpoint);
                 return false;
             }
 
             m_isConnected = true;
-            m_logger->info("Queryport connected to: {}", ansEndpoint);
+            logger_->info("Queryport connected to: {}", ansEndpoint);
             return true;
         }
 
-        const component_port_qry* QueryPort::GetConfig() const{
-            return (component_port_qry*)GetPortBaseConfig();
+        const ComponentPortQry* QueryPort::GetConfig() const{
+            return (ComponentPortQry*) config();
         }
 
-        QueryPort* QueryPort::AsQueryPort() {
-            return this;
-        }
-
-//        bool QueryPort::RecvQuery(std::shared_ptr<capnp::FlatArrayMessageReader>& messageReader,
-//                                  std::shared_ptr<riaps::MessageParams>& params) {
-//            /**
-//             * |RequestId|Message|Timestamp|
-//             */
-//
-//            char* cRequestId = nullptr;
-//            zframe_t *bodyFrame = nullptr, *timestampFrame = nullptr;
-//            if (zsock_recv(_port_socket, "sff", &cRequestId, &bodyFrame, &timestampFrame)==0){
-//                std::string socketId = zuuid_str(_socketId);
-//                params.reset(new riaps::MessageParams(socketId, &cRequestId, &timestampFrame));
-//            } else {
-//                m_logger->error("Wrong incoming message format on port: {}", GetPortName());
+        PortError QueryPort::SendQuery(capnp::MallocMessageBuilder &message,std::string& requestId, bool addTimestamp) const {
+//            if (port_socket_ == nullptr || !m_isConnected){
+//                return false;
 //            }
-//
-//            return false;
-//        }
-
-
-        bool QueryPort::SendQuery(capnp::MallocMessageBuilder &message,std::string& requestId, bool addTimestamp) const {
-            if (port_socket_ == nullptr || !m_isConnected){
-                return false;
-            }
 
             zframe_t* userFrame;
             userFrame << message;
@@ -110,24 +83,6 @@ namespace riaps {
             } else{
                 tsFrame = zframe_new_empty();
             }
-
-
-            // Create the timestamp
-            //capnp::MallocMessageBuilder tsBuilder;
-            //auto msgTimestamp = tsBuilder.initRoot<riaps::distrcoord::RiapsTimestamp>();
-
-            // Build the timestamp
-            //msgTimestamp.setValue(zclock_mono());
-            //zmsg_t* zmsgTimestamp;
-            //zmsgTimestamp << tsBuilder;
-
-            // Create expiration time
-            //capnp::MallocMessageBuilder expBuilder;
-            //auto msgExpire = expBuilder.initRoot<riaps::distrcoord::RiapsTimestamp>();
-            //msgExpire.setValue(expiration);
-            //zmsg_t* zmsgExpiration;
-            //zmsgExpiration << expBuilder;
-
             // Generate uniqueId
             std::string msgId;
             {
@@ -136,21 +91,19 @@ namespace riaps {
                 zuuid_destroy(&id);
             }
 
-            int rc = zsock_send(const_cast<zsock_t*>(GetSocket()),
+            int rc = zsock_send(const_cast<zsock_t*>(port_socket()),
                                 "sff",
                                 msgId.c_str() ,
                                 userFrame,
                                 tsFrame
-                                )
-            ;
+                                );
 
             zframe_destroy(&userFrame);
             zframe_destroy(&tsFrame);
             if (rc == 0) {
                 requestId = msgId;
-                return true;
             }
-            return false;
+            return PortError(rc);
         }
 
         QueryPort::~QueryPort() noexcept {
