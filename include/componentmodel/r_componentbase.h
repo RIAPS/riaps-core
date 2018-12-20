@@ -166,6 +166,7 @@ namespace riaps {
         /**
          * Resource management handlers
          */
+        void HandleReinstate();
         virtual void HandleCPULimit();
         virtual void HandleMemLimit();
         virtual void HandleSpcLimit();

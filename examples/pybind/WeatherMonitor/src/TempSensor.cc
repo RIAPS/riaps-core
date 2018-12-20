@@ -62,6 +62,7 @@ testClass.def("handleSpcLimit"        , &weathermonitor::components::TempSensor:
 testClass.def("handleNetLimit"        , &weathermonitor::components::TempSensor::HandleNetLimit);
 testClass.def("handleNICStateChange"  , &weathermonitor::components::TempSensor::HandleNICStateChange);
 testClass.def("handlePeerStateChange" , &weathermonitor::components::TempSensor::HandlePeerStateChange);
+testClass.def("handleReinstate"       , &weathermonitor::components::TempSensor::HandleReinstate);
 
 m.def("create_component_py", &create_component_py, "Instantiates the component from python configuration");
 }

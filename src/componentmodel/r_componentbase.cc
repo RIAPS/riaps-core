@@ -412,6 +412,11 @@ namespace riaps{
                 , component_name());
     }
 
+    // TODO: implement reinstate
+    void ComponentBase::HandleReinstate() {
+        riaps_logger_->warn("Reinstate is not implemented.");
+    }
+
     void ComponentBase::OnScheduledTimer(uint64_t timerId) {
         riaps_logger_->error("Scheduled timer is fired, but no handler is implemented. Implement OnSchedulerTimer() in component {}", component_config().component_name);
     }
