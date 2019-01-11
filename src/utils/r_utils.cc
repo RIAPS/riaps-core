@@ -51,15 +51,15 @@ void print_cacheips(std::map<std::string, riaps::utils::Timeout<std::chrono::mil
     if (logger == nullptr)
         return;
 
-    fmt::MemoryWriter w;
+    fmt::memory_buffer w;
 
-    w.write("Known nodes: ");
+    fmt::format_to(w, "Known nodes: ");
     if (selfAddress!="")
-       w << "*" << selfAddress << "*; ";
+       fmt::format_to(w, "*{}*;",selfAddress);
     for (auto &it : ipcache) {
-        w << it.first << "; ";
+        fmt::format_to(w,"{};", it.first);
     }
-    logger->info(w.c_str());
+    logger->info(w.data());
 }
 
 bool maintain_cache(std::map<std::string, riaps::utils::Timeout<std::chrono::milliseconds>>& ipcache){

@@ -5,6 +5,7 @@
 
 #include <componentmodel/r_devicethread.h>
 #include <iostream>
+#include <spdlog/sinks/stdout_color_sinks.h>
 
 namespace riaps{
     namespace components{
@@ -30,7 +31,7 @@ namespace riaps{
         }
 
         void DeviceThread::Terminate() {
-            std::cout << "Terminate called" <<std::endl;
+            _logger->debug("Terminate called");
             _isTerminated.store(true);
             if (_deviceThread.joinable())
                 _deviceThread.join();

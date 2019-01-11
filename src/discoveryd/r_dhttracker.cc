@@ -5,9 +5,10 @@
 #include <discoveryd/r_dhttracker.h>
 #include <algorithm>
 #include <framework/rfw_network_interfaces.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
 
 
-#define LOGGER_NAME "dht_tracker"
+constexpr auto LOGGER_NAME = "dht_tracker";
 
 namespace spd = spdlog;
 

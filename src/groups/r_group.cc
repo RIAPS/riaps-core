@@ -180,10 +180,12 @@ namespace riaps{
             zmsg_add(zmsg, frame);
 
             bool rc = SendMessage(&zmsg, INTERNAL_PUB_NAME);
-            logger_->error_if(!rc, "ProposeValueToLeader() failed");
-            logger_->debug_if(rc, "ProposeValueToLeader() proposeId: {}, leader_id: {}, srcComp: {}", proposeId,
-                              leader_id(),
-                              parent_component_id());
+            if (!rc)
+                logger_->error("ProposeValueToLeader() failed");
+            else
+                logger_->debug("ProposeValueToLeader() proposeId: {}, leader_id: {}, srcComp: {}", proposeId,
+                               leader_id(),
+                               parent_component_id());
             return rc;
         }
 
@@ -221,8 +223,11 @@ namespace riaps{
             zmsg_add(zmsg, header);
 
             bool rc = SendMessage(&zmsg, INTERNAL_PUB_NAME);
-            logger_->error_if(!rc, "ProposeActionToLeader() failed");
-            logger_->debug_if(rc, "ProposeActionToLeader() proposeId: {}, leader_id: {}, srcComp: {}", proposeId,
+
+            if (!rc)
+                logger_->error("ProposeActionToLeader() failed");
+            else
+                logger_->debug("ProposeActionToLeader() proposeId: {}, leader_id: {}, srcComp: {}", proposeId,
                               leader_id(),
                               parent_component()->ComponentUuid());
             return rc;
@@ -759,8 +764,10 @@ namespace riaps{
                                             msgCons.getTsyncCoordA().getTime().getTvNsec()
                                     };
 
-                                    logger_->error_if(t.tv_sec!=msgCons.getTsyncCoordA().getTime().getTvSec(),"tv_sec!=TvSec");
-                                    logger_->error_if(t.tv_nsec!=msgCons.getTsyncCoordA().getTime().getTvNsec(),"tv_nsec!=TvNsec");
+                                    if (t.tv_sec!=msgCons.getTsyncCoordA().getTime().getTvSec())
+                                        logger_->error("tv_sec!=TvSec");
+                                    if (t.tv_nsec!=msgCons.getTsyncCoordA().getTime().getTvNsec())
+                                        logger_->error("tv_nsec!=TvNsec");
 
                                     parent_component_->OnActionPropose(group_id_,
                                                                       msgPropose.getProposeId(),

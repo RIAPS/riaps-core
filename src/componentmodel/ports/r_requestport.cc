@@ -67,10 +67,8 @@ namespace riaps {
 //        }
 
         PortError RequestPort::Send(capnp::MallocMessageBuilder &message) const {
-//            if (port_socket_ == nullptr || !is_connected_){
-//                return false;
-//            }
-            logger_->error_if(port_socket_ == nullptr, "Port socket ({}) is null: {} ", port_name(), __func__);
+            if (!port_socket_)
+                logger_->error("Port socket ({}) is null: {} ", port_name(), __func__);
 
             return SenderPort::Send(message);
         }
