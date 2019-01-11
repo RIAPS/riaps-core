@@ -21,8 +21,7 @@
 #include <msgpack.hpp>
 #include <capnp/message.h>
 #include <capnp/serialize.h>
-#include <spdlog/spdlog.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog_setup/conf.h>
 
 #include <iostream>
 #include <fstream>

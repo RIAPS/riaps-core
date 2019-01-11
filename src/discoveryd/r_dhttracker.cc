@@ -5,7 +5,7 @@
 #include <discoveryd/r_dhttracker.h>
 #include <algorithm>
 #include <framework/rfw_network_interfaces.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/sinks/stdout_sinks.h>
 
 
 constexpr auto LOGGER_NAME = "dht_tracker";

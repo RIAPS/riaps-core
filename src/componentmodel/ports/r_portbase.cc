@@ -7,7 +7,6 @@
 #include <componentmodel/r_componentbase.h>
 
 #include <capnp/message.h>
-#include <fmt/format.h>
 
 
 using namespace std;

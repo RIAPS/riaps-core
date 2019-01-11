@@ -51,14 +51,19 @@ void print_cacheips(std::map<std::string, riaps::utils::Timeout<std::chrono::mil
     if (logger == nullptr)
         return;
 
-    fmt::memory_buffer w;
-
-    fmt::format_to(w, "Known nodes: ");
+    fmt::MemoryWriter w;
+    w << "Known nodes: ";
     if (selfAddress!="")
-       fmt::format_to(w, "*{}*;",selfAddress);
+        w << "*" << selfAddress << "*;";
     for (auto &it : ipcache) {
-        fmt::format_to(w,"{};", it.first);
+        w << it.first << ";";
     }
+//    fmt::format_to(w, "Known nodes: ");
+//    if (selfAddress!="")
+//       fmt::format_to(w, "*{}*;",selfAddress);
+//    for (auto &it : ipcache) {
+//        fmt::format_to(w,"{};", it.first);
+//    }
     logger->info(w.data());
 }
 

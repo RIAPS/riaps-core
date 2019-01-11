@@ -4,11 +4,12 @@
 
 #include <componentmodel/r_configuration.h>
 
+#include <spdlog_setup/conf.h>
 
-#include <spdlog/spdlog.h>
 #include <czmq.h>
 #include <string>
 #include <iostream>
+
 
 
 #define SERVICE_POLLING_INTERVAL 2000

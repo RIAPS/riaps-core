@@ -8,7 +8,7 @@
 #include <tuple>
 #include <vector>
 #include <lmdb.h>
-#include <spdlog/spdlog.h>
+#include <spdlog_setup/conf.h>
 #include <const/r_const.h>
 
 constexpr auto DB_NAME = "disco";

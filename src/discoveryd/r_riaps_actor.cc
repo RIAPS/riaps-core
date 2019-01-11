@@ -4,7 +4,7 @@
 #include <framework/rfw_network_interfaces.h>
 #include <discoveryd/r_dhttracker.h>
 
-#include <spdlog/spdlog.h>
+#include <spdlog_setup/conf.h>
 
 namespace spd=spdlog;
 

@@ -3,7 +3,6 @@
 //
 
 #include <componentmodel/ports/r_queryport.h>
-#include <fmt/format.h>
 #include <framework/rfw_network_interfaces.h>
 
 using namespace std;
