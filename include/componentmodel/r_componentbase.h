@@ -149,6 +149,8 @@ namespace riaps {
          */
         const ComponentConf& component_config() const;
 
+        std::shared_ptr<spd::logger> component_logger();
+
         /**
          *
          * @return The component unique ID.
@@ -375,7 +377,8 @@ namespace riaps {
 
         std::function<void(const uint64_t)> scheduled_action_;
 
-        std::shared_ptr<spd::logger> component_logger();
+
+        const std::string component_logger_name();
 
         void set_config(ComponentConf& c_conf);
         void set_debug_level(spd::level::level_enum component_level,
@@ -384,6 +387,7 @@ namespace riaps {
     private:
         std::shared_ptr<spd::logger> riaps_logger_;
         std::shared_ptr<spd::logger> component_logger_;
+        std::string                  component_logger_name_;
 
         const ports::PublisherPort*  InitPublisherPort  (const ComponentPortPub&);
         const ports::SubscriberPort* InitSubscriberPort (const ComponentPortSub&);

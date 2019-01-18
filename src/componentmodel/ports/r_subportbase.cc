@@ -30,7 +30,7 @@ namespace riaps {
                 return false;
             }
 
-            logger_->debug("Subscriber connected to: {} [{}]", endpoint, GetConfig()->message_type);
+            logger()->debug("Subscriber connected to: {} [{}]", endpoint, GetConfig()->message_type);
             return true;
         }
 

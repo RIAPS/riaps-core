@@ -22,17 +22,20 @@ namespace riaps {
             config_ = config;
             port_socket_ = nullptr;
 
+
+        }
+
+        std::shared_ptr<spd::logger> PortBase::logger() const {
             // InsidePorts have no parent components
-            if (parent_component == nullptr) {
+            if (parent_component_ == nullptr) {
                 string logger_prefix = port_type_ == PortTypes::Inside?"InsidePort":"NullParent";
-                string logger_name = fmt::format("{}::{}", logger_prefix, config->port_name);
-                logger_ = spd::stdout_color_mt(logger_name);
-            } else {
-                logger_ = spd::get(parent_component_->component_config().component_name);
+                string logger_name = fmt::format("{}::{}", logger_prefix, config_->port_name);
+                if (spd::get(logger_name) == nullptr) {
+                    return spd::stdout_color_mt(logger_name);
+                }
+                return spd::get(logger_name);
             }
-
-
-
+            return const_cast<ComponentBase*>(parent_component_)->component_logger();
         }
 
         const zsock_t *PortBase::port_socket() const {

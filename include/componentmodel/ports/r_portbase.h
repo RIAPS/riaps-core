@@ -71,7 +71,7 @@ namespace riaps {
     protected:
         PortTypes                    port_type_;
         zsock_t*                     port_socket_;
-        std::shared_ptr<spd::logger> logger_;
+        std::shared_ptr<spd::logger> logger() const;
 
     private:
         const ComponentPortConfig* config_;

@@ -423,24 +423,48 @@ namespace riaps{
     
     void ComponentBase::set_config(ComponentConf &c_conf) {
         component_config_ = c_conf;
+        component_logger_name_ = fmt::format("{}.{}", this->actor()->actor_name(), this->component_name());
 
-        // TODO: Create loggers somewhere else
         auto logger_name = fmt::format("::{}", component_config_.component_name);
         riaps_logger_ = spd::get(logger_name);
         if (riaps_logger_ == nullptr)
             riaps_logger_ = spd::stdout_color_mt(logger_name);
 
-        logger_name = fmt::format("{}",component_config_.component_name);
-        component_logger_ = spd::get(logger_name);
-        if (component_logger_ == nullptr)
-            component_logger_ = spd::stdout_color_mt(logger_name);
+//        logger_name = fmt::format("{}",component_config_.component_name);
+//        component_logger_ = spd::get(logger_name);
+//        if (component_logger_ == nullptr)
+//            component_logger_ = spd::stdout_color_mt(logger_name);
 
+        component_logger_ = spd::get(component_logger_name());
+
+        if (component_logger() == nullptr) {
+            // The component logger is configured by spdlog-setup
+            try {
+                // TODO: filename from python const
+                spdlog_setup::from_file("riaps-log.conf");
+                component_logger_ = spd::get(component_logger_name());
+            }catch (const spdlog_setup::setup_error &e) {
+                // Just swallow it, we cannot do anything here.
+                riaps_logger_->error("sdplog_setup: {}", e.what());
+            }
+
+            if (component_logger_ == nullptr) {
+                component_logger_ = spd::stdout_color_mt(component_logger_name());
+                component_logger_->set_pattern("[%l]:%H:%M:%S,%e:[%P]:%n:%v");
+            }
+        }
+
+        riaps_logger_->info("log config done: {}", component_logger_name());
     }
 
     void ComponentBase::set_debug_level(spd::level::level_enum component_level,
                                         spdlog::level::level_enum framework_level) {
         riaps_logger_->set_level(framework_level);
         component_logger()->set_level(component_level);
+    }
+
+    const std::string ComponentBase::component_logger_name() {
+        return component_logger_name_;
     }
 
     ComponentBase::ComponentBase(const std::string &application_name, const std::string &actor_name) {
