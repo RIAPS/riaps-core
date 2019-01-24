@@ -5,19 +5,25 @@
 
 constexpr auto ENV_RIAPSAPPS = "RIAPSAPPS";
 
-//#define DISCOVERY_SERVICE_IPC "ipc:///tmp/riaps-disco"
+// Name of endpoint for actor-devm communication
+constexpr auto DEVMANAGER_ENDPOINT = "tcp://127.0.0.1:9790";
+constexpr auto DEPLO_ENDPOINT = "tcp://127.0.0.1:9780";
+
+// ** DISCO **
+constexpr auto DISCO_LOGGER_NAME = "discovery";
+constexpr auto CMD_DISCO_JOIN = "JOIN";
+constexpr auto REGULAR_MAINTAIN_PERIOD = 3000; //msec
+constexpr auto RIAPS_DHT_NODE_PORT     = 4222;
+constexpr auto DHT_ROUTER_CHANNEL      = "ipc:///tmp/dhtrouterchannel";
+
+// IPC socket address for sending control messages to the discovery service
+constexpr auto CONTROL_SOCKET = "ipc:///tmp/discoverycontrol";
 constexpr auto DISCOVERY_ENDPOINT = "tcp://127.0.0.1:9700";
 
-
-// Name of endpoint for actor-devm communication
-//#define DEVMANAGER_SERVICE_ADDR "ipc:///tmp/riaps-devm"
-constexpr auto DEVMANAGER_ENDPOINT = "tcp://127.0.0.1:9790";
-
-//Timeout for actor-devm communication (-1: wait forever)
-#define DEVM_ENDPOINTRECVTIMEOUT 1000
-#define DEVM_ENDPOINTSENDTIMEOUT 3000
-
-constexpr auto DEPLO_ENDPOINT = "tcp://127.0.0.1:9780";
+// ** RSA keys ** //
+// For discovery service (beacon signature, value encryption in DHT)
+constexpr auto KEY_FOLDER = ".ssh";
+constexpr auto KEY_FILE   = "id_rsa.key";
 
 /**
  * Actor argument index

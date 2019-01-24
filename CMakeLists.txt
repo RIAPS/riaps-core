@@ -36,8 +36,8 @@ include_directories(${LIBALLPATH_INCLUDE})
 link_directories(${LIBALLPATH_LIB})
 
 # Debug binaries are to be copied into "./bin" directory
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_HOME_DIRECTORY}/bin)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_HOME_DIRECTORY}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/bin/${arch})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/bin/${arch})
 
 include_directories(include)
 include_directories(include/pybind11/include)
@@ -181,6 +181,7 @@ list(APPEND RDISCOVERYD_SOURCE
         src/discoveryd/r_msghandler.cc
         src/discoveryd/r_dhttracker.cc
         src/utils/r_lmdb.cc
+        src/discoveryd/r_validator.cc
         include/messaging/disco.capnp.c++
         )
 
@@ -199,6 +200,7 @@ list(APPEND RDISCOVERYD_HEADERS
         include/groups/r_group.h
         include/spdlog/spdlog.h
         include/utils/r_timeout.h
+        include/discoveryd/r_validator.h
         )
 
 # rdiscoveryd
@@ -206,7 +208,7 @@ add_executable(rdiscoveryd
         ${RDISCOVERYD_SOURCE}
         ${RDISCOVERYD_HEADERS}
         )
-target_link_libraries(rdiscoveryd czmq zmq opendht gnutls riaps capnp nettle hogweed gmp pthread kj lmdb)
+target_link_libraries(rdiscoveryd czmq zmq opendht gnutls riaps capnp nettle hogweed gmp pthread kj lmdb stdc++fs)
 
 install(TARGETS rdiscoveryd DESTINATION bin)
 

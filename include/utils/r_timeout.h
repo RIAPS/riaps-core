@@ -3,6 +3,7 @@
 #define RIAPS_CORE_R_TIMEOUT_H
 
 #include <chrono>
+#include <random>
 
 using namespace std::chrono;
 
@@ -33,6 +34,10 @@ namespace riaps{
                 Reset(d);
             }
 
+            Timeout<T>(int64_t lower_bound, int64_t upper_bound) {
+                Reset(lower_bound, upper_bound);
+            }
+
             /**
              * Resets the start time point, doesn't touch the timeout
              */
@@ -54,6 +59,14 @@ namespace riaps{
                 m_timeout = T(timeout);
             }
 
+            void Reset(int64_t lower_bound, int64_t upper_bound) {
+                std::random_device                      rd;
+                std::mt19937                            gen(rd());
+                std::uniform_int_distribution<int64_t > dist(lower_bound, upper_bound);
+                int64_t v = dist(gen);
+                Reset(v);
+            }
+
             /**
              * If ::now()>_endPoint
              * @return
@@ -72,6 +85,10 @@ namespace riaps{
             steady_clock::time_point  m_startPoint; // The election timeout from this timepoint
             T m_timeout; // The election timeout
             steady_clock::time_point  m_endPoint;
+
+//            std::random_device                      rd;
+//            std::mt19937                            gen;
+//            std::uniform_int_distribution<int64_t > dist;
         };
     }
 }

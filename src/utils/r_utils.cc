@@ -47,7 +47,7 @@ void operator>>(zframe_t& frame, std::shared_ptr<capnp::FlatArrayMessageReader>&
 namespace spd=spdlog;
 
 void print_cacheips(std::map<std::string, riaps::utils::Timeout<std::chrono::milliseconds>>& ipcache, const std::string& selfAddress) {
-    auto logger = spd::get("rdiscovery");
+    auto logger = spd::get(DISCO_LOGGER_NAME);
     if (logger == nullptr)
         return;
 
@@ -168,3 +168,11 @@ const std::string GetAppPath(const std::string& appName){
     return p;
 }
 
+dht::Blob ConvertToBlob(const std::string& data) {
+    dht::Blob result;
+    transform(data.begin(), data.end(), back_inserter(result),
+              [](char c) -> uint8_t {
+                  return (uint8_t)c;
+              });
+    return result;
+}

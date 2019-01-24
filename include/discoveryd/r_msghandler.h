@@ -12,6 +12,7 @@
 #ifndef RIAPS_CORE_R_MSGHANDLER_H
 #define RIAPS_CORE_R_MSGHANDLER_H
 
+#include <const/r_const.h>
 #include <groups/r_group.h>
 #include <discoveryd/r_discovery_types.h>
 #include <discoveryd/r_registration.h>
@@ -20,10 +21,7 @@
 #include <czmq.h>
 #include <spdlog_setup/conf.h>
 
-constexpr auto REGULAR_MAINTAIN_PERIOD = 3000; //msec
-constexpr auto CMD_JOIN                = "JOIN";
-constexpr auto RIAPS_DHT_NODE_PORT     = 4222;
-constexpr auto DHT_ROUTER_CHANNEL      = "ipc:///tmp/dhtrouterchannel";
+
 
 static const std::map<riaps::discovery::Kind, std::string> kindMap =
             {{riaps::discovery::Kind::PUB, "pub"},

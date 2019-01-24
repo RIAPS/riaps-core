@@ -822,7 +822,7 @@ namespace riaps{
             if (streq(command, "$TERM")) {
                 logger_->info("$TERMINATE arrived, discovery service is stopping.");
                 terminated_ = true;
-            } else if (streq(command, CMD_JOIN)) {
+            } else if (streq(command, CMD_DISCO_JOIN)) {
                 bool hasMoreMsg = true;
 
                 while (hasMoreMsg) {
