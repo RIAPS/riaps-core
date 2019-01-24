@@ -5,6 +5,9 @@
 
 constexpr auto ENV_RIAPSAPPS = "RIAPSAPPS";
 
+// ** Config **
+constexpr auto CONF_PATH = "/etc/riaps/riaps.conf";
+
 // Name of endpoint for actor-devm communication
 constexpr auto DEVMANAGER_ENDPOINT = "tcp://127.0.0.1:9790";
 constexpr auto DEPLO_ENDPOINT = "tcp://127.0.0.1:9780";

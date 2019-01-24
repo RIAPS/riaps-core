@@ -16,7 +16,6 @@ namespace riaps{
             /**
              * Intitalizes with 0 timeout from now;
              */
-
             Timeout<T>(){
                 Reset(T(0));
             };
@@ -59,6 +58,9 @@ namespace riaps{
                 m_timeout = T(timeout);
             }
 
+            /*
+             * Random timeout between lower_bound and upper_bound
+             */
             void Reset(int64_t lower_bound, int64_t upper_bound) {
                 std::random_device                      rd;
                 std::mt19937                            gen(rd());
@@ -85,10 +87,6 @@ namespace riaps{
             steady_clock::time_point  m_startPoint; // The election timeout from this timepoint
             T m_timeout; // The election timeout
             steady_clock::time_point  m_endPoint;
-
-//            std::random_device                      rd;
-//            std::mt19937                            gen;
-//            std::uniform_int_distribution<int64_t > dist;
         };
     }
 }

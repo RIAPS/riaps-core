@@ -13,12 +13,26 @@ void DestroySocket(zsock_t* socket) {
     zsock_destroy(&socket);
 }
 
-DiscoveryValidator::DiscoveryValidator(const std::string& ip_address, std::shared_ptr<dht::crypto::PrivateKey>& private_key)
-    : private_key_(private_key) {
+DiscoveryValidator::DiscoveryValidator(bool has_security) {
+    logger_ = spd::get(DISCO_LOGGER_NAME);
+    has_security_ = has_security;
+}
+
+bool DiscoveryValidator::InitNoSecurity() {
+    if (riaps::framework::Configuration::HasSecurity()) {
+        return false;
+    }
+    return true;
+}
+
+bool DiscoveryValidator::InitWithSecurity(const std::string &ip_address,
+                                          std::shared_ptr<dht::crypto::PrivateKey> &private_key) {
+    if (!riaps::framework::Configuration::HasSecurity()) {
+        return false;
+    }
 
     last_delete_ = riaps::utils::Timeout<std::chrono::minutes>(1);
-    logger_ = spd::get(DISCO_LOGGER_NAME);
-    logger_->debug("{}", __func__);
+    private_key_ = private_key;
 
     auto zmq_address   = fmt::format("tcp://{}:!", ip_address);
 
@@ -32,9 +46,12 @@ DiscoveryValidator::DiscoveryValidator(const std::string& ip_address, std::share
     });
 
     signature_ = private_key_->sign(ConvertToBlob(validator_address()));
+    return true;
 }
 
 bool DiscoveryValidator::IsValid(const std::string &node_address) {
+    if (!has_security_)
+        return true;
     DeleteOldNodes();
     if (!IsUptodate(node_address)) {
         auto new_node = CreateNode(node_address);
@@ -71,6 +88,9 @@ bool DiscoveryValidator::IsUptodate(const std::string &node_address) {
 }
 
 void DiscoveryValidator::ReplyAll() {
+    if (!has_security_)
+        return;
+
     void* which = zpoller_wait(poller_.get(), 500);
     if(which) {
         if (which == validator_socket()) {

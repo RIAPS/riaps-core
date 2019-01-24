@@ -17,6 +17,7 @@
 #include <discoveryd/r_dhttracker.h>
 #include <discoveryd/r_validator.h>
 #include <framework/rfw_network_interfaces.h>
+#include <framework/rfw_configuration.h>
 #include <utils/r_utils.h>
 #include <utils/r_timeout.h>
 
@@ -43,31 +44,33 @@ namespace fs = std::experimental::filesystem;
 
 using namespace std;
 
-shared_ptr<dht::crypto::PrivateKey> getPrivateKey_s(fs::path& key_path ) {
-    ifstream privfs(key_path);
-//    if (!privfs.good())
-//        console->error("No key");
-
-    std::stringstream buffer;
-    buffer << privfs.rdbuf();
-    vector<uint8_t> blob_key;
-    string s = buffer.str();
-    transform(s.begin(), s.end(), back_inserter(blob_key),
-              [](char c) -> uint8_t {
-                  return (uint8_t)c;
-              });
-    return make_shared<dht::crypto::PrivateKey>(blob_key);
-}
+//shared_ptr<dht::crypto::PrivateKey> getPrivateKey_s(fs::path& key_path ) {
+//    ifstream privfs(key_path);
+////    if (!privfs.good())
+////        console->error("No key");
 //
-//shared_ptr<dht::crypto::PrivateKey> getPrivateKey_b(fs::path& key_path ) {
-//    ifstream privfs2;
-//    privfs2.open(key_path, ios::ate);
-//    auto pos = privfs2.tellg();
-//    std::vector<uint8_t> buffer2(pos);
-//    privfs2.seekg(0, ios::beg);
-//    privfs2.read((char*)buffer2.begin().base(), pos);
-//    return make_shared<dht::crypto::PrivateKey>(buffer2);
+//    std::stringstream buffer;
+//    buffer << privfs.rdbuf();
+//    vector<uint8_t> blob_key;
+//    string s = buffer.str();
+//    transform(s.begin(), s.end(), back_inserter(blob_key),
+//              [](char c) -> uint8_t {
+//                  return (uint8_t)c;
+//              });
+//    return make_shared<dht::crypto::PrivateKey>(blob_key);
 //}
+//
+shared_ptr<dht::crypto::PrivateKey> getPrivateKey_b(fs::path& key_path ) {
+    ifstream privfs;
+    privfs.open(key_path, ios::ate);
+    if (!privfs.good())
+        return nullptr;
+    auto pos = privfs.tellg();
+    std::vector<uint8_t> buffer(pos);
+    privfs.seekg(0, ios::beg);
+    privfs.read((char*)buffer.begin().base(), pos);
+    return make_shared<dht::crypto::PrivateKey>(buffer);
+}
 //
 
 //
@@ -104,36 +107,26 @@ shared_ptr<dht::crypto::PrivateKey> getPrivateKey_s(fs::path& key_path ) {
 
 
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
 
     auto console = spd::stdout_color_mt(DISCO_LOGGER_NAME);
     console->set_level(spd::level::debug);
     console->info("Starting RIAPS DISCOVERY SERVICE ");
 
 
-
-    // Random generator for beacon interval
-    std::random_device rd;
-    std::mt19937 gen(rd());
-
-    // UDP packet interval is between 2-5sec
-    std::uniform_int_distribution<> dis(2, 5);
+    auto has_security = riaps::framework::Configuration::HasSecurity();
+    console->info("Security is turned {}", has_security ? "on" : "off");
 
     string iface = riaps::framework::Network::GetConfiguredIface();
     string address;
     if (iface != "") {
         zsys_set_interface(iface.c_str());
         address = riaps::framework::Network::GetIPAddress(iface);
-    }
-    else {
+    } else {
         riaps::framework::Network::GetFirstGlobalIface(iface, address);
-        assert(iface!="");
+        assert(iface != "");
         zsys_set_interface(iface.c_str());
     }
-
-
-
 
     zactor_t *r_actor = zactor_new(riaps_actor, NULL);
     uint8_t dhtStarted = 0;
@@ -141,33 +134,33 @@ int main(int argc, char* argv[])
 
     if (dhtStarted) {
         console->info("DHT thread is initialized, starts beaconing.");
-    }else {
+    } else {
         console->error("Unable to initialize DHT thread, exiting.");
         zactor_destroy(&r_actor);
         zclock_sleep(500);
         return -1;
     }
 
-    zsock_t * control = zsock_new_router(CONTROL_SOCKET);
+    zsock_t *control = zsock_new_router(CONTROL_SOCKET);
 
     // zbeacon for sending UDP beacons
-    zactor_t *speaker = zactor_new (zbeacon, NULL);
+    zactor_t *speaker = zactor_new(zbeacon, NULL);
 
     // listen for UDP packages
-    zactor_t *listener  = zactor_new (zbeacon, NULL);
+    zactor_t *listener = zactor_new(zbeacon, NULL);
 
-    zsock_t* dhtTracker = zsock_new_dealer(CHAN_IN_DHTTRACKER);
+    zsock_t *dhtTracker = zsock_new_dealer(CHAN_IN_DHTTRACKER);
 
-    #ifdef _DEBUG_
-        zstr_sendx (speaker, "VERBOSE", NULL);
-        zstr_sendx (listener, "VERBOSE", NULL);
-    #endif
+#ifdef _DEBUG_
+    zstr_sendx (speaker, "VERBOSE", NULL);
+    zstr_sendx (listener, "VERBOSE", NULL);
+#endif
 
     // configure zbeacon publisher
-    zsock_send (speaker, "si", "CONFIGURE", UDP_PACKET_PORT);
+    zsock_send(speaker, "si", "CONFIGURE", UDP_PACKET_PORT);
 
     // configure zbeacon listener
-    zsock_send (listener, "si", "CONFIGURE", UDP_PACKET_PORT);
+    zsock_send(listener, "si", "CONFIGURE", UDP_PACKET_PORT);
 
     // Load the private key
     const char *homedir;
@@ -180,10 +173,27 @@ int main(int argc, char* argv[])
     key_path /= KEY_FOLDER;
     key_path /= KEY_FILE;
 
-    auto private_key = getPrivateKey_s(key_path);
+    auto private_key = getPrivateKey_b(key_path);
+    if (has_security && private_key == nullptr) {
+        console->error("Couldn't load private key: {}", key_path.string());
+        exit(-1);
+    }
 
     // Create validator
-    DiscoveryValidator validator(address, private_key);
+    DiscoveryValidator validator(has_security);
+
+    if (has_security) {
+        if (!validator.InitWithSecurity(address, private_key)) {
+            console->error("Cannot instantiate DiscoveryValidator with security.");
+            exit(-1);
+        }
+    } else {
+        if (!validator.InitNoSecurity()) {
+            console->error("Cannot instantiate DiscoveryValidator without security.");
+            exit(-1);
+        }
+    }
+
 
     // Check the listener
     char* hostname = zstr_recv (listener);
@@ -235,7 +245,8 @@ int main(int argc, char* argv[])
 
     //    auto signed_data    = sign(ConvertToBlob(address), private_key);
 
-    auto udp_payload = ConvertToBlob(validator.validator_address());
+    string announcement = "╩■";
+    auto udp_payload = has_security?ConvertToBlob(validator.validator_address()):ConvertToBlob(announcement);
     zsock_send (speaker, "sbi", "PUBLISH", udp_payload.data(), udp_payload.size(), BEACON_FREQ);
 
     zpoller_add(poller, listener);
@@ -279,9 +290,6 @@ int main(int argc, char* argv[])
                         // Check if the node already connected
                         bool is_newitem = externalipcache.find(std::string(newhost)) == externalipcache.end();
                         if (is_newitem){
-                            //console->info("Join to DHT node: {}", newhost);
-                            //std::cout <<  << newhost << std::endl;
-
                             int64_t time = zclock_mono();
                             externalipcache[newhost] = time;
 
@@ -304,9 +312,9 @@ int main(int argc, char* argv[])
 
             // If UDP package was received
             if (ipaddress) {
-                auto validator_address   = zstr_recv(listener);
-                if (validator_address && ipaddress!=address) {
-                    if (validator.IsValid(validator_address)) {
+                auto b_payload   = zstr_recv(listener);
+                if ((has_security&&b_payload || !has_security && (b_payload == announcement)) && ipaddress!=address) {
+                    if (validator.IsValid(b_payload)) {
 
                         // Pass the ip addres to the dht tracker to check its stability
                         // DHT must be stable for at least 3 seconds before the registration happens
@@ -338,7 +346,7 @@ int main(int argc, char* argv[])
                             }
                         }
                     }
-                    zstr_free (&validator_address);
+                    zstr_free (&b_payload);
                 }
                 zstr_free (&ipaddress);
             }

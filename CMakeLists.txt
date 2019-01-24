@@ -201,6 +201,7 @@ list(APPEND RDISCOVERYD_HEADERS
         include/spdlog/spdlog.h
         include/utils/r_timeout.h
         include/discoveryd/r_validator.h
+        include/discoveryd/r_dhtdata.h
         )
 
 # rdiscoveryd
