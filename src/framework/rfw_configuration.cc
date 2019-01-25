@@ -23,20 +23,5 @@ namespace riaps{
             auto result = DEPLO_ENDPOINT;// + Network::GetMacAddressStripped();
             return result;
         }
-
-        const bool Configuration::HasSecurity() {
-            INIReader reader(CONF_PATH);
-
-            if (reader.ParseError() != 0) {
-                return false;
-            }
-
-            string security = reader.Get("RIAPS", "security", "off");
-            if (security == "on" ||
-                security == "True")
-                return true;
-
-            return false;
-        }
     }
 }

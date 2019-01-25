@@ -17,7 +17,7 @@ constexpr auto DISCO_LOGGER_NAME = "discovery";
 constexpr auto CMD_DISCO_JOIN = "JOIN";
 constexpr auto REGULAR_MAINTAIN_PERIOD = 3000; //msec
 constexpr auto RIAPS_DHT_NODE_PORT     = 4222;
-constexpr auto DHT_ROUTER_CHANNEL      = "ipc:///tmp/dhtrouterchannel";
+constexpr auto DHT_RESULT_CHANNEL      = "ipc:///tmp/dhtrouterchannel";
 
 // IPC socket address for sending control messages to the discovery service
 constexpr auto CONTROL_SOCKET = "ipc:///tmp/discoverycontrol";

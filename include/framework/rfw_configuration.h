@@ -16,7 +16,6 @@ namespace riaps {
             static const std::string GetDiscoveryEndpoint();
             static const std::string GetDeviceManagerEndpoint();
             static const std::string GetDeploEndpoint();
-            static const bool        HasSecurity();
         };
     }
 }

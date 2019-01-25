@@ -16,6 +16,8 @@
 #include <groups/r_group.h>
 #include <discoveryd/r_discovery_types.h>
 #include <discoveryd/r_registration.h>
+#include <discoveryd/r_msghandler.h>
+#include <discoveryd/r_dhtdata.h>
 
 #include <opendht.h>
 #include <czmq.h>
@@ -40,12 +42,14 @@ namespace spd = spdlog;
 namespace riaps{
     class DiscoveryMessageHandler{
     public:
-        DiscoveryMessageHandler(dht::DhtRunner& dhtNode, zsock_t** pipe, std::shared_ptr<spdlog::logger> logger = nullptr);
+        DiscoveryMessageHandler(dht::DhtRunner& dhtNode,
+                                zsock_t** pipe,
+                                std::shared_ptr<spdlog::logger> logger = nullptr);
         bool init();
         void run();
         ~DiscoveryMessageHandler();
     private:
-        bool handleZombieUpdate (const std::vector<std::shared_ptr<dht::Value>> &values);
+        bool HandleZombieUpdate (std::vector<DhtData>&& values);
 
         /**
          * Handles messages from the zactor pipe (typically $TERM - terminate)
@@ -85,7 +89,7 @@ namespace riaps{
          * Registers the component in a group and subscribes to notifications about new members.
          * @param msgGroupJoin
          */
-        void handleGroupJoin    (riaps::discovery::GroupJoinReq::Reader    & msgGroupJoin);
+        void HandleGroupJoin    (riaps::discovery::GroupJoinReq::Reader    & msgGroupJoin);
 
         /**
          *
@@ -100,7 +104,7 @@ namespace riaps{
 
         void handleDhtGroupUpdate(const riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
 
-        void pushDhtValuesToDisco(std::vector<std::shared_ptr<dht::Value>> values);
+        void PushDhtValuesToDisco(std::vector<DhtData>&& values);
 
         std::future<bool> waitForDht();
 
@@ -122,8 +126,8 @@ namespace riaps{
                 const std::string& clientInstanceName,
                 const std::string& clientPortName);
 
-        void maintainRenewal();
-        void maintainZombieList();
+        void RenewServices();
+        void MaintainZombieList();
         int deregisterActor(const std::string& appName,
                             const std::string& actorName);
 
@@ -131,8 +135,9 @@ namespace riaps{
         std::string host_address_;
 
 
-        void dhtPut(dht::InfoHash keyhash, const std::string key, std::vector<uint8_t> data, uint8_t callLevel);
-        void dhtGet(const std::string lookupKey, ClientDetails clientDetails, uint8_t callLevel);
+        void DhtPut(const std::string& key, std::vector<uint8_t>& data);
+        void DhtPut(dht::InfoHash& keyhash, std::vector<uint8_t>& data);
+        void DhtGet(const std::string lookupKey, ClientDetails clientDetails, uint8_t callLevel);
 
         int64_t last_service_checkin_;
         int64_t last_zombie_check_;
@@ -197,6 +202,9 @@ namespace riaps{
         };
 
         std::unordered_map<pid_t, std::vector<std::shared_ptr<RegisteredGroup>>> group_services_;
+
+        bool has_security_;
+        std::shared_ptr<dht::crypto::PrivateKey> private_key_;
     };
 }
 

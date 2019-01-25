@@ -36,8 +36,8 @@ include_directories(${LIBALLPATH_INCLUDE})
 link_directories(${LIBALLPATH_LIB})
 
 # Debug binaries are to be copied into "./bin" directory
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/bin/${arch})
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/bin/${arch})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/bin/)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/bin/)
 
 include_directories(include)
 include_directories(include/pybind11/include)
@@ -86,7 +86,7 @@ if (BUILD_TESTS)
     # add_subdirectory(tests/TimedTest)
     # add_subdirectory(examples/EchoIO)
     # add_subdirectory(examples/pybind/WeatherMonitor)
-    # add_subdirectory(examples/pybind/DistributedEstimatorPybind)
+    add_subdirectory(examples/pybind/DistributedEstimatorPybind)
 endif()
 
 
@@ -120,6 +120,7 @@ list (APPEND riapslib_SOURCE
         src/componentmodel/r_parameter.cc
         src/framework/rfw_configuration.cc
         src/framework/rfw_network_interfaces.cc
+        src/framework/rfw_security.cc
         src/groups/r_group.cc
         src/groups/r_grouplead.cc
         src/utils/r_utils.cc
@@ -162,7 +163,7 @@ list (APPEND riapslib_HEADERS
         include/utils/r_expirable.h
         include/utils/r_expirablelist.h
         include/utils/r_timeout.h
-
+        include/framework/rfw_security.h
         )
 
 # libriaps
@@ -171,7 +172,7 @@ add_library(riaps SHARED
         ${riapslib_HEADERS}
         )
 
-target_link_libraries(riaps PRIVATE czmq zmq dl capnp kj)
+target_link_libraries(riaps PRIVATE czmq zmq dl capnp kj opendht gnutls stdc++fs)
 install(TARGETS riaps DESTINATION lib)
 
 # rdiscoveryd source
@@ -182,6 +183,7 @@ list(APPEND RDISCOVERYD_SOURCE
         src/discoveryd/r_dhttracker.cc
         src/utils/r_lmdb.cc
         src/discoveryd/r_validator.cc
+        src/discoveryd/r_dhtdata.cc
         include/messaging/disco.capnp.c++
         )
 
@@ -194,6 +196,7 @@ list(APPEND RDISCOVERYD_HEADERS
         include/discoveryd/r_dhttracker.h
         include/framework/rfw_configuration.h
         include/framework/rfw_network_interfaces.h
+        include/framework/rfw_security.h
         include/utils/r_lmdb.h
         include/utils/r_utils.h
         include/messaging/disco.capnp.h

@@ -18,6 +18,7 @@
 #include <discoveryd/r_validator.h>
 #include <framework/rfw_network_interfaces.h>
 #include <framework/rfw_configuration.h>
+#include <framework/rfw_security.h>
 #include <utils/r_utils.h>
 #include <utils/r_timeout.h>
 
@@ -60,17 +61,7 @@ using namespace std;
 //    return make_shared<dht::crypto::PrivateKey>(blob_key);
 //}
 //
-shared_ptr<dht::crypto::PrivateKey> getPrivateKey_b(fs::path& key_path ) {
-    ifstream privfs;
-    privfs.open(key_path, ios::ate);
-    if (!privfs.good())
-        return nullptr;
-    auto pos = privfs.tellg();
-    std::vector<uint8_t> buffer(pos);
-    privfs.seekg(0, ios::beg);
-    privfs.read((char*)buffer.begin().base(), pos);
-    return make_shared<dht::crypto::PrivateKey>(buffer);
-}
+
 //
 
 //
@@ -114,7 +105,7 @@ int main(int argc, char* argv[]) {
     console->info("Starting RIAPS DISCOVERY SERVICE ");
 
 
-    auto has_security = riaps::framework::Configuration::HasSecurity();
+    auto has_security = riaps::framework::Security::HasSecurity();
     console->info("Security is turned {}", has_security ? "on" : "off");
 
     string iface = riaps::framework::Network::GetConfiguredIface();
@@ -162,20 +153,9 @@ int main(int argc, char* argv[]) {
     // configure zbeacon listener
     zsock_send(listener, "si", "CONFIGURE", UDP_PACKET_PORT);
 
-    // Load the private key
-    const char *homedir;
-
-    if ((homedir = getenv("HOME")) == NULL) {
-        homedir = getpwuid(getuid())->pw_dir;
-    }
-
-    fs::path key_path(homedir);
-    key_path /= KEY_FOLDER;
-    key_path /= KEY_FILE;
-
-    auto private_key = getPrivateKey_b(key_path);
+    auto private_key = riaps::framework::Security::private_key();
     if (has_security && private_key == nullptr) {
-        console->error("Couldn't load private key: {}", key_path.string());
+        console->error("Couldn't load private key: {}", riaps::framework::Security::key_path());
         exit(-1);
     }
 
@@ -313,14 +293,14 @@ int main(int argc, char* argv[]) {
             // If UDP package was received
             if (ipaddress) {
                 auto b_payload   = zstr_recv(listener);
-                if ((has_security&&b_payload || !has_security && (b_payload == announcement)) && ipaddress!=address) {
+                if ((has_security&&b_payload || !has_security && (b_payload == announcement)) ) {
                     if (validator.IsValid(b_payload)) {
 
                         // Pass the ip addres to the dht tracker to check its stability
                         // DHT must be stable for at least 3 seconds before the registration happens
                         zsock_send(dhtTracker, "ss", CMD_BEACON_IP, ipaddress);
 
-                        if (strcmp(ipaddress, address.c_str()) != 0) {
+                        if (strcmp(ipaddress, address.c_str()) != 0 && ipaddress!=address) {
                             // Check if the item already in the map
                             bool is_newitem = ipcache.find(std::string(ipaddress)) == ipcache.end();
 

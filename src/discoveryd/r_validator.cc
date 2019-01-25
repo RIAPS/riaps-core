@@ -3,7 +3,9 @@
 //
 
 #include <discoveryd/r_validator.h>
+#include <framework/rfw_security.h>
 #include <spdlog/spdlog.h>
+
 
 using namespace std;
 
@@ -19,7 +21,7 @@ DiscoveryValidator::DiscoveryValidator(bool has_security) {
 }
 
 bool DiscoveryValidator::InitNoSecurity() {
-    if (riaps::framework::Configuration::HasSecurity()) {
+    if (riaps::framework::Security::HasSecurity()) {
         return false;
     }
     return true;
@@ -27,7 +29,7 @@ bool DiscoveryValidator::InitNoSecurity() {
 
 bool DiscoveryValidator::InitWithSecurity(const std::string &ip_address,
                                           std::shared_ptr<dht::crypto::PrivateKey> &private_key) {
-    if (!riaps::framework::Configuration::HasSecurity()) {
+    if (!riaps::framework::Security::HasSecurity()) {
         return false;
     }
 
