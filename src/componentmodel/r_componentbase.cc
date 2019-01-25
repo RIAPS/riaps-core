@@ -1,6 +1,7 @@
 #include <componentmodel/r_componentbase.h>
 #include <utils/r_utils.h>
 #include <functional>
+#include <framework/rfw_security.h>
 
 using namespace std;
 
@@ -463,11 +464,16 @@ namespace riaps{
         component_logger()->set_level(component_level);
     }
 
+    bool ComponentBase::has_security() const {
+        return has_security_;
+    }
+
     const std::string ComponentBase::component_logger_name() {
         return component_logger_name_;
     }
 
     ComponentBase::ComponentBase(const std::string &application_name, const std::string &actor_name) {
+        has_security_ = riaps::framework::Security::HasSecurity();
         actor_ = std::make_shared<PyActor>(application_name, actor_name);
         component_uuid_ = zuuid_new();
     }

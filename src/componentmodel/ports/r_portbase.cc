@@ -11,6 +11,8 @@
 
 using namespace std;
 
+constexpr auto CERT_PATH = "/usr/local/riaps/keys/riaps-sys.cert";
+
 namespace riaps {
     namespace ports {
 
@@ -18,14 +20,32 @@ namespace riaps {
                            const ComponentPortConfig* config,
                            const ComponentBase* parent_component)
                 : parent_component_(parent_component) {
-            port_type_ = port_type;
-            config_ = config;
-            port_socket_ = nullptr;
+            port_type_        = port_type;
+            config_           = config;
+            port_socket_      = nullptr;
+            port_certificate_ = nullptr;
 
+            if (has_security()) {
+                ifstream f_server(CERT_PATH);
+                //ifstream f_client(client_cert_file);
 
+                if (!f_server.good()) {
+                    logger()->error("Missing certificate: {}", CERT_PATH);
+                } else {
+                    port_certificate_ = zcert_load(CERT_PATH);
+                }
+            }
         }
 
-        std::shared_ptr<spd::logger> PortBase::logger() const {
+        bool PortBase::has_security() const {
+            if (parent_component_ == nullptr) {
+                logger()->warn("Parent component is null for {}", port_name());
+                return false;
+            }
+            return parent_component_->has_security();
+        }
+
+        shared_ptr<spd::logger> PortBase::logger() const {
             // InsidePorts have no parent components
             if (parent_component_ == nullptr) {
                 string logger_prefix = port_type_ == PortTypes::Inside?"InsidePort":"NullParent";
@@ -106,6 +126,10 @@ namespace riaps {
         PortBase::~PortBase() {
             if (port_socket_) {
                 zsock_destroy(&port_socket_);
+            }
+
+            if (has_security() && port_certificate_!= nullptr) {
+                zcert_destroy(&port_certificate_);
             }
         }
     }

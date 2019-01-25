@@ -167,6 +167,8 @@ namespace riaps {
         virtual void HandleNICStateChange(const std::string& state);
         virtual void HandlePeerStateChange(const std::string& state, const std::string& uuid);
 
+        bool has_security() const;
+
         virtual ~ComponentBase() = default;
 
     protected:
@@ -443,7 +445,7 @@ namespace riaps {
          */
         zactor_t* component_zactor_;
 
-
+        bool has_security_;
     };
 
     template<class T>
