@@ -17,8 +17,8 @@ riaps_actor (zsock_t *pipe, void *args)
     std::string host_address = riaps::framework::Network::GetIPAddress();
 
     console->info("Starting DHT node on {}:{} ({})", host_address, RIAPS_DHT_NODE_PORT, mac_address);
-    dht::DhtRunner dhtNode;
-    dht::DhtRunner backupNode;
+    dht::DhtRunner dht_node;
+    dht::DhtRunner backup_node;
 
     // Launch a dht node on a new thread, using a
     // generated RSA key pair, and listen on port 4222.
@@ -26,9 +26,9 @@ riaps_actor (zsock_t *pipe, void *args)
 
     zsock_signal (pipe, 0);
     try {
-        dhtNode.run(RIAPS_DHT_NODE_PORT, {}, true);
-        backupNode.run(RIAPS_DHT_NODE_PORT-1, {}, true);
-        backupNode.bootstrap(host_address, std::to_string(RIAPS_DHT_NODE_PORT));
+        dht_node.run(RIAPS_DHT_NODE_PORT, {}, true);
+        backup_node.run(RIAPS_DHT_NODE_PORT-1, {}, true);
+        backup_node.bootstrap(host_address, std::to_string(RIAPS_DHT_NODE_PORT));
         zsock_send(pipe, "1", 1);
     } catch (dht::DhtException& e){
         console->error("DHT threw an exception: {}", e.what());
@@ -38,13 +38,13 @@ riaps_actor (zsock_t *pipe, void *args)
     }
 
     std::srand(std::time(0));
-    riaps::DiscoveryMessageHandler msgHandler(dhtNode, &pipe, console);
-    msgHandler.init();
-    msgHandler.run();
-    dhtNode.shutdown([console](){
+    riaps::DiscoveryMessageHandler handler(dht_node, &pipe, console);
+    handler.Init();
+    handler.Run();
+    dht_node.shutdown([console](){
         console->info("Public DHT stopped");
     });
-    backupNode.shutdown([console](){
+    backup_node.shutdown([console](){
         console->info("Backup DHT stopped");
     });
 

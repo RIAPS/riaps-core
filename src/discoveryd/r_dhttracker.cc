@@ -30,7 +30,7 @@ void dht_tracker (zsock_t *pipe, void *args) {
     zpoller_t* poller = zpoller_new(pipe, in_socket, nullptr);
 
     auto logger = spd::stdout_color_mt(LOGGER_NAME);
-    logger->set_level(spd::level::debug);
+    logger->set_level(spd::level::info);
 
     bool terminated = false;
     bool isStable   = false;

@@ -9,10 +9,10 @@
 using namespace std;
 
 namespace riaps{
-    DiscoveryMessageHandler::DiscoveryMessageHandler(dht::DhtRunner &dhtNode,
+    DiscoveryMessageHandler::DiscoveryMessageHandler(dht::DhtRunner &dht_node,
                                                      zsock_t** pipe,
                                                      std::shared_ptr<spdlog::logger> logger)
-        : dht_node_(dhtNode),
+        : dht_node_(dht_node),
           pipe_(*pipe),
           service_check_period_((uint16_t)20000), // 20 sec in in msec.
           zombie_check_period_((uint16_t)600000), // 10 min in msec
@@ -26,7 +26,7 @@ namespace riaps{
         has_security_ = riaps::framework::Security::HasSecurity();
     }
 
-    bool DiscoveryMessageHandler::init() {
+    bool DiscoveryMessageHandler::Init() {
         if (has_security_)
             private_key_ = framework::Security::private_key();
 
@@ -93,7 +93,7 @@ namespace riaps{
         }
     }
 
-    future<bool> DiscoveryMessageHandler::waitForDht() {
+    future<bool> DiscoveryMessageHandler::WaitForDht() {
         auto& logger = logger_;
         return std::async(std::launch::async, [logger]()->bool{
             zsock_t* query = zsock_new(ZMQ_DEALER);
@@ -119,7 +119,7 @@ namespace riaps{
         });
     }
 
-    void DiscoveryMessageHandler::run() {
+    void DiscoveryMessageHandler::Run() {
         while (!terminated_){
             void *which = zpoller_wait(poller_, REGULAR_MAINTAIN_PERIOD);
 
@@ -137,7 +137,7 @@ namespace riaps{
 
             // Handling messages from the caller (e.g.: $TERM$)
             if (which == pipe_) {
-                handlePipeMessage();
+                HandlePipeMessage();
             }
             else if (which == dht_update_socket_){
                 // Process the updated nodes
@@ -156,11 +156,11 @@ namespace riaps{
                     // If update
                     if (msgDhtUpdate.isProviderUpdate()) {
                         riaps::discovery::ProviderListUpdate::Reader msgProviderUpdate = msgDhtUpdate.getProviderUpdate();
-                        handleDhtUpdate(msgProviderUpdate, client_subscriptions_);
+                        HandleDhtUpdate(msgProviderUpdate, client_subscriptions_);
 
                     } else if (msgDhtUpdate.isProviderGet()) {
                         riaps::discovery::ProviderListGet::Reader msgProviderGet = msgDhtUpdate.getProviderGet();
-                        handleDhtGet(msgProviderGet, clients_);
+                        HandleDhtGet(msgProviderGet, clients_);
                     } else if (msgDhtUpdate.isZombieList()) {
                         auto zombieList = msgDhtUpdate.getZombieList();
                         for (int i =0; i< zombieList.size(); i++){
@@ -169,7 +169,7 @@ namespace riaps{
                         }
                     } else if (msgDhtUpdate.isGroupUpdate()){
                         riaps::discovery::GroupUpdate::Reader msgGroupUpdate = msgDhtUpdate.getGroupUpdate();
-                        handleDhtGroupUpdate(msgGroupUpdate);
+                        HandleDhtGroupUpdate(msgGroupUpdate);
                     }
 
                     zframe_destroy(&capnpMsgBody);
@@ -183,7 +183,7 @@ namespace riaps{
 
                 // Handling messages from the RIAPS FW
             else if(which == riaps_socket_){
-                handleRiapsMessage();
+                HandleRiapsMessage();
             }
             else {
                 //auto outdateds = maintain_servicecache(service_checkins);
@@ -191,7 +191,7 @@ namespace riaps{
         }
     }
 
-    void DiscoveryMessageHandler::handleRiapsMessage() {
+    void DiscoveryMessageHandler::HandleRiapsMessage() {
         zmsg_t *riapsMessage = zmsg_recv(riaps_socket_);
         if (!riapsMessage) {
             logger_->critical("Empty message arrived => interrupted");
@@ -221,16 +221,16 @@ namespace riaps{
 
             if (msgDiscoReq.isActorReg()) {
                 riaps::discovery::ActorRegReq::Reader msgActorReq = msgDiscoReq.getActorReg();
-                handleActorReg(msgActorReq);
+                HandleActorReg(msgActorReq);
             } else if (msgDiscoReq.isActorUnreg()){
                 riaps::discovery::ActorUnregReq::Reader msgActorUnreg = msgDiscoReq.getActorUnreg();
-                handleActorUnreg(msgActorUnreg);
+                HandleActorUnreg(msgActorUnreg);
             } else if (msgDiscoReq.isServiceReg()){
                 riaps::discovery::ServiceRegReq::Reader msgServiceReg = msgDiscoReq.getServiceReg();
-                handleServiceReg(msgServiceReg);
+                HandleServiceReg(msgServiceReg);
             } else if (msgDiscoReq.isServiceLookup()){
                 riaps::discovery::ServiceLookupReq::Reader msgServiceLookup = msgDiscoReq.getServiceLookup();
-                handleServiceLookup(msgServiceLookup);
+                HandleServiceLookup(msgServiceLookup);
             } else if (msgDiscoReq.isGroupJoin()){
                 riaps::discovery::GroupJoinReq::Reader msgGroupJoin = msgDiscoReq.getGroupJoin();
                 HandleGroupJoin(msgGroupJoin);
@@ -240,7 +240,7 @@ namespace riaps{
         }
     }
 
-    void DiscoveryMessageHandler::handleActorReg(riaps::discovery::ActorRegReq::Reader& msgActorReq) {
+    void DiscoveryMessageHandler::HandleActorReg(riaps::discovery::ActorRegReq::Reader& msgActorReq) {
 
         string actorname = string(msgActorReq.getActorName().cStr());
         string appname   = string(msgActorReq.getAppName().cStr());
@@ -277,7 +277,7 @@ namespace riaps{
 
             // Purge the old instance
             if (isRegistered && !isRunning) {
-                deregisterActor(appname, actorname);
+                DeregisterActor(appname, actorname);
             }
 
             // Open a new PAIR socket for actor communication
@@ -330,7 +330,7 @@ namespace riaps{
         }
     }
 
-    void DiscoveryMessageHandler::handleActorUnreg(riaps::discovery::ActorUnregReq::Reader &msgActorUnreg) {
+    void DiscoveryMessageHandler::HandleActorUnreg(riaps::discovery::ActorUnregReq::Reader &msgActorUnreg) {
         const string actorname = string(msgActorUnreg.getActorName().cStr());
         const string appname = string(msgActorUnreg.getAppName().cStr());
         const int servicePid = msgActorUnreg.getPid();
@@ -359,7 +359,7 @@ namespace riaps{
             }
         }
 
-        int port = deregisterActor(appname, actorname);
+        int port = DeregisterActor(appname, actorname);
 
         // Create and send the Response
         capnp::MallocMessageBuilder message;
@@ -385,15 +385,15 @@ namespace riaps{
         zmsg_send(&msg, riaps_socket_);
     }
 
-    void DiscoveryMessageHandler::handleServiceReg(riaps::discovery::ServiceRegReq::Reader &msgServiceReg) {
-        auto check_dht = waitForDht();
+    void DiscoveryMessageHandler::HandleServiceReg(riaps::discovery::ServiceRegReq::Reader &msgServiceReg) {
+        auto check_dht = WaitForDht();
 
         auto msgPath           = msgServiceReg.getPath();
         auto msgSock           = msgServiceReg.getSocket();
         auto servicePid         = msgServiceReg.getPid();
 
 
-        auto kv_pair = buildInsertKeyValuePair(msgPath.getAppName(),
+        auto kv_pair = BuildInsertKeyValuePair(msgPath.getAppName(),
                                                msgPath.getMsgType(),
                                                msgPath.getKind(),
                                                msgPath.getScope(),
@@ -476,7 +476,7 @@ namespace riaps{
         dht_node_.put(keyhash, d);
     }
 
-    void DiscoveryMessageHandler::handleServiceLookup(riaps::discovery::ServiceLookupReq::Reader &msgServiceLookup) {
+    void DiscoveryMessageHandler::HandleServiceLookup(riaps::discovery::ServiceLookupReq::Reader &msgServiceLookup) {
         auto client = msgServiceLookup.getClient();
         auto path   = msgServiceLookup.getPath();
 
@@ -484,7 +484,7 @@ namespace riaps{
         // Value -> /appname/clientactorname/clienthost/clientinstancename/clientportname
         // The "value" is interested in "key"
         auto lookupkey =
-                buildLookupKey(path.getAppName(),
+                BuildLookupKey(path.getAppName(),
                                path.getMsgType(),
                                path.getKind(),
                                path.getScope(),
@@ -802,7 +802,7 @@ namespace riaps{
     }
 
     // Handle ZMQ messages, arriving on the zactor PIPE
-    void DiscoveryMessageHandler::handlePipeMessage(){
+    void DiscoveryMessageHandler::HandlePipeMessage(){
         zmsg_t* msg = zmsg_recv(pipe_);
         if (!msg){
             std::cout << "No msg => interrupted" << std::endl;
@@ -874,7 +874,7 @@ namespace riaps{
         return true;
     }
 
-    void DiscoveryMessageHandler::handleDhtGet(
+    void DiscoveryMessageHandler::HandleDhtGet(
                    const riaps::discovery::ProviderListGet::Reader& msgProviderGet,
                    const std::map<std::string, std::shared_ptr<ActorDetails>>& clients)
     {
@@ -953,7 +953,7 @@ namespace riaps{
 /// \param msgProviderUpdate The capnp message from the OpenDHT Listen().
 /// \param clientSubscriptions List of current key subscribtions.
 /// \param clients  Holds the ZMQ sockets of the client actors.
-    void DiscoveryMessageHandler::handleDhtUpdate(const riaps::discovery::ProviderListUpdate::Reader& msgProviderUpdate,
+    void DiscoveryMessageHandler::HandleDhtUpdate(const riaps::discovery::ProviderListUpdate::Reader& msgProviderUpdate,
                       const map<string, vector<unique_ptr<ClientDetails>>>& clientSubscriptions){
 
         string provider_key = string(msgProviderUpdate.getProviderpath().cStr());
@@ -1035,7 +1035,7 @@ namespace riaps{
         }
     }
 
-    void DiscoveryMessageHandler::handleDhtGroupUpdate(const riaps::discovery::GroupUpdate::Reader &msgGroupUpdate) {
+    void DiscoveryMessageHandler::HandleDhtGroupUpdate(const riaps::discovery::GroupUpdate::Reader &msgGroupUpdate) {
         // Look for the affected actors
         string appName = msgGroupUpdate.getAppName().cStr();
         bool actorFound = false;
@@ -1110,7 +1110,7 @@ namespace riaps{
         }
     }
 
-    int DiscoveryMessageHandler::deregisterActor(const std::string& appName,
+    int DiscoveryMessageHandler::DeregisterActor(const std::string& appName,
                                                  const std::string& actorName){
 
         string clientKeyBase = fmt::format("/{}/{}/",appName,actorName);
@@ -1156,7 +1156,7 @@ namespace riaps{
         sleep(1);
     }
 
-    const std::tuple<const string, const string> DiscoveryMessageHandler::buildInsertKeyValuePair(
+    const std::tuple<const string, const string> DiscoveryMessageHandler::BuildInsertKeyValuePair(
             const string&             appName,
             const string&             msgType,
             const riaps::discovery::Kind&  kind,
@@ -1176,7 +1176,7 @@ namespace riaps{
         return make_tuple(key, value);
     }
 
-    const pair<const string, const string> DiscoveryMessageHandler::buildLookupKey(
+    const pair<const string, const string> DiscoveryMessageHandler::BuildLookupKey(
             const std::string& appName,
             const std::string& msgType,
             const riaps::discovery::Kind& kind,
