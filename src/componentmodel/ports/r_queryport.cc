@@ -3,7 +3,6 @@
 //
 
 #include <componentmodel/ports/r_queryport.h>
-#include <fmt/format.h>
 #include <framework/rfw_network_interfaces.h>
 
 using namespace std;
@@ -55,12 +54,12 @@ namespace riaps {
             int rc = zsock_connect(port_socket_, "%s", ansEndpoint.c_str());
 
             if (rc != 0) {
-                logger_->error("Queryport {} couldn't connect to {}", GetConfig()->port_name, ansEndpoint);
+                logger()->error("Queryport {} couldn't connect to {}", GetConfig()->port_name, ansEndpoint);
                 return false;
             }
 
             m_isConnected = true;
-            logger_->info("Queryport connected to: {}", ansEndpoint);
+            logger()->info("Queryport connected to: {}", ansEndpoint);
             return true;
         }
 

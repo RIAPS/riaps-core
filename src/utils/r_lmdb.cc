@@ -4,6 +4,7 @@
 
 #include <utils/r_lmdb.h>
 #include <sys/stat.h>
+#include <spdlog/sinks/stdout_sinks.h>
 
 using namespace std;
 

@@ -103,9 +103,9 @@ namespace riaps {
 
             capnp::FlatArrayMessageReader reader(capnpBuffer);
             auto msgDiscoRep= reader.getRoot<riaps::discovery::DiscoRep>();
-            if (msgDiscoRep.isActorUnreg()){
-                _logger->error_if(msgDiscoRep.getActorUnreg().getStatus() == riaps::discovery::Status::ERR,
-                                  "Couldn't deregister actor: {} PID: {}",actor_name,::getpid());
+            if (   msgDiscoRep.isActorUnreg()
+                && msgDiscoRep.getActorUnreg().getStatus() == riaps::discovery::Status::ERR) {
+                _logger->error("Couldn't deregister actor: {} PID: {}",actor_name,::getpid());
             }
 
             zmsg_destroy(&msgRep);

@@ -40,10 +40,10 @@ namespace riaps{
             }
 
             // TODO: spd logger
-            logger_->debug("Response is created on {}:{}", host_, port_);
+            logger()->debug("Response is created on {}:{}", host_, port_);
 
 
-            logger_->debug("{}.host_ = {}", __FUNCTION__, host_);
+            logger()->debug("{}.host_ = {}", __FUNCTION__, host_);
             if (!Disco::RegisterService(
                     parent_component()->actor()->application_name(),
                     parent_component()->actor()->actor_name(),
@@ -53,7 +53,7 @@ namespace riaps{
                     riaps::discovery::Kind::REP,
                     (config.is_local ? riaps::discovery::Scope::LOCAL : riaps::discovery::Scope::GLOBAL),
                     {})) {
-                logger_->error("Response port couldn't be registered.");
+                logger()->error("Response port couldn't be registered.");
             }
         }
 

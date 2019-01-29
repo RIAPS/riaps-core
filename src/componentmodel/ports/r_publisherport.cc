@@ -22,7 +22,7 @@ namespace riaps{
                     (config.is_local ? riaps::discovery::Scope::LOCAL : riaps::discovery::Scope::GLOBAL),
                     {})) {
 
-                logger_->error("Publisher port couldn't be registered.");
+                logger()->error("Publisher port couldn't be registered.");
             }
         }
     }

@@ -4,11 +4,12 @@
 
 #include <componentmodel/r_configuration.h>
 
+#include <spdlog_setup/conf.h>
 
-#include <spdlog/spdlog.h>
 #include <czmq.h>
 #include <string>
 #include <iostream>
+
 
 
 #define SERVICE_POLLING_INTERVAL 2000
@@ -70,7 +71,7 @@ namespace riaps {
     protected:
         PortTypes                    port_type_;
         zsock_t*                     port_socket_;
-        std::shared_ptr<spd::logger> logger_;
+        std::shared_ptr<spd::logger> logger() const;
 
     private:
         const ComponentPortConfig* config_;

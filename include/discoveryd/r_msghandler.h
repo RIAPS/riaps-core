@@ -18,7 +18,7 @@
 
 #include <opendht.h>
 #include <czmq.h>
-#include <spdlog/spdlog.h>
+#include <spdlog_setup/conf.h>
 
 constexpr auto REGULAR_MAINTAIN_PERIOD = 3000; //msec
 constexpr auto CMD_JOIN                = "JOIN";

@@ -17,7 +17,7 @@
 #include <map>
 #include <unordered_map>
 #include <czmq.h>
-#include <spdlog/spdlog.h>
+#include <spdlog_setup/conf.h>
 
 
 

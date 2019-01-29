@@ -8,9 +8,9 @@
 #include "ports/r_porterror.h"
 #include <capnp/message.h>
 #include <capnp/serialize.h>
-#include <spdlog/spdlog.h>
 #include <czmq.h>
 #include <memory>
+#include <spdlog_setup/conf.h>
 
 class MessageReaderArray {
 public:

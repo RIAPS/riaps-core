@@ -21,7 +21,7 @@
 #include <msgpack.hpp>
 #include <capnp/message.h>
 #include <capnp/serialize.h>
-#include <spdlog/spdlog.h>
+#include <spdlog_setup/conf.h>
 
 #include <iostream>
 #include <fstream>
@@ -70,17 +70,23 @@ namespace riaps {
         friend riaps::groups::Group;
     public:
 
-        /// @param config Configuration, parsed from the model file.
-        /// @param actor Parent actor, the owner the component.
-        //ComponentBase(ComponentConf& config, Actor& actor);
-
-
         ///////////////////// PYTHON PART ///////////////////////
         ComponentBase(const std::string &application_name, const std::string &actor_name);
 
-        virtual void Setup();
-        virtual void Activate();
-        void HandlePortUpdate(const std::string &port_name, const std::string &host, int port);
+        virtual void Setup() final;
+        virtual void Activate() final;
+        virtual void HandlePortUpdate(const std::string &port_name, const std::string &host, int port) final;
+        virtual void HandleReinstate() final;
+
+        /**
+         * @brief Stops the component
+         *
+         * Stops the component in the following order:
+         *   1) Stops the timers
+         *   2) Destroys the component thread
+         *   3) Deletes ports
+         */
+        virtual void Terminate() final;
 
         /////////////////////////////////////////
 
@@ -91,12 +97,6 @@ namespace riaps {
         zactor_t* GetZmqPipe() const;
 
         friend void component_actor(zsock_t* pipe, void* args);
-
-
-        // Obsolote
-        //bool SendMessageOnPort(std::string message, const std::string& portName);
-        //bool SendMessageOnPort(msgpack::sbuffer& message, const std::string& portName);
-        //bool SendMessageOnPort(MessageBase* message, const std::string& portName);
 
         /**
          * @brief Sends capnp message on port.
@@ -138,15 +138,7 @@ namespace riaps {
 
 
 
-        /**
-         * @brief Stops the component
-         *
-         * Stops the component in the following order:
-         *   1) Stops the timers
-         *   2) Destroys the component thread
-         *   3) Deletes ports
-         */
-        void Terminate();
+
 
         void UpdateGroup(riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
 
@@ -157,6 +149,8 @@ namespace riaps {
          */
         const ComponentConf& component_config() const;
 
+        std::shared_ptr<spd::logger> component_logger();
+
         /**
          *
          * @return The component unique ID.
@@ -166,7 +160,6 @@ namespace riaps {
         /**
          * Resource management handlers
          */
-        void HandleReinstate();
         virtual void HandleCPULimit();
         virtual void HandleMemLimit();
         virtual void HandleSpcLimit();
@@ -177,11 +170,6 @@ namespace riaps {
         virtual ~ComponentBase() = default;
 
     protected:
-
-
-        // PYTHON STUFF //
-        //////////////////
-
         /**
          * Sends a ZMQ message on the given inside port. This Send() is just for InsidePorts
          *
@@ -389,7 +377,8 @@ namespace riaps {
 
         std::function<void(const uint64_t)> scheduled_action_;
 
-        std::shared_ptr<spd::logger> component_logger();
+
+        const std::string component_logger_name();
 
         void set_config(ComponentConf& c_conf);
         void set_debug_level(spd::level::level_enum component_level,
@@ -398,6 +387,7 @@ namespace riaps {
     private:
         std::shared_ptr<spd::logger> riaps_logger_;
         std::shared_ptr<spd::logger> component_logger_;
+        std::string                  component_logger_name_;
 
         const ports::PublisherPort*  InitPublisherPort  (const ComponentPortPub&);
         const ports::SubscriberPort* InitSubscriberPort (const ComponentPortSub&);
