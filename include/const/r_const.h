@@ -25,7 +25,7 @@ constexpr auto DISCOVERY_ENDPOINT = "tcp://127.0.0.1:9700";
 
 // ** Security **
 // *** RSA keys ***
-constexpr auto KEY_FOLDER = ".ssh";
+constexpr auto KEY_FOLDER = "/usr/local/riaps/keys";
 constexpr auto KEY_FILE   = "id_rsa.key";
 
 // *** CURVE Path ***
