@@ -21,7 +21,6 @@ namespace riaps{
                     riaps::discovery::Kind::PUB,
                     (config.is_local ? riaps::discovery::Scope::LOCAL : riaps::discovery::Scope::GLOBAL),
                     {})) {
-
                 logger()->error("Publisher port couldn't be registered.");
             }
         }

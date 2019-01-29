@@ -5,9 +5,7 @@
 #include <componentmodel/r_configuration.h>
 #include <componentmodel/ports/r_portbase.h>
 #include <componentmodel/r_componentbase.h>
-
 #include <capnp/message.h>
-
 
 using namespace std;
 
@@ -21,8 +19,6 @@ namespace riaps {
             port_type_ = port_type;
             config_ = config;
             port_socket_ = nullptr;
-
-
         }
 
         std::shared_ptr<spd::logger> PortBase::logger() const {

@@ -70,6 +70,7 @@ namespace riaps {
         friend riaps::groups::Group;
     public:
 
+
         ///////////////////// PYTHON PART ///////////////////////
         ComponentBase(const std::string &application_name, const std::string &actor_name);
 
@@ -148,7 +149,6 @@ namespace riaps {
          * @return The component configuration.
          */
         const ComponentConf& component_config() const;
-
         std::shared_ptr<spd::logger> component_logger();
 
         /**
@@ -160,6 +160,7 @@ namespace riaps {
         /**
          * Resource management handlers
          */
+        void HandleReinstate();
         virtual void HandleCPULimit();
         virtual void HandleMemLimit();
         virtual void HandleSpcLimit();
@@ -379,6 +380,10 @@ namespace riaps {
 
 
         const std::string component_logger_name();
+
+        void set_config(ComponentConf& c_conf);
+        void set_debug_level(spd::level::level_enum component_level,
+                             spd::level::level_enum framework_level = spd::level::info);
 
         void set_config(ComponentConf& c_conf);
         void set_debug_level(spd::level::level_enum component_level,
