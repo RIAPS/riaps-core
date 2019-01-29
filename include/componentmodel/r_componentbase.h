@@ -160,7 +160,6 @@ namespace riaps {
         /**
          * Resource management handlers
          */
-        void HandleReinstate();
         virtual void HandleCPULimit();
         virtual void HandleMemLimit();
         virtual void HandleSpcLimit();
@@ -385,9 +384,6 @@ namespace riaps {
         void set_debug_level(spd::level::level_enum component_level,
                              spd::level::level_enum framework_level = spd::level::info);
 
-        void set_config(ComponentConf& c_conf);
-        void set_debug_level(spd::level::level_enum component_level,
-                             spd::level::level_enum framework_level = spd::level::info);
 
     private:
         std::shared_ptr<spd::logger> riaps_logger_;
