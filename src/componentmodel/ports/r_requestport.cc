@@ -27,6 +27,16 @@ namespace riaps {
             const ComponentPortReq* current_config = GetConfig();
             const string host = (current_config->is_local) ? "127.0.0.1" : riaps::framework::Network::GetIPAddress();
 
+            if (!GetConfig()->is_local && has_security()) {
+                if (port_certificate_ != nullptr) {
+                    zcert_apply(port_certificate_.get(), port_socket_);
+                    zsock_set_curve_serverkey(port_socket_, zcert_public_txt(port_certificate_.get()));
+                } else {
+                    logger()->error("Port certificate is null, cannot create port: {}", port_name());
+                    return;
+                }
+            }
+
             auto results =
                     Disco::SubscribeToService(
                             parent_component()->actor()->application_name(),

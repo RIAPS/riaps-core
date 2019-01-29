@@ -18,20 +18,14 @@ namespace riaps {
 
         class ResponsePort : public PortBase, public SenderPort, public RecvPort {
         public:
-
             ResponsePort(const ComponentPortRep &config, const ComponentBase *parent);
             virtual const ComponentPortRep* GetConfig() const;
-
-            //virtual ResponsePort* AsResponsePort() ;
-            //virtual RecvPort*     AsRecvPort()     ;
-
             ~ResponsePort() noexcept ;
-
-
         protected:
             int port_;
             std::string host_;
             std::string endpoint_;
+            std::shared_ptr<zactor_t> auth_;
         };
     }
 }

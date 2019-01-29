@@ -74,11 +74,11 @@ namespace riaps {
         PortTypes                    port_type_;
         zsock_t*                     port_socket_;
         std::shared_ptr<spd::logger> logger() const;
+        std::shared_ptr<zcert_t>   port_certificate_;
 
     private:
         const ComponentPortConfig* config_;
         const ComponentBase*       parent_component_;
-        zcert_t*                   port_certificate_;
     };
 
     template<class T>

@@ -12,6 +12,7 @@
 #include "czmq.h"
 
 #include <string>
+#include <memory>
 
 namespace riaps {
 
@@ -28,9 +29,10 @@ namespace riaps {
 
             ~AnswerPort() noexcept ;
         protected:
-            int         port_;
-            std::string host_;
-            std::string endpoint_;
+            std::shared_ptr<zactor_t> auth_;
+            int                       port_;
+            std::string               host_;
+            std::string               endpoint_;
         };
     }
 }

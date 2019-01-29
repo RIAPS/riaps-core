@@ -2,6 +2,7 @@
 // Created by parallels on 9/7/16.
 //
 
+#include <framework/rfw_security.h>
 #include <componentmodel/r_configuration.h>
 #include <componentmodel/ports/r_portbase.h>
 #include <componentmodel/r_componentbase.h>
@@ -10,8 +11,6 @@
 
 
 using namespace std;
-
-constexpr auto CERT_PATH = "/usr/local/riaps/keys/riaps-sys.cert";
 
 namespace riaps {
     namespace ports {
@@ -26,13 +25,13 @@ namespace riaps {
             port_certificate_ = nullptr;
 
             if (has_security()) {
-                ifstream f_server(CERT_PATH);
-                //ifstream f_client(client_cert_file);
-
-                if (!f_server.good()) {
-                    logger()->error("Missing certificate: {}", CERT_PATH);
-                } else {
-                    port_certificate_ = zcert_load(CERT_PATH);
+                zcert_t* curve_key = riaps::framework::Security::curve_key();
+                if (curve_key == nullptr)
+                    logger()->error("Cannot open CURVE key: {}", riaps::framework::Security::curve_key_path());
+                else {
+                    port_certificate_ = shared_ptr<zcert_t>(curve_key, [](zcert_t* c){
+                        zcert_destroy(&c);
+                    });
                 }
             }
         }
@@ -126,10 +125,6 @@ namespace riaps {
         PortBase::~PortBase() {
             if (port_socket_) {
                 zsock_destroy(&port_socket_);
-            }
-
-            if (has_security() && port_certificate_!= nullptr) {
-                zcert_destroy(&port_certificate_);
             }
         }
     }

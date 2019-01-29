@@ -57,6 +57,17 @@ namespace riaps {
             return key_path.string();
         }
 
+        zcert_t* Security::curve_key() {
+            auto result = zcert_load(curve_key_path().c_str());
+            return result;
+        }
+
+        const std::string Security::curve_key_path() {
+            fs::path key_path(CURVE_FOLDER);
+            key_path /= CURVE_KEY;
+            return key_path.string();
+        }
+
     }
 }
 
