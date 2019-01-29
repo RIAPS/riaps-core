@@ -455,12 +455,6 @@ namespace riaps{
         riaps_logger_->info("log config done: {}", component_logger_name());
     }
 
-    void ComponentBase::set_debug_level(spd::level::level_enum component_level,
-                                        spdlog::level::level_enum framework_level) {
-        riaps_logger_->set_level(framework_level);
-        component_logger()->set_level(component_level);
-    }
-
     const std::string ComponentBase::component_logger_name() {
         return component_logger_name_;
     }
