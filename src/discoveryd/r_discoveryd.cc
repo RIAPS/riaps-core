@@ -236,10 +236,10 @@ int main(int argc, char* argv[])
         // If UDP package was received
         if (ipaddress) {
             zframe_t *content = zframe_recv (listener);
-            //if (zframe_size (content) != 2)
-            //    console->warn("Invalid beacon package received");
-            //else
-            //    console->warn_if(zframe_data (content) [0] != 0xCA || zframe_data (content) [1] == 0xFE, "Invalid beacon content");
+//            if (zframe_size (content) != 2)
+//                console->warn("Invalid beacon package received");
+//            else
+//                console->warn_if(zframe_data (content) [0] != 0xCA || zframe_data (content) [1] == 0xFE, "Invalid beacon content");
 
             // Pass the ip addres to the dht tracker to check its stability
             // DHT must be stable for at least 3 seconds before the registration happens

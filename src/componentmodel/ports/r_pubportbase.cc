@@ -26,16 +26,16 @@ namespace riaps{
             }
 
             if (host_ == "") {
-                logger_->error("Publisher cannot be initiated. Cannot find  available network interface.");
+                logger()->error("Publisher cannot be initiated. Cannot find  available network interface.");
             }
 
             string pub_endpoint = fmt::format("tcp://{}:!",host_);
             port_ = zsock_bind(port_socket_, "%s", pub_endpoint.c_str());
 
             if (port_ == -1) {
-                logger_->error("Couldn't bind publisher port: {}", port_name());
+                logger()->error("Couldn't bind publisher port: {}", port_name());
             } else
-                logger_->debug("Publisher is created on {}:{} [{}]", host_, port_, GetConfig()->message_type);
+                logger()->debug("Publisher is created on {}:{} [{}]", host_, port_, GetConfig()->message_type);
         }
 
         const ComponentPortPub* PublisherPortBase::GetConfig() const {

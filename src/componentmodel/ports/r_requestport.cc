@@ -49,12 +49,12 @@ namespace riaps {
             int rc = zsock_connect(port_socket_, "%s", rep_endpoint.c_str());
 
             if (rc != 0) {
-                logger_->error("Request '{}' couldn't connect to ", GetConfig()->port_name, rep_endpoint);
+                logger()->error("Request '{}' couldn't connect to ", GetConfig()->port_name, rep_endpoint);
                 return false;
             }
 
             is_connected_ = true;
-            logger_->debug("Request port connected to: {}", rep_endpoint);
+            logger()->debug("Request port connected to: {}", rep_endpoint);
             return true;
         }
 
@@ -66,11 +66,9 @@ namespace riaps {
 //            return recv_timestamp_;
 //        }
 
-        PortError RequestPort::Send(capnp::MallocMessageBuilder &message) const {
-//            if (port_socket_ == nullptr || !is_connected_){
-//                return false;
-//            }
-            logger_->error_if(port_socket_ == nullptr, "Port socket ({}) is null: {} ", port_name(), __func__);
+        PortError RequestPort::Send(capnp::MallocMessageBuilder &message) const{
+            if (!port_socket_)
+                this->logger()->error("Port socket ({}) is null: {} ", port_name(), __func__);
 
             return SenderPort::Send(message);
         }

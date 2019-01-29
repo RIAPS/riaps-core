@@ -16,7 +16,7 @@ namespace riaps{
 
 
             if (host_ == "") {
-                logger_->error("Response cannot be initiated. Cannot find  available network interface.");
+                logger()->error("Response cannot be initiated. Cannot find  available network interface.");
             }
 
             string end_point = fmt::format("tcp://{}:!", host_);
@@ -24,11 +24,10 @@ namespace riaps{
 
 
             if (port_ == -1) {
-                logger_->error("Couldn't bind response port.");
+                logger()->error("Couldn't bind response port.");
             }
 
-            logger_->info("Answerport is created on: {}:{}", host_, port_);
-
+            logger()->info("Answerport is created on: {}:{}", host_, port_);
 
             if (!Disco::RegisterService(
                     parent_component->actor()->application_name(),
@@ -39,7 +38,7 @@ namespace riaps{
                     riaps::discovery::Kind::ANS,
                     (config.is_local ? riaps::discovery::Scope::LOCAL : riaps::discovery::Scope::GLOBAL),
                     {})) {
-                logger_->error("Answerport couldn't be registered.");
+                logger()->error("Answerport couldn't be registered.");
             }
         }
 

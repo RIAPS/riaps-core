@@ -14,7 +14,7 @@
 #include <messaging/distcoord.capnp.h>
 #include <utils/r_timeout.h>
 
-#include <spdlog/spdlog.h>
+#include <spdlog_setup/conf.h>
 #include <msgpack.hpp>
 #include <czmq.h>
 

@@ -7,7 +7,7 @@
 
 #include <messaging/distcoord.capnp.h>
 #include <groups/r_group.h>
-#include <spdlog/spdlog.h>
+#include <spdlog_setup/conf.h>
 #include <utils/r_timeout.h>
 #include <czmq.h>
 #include <functional>

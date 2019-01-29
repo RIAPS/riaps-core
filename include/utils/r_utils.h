@@ -15,7 +15,7 @@
 #include <capnp/message.h>
 #include <capnp/serialize.h>
 #include <czmq.h>
-#include <spdlog/spdlog.h>
+#include <spdlog_setup/conf.h>
 
 #include <iostream>
 #include <memory>
