@@ -101,7 +101,7 @@ using namespace std;
 int main(int argc, char* argv[]) {
 
     auto console = spd::stdout_color_mt(DISCO_LOGGER_NAME);
-    console->set_level(spd::level::debug);
+    console->set_level(spd::level::info);
     console->info("Starting RIAPS DISCOVERY SERVICE ");
 
 

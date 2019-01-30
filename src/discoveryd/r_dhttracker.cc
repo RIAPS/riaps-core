@@ -28,6 +28,7 @@ void dht_tracker (zsock_t *pipe, void *args) {
 
     zsock_t* in_socket  = zsock_new_router(CHAN_IN_DHTTRACKER);
     zpoller_t* poller = zpoller_new(pipe, in_socket, nullptr);
+    zpoller_set_nonstop(poller, true);
 
     auto logger = spd::stdout_color_mt(LOGGER_NAME);
     logger->set_level(spd::level::info);

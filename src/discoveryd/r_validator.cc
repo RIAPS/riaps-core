@@ -43,6 +43,7 @@ bool DiscoveryValidator::InitWithSecurity(const std::string &ip_address,
     });
     validator_address_ = zsock_endpoint(validator_socket());
     auto poller = zpoller_new(validator_socket(), nullptr);
+    zpoller_set_nonstop(poller, true);
     poller_ = shared_ptr<zpoller_t>(poller, [](zpoller_t* p){
         zpoller_destroy(&p);
     });
