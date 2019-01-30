@@ -6,21 +6,21 @@
 constexpr auto ENV_RIAPSAPPS = "RIAPSAPPS";
 
 // ** RIAPS-CONF Path **
-constexpr auto CONF_PATH = "/etc/riaps/riaps.conf";
+constexpr auto CONF_PATH = "/usr/local/riaps/etc/riaps.conf";
 
 // ** DEVM endpoints **
 constexpr auto DEVMANAGER_ENDPOINT = "tcp://127.0.0.1:9790";
-constexpr auto DEPLO_ENDPOINT = "tcp://127.0.0.1:9780";
+constexpr auto DEPLO_ENDPOINT      = "tcp://127.0.0.1:9780";
 
-// ** DISCOVERY PARAMETRS **
-constexpr auto DISCO_LOGGER_NAME = "discovery";
-constexpr auto CMD_DISCO_JOIN = "JOIN";
+// ** DISCOVERY PARAMETERS **
+constexpr auto DISCO_LOGGER_NAME       = "discovery";
+constexpr auto CMD_DISCO_JOIN          = "JOIN";
 constexpr auto REGULAR_MAINTAIN_PERIOD = 3000; //msec
 constexpr auto RIAPS_DHT_NODE_PORT     = 4222;
 
 // ** DISCOVERY POINTS **
-constexpr auto DHT_RESULT_CHANNEL      = "ipc:///tmp/dhtrouterchannel";
-constexpr auto CONTROL_SOCKET = "ipc:///tmp/discoverycontrol";
+constexpr auto DHT_RESULT_CHANNEL = "ipc:///tmp/dhtrouterchannel";
+constexpr auto CONTROL_SOCKET     = "ipc:///tmp/discoverycontrol";
 constexpr auto DISCOVERY_ENDPOINT = "tcp://127.0.0.1:9700";
 
 // ** Security **

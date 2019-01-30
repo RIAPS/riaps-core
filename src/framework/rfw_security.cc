@@ -43,15 +43,7 @@ namespace riaps {
         }
 
         const std::string Security::key_path() {
-            // Load the private key
-            const char *homedir;
-
-            if ((homedir = getenv("HOME")) == NULL) {
-                homedir = getpwuid(getuid())->pw_dir;
-            }
-
-            fs::path key_path(homedir);
-            key_path /= KEY_FOLDER;
+            fs::path key_path(KEY_FOLDER);
             key_path /= KEY_FILE;
 
             return key_path.string();

@@ -72,7 +72,7 @@ bool DiscoveryValidator::IsValid(const std::string &node_address) {
 
 std::shared_ptr<node_info> DiscoveryValidator::CreateNode(const std::string &node_address) {
     auto node = make_shared<node_info>();
-    node->check_period = riaps::utils::Timeout<std::chrono::seconds>(10,30);
+    node->check_period = riaps::utils::Timeout<std::chrono::seconds>(45,60);
     node->validated = false;
     zsock_t *socket = zsock_new(ZMQ_DEALER);
     node->request = shared_ptr<zsock_t>(socket, [](zsock_t *z) {
@@ -111,9 +111,10 @@ void DiscoveryValidator::ReplyAll() {
                                        s,
                                        d, signature_.size());
                         logger_->debug("Identified as {} ({})", s, validator_address());
+                    } else {
+                        zframe_destroy(&identity_frame);
                     }
                     zstr_free(&command);
-                    zframe_destroy(&identity_frame);
                 }
                 zmsg_destroy(&msg);
             }
@@ -143,11 +144,14 @@ void DiscoveryValidator::ReplyAll() {
 
 void DiscoveryValidator::Validate(const std::string &node_address) {
     auto node = cluster_nodes_[node_address];
-    node->check_period.Reset();
-    node->validated = false;
-    zsock_connect(node->request.get(), node_address.c_str());
-    string msg_cpy = IDENTIFY_MESSAGE;
-    zsock_send(node->request.get(), "s", msg_cpy.c_str());
+    if (node->check_period.IsTimeout()) {
+        logger_->debug("Validating {}", node_address);
+        node->check_period.Reset();
+        node->validated = false;
+        zsock_connect(node->request.get(), node_address.c_str());
+        string msg_cpy = IDENTIFY_MESSAGE;
+        zsock_send(node->request.get(), "s", msg_cpy.c_str());
+    }
 }
 
 void DiscoveryValidator::DeleteOldNodes() {

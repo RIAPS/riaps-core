@@ -292,13 +292,15 @@ int main(int argc, char* argv[]) {
 
             // If UDP package was received
             if (ipaddress) {
+                // Pass the ip addres to the dht tracker to check its stability
+                // DHT must be stable for at least 3 seconds before the registration happens
+                zsock_send(dhtTracker, "ss", CMD_BEACON_IP, ipaddress);
+
                 auto b_payload   = zstr_recv(listener);
                 if ((has_security&&b_payload || !has_security && (b_payload == announcement)) ) {
                     if (validator.IsValid(b_payload)) {
 
-                        // Pass the ip addres to the dht tracker to check its stability
-                        // DHT must be stable for at least 3 seconds before the registration happens
-                        zsock_send(dhtTracker, "ss", CMD_BEACON_IP, ipaddress);
+
 
                         if (strcmp(ipaddress, address.c_str()) != 0 && ipaddress!=address) {
                             // Check if the item already in the map
