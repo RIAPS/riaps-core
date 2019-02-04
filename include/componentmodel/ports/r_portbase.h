@@ -63,6 +63,8 @@ namespace riaps {
         InsidePort*          AsInsidePort()         ;
         RecvPort*            AsRecvPort()           ;
 
+        bool has_security() const;
+
         template<class T>
         T* GetPortAs();
 
@@ -72,6 +74,7 @@ namespace riaps {
         PortTypes                    port_type_;
         zsock_t*                     port_socket_;
         std::shared_ptr<spd::logger> logger() const;
+        std::shared_ptr<zcert_t>   port_certificate_;
 
     private:
         const ComponentPortConfig* config_;

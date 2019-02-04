@@ -16,6 +16,7 @@
 #include <capnp/serialize.h>
 #include <czmq.h>
 #include <spdlog_setup/conf.h>
+#include <opendht.h>
 
 #include <iostream>
 #include <memory>
@@ -70,5 +71,18 @@ void operator>>(zframe_t& frame, capnp::FlatArrayMessageReader& message);
 
 timespec operator-(const timespec& ts1, const timespec& ts2);
 bool operator>(const timespec& ts1, const timespec& ts2);
+
+template<class T>
+dht::Blob ConvertToBlob(T* data, size_t size) {
+    dht::Blob result;
+    transform(data, data+size, back_inserter(result),
+              [](T c) -> uint8_t {
+                  return (uint8_t)c;
+              });
+    return result;
+}
+
+
+dht::Blob ConvertToBlob(const std::string& data);
 
 #endif

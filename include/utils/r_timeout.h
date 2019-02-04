@@ -3,6 +3,7 @@
 #define RIAPS_CORE_R_TIMEOUT_H
 
 #include <chrono>
+#include <random>
 
 using namespace std::chrono;
 
@@ -15,7 +16,6 @@ namespace riaps{
             /**
              * Intitalizes with 0 timeout from now;
              */
-
             Timeout<T>(){
                 Reset(T(0));
             };
@@ -31,6 +31,10 @@ namespace riaps{
             Timeout<T>(int64_t timeout) {
                 T d(timeout);
                 Reset(d);
+            }
+
+            Timeout<T>(int64_t lower_bound, int64_t upper_bound) {
+                Reset(lower_bound, upper_bound);
             }
 
             /**
@@ -52,6 +56,17 @@ namespace riaps{
 
             void Reset(int64_t timeout) {
                 m_timeout = T(timeout);
+            }
+
+            /*
+             * Random timeout between lower_bound and upper_bound
+             */
+            void Reset(int64_t lower_bound, int64_t upper_bound) {
+                std::random_device                      rd;
+                std::mt19937                            gen(rd());
+                std::uniform_int_distribution<int64_t > dist(lower_bound, upper_bound);
+                int64_t v = dist(gen);
+                Reset(v);
             }
 
             /**

@@ -5,6 +5,7 @@
 #ifndef RIAPS_CORE_R_PUBLISHERPORTBASE_H
 #define RIAPS_CORE_R_PUBLISHERPORTBASE_H
 
+#include <const/r_const.h>
 #include <componentmodel/ports/r_portbase.h>
 #include <componentmodel/ports/r_senderport.h>
 
@@ -21,6 +22,7 @@ namespace riaps{
         protected:
             int port_;
             std::string host_;
+            std::shared_ptr<zactor_t> auth_;
             virtual void InitSocket();
         };
     }

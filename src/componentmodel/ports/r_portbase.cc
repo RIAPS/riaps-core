@@ -2,6 +2,7 @@
 // Created by parallels on 9/7/16.
 //
 
+#include <framework/rfw_security.h>
 #include <componentmodel/r_configuration.h>
 #include <componentmodel/ports/r_portbase.h>
 #include <componentmodel/r_componentbase.h>
@@ -16,12 +17,33 @@ namespace riaps {
                            const ComponentPortConfig* config,
                            const ComponentBase* parent_component)
                 : parent_component_(parent_component) {
-            port_type_ = port_type;
-            config_ = config;
-            port_socket_ = nullptr;
+
+            port_type_        = port_type;
+            config_           = config;
+            port_socket_      = nullptr;
+            port_certificate_ = nullptr;
+
+            if (has_security()) {
+                zcert_t* curve_key = riaps::framework::Security::curve_key();
+                if (curve_key == nullptr)
+                    logger()->error("Cannot open CURVE key: {}", riaps::framework::Security::curve_key_path());
+                else {
+                    port_certificate_ = shared_ptr<zcert_t>(curve_key, [](zcert_t* c){
+                        zcert_destroy(&c);
+                    });
+                }
+            }
         }
 
-        std::shared_ptr<spd::logger> PortBase::logger() const {
+        bool PortBase::has_security() const {
+            if (parent_component_ == nullptr) {
+                logger()->warn("Parent component is null for {}", port_name());
+                return false;
+            }
+            return parent_component_->has_security();
+        }
+
+        shared_ptr<spd::logger> PortBase::logger() const {
             // InsidePorts have no parent components
             if (parent_component_ == nullptr) {
                 string logger_prefix = port_type_ == PortTypes::Inside?"InsidePort":"NullParent";

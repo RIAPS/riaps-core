@@ -35,7 +35,6 @@ set (LIBALLPATH_LIB ${DEPENDENCIES}/${arch}/lib)
 include_directories(${LIBALLPATH_INCLUDE})
 link_directories(${LIBALLPATH_LIB})
 
-# Debug binaries are to be copied into "./bin" directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_HOME_DIRECTORY})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_HOME_DIRECTORY})
 
@@ -86,7 +85,7 @@ if (BUILD_TESTS)
     # add_subdirectory(tests/TimedTest)
     # add_subdirectory(examples/EchoIO)
     # add_subdirectory(examples/pybind/WeatherMonitor)
-    # add_subdirectory(examples/pybind/DistributedEstimatorPybind)
+    #add_subdirectory(examples/pybind/DistributedEstimatorPybind)
 endif()
 
 
@@ -120,6 +119,7 @@ list (APPEND riapslib_SOURCE
         src/componentmodel/r_parameter.cc
         src/framework/rfw_configuration.cc
         src/framework/rfw_network_interfaces.cc
+        src/framework/rfw_security.cc
         src/groups/r_group.cc
         src/groups/r_grouplead.cc
         src/utils/r_utils.cc
@@ -162,7 +162,7 @@ list (APPEND riapslib_HEADERS
         include/utils/r_expirable.h
         include/utils/r_expirablelist.h
         include/utils/r_timeout.h
-
+        include/framework/rfw_security.h
         )
 
 # libriaps
@@ -171,7 +171,7 @@ add_library(riaps SHARED
         ${riapslib_HEADERS}
         )
 
-target_link_libraries(riaps PRIVATE czmq zmq dl capnp kj)
+target_link_libraries(riaps PRIVATE czmq zmq dl capnp kj opendht gnutls stdc++fs)
 install(TARGETS riaps DESTINATION lib)
 
 # rdiscoveryd source
@@ -181,6 +181,8 @@ list(APPEND RDISCOVERYD_SOURCE
         src/discoveryd/r_msghandler.cc
         src/discoveryd/r_dhttracker.cc
         src/utils/r_lmdb.cc
+        src/discoveryd/r_validator.cc
+        src/discoveryd/r_dhtdata.cc
         include/messaging/disco.capnp.c++
         )
 
@@ -193,12 +195,15 @@ list(APPEND RDISCOVERYD_HEADERS
         include/discoveryd/r_dhttracker.h
         include/framework/rfw_configuration.h
         include/framework/rfw_network_interfaces.h
+        include/framework/rfw_security.h
         include/utils/r_lmdb.h
         include/utils/r_utils.h
         include/messaging/disco.capnp.h
         include/groups/r_group.h
         include/spdlog/spdlog.h
         include/utils/r_timeout.h
+        include/discoveryd/r_validator.h
+        include/discoveryd/r_dhtdata.h
         )
 
 # rdiscoveryd
@@ -206,7 +211,7 @@ add_executable(rdiscoveryd
         ${RDISCOVERYD_SOURCE}
         ${RDISCOVERYD_HEADERS}
         )
-target_link_libraries(rdiscoveryd czmq zmq opendht gnutls riaps capnp nettle hogweed gmp pthread kj lmdb)
+target_link_libraries(rdiscoveryd czmq zmq opendht gnutls riaps capnp nettle hogweed gmp pthread kj lmdb stdc++fs)
 
 install(TARGETS rdiscoveryd DESTINATION bin)
 
