@@ -6,9 +6,7 @@
 #include <componentmodel/r_configuration.h>
 #include <componentmodel/ports/r_portbase.h>
 #include <componentmodel/r_componentbase.h>
-
 #include <capnp/message.h>
-
 
 using namespace std;
 
@@ -19,6 +17,7 @@ namespace riaps {
                            const ComponentPortConfig* config,
                            const ComponentBase* parent_component)
                 : parent_component_(parent_component) {
+
             port_type_        = port_type;
             config_           = config;
             port_socket_      = nullptr;

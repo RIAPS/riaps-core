@@ -57,11 +57,8 @@ namespace riaps{
             if (port_ == -1) {
                 logger()->error("Couldn't bind response port.");
             }
-
             // TODO: spd logger
             logger()->debug("Response is created on {}:{}", host_, port_);
-
-
             logger()->debug("{}.host_ = {}", __FUNCTION__, host_);
             if (!Disco::RegisterService(
                     parent_component()->actor()->application_name(),

@@ -69,7 +69,6 @@ namespace riaps {
     class ComponentBase {
         friend riaps::groups::Group;
     public:
-
         ///////////////////// PYTHON PART ///////////////////////
         ComponentBase(const std::string &application_name, const std::string &actor_name);
 
@@ -148,6 +147,7 @@ namespace riaps {
          * @return The component configuration.
          */
         const ComponentConf& component_config() const;
+        std::shared_ptr<spd::logger> component_logger();
 
         std::shared_ptr<spd::logger> component_logger();
 
@@ -385,6 +385,7 @@ namespace riaps {
         void set_config(ComponentConf& c_conf);
         void set_debug_level(spd::level::level_enum component_level,
                              spd::level::level_enum framework_level = spd::level::info);
+
 
     private:
         std::shared_ptr<spd::logger> riaps_logger_;

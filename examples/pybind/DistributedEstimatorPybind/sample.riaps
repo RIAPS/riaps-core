@@ -29,7 +29,7 @@ app DistributedEstimator {
     
     // Estimator actor
     actor Estimator {
-        {  // Sensor component
+        local SensorReady, SensorQuery, SensorValue; {  // Sensor component
           sensor : Sensor;
           // Local estimator, publishes global message 'Estimate'
 		  filter : LocalEstimator(iArg=789,fArg=0.12,sArg="text",bArg=false);

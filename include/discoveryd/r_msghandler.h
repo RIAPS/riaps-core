@@ -23,8 +23,6 @@
 #include <czmq.h>
 #include <spdlog_setup/conf.h>
 
-
-
 static const std::map<riaps::discovery::Kind, std::string> kindMap =
             {{riaps::discovery::Kind::PUB, "pub"},
              {riaps::discovery::Kind::SUB, "sub"},

@@ -48,7 +48,6 @@ namespace riaps{
 
             logger()->info("Answerport is created on: {}:{}", host_, port_);
 
-
             if (!Disco::RegisterService(
                     parent_component->actor()->application_name(),
                     parent_component->actor()->actor_name(),

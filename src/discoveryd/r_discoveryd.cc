@@ -360,7 +360,6 @@ int main(int argc, char* argv[]) {
 //            has_joined = false;
 //        }
 
-
     }
     zsock_send(speaker, "s", "SILENCE");
     zclock_sleep(500);
