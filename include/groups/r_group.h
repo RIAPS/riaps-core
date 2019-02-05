@@ -5,11 +5,12 @@
 #ifndef RIAPS_CORE_R_GROUP_H_H
 #define RIAPS_CORE_R_GROUP_H_H
 
+#include <const/r_const.h>
 #include <componentmodel/r_componentbase.h>
 #include <componentmodel/r_configuration.h>
-#include <groups/r_grouplead.h>
 #include <componentmodel/ports/r_pubportgroup.h>
 #include <componentmodel/ports/r_subportgroup.h>
+#include <groups/r_grouplead.h>
 #include <messaging/disco.capnp.h>
 #include <messaging/distcoord.capnp.h>
 #include <utils/r_timeout.h>
@@ -25,9 +26,7 @@
 #include <chrono>
 #include <set>
 
-constexpr auto INTERNAL_SUB_NAME = "$SUB#";
-constexpr auto INTERNAL_PUB_NAME = "$PUB#";
-constexpr auto INTERNAL_MESSAGETYPE = "InternalGroupMessage";
+
 
 
 namespace spd = spdlog;

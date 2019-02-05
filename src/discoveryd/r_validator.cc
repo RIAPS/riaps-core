@@ -133,7 +133,7 @@ void DiscoveryValidator::ReplyAll() {
                     if (private_key_->getPublicKey().checkSignature(ConvertToBlob(ip_str), blob_signature)) {
                         cluster_nodes_[ip_str]->validated = true;
                         logger_->debug("{} is validated from now", ip_str);
-                        zsock_disconnect(cluster_nodes_[ip_str]->request.get(), ip_address);
+                        zsock_disconnect(cluster_nodes_[ip_str]->request.get(), "%s", ip_address);
                     }
                 }
                 zstr_free(&ip_address);
@@ -149,7 +149,7 @@ void DiscoveryValidator::Validate(const std::string &node_address) {
         logger_->debug("Validating {}", node_address);
         node->check_period.Reset();
         node->validated = false;
-        zsock_connect(node->request.get(), node_address.c_str());
+        zsock_connect(node->request.get(), "%s", node_address.c_str());
         string msg_cpy = IDENTIFY_MESSAGE;
         zsock_send(node->request.get(), "s", msg_cpy.c_str());
     }
