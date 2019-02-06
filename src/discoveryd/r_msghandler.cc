@@ -286,10 +286,10 @@ namespace riaps{
 
             //_clients[clientKeyBase] = std::unique_ptr<actor_details_t>(new actor_details_t());
             clients_[clientKeyBase] = std::make_shared<ActorDetails>();
-            clients_[clientKeyBase] -> socket  = actor_socket;
-            clients_[clientKeyBase] -> port    = port;
-            clients_[clientKeyBase] -> pid     = msgActorReq.getPid();
-            clients_[clientKeyBase] -> appName = appname;
+            clients_[clientKeyBase] -> socket   = actor_socket;
+            clients_[clientKeyBase] -> port     = port;
+            clients_[clientKeyBase] -> pid      = msgActorReq.getPid();
+            clients_[clientKeyBase] -> app_name = appname;
 
             // Subscribe to groups
             if (group_listeners_.find(appname) == group_listeners_.end()) {
@@ -495,12 +495,12 @@ namespace riaps{
 
         // This client is interested in this kind of messages. Register it.
         auto current_client = std::unique_ptr<ClientDetails>(new ClientDetails());
-        current_client->app_name      = path.getAppName();
-        current_client->actor_host    = client.getActorHost();
-        current_client->portname      = client.getPortName();
-        current_client->actor_name    = client.getActorName();
-        current_client->instance_name = client.getInstanceName();
-        current_client->isLocal       = path.getScope() == riaps::discovery::Scope::LOCAL ? true : false;
+        current_client->app_name       = path.getAppName();
+        current_client->actor_host     = riaps::framework::Network::GetIPAddress(); //client.getActorHost();
+        current_client->port_name      = client.getPortName();
+        current_client->actor_name     = client.getActorName();
+        current_client->instance_name  = client.getInstanceName();
+        current_client->is_local       = path.getScope() == riaps::discovery::Scope::LOCAL ? true : false;
 
         // Copy for the get callback
         ClientDetails currentClientTmp(*current_client);
@@ -639,7 +639,7 @@ namespace riaps{
 
                               auto msg_path = msg_providerget.initPath();
 
-                              riaps::discovery::Scope scope = clientDetails.isLocal ? riaps::discovery::Scope::LOCAL : riaps::discovery::Scope::GLOBAL;
+                              riaps::discovery::Scope scope = clientDetails.is_local ? riaps::discovery::Scope::LOCAL : riaps::discovery::Scope::GLOBAL;
                               string app_name = clientDetails.app_name;
 
                               msg_path.setScope(scope);
@@ -648,7 +648,7 @@ namespace riaps{
                               auto msg_client = msg_providerget.initClient();
 
                               msg_client.setActorName(clientDetails.actor_name);
-                              msg_client.setPortName(clientDetails.portname);
+                              msg_client.setPortName(clientDetails.port_name);
                               msg_client.setActorHost(clientDetails.actor_host);
                               msg_client.setInstanceName(clientDetails.instance_name);
 
@@ -1012,9 +1012,9 @@ namespace riaps{
                             msgClient.setActorHost(subscribedClient->actor_host);
                             msgClient.setActorName(subscribedClient->actor_name);
                             msgClient.setInstanceName(subscribedClient->instance_name);
-                            msgClient.setPortName(subscribedClient->portname);
+                            msgClient.setPortName(subscribedClient->port_name);
 
-                            msgPortUpd.setScope(subscribedClient->isLocal ? riaps::discovery::Scope::LOCAL : riaps::discovery::Scope::GLOBAL);
+                            msgPortUpd.setScope(subscribedClient->is_local ? riaps::discovery::Scope::LOCAL : riaps::discovery::Scope::GLOBAL);
 
                             msgSocket.setHost(host);
                             msgSocket.setPort(portNum);
@@ -1027,7 +1027,7 @@ namespace riaps{
 
                             zmsg_send(&msg, clientSocket->socket);
 
-                            logger_->info("Update() returns {}@{}:{} to {}", subscribedClient->portname, host, portNum, clientKeyBase);
+                            logger_->info("Update() returns {}@{}:{} to {}", subscribedClient->port_name, host, portNum, clientKeyBase);
                         }
                     }
                 }
@@ -1043,7 +1043,7 @@ namespace riaps{
         set<zsock_t*> sentCache;
 
         for (auto& client : clients_){
-            if (client.second->appName == appName){
+            if (client.second->app_name == appName){
                 if (sentCache.find(client.second->socket) != sentCache.end()) continue;
 
                 std::string log;
@@ -1113,8 +1113,8 @@ namespace riaps{
     int DiscoveryMessageHandler::DeregisterActor(const std::string& appName,
                                                  const std::string& actorName){
 
-        string clientKeyBase = fmt::format("/{}/{}/",appName,actorName);
-        string clientKeyLocal = clientKeyBase + mac_address_;
+        string clientKeyBase   = fmt::format("/{}/{}/",appName,actorName);
+        string clientKeyLocal  = clientKeyBase + mac_address_;
         string clientKeyGlobal = clientKeyBase + host_address_;
 
         vector<string> keysToBeErased {clientKeyBase, clientKeyLocal, clientKeyGlobal};

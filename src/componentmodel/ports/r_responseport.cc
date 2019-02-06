@@ -34,14 +34,14 @@ namespace riaps{
 
             // The port is NOT local AND encrypted
             if (!GetConfig()->is_local && has_security()) {
-                zactor_t *auth = zactor_new (zauth, NULL);
-                auth_ = shared_ptr<zactor_t>(auth, [](zactor_t* z) {zactor_destroy(&z);});
-                //zstr_sendx (auth, "VERBOSE", NULL);
-                //zsock_wait (auth);
-                zstr_sendx (auth, "CURVE", CURVE_FOLDER, NULL);
-                zsock_wait (auth);
-//                zstr_sendx (auth, "ALLOW", "192.168.1.104", "192.168.1.101", NULL);
+//                zactor_t *auth = zactor_new (zauth, NULL);
+//                auth_ = shared_ptr<zactor_t>(auth, [](zactor_t* z) {zactor_destroy(&z);});
+//                //zstr_sendx (auth, "VERBOSE", NULL);
+//                //zsock_wait (auth);
+//                zstr_sendx (auth, "CURVE", CURVE_FOLDER, NULL);
 //                zsock_wait (auth);
+////                zstr_sendx (auth, "ALLOW", "192.168.1.104", "192.168.1.101", NULL);
+////                zsock_wait (auth);
                 if (port_certificate_ != nullptr) {
                     zcert_apply (port_certificate_.get(), port_socket_);
                     zsock_set_curve_server (port_socket_, 1);

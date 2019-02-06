@@ -3,9 +3,11 @@
 #include <framework/rfw_configuration.h>
 #include <spdlog/spdlog.h>
 
+using namespace std;
+
 namespace riaps {
     namespace discovery {
-        zsock_t* Disco::RegisterActor(const std::string &app_name, const std::string &actor_name) {
+        zsock_t* Disco::RegisterActor(const string &app_name, const string &actor_name) {
             /////
             /// Request
             /////
@@ -23,7 +25,7 @@ namespace riaps {
             zmsg_t* msg = zmsg_new();
             zmsg_pushmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
 
-            std::string ipcAddress = riaps::framework::Configuration::GetDiscoveryEndpoint();
+            string ipcAddress = riaps::framework::Configuration::GetDiscoveryEndpoint();
             zsock_t * client = zsock_new_req (ipcAddress.c_str());
             assert(client);
 
@@ -36,7 +38,7 @@ namespace riaps {
 
             zframe_t* capnp_msgbody = zmsg_pop(msg_response);
             size_t    size = zframe_size(capnp_msgbody);
-            byte*     data = zframe_data(capnp_msgbody);
+            auto      data = zframe_data(capnp_msgbody);
 
             auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
 
@@ -97,7 +99,7 @@ namespace riaps {
 
             zframe_t* capnpBody = zmsg_pop(msgRep);
             size_t    size = zframe_size(capnpBody);
-            byte*     data = zframe_data(capnpBody);
+            auto      data = zframe_data(capnpBody);
 
             auto capnpBuffer = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
 
@@ -163,7 +165,7 @@ namespace riaps {
 
             zframe_t* capnp_msgbody = zmsg_pop(msg_response);
             size_t    size = zframe_size(capnp_msgbody);
-            byte*     data = zframe_data(capnp_msgbody);
+            auto      data = zframe_data(capnp_msgbody);
 
             auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
 
@@ -241,7 +243,7 @@ namespace riaps {
 
             zframe_t* capnp_msgbody = zmsg_pop(msg_response);
             size_t    size = zframe_size(capnp_msgbody);
-            byte*     data = zframe_data(capnp_msgbody);
+            auto      data = zframe_data(capnp_msgbody);
 
             auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
 
@@ -324,7 +326,7 @@ namespace riaps {
 
             zframe_t* capnpBody = zmsg_pop(msgResponse);
             size_t    size = zframe_size(capnpBody);
-            byte*     data = zframe_data(capnpBody);
+            auto      data = zframe_data(capnpBody);
 
             auto capnpData = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
 
