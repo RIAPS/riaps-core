@@ -16,9 +16,9 @@
 #include <set>
 #include <unordered_map>
 
-#define MIN_ELECTION_TIMEOUT 150
-#define MAX_ELECTION_TIMEOUT 500
-#define APPENDENTRY_TIMEOUT  75
+constexpr auto MIN_ELECTION_TIMEOUT = 150;
+constexpr auto MAX_ELECTION_TIMEOUT = 500;
+constexpr auto APPENDENTRY_TIMEOUT  = 75;
 
 using namespace std::chrono;
 using namespace riaps::utils;
@@ -46,7 +46,7 @@ namespace riaps{
             void SetOnLeaderChanged(std::function<void(const std::string&)> handler);
 
             /**
-             * Maintain the state whan no incoming message.
+             * Maintain the state when no incoming message.
              */
             void Update();
 

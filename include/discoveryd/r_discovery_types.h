@@ -22,7 +22,7 @@ struct ActorDetails {
     int pid;
 
     // Application name
-    std::string appName;
+    std::string app_name;
 
     ~ActorDetails(){
         if (socket!=nullptr) {
@@ -37,21 +37,21 @@ struct ClientDetails{
     std::string actor_name;
     std::string actor_host;
     std::string instance_name;
-    std::string portname;
-    bool        isLocal;
+    std::string port_name;
+    bool        is_local;
 
 
     ClientDetails(){
-        isLocal = false;
+        is_local = false;
     }
 
     ClientDetails(const struct ClientDetails& other){
-        app_name = other.app_name;
-        actor_name = other.actor_name;
-        actor_host = other.actor_host;
+        app_name      = other.app_name;
+        actor_name    = other.actor_name;
+        actor_host    = other.actor_host;
         instance_name = other.instance_name;
-        portname = other.portname;
-        isLocal = other.isLocal;
+        port_name     = other.port_name;
+        is_local      = other.is_local;
     }
 
     //bool operator==(const struct _client_details& rhs);
