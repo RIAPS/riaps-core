@@ -148,7 +148,6 @@ namespace riaps {
          */
         const ComponentConf& component_config() const;
         std::shared_ptr<spd::logger> component_logger();
-
         /**
          *
          * @return The component unique ID.
