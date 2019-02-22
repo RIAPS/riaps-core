@@ -148,7 +148,7 @@ namespace riaps {
         }
 
         bool PeriodicTimer::has_delay() {
-            return delay_.tv_sec == 0 && delay_.tv_nsec == 0;
+            return !(delay_.tv_sec == 0 && delay_.tv_nsec == 0);
         }
 
         void PeriodicTimer::Halt() {
