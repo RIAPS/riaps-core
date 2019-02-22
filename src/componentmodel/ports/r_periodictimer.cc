@@ -11,6 +11,9 @@
 
 using namespace std;
 
+constexpr auto CMD_START = "$START";
+constexpr auto CMD_HALT  = "$HALT" ;
+
 namespace riaps {
     namespace ports {
 
@@ -37,21 +40,19 @@ namespace riaps {
             timespec now;
             clock_gettime(CLOCK_REALTIME, &now);
 
-            const timespec period {
-                    periodic_timer->interval()/1000,
-                    (periodic_timer->interval()%1000)*1000000
-            };
+            const timespec period = periodic_timer->has_delay()?
+                    periodic_timer->delay() :
+                    timespec {
+                        periodic_timer->interval()/1000,
+                        (periodic_timer->interval()%1000)*1000000
+                    };
+
 
             while (!terminated) {
                 if (started) {
-                    // Send FIRE message
-
-                    //auto port_name = periodic_timer->port_name();
-                    //zmsg_addstr(msg, port_name.c_str());
-
-                    //auto diff = chrono::milliseconds(periodic_timer->interval());
-                    //now += diff;
-                    //this_thread::sleep_until(now);
+                    if (periodic_timer->has_delay()) {
+                        clock_gettime(CLOCK_REALTIME, &now);
+                    }
 
                     now.tv_sec+=period.tv_sec;
                     if (now.tv_nsec + period.tv_nsec >= 1E9) {
@@ -62,11 +63,12 @@ namespace riaps {
                         now.tv_nsec+=period.tv_nsec;
 
                     zframe_t *msg = zframe_new(&now, sizeof(timespec));
-
                     clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &now, NULL);
-
                     zframe_send(&msg, zsock_timer, ZFRAME_DONTWAIT);
-                } else{
+                    if (periodic_timer->has_delay()) {
+                        started = false;
+                    }
+                } else {
                     this_thread::sleep_for(chrono::milliseconds(10));
                 }
 
@@ -83,10 +85,11 @@ namespace riaps {
                     if (streq(command, "$TERM")) {
                         cout << "$TERM arrived in periodic timer" << std::endl;
                         terminated = true;
-                    } else if (streq(command, "$START")){
+                    } else if (streq(command, CMD_START)){
                         started = true;
-                        //now = chrono::high_resolution_clock::now();
                         clock_gettime(CLOCK_REALTIME, &now);
+                    } else if (streq(command, CMD_HALT)){
+                        started = false;
                     }
                     zstr_free(&command);
                     zmsg_destroy(&msg);
@@ -101,6 +104,7 @@ namespace riaps {
                 : PortBase(PortTypes::Timer, (ComponentPortConfig*)&config, parent_component) {
             interval_ = config.period;
             timer_actor_ = zactor_new(ptimeractor, this);
+            delay_ = timespec{0,0};
         }
 
         void PeriodicTimer::Init() {
@@ -135,8 +139,26 @@ namespace riaps {
 
         void PeriodicTimer::Start() {
             zmsg_t* msg = zmsg_new();
-            zmsg_addstr(msg,"$START");
+            zmsg_addstr(msg, CMD_START);
             zactor_send(timer_actor_, &msg);
+        }
+
+        bool PeriodicTimer::has_delay() {
+            return delay_.tv_sec == 0 && delay_.tv_nsec == 0;
+        }
+
+        void PeriodicTimer::Halt() {
+            zmsg_t* msg = zmsg_new();
+            zmsg_addstr(msg, CMD_HALT);
+            zactor_send(timer_actor_, &msg);
+        }
+
+        const timespec& PeriodicTimer::delay() {
+            return delay_;
+        }
+
+        void PeriodicTimer::delay(timespec &delay) {
+            delay_ = delay;
         }
 
         void PeriodicTimer::Stop() {
