@@ -37,12 +37,10 @@ namespace riaps {
             zmq_setsockopt(zsock_timer, ZMQ_SNDTIMEO, &send_timeout, sizeof(int));
 
             //auto now = chrono::high_resolution_clock::now();
-            timespec now;
+            timespec& now = periodic_timer->now_;
             clock_gettime(CLOCK_REALTIME, &now);
 
-            const timespec period = periodic_timer->has_delay()?
-                    periodic_timer->delay() :
-                    timespec {
+            timespec period = {
                         periodic_timer->interval()/1000,
                         (periodic_timer->interval()%1000)*1000000
                     };
@@ -51,6 +49,7 @@ namespace riaps {
             while (!terminated) {
                 if (started) {
                     if (periodic_timer->has_delay()) {
+                        period = periodic_timer->delay();
                         clock_gettime(CLOCK_REALTIME, &now);
                     }
 
@@ -66,7 +65,7 @@ namespace riaps {
                     clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &now, NULL);
                     zframe_send(&msg, zsock_timer, ZFRAME_DONTWAIT);
                     if (periodic_timer->has_delay()) {
-                        started = false;
+                        periodic_timer->Halt();
                     }
                 } else {
                     this_thread::sleep_for(chrono::milliseconds(10));
@@ -102,9 +101,10 @@ namespace riaps {
 
         PeriodicTimer::PeriodicTimer(const ComponentPortTim &config, const ComponentBase* parent_component)
                 : PortBase(PortTypes::Timer, (ComponentPortConfig*)&config, parent_component) {
-            interval_ = config.period;
+            interval_    = config.period;
+            delay_       = timespec{0,0};
+            has_started_ = false;
             timer_actor_ = zactor_new(ptimeractor, this);
-            delay_ = timespec{0,0};
         }
 
         void PeriodicTimer::Init() {
@@ -138,9 +138,13 @@ namespace riaps {
         }
 
         void PeriodicTimer::Start() {
-            zmsg_t* msg = zmsg_new();
-            zmsg_addstr(msg, CMD_START);
-            zactor_send(timer_actor_, &msg);
+            if (!has_started_) {
+                has_started_=true;
+                clock_gettime(CLOCK_REALTIME, &now_);
+                zmsg_t* msg = zmsg_new();
+                zmsg_addstr(msg, CMD_START);
+                zactor_send(timer_actor_, &msg);
+            }
         }
 
         bool PeriodicTimer::has_delay() {
@@ -148,17 +152,20 @@ namespace riaps {
         }
 
         void PeriodicTimer::Halt() {
-            zmsg_t* msg = zmsg_new();
-            zmsg_addstr(msg, CMD_HALT);
-            zactor_send(timer_actor_, &msg);
+            if (has_started_) {
+                has_started_ = false;
+                zmsg_t *msg = zmsg_new();
+                zmsg_addstr(msg, CMD_HALT);
+                zactor_send(timer_actor_, &msg);
+            }
         }
 
         const timespec& PeriodicTimer::delay() {
             return delay_;
         }
 
-        void PeriodicTimer::delay(timespec &delay) {
-            delay_ = delay;
+        void PeriodicTimer::delay(timespec &value) {
+            delay_ = value;
         }
 
         void PeriodicTimer::Stop() {
