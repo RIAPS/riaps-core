@@ -19,22 +19,20 @@ namespace riaps {
             void Init();
             timespec Recv();
 
-            int interval();
+            ulong interval();
             void Stop();
             void Start();
             void Halt();
             void delay(timespec& value);
-            const timespec& delay();
-
+            const timespec delay();
 
             bool has_delay();
 
-            bool is_running() const noexcept;
             virtual const zsock_t* port_socket() const;
 
             std::string TimerChannel();
 
-            virtual ~PeriodicTimer() = default;
+            ~PeriodicTimer() override = default;
         protected:
             std::string             timer_channel_;
             zactor_t*               timer_actor_;
@@ -42,6 +40,7 @@ namespace riaps {
             timespec                delay_;
             timespec                now_;
             bool                    has_started_;
+            std::mutex              mtx_;
             std::unique_ptr<zmsg_t, std::function<void(zmsg_t*)>> last_zmsg_;
         };
     }

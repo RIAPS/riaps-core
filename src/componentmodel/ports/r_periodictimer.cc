@@ -8,6 +8,7 @@
 #include <thread>
 #include <functional>
 #include <atomic>
+#include <mutex>
 
 using namespace std;
 
@@ -50,6 +51,8 @@ namespace riaps {
                 if (started) {
                     if (periodic_timer->has_delay()) {
                         period = periodic_timer->delay();
+                        if (period.tv_sec == 0 && period.tv_nsec == 0) continue;
+
                         clock_gettime(CLOCK_REALTIME, &now);
                     }
 
@@ -133,7 +136,7 @@ namespace riaps {
             return fmt::format("inproc://timer_{}", port_name());
         }
 
-        int PeriodicTimer::interval() {
+        ulong PeriodicTimer::interval() {
             return interval_;
         }
 
@@ -148,7 +151,8 @@ namespace riaps {
         }
 
         bool PeriodicTimer::has_delay() {
-            return !(delay_.tv_sec == 0 && delay_.tv_nsec == 0);
+            //return !(delay_.tv_sec == 0 && delay_.tv_nsec == 0);
+            return interval_ == 0;
         }
 
         void PeriodicTimer::Halt() {
@@ -160,12 +164,18 @@ namespace riaps {
             }
         }
 
-        const timespec& PeriodicTimer::delay() {
-            return delay_;
+        const timespec PeriodicTimer::delay() {
+            mtx_.lock();
+            auto result = delay_;
+            mtx_.unlock();
+            return result;
+
         }
 
         void PeriodicTimer::delay(timespec &value) {
+            mtx_.lock();
             delay_ = value;
+            mtx_.unlock();
         }
 
         void PeriodicTimer::Stop() {

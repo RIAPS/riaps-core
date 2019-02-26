@@ -76,7 +76,10 @@ namespace riaps{
                     auto zmq_socket = newPort->port_socket();
                     portSockets[zmq_socket] = newPort;
                     zpoller_add(poller, (void*)zmq_socket);
-                    const_cast<riaps::ports::PeriodicTimer*>(newPort)->Start();
+
+                    // Start only if the timer is periodic, sporadic timers must be started explicitly
+                    if (!const_cast<riaps::ports::PeriodicTimer*>(newPort)->has_delay())
+                        const_cast<riaps::ports::PeriodicTimer*>(newPort)->Start();
                 }
 
                 // Add and start publishers
@@ -343,6 +346,7 @@ namespace riaps{
 
     void ComponentBase::Terminate() {
         riaps_logger_->debug("Terminate component: {}", component_name());
+
         // Stop timers
         for (auto& c : component_config().component_ports.tims){
             riaps_logger_->info("Stop timer: {}", c.port_name);
@@ -356,7 +360,7 @@ namespace riaps{
             auto released_port = port.second.release();
             delete released_port;
         }
-
+        component_logger()->flush();
         zuuid_destroy(&component_uuid_);
     }
 
