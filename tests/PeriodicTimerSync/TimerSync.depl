@@ -1,0 +1,3 @@
+app TimerSync {
+	on all ActorA;
+}
