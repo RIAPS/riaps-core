@@ -1,0 +1,18 @@
+/* Periodic Timer Sync
+ *
+ * Use RIAPS timer ports to approximately synchronize periodic timers across actors
+ */
+app TimerSync {
+	
+	device TimerComp in cpp {
+		timer periodic 1000;
+		// timer syncDelay;
+	}
+	
+	actor ActorA{
+		
+		{
+			tComp : TimerComp;
+		}
+	}
+}

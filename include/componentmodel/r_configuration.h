@@ -58,6 +58,10 @@ struct ComponentPortSub : public ComponentPortConfig{
 };
 struct ComponentPortTim : public ComponentPortConfig {
     ulong period;
+
+    ComponentPortTim() {
+        period = 0;
+    }
 };
 struct ComponentPortIns : public ComponentPortConfig{
 
