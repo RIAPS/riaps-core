@@ -15,6 +15,9 @@ class Gateway(Component):
 
 # riaps:keep_currentvoltage:begin
     def on_currentvoltage(self):
+        bytes = self.currentvoltage.recv()
+        values = distributedvoltage_capnp.Voltage.from_bytes(bytes)
+
         pass
 # riaps:keep_currentvoltage:end
 

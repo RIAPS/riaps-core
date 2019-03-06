@@ -51,7 +51,7 @@ namespace distributedvoltage {
             int nb_coilBits;
             int nb_discreteBits;
             std::unique_ptr<uint16_t[]> holding_regs;
-            std::unique_ptr<uint16_t[]> input_regs;
+            std::unique_ptr<uint16_t[]> input_regs_;
             std::unique_ptr<uint8_t[]> coil_bits;
             std::unique_ptr<uint8_t[]> discrete_bits;
             bool portOpen;
