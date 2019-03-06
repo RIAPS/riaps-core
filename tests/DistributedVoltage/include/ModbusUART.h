@@ -46,18 +46,18 @@ namespace distributedvoltage {
             serial_port_config port_config_;
             modbus_t* ctx_;
 
-            int nb_holdingRegs;
-            int nb_inputRegs;
-            int nb_coilBits;
-            int nb_discreteBits;
-            std::unique_ptr<uint16_t[]> holding_regs;
+            int nb_holding_regs_;
+            int nb_input_regs_;
+            int nb_coil_bits_;
+            int nb_discrete_bits_;
+            std::unique_ptr<uint16_t[]> holding_regs_;
             std::unique_ptr<uint16_t[]> input_regs_;
-            std::unique_ptr<uint8_t[]> coil_bits;
-            std::unique_ptr<uint8_t[]> discrete_bits;
-            bool portOpen;
+            std::unique_ptr<uint8_t[]> coil_bits_;
+            std::unique_ptr<uint8_t[]> discrete_bits_;
+            bool port_open_;
 
-            int portSlaveAddress;
-            int portSerialMode;
+            int port_slave_address_;
+            int port_serial_mode_;
 
             Status current_status_;
 

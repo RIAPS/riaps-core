@@ -94,70 +94,70 @@ namespace distributedvoltage {
 
             auto islaveaddress = component_config().component_parameters.getParam("slaveaddress");
             if (islaveaddress != nullptr) {
-                if(!islaveaddress->getValueAsInt(&(portSlaveAddress))) {
-                    component_logger()->error("{}: Invalid Port Address argument - {}, should be integer value", pid, portSlaveAddress);
+                if(!islaveaddress->getValueAsInt(&(port_slave_address_))) {
+                    component_logger()->error("{}: Invalid Port Address argument - {}, should be integer value", pid, port_slave_address_);
                 }
             } else {
                 // Declare a default value
-                portSlaveAddress = 10;
+                port_slave_address_ = 10;
             }
 
             // Configure number of Modbus data registers used
             auto inumholdreg = component_config().component_parameters.getParam("numholdreg");
             if (inumholdreg != nullptr) {
-                if(!inumholdreg->getValueAsInt(&(nb_holdingRegs))) {
-                    component_logger()->error("{}: Invalid Number of Holding Registers argument - {}, should be integer value", pid, nb_holdingRegs);
+                if(!inumholdreg->getValueAsInt(&(nb_holding_regs_))) {
+                    component_logger()->error("{}: Invalid Number of Holding Registers argument - {}, should be integer value", pid, nb_holding_regs_);
                 }
             } else {
                 // Set a default of 3 (an arbritary number based on the first example created)
-                nb_holdingRegs = 3;
+                nb_holding_regs_ = 3;
             }
 
             auto inuminputreg = component_config().component_parameters.getParam("numinputreg");
             if (inuminputreg != nullptr) {
-                if(!inuminputreg->getValueAsInt(&(nb_inputRegs))) {
-                    component_logger()->error("{}: Invalid Number of Input Registers argument - {}, should be integer value", pid, nb_inputRegs);
+                if(!inuminputreg->getValueAsInt(&(nb_input_regs_))) {
+                    component_logger()->error("{}: Invalid Number of Input Registers argument - {}, should be integer value", pid, nb_input_regs_);
                 }
             } else {
                 // Set a default of 4 (an arbritary number based on the first example created)
-                nb_inputRegs = 4;
+                nb_input_regs_ = 4;
             }
 
             auto inumcoilbits = component_config().component_parameters.getParam("numcoilbits");
             if (inumcoilbits != nullptr) {
-                if(!inumcoilbits->getValueAsInt(&(nb_coilBits))) {
-                    component_logger()->error("{}: Invalid Number of Coil Bits argument - {}, should be integer value", pid, nb_coilBits);
+                if(!inumcoilbits->getValueAsInt(&(nb_coil_bits_))) {
+                    component_logger()->error("{}: Invalid Number of Coil Bits argument - {}, should be integer value", pid, nb_coil_bits_);
                 }
             } else {
                 // Set a default of 8 (an arbritary number based on the first example created)
-                nb_coilBits = 8;
+                nb_coil_bits_ = 8;
             }
 
             auto inumdiscretebits = component_config().component_parameters.getParam("numdiscretebits");
             if (inumdiscretebits != nullptr) {
-                if(!inumdiscretebits->getValueAsInt(&(nb_discreteBits))) {
-                    component_logger()->error("{}: Invalid Number of Discreet Bits argument - {}, should be integer value", pid, nb_discreteBits);
+                if(!inumdiscretebits->getValueAsInt(&(nb_discrete_bits_))) {
+                    component_logger()->error("{}: Invalid Number of Discreet Bits argument - {}, should be integer value", pid, nb_discrete_bits_);
                 }
             } else {
                 // Set a default of 8 (an arbritary number based on the first example created)
-                nb_discreteBits = 8;
+                nb_discrete_bits_ = 8;
             }
 
             // Modbus port initially closed
-            portOpen = false;
-            portSerialMode = MODBUS_RTU_RS232;
+            port_open_ = false;
+            port_serial_mode_ = MODBUS_RTU_RS232;
 
             // Setup Modbus Data Registers
-            holding_regs  = std::unique_ptr<uint16_t[]>(new uint16_t[nb_holdingRegs]);
-            input_regs_   = std::unique_ptr<uint16_t[]>(new uint16_t[nb_inputRegs]);
-            coil_bits     = std::unique_ptr<uint8_t[]>(new uint8_t[nb_coilBits]);
-            discrete_bits = std::unique_ptr<uint8_t[]>(new uint8_t[nb_discreteBits]);
+            holding_regs_  = std::unique_ptr<uint16_t[]>(new uint16_t[nb_holding_regs_]);
+            input_regs_   = std::unique_ptr<uint16_t[]>(new uint16_t[nb_input_regs_]);
+            coil_bits_     = std::unique_ptr<uint8_t[]>(new uint8_t[nb_coil_bits_]);
+            discrete_bits_ = std::unique_ptr<uint8_t[]>(new uint8_t[nb_discrete_bits_]);
 
-            component_logger()->info("{}: Modbus UART settings {} @{}:{} {}{}{}", pid, portSlaveAddress, port_config_.portname,
+            component_logger()->info("{}: Modbus UART settings {} @{}:{} {}{}{}", pid, port_slave_address_, port_config_.portname,
                           port_config_.baudrate, port_config_.bytesize, port_config_.parity, port_config_.stopbits);
             component_logger()->info(
                     "{}: Modbus Reg settings: numCoilBits={}, numDiscreteBits={}, numInputRegs={}, numHoldingRegs={}",
-                    pid, nb_coilBits, nb_discreteBits, nb_inputRegs, nb_holdingRegs);
+                    pid, nb_coil_bits_, nb_discrete_bits_, nb_input_regs_, nb_holding_regs_);
 
             /* Initialize the libmodbus context
             * Returns a pointer to a modbus_t structure if successful. Otherwise it shall return NULL.
@@ -188,8 +188,8 @@ namespace distributedvoltage {
 
             // Init the modbus
             if (current_status_ == ModbusUART::Status::INIT && ctx_ != nullptr) {
-                if (StartRTUModbus(portSerialMode)) {
-                    component_logger()->debug("{}: Started Modbus: port={}, slaveAddress={}", ::getpid(), port_config_.portname, portSlaveAddress);
+                if (StartRTUModbus(port_serial_mode_)) {
+                    component_logger()->debug("{}: Started Modbus: port={}, slaveAddress={}", ::getpid(), port_config_.portname, port_slave_address_);
                     current_status_ = ModbusUART::Status::MODBUS_READY;
                 }
             }
@@ -243,7 +243,7 @@ namespace distributedvoltage {
                 modbus_free(ctx_);
                 ctx_ = nullptr;
             }
-            portOpen = false;
+            port_open_ = false;
             component_logger()->info("Modbus closed");
         }
 
@@ -252,7 +252,7 @@ namespace distributedvoltage {
             // Enable debugging of libmodbus
             modbus_set_debug(ctx_, false);
 
-            modbus_set_slave(ctx_, portSlaveAddress);
+            modbus_set_slave(ctx_, port_slave_address_);
 
             if (serial_mode == MODBUS_RTU_RS485) {
                 if (modbus_rtu_set_serial_mode(ctx_, serial_mode) == -1) {
@@ -269,12 +269,12 @@ namespace distributedvoltage {
                 modbus_free(ctx_);
                 return false;
             } else {
-                portOpen = true;
+                port_open_ = true;
                 component_logger()->info("Modbus port open. Port={}, Baud={}, {}{}{}", port_config_.portname, port_config_.baudrate,
                               port_config_.bytesize, port_config_.parity, port_config_.stopbits);
             }
 
-            return portOpen;
+            return port_open_;
         }
 
         // riaps:keep_impl:end
