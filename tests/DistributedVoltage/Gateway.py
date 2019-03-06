@@ -8,16 +8,23 @@ import distributedvoltage_capnp
 
 class Gateway(Component):
 
-# riaps:keep_constr:begin
+    # riaps:keep_constr:begin
     def __init__(self):
         super(Gateway, self).__init__()
-# riaps:keep_constr:end
+    # riaps:keep_constr:end
 
-# riaps:keep_currentvoltage:begin
+    # riaps:keep_currentvoltage:begin
     def on_currentvoltage(self):
         bytes = self.currentvoltage.recv()
-        values = distributedvoltage_capnp.Voltage.from_bytes(bytes)
+        msg = distributedvoltage_capnp.Voltage.from_bytes(bytes)
 
+        timestamp = msg.time
+        values    = msg.values
+
+        s = ""
+        for i in values:
+            s = f'{s} {i} at {timestamp.tvSpec}.{timestamp.tvNspec}'
+        self.logger.info("values arrived: %s" % s)
         pass
 # riaps:keep_currentvoltage:end
 

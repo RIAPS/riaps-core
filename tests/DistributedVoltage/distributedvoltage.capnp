@@ -10,8 +10,8 @@ struct Timespec {
 }
 
 struct Voltage {
-    value @0 : List(Int64);
-    time  @1 : Timespec;
+    values @0 : List(Int64);
+    time   @1 : Timespec;
 }
 # riaps:keep_voltage:end
 

@@ -210,18 +210,17 @@ namespace distributedvoltage {
                 current_status_ = ModbusUART::Status::RUNNING;
             } else if (current_status_ == ModbusUART::Status::RUNNING) {
                 int addr = 0;
-                int nb   = 5;
+                int nb   = 4;
 
-                timespec now;
+                timespec now{0, 0};
                 clock_gettime(CLOCK_REALTIME, &now);
                 auto regs_read = modbus_read_input_registers(ctx_, addr, nb, input_regs_.get());
                 if (regs_read == -1) {
                     component_logger()->error("Failed to read input registers: {}.  Address={}, #Reg={}", modbus_strerror(errno), addr, nb);
                 } else {
                     MessageBuilder<messages::Voltage> message;
-                    messages::Voltage::Builder b = message.spec_builder();
-                    auto values = b.initValue(nb);
-                    auto timestamp = b.initTime();
+                    auto values    = message->initValues(nb);
+                    auto timestamp = message->initTime();
                     timestamp.setTvSpec(now.tv_sec);
                     timestamp.setTvNspec(now.tv_nsec);
                     for (uint i = 0; i<nb; i++) {
@@ -251,7 +250,7 @@ namespace distributedvoltage {
         bool ModbusUART::StartRTUModbus(int serial_mode) {
 
             // Enable debugging of libmodbus
-            modbus_set_debug(ctx_, true);
+            modbus_set_debug(ctx_, false);
 
             modbus_set_slave(ctx_, portSlaveAddress);
 
