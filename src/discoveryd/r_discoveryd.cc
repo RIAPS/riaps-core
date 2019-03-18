@@ -12,19 +12,22 @@
  */
 
 
-
+#include <const/r_const.h>
 #include <discoveryd/r_riaps_actor.h>
 #include <discoveryd/r_dhttracker.h>
+#include <discoveryd/r_validator.h>
 #include <framework/rfw_network_interfaces.h>
+#include <framework/rfw_configuration.h>
+#include <framework/rfw_security.h>
 #include <utils/r_utils.h>
 #include <utils/r_timeout.h>
 
-#include <spdlog/spdlog.h>
-
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <map>
 #include <vector>
+#include <experimental/filesystem>
 
 // Frequency of sending UDP packets (msec)
 #define BEACON_FREQ 1000
@@ -35,35 +38,84 @@
 // Port to be used for sending/receiving UDP beacon packages
 #define UDP_PACKET_PORT 9999
 
-// IPC socket address for sending control messages to the discovery service
-#define CONTROL_SOCKET "ipc:///tmp/discoverycontrol"
 
-#define CMD_JOIN "JOIN"
 
 namespace spd = spdlog;
+namespace fs = std::experimental::filesystem;
 
-int main(int argc, char* argv[])
-{
+using namespace std;
 
-    auto console = spd::stdout_color_mt("rbeacon");
+//shared_ptr<dht::crypto::PrivateKey> getPrivateKey_s(fs::path& key_path ) {
+//    ifstream privfs(key_path);
+////    if (!privfs.good())
+////        console->error("No key");
+//
+//    std::stringstream buffer;
+//    buffer << privfs.rdbuf();
+//    vector<uint8_t> blob_key;
+//    string s = buffer.str();
+//    transform(s.begin(), s.end(), back_inserter(blob_key),
+//              [](char c) -> uint8_t {
+//                  return (uint8_t)c;
+//              });
+//    return make_shared<dht::crypto::PrivateKey>(blob_key);
+//}
+//
+
+//
+
+//
+//dht::Blob sign(const dht::Blob& data, std::shared_ptr<dht::crypto::PrivateKey> private_key) {
+//    auto signature = private_key->sign(data);
+//    auto converted = reinterpret_cast<char*>(signature.data());
+//
+//    const int max_dst_size = LZ4_compressBound(signature.size());
+//    unique_ptr<char> compressed_signature(new char[max_dst_size]);
+//    auto compressed_size = LZ4_compress_limitedOutput(converted, compressed_signature.get(), signature.size(), 255);
+//    if (compressed_size<0)
+//        cout << "Compression sux";
+//    else if (compressed_size == 0)
+//        cout << "Empty output in compression";
+//    else
+//        cout << "Compression is good";
+//
+//    auto result = ConvertToBlob(compressed_signature.get(), compressed_size);
+//    return result;
+//}
+//
+//bool check_signature(const std::string& data, dht::Blob& compressed_signature, std::shared_ptr<dht::crypto::PrivateKey> private_key) {
+//    vector<char> decompressed_buffer(512);
+//    const int decompressed_size = LZ4_decompress_safe(reinterpret_cast<char*>(compressed_signature.data()), decompressed_buffer.data(), compressed_signature.size(), 512);
+//    if (decompressed_size<0)
+//        cout << "Decompression sux";
+//    else if (decompressed_size == 0)
+//        cout << "Empty output in decompression";
+//    else
+//        cout << "Decompression is good";
+//
+//    return private_key->getPublicKey().checkSignature(ConvertToBlob(data), ConvertToBlob(decompressed_buffer.data(), decompressed_size));
+//}
+
+
+
+int main(int argc, char* argv[]) {
+
+    auto console = spd::stdout_color_mt(DISCO_LOGGER_NAME);
+    console->set_level(spd::level::info);
     console->info("Starting RIAPS DISCOVERY SERVICE ");
 
-    // Random generator for beacon interval
-    std::random_device rd;
-    std::mt19937 gen(rd());
 
-    // UDP packet interval is between 2-5sec
-    std::uniform_int_distribution<> dis(2, 5);
+    auto has_security = riaps::framework::Security::HasSecurity();
+    console->info("Security is turned {}", has_security ? "on" : "off");
 
-    std::string iface = riaps::framework::Network::GetConfiguredIface();
-    std::string address;
+    string iface = riaps::framework::Network::GetConfiguredIface();
+    string address;
     if (iface != "") {
         zsys_set_interface(iface.c_str());
         address = riaps::framework::Network::GetIPAddress(iface);
-    }
-    else {
+    } else {
         riaps::framework::Network::GetFirstGlobalIface(iface, address);
-        assert(iface!="");
+        assert(iface != "");
         zsys_set_interface(iface.c_str());
     }
 
@@ -73,33 +125,55 @@ int main(int argc, char* argv[])
 
     if (dhtStarted) {
         console->info("DHT thread is initialized, starts beaconing.");
-    }else {
+    } else {
         console->error("Unable to initialize DHT thread, exiting.");
         zactor_destroy(&r_actor);
         zclock_sleep(500);
         return -1;
     }
 
-    zsock_t * control = zsock_new_router(CONTROL_SOCKET);
+    zsock_t *control = zsock_new_router(CONTROL_SOCKET);
 
     // zbeacon for sending UDP beacons
-    zactor_t *speaker = zactor_new (zbeacon, NULL);
+    zactor_t *speaker = zactor_new(zbeacon, NULL);
 
     // listen for UDP packages
-    zactor_t *listener  = zactor_new (zbeacon, NULL);
+    zactor_t *listener = zactor_new(zbeacon, NULL);
 
-    zsock_t* dhtTracker = zsock_new_dealer(CHAN_IN_DHTTRACKER);
+    zsock_t *dhtTracker = zsock_new_dealer(CHAN_IN_DHTTRACKER);
 
-    #ifdef _DEBUG_
-        zstr_sendx (speaker, "VERBOSE", NULL);
-        zstr_sendx (listener, "VERBOSE", NULL);
-    #endif
+#ifdef _DEBUG_
+    zstr_sendx (speaker, "VERBOSE", NULL);
+    zstr_sendx (listener, "VERBOSE", NULL);
+#endif
 
     // configure zbeacon publisher
-    zsock_send (speaker, "si", "CONFIGURE", UDP_PACKET_PORT);
+    zsock_send(speaker, "si", "CONFIGURE", UDP_PACKET_PORT);
 
     // configure zbeacon listener
-    zsock_send (listener, "si", "CONFIGURE", UDP_PACKET_PORT);
+    zsock_send(listener, "si", "CONFIGURE", UDP_PACKET_PORT);
+
+    auto private_key = riaps::framework::Security::private_key();
+    if (has_security && private_key == nullptr) {
+        console->error("Couldn't load private key: {}", riaps::framework::Security::key_path());
+        exit(-1);
+    }
+
+    // Create validator
+    DiscoveryValidator validator(has_security);
+
+    if (has_security) {
+        if (!validator.InitWithSecurity(address, private_key)) {
+            console->error("Cannot instantiate DiscoveryValidator with security.");
+            exit(-1);
+        }
+    } else {
+        if (!validator.InitNoSecurity()) {
+            console->error("Cannot instantiate DiscoveryValidator without security.");
+            exit(-1);
+        }
+    }
+
 
     // Check the listener
     char* hostname = zstr_recv (listener);
@@ -123,7 +197,7 @@ int main(int argc, char* argv[])
     free (hostname);
 
     // Broadcast the magic value 0xCAFE
-    byte announcement [2] = { 0xCA, 0xFE };
+    //byte announcement [2] = { 0xCA, 0xFE };
 
     // PUBLISHING only when we have to. (when no package from the others)
     //zsock_send (speaker, "sbi", "PUBLISH", announcement, 2, HIGH_BEACON_FREQ);
@@ -147,11 +221,18 @@ int main(int argc, char* argv[])
     //int nextDiff = dis(gen)*1000;
     //int64_t nextAnnouncement = zclock_mono() + nextDiff;
 
-    zsock_send (speaker, "sbi", "PUBLISH", announcement, 2, BEACON_FREQ);
+    //zsock_send (speaker, "sbi", "PUBLISH", announcement, 2, BEACON_FREQ);
 
+    //    auto signed_data    = sign(ConvertToBlob(address), private_key);
+
+    string announcement = "╩■";
+    auto udp_payload = has_security?ConvertToBlob(validator.validator_address()):ConvertToBlob(announcement);
+    zsock_send (speaker, "sbi", "PUBLISH", udp_payload.data(), udp_payload.size(), BEACON_FREQ);
+
+    zpoller_add(poller, listener);
     while (!zsys_interrupted) {
         // Wait for at most UDP_READ_TIMEOUT millisecond for UDP package
-        zsock_set_rcvtimeo (listener, UDP_READ_TIMEOUT);
+        //zsock_set_rcvtimeo (listener, UDP_READ_TIMEOUT);
 
         // If no announcement, start sending beacons
 //        if (zclock_mono()>nextAnnouncement){
@@ -171,7 +252,8 @@ int main(int argc, char* argv[])
 //            nextAnnouncement = zclock_mono() + nextDiff;
 //        }
 
-        void *which = zpoller_wait(poller, 1);
+        void *which = zpoller_wait(poller, UDP_READ_TIMEOUT);
+        validator.ReplyAll();
 
         // Command arrived from external scripts
         if (which == control){
@@ -181,21 +263,18 @@ int main(int argc, char* argv[])
             } else{
                 char* header = zmsg_popstr(msg);
                 char* command = zmsg_popstr(msg);
-                if (streq(command, CMD_JOIN)){
+                if (streq(command, CMD_DISCO_JOIN)){
                     char* newhost = zmsg_popstr(msg);
                     if (newhost){
 
                         // Check if the node already connected
                         bool is_newitem = externalipcache.find(std::string(newhost)) == externalipcache.end();
                         if (is_newitem){
-                            //console->info("Join to DHT node: {}", newhost);
-                            //std::cout <<  << newhost << std::endl;
-
                             int64_t time = zclock_mono();
                             externalipcache[newhost] = time;
 
                             zmsg_t* join_msg = zmsg_new();
-                            zmsg_addstr(join_msg, CMD_JOIN);
+                            zmsg_addstr(join_msg, CMD_DISCO_JOIN);
                             zmsg_addstr(join_msg, newhost);
                             zmsg_send(&join_msg, r_actor);
                         }
@@ -208,6 +287,57 @@ int main(int argc, char* argv[])
                 zmsg_destroy(&msg);
             }
 
+        } else if (which == listener) {
+            char *ipaddress = zstr_recv (listener);
+
+            // If UDP package was received
+            if (ipaddress) {
+                // Pass the ip addres to the dht tracker to check its stability
+                // DHT must be stable for at least 3 seconds before the registration happens
+                zsock_send(dhtTracker, "ss", CMD_BEACON_IP, ipaddress);
+
+                auto b_payload   = zstr_recv(listener);
+                if ((has_security&&b_payload || !has_security && (b_payload == announcement)) ) {
+                    if (validator.IsValid(b_payload)) {
+
+
+
+                        if (strcmp(ipaddress, address.c_str()) != 0 && ipaddress!=address) {
+                            // Check if the item already in the map
+                            bool is_newitem = ipcache.find(std::string(ipaddress)) == ipcache.end();
+
+                            // If the ipaddress in the cache, update the timestamp
+                            // If the ipaddress is new, add to the cache
+                            //int64_t time = zclock_mono();
+                            ipcache[ipaddress] = riaps::utils::Timeout<std::chrono::milliseconds>(
+                                    std::chrono::milliseconds(IPCACHE_TIMEOUT));
+
+                            // Check for outdated ip addresses (no UDP paca)
+                            bool is_maintained = maintain_cache(ipcache);
+
+                            // If a new item arrive or an old one was deleted => print the contents
+                            if (is_newitem || is_maintained) {
+                                print_cacheips(ipcache, address);
+                            }
+
+                            if (is_newitem) {
+                                zmsg_t *join_msg = zmsg_new();
+                                zmsg_addstr(join_msg, CMD_DISCO_JOIN);
+                                zmsg_addstr(join_msg, ipaddress);
+                                zmsg_send(&join_msg, r_actor);
+                            }
+                        }
+                    }
+                    zstr_free (&b_payload);
+                }
+                zstr_free (&ipaddress);
+            }
+        } // Source of the incoming UDP package
+        else{
+            bool is_maintained = maintain_cache(ipcache);
+            if (is_maintained){
+                print_cacheips(ipcache, address);
+            }
         }
 
 //        if (!has_joined && ipcache.size()>1){
@@ -230,57 +360,6 @@ int main(int argc, char* argv[])
 //            has_joined = false;
 //        }
 
-        // Source of the incoming UDP package
-        char *ipaddress = zstr_recv (listener);
-
-        // If UDP package was received
-        if (ipaddress) {
-            zframe_t *content = zframe_recv (listener);
-//            if (zframe_size (content) != 2)
-//                console->warn("Invalid beacon package received");
-//            else
-//                console->warn_if(zframe_data (content) [0] != 0xCA || zframe_data (content) [1] == 0xFE, "Invalid beacon content");
-
-            // Pass the ip addres to the dht tracker to check its stability
-            // DHT must be stable for at least 3 seconds before the registration happens
-            zsock_send(dhtTracker, "ss", CMD_BEACON_IP, ipaddress);
-
-            if (strcmp(ipaddress,address.c_str()) != 0) {
-                // Check if the item already in the map
-                bool is_newitem = ipcache.find(std::string(ipaddress)) == ipcache.end();
-
-                // If the ipaddress in the cache, update the timestamp
-                // If the ipaddress is new, add to the cache
-                //int64_t time = zclock_mono();
-                ipcache[ipaddress] = riaps::utils::Timeout<std::chrono::milliseconds>(
-                        std::chrono::milliseconds(IPCACHE_TIMEOUT));
-
-                // Check for outdated ip addresses (no UDP paca)
-                bool is_maintained = maintain_cache(ipcache);
-
-                // If a new item arrive or an old one was deleted => print the contents
-                if (is_newitem || is_maintained) {
-                    print_cacheips(ipcache, address);
-                }
-
-                if (is_newitem) {
-                    zmsg_t *join_msg = zmsg_new();
-                    zmsg_addstr(join_msg, CMD_JOIN);
-                    zmsg_addstr(join_msg, ipaddress);
-                    zmsg_send(&join_msg, r_actor);
-                }
-            }
-
-
-
-            zframe_destroy (&content);
-            zstr_free (&ipaddress);
-        } else{
-            bool is_maintained = maintain_cache(ipcache);
-            if (is_maintained){
-                print_cacheips(ipcache, address);
-            }
-        }
     }
     zsock_send(speaker, "s", "SILENCE");
     zclock_sleep(500);
@@ -291,8 +370,8 @@ int main(int argc, char* argv[])
     zactor_destroy(&listener);
     zactor_destroy(&speaker);
 
-    // Wait for the threads to stop for sure.
-    zclock_sleep(1500);
+    // Wait for the threads
+    zclock_sleep(1000);
     
     return 0;
 }

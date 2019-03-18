@@ -5,19 +5,37 @@
 
 constexpr auto ENV_RIAPSAPPS = "RIAPSAPPS";
 
-//#define DISCOVERY_SERVICE_IPC "ipc:///tmp/riaps-disco"
+// ** RIAPS-CONF Path **
+constexpr auto CONF_PATH = "/usr/local/riaps/etc/riaps.conf";
+
+// ** DEVM endpoints **
+constexpr auto DEVMANAGER_ENDPOINT = "tcp://127.0.0.1:9790";
+constexpr auto DEPLO_ENDPOINT      = "tcp://127.0.0.1:9780";
+
+// ** DISCOVERY PARAMETERS **
+constexpr auto DISCO_LOGGER_NAME       = "discovery";
+constexpr auto CMD_DISCO_JOIN          = "JOIN";
+constexpr auto REGULAR_MAINTAIN_PERIOD = 3000; //msec
+constexpr auto RIAPS_DHT_NODE_PORT     = 4222;
+
+// ** DISCOVERY POINTS **
+constexpr auto DHT_RESULT_CHANNEL = "ipc:///tmp/dhtrouterchannel";
+constexpr auto CONTROL_SOCKET     = "ipc:///tmp/discoverycontrol";
 constexpr auto DISCOVERY_ENDPOINT = "tcp://127.0.0.1:9700";
 
+// ** Security **
+// *** RSA keys ***
+constexpr auto KEY_FOLDER = "/usr/local/riaps/keys";
+constexpr auto KEY_FILE   = "id_rsa.key";
 
-// Name of endpoint for actor-devm communication
-//#define DEVMANAGER_SERVICE_ADDR "ipc:///tmp/riaps-devm"
-constexpr auto DEVMANAGER_ENDPOINT = "tcp://127.0.0.1:9790";
+// *** CURVE Path ***
+constexpr auto CURVE_FOLDER = "/usr/local/riaps/keys";
+constexpr auto CURVE_KEY    = "riaps-sys.cert";
 
-//Timeout for actor-devm communication (-1: wait forever)
-#define DEVM_ENDPOINTRECVTIMEOUT 1000
-#define DEVM_ENDPOINTSENDTIMEOUT 3000
-
-constexpr auto DEPLO_ENDPOINT = "tcp://127.0.0.1:9780";
+//** Groups **
+constexpr auto INTERNAL_SUB_NAME = "$SUB#";
+constexpr auto INTERNAL_PUB_NAME = "$PUB#";
+constexpr auto INTERNAL_MESSAGETYPE = "InternalGroupMessage";
 
 /**
  * Actor argument index

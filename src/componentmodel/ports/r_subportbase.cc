@@ -16,17 +16,23 @@ namespace riaps {
         }
 
         /**
-         *
          * @param endpoint The endpoint, INCLUDING the transport layer. e.g.: tcp://192.168.1.1:4245
          * @return True if the connection successful. False otherwise.
          */
         bool SubscriberPortBase::ConnectToPublihser(const string &endpoint) {
-            int rc = zsock_connect(port_socket_, "%s", endpoint.c_str());
+            if (!GetConfig()->is_local && has_security()) {
+                if (port_certificate_ != nullptr) {
+                    zcert_apply(port_certificate_.get(), port_socket_);
+                    zsock_set_curve_serverkey(port_socket_, zcert_public_txt(port_certificate_.get()));
+                } else {
+                    logger()->error("Port certificate is null, cannot create port: {}", port_name());
+                    return false;
+                }
+            }
 
+            auto rc = zsock_connect(port_socket_, "%s", endpoint.c_str());
             if (rc != 0) {
-                // TODO: spd logger
-                cout << "Subscriber '" + config()->port_name + "' couldn't connect to " + endpoint
-                          << endl;
+                logger()->error("Subscriber {} couldn't connect to {}", port_name(), endpoint);
                 return false;
             }
 

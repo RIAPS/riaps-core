@@ -31,7 +31,12 @@
             },
             "internals":[],
             "locals":[],
-            "wires":[]
+            "usage":{
+                "cpu":{},
+                "mem":{},
+                "net":{},
+                "spc":{}
+            }
         },
         "Estimator":{
             "formals":[],
@@ -63,8 +68,23 @@
                 }
             },
             "internals":[],
-            "locals":[],
-            "wires":[]
+            "locals":[
+                {
+                    "type":"SensorReady"
+                },
+                {
+                    "type":"SensorQuery"
+                },
+                {
+                    "type":"SensorValue"
+                }
+            ],
+            "usage":{
+                "cpu":{},
+                "mem":{},
+                "net":{},
+                "spc":{}
+            }
         }
     },
     "components":{
@@ -87,21 +107,27 @@
                     "name":"bArg"
                 }
             ],
+            "language":"default",
             "name":"GlobalEstimator",
             "ports":{
+                "anss":{},
                 "clts":{},
                 "inss":{},
                 "pubs":{},
+                "qrys":{},
                 "reps":{},
                 "reqs":{},
                 "srvs":{},
                 "subs":{
                     "estimate":{
+                        "deadline":0,
+                        "timed":false,
                         "type":"Estimate"
                     }
                 },
                 "tims":{
                     "wakeup":{
+                        "deadline":0,
                         "period":3000
                     }
                 }
@@ -122,25 +148,33 @@
                     "name":"bArg"
                 }
             ],
+            "language":"default",
             "name":"LocalEstimator",
             "ports":{
+                "anss":{},
                 "clts":{},
                 "inss":{},
                 "pubs":{
                     "estimate":{
+                        "timed":false,
                         "type":"Estimate"
                     }
                 },
+                "qrys":{},
                 "reps":{},
                 "reqs":{
                     "query":{
+                        "deadline":0,
                         "rep_type":"SensorValue",
-                        "req_type":"SensorQuery"
+                        "req_type":"SensorQuery",
+                        "timed":false
                     }
                 },
                 "srvs":{},
                 "subs":{
                     "ready":{
+                        "deadline":0,
+                        "timed":false,
                         "type":"SensorReady"
                     }
                 },
@@ -149,19 +183,25 @@
         },
         "Sensor":{
             "formals":[],
+            "language":"default",
             "name":"Sensor",
             "ports":{
+                "anss":{},
                 "clts":{},
                 "inss":{},
                 "pubs":{
                     "ready":{
+                        "timed":false,
                         "type":"SensorReady"
                     }
                 },
+                "qrys":{},
                 "reps":{
                     "request":{
+                        "deadline":0,
                         "rep_type":"SensorValue",
-                        "req_type":"SensorQuery"
+                        "req_type":"SensorQuery",
+                        "timed":false
                     }
                 },
                 "reqs":{},
@@ -169,6 +209,7 @@
                 "subs":{},
                 "tims":{
                     "clock":{
+                        "deadline":0,
                         "period":1000
                     }
                 }

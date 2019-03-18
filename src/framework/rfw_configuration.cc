@@ -5,20 +5,21 @@
 #include <framework/rfw_configuration.h>
 #include <framework/rfw_network_interfaces.h>
 
+using namespace std;
 
 namespace riaps{
     namespace framework{
-        const std::string Configuration::GetDiscoveryEndpoint() {
+        const string Configuration::GetDiscoveryEndpoint() {
             auto result = DISCOVERY_ENDPOINT;// + Network::GetMacAddressStripped();
             return result;
         }
 
-        const std::string Configuration::GetDeviceManagerEndpoint(){
+        const string Configuration::GetDeviceManagerEndpoint(){
             auto result = DEVMANAGER_ENDPOINT;// + Network::GetMacAddressStripped();
             return result;
         }
 
-        const std::string Configuration::GetDeploEndpoint() {
+        const string Configuration::GetDeploEndpoint() {
             auto result = DEPLO_ENDPOINT;// + Network::GetMacAddressStripped();
             return result;
         }

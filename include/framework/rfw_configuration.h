@@ -5,7 +5,7 @@
 #ifndef RIAPS_CORE_RFW_CONFIGURATION_H
 #define RIAPS_CORE_RFW_CONFIGURATION_H
 
-
+#include <INIReader.h>
 #include <const/r_const.h>
 #include <string>
 

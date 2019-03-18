@@ -1,0 +1,21 @@
+app DistributedVoltage {
+
+    message Voltage;
+
+    device ModbusUART (slaveaddress=10, port='UART2', baudrate=115200, numholdreg=3, numinputreg=4, addr=0, nb=4) in cpp {
+        pub currentvoltage : Voltage;
+        timer clock 50;
+    }
+
+    component Gateway() {
+        sub currentvoltage : Voltage;
+    }
+
+    actor Collector() {
+        local Voltage;
+        {
+            gateway : Gateway;
+            modbusinstance : ModbusUART(slaveaddress=10, port='UART2', baudrate=115200, numholdreg=3, numinputreg=5, addr=0, nb=4);
+        }
+    }
+}

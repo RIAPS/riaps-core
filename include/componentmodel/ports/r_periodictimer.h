@@ -12,28 +12,35 @@ namespace riaps {
         void ptimeractor(zsock_t* pipe, void* args);
 
         class PeriodicTimer : public PortBase {
+            friend void ptimeractor(zsock_t* pipe, void* args);
         public:
             PeriodicTimer(const ComponentPortTim& config, const ComponentBase* parent_component);
 
             void Init();
             timespec Recv();
 
-            int interval();
+            ulong interval();
             void Stop();
             void Start();
+            void Halt();
+            void delay(timespec& value);
+            const timespec delay();
 
-            bool is_running() const noexcept;
+            bool has_delay();
+
             virtual const zsock_t* port_socket() const;
 
-
-            //virtual PeriodicTimer* AsTimerPort() override;
             std::string TimerChannel();
 
-            virtual ~PeriodicTimer() = default;
+            ~PeriodicTimer() override = default;
         protected:
             std::string             timer_channel_;
             zactor_t*               timer_actor_;
             ulong                   interval_;
+            timespec                delay_;
+            timespec                now_;
+            bool                    has_started_;
+            std::mutex              mtx_;
             std::unique_ptr<zmsg_t, std::function<void(zmsg_t*)>> last_zmsg_;
         };
     }

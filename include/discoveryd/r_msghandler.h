@@ -12,18 +12,16 @@
 #ifndef RIAPS_CORE_R_MSGHANDLER_H
 #define RIAPS_CORE_R_MSGHANDLER_H
 
+#include <const/r_const.h>
 #include <groups/r_group.h>
 #include <discoveryd/r_discovery_types.h>
 #include <discoveryd/r_registration.h>
+#include <discoveryd/r_msghandler.h>
+#include <discoveryd/r_dhtdata.h>
 
 #include <opendht.h>
 #include <czmq.h>
 #include <spdlog_setup/conf.h>
-
-constexpr auto REGULAR_MAINTAIN_PERIOD = 3000; //msec
-constexpr auto CMD_JOIN                = "JOIN";
-constexpr auto RIAPS_DHT_NODE_PORT     = 4222;
-constexpr auto DHT_ROUTER_CHANNEL      = "ipc:///tmp/dhtrouterchannel";
 
 static const std::map<riaps::discovery::Kind, std::string> kindMap =
             {{riaps::discovery::Kind::PUB, "pub"},
@@ -42,71 +40,73 @@ namespace spd = spdlog;
 namespace riaps{
     class DiscoveryMessageHandler{
     public:
-        DiscoveryMessageHandler(dht::DhtRunner& dhtNode, zsock_t** pipe, std::shared_ptr<spdlog::logger> logger = nullptr);
-        bool init();
-        void run();
+        DiscoveryMessageHandler(dht::DhtRunner& dht_node,
+                                zsock_t** pipe,
+                                std::shared_ptr<spdlog::logger> logger = nullptr);
+        bool Init();
+        void Run();
         ~DiscoveryMessageHandler();
     private:
-        bool handleZombieUpdate (const std::vector<std::shared_ptr<dht::Value>> &values);
+        bool HandleZombieUpdate (std::vector<DhtData>&& values);
 
         /**
          * Handles messages from the zactor pipe (typically $TERM - terminate)
          */
-        void handlePipeMessage  ();
+        void HandlePipeMessage();
 
         /**
          * Handles messages from the actors
          */
-        void handleRiapsMessage ();
+        void HandleRiapsMessage();
 
         /**
          * Handles actor registration, creates the PIPE ZMQ channel between the actor and the discovery service.
          * @param msgActorReq
          */
-        void handleActorReg     (riaps::discovery::ActorRegReq::Reader     & msgActorReq);
+        void HandleActorReg     (riaps::discovery::ActorRegReq::Reader     & msgActorReq);
 
         /**
          * Unregisters the actor, closes the ZMQ channel, removes all related data.
          * @param msgActorUnreg
          */
-        void handleActorUnreg   (riaps::discovery::ActorUnregReq::Reader   & msgActorUnreg);
+        void HandleActorUnreg   (riaps::discovery::ActorUnregReq::Reader   & msgActorUnreg);
 
         /**
          * Registers a service in the DHT.
          * @param msgServiceReg
          */
-        void handleServiceReg   (riaps::discovery::ServiceRegReq::Reader   & msgServiceReg);
+        void HandleServiceReg   (riaps::discovery::ServiceRegReq::Reader   & msgServiceReg);
 
         /**
          * Searches a service in the DHT, and subscribes to the new services (under the same key).
          * @param msgServiceLookup
          */
-        void handleServiceLookup(riaps::discovery::ServiceLookupReq::Reader& msgServiceLookup);
+        void HandleServiceLookup(riaps::discovery::ServiceLookupReq::Reader& msgServiceLookup);
 
         /**
          * Registers the component in a group and subscribes to notifications about new members.
          * @param msgGroupJoin
          */
-        void handleGroupJoin    (riaps::discovery::GroupJoinReq::Reader    & msgGroupJoin);
+        void HandleGroupJoin    (riaps::discovery::GroupJoinReq::Reader    & msgGroupJoin);
 
         /**
          *
          * @param msgProviderGet
          * @param clients
          */
-        void handleDhtGet(const riaps::discovery::ProviderListGet::Reader& msgProviderGet,
+        void HandleDhtGet(const riaps::discovery::ProviderListGet::Reader& msgProviderGet,
                           const std::map<std::string, std::shared_ptr<ActorDetails>>& clients);
 
-        void handleDhtUpdate(const riaps::discovery::ProviderListUpdate::Reader&                          msgProviderUpdate,
+        void HandleDhtUpdate(const riaps::discovery::ProviderListUpdate::Reader&                          msgProviderUpdate,
                           const std::map<std::string, std::vector<std::unique_ptr<ClientDetails>>>& clientSubscriptions);
 
-        void handleDhtGroupUpdate(const riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
+        void HandleDhtGroupUpdate(const riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
 
-        void pushDhtValuesToDisco(std::vector<std::shared_ptr<dht::Value>> values);
+        void PushDhtValuesToDisco(std::vector<DhtData>&& values);
 
-        std::future<bool> waitForDht();
+        std::future<bool> WaitForDht();
 
-        const std::tuple<const std::string, const std::string> buildInsertKeyValuePair(
+        const std::tuple<const std::string, const std::string> BuildInsertKeyValuePair(
                 const std::string&             appName,
                 const std::string&             msgType,
                 const riaps::discovery::Kind&  kind,
@@ -114,7 +114,7 @@ namespace riaps{
                 const std::string&             host,
                 const uint16_t                 port);
 
-        const std::pair<const std::string, const std::string> buildLookupKey(
+        const std::pair<const std::string, const std::string> BuildLookupKey(
                 const std::string&             appName,
                 const std::string&             msgType,
                 const riaps::discovery::Kind&  kind,
@@ -124,17 +124,18 @@ namespace riaps{
                 const std::string& clientInstanceName,
                 const std::string& clientPortName);
 
-        void maintainRenewal();
-        void maintainZombieList();
-        int deregisterActor(const std::string& appName,
+        void RenewServices();
+        void MaintainZombieList();
+        int DeregisterActor(const std::string& appName,
                             const std::string& actorName);
 
         std::string mac_address_;
         std::string host_address_;
 
 
-        void dhtPut(dht::InfoHash keyhash, const std::string key, std::vector<uint8_t> data, uint8_t callLevel);
-        void dhtGet(const std::string lookupKey, ClientDetails clientDetails, uint8_t callLevel);
+        void DhtPut(const std::string& key, std::vector<uint8_t>& data);
+        void DhtPut(dht::InfoHash& keyhash, std::vector<uint8_t>& data);
+        void DhtGet(const std::string lookupKey, ClientDetails clientDetails, uint8_t callLevel);
 
         int64_t last_service_checkin_;
         int64_t last_zombie_check_;
@@ -199,6 +200,9 @@ namespace riaps{
         };
 
         std::unordered_map<pid_t, std::vector<std::shared_ptr<RegisteredGroup>>> group_services_;
+
+        bool has_security_;
+        std::shared_ptr<dht::crypto::PrivateKey> private_key_;
     };
 }
 

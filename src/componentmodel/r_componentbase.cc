@@ -1,6 +1,7 @@
 #include <componentmodel/r_componentbase.h>
 #include <utils/r_utils.h>
 #include <functional>
+#include <framework/rfw_security.h>
 
 using namespace std;
 
@@ -75,7 +76,10 @@ namespace riaps{
                     auto zmq_socket = newPort->port_socket();
                     portSockets[zmq_socket] = newPort;
                     zpoller_add(poller, (void*)zmq_socket);
-                    const_cast<riaps::ports::PeriodicTimer*>(newPort)->Start();
+
+                    // Start only if the timer is periodic, sporadic timers must be started explicitly
+                    if (!const_cast<riaps::ports::PeriodicTimer*>(newPort)->has_delay())
+                        const_cast<riaps::ports::PeriodicTimer*>(newPort)->Start();
                 }
 
                 // Add and start publishers
@@ -342,6 +346,7 @@ namespace riaps{
 
     void ComponentBase::Terminate() {
         riaps_logger_->debug("Terminate component: {}", component_name());
+
         // Stop timers
         for (auto& c : component_config().component_ports.tims){
             riaps_logger_->info("Stop timer: {}", c.port_name);
@@ -355,7 +360,7 @@ namespace riaps{
             auto released_port = port.second.release();
             delete released_port;
         }
-
+        component_logger()->flush();
         zuuid_destroy(&component_uuid_);
     }
 
@@ -446,7 +451,6 @@ namespace riaps{
                 // Just swallow it, we cannot do anything here.
                 riaps_logger_->error("sdplog_setup: {}", e.what());
             }
-
             if (component_logger_ == nullptr) {
                 component_logger_ = spd::stdout_color_mt(component_logger_name());
                 component_logger_->set_pattern("[%l]:%H:%M:%S,%e:[%P]:%n:%v");
@@ -455,17 +459,22 @@ namespace riaps{
         riaps_logger_->info("log config done: {}", component_logger_name());
     }
 
-    const std::string ComponentBase::component_logger_name() {
-        return component_logger_name_;
-    }
-
     void ComponentBase::set_debug_level(spd::level::level_enum component_level,
                                         spdlog::level::level_enum framework_level) {
         riaps_logger_->set_level(framework_level);
         component_logger()->set_level(component_level);
     }
 
+    bool ComponentBase::has_security() const {
+        return has_security_;
+    }
+
+    const std::string ComponentBase::component_logger_name() {
+        return component_logger_name_;
+    }
+
     ComponentBase::ComponentBase(const std::string &application_name, const std::string &actor_name) {
+        has_security_ = riaps::framework::Security::HasSecurity();
         actor_ = std::make_shared<PyActor>(application_name, actor_name);
         component_uuid_ = zuuid_new();
     }
@@ -620,7 +629,6 @@ namespace riaps{
         ports_[config.port_name] = std::move(newtimer);
         return result;
     }
-
     riaps::ports::PortError ComponentBase::SendMessageOnPort(capnp::MallocMessageBuilder& message,
                                           const std::string &port_name) {
         auto sender_port = GetPortAs<riaps::ports::SenderPort>(port_name);
@@ -633,6 +641,7 @@ namespace riaps{
 
     riaps::ports::PortError ComponentBase::SendMessageOnPort(capnp::MallocMessageBuilder &message, const std::string &port_name,
                                           std::shared_ptr<riaps::MessageParams> params) {
+
         auto answer_port = GetPortAs<riaps::ports::AnswerPort>(port_name);
         if (!answer_port)
             riaps_logger_->error("{} Unable to convert port: {}", __func__, port_name);

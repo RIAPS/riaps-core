@@ -69,8 +69,6 @@ namespace riaps {
     class ComponentBase {
         friend riaps::groups::Group;
     public:
-
-
         ///////////////////// PYTHON PART ///////////////////////
         ComponentBase(const std::string &application_name, const std::string &actor_name);
 
@@ -150,7 +148,6 @@ namespace riaps {
          */
         const ComponentConf& component_config() const;
         std::shared_ptr<spd::logger> component_logger();
-
         /**
          *
          * @return The component unique ID.
@@ -166,6 +163,8 @@ namespace riaps {
         virtual void HandleNetLimit();
         virtual void HandleNICStateChange(const std::string& state);
         virtual void HandlePeerStateChange(const std::string& state, const std::string& uuid);
+
+        bool has_security() const;
 
         virtual ~ComponentBase() = default;
 
@@ -444,7 +443,7 @@ namespace riaps {
          */
         zactor_t* component_zactor_;
 
-
+        bool has_security_;
     };
 
     template<class T>
