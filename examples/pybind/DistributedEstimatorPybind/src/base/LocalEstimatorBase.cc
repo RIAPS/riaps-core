@@ -20,7 +20,7 @@ namespace distributedestimator {
                                                const std::string &application_name,
                                                const std::string &actor_name)
                 : ComponentBase(application_name, actor_name) {
-            auto config = PyConfigConverter::convert(type_spec, actor_spec);
+            auto config = PyConfigConverter::convert(type_spec, actor_spec, args);
             config.component_name = name;
             config.component_type = type_name;
             config.is_device=false;
