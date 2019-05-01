@@ -73,16 +73,19 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a4a57b15a357dab8ae55d42a5a55b2f6a"><td class="memItemLeft" align="right" valign="top"><a id="a4a57b15a357dab8ae55d42a5a55b2f6a"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>PortError</b> (bool success, int error_code=0)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><b>PortError</b> (bool <a class="el" href="classriaps_1_1ports_1_1PortError.html#a804b575537e2069209bea8149eff2af3">success</a>, int <a class="el" href="classriaps_1_1ports_1_1PortError.html#a75c70c17877377826cc2b5488b3dd698">error_code</a>=0)</td></tr>
 <tr class="separator:a4a57b15a357dab8ae55d42a5a55b2f6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a44476b3828941b7344b47ee447fca149"><td class="memItemLeft" align="right" valign="top"><a id="a44476b3828941b7344b47ee447fca149"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>error</b> () const</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classriaps_1_1ports_1_1PortError.html#a44476b3828941b7344b47ee447fca149">error</a> () const</td></tr>
+<tr class="memdesc:a44476b3828941b7344b47ee447fca149"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if error has occurred in the last operation. <br /></td></tr>
 <tr class="separator:a44476b3828941b7344b47ee447fca149"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a804b575537e2069209bea8149eff2af3"><td class="memItemLeft" align="right" valign="top"><a id="a804b575537e2069209bea8149eff2af3"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>success</b> () const</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classriaps_1_1ports_1_1PortError.html#a804b575537e2069209bea8149eff2af3">success</a> () const</td></tr>
+<tr class="memdesc:a804b575537e2069209bea8149eff2af3"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if no error has occurred in the last operation. <br /></td></tr>
 <tr class="separator:a804b575537e2069209bea8149eff2af3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a75c70c17877377826cc2b5488b3dd698"><td class="memItemLeft" align="right" valign="top"><a id="a75c70c17877377826cc2b5488b3dd698"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>error_code</b> () const</td></tr>
+int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classriaps_1_1ports_1_1PortError.html#a75c70c17877377826cc2b5488b3dd698">error_code</a> () const</td></tr>
+<tr class="memdesc:a75c70c17877377826cc2b5488b3dd698"><td class="mdescLeft">&#160;</td><td class="mdescRight">The ZMQ error code. <br /></td></tr>
 <tr class="separator:a75c70c17877377826cc2b5488b3dd698"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3571201c8ee255598d9b820f41aeed52"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classriaps_1_1ports_1_1PortError.html#a3571201c8ee255598d9b820f41aeed52">operator bool</a> () const</td></tr>
 <tr class="separator:a3571201c8ee255598d9b820f41aeed52"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -110,7 +113,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>error_code</b> () cons
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>True if error is indicated. </dd></dl>
+<p>bool operator override, so the object can be used in if. </p><dl class="section return"><dt>Returns</dt><dd>True if error has occured in the last operation. </dd></dl>
 
 </div>
 </div>

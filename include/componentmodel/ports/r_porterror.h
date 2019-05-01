@@ -25,13 +25,18 @@ namespace riaps {
             explicit PortError(bool success, int error_code=0);
             ~PortError() = default;
 
-
+            /// True if error has occurred in the last operation.
             bool      error     () const;
+
+            /// True if no error has occurred in the last operation.
             bool      success   () const;
+
+            /// The ZMQ error code.
             int       error_code() const;
 
             /**
-             * @return True if error is indicated.
+             * bool operator override, so the object can be used in if.
+             * @return True if error has occured in the last operation.
              */
             operator bool() const {
                 return error();

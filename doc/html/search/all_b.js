@@ -1,8 +1,5 @@
 var searchData=
 [
-  ['portbase',['PortBase',['../classriaps_1_1ports_1_1PortBase.html',1,'riaps::ports']]],
-  ['portconfigbase',['PortConfigBase',['../structPortConfigBase.html',1,'']]],
-  ['porterror',['PortError',['../classriaps_1_1ports_1_1PortError.html',1,'riaps::ports']]],
-  ['proposeaction',['ProposeAction',['../group__DC.html#gabdba9d81bca931766f906f8b3c4ea9f8',1,'riaps::ComponentBase']]],
-  ['pyactor',['PyActor',['../classPyActor.html',1,'']]]
+  ['ongroupmessage',['OnGroupMessage',['../classriaps_1_1ComponentBase.html#af9cdff1b845fda983e088f76607a03f8',1,'riaps::ComponentBase']]],
+  ['operator_20bool',['operator bool',['../classriaps_1_1ports_1_1PortError.html#a3571201c8ee255598d9b820f41aeed52',1,'riaps::ports::PortError']]]
 ];

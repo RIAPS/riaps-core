@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['messagebuilder',['MessageBuilder',['../classMessageBuilder.html',1,'']]],
-  ['messagereader',['MessageReader',['../classMessageReader.html',1,'']]],
-  ['messagereaderarray',['MessageReaderArray',['../classMessageReaderArray.html',1,'']]]
+  ['leavegroup',['LeaveGroup',['../group__DC.html#gab74b71765a6823445a15b54a8d8a5265',1,'riaps::ComponentBase']]]
 ];

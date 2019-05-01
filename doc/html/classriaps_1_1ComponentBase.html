@@ -88,6 +88,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ga862b5fcd3b7822776fab72498f7971fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3d3817d144e691988e49f49a6e00c84e"><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__B.html#ga3d3817d144e691988e49f49a6e00c84e">ComponentUuid</a> () const</td></tr>
 <tr class="separator:ga3d3817d144e691988e49f49a6e00c84e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga343ea3a879f9df906062b05c01e28574"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__B.html#ga343ea3a879f9df906062b05c01e28574">has_security</a> () const</td></tr>
+<tr class="separator:ga343ea3a879f9df906062b05c01e28574"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga719345ef62b93b4bf9d4eb51c91a889c"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structComponentConf.html">ComponentConf</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__B.html#ga719345ef62b93b4bf9d4eb51c91a889c">component_config</a> () const</td></tr>
+<tr class="separator:ga719345ef62b93b4bf9d4eb51c91a889c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga270fe294b416bd304bd35aedfa515d8f"><td class="memItemLeft" align="right" valign="top">
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>HandleCPULimit</b> ()</td></tr>
 <tr class="separator:ga270fe294b416bd304bd35aedfa515d8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -106,8 +110,6 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>HandleNICStat
 <tr class="memitem:ga7a86823d3f179471fb4b8340b14737ed"><td class="memItemLeft" align="right" valign="top">
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>HandlePeerStateChange</b> (const std::string &amp;state, const std::string &amp;uuid)</td></tr>
 <tr class="separator:ga7a86823d3f179471fb4b8340b14737ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a343ea3a879f9df906062b05c01e28574"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classriaps_1_1ComponentBase.html#a343ea3a879f9df906062b05c01e28574">has_security</a> () const</td></tr>
-<tr class="separator:a343ea3a879f9df906062b05c01e28574"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6a9c2ef9faaf6fe99c411231266c3e75"><td class="memItemLeft" align="right" valign="top">
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>SendGroupMessage</b> (const <a class="el" href="structriaps_1_1groups_1_1GroupId.html">riaps::groups::GroupId</a> &amp;groupId, capnp::MallocMessageBuilder &amp;message, const std::string &amp;portName=&quot;&quot;)</td></tr>
 <tr class="separator:ga6a9c2ef9faaf6fe99c411231266c3e75"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -142,8 +144,6 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>HandleReinsta
 <tr class="memitem:ac7fb167cf2a18e680c8620016729aa3d"><td class="memItemLeft" align="right" valign="top"><a id="ac7fb167cf2a18e680c8620016729aa3d"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>UpdateGroup</b> (riaps::discovery::GroupUpdate::Reader &amp;msgGroupUpdate)</td></tr>
 <tr class="separator:ac7fb167cf2a18e680c8620016729aa3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a719345ef62b93b4bf9d4eb51c91a889c"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structComponentConf.html">ComponentConf</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classriaps_1_1ComponentBase.html#a719345ef62b93b4bf9d4eb51c91a889c">component_config</a> () const</td></tr>
-<tr class="separator:a719345ef62b93b4bf9d4eb51c91a889c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -158,16 +158,16 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:gae313f3b72ac3f452d7542a8f3eadfb71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac0332190f3c7979926c1f22cf50743d2"><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__B.html#gac0332190f3c7979926c1f22cf50743d2">component_name</a> () const</td></tr>
 <tr class="separator:gac0332190f3c7979926c1f22cf50743d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gacce00aa6c2790bf437737e7524af267d"><td class="memItemLeft" align="right" valign="top">ports::PublisherPort *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__B.html#gacce00aa6c2790bf437737e7524af267d">GetPublisherPortByName</a> (const std::string &amp;portName)</td></tr>
+<tr class="memitem:gacce00aa6c2790bf437737e7524af267d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classriaps_1_1ports_1_1PublisherPort.html">ports::PublisherPort</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__B.html#gacce00aa6c2790bf437737e7524af267d">GetPublisherPortByName</a> (const std::string &amp;portName)</td></tr>
 <tr class="separator:gacce00aa6c2790bf437737e7524af267d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac53007756f1092f26004467aa36a09ab"><td class="memItemLeft" align="right" valign="top">ports::RequestPort *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__B.html#gac53007756f1092f26004467aa36a09ab">GetRequestPortByName</a> (const std::string &amp;portName)</td></tr>
+<tr class="memitem:gac53007756f1092f26004467aa36a09ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classriaps_1_1ports_1_1RequestPort.html">ports::RequestPort</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__B.html#gac53007756f1092f26004467aa36a09ab">GetRequestPortByName</a> (const std::string &amp;portName)</td></tr>
 <tr class="separator:gac53007756f1092f26004467aa36a09ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8e2d775ceff674bc80db41c1b5e66a3c"><td class="memItemLeft" align="right" valign="top">
-ports::QueryPort *&#160;</td><td class="memItemRight" valign="bottom"><b>GetQueryPortByName</b> (const std::string &amp;portName)</td></tr>
+<a class="el" href="classriaps_1_1ports_1_1QueryPort.html">ports::QueryPort</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>GetQueryPortByName</b> (const std::string &amp;portName)</td></tr>
 <tr class="separator:ga8e2d775ceff674bc80db41c1b5e66a3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9af2413964c1145982dd408c1bb2139b"><td class="memItemLeft" align="right" valign="top">ports::ResponsePort *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__B.html#ga9af2413964c1145982dd408c1bb2139b">GetResponsePortByName</a> (const std::string &amp;portName)</td></tr>
+<tr class="memitem:ga9af2413964c1145982dd408c1bb2139b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classriaps_1_1ports_1_1ResponsePort.html">ports::ResponsePort</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__B.html#ga9af2413964c1145982dd408c1bb2139b">GetResponsePortByName</a> (const std::string &amp;portName)</td></tr>
 <tr class="separator:ga9af2413964c1145982dd408c1bb2139b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga085bc25adc991b80c4365e75cdda363b"><td class="memItemLeft" align="right" valign="top">ports::SubscriberPort *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__B.html#ga085bc25adc991b80c4365e75cdda363b">GetSubscriberPortByName</a> (const std::string &amp;portName)</td></tr>
+<tr class="memitem:ga085bc25adc991b80c4365e75cdda363b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classriaps_1_1ports_1_1SubscriberPort.html">ports::SubscriberPort</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__B.html#ga085bc25adc991b80c4365e75cdda363b">GetSubscriberPortByName</a> (const std::string &amp;portName)</td></tr>
 <tr class="separator:ga085bc25adc991b80c4365e75cdda363b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a06157bbf44d7dcdaaa8e5ce4e6dbb9ae"><td class="memItemLeft" align="right" valign="top"><a id="a06157bbf44d7dcdaaa8e5ce4e6dbb9ae"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>OnScheduledTimer</b> (uint64_t timerId)</td></tr>
@@ -277,24 +277,6 @@ std::function&lt; void(const uint64_t)&gt;&#160;</td><td class="memItemRight" va
       </table>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classPyActor.html">PyActor</a> object, contains the properties of the Python actor. </dd></dl>
-
-</div>
-</div>
-<a id="a719345ef62b93b4bf9d4eb51c91a889c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a719345ef62b93b4bf9d4eb51c91a889c">&#9670;&nbsp;</a></span>component_config()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="structComponentConf.html">ComponentConf</a>&amp; riaps::ComponentBase::component_config </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structComponentConf.html">ComponentConf</a> object that contains the component configuration. </dd></dl>
 
 </div>
 </div>
@@ -484,24 +466,6 @@ std::function&lt; void(const uint64_t)&gt;&#160;</td><td class="memItemRight" va
   </table>
   </dd>
 </dl>
-
-</div>
-</div>
-<a id="a343ea3a879f9df906062b05c01e28574"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a343ea3a879f9df906062b05c01e28574">&#9670;&nbsp;</a></span>has_security()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool riaps::ComponentBase::has_security </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>True if the security is turned on, otherwise false. </dd></dl>
 
 </div>
 </div>

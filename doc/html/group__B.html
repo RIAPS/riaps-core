@@ -71,6 +71,10 @@ Functions</h2></td></tr>
 <tr class="separator:ga862b5fcd3b7822776fab72498f7971fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3d3817d144e691988e49f49a6e00c84e"><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__B.html#ga3d3817d144e691988e49f49a6e00c84e">riaps::ComponentBase::ComponentUuid</a> () const</td></tr>
 <tr class="separator:ga3d3817d144e691988e49f49a6e00c84e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga343ea3a879f9df906062b05c01e28574"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__B.html#ga343ea3a879f9df906062b05c01e28574">riaps::ComponentBase::has_security</a> () const</td></tr>
+<tr class="separator:ga343ea3a879f9df906062b05c01e28574"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga719345ef62b93b4bf9d4eb51c91a889c"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structComponentConf.html">ComponentConf</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__B.html#ga719345ef62b93b4bf9d4eb51c91a889c">riaps::ComponentBase::component_config</a> () const</td></tr>
+<tr class="separator:ga719345ef62b93b4bf9d4eb51c91a889c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga776e653d31dd2f0cddacd4410fc71afd"><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__B.html#ga776e653d31dd2f0cddacd4410fc71afd">riaps::ComponentBase::component_logger_name</a> ()</td></tr>
 <tr class="separator:ga776e653d31dd2f0cddacd4410fc71afd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3af2af9fae31f7606993cf9d56bf6193"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
@@ -80,20 +84,38 @@ Functions</h2></td></tr>
 <tr class="separator:gae313f3b72ac3f452d7542a8f3eadfb71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac0332190f3c7979926c1f22cf50743d2"><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__B.html#gac0332190f3c7979926c1f22cf50743d2">riaps::ComponentBase::component_name</a> () const</td></tr>
 <tr class="separator:gac0332190f3c7979926c1f22cf50743d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gacce00aa6c2790bf437737e7524af267d"><td class="memItemLeft" align="right" valign="top">ports::PublisherPort *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__B.html#gacce00aa6c2790bf437737e7524af267d">riaps::ComponentBase::GetPublisherPortByName</a> (const std::string &amp;portName)</td></tr>
+<tr class="memitem:gacce00aa6c2790bf437737e7524af267d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classriaps_1_1ports_1_1PublisherPort.html">ports::PublisherPort</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__B.html#gacce00aa6c2790bf437737e7524af267d">riaps::ComponentBase::GetPublisherPortByName</a> (const std::string &amp;portName)</td></tr>
 <tr class="separator:gacce00aa6c2790bf437737e7524af267d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac53007756f1092f26004467aa36a09ab"><td class="memItemLeft" align="right" valign="top">ports::RequestPort *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__B.html#gac53007756f1092f26004467aa36a09ab">riaps::ComponentBase::GetRequestPortByName</a> (const std::string &amp;portName)</td></tr>
+<tr class="memitem:gac53007756f1092f26004467aa36a09ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classriaps_1_1ports_1_1RequestPort.html">ports::RequestPort</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__B.html#gac53007756f1092f26004467aa36a09ab">riaps::ComponentBase::GetRequestPortByName</a> (const std::string &amp;portName)</td></tr>
 <tr class="separator:gac53007756f1092f26004467aa36a09ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8e2d775ceff674bc80db41c1b5e66a3c"><td class="memItemLeft" align="right" valign="top"><a id="ga8e2d775ceff674bc80db41c1b5e66a3c"></a>
-ports::QueryPort *&#160;</td><td class="memItemRight" valign="bottom"><b>riaps::ComponentBase::GetQueryPortByName</b> (const std::string &amp;portName)</td></tr>
+<a class="el" href="classriaps_1_1ports_1_1QueryPort.html">ports::QueryPort</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>riaps::ComponentBase::GetQueryPortByName</b> (const std::string &amp;portName)</td></tr>
 <tr class="separator:ga8e2d775ceff674bc80db41c1b5e66a3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9af2413964c1145982dd408c1bb2139b"><td class="memItemLeft" align="right" valign="top">ports::ResponsePort *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__B.html#ga9af2413964c1145982dd408c1bb2139b">riaps::ComponentBase::GetResponsePortByName</a> (const std::string &amp;portName)</td></tr>
+<tr class="memitem:ga9af2413964c1145982dd408c1bb2139b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classriaps_1_1ports_1_1ResponsePort.html">ports::ResponsePort</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__B.html#ga9af2413964c1145982dd408c1bb2139b">riaps::ComponentBase::GetResponsePortByName</a> (const std::string &amp;portName)</td></tr>
 <tr class="separator:ga9af2413964c1145982dd408c1bb2139b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga085bc25adc991b80c4365e75cdda363b"><td class="memItemLeft" align="right" valign="top">ports::SubscriberPort *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__B.html#ga085bc25adc991b80c4365e75cdda363b">riaps::ComponentBase::GetSubscriberPortByName</a> (const std::string &amp;portName)</td></tr>
+<tr class="memitem:ga085bc25adc991b80c4365e75cdda363b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classriaps_1_1ports_1_1SubscriberPort.html">ports::SubscriberPort</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__B.html#ga085bc25adc991b80c4365e75cdda363b">riaps::ComponentBase::GetSubscriberPortByName</a> (const std::string &amp;portName)</td></tr>
 <tr class="separator:ga085bc25adc991b80c4365e75cdda363b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="ga719345ef62b93b4bf9d4eb51c91a889c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga719345ef62b93b4bf9d4eb51c91a889c">&#9670;&nbsp;</a></span>component_config()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structComponentConf.html">ComponentConf</a>&amp; riaps::ComponentBase::component_config </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structComponentConf.html">ComponentConf</a> object that contains the component configuration. </dd></dl>
+
+</div>
+</div>
 <a id="ga862b5fcd3b7822776fab72498f7971fb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga862b5fcd3b7822776fab72498f7971fb">&#9670;&nbsp;</a></span>component_logger()</h2>
 
@@ -254,7 +276,7 @@ template&lt;class T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">ports::PublisherPort* riaps::ComponentBase::GetPublisherPortByName </td>
+          <td class="memname"><a class="el" href="classriaps_1_1ports_1_1PublisherPort.html">ports::PublisherPort</a>* riaps::ComponentBase::GetPublisherPortByName </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>portName</em></td><td>)</td>
@@ -288,7 +310,7 @@ template&lt;class T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">ports::RequestPort* riaps::ComponentBase::GetRequestPortByName </td>
+          <td class="memname"><a class="el" href="classriaps_1_1ports_1_1RequestPort.html">ports::RequestPort</a>* riaps::ComponentBase::GetRequestPortByName </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>portName</em></td><td>)</td>
@@ -322,7 +344,7 @@ template&lt;class T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">ports::ResponsePort* riaps::ComponentBase::GetResponsePortByName </td>
+          <td class="memname"><a class="el" href="classriaps_1_1ports_1_1ResponsePort.html">ports::ResponsePort</a>* riaps::ComponentBase::GetResponsePortByName </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>portName</em></td><td>)</td>
@@ -356,7 +378,7 @@ template&lt;class T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">ports::SubscriberPort* riaps::ComponentBase::GetSubscriberPortByName </td>
+          <td class="memname"><a class="el" href="classriaps_1_1ports_1_1SubscriberPort.html">ports::SubscriberPort</a>* riaps::ComponentBase::GetSubscriberPortByName </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>portName</em></td><td>)</td>
@@ -377,6 +399,24 @@ template&lt;class T &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>NULL if the port with the name wasn't found or the port is not a subscriber port. </dd></dl>
+
+</div>
+</div>
+<a id="ga343ea3a879f9df906062b05c01e28574"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga343ea3a879f9df906062b05c01e28574">&#9670;&nbsp;</a></span>has_security()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool riaps::ComponentBase::has_security </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>True if the security is turned on, otherwise false. </dd></dl>
 
 </div>
 </div>

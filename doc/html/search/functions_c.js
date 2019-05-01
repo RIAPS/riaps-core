@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['terminate',['Terminate',['../classriaps_1_1ComponentBase.html#a0231eb9af9d445992833ffb93650e1fb',1,'riaps::ComponentBase']]],
-  ['timeout',['Timeout',['../classriaps_1_1utils_1_1Timeout.html#af79ed08efbb50af9e39ad6356e9d98ed',1,'riaps::utils::Timeout::Timeout()'],['../classriaps_1_1utils_1_1Timeout.html#ab874c9be6851a9376f252b9938205d8a',1,'riaps::utils::Timeout::Timeout(T timeout)']]],
-  ['tscagpio',['TscaGpio',['../classtsyncgpio_1_1components_1_1TscaGpio.html#ab4beda44b045d653fbc37844c35acc5f',1,'tsyncgpio::components::TscaGpio']]]
+  ['scheduleaction',['ScheduleAction',['../classriaps_1_1ComponentBase.html#ad9e46da215b2ef0680688313a818fade',1,'riaps::ComponentBase']]],
+  ['sendmessageonport',['SendMessageOnPort',['../classriaps_1_1ComponentBase.html#a047c0240b75a44bdf149c2eeecb3343e',1,'riaps::ComponentBase::SendMessageOnPort(capnp::MallocMessageBuilder &amp;message, const std::string &amp;port_name)'],['../classriaps_1_1ComponentBase.html#a5fb169680cc9b3d37ae65aeb43442b99',1,'riaps::ComponentBase::SendMessageOnPort(capnp::MallocMessageBuilder &amp;message, const std::string &amp;port_name, std::shared_ptr&lt; riaps::MessageParams &gt; params)'],['../classriaps_1_1ComponentBase.html#a52c1514478464c06280bc93327d23c9d',1,'riaps::ComponentBase::SendMessageOnPort(capnp::MallocMessageBuilder &amp;message, const std::string &amp;port_name, std::string &amp;request_id)'],['../classriaps_1_1ComponentBase.html#a7fc3b4459634bd931e85e47baecf6f98',1,'riaps::ComponentBase::SendMessageOnPort(zmsg_t **message, const std::string &amp;portName)']]],
+  ['sendquery',['SendQuery',['../classriaps_1_1ports_1_1QueryPort.html#a79625c3e94a9d84b5ea1de55fedeff02',1,'riaps::ports::QueryPort']]],
+  ['success',['success',['../classriaps_1_1ports_1_1PortError.html#a804b575537e2069209bea8149eff2af3',1,'riaps::ports::PortError']]]
 ];

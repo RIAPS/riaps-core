@@ -1,21 +1,5 @@
 var searchData=
 [
-  ['getgroupmembercount',['GetGroupMemberCount',['../classriaps_1_1ComponentBase.html#a2783cf06aa35c54408fad0ab9c4170df',1,'riaps::ComponentBase']]],
-  ['getmembercount',['GetMemberCount',['../classriaps_1_1groups_1_1Group.html#a853c50180b6edd0eb61fe7fc18c6b81a',1,'riaps::groups::Group']]],
-  ['getportas',['GetPortAs',['../group__B.html#ga3af2af9fae31f7606993cf9d56bf6193',1,'riaps::ComponentBase']]],
-  ['getportbyname',['GetPortByName',['../group__B.html#gae313f3b72ac3f452d7542a8f3eadfb71',1,'riaps::ComponentBase']]],
-  ['getpublisherportbyname',['GetPublisherPortByName',['../group__B.html#gacce00aa6c2790bf437737e7524af267d',1,'riaps::ComponentBase']]],
-  ['getrequestportbyname',['GetRequestPortByName',['../group__B.html#gac53007756f1092f26004467aa36a09ab',1,'riaps::ComponentBase']]],
-  ['getresponseportbyname',['GetResponsePortByName',['../group__B.html#ga9af2413964c1145982dd408c1bb2139b',1,'riaps::ComponentBase']]],
-  ['getsubscriberportbyname',['GetSubscriberPortByName',['../group__B.html#ga085bc25adc991b80c4365e75cdda363b',1,'riaps::ComponentBase']]],
-  ['getzmqpipe',['GetZmqPipe',['../classriaps_1_1ComponentBase.html#ac2c9515a563a515ee4a588df74623141',1,'riaps::ComponentBase']]],
-  ['group',['Group',['../classriaps_1_1groups_1_1Group.html',1,'riaps::groups::Group'],['../classriaps_1_1groups_1_1Group.html#aba69d644b52a70edf7e8b3f68edaa49e',1,'riaps::groups::Group::Group()']]],
-  ['group_5fname',['group_name',['../structriaps_1_1groups_1_1GroupId.html#aa1934dee0c21e21883a501dfddc73374',1,'riaps::groups::GroupId']]],
-  ['group_5ftype_5fid',['group_type_id',['../structriaps_1_1groups_1_1GroupId.html#abb5ce44c9d96e1d3ee3a7cfc554a026e',1,'riaps::groups::GroupId']]],
-  ['groupdetails',['GroupDetails',['../structriaps_1_1groups_1_1GroupDetails.html',1,'riaps::groups']]],
-  ['groupid',['GroupId',['../structriaps_1_1groups_1_1GroupId.html',1,'riaps::groups']]],
-  ['groupportconfig',['GroupPortConfig',['../structGroupPortConfig.html',1,'']]],
-  ['groupservice',['GroupService',['../structriaps_1_1groups_1_1GroupService.html',1,'riaps::groups']]],
-  ['groupt_5fports',['groupt_ports',['../structgroupt__ports.html',1,'']]],
-  ['grouptypeconf',['GroupTypeConf',['../structGroupTypeConf.html',1,'']]]
+  ['error',['error',['../classriaps_1_1ports_1_1PortError.html#a44476b3828941b7344b47ee447fca149',1,'riaps::ports::PortError']]],
+  ['error_5fcode',['error_code',['../classriaps_1_1ports_1_1PortError.html#a75c70c17877377826cc2b5488b3dd698',1,'riaps::ports::PortError']]]
 ];

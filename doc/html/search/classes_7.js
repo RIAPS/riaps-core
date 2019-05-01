@@ -1,28 +1,6 @@
 var searchData=
 [
-  ['gateway',['Gateway',['../classGateway_1_1Gateway.html',1,'Gateway']]],
-  ['globalestimator',['GlobalEstimator',['../classdistributedestimator_1_1components_1_1GlobalEstimator.html',1,'distributedestimator::components']]],
-  ['globalestimatorbase',['GlobalEstimatorBase',['../classdistributedestimator_1_1components_1_1GlobalEstimatorBase.html',1,'distributedestimator::components']]],
-  ['gpiodevicecomponent',['GpioDeviceComponent',['../classgpiotoggleexample_1_1components_1_1GpioDeviceComponent.html',1,'gpiotoggleexample::components']]],
-  ['gpiodevicecomponentbase',['GpioDeviceComponentBase',['../classgpiotoggleexample_1_1components_1_1GpioDeviceComponentBase.html',1,'gpiotoggleexample::components']]],
-  ['gpiodevicethread',['GpioDeviceThread',['../classgpiotoggleexample_1_1components_1_1GpioDeviceThread.html',1,'gpiotoggleexample::components']]],
-  ['group',['Group',['../classriaps_1_1groups_1_1Group.html',1,'riaps::groups']]],
-  ['groupcomp',['GroupComp',['../classgrouptest_1_1components_1_1GroupComp.html',1,'grouptest::components']]],
-  ['groupcompbase',['GroupCompBase',['../classgrouptest_1_1components_1_1GroupCompBase.html',1,'grouptest::components']]],
-  ['groupdetails',['GroupDetails',['../structriaps_1_1groups_1_1GroupDetails.html',1,'riaps::groups']]],
-  ['groupheartbeat',['GroupHeartBeat',['../structriaps_1_1distrcoord_1_1GroupHeartBeat.html',1,'riaps::distrcoord']]],
-  ['groupid',['GroupId',['../structriaps_1_1discovery_1_1GroupId.html',1,'riaps::discovery::GroupId'],['../structriaps_1_1groups_1_1GroupId.html',1,'riaps::groups::GroupId']]],
-  ['groupinternals',['GroupInternals',['../structriaps_1_1distrcoord_1_1GroupInternals.html',1,'riaps::distrcoord']]],
-  ['groupjoinrep',['GroupJoinRep',['../structriaps_1_1discovery_1_1GroupJoinRep.html',1,'riaps::discovery']]],
-  ['groupjoinreq',['GroupJoinReq',['../structriaps_1_1discovery_1_1GroupJoinReq.html',1,'riaps::discovery']]],
-  ['grouplead',['GroupLead',['../classriaps_1_1groups_1_1GroupLead.html',1,'riaps::groups']]],
-  ['groupmessage',['GroupMessage',['../structriaps_1_1distrcoord_1_1GroupMessage.html',1,'riaps::distrcoord']]],
-  ['groupportconfig',['GroupPortConfig',['../structGroupPortConfig.html',1,'']]],
-  ['grouppublisherport',['GroupPublisherPort',['../classriaps_1_1ports_1_1GroupPublisherPort.html',1,'riaps::ports']]],
-  ['groupservice',['GroupService',['../structriaps_1_1groups_1_1GroupService.html',1,'riaps::groups::GroupService'],['../structriaps_1_1discovery_1_1GroupService.html',1,'riaps::discovery::GroupService']]],
-  ['groupsubscriberport',['GroupSubscriberPort',['../classriaps_1_1ports_1_1GroupSubscriberPort.html',1,'riaps::ports']]],
-  ['groupt_5fports',['groupt_ports',['../structgroupt__ports.html',1,'']]],
-  ['grouptypeconf',['GroupTypeConf',['../structGroupTypeConf.html',1,'']]],
-  ['grouptypes',['GroupTypes',['../structdistributedestimator_1_1groups_1_1GroupTypes.html',1,'distributedestimator::groups']]],
-  ['groupupdate',['GroupUpdate',['../structriaps_1_1discovery_1_1GroupUpdate.html',1,'riaps::discovery']]]
+  ['senderport',['SenderPort',['../classriaps_1_1ports_1_1SenderPort.html',1,'riaps::ports']]],
+  ['subscriberport',['SubscriberPort',['../classriaps_1_1ports_1_1SubscriberPort.html',1,'riaps::ports']]],
+  ['subscriberportbase',['SubscriberPortBase',['../classriaps_1_1ports_1_1SubscriberPortBase.html',1,'riaps::ports']]]
 ];

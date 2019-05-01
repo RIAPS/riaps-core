@@ -41,16 +41,13 @@
 #include <componentmodel/ports/r_queryport.h>
 #include <componentmodel/ports/r_periodictimer.h>
 
-
 constexpr auto BILLION = 1000000000l;
 constexpr auto TIMER_ACCURACY = (50*1000); // 50 microsec
 
 namespace spd = spdlog;
 
-
 namespace riaps {
 
-    //class PyActor;
 
     namespace groups{
         class Group;
@@ -60,102 +57,87 @@ namespace riaps {
 
 
     /**
-     * @brief Declare the component thread fn.
-     * @param pipe ZMQ pair socket to send/recv messages from the component thread.
-     * @param args Component instance is passed to the component thread.
+     * @brief Declares the component thread function. The component thread is implemented as a ZMQ actor (http://czmq.zeromq.org/czmq4-0:zactor).
+     * @param pipe ZMQ pair socket to send/recv messages to/from the component thread.
+     * @param args Outer shell object, handles the communication with the PyActor, provides virtual methods for the developer components.
      */
     void component_actor(zsock_t* pipe, void* args);
 
+    /**
+     * @brief Parent class of all C++ components. Provides the RIAPS API for the developer.
+     */
     class ComponentBase {
         friend riaps::groups::Group;
     public:
-        ///////////////////// PYTHON PART ///////////////////////
+
         ComponentBase(const std::string &application_name, const std::string &actor_name);
 
-        virtual void Setup() final;
-        virtual void Activate() final;
-        virtual void HandlePortUpdate(const std::string &port_name, const std::string &host, int port) final;
-        virtual void HandleReinstate() final;
-
+        /** @name API for the Python actor
+         */
+        ///@{
         /**
-         * @brief Stops the component
+         * @brief Stops the component.
          *
          * Stops the component in the following order:
-         *   1) Stops the timers
-         *   2) Destroys the component thread
-         *   3) Deletes ports
+         *   -# Stops the timers
+         *   -# Destroys the component thread
+         *   -# Deletes ports
          */
         virtual void Terminate() final;
+        virtual void Setup() final;
+        virtual void Activate() final;
 
-        /////////////////////////////////////////
+        /**
+         * Forwards PortUpdate message to the component thread.
+         * @param port_name The name of the port which has to connect to a new service.
+         * @param host IP address of the new service.
+         * @param port Port of the new service.
+         */
+        virtual void HandlePortUpdate(const std::string &port_name, const std::string &host, int port) final;
+        virtual void HandleReinstate() final;
+        ///@}
 
-        /// @return The owner actor.
-        //const Actor* GetActor() const;
+        /**
+         * @return PyActor object, contains the properties of the Python actor.
+         */
         std::shared_ptr<PyActor> actor() const;
 
-        zactor_t* GetZmqPipe() const;
 
+
+        /// @cond
+        /// Friend declaration. Skipped in doxygen.
         friend void component_actor(zsock_t* pipe, void* args);
+        /// @endcond
 
         /**
-         * @brief Sends capnp message on port.
-         *
-         * Copies the capnp message buffer into a ZMQ message frame and sends the message on port, identified by portName.
-         * @param message The capnp buffer that holds the message
-         * @param portName The message is sent on this port. Available names are declared in the riaps model.
-         * @return True if the message is sent.
+         * \defgroup B Basics
+         * @{
          */
-        riaps::ports::PortError SendMessageOnPort(capnp::MallocMessageBuilder& message,
-                               const std::string& port_name);
 
         /**
-         * Sends message on answer port
-         *
-         * @return
+         * @return The component logger instance.
          */
-        riaps::ports::PortError SendMessageOnPort(capnp::MallocMessageBuilder& message,
-                               const std::string& port_name,
-                               std::shared_ptr<riaps::MessageParams> params);
-
-        /**
-         * Sends a message on query port
-         *
-         */
-        riaps::ports::PortError SendMessageOnPort(capnp::MallocMessageBuilder& message,
-                               const std::string&           port_name,
-                               std::string&                 request_id);
-
-
-
-        bool SendGroupMessage(const riaps::groups::GroupId& groupId,
-                              capnp::MallocMessageBuilder& message,
-                              const std::string& portName="");
-
-        bool SendGroupMessage(const riaps::groups::GroupId&& groupId,
-                              capnp::MallocMessageBuilder& message,
-                              const std::string& portName="");
-
-
-
-
-
-        void UpdateGroup(riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
-
-
-        /**
-         *
-         * @return The component configuration.
-         */
-        const ComponentConf& component_config() const;
         std::shared_ptr<spd::logger> component_logger();
+
         /**
-         *
          * @return The component unique ID.
          */
         const std::string ComponentUuid() const;
 
         /**
-         * Resource management handlers
+         * @return True if the security is turned on, otherwise false.
+         */
+        bool has_security() const;
+
+        /**
+         * @return ::ComponentConf object that contains the component configuration.
+         */
+        const ComponentConf& component_config() const;
+        ///@}
+
+        /**
+         * \defgroup RFM Resource and fault management
+         * @{
          */
         virtual void HandleCPULimit();
         virtual void HandleMemLimit();
@@ -163,8 +145,64 @@ namespace riaps {
         virtual void HandleNetLimit();
         virtual void HandleNICStateChange(const std::string& state);
         virtual void HandlePeerStateChange(const std::string& state, const std::string& uuid);
+        ///@}
 
-        bool has_security() const;
+
+
+        /** @name Internal methods.
+         */
+        ///@{
+        /**
+         * @return PAIR socket of the component thread.
+         */
+        zactor_t* GetZmqPipe() const;
+
+        /**
+         * @brief Sends capnp message on port.
+         *
+         * Copies the capnp message buffer into a ZMQ message frame and sends the message on port, identified by port_name.
+         * @param message The capnp buffer that holds the message
+         * @param port_name The message is sent on this port. Available names are declared in the riaps model.
+         * @return riaps::ports::PortError object, that contains the error code if any.
+         */
+        riaps::ports::PortError SendMessageOnPort(capnp::MallocMessageBuilder& message,
+                                                  const std::string& port_name);
+
+        /**
+         * Sends message on answer port
+         *
+         * @return
+         */
+        riaps::ports::PortError SendMessageOnPort(capnp::MallocMessageBuilder& message,
+                                                  const std::string& port_name,
+                                                  std::shared_ptr<riaps::MessageParams> params);
+
+        /**
+         * Sends a message on query port
+         *
+         */
+        riaps::ports::PortError SendMessageOnPort(capnp::MallocMessageBuilder& message,
+                                                  const std::string&           port_name,
+                                                  std::string&                 request_id);
+
+        void UpdateGroup(riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
+
+
+
+        ///@}
+
+        /**
+         * \defgroup DC Distributed Coordination
+         * @{
+         */
+        bool SendGroupMessage(const riaps::groups::GroupId& groupId,
+                              capnp::MallocMessageBuilder& message,
+                              const std::string& portName="");
+
+        bool SendGroupMessage(const riaps::groups::GroupId&& groupId,
+                              capnp::MallocMessageBuilder& message,
+                              const std::string& portName="");
+        /** @}*/
 
         virtual ~ComponentBase() = default;
 
@@ -178,6 +216,10 @@ namespace riaps {
          */
         bool SendMessageOnPort(zmsg_t** message, const std::string& portName);
 
+        /**
+         * \addgroup DC
+         * @{
+         */
         /**
          * Fired when a message arrives on one the group ports.
          * @param groupId groupType, groupName pair (the unique identifier of the group)
@@ -221,6 +263,38 @@ namespace riaps {
          * @return
          */
         bool IsLeader(const riaps::groups::GroupId& groupId);
+        ///@}
+
+        /**
+         * \addtogroup B
+         * @{
+         */
+
+        /**
+         * The name of the component logger.
+         * @return The name of the component logger.
+         */
+        const std::string component_logger_name();
+
+        /**
+         *
+         * @tparam T Type of the RIAPS port.
+         * @return Port instance with the given name, otherwise nullptr.
+         */
+        template<class T>
+        T* GetPortAs(const std::string&);
+
+        /**
+         * Search a port with the given name.
+         * @return NULL if there is no port with the given name.
+         */
+        ports::PortBase* GetPortByName(const std::string&);
+
+        /**
+         * The component name.
+         * @return The component name.
+         */
+        const std::string component_name() const;
 
         /**
          * Search publisher port with portName.
@@ -255,43 +329,14 @@ namespace riaps {
          * @return NULL if the port with the name wasn't found or the port is not a subscriber port.
          */
         ports::SubscriberPort* GetSubscriberPortByName(const std::string& portName);
+        ///@}
 
-        /**
-         * Search a port with the given name.
-         *
-         * @return NULL if there is no port with the given name.
-         */
-        ports::PortBase* GetPortByName(const std::string&);
 
-        template<class T>
-        T* GetPortAs(const std::string&);
-
-        const std::string component_name() const;
 
         // Note: disable for now, we need more tests.
         //bool CreateOneShotTimer(const std::string& timerid, timespec& wakeuptime);
         //virtual void OnScheduledTimer(char* timerId, bool missed);
         virtual void OnScheduledTimer(uint64_t timerId);
-
-
-
-/*        virtual void DispatchMessage(const std::string& messagetype,
-                                     msgpack::sbuffer* message,
-                                     ports::PortBase* port);
-*/
-        /*virtual void DispatchMessage(const std::string& messagetype,
-                                     riaps::MessageBase* message,
-                                     ports::PortBase* port) = 0;
-*/
-
-//        virtual void DispatchMessage(const std::string& messagetype,
-//                                     kj::ArrayPtr<const capnp::word>* data,
-//                                     ports::PortBase* port) = 0;
-
-//        virtual void DispatchMessage(const std::string& messagetype,
-//                                     capnp::FlatArrayMessageReader* capnpreader,
-//                                     ports::PortBase* port) = 0;
-
 
         /**
          * Converts and forwards the incoming capnp message to the appropriate handler. Pure virtual function,
@@ -313,17 +358,27 @@ namespace riaps {
         timespec WaitUntil(const timespec& targetTimepoint);
 
         /**
-         *
-         * @param groupType
-         * @param groupName
+         * \addtogroup DC
+         * @{
+         */
+
+        /**
+         * Is the current component the leader?
+         * @param groupId
+         * @return True if the current component is the leader in the given group, otherwise False.
+         */
+        bool IsLeader(const riaps::groups::Group* groupId);
+
+        /**
+         * The component joins to the given group.
+         * @param groupId The id of the group to join.
          */
         bool JoinGroup(riaps::groups::GroupId&& groupId);
         bool JoinGroup(riaps::groups::GroupId&  groupId);
 
         /**
-         *
-         * @param groupType
-         * @param groupName
+         * The component leaves the given group.
+         * @param groupId The id of the group to be left.
          */
         bool LeaveGroup(riaps::groups::GroupId&& groupId);
         bool LeaveGroup(riaps::groups::GroupId&  groupId);
@@ -357,6 +412,7 @@ namespace riaps {
                                   const std::string&            actionId ,
                                   const timespec&               absTime
         );
+        ///@}
 
         uint64_t ScheduleAbsTimer(const timespec &t, uint64_t wakeupOffset = 0 /*nanosec*/);
 
@@ -376,9 +432,6 @@ namespace riaps {
 
         std::function<void(const uint64_t)> scheduled_action_;
 
-
-        const std::string component_logger_name();
-
         void set_config(ComponentConf& c_conf);
         void set_debug_level(spd::level::level_enum component_level,
                              spd::level::level_enum framework_level = spd::level::info);
@@ -397,13 +450,6 @@ namespace riaps {
         const ports::AnswerPort*     InitAnswerPort     (const ComponentPortAns&);
         const ports::PeriodicTimer*  InitTimerPort      (const ComponentPortTim&);
         const ports::InsidePort*     InitInsidePort     (const ComponentPortIns&);
-
-        /**
-         * Is the current component the leader?
-         * @param groupId
-         * @return
-         */
-        bool IsLeader(const riaps::groups::Group* groupId);
 
 
 

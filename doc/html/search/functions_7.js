@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['leavegroup',['LeaveGroup',['../group__DC.html#gab74b71765a6823445a15b54a8d8a5265',1,'riaps::ComponentBase']]]
+  ['joingroup',['JoinGroup',['../group__DC.html#gadf51a105a2ecac48bf245a1e904a0f96',1,'riaps::ComponentBase']]]
 ];
