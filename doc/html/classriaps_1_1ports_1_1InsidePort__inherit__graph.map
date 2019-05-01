@@ -1,0 +1,4 @@
+<map id="riaps::ports::InsidePort" name="riaps::ports::InsidePort">
+<area shape="rect" id="node2" href="$classriaps_1_1ports_1_1PortBase.html" title="riaps::ports::PortBase" alt="" coords="5,5,155,32"/>
+<area shape="rect" id="node3" href="$classriaps_1_1ports_1_1SenderPort.html" title="riaps::ports::SenderPort" alt="" coords="179,5,339,32"/>
+</map>
