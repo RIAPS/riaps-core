@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['initgroup',['InitGroup',['../classriaps_1_1groups_1_1Group.html#a51ebb4afb06c8895f76504482327ecae',1,'riaps::groups::Group']]],
-  ['isleader',['IsLeader',['../classriaps_1_1ComponentBase.html#a23bdbf84dd8012a2eaaffd62b2e9d551',1,'riaps::ComponentBase::IsLeader(const riaps::groups::GroupId &amp;groupId)'],['../group__DC.html#ga89a583a2d4f9c205b1587001de02b6c1',1,'riaps::ComponentBase::IsLeader(const riaps::groups::Group *groupId)']]],
-  ['isleaderavailable',['IsLeaderAvailable',['../classriaps_1_1ComponentBase.html#aa613af7e71509122c7f70ecc0fc0d63f',1,'riaps::ComponentBase']]]
+  ['joingroup',['JoinGroup',['../group__DC.html#gadf51a105a2ecac48bf245a1e904a0f96',1,'riaps::ComponentBase']]]
 ];

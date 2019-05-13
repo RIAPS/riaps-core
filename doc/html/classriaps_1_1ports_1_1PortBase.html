@@ -71,6 +71,11 @@ $(function() {
 <div class="title">riaps::ports::PortBase Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Base class for all RIAPS ports. Stores metadata and the ZMQ port instance of the RIAPS port. Provides API for the derived classes.  
+ <a href="classriaps_1_1ports_1_1PortBase.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="r__portbase_8h_source.html">r_portbase.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for riaps::ports::PortBase:</div>
 <div class="dyncontent">
@@ -92,9 +97,6 @@ Inheritance diagram for riaps::ports::PortBase:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a626b0f5789ea8593f7d81a0803a2069a"><td class="memItemLeft" align="right" valign="top"><a id="a626b0f5789ea8593f7d81a0803a2069a"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>PortBase</b> (PortTypes <a class="el" href="classriaps_1_1ports_1_1PortBase.html#a2a508c68108ab49a94c8c70e6ef2695d">port_type</a>, const <a class="el" href="structComponentPortConfig.html">ComponentPortConfig</a> *<a class="el" href="classriaps_1_1ports_1_1PortBase.html#a4ef3b481ee1ce0d23dc23c5fd9978c50">config</a>, const <a class="el" href="classriaps_1_1ComponentBase.html">ComponentBase</a> *<a class="el" href="classriaps_1_1ports_1_1PortBase.html#ad38ae67c8eaf5e9b4b8bdccd2fb6318b">parent_component</a>)</td></tr>
-<tr class="separator:a626b0f5789ea8593f7d81a0803a2069a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2df05b03b169338fe203eac758acda99"><td class="memItemLeft" align="right" valign="top">virtual const zsock_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classriaps_1_1ports_1_1PortBase.html#a2df05b03b169338fe203eac758acda99">port_socket</a> () const</td></tr>
 <tr class="separator:a2df05b03b169338fe203eac758acda99"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad38ae67c8eaf5e9b4b8bdccd2fb6318b"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classriaps_1_1ComponentBase.html">ComponentBase</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classriaps_1_1ports_1_1PortBase.html#ad38ae67c8eaf5e9b4b8bdccd2fb6318b">parent_component</a> ()</td></tr>
@@ -105,65 +107,29 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4ef3b481ee1ce0d23dc23c5fd9978c50"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab39745fa15a3e8a49ed794f7361767ae"><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classriaps_1_1ports_1_1PortBase.html#ab39745fa15a3e8a49ed794f7361767ae">port_name</a> () const</td></tr>
 <tr class="separator:ab39745fa15a3e8a49ed794f7361767ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2c9fa096e8de5cccecc07602526e32e"><td class="memItemLeft" align="right" valign="top"><a id="aa2c9fa096e8de5cccecc07602526e32e"></a>
-<a class="el" href="classriaps_1_1ports_1_1RequestPort.html">RequestPort</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>AsRequestPort</b> ()</td></tr>
-<tr class="separator:aa2c9fa096e8de5cccecc07602526e32e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b36ac9e56dd4376e7e4b43b2dae5044"><td class="memItemLeft" align="right" valign="top"><a id="a2b36ac9e56dd4376e7e4b43b2dae5044"></a>
-<a class="el" href="classriaps_1_1ports_1_1QueryPort.html">QueryPort</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>AsQueryPort</b> ()</td></tr>
-<tr class="separator:a2b36ac9e56dd4376e7e4b43b2dae5044"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3d396bdf9105de6f460f5f40ccddf236"><td class="memItemLeft" align="right" valign="top"><a id="a3d396bdf9105de6f460f5f40ccddf236"></a>
-<a class="el" href="classriaps_1_1ports_1_1PublisherPort.html">PublisherPort</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>AsPublishPort</b> ()</td></tr>
-<tr class="separator:a3d396bdf9105de6f460f5f40ccddf236"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5dd5fed2a80d7d209ccf23379509e7e"><td class="memItemLeft" align="right" valign="top"><a id="ac5dd5fed2a80d7d209ccf23379509e7e"></a>
-<a class="el" href="classriaps_1_1ports_1_1GroupPublisherPort.html">GroupPublisherPort</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>AsGroupPublishPort</b> ()</td></tr>
-<tr class="separator:ac5dd5fed2a80d7d209ccf23379509e7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a404e15ceeaa348d889d3bf7ed6433638"><td class="memItemLeft" align="right" valign="top"><a id="a404e15ceeaa348d889d3bf7ed6433638"></a>
-<a class="el" href="classriaps_1_1ports_1_1GroupSubscriberPort.html">GroupSubscriberPort</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>AsGroupSubscriberPort</b> ()</td></tr>
-<tr class="separator:a404e15ceeaa348d889d3bf7ed6433638"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3fa5b91a10c36397887a3dc0186d340"><td class="memItemLeft" align="right" valign="top"><a id="ac3fa5b91a10c36397887a3dc0186d340"></a>
-<a class="el" href="classriaps_1_1ports_1_1ResponsePort.html">ResponsePort</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>AsResponsePort</b> ()</td></tr>
-<tr class="separator:ac3fa5b91a10c36397887a3dc0186d340"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30bc60286a2927353eaddca4ab45b6c5"><td class="memItemLeft" align="right" valign="top"><a id="a30bc60286a2927353eaddca4ab45b6c5"></a>
-<a class="el" href="classriaps_1_1ports_1_1AnswerPort.html">AnswerPort</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>AsAnswerPort</b> ()</td></tr>
-<tr class="separator:a30bc60286a2927353eaddca4ab45b6c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2780bdfc21e5e279de6eb71f3ac16710"><td class="memItemLeft" align="right" valign="top"><a id="a2780bdfc21e5e279de6eb71f3ac16710"></a>
-<a class="el" href="classriaps_1_1ports_1_1SubscriberPort.html">SubscriberPort</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>AsSubscribePort</b> ()</td></tr>
-<tr class="separator:a2780bdfc21e5e279de6eb71f3ac16710"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3b58a76e95385798be02e9207bcc65d"><td class="memItemLeft" align="right" valign="top"><a id="aa3b58a76e95385798be02e9207bcc65d"></a>
-<a class="el" href="classriaps_1_1ports_1_1PeriodicTimer.html">PeriodicTimer</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>AsTimerPort</b> ()</td></tr>
-<tr class="separator:aa3b58a76e95385798be02e9207bcc65d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a553a55b9f19673d32900fde75f84ead8"><td class="memItemLeft" align="right" valign="top"><a id="a553a55b9f19673d32900fde75f84ead8"></a>
-InsidePort *&#160;</td><td class="memItemRight" valign="bottom"><b>AsInsidePort</b> ()</td></tr>
-<tr class="separator:a553a55b9f19673d32900fde75f84ead8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab7de30eb86c169191a84e4a30313cf51"><td class="memItemLeft" align="right" valign="top"><a id="ab7de30eb86c169191a84e4a30313cf51"></a>
-<a class="el" href="classriaps_1_1ports_1_1RecvPort.html">RecvPort</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>AsRecvPort</b> ()</td></tr>
-<tr class="separator:ab7de30eb86c169191a84e4a30313cf51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a793a5952f801068663c65448706d7263"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classriaps_1_1ports_1_1PortBase.html#a793a5952f801068663c65448706d7263">has_security</a> () const</td></tr>
 <tr class="separator:a793a5952f801068663c65448706d7263"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acce3d2df54399c061a494ac15633aeee"><td class="memTemplParams" colspan="2"><a id="acce3d2df54399c061a494ac15633aeee"></a>
-template&lt;class T &gt; </td></tr>
-<tr class="memitem:acce3d2df54399c061a494ac15633aeee"><td class="memTemplItemLeft" align="right" valign="top">T *&#160;</td><td class="memTemplItemRight" valign="bottom"><b>GetPortAs</b> ()</td></tr>
+<tr class="memitem:acce3d2df54399c061a494ac15633aeee"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:acce3d2df54399c061a494ac15633aeee"><td class="memTemplItemLeft" align="right" valign="top">T *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classriaps_1_1ports_1_1PortBase.html#acce3d2df54399c061a494ac15633aeee">GetPortAs</a> ()</td></tr>
 <tr class="separator:acce3d2df54399c061a494ac15633aeee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a909accfd6f4ffb95ed642fa3bebf6c54"><td class="memItemLeft" align="right" valign="top"><a id="a909accfd6f4ffb95ed642fa3bebf6c54"></a>
-std::shared_ptr&lt; spd::logger &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>logger</b> () const</td></tr>
+<tr class="memitem:a909accfd6f4ffb95ed642fa3bebf6c54"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; spd::logger &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classriaps_1_1ports_1_1PortBase.html#a909accfd6f4ffb95ed642fa3bebf6c54">logger</a> () const</td></tr>
 <tr class="separator:a909accfd6f4ffb95ed642fa3bebf6c54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a67db3760eded0edf75b2e3b2a8beb2c1"><td class="memItemLeft" align="right" valign="top"><a id="a67db3760eded0edf75b2e3b2a8beb2c1"></a>
-PortTypes&#160;</td><td class="memItemRight" valign="bottom"><b>port_type_</b></td></tr>
+<tr class="memitem:a67db3760eded0edf75b2e3b2a8beb2c1"><td class="memItemLeft" align="right" valign="top">PortTypes&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classriaps_1_1ports_1_1PortBase.html#a67db3760eded0edf75b2e3b2a8beb2c1">port_type_</a></td></tr>
 <tr class="separator:a67db3760eded0edf75b2e3b2a8beb2c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab5cdc9816b0e584c8a544125dedce7a4"><td class="memItemLeft" align="right" valign="top"><a id="ab5cdc9816b0e584c8a544125dedce7a4"></a>
-zsock_t *&#160;</td><td class="memItemRight" valign="bottom"><b>port_socket_</b></td></tr>
+<tr class="memitem:ab5cdc9816b0e584c8a544125dedce7a4"><td class="memItemLeft" align="right" valign="top">zsock_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classriaps_1_1ports_1_1PortBase.html#ab5cdc9816b0e584c8a544125dedce7a4">port_socket_</a></td></tr>
 <tr class="separator:ab5cdc9816b0e584c8a544125dedce7a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c1543fbb82746f5864e661f5f291e4d"><td class="memItemLeft" align="right" valign="top"><a id="a2c1543fbb82746f5864e661f5f291e4d"></a>
-std::shared_ptr&lt; zcert_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>port_certificate_</b></td></tr>
+<tr class="memitem:a2c1543fbb82746f5864e661f5f291e4d"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; zcert_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classriaps_1_1ports_1_1PortBase.html#a2c1543fbb82746f5864e661f5f291e4d">port_certificate_</a></td></tr>
 <tr class="separator:a2c1543fbb82746f5864e661f5f291e4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Base class for all RIAPS ports. Stores metadata and the ZMQ port instance of the RIAPS port. Provides API for the derived classes. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a4ef3b481ee1ce0d23dc23c5fd9978c50"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4ef3b481ee1ce0d23dc23c5fd9978c50">&#9670;&nbsp;</a></span>config()</h2>
 
@@ -182,6 +148,32 @@ std::shared_ptr&lt; zcert_t &gt;&#160;</td><td class="memItemRight" valign="bott
 
 </div>
 </div>
+<a id="acce3d2df54399c061a494ac15633aeee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acce3d2df54399c061a494ac15633aeee">&#9670;&nbsp;</a></span>GetPortAs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">T * riaps::ports::PortBase::GetPortAs </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>RIAPS port type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns the current port as T pointer. </dd></dl>
+
+</div>
+</div>
 <a id="a793a5952f801068663c65448706d7263"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a793a5952f801068663c65448706d7263">&#9670;&nbsp;</a></span>has_security()</h2>
 
@@ -197,6 +189,32 @@ std::shared_ptr&lt; zcert_t &gt;&#160;</td><td class="memItemRight" valign="bott
       </table>
 </div><div class="memdoc">
 <p>Security on/off. </p><dl class="section return"><dt>Returns</dt><dd>True if the security is turned on. False otherwise. </dd></dl>
+
+</div>
+</div>
+<a id="a909accfd6f4ffb95ed642fa3bebf6c54"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a909accfd6f4ffb95ed642fa3bebf6c54">&#9670;&nbsp;</a></span>logger()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt;spd::logger&gt; riaps::ports::PortBase::logger </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>Logger for framework logging. </dd></dl>
 
 </div>
 </div>
@@ -260,7 +278,7 @@ std::shared_ptr&lt; zcert_t &gt;&#160;</td><td class="memItemRight" valign="bott
 </div><div class="memdoc">
 <p>ZMQ socket of the port. </p><dl class="section return"><dt>Returns</dt><dd>ZMQ socket. </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classriaps_1_1ports_1_1PeriodicTimer.html#a5bc8b3324d3af4bfe05f5363488458fc">riaps::ports::PeriodicTimer</a>.</p>
+<p>Reimplemented in <a class="el" href="group__PAPI.html#ga5bc8b3324d3af4bfe05f5363488458fc">riaps::ports::PeriodicTimer</a>.</p>
 
 </div>
 </div>
@@ -279,6 +297,85 @@ std::shared_ptr&lt; zcert_t &gt;&#160;</td><td class="memItemRight" valign="bott
       </table>
 </div><div class="memdoc">
 <p>The type of the port. </p><dl class="section return"><dt>Returns</dt><dd>The type of the port. </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a2c1543fbb82746f5864e661f5f291e4d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c1543fbb82746f5864e661f5f291e4d">&#9670;&nbsp;</a></span>port_certificate_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt;zcert_t&gt; riaps::ports::PortBase::port_certificate_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>The applied certificate on the port when security is turned on. </p>
+
+</div>
+</div>
+<a id="ab5cdc9816b0e584c8a544125dedce7a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5cdc9816b0e584c8a544125dedce7a4">&#9670;&nbsp;</a></span>port_socket_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">zsock_t* riaps::ports::PortBase::port_socket_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>The ZMQ socket of the port. </p>
+
+</div>
+</div>
+<a id="a67db3760eded0edf75b2e3b2a8beb2c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a67db3760eded0edf75b2e3b2a8beb2c1">&#9670;&nbsp;</a></span>port_type_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">PortTypes riaps::ports::PortBase::port_type_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Port type. Possible values:</p><ol type="1">
+<li>Publisher</li>
+<li>Subscriber</li>
+<li>Request</li>
+<li>Response</li>
+<li>Timer</li>
+<li>Inside</li>
+<li>Query</li>
+<li>Answer </li>
+</ol>
 
 </div>
 </div>

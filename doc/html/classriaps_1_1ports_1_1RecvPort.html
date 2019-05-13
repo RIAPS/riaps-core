@@ -89,19 +89,71 @@ Collaboration diagram for riaps::ports::RecvPort:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a19d2688a6446d4d813d9dd41a1c1606e"><td class="memItemLeft" align="right" valign="top"><a id="a19d2688a6446d4d813d9dd41a1c1606e"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>RecvPort</b> (<a class="el" href="classriaps_1_1ports_1_1PortBase.html">PortBase</a> *portBase)</td></tr>
-<tr class="separator:a19d2688a6446d4d813d9dd41a1c1606e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e0cb84c825f22523e343c4e5696a004"><td class="memItemLeft" align="right" valign="top"><a id="a2e0cb84c825f22523e343c4e5696a004"></a>
-virtual std::tuple&lt; std::unique_ptr&lt; <a class="el" href="classMessageReaderArray.html">MessageReaderArray</a> &gt;, <a class="el" href="classriaps_1_1ports_1_1PortError.html">PortError</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Recv</b> ()</td></tr>
+<tr class="memitem:ad951c7619c70ca326a0e85d4e88ca1eb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classriaps_1_1ports_1_1RecvPort.html#ad951c7619c70ca326a0e85d4e88ca1eb">RecvPort</a> (<a class="el" href="classriaps_1_1ports_1_1PortBase.html">PortBase</a> *port_base)</td></tr>
+<tr class="separator:ad951c7619c70ca326a0e85d4e88ca1eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e0cb84c825f22523e343c4e5696a004"><td class="memItemLeft" align="right" valign="top">virtual std::tuple&lt; std::unique_ptr&lt; <a class="el" href="classMessageReaderArray.html">MessageReaderArray</a> &gt;, <a class="el" href="classriaps_1_1ports_1_1PortError.html">PortError</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classriaps_1_1ports_1_1RecvPort.html#a2e0cb84c825f22523e343c4e5696a004">Recv</a> ()</td></tr>
 <tr class="separator:a2e0cb84c825f22523e343c4e5696a004"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4be5d8a7bf3ec89728492447cb4140bf"><td class="memItemLeft" align="right" valign="top"><a id="a4be5d8a7bf3ec89728492447cb4140bf"></a>
-virtual std::tuple&lt; std::unique_ptr&lt; <a class="el" href="classMessageReaderArray.html">MessageReaderArray</a> &gt;, <a class="el" href="classriaps_1_1ports_1_1PortError.html">PortError</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Recv</b> (zsock_t *socket)</td></tr>
-<tr class="separator:a4be5d8a7bf3ec89728492447cb4140bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a591c5aaddb9b247070bfe5170e16620f"><td class="memItemLeft" align="right" valign="top"><a id="a591c5aaddb9b247070bfe5170e16620f"></a>
-virtual std::tuple&lt; std::unique_ptr&lt; <a class="el" href="classMessageReaderArray.html">MessageReaderArray</a> &gt;, <a class="el" href="classriaps_1_1ports_1_1PortError.html">PortError</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Recv</b> (zmsg_t *msg)</td></tr>
-<tr class="separator:a591c5aaddb9b247070bfe5170e16620f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="ad951c7619c70ca326a0e85d4e88ca1eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad951c7619c70ca326a0e85d4e88ca1eb">&#9670;&nbsp;</a></span>RecvPort()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">riaps::ports::RecvPort::RecvPort </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classriaps_1_1ports_1_1PortBase.html">PortBase</a> *&#160;</td>
+          <td class="paramname"><em>port_base</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">port_base</td><td>The port object that is intended to be call the <a class="el" href="classriaps_1_1ports_1_1RecvPort.html#a2e0cb84c825f22523e343c4e5696a004">Recv()</a> method. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a2e0cb84c825f22523e343c4e5696a004"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e0cb84c825f22523e343c4e5696a004">&#9670;&nbsp;</a></span>Recv()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual std::tuple&lt;std::unique_ptr&lt;<a class="el" href="classMessageReaderArray.html">MessageReaderArray</a>&gt;, <a class="el" href="classriaps_1_1ports_1_1PortError.html">PortError</a>&gt; riaps::ports::RecvPort::Recv </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Reads the message from the port_socket_ </p><dl class="section return"><dt>Returns</dt><dd>A tuple containing the received message as kj::array bytes and an error structure. </dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>include/componentmodel/ports/<a class="el" href="r__recvport_8h_source.html">r_recvport.h</a></li>
 </ul>

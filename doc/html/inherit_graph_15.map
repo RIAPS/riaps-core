@@ -1,5 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classriaps_1_1ports_1_1PortBase.html" title="riaps::ports::PortBase" alt="" coords="11,183,160,209"/>
+<area shape="rect" id="node1" href="$classriaps_1_1ports_1_1PortBase.html" title="Base class for all RIAPS ports. Stores metadata and the ZMQ port instance of the RIAPS port..." alt="" coords="11,183,160,209"/>
 <area shape="rect" id="node2" href="$classriaps_1_1ports_1_1AnswerPort.html" title="riaps::ports::AnswerPort" alt="" coords="233,81,396,108"/>
 <area shape="rect" id="node3" href="$classriaps_1_1ports_1_1PeriodicTimer.html" title="riaps::ports::PeriodicTimer" alt="" coords="227,183,402,209"/>
 <area shape="rect" id="node4" href="$classriaps_1_1ports_1_1PublisherPortBase.html" title="riaps::ports::PublisherPortBase" alt="" coords="213,31,416,57"/>

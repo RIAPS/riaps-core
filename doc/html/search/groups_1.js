@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['distributed_20coordination',['Distributed Coordination',['../group__DC.html',1,'']]]
+  ['metadata_20api',['Metadata API',['../group__B.html',1,'']]]
 ];

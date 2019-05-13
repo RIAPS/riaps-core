@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['distributed_20coordination',['Distributed Coordination',['../group__DC.html',1,'']]],
-  ['dispatchinsidemessage',['DispatchInsideMessage',['../classriaps_1_1ComponentBase.html#a02d1b3f2853fb01007ce2744c1e4d413',1,'riaps::ComponentBase']]],
-  ['dispatchmessage',['DispatchMessage',['../classriaps_1_1ComponentBase.html#ad51027b7e46c7fcbb916936ae8b93154',1,'riaps::ComponentBase']]]
+  ['endpoints_5f',['endpoints_',['../classriaps_1_1ports_1_1SubscriberPortBase.html#ae2b2156e0b7aa8c2fa38d9ba5ca16cab',1,'riaps::ports::SubscriberPortBase']]],
+  ['error',['error',['../classriaps_1_1ports_1_1PortError.html#a44476b3828941b7344b47ee447fca149',1,'riaps::ports::PortError']]],
+  ['error_5fcode',['error_code',['../classriaps_1_1ports_1_1PortError.html#a75c70c17877377826cc2b5488b3dd698',1,'riaps::ports::PortError']]]
 ];

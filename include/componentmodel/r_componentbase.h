@@ -110,7 +110,7 @@ namespace riaps {
         /// @endcond
 
         /**
-         * \defgroup B Basics
+         * \defgroup B Metadata API
          * @{
          */
 
@@ -297,7 +297,7 @@ namespace riaps {
         const std::string component_name() const;
 
         /**
-         * Search publisher port with portName.
+         * Search publisher port by name.
          *
          * @param portName The name of the publisher port to be retrieved.
          * @return NULL if the port with the name wasn't found or the port is not a publisher port.
@@ -305,17 +305,23 @@ namespace riaps {
         ports::PublisherPort*  GetPublisherPortByName(const std::string& portName);
 
         /**
-         * Search request port with portName.
+         * Search request port by name.
          *
          * @param portName The name of the request port to be retrieved.
          * @return NULL if the port with the name wasn't found or the port is not a request port.
          */
         ports::RequestPort*    GetRequestPortByName(const std::string& portName);
 
+        /**
+         * Search query port by name.
+         *
+         * @param portName The name of the request port to be retrieved.
+         * @return NULL if the port with the name wasn't found or the port is not a request port.
+         */
         ports::QueryPort*      GetQueryPortByName(const std::string& portName);
 
         /**
-         * Search response port with portName.
+         * Search response port by name.
          *
          * @param portName The name of the response port to be retrieved.
          * @return NULL if the port with the name wasn't found or the port is not a response port.
@@ -323,15 +329,29 @@ namespace riaps {
         ports::ResponsePort*   GetResponsePortByName(const std::string& portName);
 
         /**
-         * Search subscriber port with portName.
+         * Search subscriber port by name.
          *
          * @param portName The name of the subscriber port to be retrieved.
          * @return NULL if the port with the name wasn't found or the port is not a subscriber port.
          */
         ports::SubscriberPort* GetSubscriberPortByName(const std::string& portName);
+
+        /**
+         * Sets the debug level. The possible debug levels are:
+         *  -# trace = 0,
+         *  -# debug = 1,
+         *  -# info = 2,
+         *  -# warn = 3,
+         *  -# err = 4,
+         *  -# critical = 5,
+         *  -# off = 6
+         *
+         *  @param component_level Debug level of the components.
+         *  @param framework_level Debug level of the RIAPS framework.
+         */
+        void set_debug_level(spd::level::level_enum component_level,
+                             spd::level::level_enum framework_level = spd::level::info);
         ///@}
-
-
 
         // Note: disable for now, we need more tests.
         //bool CreateOneShotTimer(const std::string& timerid, timespec& wakeuptime);
@@ -433,8 +453,7 @@ namespace riaps {
         std::function<void(const uint64_t)> scheduled_action_;
 
         void set_config(ComponentConf& c_conf);
-        void set_debug_level(spd::level::level_enum component_level,
-                             spd::level::level_enum framework_level = spd::level::info);
+
 
 
     private:

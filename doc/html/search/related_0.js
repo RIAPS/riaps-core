@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['component_5factor',['component_actor',['../classriaps_1_1ComponentBase.html#aafebbfe00b068327fa4e07c38f4f0327',1,'riaps::ComponentBase']]]
+  ['ptimeractor',['ptimeractor',['../classriaps_1_1ports_1_1PeriodicTimer.html#a3c4f2ece75fe6a52686a89c137d4599e',1,'riaps::ports::PeriodicTimer']]]
 ];
