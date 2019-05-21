@@ -52,9 +52,36 @@ bool DiscoveryValidator::InitWithSecurity(const std::string &ip_address,
     return true;
 }
 
+bool DiscoveryValidator::IsValidZmqAddress(const std::string &zmq_address) {
+    string prefix = "tcp://";
+    auto tcp_idx = zmq_address.find(prefix);
+    if (tcp_idx==string::npos)
+        return false;
+
+    auto address_port = zmq_address.substr(tcp_idx+prefix.size());
+    auto colon_idx = address_port.find(":");
+    if (colon_idx == string::npos)
+        return false;
+
+    auto address = address_port.substr(0, colon_idx);
+    auto port = stoi(address_port.substr(colon_idx+1));
+
+    if (port<=0 || port >=65535) {
+        return false;
+    }
+
+    struct sockaddr_in sa;
+    int result = inet_pton(AF_INET, address.c_str(), &(sa.sin_addr));
+    return result != 0;
+}
+
 bool DiscoveryValidator::IsValid(const std::string &node_address) {
     if (!has_security_)
         return true;
+
+    if (!IsValidZmqAddress(node_address))
+        return false;
+
     DeleteOldNodes();
     if (!IsUptodate(node_address)) {
         auto new_node = CreateNode(node_address);
