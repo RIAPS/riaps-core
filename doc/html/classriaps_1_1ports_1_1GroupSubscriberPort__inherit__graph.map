@@ -1,0 +1,5 @@
+<map id="riaps::ports::GroupSubscriberPort" name="riaps::ports::GroupSubscriberPort">
+<area shape="rect" id="node2" href="$classriaps_1_1ports_1_1SubscriberPortBase.html" title="riaps::ports::Subscriber\lPortBase" alt="" coords="88,155,245,196"/>
+<area shape="rect" id="node3" href="$classriaps_1_1ports_1_1PortBase.html" title="Base class for all RIAPS ports. Stores metadata and the ZMQ port instance of the RIAPS port..." alt="" coords="5,80,155,107"/>
+<area shape="rect" id="node4" href="$classriaps_1_1ports_1_1RecvPort.html" title="riaps::ports::RecvPort" alt="" coords="179,80,330,107"/>
+</map>

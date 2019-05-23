@@ -1,0 +1,3 @@
+<map id="riaps::ports::QueryPort" name="riaps::ports::QueryPort">
+<area shape="rect" id="node2" href="$classriaps_1_1ports_1_1PortBase.html" title="Base class for all RIAPS ports. Stores metadata and the ZMQ port instance of the RIAPS port..." alt="" coords="8,5,157,32"/>
+</map>

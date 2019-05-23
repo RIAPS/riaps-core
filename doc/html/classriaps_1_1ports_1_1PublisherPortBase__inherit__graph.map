@@ -1,0 +1,6 @@
+<map id="riaps::ports::PublisherPortBase" name="riaps::ports::PublisherPortBase">
+<area shape="rect" id="node4" href="$classriaps_1_1ports_1_1GroupPublisherPort.html" title="riaps::ports::GroupPublisherPort" alt="" coords="5,155,213,181"/>
+<area shape="rect" id="node5" href="$classriaps_1_1ports_1_1PublisherPort.html" title="riaps::ports::PublisherPort" alt="" coords="237,155,411,181"/>
+<area shape="rect" id="node2" href="$classriaps_1_1ports_1_1PortBase.html" title="Base class for all RIAPS ports. Stores metadata and the ZMQ port instance of the RIAPS port..." alt="" coords="52,5,201,32"/>
+<area shape="rect" id="node3" href="$classriaps_1_1ports_1_1SenderPort.html" title="riaps::ports::SenderPort" alt="" coords="225,5,385,32"/>
+</map>

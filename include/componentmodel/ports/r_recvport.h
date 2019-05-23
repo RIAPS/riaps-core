@@ -1,7 +1,3 @@
-//
-// Created by istvan on 3/29/18.
-//
-
 #ifndef RIAPS_CORE_R_RECVPORT_H
 #define RIAPS_CORE_R_RECVPORT_H
 
@@ -13,34 +9,29 @@
 #include <czmq.h>
 #include <memory>
 
-namespace riaps{
-    namespace ports{
-
+namespace riaps::ports{
         class PortBase;
 
         class RecvPort : public riaps::ports::TimedPort {
         public:
-            RecvPort(PortBase* portBase);
 
-//            virtual std::shared_ptr<capnp::FlatArrayMessageReader> Recv();
-//            virtual std::shared_ptr<capnp::FlatArrayMessageReader> Recv(zsock_t* socket);
-//            virtual std::shared_ptr<capnp::FlatArrayMessageReader> Recv(zmsg_t* msg);
+            /**
+             * @param port_base The port object that is intended to be call the Recv() method.
+             */
+            explicit RecvPort(PortBase* port_base);
 
+            /**
+             * Reads the message from the port_socket_
+             * @return A tuple containing the received message as kj::array bytes and an error structure.
+             */
             virtual std::tuple<std::unique_ptr<MessageReaderArray>, PortError> Recv();
-            virtual std::tuple<std::unique_ptr<MessageReaderArray>, PortError> Recv(zsock_t* socket);
-            virtual std::tuple<std::unique_ptr<MessageReaderArray>, PortError> Recv(zmsg_t* msg);
-
-            virtual ~RecvPort() = default;
-
+            ~RecvPort() override = default;
 
         private:
             PortBase*                 port_;
-            //std::shared_ptr<zmsg_t>   last_zmsg_;
-            //std::shared_ptr<zframe_t> last_frm_;
-            //std::shared_ptr<capnp::FlatArrayMessageReader> last_reader_;
-
+            std::tuple<std::unique_ptr<MessageReaderArray>, PortError> Recv(zsock_t* socket);
+            std::tuple<std::unique_ptr<MessageReaderArray>, PortError> Recv(zmsg_t* msg);
         };
     }
-}
 
 #endif //RIAPS_CORE_R_RECVPORT_H

@@ -1,0 +1,13 @@
+<map id="riaps::ports::PortBase" name="riaps::ports::PortBase">
+<area shape="rect" id="node2" href="$classriaps_1_1ports_1_1AnswerPort.html" title="riaps::ports::AnswerPort" alt="" coords="223,5,385,32"/>
+<area shape="rect" id="node3" href="$classriaps_1_1ports_1_1PeriodicTimer.html" title="riaps::ports::PeriodicTimer" alt="" coords="217,56,391,83"/>
+<area shape="rect" id="node4" href="$classriaps_1_1ports_1_1PublisherPortBase.html" title="riaps::ports::PublisherPortBase" alt="" coords="203,107,405,133"/>
+<area shape="rect" id="node7" href="$classriaps_1_1ports_1_1QueryPort.html" title="riaps::ports::QueryPort" alt="" coords="227,157,381,184"/>
+<area shape="rect" id="node8" href="$classriaps_1_1ports_1_1RequestPort.html" title="riaps::ports::RequestPort" alt="" coords="220,208,388,235"/>
+<area shape="rect" id="node9" href="$classriaps_1_1ports_1_1ResponsePort.html" title="riaps::ports::ResponsePort" alt="" coords="215,259,393,285"/>
+<area shape="rect" id="node10" href="$classriaps_1_1ports_1_1SubscriberPortBase.html" title="riaps::ports::Subscriber\lPortBase" alt="" coords="225,310,383,351"/>
+<area shape="rect" id="node5" href="$classriaps_1_1ports_1_1GroupPublisherPort.html" title="riaps::ports::GroupPublisherPort" alt="" coords="457,81,665,108"/>
+<area shape="rect" id="node6" href="$classriaps_1_1ports_1_1PublisherPort.html" title="riaps::ports::PublisherPort" alt="" coords="475,132,648,159"/>
+<area shape="rect" id="node11" href="$classriaps_1_1ports_1_1GroupSubscriberPort.html" title="riaps::ports::GroupSubscriberPort" alt="" coords="453,292,669,319"/>
+<area shape="rect" id="node12" href="$classriaps_1_1ports_1_1SubscriberPort.html" title="riaps::ports::SubscriberPort" alt="" coords="471,343,652,369"/>
+</map>

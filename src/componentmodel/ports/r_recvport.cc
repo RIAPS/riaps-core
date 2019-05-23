@@ -7,8 +7,8 @@ using namespace std;
 
 namespace riaps{
     namespace ports {
-        RecvPort::RecvPort(riaps::ports::PortBase *portBase) :
-                port_       (portBase)//,
+        RecvPort::RecvPort(riaps::ports::PortBase *port_base) :
+                port_       (port_base)//,
 //                last_frm_   (nullptr) ,
 //                last_zmsg_  (nullptr) ,
 //                last_reader_(nullptr)

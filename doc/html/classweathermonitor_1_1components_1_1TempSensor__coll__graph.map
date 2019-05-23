@@ -1,0 +1,4 @@
+<map id="weathermonitor::components::TempSensor" name="weathermonitor::components::TempSensor">
+<area shape="rect" id="node2" href="$classweathermonitor_1_1components_1_1TempSensorBase.html" title="weathermonitor::components\l::TempSensorBase" alt="" coords="5,80,196,121"/>
+<area shape="rect" id="node3" href="$classriaps_1_1ComponentBase.html" title="riaps::ComponentBase" alt="" coords="23,5,178,32"/>
+</map>

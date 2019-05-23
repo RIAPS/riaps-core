@@ -37,24 +37,25 @@ namespace riaps {
         class GroupLead;
 
         /**
-         * The instance name of the group and the group type id (form the config) are the GroupId
+         * Uniquely identifies a group instance.
          */
         struct GroupId {
+            /**
+             * The group type, comes from the model file.
+             */
             std::string group_type_id;
-            std::string group_name;
-
 
             /**
-             * To use GroupId in std::map as key
-             * @param other
-             * @return
+             * Name of the group, can be dynamic.
              */
-            bool operator<(const GroupId& other) const;
+            std::string group_name;
 
+            bool operator<(const GroupId& other) const;
             bool operator==(const GroupId& other) const;
 
-
+            ///\cond
             MSGPACK_DEFINE(group_name, group_type_id);
+            ///\endcond
         };
 
         /**
