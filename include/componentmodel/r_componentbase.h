@@ -110,7 +110,7 @@ namespace riaps {
         /// @endcond
 
         /**
-         * \defgroup B Metadata API
+         * \defgroup B Component API
          * @{
          */
 
