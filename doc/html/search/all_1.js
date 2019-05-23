@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['component_20api',['Component API',['../group__B.html',1,'']]],
   ['capnp_5fdata',['capnp_data',['../classMessageReaderArray.html#a4f2fddcc05a25a3cd5b1585e57d50df7',1,'MessageReaderArray']]],
   ['component_5fconfig',['component_config',['../group__B.html#ga719345ef62b93b4bf9d4eb51c91a889c',1,'riaps::ComponentBase']]],
   ['component_5flogger',['component_logger',['../group__B.html#ga862b5fcd3b7822776fab72498f7971fb',1,'riaps::ComponentBase']]],

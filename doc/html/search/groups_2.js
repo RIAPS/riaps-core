@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['port_20api',['Port API',['../group__PAPI.html',1,'']]]
+  ['resource_20and_20fault_20management',['Resource and fault management',['../group__RFM.html',1,'']]]
 ];

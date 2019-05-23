@@ -43,6 +43,7 @@ namespace riaps {
             /**
              * \defgroup PAPI Port API
              * @{
+             */
 
 
             ulong interval();
