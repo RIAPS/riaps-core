@@ -4,7 +4,8 @@ var indexSectionsWithContent =
   1: "acgmpqrs",
   2: "acdeghijlmoprst",
   3: "egp",
-  4: "cdr"
+  4: "p",
+  5: "cdpr"
 };
 
 var indexSectionNames =
@@ -13,7 +14,8 @@ var indexSectionNames =
   1: "classes",
   2: "functions",
   3: "variables",
-  4: "groups"
+  4: "related",
+  5: "groups"
 };
 
 var indexSectionLabels =
@@ -22,6 +24,7 @@ var indexSectionLabels =
   1: "Classes",
   2: "Functions",
   3: "Variables",
-  4: "Modules"
+  4: "Friends",
+  5: "Modules"
 };
 

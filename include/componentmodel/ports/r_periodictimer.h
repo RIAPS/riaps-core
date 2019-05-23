@@ -55,8 +55,14 @@ namespace riaps {
 
             bool has_delay();
 
+            /**
+             * @return ZMQ Socket of the timer.
+             */
             virtual const zsock_t* port_socket() const;
 
+            /**
+             * @return ZMQ channel of the timer.
+             */
             std::string TimerChannel();
 
             ~PeriodicTimer() override = default;

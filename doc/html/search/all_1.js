@@ -22,5 +22,6 @@ var searchData=
   ['componentporttim',['ComponentPortTim',['../structComponentPortTim.html',1,'']]],
   ['componentuuid',['ComponentUuid',['../group__B.html#ga3d3817d144e691988e49f49a6e00c84e',1,'riaps::ComponentBase']]],
   ['config',['config',['../classriaps_1_1ports_1_1PortBase.html#a4ef3b481ee1ce0d23dc23c5fd9978c50',1,'riaps::ports::PortBase']]],
-  ['connecttopublihser',['ConnectToPublihser',['../classriaps_1_1ports_1_1SubscriberPortBase.html#a7c3633740b0c42edff1c5b1516d3e1a3',1,'riaps::ports::SubscriberPortBase']]]
+  ['connecttopublihser',['ConnectToPublihser',['../classriaps_1_1ports_1_1SubscriberPortBase.html#a7c3633740b0c42edff1c5b1516d3e1a3',1,'riaps::ports::SubscriberPortBase']]],
+  ['connecttoresponse',['ConnectToResponse',['../classriaps_1_1ports_1_1RequestPort.html#a1cb761cc1b16085e3c1ba515bca90cc0',1,'riaps::ports::RequestPort']]]
 ];

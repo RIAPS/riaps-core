@@ -67,15 +67,6 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga8722e0d65997f65eeb327dc9bb016ad6"><td class="memItemLeft" align="right" valign="top"><a id="ga8722e0d65997f65eeb327dc9bb016ad6"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>riaps::ports::PeriodicTimer::PeriodicTimer</b> (const <a class="el" href="structComponentPortTim.html">ComponentPortTim</a> &amp;<a class="el" href="classriaps_1_1ports_1_1PortBase.html#a4ef3b481ee1ce0d23dc23c5fd9978c50">config</a>, const <a class="el" href="classriaps_1_1ComponentBase.html">ComponentBase</a> *<a class="el" href="classriaps_1_1ports_1_1PortBase.html#ad38ae67c8eaf5e9b4b8bdccd2fb6318b">parent_component</a>)</td></tr>
-<tr class="separator:ga8722e0d65997f65eeb327dc9bb016ad6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga24daf63b0a6bfadfb7649315f1cd31d1"><td class="memItemLeft" align="right" valign="top"><a id="ga24daf63b0a6bfadfb7649315f1cd31d1"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>riaps::ports::PeriodicTimer::Init</b> ()</td></tr>
-<tr class="separator:ga24daf63b0a6bfadfb7649315f1cd31d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gafe543d886ebd25bdcebcb336c1cccc87"><td class="memItemLeft" align="right" valign="top"><a id="gafe543d886ebd25bdcebcb336c1cccc87"></a>
-timespec&#160;</td><td class="memItemRight" valign="bottom"><b>riaps::ports::PeriodicTimer::Recv</b> ()</td></tr>
-<tr class="separator:gafe543d886ebd25bdcebcb336c1cccc87"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf929962e1fc3af6a6efa400ffc283319"><td class="memItemLeft" align="right" valign="top"><a id="gaf929962e1fc3af6a6efa400ffc283319"></a>
 ulong&#160;</td><td class="memItemRight" valign="bottom"><b>riaps::ports::PeriodicTimer::interval</b> ()</td></tr>
 <tr class="separator:gaf929962e1fc3af6a6efa400ffc283319"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -99,18 +90,10 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>riaps::ports::Periodi
 <tr class="separator:gaadcf9c4fa39309e9b6d45abe08560355"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5bc8b3324d3af4bfe05f5363488458fc"><td class="memItemLeft" align="right" valign="top">virtual const zsock_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__PAPI.html#ga5bc8b3324d3af4bfe05f5363488458fc">riaps::ports::PeriodicTimer::port_socket</a> () const</td></tr>
 <tr class="separator:ga5bc8b3324d3af4bfe05f5363488458fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3f082a85e00ad7a3c122bd8cde284773"><td class="memItemLeft" align="right" valign="top"><a id="ga3f082a85e00ad7a3c122bd8cde284773"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>riaps::ports::PeriodicTimer::TimerChannel</b> ()</td></tr>
+<tr class="memitem:ga3f082a85e00ad7a3c122bd8cde284773"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__PAPI.html#ga3f082a85e00ad7a3c122bd8cde284773">riaps::ports::PeriodicTimer::TimerChannel</a> ()</td></tr>
 <tr class="separator:ga3f082a85e00ad7a3c122bd8cde284773"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>Instantiates a new timer object and starts the timer thread. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">config</td><td></td></tr>
-    <tr><td class="paramname">parent_component</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="ga5bc8b3324d3af4bfe05f5363488458fc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga5bc8b3324d3af4bfe05f5363488458fc">&#9670;&nbsp;</a></span>port_socket()</h2>
@@ -134,9 +117,27 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>riaps::ports::
   </tr>
 </table>
 </div><div class="memdoc">
-<p>ZMQ socket of the port. </p><dl class="section return"><dt>Returns</dt><dd>ZMQ socket. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>ZMQ Socket of the timer. </dd></dl>
 
 <p>Reimplemented from <a class="el" href="classriaps_1_1ports_1_1PortBase.html#a2df05b03b169338fe203eac758acda99">riaps::ports::PortBase</a>.</p>
+
+</div>
+</div>
+<a id="ga3f082a85e00ad7a3c122bd8cde284773"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3f082a85e00ad7a3c122bd8cde284773">&#9670;&nbsp;</a></span>TimerChannel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string riaps::ports::PeriodicTimer::TimerChannel </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>ZMQ channel of the timer. </dd></dl>
 
 </div>
 </div>

@@ -20,12 +20,17 @@ namespace riaps {
             RequestPort(const ComponentPortReq &config, const ComponentBase *parent);
             virtual void Init();
 
-            // Returns false, if the request port couldn't connect
+            /**
+             * Connects to a response port
+             * @param rep_endpoint Address of the response port, where request wants to connect to.
+             * @return Returns false, if the connection is unsuccessful.
+             */
             bool ConnectToResponse(const std::string& rep_endpoint);
 
-            //virtual bool Recv(capnp::FlatArrayMessageReader** messageReader);
+            /**
+             * @return Configuration parameters of the request port.
+             */
             virtual const ComponentPortReq* GetConfig() const;
-            //const timespec& recv_timestamp() const;
 
             ~RequestPort() noexcept ;
         protected:

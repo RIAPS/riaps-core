@@ -401,23 +401,82 @@ namespace riaps {
          * @param groupId The id of the group to be left.
          */
         bool LeaveGroup(riaps::groups::GroupId&& groupId);
+
+        /**
+         * The component leaves the given group.
+         * @param groupId The id of the group to be left.
+         */
         bool LeaveGroup(riaps::groups::GroupId&  groupId);
 
+        /**
+         * Returns the current memberships of the component.
+         */
         std::vector<riaps::groups::GroupId> GetGroupMemberships();
+
+        /**
+         * Returns the current memberships of the component by type.
+         * @param groupType Group type
+         */
         std::vector<riaps::groups::GroupId> GetGroupMembershipsByType(const std::string& groupType);
+
+        /**
+         * @return True if the component is member of the given group. False otherwise.
+         */
         bool IsMemberOf(riaps::groups::GroupId& groupId);
 
+        /**
+         * Handler, vote request about the message.
+         * @param groupId
+         * @param proposeId
+         * @param message
+         */
         virtual void OnPropose (riaps::groups::GroupId& groupId, const std::string& proposeId, capnp::FlatArrayMessageReader& message);
+
+        /**
+         * Handler, vote request about the action at timePoint.
+         * @param groupId
+         * @param proposeId
+         * @param actionId
+         * @param timePoint
+         */
         virtual void OnActionPropose (riaps::groups::GroupId& groupId,
                                       const std::string& proposeId,
                                       const std::string& actionId,
                                       const timespec& timePoint);
 
+        /**
+         * Handler. Message arrived to the leader.
+         * @param groupId
+         * @param message
+         */
         virtual void OnMessageToLeader(const riaps::groups::GroupId& groupId, capnp::FlatArrayMessageReader& message);
+
+        /**
+         * Handler. Message arrived from the leader.
+         * @param groupId
+         * @param message
+         */
         virtual void OnMessageFromLeader(const riaps::groups::GroupId& groupId, capnp::FlatArrayMessageReader& message);
 
+        /**
+         * Handler. Outcome of a vote is announced.
+         * @param groupId
+         * @param proposeId
+         * @param accepted
+         */
         virtual void OnAnnounce(const riaps::groups::GroupId& groupId, const std::string& proposeId, bool accepted);
+
+        /**
+         * Sends a request for vote about the _message_.
+         * @param groupId
+         * @param message
+         * @return
+         */
         std::string SendPropose(const riaps::groups::GroupId& groupId, capnp::MallocMessageBuilder& message);
+
+        /**
+         * Sends vote about proposeId.
+         */
         bool SendVote(const riaps::groups::GroupId& groupId, const std::string& proposeId, bool accept);
 
         /**
@@ -433,7 +492,7 @@ namespace riaps {
                                   const timespec&               absTime
         );
         ///@}
-
+        
         uint64_t ScheduleAbsTimer(const timespec &t, uint64_t wakeupOffset = 0 /*nanosec*/);
 
         /**
