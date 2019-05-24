@@ -45,14 +45,40 @@ namespace riaps {
              * @{
              */
 
-
+            /**
+             * @return Period
+             */
             ulong interval();
+
+            /**
+             * Stops the timer. Destroys the thread, the timer cannot be started later.
+             */
             void Stop();
+
+            /**
+             * Starts the timer.
+             */
             void Start();
+
+            /**
+             * Halt the timer, can be started later.
+             */
             void Halt();
+
+            /**
+             * Set the current delay (for sporadic timer)
+             * @param value Delay.
+             */
             void delay(timespec& value);
+
+            /**
+             * Get the current delay (for sporadic timer)
+             */
             const timespec delay();
 
+            /**
+             * @return True if the timer is sporadic.
+             */
             bool has_delay();
 
             /**

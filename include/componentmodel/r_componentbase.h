@@ -139,11 +139,37 @@ namespace riaps {
          * \defgroup RFM Resource and fault management
          * @{
          */
+
+        /**
+         * Handle the case when the CPU limit is exceeded: notify each component. If the component has defined a handler, it will be called.
+         */
         virtual void HandleCPULimit();
+
+        /**
+         * Handle the case when the memory limit is exceeded: notify each component. If the component has defined a handler, it will be called.
+         */
         virtual void HandleMemLimit();
+
+        /**
+         * Handle the case when the file space limit is exceeded: notify each component. If the component has defined a handler, it will be called.
+         */
         virtual void HandleSpcLimit();
+
+        /**
+         * Handle the case when the net usage limit is exceeded: notify each component. If the component has defined a handler, it will be called.
+         */
         virtual void HandleNetLimit();
+
+        /**
+         * Handle the NIC state change message: notify components
+         */
         virtual void HandleNICStateChange(const std::string& state);
+
+        /**
+         * Handle the peer state change message: notify components
+         * @param state
+         * @param uuid Component UUID
+         */
         virtual void HandlePeerStateChange(const std::string& state, const std::string& uuid);
         ///@}
 
@@ -195,10 +221,25 @@ namespace riaps {
          * \defgroup DC Distributed Coordination
          * @{
          */
+
+        /**
+         * Sends a message to every members in the given group.
+         * @param groupId Group
+         * @param message The message to be sent.
+         * @param portName Depricated. Only one port is used now. Kept for compatibility.
+         * @return True if the send was successful. False otehrwise.
+         */
         bool SendGroupMessage(const riaps::groups::GroupId& groupId,
                               capnp::MallocMessageBuilder& message,
                               const std::string& portName="");
 
+        /**
+         * Sends a message to every members in the given group.
+         * @param groupId Group
+         * @param message The message to be sent.
+         * @param portName Depricated. Only one port is used now. Kept for compatibility.
+         * @return True if the send was successful. False otehrwise.
+         */
         bool SendGroupMessage(const riaps::groups::GroupId&& groupId,
                               capnp::MallocMessageBuilder& message,
                               const std::string& portName="");
@@ -230,9 +271,14 @@ namespace riaps {
                                     capnp::FlatArrayMessageReader& capnpreader,
                                     riaps::ports::PortBase* port);
 
+        /**
+         * Sends a message to the leader of the given group.
+         * @param groupId
+         * @param message
+         * @return
+         */
         bool SendMessageToLeader(const riaps::groups::GroupId& groupId,
                                  capnp::MallocMessageBuilder& message);
-
         bool SendLeaderMessage(const riaps::groups::GroupId& groupId,
                                capnp::MallocMessageBuilder& message);
 
@@ -394,6 +440,11 @@ namespace riaps {
          * @param groupId The id of the group to join.
          */
         bool JoinGroup(riaps::groups::GroupId&& groupId);
+
+        /**
+         * The component joins to the given group.
+         * @param groupId The id of the group to join.
+         */
         bool JoinGroup(riaps::groups::GroupId&  groupId);
 
         /**
@@ -492,7 +543,7 @@ namespace riaps {
                                   const timespec&               absTime
         );
         ///@}
-        
+
         uint64_t ScheduleAbsTimer(const timespec &t, uint64_t wakeupOffset = 0 /*nanosec*/);
 
         /**
