@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['terminate',['Terminate',['../classriaps_1_1ComponentBase.html#a476b2795e5086efea6186e5d3ec5daf1',1,'riaps::ComponentBase']]]
+  ['welcome_20to_20the_20c_2b_2b_20component_20framework_20documentation',['Welcome to the C++ component framework documentation',['../index.html',1,'']]]
 ];

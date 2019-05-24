@@ -1,9 +1,11 @@
-/**
- * RIAPS ComponentBase
- *
- * @brief Parent class of all RIAPS components. Controls the communication ports, messaging, timers, groups.
- *
- * @author Istvan Madari
+/*! \mainpage Welcome to the C++ component framework documentation
+
+The component framework provides a base class (ComponentBase) for your components. Features of the RIAPS framework can be used by calling the provided APIs.
+ The RIAPS services are grouped into four modules:
+ -# Component API
+ -# Resource and fault management
+ -# Distributed Coordination
+ -# Port API
  */
 
 
