@@ -22,13 +22,12 @@ namespace riaps{
             // The port is NOT local AND encrypted
             //if (!GetConfig()->is_local && has_security()) {
             if (has_security()) {
-                    if (port_certificate_ != nullptr) {
-                        zcert_apply (port_certificate_.get(), port_socket_);
-                        zsock_set_curve_server (port_socket_, 1);
-                    } else {
-                        logger()->error("Port certificate is null, cannot create port: {}", port_name());
-                        return;
-                    }
+                if (port_certificate_ != nullptr) {
+                    zcert_apply (port_certificate_.get(), port_socket_);
+                    zsock_set_curve_server (port_socket_, 1);
+                } else {
+                    logger()->error("Port certificate is null, cannot create port: {}", port_name());
+                    return;
                 }
             }
 
