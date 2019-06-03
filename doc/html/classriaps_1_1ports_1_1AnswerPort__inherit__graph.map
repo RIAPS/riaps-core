@@ -1,4 +1,0 @@
-<map id="riaps::ports::AnswerPort" name="riaps::ports::AnswerPort">
-<area shape="rect" id="node2" href="$classriaps_1_1ports_1_1PortBase.html" title="Base class for all RIAPS ports. Stores metadata and the ZMQ port instance of the RIAPS port..." alt="" coords="5,5,155,32"/>
-<area shape="rect" id="node3" href="$classriaps_1_1ports_1_1SenderPort.html" title="riaps::ports::SenderPort" alt="" coords="179,5,339,32"/>
-</map>

@@ -1,8 +1,0 @@
-<map id="riaps::ports::SenderPort" name="riaps::ports::SenderPort">
-<area shape="rect" id="node2" href="$classriaps_1_1ports_1_1AnswerPort.html" title="riaps::ports::AnswerPort" alt="" coords="233,5,396,32"/>
-<area shape="rect" id="node3" href="$classriaps_1_1ports_1_1PublisherPortBase.html" title="riaps::ports::PublisherPortBase" alt="" coords="213,56,416,83"/>
-<area shape="rect" id="node6" href="$classriaps_1_1ports_1_1RequestPort.html" title="riaps::ports::RequestPort" alt="" coords="231,107,399,133"/>
-<area shape="rect" id="node7" href="$classriaps_1_1ports_1_1ResponsePort.html" title="riaps::ports::ResponsePort" alt="" coords="225,157,404,184"/>
-<area shape="rect" id="node4" href="$classriaps_1_1ports_1_1GroupPublisherPort.html" title="riaps::ports::GroupPublisherPort" alt="" coords="464,31,672,57"/>
-<area shape="rect" id="node5" href="$classriaps_1_1ports_1_1PublisherPort.html" title="riaps::ports::PublisherPort" alt="" coords="481,81,655,108"/>
-</map>
