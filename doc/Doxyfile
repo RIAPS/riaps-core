@@ -789,28 +789,28 @@ WARN_LOGFILE           =
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = ./include/componentmodel/r_componentbase.h \
-                         ./include/componentmodel/r_messagebuilder.h \
-                         ./include/componentmodel/r_messagereader.h \
-                         ./include/componentmodel/r_configuration.h \
-                         ./include/componentmodel/r_pyactor.h \
-                         ./include/groups/r_group.h \
-                         ./include/componentmodel/ports/r_answerport.h \
-                         ./include/componentmodel/ports/r_periodictimer.h \
-                         ./include/componentmodel/ports/r_portbase.h \
-                         ./include/componentmodel/ports/r_porterror.h \
-                         ./include/componentmodel/ports/r_publisherport.h \
-                         ./include/componentmodel/ports/r_pubportbase.h \
-                         ./include/componentmodel/ports/r_pubportgroup.h \
-                         ./include/componentmodel/ports/r_queryport.h \
-                         ./include/componentmodel/ports/r_recvport.h \
-                         ./include/componentmodel/ports/r_requestport.h \
-                         ./include/componentmodel/ports/r_responseport.h \
-                         ./include/componentmodel/ports/r_senderport.h \
-                         ./include/componentmodel/ports/r_subportbase.h \
-                         ./include/componentmodel/ports/r_subportgroup.h \
-                         ./include/componentmodel/ports/r_subscriberport.h \
-                         README.md
+INPUT                  = ../include/componentmodel/r_componentbase.h \
+                         ../include/componentmodel/r_messagebuilder.h \
+                         ../include/componentmodel/r_messagereader.h \
+                         ../include/componentmodel/r_configuration.h \
+                         ../include/componentmodel/r_pyactor.h \
+                         ../include/groups/r_group.h \
+                         ../include/componentmodel/ports/r_answerport.h \
+                         ../include/componentmodel/ports/r_periodictimer.h \
+                         ../include/componentmodel/ports/r_portbase.h \
+                         ../include/componentmodel/ports/r_porterror.h \
+                         ../include/componentmodel/ports/r_publisherport.h \
+                         ../include/componentmodel/ports/r_pubportbase.h \
+                         ../include/componentmodel/ports/r_pubportgroup.h \
+                         ../include/componentmodel/ports/r_queryport.h \
+                         ../include/componentmodel/ports/r_recvport.h \
+                         ../include/componentmodel/ports/r_requestport.h \
+                         ../include/componentmodel/ports/r_responseport.h \
+                         ../include/componentmodel/ports/r_senderport.h \
+                         ../include/componentmodel/ports/r_subportbase.h \
+                         ../include/componentmodel/ports/r_subportgroup.h \
+                         ../include/componentmodel/ports/r_subscriberport.h \
+                         ../README.md
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
