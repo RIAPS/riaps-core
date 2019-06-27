@@ -24,9 +24,10 @@ namespace riaps {
             port_certificate_ = nullptr;
 
             if (has_security()) {
-                zcert_t* curve_key = riaps::framework::Security::curve_key();
+                auto app_name = parent_component->actor()->application_name();
+                zcert_t* curve_key = riaps::framework::Security::curve_key(app_name);
                 if (curve_key == nullptr)
-                    logger()->error("Cannot open CURVE key: {}", riaps::framework::Security::curve_key_path());
+                    logger()->error("Cannot open CURVE key: {}", riaps::framework::Security::curve_key_path(app_name));
                 else {
                     port_certificate_ = shared_ptr<zcert_t>(curve_key, [](zcert_t* c){
                         zcert_destroy(&c);

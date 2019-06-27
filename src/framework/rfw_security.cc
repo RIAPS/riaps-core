@@ -2,6 +2,7 @@
 // Created by istvan on 1/24/19.
 //
 
+#include <utils/r_utils.h>
 #include <framework/rfw_security.h>
 #include <experimental/filesystem>
 #include <fstream>
@@ -23,11 +24,9 @@ namespace riaps {
             }
 
             string security = reader.Get("RIAPS", "security", "off");
-            if (security == "on" ||
-                security == "True")
-                return true;
+            return security == "on" ||
+                   security == "True";
 
-            return false;
         }
 
         std::shared_ptr<dht::crypto::PrivateKey> Security::private_key() {
@@ -49,13 +48,13 @@ namespace riaps {
             return key_path.string();
         }
 
-        zcert_t* Security::curve_key() {
-            auto result = zcert_load(curve_key_path().c_str());
+        zcert_t* Security::curve_key(const string& app_name) {
+            auto result = zcert_load(curve_key_path(app_name).c_str());
             return result;
         }
 
-        const std::string Security::curve_key_path() {
-            fs::path key_path(CURVE_FOLDER);
+        const std::string Security::curve_key_path(const string& app_name) {
+            fs::path key_path(GetAppPath(app_name));
             key_path /= CURVE_KEY;
             return key_path.string();
         }

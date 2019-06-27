@@ -17,8 +17,8 @@ namespace riaps {
             static std::shared_ptr<dht::crypto::PrivateKey> private_key();
             static const std::string                        key_path();
 
-            static const std::string                        curve_key_path();
-            static zcert_t*                                 curve_key();
+            static const std::string                        curve_key_path(const std::string& app_name);
+            static zcert_t*                                 curve_key(const std::string& app_name);
         private:
 
         };

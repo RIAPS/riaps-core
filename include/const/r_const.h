@@ -29,8 +29,10 @@ constexpr auto KEY_FOLDER = "/usr/local/riaps/keys";
 constexpr auto KEY_FILE   = "id_rsa.key";
 
 // *** CURVE Path ***
-constexpr auto CURVE_FOLDER = "/usr/local/riaps/keys";
-constexpr auto CURVE_KEY    = "riaps-sys.cert";
+//constexpr auto CURVE_FOLDER = "/usr/local/riaps/keys";
+//constexpr auto CURVE_KEY    = "riaps-sys.cert";
+constexpr auto CURVE_KEY    = "riaps-app.cert";
+
 
 //** Groups **
 constexpr auto INTERNAL_SUB_NAME = "$SUB#";
