@@ -247,8 +247,6 @@ namespace riaps {
                               const std::string& portName="");
         /** @}*/
 
-        bool has_security() const;
-
         virtual ~ComponentBase() = default;
 
     protected:
