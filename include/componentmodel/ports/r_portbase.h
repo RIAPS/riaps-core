@@ -133,7 +133,6 @@ namespace riaps {
          * @return Logger for framework logging.
          */
         std::shared_ptr<spd::logger> logger() const;
-        std::shared_ptr<zcert_t>   port_certificate_;
 
         /**
          * The applied certificate on the port when security is turned on.
