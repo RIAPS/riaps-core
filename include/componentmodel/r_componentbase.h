@@ -223,7 +223,7 @@ namespace riaps {
          * \defgroup DC Distributed Coordination
          * @{
          */
-
+      
         /**
          * Sends a message to every members in the given group.
          * @param groupId Group
@@ -246,6 +246,8 @@ namespace riaps {
                               capnp::MallocMessageBuilder& message,
                               const std::string& portName="");
         /** @}*/
+
+        bool has_security() const;
 
         virtual ~ComponentBase() = default;
 
