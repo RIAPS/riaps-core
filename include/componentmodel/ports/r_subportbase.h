@@ -14,18 +14,36 @@ namespace riaps{
     namespace ports{
         class SubscriberPortBase : public PortBase, public RecvPort{
         public:
+            /**
+             * Initializes and stores a ZMQ SUB socket.
+             * @param config Port metadata.
+             * @param parent Parent component.
+             */
             SubscriberPortBase(const ComponentPortConfig* config, const ComponentBase* parent);
 
+            /**
+             * @return Pointer to the configuration structure.
+             */
             virtual const ComponentPortSub* GetConfig() const;
 
-            // Returns false, if the subscriber couldn't connect
+            /**
+             * Connects to a publisher port.
+             * @param endpoint IP address of the publisher port
+             * @return False if the connection couldn't be made.
+             */
             bool ConnectToPublihser(const std::string& endpoint);
 
-            virtual ~SubscriberPortBase();
+            ~SubscriberPortBase() override;
 
         protected:
+            /**
+             * List of ip addresses where the port is connected to
+             */
             std::vector<std::string> endpoints_;
 
+            /**
+             * Creates the ZMQ SUB socket and sets the filter to "" (no filtering).
+             */
             virtual void InitSocket();
         };
     }

@@ -32,8 +32,9 @@ namespace riaps{
                 logger()->error("Response cannot be initiated. Cannot find  available network interface.");
             }
 
-            // The port is NOT local AND encrypted
-            if (!GetConfig()->is_local && has_security()) {
+            // The port is encrypted
+            if (has_security()) {
+            //if (!GetConfig()->is_local && has_security()) {
 //                zactor_t *auth = zactor_new (zauth, NULL);
 //                auth_ = shared_ptr<zactor_t>(auth, [](zactor_t* z) {zactor_destroy(&z);});
 //                //zstr_sendx (auth, "VERBOSE", NULL);

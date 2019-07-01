@@ -12,7 +12,7 @@ namespace riaps {
         class TimedPort {
         public:
             TimedPort();
-            ~TimedPort() = default;
+            virtual ~TimedPort() = default;
             const timespec recv_timestamp();
             const timespec send_timestamp();
 

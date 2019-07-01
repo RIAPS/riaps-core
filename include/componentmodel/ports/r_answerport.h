@@ -22,9 +22,23 @@ namespace riaps {
 
         class AnswerPort : public PortBase, public SenderPort {
         public:
+            /**
+             * @param config Config parameters.
+             * @param parent Component instance which owns the port.
+             */
             AnswerPort(const ComponentPortAns &config, const ComponentBase* parent);
+
+            /**
+             * @return Config parameters of the port.
+             */
             virtual const ComponentPortAns* GetConfig() const;
 
+            /**
+             * Sends a message on the port.
+             * @param builder The message as capnp buffer
+             * @param params Parameters for the answer port (id in the first ZMQ frame)
+             * @return PortError
+             */
             PortError SendAnswer(capnp::MallocMessageBuilder& builder, std::shared_ptr<MessageParams> params);
 
             ~AnswerPort() noexcept ;

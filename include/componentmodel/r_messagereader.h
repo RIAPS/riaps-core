@@ -12,13 +12,23 @@
 #include <memory>
 #include <spdlog_setup/conf.h>
 
+/**
+ * Holds a ZMQ message. Provides kj::ArrayPtr structure for the content.
+ */
 class MessageReaderArray {
 public:
+    /**
+     * Instantiates the object from ZMQ frame.
+     * @param msg_frame ZMQ frame, whoch holds the message.
+     */
     MessageReaderArray(zframe_t* msg_frame);
     MessageReaderArray( const MessageReaderArray& )            = delete; // non construction-copyable
     MessageReaderArray& operator=( const MessageReaderArray& ) = delete; // non copyable
 
-
+    /**
+     * Pointer to the content as kj::ArrayPtr (used by capnp).
+     * @return
+     */
     kj::ArrayPtr<const capnp::word> capnp_data() const;
 
     virtual ~MessageReaderArray();
@@ -34,6 +44,10 @@ inline kj::ArrayPtr<const capnp::word> MessageReaderArray::capnp_data() const {
     return capnp_data_;
 }
 
+/**
+ * Converts a MessageReaderArray into a typed capnp message.
+ * @tparam T
+ */
 template <class T>
 class MessageReader {
 public:

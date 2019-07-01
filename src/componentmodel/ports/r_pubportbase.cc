@@ -31,7 +31,8 @@ namespace riaps{
             }
 
             // The port is NOT local AND encrypted
-            if (!GetConfig()->is_local && has_security()) {
+            //if (!GetConfig()->is_local && has_security()) {
+            if (has_security()) {
 //                zactor_t *auth = zactor_new (zauth, NULL);
 //                auth_ = shared_ptr<zactor_t>(auth, [](zactor_t* z) {zactor_destroy(&z);});
 //                zstr_sendx (auth, "VERBOSE", NULL);

@@ -19,15 +19,37 @@ namespace riaps{
 
         class PortBase;
 
+        /**
+         * Base class of all sender type ports: Publisher, Request/Response, Query/Answer
+         */
         class SenderPort{
-            //static_assert(std::is_base_of<PortBase, T>::value, "T must extend PortBase");
         public:
+
+            /**
+             * @param portBase Instance of the sender-type port
+             */
             SenderPort(PortBase* portBase);
 
+            /**
+             * Sends a capnp message.
+             * @param message
+             * @return
+             */
             virtual PortError Send(capnp::MallocMessageBuilder& message) const;
 
-            // TODO: Redesign. We don't want to expose this to the developers.
+            /**
+             * Sends a ZMQ message on the port. Ownership is taken, the message is deleted by the Send()
+             * @param message ZMQ message to be sent.
+             * @return PortError
+             */
             virtual PortError Send(zmsg_t** message) const;
+
+            /**
+             * Sends a byte array. Ownership is taken, the buffer is deleted by the Send()
+             * @param message The message represented in byte array.
+             * @param size Size if the buffer.
+             * @return PortError
+             */
             virtual PortError Send(byte* message, size_t size) const;
 
 

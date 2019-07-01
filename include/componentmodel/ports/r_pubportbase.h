@@ -14,8 +14,15 @@ namespace riaps{
         class PublisherPortBase : public PortBase, public SenderPort {
         public:
             PublisherPortBase(const ComponentPortConfig* config, const ComponentBase* parent);
+
+            /**
+             * @return The ZMQ address of the publisher port.
+             */
             std::string endpoint();
 
+            /**
+             * @return Configuration parameters of the puvlisher port.
+             */
             virtual const ComponentPortPub* GetConfig() const;
             virtual ~PublisherPortBase() = default;
 

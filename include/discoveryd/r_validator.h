@@ -49,6 +49,7 @@ private:
     std::shared_ptr<node_info> CreateNode(const std::string& node_address);
     bool IsUptodate(const std::string& node_address);
     void DeleteOldNodes();
+    bool IsValidZmqAddress(const std::string& zmq_address);
 
 
     std::shared_ptr<spd::logger>                      logger_;

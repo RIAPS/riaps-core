@@ -6,8 +6,7 @@
 #define RIAPS_CORE_R_PORTERROR_H
 #include <czmq.h>
 
-namespace riaps {
-    namespace ports {
+namespace riaps::ports {
 
         enum ZmqErrors {
             kEAGAIN       = EAGAIN       ,
@@ -20,18 +19,26 @@ namespace riaps {
             kEHOSTUNREACH = EHOSTUNREACH   // Only in Send()
         };
 
+        /**
+         * Encapsulates ZMQ error.
+         */
         class PortError {
         public:
             explicit PortError(bool success, int error_code=0);
             ~PortError() = default;
 
-
+            /// True if error has occurred in the last operation.
             bool      error     () const;
+
+            /// True if no error has occurred in the last operation.
             bool      success   () const;
+
+            /// The ZMQ error code.
             int       error_code() const;
 
             /**
-             * @return True if error is indicated.
+             * bool operator override, so the object can be used in if.
+             * @return True if error has occurred in the last operation.
              */
             operator bool() const {
                 return error();
@@ -49,18 +56,26 @@ namespace riaps {
             }
         }
 
+        /**
+         * @return True, if no error.
+         */
         inline bool PortError::success() const {
             return success_;
         }
 
+        /**
+         * @return True, if error occurred.
+         */
         inline bool PortError::error() const {
             return !success_;
         }
 
+        /**
+         * @return The ZMQ error number.
+         */
         inline int PortError::error_code() const {
             return error_code_;
         }
     }
-}
 
 #endif //RIAPS_CORE_R_PORTERROR_H
