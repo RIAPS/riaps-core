@@ -23,7 +23,8 @@ namespace riaps{
             if (GetConfig()->is_local){
                 host_ = "127.0.0.1";
             } else {
-                host_ = riaps::framework::Network::GetIPAddress();
+                auto iface = riaps::framework::Network::GetConfiguredIface();
+                host_ = riaps::framework::Network::GetIPAddress(iface);
             }
 
             if (host_ == "") {
