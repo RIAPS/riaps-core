@@ -12,7 +12,8 @@ namespace riaps{
             SenderPort(this)
         {
             port_socket_ = zsock_new(ZMQ_ROUTER);
-            host_ = riaps::framework::Network::GetIPAddress();
+            auto iface = riaps::framework::Network::GetConfiguredIface();
+            host_ = riaps::framework::Network::GetIPAddress(iface);
 
 
             if (host_ == "") {
