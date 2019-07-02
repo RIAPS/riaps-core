@@ -33,7 +33,6 @@ constexpr auto KEY_FILE   = "id_rsa.key";
 //constexpr auto CURVE_KEY    = "riaps-sys.cert";
 constexpr auto CURVE_KEY    = "riaps-app.cert";
 
-
 //** Groups **
 constexpr auto INTERNAL_SUB_NAME = "$SUB#";
 constexpr auto INTERNAL_PUB_NAME = "$PUB#";

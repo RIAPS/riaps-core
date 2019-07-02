@@ -223,7 +223,7 @@ namespace riaps {
          * \defgroup DC Distributed Coordination
          * @{
          */
-
+      
         /**
          * Sends a message to every members in the given group.
          * @param groupId Group
