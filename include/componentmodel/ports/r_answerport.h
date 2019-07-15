@@ -18,6 +18,9 @@ namespace riaps {
 
     class ComponentBase;
 
+    /*
+     * RIAPS Ports.
+     */
     namespace ports {
 
         class AnswerPort : public PortBase, public SenderPort {

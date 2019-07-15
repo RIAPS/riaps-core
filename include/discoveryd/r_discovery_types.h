@@ -18,7 +18,7 @@ struct ActorDetails {
     // The port of the socket
     int port;
 
-    // The actor's PID, so we can detect if the porcess died.
+    // The actor's PID, so we can detect if the process died.
     int pid;
 
     // Application name
@@ -67,7 +67,6 @@ struct ServiceCheckins {
 
     ServiceCheckins(){
         // 10 mins
-        // TODO: Riaps timeout
         timeout = 10*60*1000;
     }
 };

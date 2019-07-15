@@ -58,6 +58,9 @@ public:
         spec_reader_  = reader_->getRoot<T>();
     }
 
+    /**
+     * Function call on the wrapped capnp object.
+     */
     typename T::Reader* operator->() {
         return &spec_reader_;
     }

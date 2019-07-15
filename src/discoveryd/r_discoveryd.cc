@@ -1,13 +1,8 @@
 /*!
  * RIAPS Discovery Service
- *
- * Goal of the service:
- *   - Discover other RIAPS nodes on the local network
- *   - Maintain an ip address cache about the discovered RIAPS nodes
- *   - Control the local Discovery Service client (currently OpenDHT)
- *
- * CZMQ zbeacon  used to discover other riaps nodes in the local network. Each riaps node send a UDP packet periodically.
- *
+ *   - Discovers other RIAPS nodes on the local network
+ *   - Maintains an ip address cache about the discovered RIAPS nodes
+ *   - Controls the local Discovery Service client (currently OpenDHT)
  * \author Istvan Madari
  */
 
@@ -38,65 +33,10 @@
 // Port to be used for sending/receiving UDP beacon packages
 #define UDP_PACKET_PORT 9999
 
-
-
 namespace spd = spdlog;
 namespace fs = std::experimental::filesystem;
 
 using namespace std;
-
-//shared_ptr<dht::crypto::PrivateKey> getPrivateKey_s(fs::path& key_path ) {
-//    ifstream privfs(key_path);
-////    if (!privfs.good())
-////        console->error("No key");
-//
-//    std::stringstream buffer;
-//    buffer << privfs.rdbuf();
-//    vector<uint8_t> blob_key;
-//    string s = buffer.str();
-//    transform(s.begin(), s.end(), back_inserter(blob_key),
-//              [](char c) -> uint8_t {
-//                  return (uint8_t)c;
-//              });
-//    return make_shared<dht::crypto::PrivateKey>(blob_key);
-//}
-//
-
-//
-
-//
-//dht::Blob sign(const dht::Blob& data, std::shared_ptr<dht::crypto::PrivateKey> private_key) {
-//    auto signature = private_key->sign(data);
-//    auto converted = reinterpret_cast<char*>(signature.data());
-//
-//    const int max_dst_size = LZ4_compressBound(signature.size());
-//    unique_ptr<char> compressed_signature(new char[max_dst_size]);
-//    auto compressed_size = LZ4_compress_limitedOutput(converted, compressed_signature.get(), signature.size(), 255);
-//    if (compressed_size<0)
-//        cout << "Compression sux";
-//    else if (compressed_size == 0)
-//        cout << "Empty output in compression";
-//    else
-//        cout << "Compression is good";
-//
-//    auto result = ConvertToBlob(compressed_signature.get(), compressed_size);
-//    return result;
-//}
-//
-//bool check_signature(const std::string& data, dht::Blob& compressed_signature, std::shared_ptr<dht::crypto::PrivateKey> private_key) {
-//    vector<char> decompressed_buffer(512);
-//    const int decompressed_size = LZ4_decompress_safe(reinterpret_cast<char*>(compressed_signature.data()), decompressed_buffer.data(), compressed_signature.size(), 512);
-//    if (decompressed_size<0)
-//        cout << "Decompression sux";
-//    else if (decompressed_size == 0)
-//        cout << "Empty output in decompression";
-//    else
-//        cout << "Decompression is good";
-//
-//    return private_key->getPublicKey().checkSignature(ConvertToBlob(data), ConvertToBlob(decompressed_buffer.data(), decompressed_size));
-//}
-
-
 
 int main(int argc, char* argv[]) {
 
@@ -108,6 +48,7 @@ int main(int argc, char* argv[]) {
     auto has_security = riaps::framework::Security::HasSecurity();
     console->info("Security is turned {}", has_security ? "on" : "off");
 
+    // Name of the interface to be used from the riaps.conf
     string iface = riaps::framework::Network::GetConfiguredIface();
     string address;
     if (iface != "") {
@@ -119,7 +60,7 @@ int main(int argc, char* argv[]) {
         zsys_set_interface(iface.c_str());
     }
 
-    zactor_t *r_actor = zactor_new(riaps_actor, NULL);
+    zactor_t *r_actor = zactor_new(riaps::discovery::riaps_actor, NULL);
     uint8_t dhtStarted = 0;
     zsock_recv(r_actor, "1", &dhtStarted);
 
@@ -160,7 +101,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Create validator
-    DiscoveryValidator validator(has_security);
+    riaps::discovery::DiscoveryValidator validator(has_security);
 
     if (has_security) {
         if (!validator.InitWithSecurity(address, private_key)) {

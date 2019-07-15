@@ -12,32 +12,42 @@ namespace riaps {
         class Network{
             public:
 
-            // Returns the MAC address of the given network interface. E.g.: eth0
-            // If not specified, the ifacename will be the first global network interface
-            static std::string
-            GetMacAddress(const std::string& ifacename = "");
 
+            /**
+             * Returns the MAC address of the given network interface. E.g.: eth0
+             * If not specified, the ifacename will be the first global network interface
+             * @param ifacename the interface to be queried (empty string for the first one)
+             * @return MAC address
+             */
+            static std::string GetMacAddress(const std::string& ifacename = "");
 
-            // Returns the MAC address without ':' of the given network interface. E.g.: eth0
-            // If not specified, the ifacename will be the first global network interface
-            static std::string
-            GetMacAddressStripped(const std::string& ifacename = "");
+            /**
+             * Returns the MAC address without ':' of the given network interface. E.g.: eth0
+             * If not specified, the ifacename will be the first global network interface
+             * @param ifacename the interface to be queried (empty string for the first one)
+             * @return Stripped MAC address
+             */
+            static std::string GetMacAddressStripped(const std::string& ifacename = "");
 
-            // Returns the IP address of the given network interface. E.g.: eth0
-            // If not specified, the ifacename will be first global network interface
-            static std::string
-            GetIPAddress(const std::string& ifacename = "");
+            /*
+             * Returns the IP address of the given network interface. E.g.: eth0
+             * If not specified, the ifacename will be first global network interface
+             */
+            static std::string GetIPAddress(const std::string& ifacename = "");
 
-            // Returns the IP address and name of the first global network interface
-            static void
-            GetFirstGlobalIface(std::string& ifacename, std::string& ipaddress);
+            /**
+             * Returns the IP address and name of the first global network interface
+             */
+            static void GetFirstGlobalIface(std::string& ifacename, std::string& ipaddress);
 
-            // Returns the nic_name parameter from the riaps.conf
-            static std::string
-            GetConfiguredIface();
+            /**
+             * @return The nic_name parameter from the riaps.conf
+             */
+            static std::string GetConfiguredIface();
 
-
-            // Checks whether the given network interface exists
+            /**
+             * @return True if the given network interface exists
+             */
             static bool CheckIfaceName(const std::string& ifacename);
 
         };

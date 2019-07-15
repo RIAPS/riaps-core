@@ -32,6 +32,10 @@
 namespace spd = spdlog;
 
 namespace riaps {
+
+    /**
+     * RIAPS Distributed Coordination API
+     */
     namespace groups {
 
         class GroupLead;
