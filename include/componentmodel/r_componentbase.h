@@ -213,7 +213,7 @@ namespace riaps {
                                                   const std::string&           port_name,
                                                   std::string&                 request_id);
 
-        void UpdateGroup(riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
+        void UpdateGroup(riaps::discovery::GroupUpdate::Reader& msg_group_update);
 
 
 
@@ -226,25 +226,25 @@ namespace riaps {
       
         /**
          * Sends a message to every members in the given group.
-         * @param groupId Group
-         * @param message The message to be sent.
-         * @param portName Depricated. Only one port is used now. Kept for compatibility.
+         * @param group_id Group instance id.
+         * @param message The message to be sent in capnp buffer.
+         * @param port_name Depricated. Only one port is used now. Kept for compatibility.
          * @return True if the send was successful. False otehrwise.
          */
-        bool SendGroupMessage(const riaps::groups::GroupId& groupId,
+        bool SendGroupMessage(const riaps::groups::GroupId& group_id,
                               capnp::MallocMessageBuilder& message,
-                              const std::string& portName="");
+                              const std::string& port_name="");
 
         /**
          * Sends a message to every members in the given group.
-         * @param groupId Group
+         * @param group_id Group instance id.
          * @param message The message to be sent.
-         * @param portName Depricated. Only one port is used now. Kept for compatibility.
+         * @param port_name Depricated. Only one port is used now. Kept for compatibility.
          * @return True if the send was successful. False otehrwise.
          */
-        bool SendGroupMessage(const riaps::groups::GroupId&& groupId,
+        bool SendGroupMessage(const riaps::groups::GroupId&& group_id,
                               capnp::MallocMessageBuilder& message,
-                              const std::string& portName="");
+                              const std::string& port_name="");
         /** @}*/
 
         virtual ~ComponentBase() = default;
@@ -254,10 +254,10 @@ namespace riaps {
          * Sends a ZMQ message on the given inside port. This Send() is just for InsidePorts
          *
          * @param message ZMQ message structure to be sent
-         * @param portName The port, which sends the message.
+         * @param port_name The port, which sends the message.
          * @return True if the message was sent successfully.
          */
-        bool SendMessageOnPort(zmsg_t** message, const std::string& portName);
+        bool SendMessageOnPort(zmsg_t** message, const std::string& port_name);
 
         /**
          * \addgroup DC
@@ -265,23 +265,23 @@ namespace riaps {
          */
         /**
          * Fired when a message arrives on one the group ports.
-         * @param groupId groupType, groupName pair (the unique identifier of the group)
+         * @param group_id Group instance id.
          * @param capnpreader The received message in capnp buffer
          * @param port The port structure where the message was read form.
          */
-        virtual void OnGroupMessage(const riaps::groups::GroupId& groupId,
+        virtual void OnGroupMessage(const riaps::groups::GroupId& group_id,
                                     capnp::FlatArrayMessageReader& capnpreader,
                                     riaps::ports::PortBase* port);
 
         /**
          * Sends a message to the leader of the given group.
-         * @param groupId
-         * @param message
-         * @return
+         * @param group_id Group instance id.
+         * @param message The message to be sent.
+         * @return True if the message was sent successfully.
          */
-        bool SendMessageToLeader(const riaps::groups::GroupId& groupId,
+        bool SendMessageToLeader(const riaps::groups::GroupId& group_id,
                                  capnp::MallocMessageBuilder& message);
-        bool SendLeaderMessage(const riaps::groups::GroupId& groupId,
+        bool SendLeaderMessage(const riaps::groups::GroupId& group_id,
                                capnp::MallocMessageBuilder& message);
 
 
@@ -289,9 +289,9 @@ namespace riaps {
 
         /**
          * Gives a snapshot about the members of a group, considering a timeout.
-         * @param groupId The group id where the members are counted.
-         * @param timeout A member is counted if heartbeat was recevied from it in the last "timeout" msec
-         * @return
+         * @param groupId Group instance id.
+         * @param timeout A member is counted if heartbeat was received from it in the last "timeout" msec
+         * @return The number of members.
          */
         uint16_t GetGroupMemberCount(const riaps::groups::GroupId &groupId,
                                      int64_t timeout = 1000 * 15 /*15 sec in msec*/);
@@ -687,25 +687,30 @@ namespace riaps {
          * Points to the component owner.
          */
         std::shared_ptr<PyActor> actor_;
-        //const Actor* actor_;
 
         /**
-         * Holds the component thread.
+         * The component thread.
          */
         zactor_t* component_zactor_;
 
         /**
          * This setting is coming from the riaps.conf file.
-         * If the security is turned on, it is true. False, otherwise.
+         * If the security is turned on, this is true. False, otherwise.
          */
         bool has_security_;
     };
 
+    /**
+     * Finds a port by name and converts it to T*
+     * @tparam T The expected port type.
+     * @param port_name The name of the port to be searched.
+     * @return Pointer to the port. Nullptr if not found or wrong type.
+     */
     template<class T>
-    T* ComponentBase::GetPortAs(const std::string& portName) {
-        ports::PortBase* portBase = GetPortByName(portName);
-        if (portBase == nullptr) return nullptr;
-        return dynamic_cast<T*>(portBase);
+    T* ComponentBase::GetPortAs(const std::string& port_name) {
+        ports::PortBase* port_base = GetPortByName(port_name);
+        if (port_base == nullptr) return nullptr;
+        return dynamic_cast<T*>(port_base);
     }
 }
 

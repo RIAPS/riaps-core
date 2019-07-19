@@ -509,7 +509,7 @@ namespace riaps{
         return portBase->AsSubscribePort();
     }
 
-    void ComponentBase::OnGroupMessage(const riaps::groups::GroupId &groupId,
+    void ComponentBase::OnGroupMessage(const riaps::groups::GroupId &group_id,
                                        capnp::FlatArrayMessageReader &capnpreader, riaps::ports::PortBase *port) {
         riaps_logger_->error("Group message arrived, but no handler implemented in the component");
     }
@@ -560,16 +560,16 @@ namespace riaps{
         return result;
     }
 
-    bool ComponentBase::SendMessageOnPort(zmsg_t** message, const std::string& portName) {
-        auto port = GetPortByName(portName);
+    bool ComponentBase::SendMessageOnPort(zmsg_t** message, const std::string& port_name) {
+        auto port = GetPortByName(port_name);
         if (port == nullptr) return false;
         auto insidePort = port->AsInsidePort();
         return insidePort->Send(message);
     }
 
-    bool ComponentBase::SendLeaderMessage(const riaps::groups::GroupId &groupId,
+    bool ComponentBase::SendLeaderMessage(const riaps::groups::GroupId &group_id,
                                           capnp::MallocMessageBuilder &message) {
-        auto group = getGroupById(groupId);
+        auto group = getGroupById(group_id);
         if (group == nullptr) return false;
         if (!IsLeader(group)) return false;
         return group->SendLeaderMessage(message);
@@ -656,28 +656,28 @@ namespace riaps{
         return query_port->SendQuery(message, requestId);
     }
 
-    bool ComponentBase::SendGroupMessage(const riaps::groups::GroupId &groupId,
+    bool ComponentBase::SendGroupMessage(const riaps::groups::GroupId &group_id,
                                          capnp::MallocMessageBuilder &message,
-                                         const std::string& portName) {
+                                         const std::string& port_name) {
         // Search the group
-        if (groups_.find(groupId)==groups_.end()) return false;
+        if (groups_.find(group_id)==groups_.end()) return false;
 
-        riaps::groups::Group* group = groups_[groupId].get();
+        riaps::groups::Group* group = groups_[group_id].get();
 
-        return group->SendMessage(message, portName);
+        return group->SendMessage(message, port_name);
 
     }
 
-    bool ComponentBase::SendGroupMessage(const riaps::groups::GroupId&& groupId,
+    bool ComponentBase::SendGroupMessage(const riaps::groups::GroupId&& group_id,
                                          capnp::MallocMessageBuilder &message,
-                                         const std::string& portName) {
-        return SendGroupMessage(groupId, message, portName);
+                                         const std::string& port_name) {
+        return SendGroupMessage(group_id, message, port_name);
 
     }
 
-    bool ComponentBase::SendMessageToLeader(const riaps::groups::GroupId &groupId,
+    bool ComponentBase::SendMessageToLeader(const riaps::groups::GroupId &group_id,
                                             capnp::MallocMessageBuilder &message) {
-        auto group = getGroupById(groupId);
+        auto group = getGroupById(group_id);
         if (group == nullptr){
             return false;
         }
@@ -975,14 +975,14 @@ namespace riaps{
         return group->SendVote(proposeId, accept);
     }
 
-    void ComponentBase::UpdateGroup(riaps::discovery::GroupUpdate::Reader &msgGroupUpdate) {
+    void ComponentBase::UpdateGroup(riaps::discovery::GroupUpdate::Reader &msg_group_update) {
         // First, find the affected groups
         riaps::groups::GroupId gid;
-        gid.group_name    = msgGroupUpdate.getGroupId().getGroupName().cStr();
-        gid.group_type_id = msgGroupUpdate.getGroupId().getGroupType().cStr();
+        gid.group_name    = msg_group_update.getGroupId().getGroupName().cStr();
+        gid.group_type_id = msg_group_update.getGroupId().getGroupType().cStr();
 
         if (groups_.find(gid) == groups_.end()) return;
 
-        groups_[gid]->ConnectToNewServices(msgGroupUpdate);
+        groups_[gid]->ConnectToNewServices(msg_group_update);
     }
 }

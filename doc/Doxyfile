@@ -811,6 +811,9 @@ INPUT                  = ../include/componentmodel/r_componentbase.h \
                          ../include/componentmodel/ports/r_subportbase.h \
                          ../include/componentmodel/ports/r_subportgroup.h \
                          ../include/componentmodel/ports/r_subscriberport.h \
+                         ../include/componentmodel/r_riapsmessage.h \
+                         ../include/utils/r_lmdb.h \
+                         ../include/utils/r_timeout.h \
                          ../include/discoveryd/r_dhtdata.h \
                          ../include/discoveryd/r_validator.h \
                          ../include/framework/rfw_configuration.h \

@@ -19,11 +19,20 @@ namespace riaps {
         class QueryPort : public PortBase {
         public:
 
+            /**
+             * @param config Configuration. Comes from the riaps file.
+             * @param component The parent component.
+             */
             QueryPort(const ComponentPortQry &config, const ComponentBase *component);
             virtual void Init();
 
-            // Returns false, if the request port couldn't connect
-            bool ConnectToResponse(const std::string& ansEndpoint);
+            /**
+             * Connects to a server.
+             * @param ans_endpoint The address of the server. (Answer type port)
+             * @return False, if the request port couldn't connect. True otherwise.
+             */
+            bool ConnectToResponse(const std::string& ans_endpoint);
+
 
             template<class R, class T>
             bool RecvQuery(std::shared_ptr<riaps::RiapsMessage<R, T>>& message,
