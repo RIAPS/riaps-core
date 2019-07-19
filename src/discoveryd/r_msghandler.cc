@@ -15,8 +15,8 @@ namespace riaps{
                                                          shared_ptr<spdlog::logger> logger)
                 : dht_node_(dht_node),
                   pipe_(*pipe),
-                  service_check_period_((uint16_t) 20000), // 20 sec in in msec.
-                  zombie_check_period_((uint16_t) 600000), // 10 min in msec
+                  service_renewal_period_((uint16_t) 20000), // 20 sec in in msec.
+                  zombie_renewal_period_((uint16_t) 600000), // 10 min in msec
                   mac_address_(riaps::framework::Network::GetMacAddressStripped()),
                   host_address_(riaps::framework::Network::GetIPAddress()),
                   zombieglobalkey_("/zombie/globals"),
@@ -47,7 +47,7 @@ namespace riaps{
             poller_ = zpoller_new(pipe_, dht_update_socket_, riaps_socket_, nullptr);
             zpoller_set_nonstop(poller_, true);
 
-            last_service_checkin_ = last_zombie_check_ = zclock_mono();
+            last_service_renewal_ = last_zombie_renewal_ = zclock_mono();
 
             // Get current global zombies
             dht_node_.get<DhtData>(dht::InfoHash::get(zombieglobalkey_), [this](vector<DhtData> &&values) {
@@ -98,8 +98,8 @@ namespace riaps{
             auto &logger = logger_;
             return async(launch::async, [logger]() -> bool {
                 zsock_t *query = zsock_new(ZMQ_DEALER);
-                zuuid_t *socketId = zuuid_new();
-                zsock_set_identity(query, zuuid_str(socketId));
+                zuuid_t *socket_id = zuuid_new();
+                zsock_set_identity(query, zuuid_str(socket_id));
                 zsock_connect(query, CHAN_IN_DHTTRACKER);
 
                 // Retry
@@ -114,7 +114,7 @@ namespace riaps{
                         zclock_sleep(500);
                     }
                 }
-                zuuid_destroy(&socketId);
+                zuuid_destroy(&socket_id);
                 zsock_destroy(&query);
                 return result == 1;
             });
@@ -127,12 +127,12 @@ namespace riaps{
                 // Check services whether they are still alive.
                 // Reregister the too old services (OpenDHT ValueType settings, it is 10 minutes by default)
                 int64_t loop_start_time = zclock_mono();
-                if ((loop_start_time - last_service_checkin_) > service_check_period_) {
+                if ((loop_start_time - last_service_renewal_) > service_renewal_period_) {
                     RenewServices();
                 }
 
                 // Check outdated zombies
-                if ((loop_start_time - last_zombie_check_) > zombie_check_period_) {
+                if ((loop_start_time - last_zombie_renewal_) > zombie_renewal_period_) {
                     MaintainZombieList();
                 }
 
@@ -245,10 +245,10 @@ namespace riaps{
             string actorname = string(msg_actor_req.getActorName().cStr());
             string appname = string(msg_actor_req.getAppName().cStr());
 
-            string client_key_base = fmt::format("/{}/{}/", appname, actorname);
-            logger_->info("Register actor with PID - {} : {}", msg_actor_req.getPid(), client_key_base);
+            string clientkey_base = fmt::format("/{}/{}/", appname, actorname);
+            logger_->info("Register actor with PID - {} : {}", msg_actor_req.getPid(), clientkey_base);
 
-            auto registered_actor_it = clients_.find(client_key_base);
+            auto registered_actor_it = clients_.find(clientkey_base);
             bool is_registered = registered_actor_it != clients_.end();
 
             // If the name of the actor is registered previously and it still run => Error
@@ -256,7 +256,7 @@ namespace riaps{
 
             // If the actor already registered and running
             if (is_running) {
-                logger_->error("Cannot register actor. This actor already registered ({})", client_key_base);
+                logger_->error("Cannot register actor. This actor already registered ({})", clientkey_base);
 
                 capnp::MallocMessageBuilder message;
                 auto drepmsg = message.initRoot<riaps::discovery::DiscoRep>();
@@ -284,12 +284,12 @@ namespace riaps{
                 zsock_t *actor_socket = zsock_new (ZMQ_PAIR);
                 auto port = zsock_bind(actor_socket, "tcp://*:!");
 
-                //_clients[client_key_base] = unique_ptr<actor_details_t>(new actor_details_t());
-                clients_[client_key_base] = make_shared<ActorDetails>();
-                clients_[client_key_base]->socket = actor_socket;
-                clients_[client_key_base]->port = port;
-                clients_[client_key_base]->pid = msg_actor_req.getPid();
-                clients_[client_key_base]->app_name = appname;
+                //_clients[clientkey_base] = unique_ptr<actor_details_t>(new actor_details_t());
+                clients_[clientkey_base] = make_shared<ActorDetails>();
+                clients_[clientkey_base]->socket = actor_socket;
+                clients_[clientkey_base]->port = port;
+                clients_[clientkey_base]->pid = msg_actor_req.getPid();
+                clients_[clientkey_base]->app_name = appname;
 
                 // Subscribe to groups
                 if (group_listeners_.find(appname) == group_listeners_.end()) {
@@ -311,22 +311,22 @@ namespace riaps{
                 arepmsg.setPort(port);
                 arepmsg.setStatus(riaps::discovery::Status::OK);
 
-                auto serializedMessage = capnp::messageToFlatArray(message);
+                auto serialized_message = capnp::messageToFlatArray(message);
 
                 zmsg_t *msg = zmsg_new();
-                zframe_t *frIdentity = zframe_dup(rep_identity_.get());
-                zmsg_add(msg, frIdentity);
+                zframe_t *frm_identity = zframe_dup(rep_identity_.get());
+                zmsg_add(msg, frm_identity);
                 zmsg_addstr(msg, "");
-                zmsg_addmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
+                zmsg_addmem(msg, serialized_message.asBytes().begin(), serialized_message.asBytes().size());
 
                 zmsg_send(&msg, riaps_socket_);
 
                 // Use the same object, do not create another copy of actor_details;
-                string clientKeyLocal = client_key_base + mac_address_;
-                clients_[clientKeyLocal] = clients_[client_key_base];
+                string clientkey_Local = clientkey_base + mac_address_;
+                clients_[clientkey_Local] = clients_[clientkey_base];
 
-                string clientKeyGlobal = client_key_base + host_address_;
-                clients_[clientKeyGlobal] = clients_[client_key_base];
+                string clientkey_global = clientkey_base + host_address_;
+                clients_[clientkey_global] = clients_[clientkey_base];
             }
         }
 
@@ -374,13 +374,13 @@ namespace riaps{
                 unregrepmsg.setStatus(riaps::discovery::Status::ERR);
             }
 
-            auto serializedMessage = capnp::messageToFlatArray(message);
+            auto serialized_message = capnp::messageToFlatArray(message);
 
             zmsg_t *msg = zmsg_new();
-            zframe_t *frIdentity = zframe_dup(rep_identity_.get());
-            zmsg_add(msg, frIdentity);
+            zframe_t *frm_identity = zframe_dup(rep_identity_.get());
+            zmsg_add(msg, frm_identity);
             zmsg_addstr(msg, "");
-            zmsg_addmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
+            zmsg_addmem(msg, serialized_message.asBytes().begin(), serialized_message.asBytes().size());
 
             zmsg_send(&msg, riaps_socket_);
         }
@@ -388,19 +388,19 @@ namespace riaps{
         void DiscoveryMessageHandler::HandleServiceReg(riaps::discovery::ServiceRegReq::Reader &msg_service_reg) {
             auto check_dht = WaitForDht();
 
-            auto msgPath = msg_service_reg.getPath();
-            auto msgSock = msg_service_reg.getSocket();
-            auto servicePid = msg_service_reg.getPid();
+            auto msg_path = msg_service_reg.getPath();
+            auto msg_sock = msg_service_reg.getSocket();
+            auto service_pid = msg_service_reg.getPid();
 
 
-            auto kv_pair = BuildInsertKeyValuePair(msgPath.getAppName(),
-                                                   msgPath.getMsgType(),
-                                                   msgPath.getKind(),
-                                                   msgPath.getScope(),
-                                                   msgSock.getHost(),
-                                                   msgSock.getPort());
+            auto kv_pair = BuildInsertKeyValuePair(msg_path.getAppName(),
+                                                   msg_path.getMsgType(),
+                                                   msg_path.getKind(),
+                                                   msg_path.getScope(),
+                                                   msg_sock.getHost(),
+                                                   msg_sock.getPort());
 
-            logger_->info("Register service: {}@{}:{}", get<0>(kv_pair), msgSock.getHost().cStr(), msgSock.getPort());
+            logger_->info("Register service: {}@{}:{}", get<0>(kv_pair), msg_sock.getHost().cStr(), msg_sock.getPort());
 
             // Save response port addresses into local database
             // If the discovery service restarts because of failure, then it puts the response ports into zombie state.
@@ -415,17 +415,17 @@ namespace riaps{
             }
 
             // New pid
-            if (service_checkins_.find(servicePid) == service_checkins_.end()) {
-                service_checkins_[servicePid] = vector<unique_ptr<ServiceCheckins>>();
+            if (service_checkins_.find(service_pid) == service_checkins_.end()) {
+                service_checkins_[service_pid] = vector<unique_ptr<ServiceCheckins>>();
             }
 
             // Add PID - Service Details
-            unique_ptr<ServiceCheckins> newItem = unique_ptr<ServiceCheckins>(new ServiceCheckins());
-            newItem->createdTime = zclock_mono();
-            newItem->key = get<0>(kv_pair);
-            newItem->value = get<1>(kv_pair);
-            //newItem->pid         = servicePid;
-            service_checkins_[servicePid].push_back(move(newItem));
+            unique_ptr<ServiceCheckins> new_item = unique_ptr<ServiceCheckins>(new ServiceCheckins());
+            new_item->createdTime = zclock_mono();
+            new_item->key = get<0>(kv_pair);
+            new_item->value = get<1>(kv_pair);
+            //newItem->pid         = service_pid;
+            service_checkins_[service_pid].push_back(move(new_item));
 
             // Convert the value to bytes
             vector<uint8_t> opendht_data(get<1>(kv_pair).begin(), get<1>(kv_pair).end());
@@ -446,13 +446,13 @@ namespace riaps{
 
             msg_servicereg_rep.setStatus(riaps::discovery::Status::OK);
 
-            auto serializedMessage = capnp::messageToFlatArray(message);
+            auto serialized_message = capnp::messageToFlatArray(message);
 
             zmsg_t *msg = zmsg_new();
-            zframe_t *frIdentity = zframe_dup(rep_identity_.get());
-            zmsg_add(msg, frIdentity);
+            zframe_t *frm_identity = zframe_dup(rep_identity_.get());
+            zmsg_add(msg, frm_identity);
             zmsg_addstr(msg, "");
-            zmsg_addmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
+            zmsg_addmem(msg, serialized_message.asBytes().begin(), serialized_message.asBytes().size());
 
             zmsg_send(&msg, riaps_socket_);
 
@@ -532,13 +532,13 @@ namespace riaps{
             auto number_of_clients = 0;
             auto sockets = msg_service_lookup_rep.initSockets(number_of_clients);
 
-            auto serializedMessage = capnp::messageToFlatArray(message);
+            auto serialized_message = capnp::messageToFlatArray(message);
 
             zmsg_t *msg = zmsg_new();
-            zframe_t *frIdentity = zframe_dup(rep_identity_.get());
-            zmsg_add(msg, frIdentity);
+            zframe_t *frm_identity = zframe_dup(rep_identity_.get());
+            zmsg_add(msg, frm_identity);
             zmsg_addstr(msg, "");
-            zmsg_addmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
+            zmsg_addmem(msg, serialized_message.asBytes().begin(), serialized_message.asBytes().size());
 
             zmsg_send(&msg, riaps_socket_);
 
@@ -588,13 +588,13 @@ namespace riaps{
                                                                           b.asString());
                                                               }
 
-                                                              auto serializedMessage = capnp::messageToFlatArray(
+                                                              auto serialized_message = capnp::messageToFlatArray(
                                                                       message);
 
                                                               zmsg_t *msg = zmsg_new();
                                                               zmsg_pushmem(msg,
-                                                                           serializedMessage.asBytes().begin(),
-                                                                           serializedMessage.asBytes().size());
+                                                                           serialized_message.asBytes().begin(),
+                                                                           serialized_message.asBytes().size());
 
                                                               zmsg_send(&msg,
                                                                         notify_ractor_socket);
@@ -657,10 +657,10 @@ namespace riaps{
                                            auto msg_get_results = msg_providerget.initResults(1);
                                            msg_get_results.set(0, result);
 
-                                           auto serializedMessage = capnp::messageToFlatArray(message);
+                                           auto serialized_message = capnp::messageToFlatArray(message);
 
                                            zmsg_t *msg = zmsg_new();
-                                           auto bytes = serializedMessage.asBytes();
+                                           auto bytes = serialized_message.asBytes();
                                            zmsg_pushmem(msg, bytes.begin(), bytes.size());
                                            zmsg_send(&msg, notify_ractor_socket);
 
@@ -690,43 +690,43 @@ namespace riaps{
         void DiscoveryMessageHandler::HandleGroupJoin(riaps::discovery::GroupJoinReq::Reader &msg_group_join) {
 
             // Join to the group.
-            auto msgGroupServices = msg_group_join.getServices();
-            string appName = msg_group_join.getAppName();
-            string componentId = msg_group_join.getComponentId();
-            auto actorPid = msg_group_join.getPid();
+            auto msg_groupservices = msg_group_join.getServices();
+            string appname = msg_group_join.getAppName();
+            string component_id = msg_group_join.getComponentId();
+            auto actor_pid = msg_group_join.getPid();
 
-            riaps::groups::GroupDetails groupDetails;
-            groupDetails.app_name = appName;
-            groupDetails.component_id = componentId;
-            groupDetails.group_id = {
+            riaps::groups::GroupDetails group_details;
+            group_details.app_name = appname;
+            group_details.component_id = component_id;
+            group_details.group_id = {
                     msg_group_join.getGroupId().getGroupType(),
                     msg_group_join.getGroupId().getGroupName()
             };
 
-            for (int i = 0; i < msgGroupServices.size(); i++) {
-                groupDetails.group_services.push_back({
-                                                              msgGroupServices[i].getMessageType(),
-                                                              msgGroupServices[i].getAddress()
+            for (int i = 0; i < msg_groupservices.size(); i++) {
+                group_details.group_services.push_back({
+                                                              msg_groupservices[i].getMessageType(),
+                                                              msg_groupservices[i].getAddress()
                                                       });
-                logger_->debug("REG: {}", msgGroupServices[i].getAddress().cStr());
+                logger_->debug("REG: {}", msg_groupservices[i].getAddress().cStr());
             }
 
-            string key = fmt::format("/groups/{}", appName);
+            string key = fmt::format("/groups/{}", appname);
 
             //Send response
-            capnp::MallocMessageBuilder repMessage;
-            auto msgDiscoRep = repMessage.initRoot<riaps::discovery::DiscoRep>();
-            auto msgGroupJoinRep = msgDiscoRep.initGroupJoin();
+            capnp::MallocMessageBuilder rep_message;
+            auto msg_discorep = rep_message.initRoot<riaps::discovery::DiscoRep>();
+            auto msg_group_join_rep = msg_discorep.initGroupJoin();
 
-            msgGroupJoinRep.setStatus(riaps::discovery::Status::OK);
+            msg_group_join_rep.setStatus(riaps::discovery::Status::OK);
 
-            auto serializedMessage = capnp::messageToFlatArray(repMessage);
+            auto serialized_message = capnp::messageToFlatArray(rep_message);
 
             zmsg_t *msg = zmsg_new();
-            zframe_t *frIdentity = zframe_dup(rep_identity_.get());
-            zmsg_add(msg, frIdentity);
+            zframe_t *frm_identity = zframe_dup(rep_identity_.get());
+            zmsg_add(msg, frm_identity);
             zmsg_addstr(msg, "");
-            zmsg_addmem(msg, serializedMessage.asBytes().begin(), serializedMessage.asBytes().size());
+            zmsg_addmem(msg, serialized_message.asBytes().begin(), serialized_message.asBytes().size());
 
             zmsg_send(&msg, riaps_socket_);
 
@@ -743,19 +743,18 @@ namespace riaps{
             /**
              * Store the details for renewing
              */
-
-            if (group_services_.find(actorPid) == group_services_.end()) {
-                group_services_[actorPid] == vector<shared_ptr<RegisteredGroup>>();
+            if (group_services_.find(actor_pid) == group_services_.end()) {
+                group_services_[actor_pid] == vector<shared_ptr<RegisteredGroup>>();
             }
-            auto currentGroupReg = make_shared<RegisteredGroup>(RegisteredGroup{
+            auto current_groupreg = make_shared<RegisteredGroup>(RegisteredGroup{
                     key,
-                    groupDetails,
-                    actorPid,
+                    group_details,
+                    actor_pid,
                     Timeout<chrono::minutes>(10) //10 minutes
             });
-            group_services_[actorPid].push_back(move(currentGroupReg));
+            group_services_[actor_pid].push_back(move(current_groupreg));
 
-            auto group_details_blob = dht::packMsg<riaps::groups::GroupDetails>(groupDetails);
+            auto group_details_blob = dht::packMsg<riaps::groups::GroupDetails>(group_details);
             DhtPut(key, group_details_blob);
         }
 
@@ -784,16 +783,16 @@ namespace riaps{
                 group_id.setGroupName(v.group_id.group_name);
                 group_id.setGroupType(v.group_id.group_type_id);
 
-                auto groupServices = msg_group_update.initServices(v.group_services.size());
+                auto group_services = msg_group_update.initServices(v.group_services.size());
                 for (int i = 0; i < v.group_services.size(); i++) {
-                    groupServices[i].setAddress(v.group_services[i].address);
-                    groupServices[i].setMessageType(v.group_services[i].message_type);
+                    group_services[i].setAddress(v.group_services[i].address);
+                    group_services[i].setMessageType(v.group_services[i].message_type);
                 }
 
-                auto serializedMessage = capnp::messageToFlatArray(dht_message);
+                auto serialized_message = capnp::messageToFlatArray(dht_message);
 
                 zmsg_t *msg = zmsg_new();
-                auto bytes = serializedMessage.asBytes();
+                auto bytes = serialized_message.asBytes();
                 zmsg_pushmem(msg, bytes.begin(), bytes.size());
                 zmsg_send(&msg, dht_notification_socket);
                 //cout << "[DHT] Group notifications sent to discovery service" << endl;
@@ -816,9 +815,9 @@ namespace riaps{
                     logger_->info("$TERMINATE arrived, discovery service is stopping.");
                     terminated_ = true;
                 } else if (streq(command, CMD_DISCO_JOIN)) {
-                    bool hasMoreMsg = true;
+                    bool has_more_msg = true;
 
-                    while (hasMoreMsg) {
+                    while (has_more_msg) {
                         char *newhost = zmsg_popstr(msg);
                         if (newhost) {
                             logger_->info("Join: {}", newhost);
@@ -826,7 +825,7 @@ namespace riaps{
                             dht_node_.bootstrap(str_newhost, to_string(RIAPS_DHT_NODE_PORT));
                             zstr_free(&newhost);
                         } else {
-                            hasMoreMsg = false;
+                            has_more_msg = false;
                         }
                     }
                 }
@@ -957,7 +956,7 @@ namespace riaps{
 
             // Look for services who may interested in the new provider
             if (client_subscriptions.find(provider_key) != client_subscriptions.end()) {
-                for (auto &subscribedClient : client_subscriptions.at(provider_key)) {
+                for (auto &subscribed_client : client_subscriptions.at(provider_key)) {
                     for (int idx = 0; idx < msg_newproviders.size(); idx++) {
                         string new_provider_endpoint = string(msg_newproviders[idx].cStr());
 
@@ -986,45 +985,45 @@ namespace riaps{
                             continue;
                         }
 
-                        string clientKeyBase = fmt::format("/{}/{}/",
-                                                           subscribedClient->app_name,
-                                                           subscribedClient->actor_name);
+                        string clientkey_base = fmt::format("/{}/{}/",
+                                                           subscribed_client->app_name,
+                                                           subscribed_client->actor_name);
 
-                        logger_->info("Search for registered actor: {}", clientKeyBase);
+                        logger_->info("Search for registered actor: {}", clientkey_base);
 
                         // If the client port saved before
-                        if (clients_.find(clientKeyBase) != clients_.end()) {
-                            const ActorDetails *clientSocket = clients_.at(clientKeyBase).get();
+                        if (clients_.find(clientkey_base) != clients_.end()) {
+                            const ActorDetails *clientSocket = clients_.at(clientkey_base).get();
 
                             if (clientSocket->socket != NULL) {
                                 capnp::MallocMessageBuilder message;
-                                auto msgDiscoUpd = message.initRoot<riaps::discovery::DiscoUpd>();
-                                auto msgPortUpd = msgDiscoUpd.initPortUpdate();
-                                auto msgClient = msgPortUpd.initClient();
-                                auto msgSocket = msgPortUpd.initSocket();
+                                auto msg_discoupd = message.initRoot<riaps::discovery::DiscoUpd>();
+                                auto msg_portupd = msg_discoupd.initPortUpdate();
+                                auto msg_client = msg_portupd.initClient();
+                                auto msg_socket = msg_portupd.initSocket();
 
                                 // Set up client
-                                msgClient.setActorHost(subscribedClient->actor_host);
-                                msgClient.setActorName(subscribedClient->actor_name);
-                                msgClient.setInstanceName(subscribedClient->instance_name);
-                                msgClient.setPortName(subscribedClient->port_name);
+                                msg_client.setActorHost(subscribed_client->actor_host);
+                                msg_client.setActorName(subscribed_client->actor_name);
+                                msg_client.setInstanceName(subscribed_client->instance_name);
+                                msg_client.setPortName(subscribed_client->port_name);
 
-                                msgPortUpd.setScope(subscribedClient->is_local ? riaps::discovery::Scope::LOCAL
+                                msg_portupd.setScope(subscribed_client->is_local ? riaps::discovery::Scope::LOCAL
                                                                                : riaps::discovery::Scope::GLOBAL);
 
-                                msgSocket.setHost(host);
-                                msgSocket.setPort(portNum);
+                                msg_socket.setHost(host);
+                                msg_socket.setPort(portNum);
 
-                                auto serializedMessage = capnp::messageToFlatArray(message);
+                                auto serialized_message = capnp::messageToFlatArray(message);
 
                                 zmsg_t *msg = zmsg_new();
-                                zmsg_pushmem(msg, serializedMessage.asBytes().begin(),
-                                             serializedMessage.asBytes().size());
+                                zmsg_pushmem(msg, serialized_message.asBytes().begin(),
+                                             serialized_message.asBytes().size());
 
                                 zmsg_send(&msg, clientSocket->socket);
 
-                                logger_->info("Update() returns {}@{}:{} to {}", subscribedClient->port_name, host,
-                                              portNum, clientKeyBase);
+                                logger_->info("Update() returns {}@{}:{} to {}", subscribed_client->port_name, host,
+                                              portNum, clientkey_base);
                             }
                         }
                     }
@@ -1077,16 +1076,16 @@ namespace riaps{
 
         void DiscoveryMessageHandler::RenewServices() {
             int64_t now = zclock_mono();
-            for (auto pidIt = service_checkins_.begin(); pidIt != service_checkins_.end(); pidIt++) {
-                for (auto serviceIt = pidIt->second.begin(); serviceIt != pidIt->second.end(); serviceIt++) {
+            for (auto pid_it = service_checkins_.begin(); pid_it != service_checkins_.end(); pid_it++) {
+                for (auto service_it = pid_it->second.begin(); service_it != pid_it->second.end(); service_it++) {
 
                     // Renew
-                    if (now - (*serviceIt)->createdTime > (*serviceIt)->timeout) {
-                        (*serviceIt)->createdTime = now;
+                    if (now - (*service_it)->createdTime > (*service_it)->timeout) {
+                        (*service_it)->createdTime = now;
 
                         // Reput key-value
-                        vector<uint8_t> opendht_data((*serviceIt)->value.begin(), (*serviceIt)->value.end());
-                        auto keyhash = dht::InfoHash::get((*serviceIt)->key);
+                        vector<uint8_t> opendht_data((*service_it)->value.begin(), (*service_it)->value.end());
+                        auto keyhash = dht::InfoHash::get((*service_it)->key);
                         this->DhtPut(keyhash, opendht_data);
                     }
                 }
@@ -1112,20 +1111,20 @@ namespace riaps{
         int DiscoveryMessageHandler::DeregisterActor(const string &app_name,
                                                      const string &actor_name) {
 
-            string clientKeyBase = fmt::format("/{}/{}/", app_name, actor_name);
-            string clientKeyLocal = clientKeyBase + mac_address_;
-            string clientKeyGlobal = clientKeyBase + host_address_;
+            string clientkey_base = fmt::format("/{}/{}/", app_name, actor_name);
+            string clientkey_local = clientkey_base + mac_address_;
+            string clientkey_global = clientkey_base + host_address_;
 
-            vector<string> keysToBeErased {clientKeyBase, clientKeyLocal, clientKeyGlobal};
+            vector<string> erase_keys {clientkey_base, clientkey_local, clientkey_global};
 
-            logger_->info("Unregister actor: {}", clientKeyBase);
+            logger_->info("Unregister actor: {}", clientkey_base);
 
             int port = -1;
-            if (clients_.find(clientKeyBase) != clients_.end()) {
-                port = clients_[clientKeyBase]->port;
+            if (clients_.find(clientkey_base) != clients_.end()) {
+                port = clients_[clientkey_base]->port;
             }
 
-            for (auto it = keysToBeErased.begin(); it != keysToBeErased.end(); it++) {
+            for (auto it = erase_keys.begin(); it != erase_keys.end(); it++) {
                 if (clients_.find(*it) != clients_.end()) {
 
                     // erased elements
@@ -1147,9 +1146,9 @@ namespace riaps{
             zclock_sleep(500);
 
             for (auto it_client = clients_.begin(); it_client != clients_.end(); it_client++) {
-                if (it_client->second->socket != NULL) {
+                if (it_client->second->socket != nullptr) {
                     zsock_destroy(&it_client->second->socket);
-                    it_client->second->socket = NULL;
+                    it_client->second->socket = nullptr;
                 }
             }
             sleep(1);

@@ -11,6 +11,8 @@ struct ActorDetails {
         socket=nullptr;
     }
 
+    ActorDetails(const ActorDetails&) = delete;
+
     // PAIR socket for sending messages to the actor
     // New socket is created for each actor.
     zsock_t* socket;

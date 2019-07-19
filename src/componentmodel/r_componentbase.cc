@@ -690,10 +690,10 @@ namespace riaps{
         riaps_logger_->debug("Message from the leader arrived, but no OnMessageFromHandler() implementation has found in component: {}", component_config().component_name);
     }
 
-    riaps::groups::Group* ComponentBase::getGroupById(const riaps::groups::GroupId &groupId) {
-        if (groups_.find(groupId)==groups_.end()) return nullptr;
+    riaps::groups::Group* ComponentBase::getGroupById(const riaps::groups::GroupId &group_id) {
+        if (groups_.find(group_id)==groups_.end()) return nullptr;
 
-        return groups_[groupId].get();
+        return groups_[group_id].get();
     }
 
 //    std::string ComponentBase::getTimerChannel() {
@@ -953,16 +953,16 @@ namespace riaps{
         return "";
     }
 
-    string ComponentBase::ProposeAction(const riaps::groups::GroupId &groupId,
-                                        const std::string &actionId,
-                                        const timespec &absTime) {
-        auto group = getGroupById(groupId);
+    string ComponentBase::ProposeAction(const riaps::groups::GroupId &group_id,
+                                        const std::string &action_id,
+                                        const timespec &abs_time) {
+        auto group = getGroupById(group_id);
         if (group == nullptr) return "";
 
         auto uuid = unique_ptr<zuuid_t, function<void(zuuid_t*)>>(zuuid_new(), [](zuuid_t* u){zuuid_destroy(&u);});
         string strUuid = zuuid_str(uuid.get());
 
-        if (group->ProposeActionToLeader(strUuid, actionId, absTime)){
+        if (group->ProposeActionToLeader(strUuid, action_id, abs_time)){
             return strUuid;
         }
         return "";

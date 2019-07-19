@@ -131,6 +131,7 @@ namespace riaps::discovery {
 
             /**
              * Forwards data from the DHT thread into the Discovery thread.
+             * @param values The values to be forwarded.
              */
             void PushDhtValuesToDisco(std::vector<DhtData> &&values);
 
@@ -180,8 +181,16 @@ namespace riaps::discovery {
             int DeregisterActor(const std::string &app_name,
                                 const std::string &actor_name);
 
-            std::string mac_address_;
+            /**
+             * Host address. DHT keys for non-local RIAPS ports are partially derived from the host address.
+             */
             std::string host_address_;
+
+            /**
+             * MAX address. DHT keys for local RIAPS ports are partially derived from the host address.
+             */
+            std::string mac_address_;
+
 
 
             /**
@@ -206,11 +215,25 @@ namespace riaps::discovery {
              */
             void DhtGet(const std::string lookup_key, ClientDetails client_details, uint8_t call_level);
 
-            int64_t last_service_checkin_;
-            int64_t last_zombie_check_;
+            /**
+             * Timestamp of the last renewal in the DHT.
+             */
+            int64_t last_service_renewal_;
 
-            const uint16_t service_check_period_;
-            const uint16_t zombie_check_period_;
+            /**
+             * Timestamp of the last renewal in the DHT.
+             */
+            int64_t last_zombie_renewal_;
+
+            /**
+             * Timestamp of the last service renewal in the DHT.
+             */
+            const uint16_t service_renewal_period_;
+
+            /**
+             * Timestamp of the last zombie service renewal in the DHT.
+             */
+            const uint16_t zombie_renewal_period_;
 
             /**
              * Key of the zombie addresses (not local address)
@@ -242,45 +265,97 @@ namespace riaps::discovery {
              */
             zsock_t *riaps_socket_;
 
+            /**
+             * ZMQ poller for all incoming sockets of the discovery.
+             */
             zpoller_t *poller_;
+
+            /**
+             * ZMQ socket for communication with the outter shell.
+             */
             zsock_t *pipe_;
 
+            /**
+             * DHT tracker thread, checks the DHT stability.
+             */
             zactor_t *dht_tracker_;
 
+            /**
+             * Latest ZMQ frame for the router-like communication.
+             */
             std::shared_ptr<zframe_t> rep_identity_;
 
+            /**
+             * Message loop keeps running until true;
+             */
             bool terminated_;
 
-            // Stores pair sockets for actor communication
+            /**
+             * Stores pair sockets for actor communication
+             */
             std::map<std::string, std::shared_ptr<ActorDetails>> clients_;
 
-            // Stores addresses of zombie services
-            // A service is zombie, if the related socket is not able to respond, but it is still in the DHT
-            // The int64 argument is a timestamp. Old zombies are removed from the set after 10 minutes.
-            std::map<std::string, int64_t> zombie_services_;
 
-            // Client subscriptions to messageTypes
+            /**
+             * Stores addresses of zombie services.
+             * A service is zombie, if the related socket is not able to respond, but it is still in the DHT
+             * The int64 argument is a timestamp. Old zombies are removed from the set after 10 minutes.
+             */
+            std::unordered_map<std::string, int64_t> zombie_services_; // TODO: replace int64_t => riaps::TimeOut
+
+            /**
+             * Client subscriptions to messageTypes
+             */
             std::map<std::string, std::vector<std::unique_ptr<ClientDetails>>> client_subscriptions_;
 
-            // Subscribe for group changes
-            // AppName - future<>
+            /**
+             * Subscribers for group changes
+             * AppName - future<>
+             */
             std::map<std::string, std::future<size_t>> group_listeners_;
 
-            // Registered OpenDHT listeners. Every key can be registered only once.
+            /**
+             * Registered OpenDHT listeners. Every key can be registered only once.
+             */
             std::map<std::string, std::future<size_t>> registered_listeners_;
 
             // Registered services, with PID-s. We are using this local cache for renew services in the OpenDHT.
             // Checking the registered services in every 20th seconds.
             std::map<pid_t, std::vector<std::unique_ptr<ServiceCheckins>>> service_checkins_;
 
+            /**
+             * Details of one group in the local cache.
+             */
             struct RegisteredGroup {
+
+                /**
+                 * The key of the group in the DHT
+                 */
                 std::string groupKey;
+
+                /**
+                 * Registered ports of the groupinstance.
+                 */
                 riaps::groups::GroupDetails services;
+
+                /**
+                 * Actor PID.
+                 */
                 pid_t actorPid;
+
+                /**
+                 * Time of the insertion.
+                 */
                 Timeout<std::chrono::minutes> timeout;
             };
 
+            /**
+             * Cache of the locally running actors - groupinstance mapping.
+             * The actor is identified by its pid.
+             * TODO: Replace PID by something else. ActorName?
+             */
             std::unordered_map<pid_t, std::vector<std::shared_ptr<RegisteredGroup>>> group_services_;
+
 
             /**
              * True if the security is turned on in riaps.conf.
