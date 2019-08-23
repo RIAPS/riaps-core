@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(riaps_core VERSION 1.1.10)
+project(riaps_core VERSION 1.1.16)
 option(arch "amd64/armhf" "amd64")
 option(BUILD_TESTS  "Build tests" ON)
 set(CMAKE_SYSTEM_NAME Linux)
 
-set(riaps_prefix "/opt/riaps/" CACHE STRING "the riaps prefix")
+#set(riaps_prefix "/opt/riaps/" CACHE STRING "the riaps prefix")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "-Wno-psabi")
 
@@ -27,11 +27,22 @@ endif()
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-set(CMAKE_INSTALL_PREFIX ${riaps_prefix}/${arch})
+if (${arch} STREQUAL "armhf")
+  set(prefix /usr/arm-linux-gnueabihf)
+else()
+  set(prefix /usr/local)
+endif()
+set(CMAKE_INSTALL_PREFIX ${prefix})
 
-set(DEPENDENCIES ${riaps_prefix})
-set (LIBALLPATH_INCLUDE ${DEPENDENCIES}/${arch}/include)
-set (LIBALLPATH_LIB ${DEPENDENCIES}/${arch}/lib)
+if (${arch} STREQUAL "armhf")
+  set(DEBIAN_PACKAGE_NAME "riaps-core-armhf")
+else()
+  set(DEBIAN_PACKAGE_NAME "riaps-core-amd64")
+endif()
+
+set(DEPENDENCIES ${prefix})
+set (LIBALLPATH_INCLUDE ${DEPENDENCIES}/include)
+set (LIBALLPATH_LIB ${DEPENDENCIES}/lib)
 include_directories(${LIBALLPATH_INCLUDE})
 link_directories(${LIBALLPATH_LIB})
 
@@ -39,7 +50,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/bin)
 
 include_directories(include)
-include_directories(include/pybind11/include)
+include_directories(/usr/local/include/python3.6/pybind11/include)
 include_directories(/usr/include/python3.5m/)
 
 # Process Cap'n Proto messages
@@ -47,7 +58,7 @@ add_custom_command(
         OUTPUT  "${CMAKE_SOURCE_DIR}/include/messaging/disco.capnp.c++"
         DEPENDS "${CMAKE_SOURCE_DIR}/include/messaging/capnp/disco.capnp"
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/include/messaging/capnp"
-        COMMAND /opt/riaps/amd64/bin/capnp compile disco.capnp -oc++:../
+        COMMAND capnp compile disco.capnp -oc++:../
         COMMENT "=== Processing cap'n p disco files ==="
 )
 
@@ -55,7 +66,7 @@ add_custom_command(
         OUTPUT  "${CMAKE_SOURCE_DIR}/include/messaging/distcoord.capnp.c++"
         DEPENDS "${CMAKE_SOURCE_DIR}/include/messaging/capnp/distcoord.capnp"
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/include/messaging/capnp"
-        COMMAND /opt/riaps/amd64/bin/capnp compile distcoord.capnp -oc++:../
+        COMMAND capnp compile distcoord.capnp -oc++:../
         COMMENT "=== Processing cap'n p distcoord files ==="
         )
 
@@ -218,7 +229,7 @@ install(TARGETS rdiscoveryd DESTINATION bin)
 
 SET(MAJOR_VERSION "1")
 SET(MINOR_VERSION "1")
-SET(PATCH_VERSION "10")
+SET(PATCH_VERSION "16")
 
 
 IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
@@ -226,7 +237,7 @@ IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
     SET(CPACK_SET_DESTDIR "on")
     SET(CPACK_PACKAGING_INSTALL_PREFIX "/tmp")
     SET(CPACK_GENERATOR "DEB")
-    SET(CPACK_DEBIAN_PACKAGE_NAME "riapscore-${arch}")
+    SET(CPACK_DEBIAN_PACKAGE_NAME "DEBIAN_PACKAGE_NAME")
     SET(CPACK_PACKAGE_DESCRIPTION "RiapsDiscoveryService")
     SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "This is the decentralized discovery service for RIAPS")
     SET(CPACK_PACKAGE_VENDOR "riaps")
@@ -234,8 +245,9 @@ IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
     SET(CPACK_PACKAGE_VERSION_MAJOR "${MAJOR_VERSION}")
     SET(CPACK_PACKAGE_VERSION_MINOR "${MINOR_VERSION}")
     SET(CPACK_PACKAGE_VERSION_PATCH "${PATCH_VERSION}")
-    SET(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}_${MAJOR_VERSION}.${MINOR_VERSION}.${CPACK_PACKAGE_VERSION_PATCH}")
-    SET(CPACK_DEBIAN_PACKAGE_DEPENDS "riaps-externals-${arch}")
+#    SET(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}_${MAJOR_VERSION}.${MINOR_VERSION}.${CPACK_PACKAGE_VERSION_PATCH}")
+    SET(CPACK_PACKAGE_FILE_NAME "${DEBIAN_PACKAGE_NAME}")
+#    SET(CPACK_DEBIAN_PACKAGE_DEPENDS "riaps-externals-${arch}")
     SET(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
     SET(CPACK_DEBIAN_PACKAGE_SECTION "devel")
     SET(CPACK_DEBIAN_PACKAGE_ARCHITECTURE ${arch})
