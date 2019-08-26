@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "-Wno-psabi")
 
 set(PYBIND11_CPP_STANDARD -std=c++14)
-add_subdirectory(include/pybind11)
+#add_subdirectory(include/pybind11)
 
 
 #Set the platform
