@@ -35,10 +35,6 @@ The component framework provides a base class (`ComponentBase`) for your compone
 * Consensus: components can propose values to the leader, other components can agree/disagree with the proposed values. Leader announces the result of the voting.
 * Time-synchronized coordinated action: components are agreeing on executing an action at the proposed time, each component schedules the action and executes it.
 
-## Copyright
-
-This work was originally Copyright (c) 2018, Vanderbilt University. It was developed with sponsorship of the Advanced Research Projects Agency – Energy (ARPA-E) of the Department of Energy.
-
 ## Contributing
 
 You are welcome to help us, fixable areas in the code: 
