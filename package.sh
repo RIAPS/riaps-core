@@ -17,10 +17,10 @@ fakeroot dpkg-deb --build package/riaps-core-amd64/
 
 #ARMHF
 mkdir -p package/riaps-core-armhf/DEBIAN
-mkdir -p package/riaps-core-armhf/usr/arm-linux-gnueabihf/lib/
+mkdir -p package/riaps-core-armhf/usr/local/
 cp DEBIAN/riaps-core-armhf.control package/riaps-core-armhf/DEBIAN/control
 cp DEBIAN/postinst package/riaps-core-armhf/DEBIAN/postinst
 cp DEBIAN/postrm package/riaps-core-armhf/DEBIAN/postrm
-cp -r armhf-opt/* package/riaps-core-armhf/.
+cp -r armhf-opt/usr/arm-linux-gnueabihf/* package/riaps-core-armhf/usr/local/.
 sed s/@version@/$coreversion/g -i package/riaps-core-armhf/DEBIAN/control
 fakeroot dpkg-deb --build package/riaps-core-armhf/
