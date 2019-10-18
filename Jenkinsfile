@@ -7,15 +7,14 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-          // Build
-          sh 'chmod +x build.sh'
-          sh 'bash build.sh'
-          // Package
-          sh 'chmod +x package.sh'
-          sh 'bash package.sh'
-          sh 'mv package/riaps-core-amd64.deb .'
-          sh 'mv package/riaps-core-armhf.deb .'
-        }
+        // Build
+        sh 'chmod +x build.sh'
+        sh 'bash build.sh'
+        // Package
+        sh 'chmod +x package.sh'
+        sh 'bash package.sh'
+        sh 'mv package/riaps-core-amd64.deb .'
+        sh 'mv package/riaps-core-armhf.deb .'
       }
     }
     stage('Deploy') {
