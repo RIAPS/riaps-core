@@ -7,18 +7,6 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        #lock('/opt/riaps') {
-          // Setup
-          #withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_OAUTH_TOKEN')]) {
-            #sh '''#!/bin/bash
-              #wget https://github.com/gruntwork-io/fetch/releases/download/v0.1.1/fetch_linux_amd64
-              #chmod +x fetch_linux_amd64
-              #source version.sh
-              #./fetch_linux_amd64 --repo="https://github.com/RIAPS/riaps-externals/" --tag=$externalsversion --release-asset="riaps-externals-amd64.deb" .
-              #sudo dpkg -i riaps-externals-amd64.deb
-              #rm riaps-externals-amd64.deb
-            #'''
-          #}
           // Build
           sh 'chmod +x build.sh'
           sh 'bash build.sh'

@@ -8,13 +8,6 @@ env:
   global:
     secure: pL9FNcvvryS/pcuaJPofKRc4EgkEswlIfqnKoR/cxqBeSaeDMzBdXqtXUmBIxzYqo+nIiTaePr2ekS86sPtjrgO91WcK8GeLrPlaeehAkVKFhx8IKVJ8V6F+SnNcw11iZLG6B5ooFVuThAWHs3BUhy7ukZHh5RB6zCGfpxvFu7tw0xnanGylg8eEfjnJyybcNKcqr6IGS3jhc8hOulQYPppbjsTNH8iFThnpWSX4soW1sVsg4PcEF9N8/NpOpVokjcin6JxdomkfrsuN3d09Uq8vEiD+GOk4etKb2o8CW1381dste62LL1WFKlbtVb+PgEN65BKQu+42sv0nsgrjbEu6XrKnE1IEWztAGD/DC/RyxbPUZnRPPyb0qub0jNzUhtAFvCtJ00dZt/1PsxbEBCWNgxKdPrykaGy3S5pvE1zyDp/4G9kfqYl7XUOMkfMX9KoYUF903DxJ6eUlInrox6J/d02VknYW6DavWULbbFIfb1C0DUqk1mj4cSggjWA01qxSAtj7ClnudpQLhlMIV5/HpO7jOQtryH/U4KH3hw7da0AHl1xRUKsN/lkqBtQOHS74lRu6I6RFhignglNU7tYdw4h00224HVVBVnhel2ih4ajexy5b18zE7o9Rc+smzz1LLgv0gBgJbEK+8KQDVnGDbIDvHoTYkUzueIwQQsM=
 before_script:
-- source version.sh
-- wget https://github.com/gruntwork-io/fetch/releases/download/v0.1.1/fetch_linux_amd64
-- source version.sh
-- chmod +x fetch_linux_amd64
-- ./fetch_linux_amd64 --repo="https://github.com/RIAPS/riaps-externals/" --tag=$externalsversion
-  --release-asset="riaps-externals-amd64.deb" .
-- sudo dpkg -i riaps-externals-amd64.deb
 - sudo add-apt-repository 'deb http://us.archive.ubuntu.com/ubuntu/ xenial main'
 - sudo apt-get update
 - sudo apt-get install g++-5-arm-linux-gnueabihf g++-5 fakeroot
