@@ -16,7 +16,7 @@ The component framework provides a base class (ComponentBase) for your component
 #include <componentmodel/r_discoverdapi.h>
 #include <componentmodel/r_configuration.h>
 #include <componentmodel/r_oneshottimer.h>
-#include <componentmodel/r_payload.h>
+#include <componentmodel/r_messageparams.h>
 #include <groups/r_group.h>
 #include <messaging/disco.capnp.h>
 

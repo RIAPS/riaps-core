@@ -6,6 +6,10 @@
 #include <memory>
 
 namespace riaps{
+
+    /**
+     * Parameters for handling messages on the Answer and Query ports.
+     */
     class MessageParams{
     public:
         MessageParams(char**     originId,

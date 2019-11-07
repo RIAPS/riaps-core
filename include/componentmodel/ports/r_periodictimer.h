@@ -94,10 +94,30 @@ namespace riaps {
             ~PeriodicTimer() override = default;
             ///@}
         private:
+
+            /**
+             * ZMQ channel name
+             */
             std::string             timer_channel_;
+
+            /**
+             * Timer thread. Implemented as ZMQ zactor.
+             */
             zactor_t*               timer_actor_;
+
+            /**
+             * Fires a message in every interval_ msec
+             */
             ulong                   interval_;
+
+            /**
+             * Delay value, if the timer is sporadic.
+             */
             timespec                delay_;
+
+            /**
+             * Timepoint of the next fire.
+             */
             timespec                now_;
             bool                    has_started_;
             std::mutex              mtx_;

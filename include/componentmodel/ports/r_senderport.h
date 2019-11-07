@@ -12,7 +12,7 @@
 #include <czmq.h>
 
 #include <type_traits>
-#include <componentmodel/r_payload.h>
+#include <componentmodel/r_messageparams.h>
 
 namespace riaps{
     namespace ports{

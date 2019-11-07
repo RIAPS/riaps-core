@@ -113,7 +113,7 @@ list (APPEND riapslib_SOURCE
         src/componentmodel/ports/r_subscriberport.cc
         src/componentmodel/ports/r_timedport.cc
         src/componentmodel/r_pyactor.cc
-        src/componentmodel/r_payload.cc
+        src/componentmodel/r_messageparams.cc
         src/componentmodel/r_componentbase.cc
         src/componentmodel/r_devicethread.cc
         src/componentmodel/r_discoverdapi.cc
@@ -149,7 +149,7 @@ list (APPEND riapslib_HEADERS
         include/componentmodel/r_messagebuilder.h
         include/componentmodel/r_messagereader.h
         include/componentmodel/r_pyactor.h
-        include/componentmodel/r_payload.h
+        include/componentmodel/r_messageparams.h
         include/componentmodel/r_componentbase.h
         include/componentmodel/r_configuration.h
         include/componentmodel/r_devicethread.h

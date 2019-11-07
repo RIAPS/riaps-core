@@ -22,6 +22,9 @@ public:
         return &spec_builder_;
     }
 
+    /**
+     * @return Strongly-type capnp message.
+     */
     typename T::Builder& spec_builder() {
         return spec_builder_;
     }
@@ -35,7 +38,15 @@ public:
 
     ~MessageBuilder() = default;
 private:
+
+    /**
+     * Capnp array.
+     */
     capnp::MallocMessageBuilder capnp_builder_;
+
+    /**
+     * Strongly-typed capnp builder object.
+     */
     typename T::Builder         spec_builder_;
 };
 
