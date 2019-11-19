@@ -1,7 +1,7 @@
 Package: riaps-core-armhf
 Architecture: armhf
-Maintainer: Institute for Software Integrated Systems 
-Depends: debconf (>= 0.5.00), riaps-externals-armhf
+Maintainer: Institute for Software Integrated Systems
+Depends: debconf (>= 0.5.00)
 Priority: required
 Version:  @version@
 Description: These are the riaps core libraries including the platform services for the armhf architecture.

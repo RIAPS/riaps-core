@@ -15,12 +15,12 @@ def setup_suite():
     riaps_app_path = os.path.join(userdir, runtime.get_active_config("riaps_apps_path"))
     test_app_path = os.path.join(riaps_app_path, runtime.get_active_config('app_dir'))
 
-    start_actor_path = "/opt/riaps/armhf/bin/"
+    start_actor_path = "/usr/arm-linux-gnueabihf/bin/"
 
     env = {"PATH": "/usr/local/bin/:" + start_actor_path + ":$PATH",
            "RIAPSHOME": "/usr/local/riaps",
            "RIAPSAPPS": "$HOME/riaps_apps",
-           "LD_LIBRARY_PATH": "/opt/riaps/armhf/lib:"+test_app_path
+           "LD_LIBRARY_PATH": "/usr/arm-linux-gnueabihf/lib:"+test_app_path
            }
 
     #start_riaps_lang = "riaps_lang " + runtime.get_active_config('model_file')
@@ -113,7 +113,7 @@ def setup_suite():
     local_riaps_lang = "riaps_lang " + model_path
     local_test_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                   runtime.get_active_config('app_dir'))
-    
+
     subprocess.call(local_riaps_lang, shell=True)
 
     move_cmd = "mv " + runtime.get_active_config('app_dir') + '.json ' + local_test_dir
@@ -121,7 +121,7 @@ def setup_suite():
 
     local_model_json = os.path.join(local_test_dir,
                                     runtime.get_active_config('app_dir') + '.json')
-    
+
     for target in runtime.get_active_config('targets'):
         model_deployer = adhoc_deployer.SSHDeployer(target["actor"], {
             'executable': local_model_json,

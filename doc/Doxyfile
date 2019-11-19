@@ -38,7 +38,7 @@ PROJECT_NAME           = "RIAPS Core"
 # could be handy for archiving the generated documentation or if some version
 # control system is used.
 
-PROJECT_NUMBER         = 1.1.16
+PROJECT_NUMBER         = 1.1.17
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer a
@@ -440,7 +440,7 @@ EXTRACT_ALL            = NO
 # be included in the documentation.
 # The default value is: NO.
 
-EXTRACT_PRIVATE        = NO
+EXTRACT_PRIVATE        = YES
 
 # If the EXTRACT_PACKAGE tag is set to YES, all members with package or internal
 # scope will be included in the documentation.
@@ -790,6 +790,7 @@ WARN_LOGFILE           =
 # Note: If this tag is empty the current directory is searched.
 
 INPUT                  = ../include/componentmodel/r_componentbase.h \
+                         ../include/discoveryd/r_msghandler.h \
                          ../include/componentmodel/r_messagebuilder.h \
                          ../include/componentmodel/r_messagereader.h \
                          ../include/componentmodel/r_configuration.h \
@@ -810,7 +811,16 @@ INPUT                  = ../include/componentmodel/r_componentbase.h \
                          ../include/componentmodel/ports/r_subportbase.h \
                          ../include/componentmodel/ports/r_subportgroup.h \
                          ../include/componentmodel/ports/r_subscriberport.h \
+                         ../include/componentmodel/r_riapsmessage.h \
+                         ../include/utils/r_lmdb.h \
+                         ../include/utils/r_timeout.h \
+                         ../include/discoveryd/r_dhtdata.h \
+                         ../include/discoveryd/r_validator.h \
+                         ../include/framework/rfw_configuration.h \
+                         ../include/framework/rfw_network_interfaces.h \
+                         ../include/framework/rfw_security.h \
                          ../README.md
+                         
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses

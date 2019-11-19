@@ -19,7 +19,7 @@ class MessageReaderArray {
 public:
     /**
      * Instantiates the object from ZMQ frame.
-     * @param msg_frame ZMQ frame, whoch holds the message.
+     * @param msg_frame ZMQ frame, which holds the message.
      */
     MessageReaderArray(zframe_t* msg_frame);
     MessageReaderArray( const MessageReaderArray& )            = delete; // non construction-copyable
@@ -58,6 +58,9 @@ public:
         spec_reader_  = reader_->getRoot<T>();
     }
 
+    /**
+     * Function call on the wrapped capnp object.
+     */
     typename T::Reader* operator->() {
         return &spec_reader_;
     }

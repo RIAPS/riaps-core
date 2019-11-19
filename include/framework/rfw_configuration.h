@@ -10,11 +10,27 @@
 #include <string>
 
 namespace riaps {
+
+    /**
+     * Common functions.
+     */
     namespace framework {
         class Configuration{
         public:
+
+            /**
+             * @return IP address : port of the discovery service.
+             */
             static const std::string GetDiscoveryEndpoint();
+
+            /**
+             * @return IP address : port of the device manager.
+             */
             static const std::string GetDeviceManagerEndpoint();
+
+            /**
+             * @return IP address : port of the deplo service.
+             */
             static const std::string GetDeploEndpoint();
         };
     }

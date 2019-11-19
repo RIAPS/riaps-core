@@ -51,7 +51,7 @@ public:
 void if_lmdb_error(bool rc, const std::string& file, const int line);
 
 /**
- * LMDB wrapper for riaps. Saves and loads actor services.
+ * LMDB wrapper for riaps. Saves and loads services (address:port, type) of the components.
  */
 class Lmdb {
 public:
@@ -62,25 +62,26 @@ public:
 
     /**
      * Saves a key-value pair into the DB.
-     * @param skey
-     * @param sval
+     * @param skey Key.
+     * @param sval Value.
      */
     void Put(const std::string& skey, const std::string& sval);
 
     /**
-     * Returns all key-value pairs from the database. Use for debug only!
-     * @return
+     * Use for debug only!
+     * @return All key-value pairs from the database.
      */
     std::unique_ptr<std::vector<std::tuple<std::string, std::string>>> GetAll();
 
     /**
+     * Query by key.
      * @param skey The key of the value to be returned
      * @return All the values under skey
      */
     std::unique_ptr<std::vector<std::string>> Get(const std::string& skey);
 
     /**
-     * Deletes the key and all values from the DB
+     * Deletes the key with all its values from the DB.
      * @param skey Key of the values to be deleted. (Both the key and the values are deleted)
      */
     void Del(const std::string& skey);
@@ -119,8 +120,14 @@ private:
      */
     std::string dbdir_;
 
+    /**
+     * Just one instance is allowed.
+     */
     static std::shared_ptr<Lmdb> singleton_;
 
+    /**
+     * Logger instance.
+     */
     std::shared_ptr<spd::logger> logger_;
 
 };

@@ -31,7 +31,14 @@ struct GroupPortConfig : public PortConfigBase{
  * Component port can be local.
  */
 struct ComponentPortConfig : public PortConfigBase {
+    /**
+     * True if the port is bound to the localhost.
+     */
     bool        is_local;
+
+    /**
+     * The first frame of each message is timestamped.
+     */
     bool        is_timed;
 
     ComponentPortConfig(){
@@ -45,12 +52,26 @@ struct ComponentPortClt : public ComponentPortConfig {};
 struct ComponentPortPub : public ComponentPortConfig {};
 
 struct ComponentPortReq : public ComponentPortConfig {
+    /**
+     * Request message type
+     */
     std::string req_type;
+
+    /**
+     * Response message type
+     */
     std::string rep_type;
 };
 
 struct ComponentPortRep : public ComponentPortConfig{
+    /**
+     * Request message type
+     */
     std::string req_type;
+
+    /**
+     * Response message type
+     */
     std::string rep_type;
 };
 struct ComponentPortSrv : public ComponentPortConfig{};
@@ -77,8 +98,9 @@ struct ComponentPortAns : public ComponentPortConfig{
     std::string ans_type;
 };
 
-
-
+/**
+ * Container fol all ports.
+ */
 struct ComponentPorts {
     std::vector<ComponentPortClt> clts; // Client
     std::vector<ComponentPortSrv> srvs; // Server

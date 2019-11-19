@@ -58,7 +58,7 @@ namespace riaps{
         const ComponentPortAns* AnswerPort::GetConfig() const{
             return (ComponentPortAns*) config();
         }
-
+        
         PortError AnswerPort::SendAnswer(capnp::MallocMessageBuilder& builder, std::shared_ptr<MessageParams> params) {
             zmsg_t* msg = zmsg_new();
 

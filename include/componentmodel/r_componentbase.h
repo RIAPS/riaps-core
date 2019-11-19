@@ -16,7 +16,7 @@ The component framework provides a base class (ComponentBase) for your component
 #include <componentmodel/r_discoverdapi.h>
 #include <componentmodel/r_configuration.h>
 #include <componentmodel/r_oneshottimer.h>
-#include <componentmodel/r_payload.h>
+#include <componentmodel/r_messageparams.h>
 #include <groups/r_group.h>
 #include <messaging/disco.capnp.h>
 
@@ -213,8 +213,9 @@ namespace riaps {
                                                   const std::string&           port_name,
                                                   std::string&                 request_id);
 
-        void UpdateGroup(riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
+        void UpdateGroup(riaps::discovery::GroupUpdate::Reader& msg_group_update);
 
+        void UpdateGroup(riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
 
 
         ///@}
@@ -226,25 +227,25 @@ namespace riaps {
       
         /**
          * Sends a message to every members in the given group.
-         * @param groupId Group
-         * @param message The message to be sent.
-         * @param portName Depricated. Only one port is used now. Kept for compatibility.
+         * @param group_id Group instance id.
+         * @param message The message to be sent in capnp buffer.
+         * @param port_name Depricated. Only one port is used now. Kept for compatibility.
          * @return True if the send was successful. False otehrwise.
          */
-        bool SendGroupMessage(const riaps::groups::GroupId& groupId,
+        bool SendGroupMessage(const riaps::groups::GroupId& group_id,
                               capnp::MallocMessageBuilder& message,
-                              const std::string& portName="");
+                              const std::string& port_name="");
 
         /**
          * Sends a message to every members in the given group.
-         * @param groupId Group
+         * @param group_id Group instance id.
          * @param message The message to be sent.
-         * @param portName Depricated. Only one port is used now. Kept for compatibility.
+         * @param port_name Depricated. Only one port is used now. Kept for compatibility.
          * @return True if the send was successful. False otehrwise.
          */
-        bool SendGroupMessage(const riaps::groups::GroupId&& groupId,
+        bool SendGroupMessage(const riaps::groups::GroupId&& group_id,
                               capnp::MallocMessageBuilder& message,
-                              const std::string& portName="");
+                              const std::string& port_name="");
         /** @}*/
 
         virtual ~ComponentBase() = default;
@@ -254,10 +255,10 @@ namespace riaps {
          * Sends a ZMQ message on the given inside port. This Send() is just for InsidePorts
          *
          * @param message ZMQ message structure to be sent
-         * @param portName The port, which sends the message.
+         * @param port_name The port, which sends the message.
          * @return True if the message was sent successfully.
          */
-        bool SendMessageOnPort(zmsg_t** message, const std::string& portName);
+        bool SendMessageOnPort(zmsg_t** message, const std::string& port_name);
 
         /**
          * \addgroup DC
@@ -265,23 +266,23 @@ namespace riaps {
          */
         /**
          * Fired when a message arrives on one the group ports.
-         * @param groupId groupType, groupName pair (the unique identifier of the group)
+         * @param group_id Group instance id.
          * @param capnpreader The received message in capnp buffer
          * @param port The port structure where the message was read form.
          */
-        virtual void OnGroupMessage(const riaps::groups::GroupId& groupId,
+        virtual void OnGroupMessage(const riaps::groups::GroupId& group_id,
                                     capnp::FlatArrayMessageReader& capnpreader,
                                     riaps::ports::PortBase* port);
 
         /**
          * Sends a message to the leader of the given group.
-         * @param groupId
-         * @param message
-         * @return
+         * @param group_id Group instance id.
+         * @param message The message to be sent.
+         * @return True if the message was sent successfully.
          */
-        bool SendMessageToLeader(const riaps::groups::GroupId& groupId,
+        bool SendMessageToLeader(const riaps::groups::GroupId& group_id,
                                  capnp::MallocMessageBuilder& message);
-        bool SendLeaderMessage(const riaps::groups::GroupId& groupId,
+        bool SendLeaderMessage(const riaps::groups::GroupId& group_id,
                                capnp::MallocMessageBuilder& message);
 
 
@@ -289,9 +290,9 @@ namespace riaps {
 
         /**
          * Gives a snapshot about the members of a group, considering a timeout.
-         * @param groupId The group id where the members are counted.
-         * @param timeout A member is counted if heartbeat was recevied from it in the last "timeout" msec
-         * @return
+         * @param groupId Group instance id.
+         * @param timeout A member is counted if heartbeat was received from it in the last "timeout" msec
+         * @return The number of members.
          */
         uint16_t GetGroupMemberCount(const riaps::groups::GroupId &groupId,
                                      int64_t timeout = 1000 * 15 /*15 sec in msec*/);
@@ -534,73 +535,147 @@ namespace riaps {
 
         /**
          * Proposes an action to the leader.
-         * @param groupId
-         * @param actionId The action to be performed. Developer-generated ID, each component knows the appropriate function to be called.
-         * @param relTime  Relative time (now + tv_sec + tv_nsec later), when the action must be called.
-         * @param message  Additional custom message, which necesseary by the other nodes for the decision.
+         * @param group_id Unique ID of the group instance.
+         * @param action_id The action to be performed. Developer-generated ID, each component is able to identify the appropriate function to be called.
+         * @param abs_time The proposed timepoint, when the action should be executed.
          * @return The generated proposeId. The leader announces the results by this id.
          */
-        std::string ProposeAction(const riaps::groups::GroupId& groupId  ,
-                                  const std::string&            actionId ,
-                                  const timespec&               absTime
+        std::string ProposeAction(const riaps::groups::GroupId& group_id  ,
+                                  const std::string&            action_id ,
+                                  const timespec&               abs_time
         );
         ///@}
 
         uint64_t ScheduleAbsTimer(const timespec &t, uint64_t wakeupOffset = 0 /*nanosec*/);
 
         /**
-         *
-         * @param tp absolute time when the action is executed
+         * @param tp Absolute time when the action is executed
          * @param action Pointer to the function to be executed
          * @param wakeupOffset The timer is fired earlier by wakeupOffset.
          *                     The value is in nanosec and depends on the current platform.
          *                     On BBB it is 2000 microsec, this is the worst case.
          *                     If the timer fires too early, make sure to call the WaitUntil() in the handler.
-         * @return unique id of the scheduled timer
+         * @return Unique id of the scheduled timer
          */
         uint64_t ScheduleAction(const timespec &tp, std::function<void(const uint64_t)> action,
                                 uint64_t wakeupOffset = 2000 * 1000);
 
 
+        /**
+         * Points to the scheduled action.
+         */
         std::function<void(const uint64_t)> scheduled_action_;
 
+        /**
+         * Saves the component configuration and sets up the loggers with the appropriate names.
+         * @param c_conf The component definition from the model file.
+         */
         void set_config(ComponentConf& c_conf);
 
 
 
     private:
+
+        /**
+         * Framework logger.
+         */
         std::shared_ptr<spd::logger> riaps_logger_;
+
+        /**
+         * Component logger
+         */
         std::shared_ptr<spd::logger> component_logger_;
+
+        /**
+         * Name of the component logger.
+         */
         std::string                  component_logger_name_;
 
-        const ports::PublisherPort*  InitPublisherPort  (const ComponentPortPub&);
-        const ports::SubscriberPort* InitSubscriberPort (const ComponentPortSub&);
-        const ports::ResponsePort*   InitResponsePort   (const ComponentPortRep&);
-        const ports::RequestPort*    InitRequestPort    (const ComponentPortReq&);
-        const ports::QueryPort*      InitQueryPort      (const ComponentPortQry&);
-        const ports::AnswerPort*     InitAnswerPort     (const ComponentPortAns&);
-        const ports::PeriodicTimer*  InitTimerPort      (const ComponentPortTim&);
-        const ports::InsidePort*     InitInsidePort     (const ComponentPortIns&);
+        /**
+         * Initializes a publisher port and stores it in the #ports_.
+         * @param config Port configuration. Comes from the model file.
+         * @return Pointer to the newly created port.
+         */
+        const ports::PublisherPort*  InitPublisherPort  (const ComponentPortPub& config);
+
+        /**
+         * Initializes a subscriber port and stores it in the #ports_.
+         * @param config Port configuration. Comes from the model file.
+         * @return Pointer to the newly created port.
+         */
+        const ports::SubscriberPort* InitSubscriberPort (const ComponentPortSub& config);
+
+        /**
+         * Initializes a response port and stores it in the #ports_.
+         * @param config Port configuration. Comes from the model file.
+         * @return Pointer to the newly created port.
+         */
+        const ports::ResponsePort*   InitResponsePort   (const ComponentPortRep& config);
+
+        /**
+         * Initializes a request port and stores it in the #ports_.
+         * @param config Port configuration. Comes from the model file.
+         * @return Pointer to the newly created port.
+         */
+        const ports::RequestPort*    InitRequestPort    (const ComponentPortReq& config);
+
+        /**
+         * Initializes a query port (ZMQ_DEALER) and stores it in the #ports_.
+         * @param config Port configuration. Comes from the model file.
+         * @return Pointer to the newly created port.
+         */
+        const ports::QueryPort*      InitQueryPort      (const ComponentPortQry& config);
+
+        /**
+         * Initializes an answer (ZMQ-ROUTER) port and stores it in the #ports_.
+         * @param config Port configuration. Comes from the model file.
+         * @return Pointer to the newly created port.
+         */
+        const ports::AnswerPort*     InitAnswerPort     (const ComponentPortAns& config);
+
+        /**
+         * Initializes a timer port and stores it in the #ports_.
+         * @param config Port configuration. Comes from the model file.
+         * @return Pointer to the newly created port.
+         */
+        const ports::PeriodicTimer*  InitTimerPort      (const ComponentPortTim& config);
+
+        /**
+         * Initializes an inside port and stores it in the #ports_.
+         * @param config Port configuration. Comes from the model file.
+         * @return Pointer to the newly created port.
+         */
+        const ports::InsidePort*     InitInsidePort     (const ComponentPortIns& config);
 
 
 
         //std::string             getTimerChannel();
         std::string             getOneShotTimerChannel();
 
-        // TODO: uniqueptr
-        // Note: disable for now, we need more tests.
-        //timers::OneShotTimer*   _oneShotTimer;
 
+        /**
+         * The component configuration. Comes from the riaps model file.
+         */
         ComponentConf component_config_;
 
 
-        // All the component ports
+        /**
+         * Pointers to the component ports.
+         */
         std::unordered_map<std::string, std::unique_ptr<ports::PortBase>> ports_;
 
+        /**
+         * Pointers to the group instances.
+         */
         std::map<riaps::groups::GroupId,
                  std::unique_ptr<riaps::groups::Group>> groups_;
 
-        riaps::groups::Group* getGroupById(const riaps::groups::GroupId &groupId);
+        /**
+         * Returns the group instance based on its id.
+         * @param group_id Group instance id.
+         * @return Pointer to the group instance.
+         */
+        riaps::groups::Group* getGroupById(const riaps::groups::GroupId &group_id);
 
         uint64_t timer_counter_;
 
@@ -613,21 +688,30 @@ namespace riaps {
          * Points to the component owner.
          */
         std::shared_ptr<PyActor> actor_;
-        //const Actor* actor_;
 
         /**
-         * Holds the component thread.
+         * The component thread.
          */
         zactor_t* component_zactor_;
 
+        /**
+         * This setting is coming from the riaps.conf file.
+         * If the security is turned on, this is true. False, otherwise.
+         */
         bool has_security_;
     };
 
+    /**
+     * Finds a port by name and converts it to T*
+     * @tparam T The expected port type.
+     * @param port_name The name of the port to be searched.
+     * @return Pointer to the port. Nullptr if not found or wrong type.
+     */
     template<class T>
-    T* ComponentBase::GetPortAs(const std::string& portName) {
-        ports::PortBase* portBase = GetPortByName(portName);
-        if (portBase == nullptr) return nullptr;
-        return dynamic_cast<T*>(portBase);
+    T* ComponentBase::GetPortAs(const std::string& port_name) {
+        ports::PortBase* port_base = GetPortByName(port_name);
+        if (port_base == nullptr) return nullptr;
+        return dynamic_cast<T*>(port_base);
     }
 }
 

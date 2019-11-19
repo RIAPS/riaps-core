@@ -50,16 +50,16 @@ namespace riaps {
             }
         }
 
-        bool QueryPort::ConnectToResponse(const std::string &ansEndpoint) {
-            int rc = zsock_connect(port_socket_, "%s", ansEndpoint.c_str());
+        bool QueryPort::ConnectToResponse(const std::string &ans_endpoint) {
+            int rc = zsock_connect(port_socket_, "%s", ans_endpoint.c_str());
 
             if (rc != 0) {
-                logger()->error("Queryport {} couldn't connect to {}", GetConfig()->port_name, ansEndpoint);
+                logger()->error("Queryport {} couldn't connect to {}", GetConfig()->port_name, ans_endpoint);
                 return false;
             }
 
             m_isConnected = true;
-            logger()->info("Queryport connected to: {}", ansEndpoint);
+            logger()->info("Queryport connected to: {}", ans_endpoint);
             return true;
         }
 
