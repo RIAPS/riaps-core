@@ -214,7 +214,6 @@ namespace riaps {
                                                   std::string&                 request_id);
 
         void UpdateGroup(riaps::discovery::GroupUpdate::Reader& msg_group_update);
-
         ///@}
 
         /**
