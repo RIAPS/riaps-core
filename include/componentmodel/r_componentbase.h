@@ -215,16 +215,13 @@ namespace riaps {
 
         void UpdateGroup(riaps::discovery::GroupUpdate::Reader& msg_group_update);
 
-        void UpdateGroup(riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
-
-
         ///@}
 
         /**
          * \defgroup DC Distributed Coordination
          * @{
          */
-      
+
         /**
          * Sends a message to every members in the given group.
          * @param group_id Group instance id.
@@ -286,7 +283,7 @@ namespace riaps {
                                capnp::MallocMessageBuilder& message);
 
 
-        
+
 
         /**
          * Gives a snapshot about the members of a group, considering a timeout.
