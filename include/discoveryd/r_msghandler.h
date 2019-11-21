@@ -23,7 +23,7 @@ namespace riaps::discovery {
         /**
          * RIAPS port type - string representation.
          */
-        static const std::map<riaps::discovery::Kind, std::string> kindMap =
+        static const std::unordered_map<riaps::discovery::Kind, std::string> kindMap =
                 {{riaps::discovery::Kind::PUB, "pub"},
                  {riaps::discovery::Kind::SUB, "sub"},
                  {riaps::discovery::Kind::CLT, "clt"},
@@ -31,7 +31,9 @@ namespace riaps::discovery {
                  {riaps::discovery::Kind::REQ, "req"},
                  {riaps::discovery::Kind::REP, "rep"},
                  {riaps::discovery::Kind::QRY, "qry"},
-                 {riaps::discovery::Kind::ANS, "ans"}};
+                 {riaps::discovery::Kind::ANS, "ans"},
+                 {riaps::discovery::Kind::GPUB, "gpub"},
+                 {riaps::discovery::Kind::GSUB, "gsub"}};
 
         /**
          * Encapsulates all the message handlers of the discovery service.

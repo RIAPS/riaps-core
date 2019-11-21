@@ -13,8 +13,7 @@ namespace spd=spdlog;
 namespace riaps::discovery {
 
 
-    void
-    riaps_actor(zsock_t *pipe, void *args) {
+    void riaps_actor(zsock_t *pipe, void *args) {
         auto console = spd::get(DISCO_LOGGER_NAME);
 
         string mac_address = riaps::framework::Network::GetMacAddressStripped();
