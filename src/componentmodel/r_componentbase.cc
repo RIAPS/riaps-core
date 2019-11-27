@@ -21,23 +21,29 @@ namespace riaps{
         //assert(timerport);
 
 
-        zsock_t* timerportOneShot = zsock_new_pull(comp->getOneShotTimerChannel().c_str());
-        assert(timerportOneShot);
+        zsock_t* timerport_oneshot = zsock_new_pull(comp->getOneShotTimerChannel().c_str());
+        assert(timerport_oneshot);
 
-        zpoller_t* poller = zpoller_new(pipe, NULL);
-        assert(poller);
+        zsock_t* group_port = zsock_new_pull(fmt::format("inproc://group_{}", comp->ComponentUuid()).c_str());
+        assert(group_port);
+
+        comp->component_poller_ = zpoller_new(pipe, NULL);
+        assert(comp->component_poller_);
 
         // Ignore interrupts zactor owner has to destroy the zactor
-        zpoller_set_nonstop(poller, true);
+        zpoller_set_nonstop(comp->component_poller_, true);
         zsock_signal (pipe, 0);
 
         //int rc = zpoller_add(poller, timerport);
         //assert(rc==0);
 
-        int rc = zpoller_add(poller, timerportOneShot);
+        int rc = zpoller_add(comp->component_poller_, timerport_oneshot);
         assert(rc==0);
 
-        rc = zpoller_add(poller, pycontrol);
+        rc = zpoller_add(comp->component_poller_, pycontrol);
+        assert(rc==0);
+
+        rc = zpoller_add(comp->component_poller_, group_port);
         assert(rc==0);
 
         bool terminated = false;
@@ -55,7 +61,7 @@ namespace riaps{
         // TODO: If leader election is enabled use dynamic timeout in the poller
         zsys_handler_reset();
         while (!terminated) {
-            void *which = zpoller_wait(poller, 10);
+            void *which = zpoller_wait(comp->component_poller_, 10);
             if (firstrun) {
                 firstrun = false;
 
@@ -66,7 +72,7 @@ namespace riaps{
                     const ports::InsidePort* newPort = comp->InitInsidePort(insconf);
                     const zsock_t* zmqSocket = newPort->port_socket();
                     portSockets[zmqSocket] = newPort;
-                    zpoller_add(poller, (void*) newPort->port_socket());
+                    zpoller_add(comp->component_poller_, (void*) newPort->port_socket());
                 }
 
                 // Add and start timers
@@ -75,7 +81,7 @@ namespace riaps{
                     auto newPort = comp->InitTimerPort(timconf);
                     auto zmq_socket = newPort->port_socket();
                     portSockets[zmq_socket] = newPort;
-                    zpoller_add(poller, (void*)zmq_socket);
+                    zpoller_add(comp->component_poller_, (void*)zmq_socket);
 
                     // Start only if the timer is periodic, sporadic timers must be started explicitly
                     if (!const_cast<riaps::ports::PeriodicTimer*>(newPort)->has_delay())
@@ -96,7 +102,7 @@ namespace riaps{
                     const ports::ResponsePort* newPort = comp->InitResponsePort(repconf);
                     const zsock_t* zmqSocket = newPort->port_socket();
                     portSockets[zmqSocket] = newPort;
-                    zpoller_add(poller, (void*) newPort->port_socket());
+                    zpoller_add(comp->component_poller_, (void*) newPort->port_socket());
                 }
 
                 // Add and start answer ports
@@ -104,7 +110,7 @@ namespace riaps{
                     const ports::AnswerPort* newPort = comp->InitAnswerPort(ansconf);
                     const zsock_t* zmqSocket = newPort->port_socket();
                     portSockets[zmqSocket] = newPort;
-                    zpoller_add(poller, (void*) newPort->port_socket());
+                    zpoller_add(comp->component_poller_, (void*) newPort->port_socket());
                 }
 
                 // Add RequestPorts
@@ -114,7 +120,7 @@ namespace riaps{
                     const ports::RequestPort* newPort = comp->InitRequestPort(reqconf);
                     const zsock_t* zmqSocket = newPort->port_socket();
                     portSockets[zmqSocket] = newPort;
-                    zpoller_add(poller, (void*) newPort->port_socket());
+                    zpoller_add(comp->component_poller_, (void*) newPort->port_socket());
                 }
 
                 // Add query ports
@@ -122,7 +128,7 @@ namespace riaps{
                     const ports::QueryPort* newPort = comp->InitQueryPort(qryconf);
                     const zsock_t* zmqSocket = newPort->port_socket();
                     portSockets[zmqSocket] = newPort;
-                    zpoller_add(poller, (void*) newPort->port_socket());
+                    zpoller_add(comp->component_poller_, (void*) newPort->port_socket());
                 }
 
                 // Add and start subscribers
@@ -130,7 +136,7 @@ namespace riaps{
                     const ports::SubscriberPort* newPort = comp->InitSubscriberPort(subconf);
                     const zsock_t* zmqSocket = newPort->port_socket();
                     portSockets[zmqSocket] = newPort;
-                    zpoller_add(poller, (void*) newPort->port_socket());
+                    zpoller_add(comp->component_poller_, (void*) newPort->port_socket());
                 }
             }
 
@@ -147,7 +153,7 @@ namespace riaps{
                     compbase_logger->debug("$TERM arrived");
                     terminated = true;
                 }
-                // New endpoint arrived, notifiy the component and join
+                // New endpoint arrived, notify the component and join
                 else if(streq(command, CMD_UPDATE_PORT)){
                     char* portname = zmsg_popstr(msg);
                     if (portname){
@@ -157,6 +163,7 @@ namespace riaps{
                             if (port){
                                 auto port_tobe_updated = comp->GetPortByName(portname);
 
+                                // Component port
                                 if (port_tobe_updated != nullptr) {
                                     if (port_tobe_updated->port_type() == ports::PortTypes::Subscriber){
                                         // note: we assume that the publisher uses tcp://
@@ -170,6 +177,19 @@ namespace riaps{
                                         ((ports::QueryPort*)port_tobe_updated)->ConnectToResponse(new_ans_endpoint);
                                     }
                                 }
+                                // Might be Group port
+                                else {
+                                    const string new_group_endpoint = fmt::format("tcp://{}:{}", host, port);
+                                    for (auto& group : comp->groups_) {
+                                        auto& group_ptr = group.second;
+                                        auto group_sub = group_ptr->group_subport();
+                                        if (group_sub->port_name() == portname) {
+                                            group_ptr->ConnectToNewServices(new_group_endpoint);
+                                            // found the right port, end the search
+                                            break;
+                                        }
+                                    }
+                                }
 
                                 zstr_free(&port);
                             }
@@ -179,6 +199,8 @@ namespace riaps{
                     }
                 }
                 // Forward group update messages
+                // Note: Obsolote,
+                // Todo: Remove
                 else if(streq(command, CMD_UPDATE_GROUP)){
                     zframe_t* capnp_msgbody = zmsg_pop(msg);
                     size_t    size = zframe_size(capnp_msgbody);
@@ -207,7 +229,7 @@ namespace riaps{
 //                }
 //            }
             // Message from one shot timer
-            else if ((which == timerportOneShot) && !terminated){
+            else if ((which == timerport_oneshot) && !terminated){
 
                 zmsg_t* msg = zmsg_recv(which);
                 zframe_t* idframe = zmsg_pop(msg);
@@ -323,12 +345,12 @@ namespace riaps{
                 // Handle all group messages
                 for (auto& grp : comp->groups_){
                     grp.second->SendPingWithPeriod();
-                    grp.second->FetchNextMessage();
+                    grp.second->FetchNextMessage(false);
                 }
             }
         }
-        zpoller_destroy(&poller);
-        zsock_destroy(&timerportOneShot);
+        zpoller_destroy(&comp->component_poller_);
+        zsock_destroy(&timerport_oneshot);
         //zsock_destroy(&timerport);
     };
 
@@ -426,7 +448,7 @@ namespace riaps{
         riaps_logger_->error("Scheduled timer is fired, but no handler is implemented. Implement OnSchedulerTimer() in component {}", component_config().component_name);
     }
     
-    void ComponentBase::set_config(ComponentConf &c_conf) {
+    void ComponentBase::set_config(ComponentConf &c_conf, const std::vector<GroupConf> &group_conf) {
         component_config_ = c_conf;
         component_logger_name_ = fmt::format("{}.{}", this->actor()->actor_name(), this->component_name());
         auto logger_name = fmt::format("::{}", component_config_.component_name);
@@ -473,7 +495,8 @@ namespace riaps{
         return component_logger_name_;
     }
 
-    ComponentBase::ComponentBase(const std::string &application_name, const std::string &actor_name) {
+    ComponentBase::ComponentBase(const std::string &application_name,
+                                 const std::string &actor_name) {
         has_security_ = riaps::framework::Security::HasSecurity();
         actor_ = std::make_shared<PyActor>(application_name, actor_name);
         component_uuid_ = zuuid_new();
@@ -738,6 +761,7 @@ namespace riaps{
         auto new_group = make_unique<riaps::groups::Group>(groupId, this);
 
         if (new_group->InitGroup()) {
+            zpoller_add(component_poller_, const_cast<zsock_t*>(new_group->group_subport()->port_socket()));
             groups_[groupId] = std::move(new_group);
             return true;
         }
@@ -752,6 +776,8 @@ namespace riaps{
     bool ComponentBase::LeaveGroup(riaps::groups::GroupId &groupId) {
         if (groups_.find(groupId) == groups_.end())
             return false;
+        auto& group = groups_[groupId];
+        zpoller_remove(component_poller_, const_cast<zsock_t*>(group->group_subport()->port_socket()));
         groups_.erase(groupId);
         return true;
     }
@@ -975,6 +1001,11 @@ namespace riaps{
         return group->SendVote(proposeId, accept);
     }
 
+    /**
+     * OBSOLOTE
+     * TODO: Remove
+     * @param msg_group_update
+     */
     void ComponentBase::UpdateGroup(riaps::discovery::GroupUpdate::Reader &msg_group_update) {
         // First, find the affected groups
         riaps::groups::GroupId gid;
@@ -983,6 +1014,6 @@ namespace riaps{
 
         if (groups_.find(gid) == groups_.end()) return;
 
-        groups_[gid]->ConnectToNewServices(msg_group_update);
+        //groups_[gid]->ConnectToNewServices(msg_group_update);
     }
 }

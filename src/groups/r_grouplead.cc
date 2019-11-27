@@ -11,7 +11,7 @@ using namespace std;
 
 
 GroupLead::GroupLead(Group* group, std::unordered_map<std::string, Timeout<std::chrono::milliseconds>>* knownNodes)
-    : m_group(group),
+    : group_(group),
       m_knownNodes(knownNodes)
 {
 
@@ -62,7 +62,7 @@ void GroupLead::Update() {
         /**
          * Note: +1 is added becuase the current node is not included in the GroupMemberCount();
          */
-        m_numberOfNodesInVote = m_group->GetMemberCount() + 1;
+        m_numberOfNodesInVote = group_->GetMemberCount() + 1;
 
         /**
          * Set the first election Term
@@ -131,7 +131,7 @@ void GroupLead::Update() {
 }
 
 const std::string GroupLead::GetComponentId() const {
-    return m_group->parent_component()->ComponentUuid();
+    return group_->parent_component()->ComponentUuid();
 }
 
 void GroupLead::Update(riaps::distrcoord::LeaderElection::Reader &internalMessage) {
@@ -277,7 +277,7 @@ void GroupLead::SendRequestForVote() {
     msgReqForVote.setSourceComponentId(GetComponentId());
     msgReqForVote.setElectionTerm(m_electionTerm);
 
-    m_group->SendInternalMessage(requestForVoteBuilder);
+    group_->SendInternalMessage(requestForVoteBuilder);
 }
 
 void GroupLead::OnActionProposeFromClient(riaps::distrcoord::Consensus::ProposeToLeader::Reader &headerMessage,
@@ -300,7 +300,7 @@ void GroupLead::OnActionProposeFromClient(riaps::distrcoord::Consensus::ProposeT
         }
     }
 
-    auto pd = std::shared_ptr<ProposeData>(new ProposeData(m_group->GetKnownComponents(), Timeout<std::chrono::milliseconds>(std::chrono::milliseconds(1000))));
+    auto pd = std::shared_ptr<ProposeData>(new ProposeData(group_->GetKnownComponents(), Timeout<std::chrono::milliseconds>(std::chrono::milliseconds(1000))));
     pd->isAction = true;
     pd->actionId = tscaMessage.getActionId();
     std::string proposeId = headerMessage.getProposeId();
@@ -329,7 +329,7 @@ void GroupLead::OnActionProposeFromClient(riaps::distrcoord::Consensus::ProposeT
     zmsg_add(msg, header);
 
 
-    if (m_group->SendMessage(&msg, INTERNAL_PUB_NAME))
+    if (group_->SendMessage(&msg))
         _logger->debug("GroupLead::OnActionProposeFromClient() - Message sent, proposeId: {} leader_id: {} sourceId: {} actionId: {}", proposeId, m_leaderId, GetComponentId(), actionId);
     else
         _logger->error("OnActionProposeFromClient() failed to send");
@@ -346,7 +346,7 @@ void GroupLead::OnProposeFromClient(riaps::distrcoord::Consensus::ProposeToLeade
     //m_logger->debug("OnProposeFromClient() continues");
 
 
-    auto pd = std::shared_ptr<ProposeData>(new ProposeData(m_group->GetKnownComponents(), Timeout<std::chrono::milliseconds>(std::chrono::milliseconds(1000))));
+    auto pd = std::shared_ptr<ProposeData>(new ProposeData(group_->GetKnownComponents(), Timeout<std::chrono::milliseconds>(std::chrono::milliseconds(1000))));
 
     // TODO: Add known node ids
     //pd.nodesInVote =
@@ -368,7 +368,7 @@ void GroupLead::OnProposeFromClient(riaps::distrcoord::Consensus::ProposeToLeade
     header << builder;
     zmsg_add(msg, header);
     zmsg_add(msg, *messageFrame);
-    if (m_group->SendMessage(&msg, INTERNAL_PUB_NAME))
+    if (group_->SendMessage(&msg))
         _logger->debug("GroupLead::OnProposeFromClient() - Message sent, proposeId: {} leader_id: {} sourceId: {}", proposeId, m_leaderId, GetComponentId());
     else
         _logger->error("OnProposeFromClient() failed to send");
@@ -457,7 +457,7 @@ void GroupLead::Announce(const std::string& proposeId, riaps::distrcoord::Consen
     auto msgAnnounce  = msgConsensus.initAnnounce();
     msgAnnounce.setProposeId(proposeId);
     msgAnnounce.setVoteResult(result);
-    m_group->SendInternalMessage(builder);
+    group_->SendInternalMessage(builder);
 }
 
 void GroupLead::SendAppendEntry() {
@@ -468,7 +468,7 @@ void GroupLead::SendAppendEntry() {
     msgAppendEntry.setSourceComponentId(GetComponentId());
     msgAppendEntry.setElectionTerm(m_electionTerm);
 
-    m_group->SendInternalMessage(appendEntryBuilder);
+    group_->SendInternalMessage(appendEntryBuilder);
 }
 
 void GroupLead::SendVote(const std::string& voteFor) {
@@ -480,7 +480,7 @@ void GroupLead::SendVote(const std::string& voteFor) {
     msgVote.setSourceComponentId(GetComponentId());
     msgVote.setVoteForId(voteFor);
 
-    m_group->SendInternalMessage(voteBuilder);
+    group_->SendInternalMessage(voteBuilder);
 }
 
 void GroupLead::ChangeLeader(const std::string &newLeader) {

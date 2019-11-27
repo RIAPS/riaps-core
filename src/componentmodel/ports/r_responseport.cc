@@ -59,7 +59,6 @@ namespace riaps{
             if (port_ == -1) {
                 logger()->error("Couldn't bind response port.");
             }
-            // TODO: spd logger
             logger()->debug("Response is created on {}:{}", host_, port_);
             logger()->debug("{}.host_ = {}", __FUNCTION__, host_);
             if (!Disco::RegisterService(
@@ -69,8 +68,8 @@ namespace riaps{
                     host_,
                     port_,
                     riaps::discovery::Kind::REP,
-                    (config.is_local ? riaps::discovery::Scope::LOCAL : riaps::discovery::Scope::GLOBAL),
-                    {})) {
+                    (config.is_local ? riaps::discovery::Scope::LOCAL : riaps::discovery::Scope::GLOBAL)
+                    )) {
                 logger()->error("Response port couldn't be registered.");
             }
         }

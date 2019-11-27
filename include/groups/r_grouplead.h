@@ -106,7 +106,7 @@ namespace riaps{
             // Votes from, when
             std::unordered_map<std::string, steady_clock::time_point> m_votes;
 
-            riaps::groups::Group* m_group;
+            riaps::groups::Group* group_;
 
 
             // Send functions

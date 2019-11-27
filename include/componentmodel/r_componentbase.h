@@ -72,7 +72,8 @@ namespace riaps {
         friend riaps::groups::Group;
     public:
 
-        ComponentBase(const std::string &application_name, const std::string &actor_name);
+        ComponentBase(const std::string &application_name,
+                      const std::string &actor_name);
 
         /** @name API for the Python actor
          */
@@ -566,7 +567,7 @@ namespace riaps {
          * Saves the component configuration and sets up the loggers with the appropriate names.
          * @param c_conf The component definition from the model file.
          */
-        void set_config(ComponentConf& c_conf);
+        void set_config(ComponentConf& c_conf, const std::vector<GroupConf> &group_conf);
 
 
 
@@ -689,6 +690,11 @@ namespace riaps {
          * The component thread.
          */
         zactor_t* component_zactor_;
+
+        /**
+         * Poller, runs in the component thread.
+         */
+        zpoller_t* component_poller_;
 
         /**
          * This setting is coming from the riaps.conf file.

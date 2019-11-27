@@ -10,7 +10,9 @@ namespace py = pybind11;
 
 class PyConfigConverter {
 public:
-    static ComponentConf convert(const py::dict& py_comp_config, const py::dict& py_actor, const py::dict& py_args) {
+    static ComponentConf convert(const py::dict& py_comp_config,
+                                 const py::dict& py_actor,
+                                 const py::dict& py_args) {
         ComponentConf result;
         result.is_device = false;
         ParseLocals(py_actor);
@@ -31,6 +33,21 @@ public:
         return result;
     }
 
+    static std::vector<GroupConf> ConvertGroups(const py::list& py_group_config) {
+        std::vector<GroupConf> results;
+
+        for (auto it = py_group_config.begin(); it!=py_group_config.end(); it++){
+            auto item = it->cast<py::dict>();
+            auto name    = item["name"].cast<std::string>();
+            auto kind    = item["kind"].cast<std::string>();
+            auto message = item["message"].cast<std::string>();
+            auto timed   = item["timed"].cast<bool>();
+            results.emplace_back(name, kind, message, timed);
+        }
+
+        return results;
+    }
+
 private:
 
     static std::set<std::string> locals_;
@@ -38,13 +55,14 @@ private:
     static void ParseLocals(const py::dict& py_actor) {
         auto json_locals = py_actor[J_LOCALS];
         for (auto it = json_locals.begin(); it!=json_locals.end(); it++){
-            locals_.insert(it->cast<py::dict>()["type"].cast<std::string>());
+            locals_.insert(it.cast<py::dict>()["type"].cast<std::string>());
         }
     }
 
     static void ParseArgs(const py::dict& py_args, ComponentConf& conf) {
-        for (auto it = py_args.begin(); it!=py_args.end(); it++) {
+        for (auto it = py_args.begin(); it!=py_args.end(); ++it) {
             auto name = it->first.cast<std::string>();
+
             if (py::str::check_(it->second)){
                 conf.component_parameters.addParam(name, it->second.cast<std::string>(), false);
             } else if (py::int_::check_(it->second)) {
@@ -68,7 +86,7 @@ private:
     // Todo: merge pub_sub and tim by enable_if
     template<class T>
     static void parse_pub_sub(const py::dict& ports, std::vector<T>& conf_container) {
-        for (auto it = ports.begin(); it!=ports.end(); it++){
+        for (auto it = ports.begin(); it!=ports.end(); ++it){
             T port;
 
             port.port_name    = it->first.cast<std::string>();
@@ -80,7 +98,7 @@ private:
 
     template<class T>
     static void parse_req_rep(const py::dict& ports, std::vector<T>& conf_container) {
-        for (auto it = ports.begin(); it!=ports.end(); it++){
+        for (auto it = ports.begin(); it!=ports.end(); ++it){
             T port;
 
             port.req_type     = it->second[J_PORT_REQTYPE].cast<std::string>();
@@ -94,9 +112,8 @@ private:
 
     static void parse_tim(const py::dict &ports,
                                       std::vector<ComponentPortTim>& conf_container) {
-        for (auto it = ports.begin(); it!=ports.end(); it++){
+        for (auto it = ports.begin(); it!=ports.end(); ++it){
             ComponentPortTim port;
-
             port.period       = it->second[J_PORT_PERIOD].cast<ulong>();
             port.port_name    = it->first.cast<std::string>();
             conf_container.push_back(port);

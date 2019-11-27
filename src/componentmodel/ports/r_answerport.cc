@@ -49,8 +49,8 @@ namespace riaps{
                     host_,
                     port_,
                     riaps::discovery::Kind::ANS,
-                    (config.is_local ? riaps::discovery::Scope::LOCAL : riaps::discovery::Scope::GLOBAL),
-                    {})) {
+                    (config.is_local ? riaps::discovery::Scope::LOCAL : riaps::discovery::Scope::GLOBAL)
+                    )) {
                 logger()->error("Answerport couldn't be registered.");
             }
         }

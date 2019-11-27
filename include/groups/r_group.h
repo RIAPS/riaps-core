@@ -26,9 +26,6 @@
 #include <chrono>
 #include <set>
 
-
-
-
 namespace spd = spdlog;
 
 namespace riaps {
@@ -67,8 +64,10 @@ namespace riaps {
          */
         struct GroupService {
             std::string message_type;
-            std::string address;
-            MSGPACK_DEFINE(message_type, address);
+            // std::string address;
+            std::string host;
+            int port;
+            MSGPACK_DEFINE(message_type, host, port);
         };
 
         /**
@@ -80,7 +79,6 @@ namespace riaps {
             GroupId                   group_id;
             std::vector<GroupService> group_services;
             MSGPACK_DEFINE(app_name, component_id, group_id, group_services);
-
         };
 
         /**
@@ -105,15 +103,18 @@ namespace riaps {
              */
             bool InitGroup();
 
-            void ConnectToNewServices(riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
+            /// OBSOLOTE
+            //void ConnectToNewServices(riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
+
+            void ConnectToNewServices(const std::string& address);
 
             bool SendMessage(capnp::MallocMessageBuilder& message, const std::string& portName);
-            bool SendMessage(zmsg_t** message, const std::string& portName);
+            bool SendMessage(zmsg_t** message);
 
             bool SendInternalMessage(capnp::MallocMessageBuilder& message);
 
             //ports::GroupSubscriberPort* FetchNextMessage(std::shared_ptr<capnp::FlatArrayMessageReader>& messageReader);
-            void FetchNextMessage();
+            void FetchNextMessage(bool has_inmsg);
 
             bool SendPingWithPeriod();
             bool SendPing();
@@ -143,6 +144,9 @@ namespace riaps {
 
             std::string leader_id() const;
 
+            const riaps::ports::GroupPublisherPort* group_pubport();
+            const riaps::ports::GroupSubscriberPort* group_subport();
+
             ~Group();
         private:
             /**
@@ -153,7 +157,7 @@ namespace riaps {
             bool SendHeartBeat(riaps::distrcoord::HeartBeatType type);
 
             GroupId     group_id_;
-            GroupTypeConf group_type_conf_;
+            const GroupConf* group_conf_;
 
             /**
              * Always store the communication ports in shart_ptr
@@ -161,7 +165,7 @@ namespace riaps {
             std::shared_ptr<riaps::ports::GroupPublisherPort>    group_pubport_;
             std::shared_ptr<riaps::ports::GroupSubscriberPort>   group_subport_;
 
-            std::map<const zsock_t*, std::shared_ptr<riaps::ports::PortBase>> group_ports_;
+            //std::map<const zsock_t*, std::shared_ptr<riaps::ports::PortBase>> group_ports_;
 
             /**
              *
@@ -175,7 +179,7 @@ namespace riaps {
              */
             std::unordered_map<std::string, riaps::utils::Timeout<std::chrono::milliseconds>> known_nodes_;
 
-            zpoller_t* group_poller_;
+            //zpoller_t* group_poller_;
 
             std::shared_ptr<spd::logger> logger_;
 

@@ -8,6 +8,8 @@
 
 using namespace std;
 
+#define DBGLN logger_->debug("{}::{}", __FUNCTION__, __LINE__);
+
 namespace riaps{
     namespace discovery {
         DiscoveryMessageHandler::DiscoveryMessageHandler(dht::DhtRunner &dht_node,
@@ -220,18 +222,23 @@ namespace riaps{
                 msg_disco_req = reader.getRoot<riaps::discovery::DiscoReq>();
 
                 if (msg_disco_req.isActorReg()) {
+                    DBGLN
                     riaps::discovery::ActorRegReq::Reader msg_actor_req = msg_disco_req.getActorReg();
                     HandleActorReg(msg_actor_req);
                 } else if (msg_disco_req.isActorUnreg()) {
+                    DBGLN
                     riaps::discovery::ActorUnregReq::Reader msg_actor_unreg = msg_disco_req.getActorUnreg();
                     HandleActorUnreg(msg_actor_unreg);
                 } else if (msg_disco_req.isServiceReg()) {
+                    DBGLN
                     riaps::discovery::ServiceRegReq::Reader msg_service_reg = msg_disco_req.getServiceReg();
                     HandleServiceReg(msg_service_reg);
                 } else if (msg_disco_req.isServiceLookup()) {
+                    DBGLN
                     riaps::discovery::ServiceLookupReq::Reader msg_service_lookup = msg_disco_req.getServiceLookup();
                     HandleServiceLookup(msg_service_lookup);
                 } else if (msg_disco_req.isGroupJoin()) {
+                    DBGLN
                     riaps::discovery::GroupJoinReq::Reader msg_group_join = msg_disco_req.getGroupJoin();
                     HandleGroupJoin(msg_group_join);
                 }
@@ -241,10 +248,9 @@ namespace riaps{
         }
 
         void DiscoveryMessageHandler::HandleActorReg(riaps::discovery::ActorRegReq::Reader &msg_actor_req) {
-
+            logger_->debug("{}", __FUNCTION__);
             string actorname = string(msg_actor_req.getActorName().cStr());
             string appname = string(msg_actor_req.getAppName().cStr());
-
             string clientkey_base = fmt::format("/{}/{}/", appname, actorname);
             logger_->info("Register actor with PID - {} : {}", msg_actor_req.getPid(), clientkey_base);
 
@@ -386,6 +392,7 @@ namespace riaps{
         }
 
         void DiscoveryMessageHandler::HandleServiceReg(riaps::discovery::ServiceRegReq::Reader &msg_service_reg) {
+            logger_->debug("{}", __FUNCTION__);
             auto check_dht = WaitForDht();
 
             auto msg_path = msg_service_reg.getPath();
@@ -495,14 +502,13 @@ namespace riaps{
                                    client.getPortName());
 
             // This client is interested in this kind of messages. Register it.
-            auto current_client = unique_ptr<ClientDetails>(new ClientDetails());
+            auto current_client = make_unique<ClientDetails>();
             current_client->app_name = path.getAppName();
             current_client->actor_host = riaps::framework::Network::GetIPAddress(); //client.getActorHost();
             current_client->port_name = client.getPortName();
             current_client->actor_name = client.getActorName();
             current_client->instance_name = client.getInstanceName();
             current_client->is_local = path.getScope() == riaps::discovery::Scope::LOCAL ? true : false;
-
             // Copy for the get callback
             ClientDetails currentClientTmp(*current_client);
 
@@ -511,27 +517,24 @@ namespace riaps{
                 // Nobody subscribed to this messagetype
                 client_subscriptions_[lookupkey.first] = vector<unique_ptr<ClientDetails>>();
             }
-
             if (find(client_subscriptions_[lookupkey.first].begin(),
                           client_subscriptions_[lookupkey.first].end(),
                           current_client) == client_subscriptions_[lookupkey.first].end()) {
 
                 client_subscriptions_[lookupkey.first].push_back(move(current_client));
             }
-            dht::InfoHash lookupkeyhash = dht::InfoHash::get(lookupkey.first);
 
+            dht::InfoHash lookupkeyhash = dht::InfoHash::get(lookupkey.first);
             logger_->info("Lookup: {}", lookupkey.first);
 
             //Send response
             capnp::MallocMessageBuilder message;
             auto msg_discorep = message.initRoot<riaps::discovery::DiscoRep>();
             auto msg_service_lookup_rep = msg_discorep.initServiceLookup();
-
             msg_service_lookup_rep.setStatus(riaps::discovery::Status::OK);
 
             auto number_of_clients = 0;
             auto sockets = msg_service_lookup_rep.initSockets(number_of_clients);
-
             auto serialized_message = capnp::messageToFlatArray(message);
 
             zmsg_t *msg = zmsg_new();
@@ -539,7 +542,6 @@ namespace riaps{
             zmsg_add(msg, frm_identity);
             zmsg_addstr(msg, "");
             zmsg_addmem(msg, serialized_message.asBytes().begin(), serialized_message.asBytes().size());
-
             zmsg_send(&msg, riaps_socket_);
 
             // Start listener on this key if it hasn't been started yet.
@@ -785,8 +787,10 @@ namespace riaps{
 
                 auto group_services = msg_group_update.initServices(v.group_services.size());
                 for (int i = 0; i < v.group_services.size(); i++) {
-                    group_services[i].setAddress(v.group_services[i].address);
-                    group_services[i].setMessageType(v.group_services[i].message_type);
+                    auto& gs = v.group_services[i];
+                    auto address = fmt::format("{}:{}", gs.host, gs.port);
+                    group_services[i].setAddress(address);
+                    group_services[i].setMessageType(gs.message_type);
                 }
 
                 auto serialized_message = capnp::messageToFlatArray(dht_message);
@@ -1184,13 +1188,14 @@ namespace riaps{
                 const string &client_instance_name,
                 const string &client_port_name) {
 
-            const map<riaps::discovery::Kind, string> kindPairs = {
-                    {riaps::discovery::Kind::CLT, kindMap.at(riaps::discovery::Kind::SRV)},
-                    {riaps::discovery::Kind::SUB, kindMap.at(riaps::discovery::Kind::PUB)},
-                    {riaps::discovery::Kind::REQ, kindMap.at(riaps::discovery::Kind::REP)},
-                    {riaps::discovery::Kind::REP, kindMap.at(riaps::discovery::Kind::REQ)},
-                    {riaps::discovery::Kind::QRY, kindMap.at(riaps::discovery::Kind::ANS)},
-                    {riaps::discovery::Kind::ANS, kindMap.at(riaps::discovery::Kind::QRY)}
+            const unordered_map<riaps::discovery::Kind, string> kindPairs = {
+                    {riaps::discovery::Kind::CLT , kindMap.at(riaps::discovery::Kind::SRV)},
+                    {riaps::discovery::Kind::SUB , kindMap.at(riaps::discovery::Kind::PUB)},
+                    {riaps::discovery::Kind::REQ , kindMap.at(riaps::discovery::Kind::REP)},
+                    {riaps::discovery::Kind::REP , kindMap.at(riaps::discovery::Kind::REQ)},
+                    {riaps::discovery::Kind::QRY , kindMap.at(riaps::discovery::Kind::ANS)},
+                    {riaps::discovery::Kind::ANS , kindMap.at(riaps::discovery::Kind::QRY)},
+                    {riaps::discovery::Kind::GSUB, kindMap.at(riaps::discovery::Kind::GPUB)}
             };
 
             string key = fmt::format("/{}/{}/{}", app_name, msg_type, kindPairs.at(kind));

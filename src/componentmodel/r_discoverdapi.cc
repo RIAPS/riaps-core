@@ -122,8 +122,7 @@ namespace riaps {
                                     const std::string &ip_address,
                                     const uint16_t &port,
                                     riaps::discovery::Kind kind,
-                                    riaps::discovery::Scope scope,
-                                    const std::vector<std::string> &tags
+                                    riaps::discovery::Scope scope
         ) {
 
             bool result = false;
@@ -304,8 +303,10 @@ namespace riaps {
             msgGroupId.setGroupName(group_id.group_name);
 
             for (int i = 0; i< group_services.size(); i++){
-                msgGroupServices[i].setAddress(group_services[i].address);
-                msgGroupServices[i].setMessageType(group_services[i].message_type);
+                auto& gs = group_services[i];
+                auto address = fmt::format("{}:{}", gs.host, gs.port);
+                msgGroupServices[i].setAddress(address);
+                msgGroupServices[i].setMessageType(gs.message_type);
             }
 
             auto serializedMessage = capnp::messageToFlatArray(message);

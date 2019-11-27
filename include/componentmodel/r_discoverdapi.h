@@ -50,8 +50,7 @@ namespace riaps {
                                         const std::string              &ip_address  ,
                                         const uint16_t                 &port        ,
                                         riaps::discovery::Kind         kind         ,
-                                        riaps::discovery::Scope        scope        ,
-                                        const std::vector<std::string> &tags
+                                        riaps::discovery::Scope        scope
             );
 
             static bool JoinGroup(const std::string &app_name,

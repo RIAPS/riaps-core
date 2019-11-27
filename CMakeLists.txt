@@ -25,9 +25,9 @@ endif()
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 if (${arch} STREQUAL "armhf")
- set(prefix /usr/arm-linux-gnueabihf)
+ set(prefix /opt/riaps/armhf)
 else()
- set(prefix /usr/local)
+ set(prefix /opt/riaps/amd64)
 endif()
 set(CMAKE_INSTALL_PREFIX ${prefix})
 
@@ -41,8 +41,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/bin)
 
 include_directories(include)
-include_directories(/usr/local/include/python3.6/pybind11/include)
-include_directories(/usr/include/python3.5m/)
+include_directories(/usr/include/python3.6/)
+include_directories(/usr/local/include/python3.6/)
 
 # Process Cap'n Proto messages
 add_custom_command(
@@ -87,7 +87,7 @@ if (BUILD_TESTS)
     # add_subdirectory(tests/TimedTest)
     # add_subdirectory(examples/EchoIO)
     # add_subdirectory(examples/pybind/WeatherMonitor)
-    # add_subdirectory(examples/pybind/DistributedEstimatorPybind)
+    add_subdirectory(examples/pybind/DistributedEstimatorPybind)
     # add_subdirectory(tests/PeriodicTimerSync)
     # add_subdirectory(tests/DistributedVoltage)
 endif()
@@ -97,6 +97,7 @@ endif()
 list (APPEND riapslib_SOURCE
         include/messaging/disco.capnp.c++
         include/messaging/distcoord.capnp.c++
+        src/componentmodel/dc.cc
         src/componentmodel/ports/r_queryport.cc
         src/componentmodel/ports/r_answerport.cc
         src/componentmodel/ports/r_insideport.cc

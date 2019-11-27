@@ -12,16 +12,21 @@ const std::string& PyActor::actor_name() const {
     return actor_name_;
 }
 
-PyActor::PyActor(const std::string &application_name, const std::string &actor_name)
+PyActor::PyActor(const std::string &application_name,
+                 const std::string &actor_name)
     : application_name_(application_name),
       actor_name_(actor_name) {
 
 }
 
-const GroupTypeConf* PyActor::GetGroupType(const std::string &groupTypeId) const {
-    for (auto it = grouptype_configurations_.begin(); it != grouptype_configurations_.end(); it++) {
-        if (it->group_type_id == groupTypeId)
-            return &(*it);
+void PyActor::AddGroupTypes(const std::vector<GroupConf> &group_conf) {
+    for (auto& gconf : group_conf) {
+        group_configurations_[gconf.name()] = gconf;
     }
-    return nullptr;
+}
+
+const GroupConf* PyActor::GetGroupType(std::string &name) const {
+    if (group_configurations_.find(name) == group_configurations_.end())
+        return nullptr;
+    return &(group_configurations_.at(name));
 }
