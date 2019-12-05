@@ -23,6 +23,8 @@ namespace groupapp {
 
 
             virtual void OnClock() override;
+            virtual void HandleGroupMessage(riaps::groups::Group *group) override;
+            virtual void HandleActivate() override;
 
             virtual ~GroupieCpp();
 

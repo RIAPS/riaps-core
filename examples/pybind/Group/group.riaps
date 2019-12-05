@@ -1,0 +1,35 @@
+// RIAPS Group 
+
+app GroupApp {
+	// Message types used in the app
+    message Msg;
+    
+    group TheGroup with leader using Msg; 
+      
+	// C++ component
+    component GroupieCpp(name,gs,tl) in c++ {
+      timer clock 3000;
+    }
+
+    // Python component
+    component Groupie(name,gs,tl) {
+      timer clock 3000;
+    }
+    
+     
+    // Actor
+    actor GroupActorA(gs='',tl='') {
+    //   local Msg; 
+       {  
+          groupie : GroupieCpp(name='A',gs=gs,tl=tl);
+       }
+    }
+    
+    // Actor
+    actor GroupActorB(gs='',tl='') {
+    //   local Msg; 
+       {  
+          groupie : Groupie(name='B',gs=gs,tl=tl);
+       }
+    }
+}

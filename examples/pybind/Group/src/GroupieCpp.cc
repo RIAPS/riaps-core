@@ -20,18 +20,39 @@ namespace groupapp {
                       const std::string& actor_name       ,
                       const py::list     groups)
             : GroupieCppBase(parent_actor, actor_spec, type_spec, name, type_name, args, application_name, actor_name, groups) {
-
         }
         // riaps:keep_construct:end
 
         void GroupieCpp::OnClock() {
             // riaps:keep_onclock:begin
             auto msg = RecvClock();
+            component_logger()->info("{}", __FUNCTION__);
+            MessageBuilder<messages::Msg> builder;
+            builder->setValue("Kukucs");
+            riaps::groups::GroupId id {"TheGroup", "g_1"};
+            this->getGroupById(id)->Send(builder);
             // riaps:keep_onclock:end
         }
 
         // riaps:keep_impl:begin
+        void GroupieCpp::HandleGroupMessage(riaps::groups::Group *group) {
+            component_logger()->info("{}", __FUNCTION__);
+            auto [msg, error] = group->Recv<messages::Msg>();
+            if (!error)
+                component_logger()->info(msg->getValue().cStr());
+            else
+                component_logger()->error(
+                        "Couldn't read groupmessage in group {}::{}",
+                        group->group_id().group_type_id,
+                        group->group_id().group_name);
+        }
 
+        void GroupieCpp::HandleActivate() {
+            if (JoinGroup({"TheGroup", "g_1"}))
+                component_logger()->info("Joined g_1");
+            else
+                component_logger()->error("Couldn't join g_1");
+        }
         // riaps:keep_impl:end
 
         // riaps:keep_destruct:begin

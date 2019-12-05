@@ -5,7 +5,7 @@ $Cxx.namespace("groupapp::messages");
 
 # riaps:keep_msg:begin
 struct Msg {
-
+    value @0 : Text;
 
 }
 # riaps:keep_msg:end
