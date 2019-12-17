@@ -17,6 +17,9 @@ public:
 
     const std::string& application_name() const;
     const std::string& actor_name() const;
+    std::vector<uint8_t> actor_id() const;
+    std::string actor_id_str() const;
+
 
     const GroupConf* GetGroupType(std::string &groupTypeId) const;
     void AddGroupTypes(const std::vector<GroupConf>& group_conf);
@@ -26,6 +29,8 @@ public:
 private:
     std::string application_name_;
     std::string actor_name_;
+
+    std::vector<uint8_t> actor_id_;
 
     std::unordered_map<std::string, GroupConf> group_configurations_;
 
