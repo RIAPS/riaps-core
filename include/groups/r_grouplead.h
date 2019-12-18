@@ -7,6 +7,8 @@
 
 #include <messaging/distcoord.capnp.h>
 #include <groups/r_group.h>
+#include <groups/r_groupdata.h>
+#include <groups/r_ownid.h>
 #include <spdlog_setup/conf.h>
 #include <utils/r_timeout.h>
 #include <czmq.h>
@@ -40,7 +42,10 @@ namespace riaps{
              *
              */
             enum NodeState{FOLLOWER, CANDIDATE, LEADER};
-            GroupLead(riaps::groups::Group* group, std::unordered_map<std::string, Timeout<std::chrono::milliseconds>>* knownNodes);
+            GroupLead(riaps::groups::Group* group,
+                    std::unordered_map<OwnId, riaps::utils::Timeout<std::chrono::milliseconds>,
+                    OwnIdHasher,
+                    OwnIdComparator>* known_nodes);
             const NodeState GetNodeState() const;
 
             void SetOnLeaderChanged(std::function<void(const std::string&)> handler);
@@ -59,13 +64,14 @@ namespace riaps{
             void OnVote(riaps::distrcoord::Consensus::Vote::Reader& message,
                         const std::string& sourceComponentId);
 
-            std::string GetLeaderId();
+            const OwnId & GetLeaderId();
 
             /**
              * Incoming message arrived, lets update the state
              * @param internalMessage
              */
-            void Update(riaps::distrcoord::LeaderElection::Reader& internalMessage);
+            void Update(const char* command, zsock_t* socket);
+            void UpdateReqVote(const ReqVote& reqvote);
             ~GroupLead();
 
             struct ProposeData {
@@ -89,22 +95,22 @@ namespace riaps{
             int64_t GenerateElectionTimeo();
 
             std::random_device m_rd;
-            std::mt19937 m_generator;
-            std::uniform_int_distribution<int> m_distrElection;
-            const std::string GetComponentId() const;
+            std::mt19937 rnd_generator_;
+            std::uniform_int_distribution<int> election_distr_;
+            const OwnId& GetOwnId() const;
 
-            NodeState m_currentState;
+            NodeState current_state_;
 
             // Timeouts
-            Timeout<std::chrono::milliseconds>  m_electionTimeout;
+            Timeout<std::chrono::milliseconds>  election_timeout_;
             Timeout<std::chrono::milliseconds>  m_appEntryTimeout;
-            uint32_t m_electionTerm;
-            uint32_t m_numberOfNodesInVote;
+            uint32_t election_term_;
+            uint32_t number_of_nodes_in_vote_;
 
 
 
             // Votes from, when
-            std::unordered_map<std::string, steady_clock::time_point> m_votes;
+            std::unordered_map<OwnId, steady_clock::time_point, OwnIdHasher, OwnIdComparator> votes_;
 
             riaps::groups::Group* group_;
 
@@ -112,14 +118,17 @@ namespace riaps{
             // Send functions
             void SendRequestForVote();
             void SendAppendEntry();
-            void SendVote(const std::string& voteFor);
+            //void SendVote(const std::string& vote_for);
+            void SendVote(uint32_t term, const OwnId &vote_for, bool vote);
             void Announce(const std::string& proposeId, riaps::distrcoord::Consensus::VoteResults result);
             uint32_t GetNumberOfVotes();
 
-            std::shared_ptr<spd::logger> _logger;
-            std::unordered_map<std::string, Timeout<std::chrono::milliseconds>>* m_knownNodes;
+            std::shared_ptr<spd::logger> logger_;
+            std::unordered_map<OwnId, riaps::utils::Timeout<std::chrono::milliseconds>,
+                    OwnIdHasher,
+                    OwnIdComparator>* known_nodes_;
 
-            std::string m_leaderId;
+            OwnId leaderid_;
 
             void ChangeLeader(const std::string& newLeader);
             std::function<void(const std::string&)> m_onLeaderChanged;
