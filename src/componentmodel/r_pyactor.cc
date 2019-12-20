@@ -22,9 +22,11 @@ PyActor::PyActor(const std::string &application_name,
                  const std::string &actor_name)
     : application_name_(application_name),
       actor_name_(actor_name) {
-    auto ip = riaps::framework::Network::GetIPAddress();
 
-    std::stringstream ss(ip);
+    auto iface = riaps::framework::Network::GetConfiguredIface();
+    auto host = riaps::framework::Network::GetIPAddress(iface);
+
+    std::stringstream ss(host);
     std::string item;
     while (std::getline(ss, item, '.')) {
         auto n = stoi(item);
