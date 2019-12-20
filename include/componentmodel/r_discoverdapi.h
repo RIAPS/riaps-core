@@ -3,7 +3,6 @@
 
 #include <componentmodel/r_riaps_actor_commands.h>
 #include <componentmodel/r_componentbase.h>
-#include <groups/r_group.h>
 #include <messaging/disco.capnp.h>
 
 #include <capnp/message.h>
@@ -17,11 +16,6 @@
 #include <iostream>
 
 namespace riaps {
-
-    namespace groups{
-        struct GroupId;
-        struct GroupService;
-    }
 
     namespace discovery {
 
@@ -51,12 +45,6 @@ namespace riaps {
                                         const uint16_t                 &port        ,
                                         riaps::discovery::Kind         kind         ,
                                         riaps::discovery::Scope        scope
-            );
-
-            static bool JoinGroup(const std::string &app_name,
-                                  const std::string &component_id,
-                                  const riaps::groups::GroupId &group_id,
-                                  const std::vector<riaps::groups::GroupService> &group_services
             );
 
             static zsock_t* RegisterActor(const std::string& app_name, const std::string& actor_name);
