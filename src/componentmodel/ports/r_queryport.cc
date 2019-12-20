@@ -15,16 +15,16 @@ namespace riaps {
                 : PortBase(PortTypes::Query,
                            (ComponentPortConfig*)(&config),
                            component),
-                  m_capnpReader(capnp::FlatArrayMessageReader(nullptr)) {
+                  capnp_reader_(capnp::FlatArrayMessageReader(nullptr)) {
             port_socket_ = zsock_new(ZMQ_DEALER);
-            m_socketId = zuuid_new();
+            socketid_ = zuuid_new();
             int timeout = 500;//msec
             int lingerValue = 0;
             int connectTimeout = 1000; //msec
             zmq_setsockopt(port_socket_, ZMQ_SNDTIMEO, &timeout , sizeof(int));
             zmq_setsockopt(port_socket_, ZMQ_LINGER, &lingerValue, sizeof(int));
-            zsock_set_identity(port_socket_, zuuid_str(m_socketId));
-            m_isConnected = false;
+            zsock_set_identity(port_socket_, zuuid_str(socketid_));
+            connected_ = false;
         }
 
         void QueryPort::Init() {
@@ -46,11 +46,11 @@ namespace riaps {
 
             for (auto result : results) {
                 string endpoint = fmt::format("tcp://{0}:{1}", result.host_name, result.port);
-                ConnectToResponse(endpoint);
+                Connect(endpoint);
             }
         }
 
-        bool QueryPort::ConnectToResponse(const std::string &ans_endpoint) {
+        bool QueryPort::Connect(const std::string &ans_endpoint) {
             int rc = zsock_connect(port_socket_, "%s", ans_endpoint.c_str());
 
             if (rc != 0) {
@@ -58,9 +58,16 @@ namespace riaps {
                 return false;
             }
 
-            m_isConnected = true;
+            connected_ = true;
             logger()->info("Queryport connected to: {}", ans_endpoint);
             return true;
+        }
+
+        void QueryPort::Disconnect(const std::string &ans_endpoint) {
+            if (zsock_disconnect(port_socket_, "%s", ans_endpoint.c_str()) == -1) {
+                logger()->error("Endpoint is invalid, cannot disconnect: {}", ans_endpoint);
+            }
+            connected_ = false;
         }
 
         const ComponentPortQry* QueryPort::GetConfig() const{
@@ -106,7 +113,7 @@ namespace riaps {
         }
 
         QueryPort::~QueryPort() noexcept {
-            zuuid_destroy(&m_socketId);
+            zuuid_destroy(&socketid_);
         }
 
 

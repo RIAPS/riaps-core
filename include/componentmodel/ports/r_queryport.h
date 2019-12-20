@@ -31,8 +31,8 @@ namespace riaps {
              * @param ans_endpoint The address of the server. (Answer type port)
              * @return False, if the request port couldn't connect. True otherwise.
              */
-            bool ConnectToResponse(const std::string& ans_endpoint);
-
+            bool Connect(const std::string& ans_endpoint);
+            void Disconnect(const std::string& ans_endpoint);
 
             template<class R, class T>
             bool RecvQuery(std::shared_ptr<riaps::RiapsMessage<R, T>>& message,
@@ -44,7 +44,7 @@ namespace riaps {
                 char* cRequestId = nullptr;
                 zframe_t *bodyFrame = nullptr, *timestampFrame = nullptr;
                 if (zsock_recv(port_socket_, "sff", &cRequestId, &bodyFrame, &timestampFrame)==0){
-                    std::string socketId = zuuid_str(m_socketId);
+                    std::string socketId = zuuid_str(socketid_);
                     params.reset(new riaps::MessageParams(socketId, &cRequestId, &timestampFrame));
                     message.reset(new RiapsMessage<R, T>(&bodyFrame));
                 } else {
@@ -76,21 +76,13 @@ namespace riaps {
              */
 
             PortError SendQuery(capnp::MallocMessageBuilder& message, std::string& requestId, bool addTimestamp = false) const;
-
-            //virtual QueryPort* AsQueryPort() ;
-
             virtual const ComponentPortQry* GetConfig() const;
 
             ~QueryPort() noexcept ;
         protected:
-            bool m_isConnected;
-
-            capnp::FlatArrayMessageReader m_capnpReader;
-
-
-
-            zuuid_t* m_socketId;
-
+            bool connected_;
+            capnp::FlatArrayMessageReader capnp_reader_;
+            zuuid_t* socketid_;
         };
     }
 }
