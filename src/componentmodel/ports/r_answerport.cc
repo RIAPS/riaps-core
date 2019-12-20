@@ -15,13 +15,13 @@ namespace riaps{
             auto iface = riaps::framework::Network::GetConfiguredIface();
             host_ = riaps::framework::Network::GetIPAddress(iface);
 
-
             if (host_ == "") {
                 logger()->error("Response cannot be initiated. Cannot find  available network interface.");
             }
+        }
 
+        void AnswerPort::Init() {
             // The port is NOT local AND encrypted
-            //if (!GetConfig()->is_local && has_security()) {
             if (has_security()) {
                 if (port_certificate_ != nullptr) {
                     zcert_apply (port_certificate_.get(), port_socket_);
@@ -35,7 +35,6 @@ namespace riaps{
             string end_point = fmt::format("tcp://{}:!", host_);
             port_ = zsock_bind(port_socket_, "%s", end_point.c_str());
 
-
             if (port_ == -1) {
                 logger()->error("Couldn't bind response port.");
             }
@@ -43,14 +42,14 @@ namespace riaps{
             logger()->info("Answerport is created on: {}:{}", host_, port_);
 
             if (!Disco::RegisterService(
-                    parent_component->actor()->application_name(),
-                    parent_component->actor()->actor_name(),
-                    config.message_type,
+                    parent_component()->actor()->application_name(),
+                    parent_component()->actor()->actor_name(),
+                    GetConfig()->message_type,
                     host_,
                     port_,
                     riaps::discovery::Kind::ANS,
-                    (config.is_local ? riaps::discovery::Scope::LOCAL : riaps::discovery::Scope::GLOBAL)
-                    )) {
+                    (GetConfig()->is_local ? riaps::discovery::Scope::LOCAL : riaps::discovery::Scope::GLOBAL)
+            )) {
                 logger()->error("Answerport couldn't be registered.");
             }
         }

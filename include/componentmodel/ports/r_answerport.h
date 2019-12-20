@@ -31,6 +31,8 @@ namespace riaps {
              */
             AnswerPort(const ComponentPortAns &config, const ComponentBase* parent);
 
+            virtual void Init();
+
             /**
              * @return Config parameters of the port.
              */
