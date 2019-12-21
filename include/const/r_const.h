@@ -36,14 +36,8 @@ constexpr auto CURVE_KEY    = "riaps-app.cert";
 //** Groups **
 constexpr auto INTERNAL_SUB_NAME = "$SUB#";
 constexpr auto INTERNAL_PUB_NAME = "$PUB#";
-
-/**
- * Actor argument index
- */
-constexpr auto ARG_IDX_APP   = 1;
-constexpr auto ARG_IDX_MODEL = 2;
-constexpr auto ARG_IDX_ACTOR = 3;
-constexpr auto ARG_IDX_DEVICE = ARG_IDX_ACTOR;
+constexpr auto INTERNAL_ANS_NAME = "$ANS#";
+constexpr auto INTERNAL_QRY_NAME = "$QRY#";
 
 // Group coordination: default timing values (in msec)
 constexpr uint16_t GROUP_HEARTBEAT        = 1000; // Group heartbeat period

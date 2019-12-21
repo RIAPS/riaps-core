@@ -31,7 +31,20 @@ namespace riaps {
              */
             AnswerPort(const ComponentPortAns &config, const ComponentBase* parent);
 
-            virtual void Init();
+            /**
+             * Loads and applies the CURVE keys.
+             */
+            void InitSecurity();
+
+            /**
+             * Registers the port in the discovery service
+             */
+            void RegisterPort();
+
+            /**
+             * Binds the socket to local address.
+             */
+            void Init();
 
             /**
              * @return Config parameters of the port.
@@ -53,6 +66,7 @@ namespace riaps {
             std::string               host_;
             std::string               endpoint_;
         };
+
     }
 }
 

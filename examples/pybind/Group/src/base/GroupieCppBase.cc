@@ -23,8 +23,9 @@ namespace groupapp {
             auto gr = PyConfigConverter::ConvertGroups(groups);
             conf.component_name = name;
             conf.component_type = type_name;
-            conf.is_device=false;
+            conf.is_device = false;
             set_config(conf, gr);
+            set_debug_level(spdlog::level::debug, spdlog::level::debug);
         }
 
         timespec GroupieCppBase::RecvClock() {

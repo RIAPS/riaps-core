@@ -64,14 +64,15 @@ namespace riaps{
             void OnVote(riaps::distrcoord::Consensus::Vote::Reader& message,
                         const std::string& sourceComponentId);
 
-            const OwnId & GetLeaderId();
+            std::optional<OwnId> GetLeaderId();
 
             /**
              * Incoming message arrived, lets update the state
              * @param internalMessage
              */
             void Update(const char* command, zsock_t* socket);
-            void UpdateReqVote(const ReqVote& reqvote);
+            void UpdateReqVote(const riaps::groups::data::ReqVote& reqvote);
+            void UpdateAuthority(const riaps::groups::data::Authority& authority);
             ~GroupLead();
 
             struct ProposeData {
@@ -103,11 +104,14 @@ namespace riaps{
 
             // Timeouts
             Timeout<std::chrono::milliseconds>  election_timeout_;
-            Timeout<std::chrono::milliseconds>  m_appEntryTimeout;
+            Timeout<std::chrono::milliseconds>  appentry_timeout_;
             uint32_t election_term_;
             uint32_t number_of_nodes_in_vote_;
 
-
+            std::string answer_address_;
+            std::string leader_address_;
+            std::shared_ptr<riaps::ports::QueryPort>  group_qryport_;
+            std::shared_ptr<riaps::ports::AnswerPort> group_ansport_;
 
             // Votes from, when
             std::unordered_map<OwnId, steady_clock::time_point, OwnIdHasher, OwnIdComparator> votes_;
@@ -128,9 +132,9 @@ namespace riaps{
                     OwnIdHasher,
                     OwnIdComparator>* known_nodes_;
 
-            OwnId leaderid_;
+            std::optional<OwnId> leaderid_;
 
-            void ChangeLeader(const std::string& newLeader);
+            void ChangeLeader(std::optional<OwnId> new_leader);
             std::function<void(const std::string&)> m_onLeaderChanged;
 
 

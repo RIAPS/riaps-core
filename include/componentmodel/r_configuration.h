@@ -139,13 +139,13 @@ public:
     GroupConf(const std::string& tname, const std::string& tkind, const std::string& tmessage, const bool ttimed) :
         name_(tname), kind_(tkind), message_(tmessage), timed_(ttimed) {};
 
-    //GroupConf(const GroupConf& conf) = default;
-
     const std::string& name() const { return name_; }
     const std::string& kind() const { return kind_; }
     const std::string& message() const { return message_; }
     const bool timed() const { return timed_; }
-    bool has_leader() const {return kind_ == "leader";};
+    bool has_leader() const {
+        return kind_ != "default";
+    };
 
 private:
     std::string name_;

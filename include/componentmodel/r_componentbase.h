@@ -17,8 +17,11 @@ The component framework provides a base class (ComponentBase) for your component
 #include <componentmodel/r_configuration.h>
 #include <componentmodel/r_oneshottimer.h>
 #include <componentmodel/r_messageparams.h>
+#include <componentmodel/r_messagebuilder.h>
+#include <groups/r_groupid.h>
 #include <groups/r_group.h>
 #include <messaging/disco.capnp.h>
+#include <utils/r_utils.h>
 
 #include <msgpack.hpp>
 #include <capnp/message.h>
@@ -53,7 +56,6 @@ namespace riaps {
 
     namespace groups{
         class Group;
-        struct GroupId;
     }
 
 
@@ -98,6 +100,7 @@ namespace riaps {
          */
         virtual void HandlePortUpdate(const std::string &port_name, const std::string &host, int port) final;
         virtual void HandleReinstate() final;
+        virtual void HandleActivate();
         ///@}
 
         /**
@@ -120,7 +123,7 @@ namespace riaps {
         /**
          * @return The component logger instance.
          */
-        std::shared_ptr<spd::logger> component_logger();
+        std::shared_ptr<spd::logger> component_logger() const;
 
         /**
          * @return The component unique ID.
@@ -226,23 +229,20 @@ namespace riaps {
          * Sends a message to every members in the given group.
          * @param group_id Group instance id.
          * @param message The message to be sent in capnp buffer.
-         * @param port_name Depricated. Only one port is used now. Kept for compatibility.
          * @return True if the send was successful. False otehrwise.
          */
-        bool SendGroupMessage(const riaps::groups::GroupId& group_id,
-                              capnp::MallocMessageBuilder& message,
-                              const std::string& port_name="");
+//        template<class T>
+//        bool SendGroupMessage(
+//                const riaps::groups::GroupId& group_id,
+//                MessageBuilder<T>& message);
 
         /**
-         * Sends a message to every members in the given group.
-         * @param group_id Group instance id.
-         * @param message The message to be sent.
-         * @param port_name Depricated. Only one port is used now. Kept for compatibility.
-         * @return True if the send was successful. False otehrwise.
+         * Handler for group messages.
+         * Implementation must immediately call recv on the group to obtain message.
+         * @param group The group where the message arrived.
          */
-        bool SendGroupMessage(const riaps::groups::GroupId&& group_id,
-                              capnp::MallocMessageBuilder& message,
-                              const std::string& port_name="");
+        virtual void HandleGroupMessage(groups::Group* group);
+
         /** @}*/
 
         virtual ~ComponentBase() = default;
@@ -295,6 +295,8 @@ namespace riaps {
                                      int64_t timeout = 1000 * 15 /*15 sec in msec*/);
 
         std::string GetLeaderId(const riaps::groups::GroupId& groupId);
+
+        std::vector<riaps::groups::Group*> GetGroups();
 
         /**
          * Does a valid leader available in the group?
@@ -569,6 +571,13 @@ namespace riaps {
          */
         void set_config(ComponentConf& c_conf, const std::vector<GroupConf> &group_conf);
 
+        /**
+         * Returns the group instance based on its id.
+         * @param group_id Group instance id.
+         * @return Pointer to the group instance.
+         */
+        riaps::groups::Group* getGroupById(const riaps::groups::GroupId &group_id);
+
 
 
     private:
@@ -664,15 +673,15 @@ namespace riaps {
         /**
          * Pointers to the group instances.
          */
-        std::map<riaps::groups::GroupId,
-                 std::unique_ptr<riaps::groups::Group>> groups_;
+        std::map<riaps::groups::GroupId, std::unique_ptr<riaps::groups::Group>> groups_;
 
-        /**
-         * Returns the group instance based on its id.
-         * @param group_id Group instance id.
-         * @return Pointer to the group instance.
-         */
-        riaps::groups::Group* getGroupById(const riaps::groups::GroupId &group_id);
+        // Maintaining ZMQ Socket - riaps port pairs. For the quick retrieve.
+        std::unordered_map<const zsock_t*, const ports::PortBase*>   port_sockets_;
+
+        // Maintaining ZMQ Socket - group port pairs. For the quick retrieve.
+        std::unordered_map<const zsock_t*, groups::Group*> group_sockets_;
+
+
 
         uint64_t timer_counter_;
 

@@ -87,9 +87,10 @@ if (BUILD_TESTS)
     # add_subdirectory(tests/TimedTest)
     # add_subdirectory(examples/EchoIO)
     # add_subdirectory(examples/pybind/WeatherMonitor)
-    add_subdirectory(examples/pybind/DistributedEstimatorPybind)
+    # add_subdirectory(examples/pybind/DistributedEstimatorPybind)
     # add_subdirectory(tests/PeriodicTimerSync)
     # add_subdirectory(tests/DistributedVoltage)
+    add_subdirectory(examples/pybind/Group)
 endif()
 
 
@@ -97,9 +98,10 @@ endif()
 list (APPEND riapslib_SOURCE
         include/messaging/disco.capnp.c++
         include/messaging/distcoord.capnp.c++
-        src/componentmodel/dc.cc
         src/componentmodel/ports/r_queryport.cc
+        #src/componentmodel/ports/r_queryportgroup.cc
         src/componentmodel/ports/r_answerport.cc
+        #src/componentmodel/ports/r_answerportgroup.cc
         src/componentmodel/ports/r_insideport.cc
         src/componentmodel/ports/r_periodictimer.cc
         src/componentmodel/ports/r_portbase.cc
@@ -127,13 +129,18 @@ list (APPEND riapslib_SOURCE
         src/framework/rfw_security.cc
         src/groups/r_group.cc
         src/groups/r_grouplead.cc
+        src/groups/r_groupid.cc
+        src/groups/r_ownid.cc
+        src/groups/r_groupdata.cc
         src/utils/r_utils.cc
         )
 
 # libriaps headers
 list (APPEND riapslib_HEADERS
         include/componentmodel/ports/r_queryport.h
+        #include/componentmodel/ports/r_queryportgroup.h
         include/componentmodel/ports/r_answerport.h
+        #include/componentmodel/ports/r_answerportgroup.h
         include/componentmodel/ports/r_insideport.h
         include/componentmodel/ports/r_periodictimer.h
         include/componentmodel/ports/r_portbase.h
@@ -161,7 +168,11 @@ list (APPEND riapslib_HEADERS
         include/componentmodel/r_riapsmessage.h
         include/const/r_const.h
         include/groups/r_group.h
+        include/groups/r_groupid.h
         include/groups/r_grouplead.h
+        include/groups/r_groupservice.h
+        include/groups/r_ownid.h
+        include/groups/r_groupdata.h
         include/messaging/disco.capnp.h
         include/messaging/distcoord.capnp.h
         include/utils/r_expirable.h

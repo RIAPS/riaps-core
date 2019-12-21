@@ -5,14 +5,14 @@
 #include <groups/r_group.h>
 #include <messaging/distcoord.capnp.h>
 #include <capnp/common.h>
-
-/*10s in msec*/
-constexpr auto PING_BASE_PERIOD = 10*1000;
+#include <groups/r_groupdata.h>
 
 namespace dc = riaps::distrcoord;
 
 using namespace std;
 using namespace riaps::discovery;
+
+namespace  gr = riaps::groups::data;
 
 namespace riaps{
 
@@ -22,22 +22,15 @@ namespace riaps{
 
         using namespace riaps;
 
-        bool GroupId::operator<(const GroupId &other) const {
-            if (group_type_id == other.group_type_id){
-                return group_name < other.group_name;
-            }
-            return group_type_id<other.group_type_id;
-        }
-
-        bool GroupId::operator==(const GroupId &other) const {
-            return group_type_id == other.group_type_id && group_name == other.group_name;
-        }
-
-        std::string Group::leader_id() const {
-            if (group_conf_->has_leader() && group_leader_ != nullptr){
+        std::optional<OwnId> Group::leader_id() const {
+            //if (group_conf_->has_leader() && group_leader_ != nullptr){
                 return group_leader_->GetLeaderId();
-            }
-            return "";
+            //}
+            //return "";
+        }
+
+        const groups::GroupId& Group::group_id() const {
+            return group_id_;
         }
 
         Group::Group(const GroupId &group_id, ComponentBase* parentComponent) :
@@ -45,40 +38,59 @@ namespace riaps{
                 parent_component_(parentComponent),
                 group_pubport_(nullptr),
                 group_subport_(nullptr),
-                group_leader_(nullptr) {
-            logger_ = spd::get(parentComponent->component_config().component_name);
-            ping_timeout_ = Timeout<std::chrono::milliseconds>(PING_BASE_PERIOD);
+                group_leader_(nullptr),
+                last_heartbeat_(0.0) {
+            logger_ = parentComponent->component_logger();
+            last_heartbeat_ = Timeout<std::chrono::milliseconds>(GROUP_HEARTBEAT);
             random_generator_ = std::mt19937(random_device_());
-            timeout_distribution_ = std::uniform_int_distribution<int>(PING_BASE_PERIOD*1.1, PING_BASE_PERIOD*2);
+            timeout_distribution_ = std::uniform_int_distribution<int>(GROUP_HEARTBEAT*1.1, GROUP_HEARTBEAT*2);
+
+            // TODO: Generate something similar to the python version
+            own_id_.data(parentComponent->actor()->actor_id(), (uint64_t)this);
+            logger_->debug("ActorId: {} Pid: {}", parent_component()->actor()->actor_id_str(), getpid());
+            logger_->debug("OwnId: {}", own_id_.strdata());
         }
 
         bool Group::InitGroup() {
             // If the groupid doesn't exist, just skip the initialization and return false
             auto group_conf = parent_component_->actor()->GetGroupType(group_id_.group_type_id);
-            if (group_conf == nullptr)
+            if (group_conf == nullptr) {
+                logger_->error("Didn't find group {} in {}", group_id_.group_type_id, __FUNCTION__);
                 return false;
+            }
 
             group_conf_ = group_conf;
 
             // Default port for the group. Reserved for RIAPS internal communication protocols
             GroupPortPub internalPubConfig;
-            internalPubConfig.message_type = INTERNAL_MESSAGETYPE;
+            internalPubConfig.message_type = group_conf->message();
             internalPubConfig.is_local     = false;
             internalPubConfig.port_name    = INTERNAL_PUB_NAME;
 
             group_pubport_ = make_shared<ports::GroupPublisherPort>(internalPubConfig, parent_component_);
-            //group_ports_[group_pubport_->port_socket()] = group_pubport_;
 
             GroupPortSub internalSubConfig;
-            internalSubConfig.message_type = INTERNAL_MESSAGETYPE;
+            internalSubConfig.message_type = group_conf->message();
             internalSubConfig.is_local     = false;
             internalSubConfig.port_name    = INTERNAL_SUB_NAME;
 
-            group_subport_ = make_shared<ports::GroupSubscriberPort>(internalSubConfig, parent_component_);
-            //group_ports_[group_subport_->port_socket()] = group_subport_;
+            group_subport_ = make_shared<ports::GroupSubscriberPort>(internalSubConfig, parent_component_, group_id_);
+            group_subport_->Init();
 
-            // Initialize the zpoller and add the group sub port
-            //group_poller_ = zpoller_new(const_cast<zsock_t*>(group_subport_->port_socket()), nullptr);
+            ComponentPortAns internal_ans_conf;
+            internal_ans_conf.message_type = INTERNAL_ANS_NAME;
+            internal_ans_conf.is_local     = false;
+            internal_ans_conf.port_name    = INTERNAL_ANS_NAME;
+
+            group_ansport_ = make_shared<ports::AnswerPort>(internal_ans_conf, parent_component_);
+            group_ansport_->Init();
+
+            ComponentPortQry internal_qry_conf;
+            internal_qry_conf.message_type = INTERNAL_QRY_NAME;
+            internal_qry_conf.is_local     = false;
+            internal_qry_conf.port_name    = INTERNAL_QRY_NAME;
+
+            group_qryport_ = make_shared<ports::QueryPort>(internal_qry_conf, parent_component_);
 
             auto msg_type = fmt::format("{}@{}.{}", internalPubConfig.message_type, group_id_.group_type_id, group_id_.group_name);
             auto has_joined = Disco::RegisterService(parent_component_->actor()->application_name(),
@@ -90,14 +102,13 @@ namespace riaps{
                                            riaps::discovery::Scope::GLOBAL);
 
             // Setup leader election
-            if (has_joined && group_conf_->has_leader()) {
-                group_leader_ = std::unique_ptr<riaps::groups::GroupLead>(
-                        new GroupLead(this, &known_nodes_)
-                );
-                group_leader_->SetOnLeaderChanged([this](const std::string& newLeader){
-                    logger_->debug("Leader changed: {}", newLeader);
-                });
-            }
+            //if (has_joined && group_conf_->has_leader()) {
+            group_leader_ = make_unique<riaps::groups::GroupLead>(this, &known_nodes_);
+
+//                group_leader_->SetOnLeaderChanged([this](const std::string& newLeader){
+//                    logger_->debug("Leader changed: {}", newLeader);
+//                });
+            //}
 
             // Register all of the publishers
             return has_joined;
@@ -107,8 +118,16 @@ namespace riaps{
             return SendMessage(message, INTERNAL_PUB_NAME);
         }
 
+        std::shared_ptr<riaps::ports::QueryPort> Group::group_qryport() {
+            return group_qryport_;
+        }
+
+        std::shared_ptr<riaps::ports::AnswerPort> Group::group_ansport() {
+            return group_ansport_;
+        }
+
         bool Group::SendMessageToLeader(capnp::MallocMessageBuilder &message) {
-            if (leader_id() == "") return false;
+            //if (leader_id() == "") return false;
 
             zframe_t* frame;
             frame << message;
@@ -129,7 +148,7 @@ namespace riaps{
         }
 
         bool Group::ProposeValueToLeader(capnp::MallocMessageBuilder &message, const std::string &proposeId) {
-            bool hasActiveLeader = leader_id() != "";
+            bool hasActiveLeader = false; //leader_id() != "";
             if (!hasActiveLeader){
                 logger_->error("ProposeValueToLeader(), no active leader, send failed");
                 return false;
@@ -155,19 +174,19 @@ namespace riaps{
             zmsg_add(zmsg, frame);
 
             bool rc = SendMessage(&zmsg);
-            if (!rc)
-                logger_->error("ProposeValueToLeader() failed");
-            else
-                logger_->debug("ProposeValueToLeader() proposeId: {}, leader_id: {}, srcComp: {}", proposeId,
-                               leader_id(),
-                               parent_component_id());
+//            if (!rc)
+//                logger_->error("ProposeValueToLeader() failed");
+//            else
+//                logger_->debug("ProposeValueToLeader() proposeId: {}, leader_id: {}, srcComp: {}", proposeId,
+//                               leader_id(),
+//                               parent_component_id());
             return rc;
         }
 
         bool Group::ProposeActionToLeader(const std::string& proposeId,
                                           const std::string &actionId,
                                           const timespec &absTime) {
-            bool hasActiveLeader = leader_id() != "";
+            bool hasActiveLeader = false; //leader_id() != "";
             if (!hasActiveLeader){
                 logger_->error("ProposeActionToLeader(), no active leader, send failed");
                 return false;
@@ -199,17 +218,18 @@ namespace riaps{
 
             bool rc = SendMessage(&zmsg);
 
-            if (!rc)
-                logger_->error("ProposeActionToLeader() failed");
-            else
-                logger_->debug("ProposeActionToLeader() proposeId: {}, leader_id: {}, srcComp: {}", proposeId,
-                              leader_id(),
-                              parent_component()->ComponentUuid());
+//            if (!rc)
+//                logger_->error("ProposeActionToLeader() failed");
+//            else
+//                logger_->debug("ProposeActionToLeader() proposeId: {}, leader_id: {}, srcComp: {}", proposeId,
+//                              leader_id(),
+//                              parent_component()->ComponentUuid());
             return rc;
         }
 
         bool Group::SendLeaderMessage(capnp::MallocMessageBuilder &message) {
-            if (leader_id()!= parent_component_id()) return false;
+            return false;
+            //if (leader_id()!= parent_component_id()) return false;
             capnp::MallocMessageBuilder builder;
             auto intMessage = builder.initRoot<riaps::distrcoord::GroupInternals>();
             auto grpMessage = intMessage.initGroupMessage();
@@ -227,12 +247,12 @@ namespace riaps{
             return SendMessage(&zmsg);
         }
 
-        const riaps::ports::GroupPublisherPort* Group::group_pubport() {
-            return group_pubport_.get();
+        std::shared_ptr<riaps::ports::GroupPublisherPort> Group::group_pubport() {
+            return group_pubport_;
         }
 
-        const riaps::ports::GroupSubscriberPort* Group::group_subport() {
-            return group_subport_.get();
+        std::shared_ptr<riaps::ports::GroupSubscriberPort> Group::group_subport() {
+            return group_subport_;
         }
 
         bool Group::SendMessage(capnp::MallocMessageBuilder& message, const std::string& portName){
@@ -268,10 +288,10 @@ namespace riaps{
         std::shared_ptr<std::set<std::string>> Group::GetKnownComponents() {
             std::shared_ptr<std::set<std::string>> result(new std::set<std::string>());
 
-            for (auto& n : known_nodes_){
-                if (n.second.IsTimeout()) continue;
-                result->emplace(n.first);
-            }
+//            for (auto& n : known_nodes_){
+//                if (n.second.IsTimeout()) continue;
+//                result->emplace(n.first);
+//            }
 //            std::transform(known_nodes_.begin(),
 //                           known_nodes_.end(),
 //                           std::back_inserter(*result),
@@ -307,64 +327,8 @@ namespace riaps{
 //        }
 
         void Group::ConnectToNewServices(const std::string &address) {
+            logger_->debug("{}::{} is connecting to {}", group_id().group_type_id, group_id().group_name, address);
             group_subport_->ConnectToPublihser(address);
-        }
-
-        bool Group::SendPing() {
-            //m_logger->debug(">>PING>>");
-            ping_timeout_.Reset();
-            return SendHeartBeat(dc::HeartBeatType::PING);
-        }
-
-        bool Group::SendPong() {
-            //m_logger->debug(">>PONG>>");
-            return SendHeartBeat(dc::HeartBeatType::PONG);
-        }
-
-        bool Group::SendPingWithPeriod() {
-
-            /**
-             * If no known node, sending periodically.
-             * Else Send ping ONLY if there is a suspicoius component (timeout exceeded)
-             */
-            if (known_nodes_.size() == 0 && ping_timeout_.IsTimeout()){
-                ping_timeout_.Reset();
-                return SendPing();
-            }
-            else {
-                for (auto it = known_nodes_.begin(); it != known_nodes_.end(); it++) {
-                    if (it->second.IsTimeout()&& ping_timeout_.IsTimeout()) {
-                        ping_timeout_.Reset();
-                        return SendPing();
-                    }
-                }
-            }
-
-            //if (ping_timeout_.IsTimeout()){
-            //    return SendPing();
-            //}
-//            int64_t currentTime = zclock_mono();
-//
-//            if (_lastPingSent == 0)
-//                _lastPingSent = currentTime;
-//
-//            // If the ping period has been reached
-//            if ((currentTime - _lastPingSent) > _pingPeriod){
-//                return SendPing();
-//            }
-            return false;
-        }
-
-
-        bool Group::SendHeartBeat(riaps::distrcoord::HeartBeatType type) {
-            capnp::MallocMessageBuilder builder;
-            auto internal = builder.initRoot<riaps::distrcoord::GroupInternals>();
-            auto heartbeat = internal.initGroupHeartBeat();
-
-            heartbeat.setHeartBeatType(type);
-            heartbeat.setSourceComponentId(this->parent_component_->ComponentUuid());
-
-            return group_pubport_->Send(builder);
         }
 
         const ComponentBase* Group::parent_component() const {
@@ -570,14 +534,115 @@ namespace riaps{
 //            return subscriberPort;
 //        }
 
-        void Group::FetchNextMessage(bool has_inmsg) {
+        double Group::GetPythonTime(timespec& now) {
+            double sec = now.tv_sec;
+            double rem = now.tv_nsec * 0.000000001;
+            return sec+rem;
+        }
+
+        double Group::GetPythonNow() {
+            timespec ts;
+            clock_gettime(CLOCK_REALTIME, &ts);
+            return GetPythonTime(ts);
+        }
+
+        std::string DoubleToStr(double val) {
+            std::ostringstream strs;
+            strs << val;
+            return strs.str();
+        }
+
+        void Group::Heartbeat() {
+
+            if (last_heartbeat_.IsTimeout()) {
+                logger_->debug("{}", __FUNCTION__);
+                zmsg_t* msg_heartbeat = zmsg_new();
+                zmsg_addstr(msg_heartbeat, HEARTBEAT);
+                zmsg_addmem(msg_heartbeat, own_id_.data().data(), 16);
+                group_pubport_->Send(&msg_heartbeat);
+                last_heartbeat_.Reset();
+            }
+        }
+
+        void Group::ProcessOnSub() {
+            auto sub_socket  = const_cast<zsock_t*>(group_subport_->port_socket());
+            auto first_frame = zframe_recv(sub_socket);
+            if (zframe_streq (first_frame, HEARTBEAT)){
+                // Recv() the second frame of the message.
+                // Must be the own_id of the another group.
+                //auto peer = zstr_recv(sub_socket);
+                auto second_frame = zframe_recv(sub_socket);
+                auto second_size = zframe_size(second_frame);
+                auto second_data = zframe_data(second_frame);
+                OwnId ownid;
+                ownid.data((char*)second_data, second_size);
+                known_nodes_[ownid] = Timeout<std::chrono::milliseconds>(GROUP_PEERTIMEOUT);
+                zframe_destroy(&second_frame);
+            } else if (zframe_streq (first_frame, GROUP_MSG)) {
+                parent_component_->HandleGroupMessage(this);
+            } else if (zframe_streq (first_frame, REQVOTE)) {
+                auto req_frame = zframe_recv(sub_socket);
+                auto req_data  = zframe_data(req_frame);
+                gr::ReqVote reqvote((char*)req_data);
+
+                logger_->debug("REQVOTE, string term: {} node: {}", reqvote.term(), reqvote.ownid().strdata());
+
+                if (group_leader_ == nullptr)
+                    logger_->error("Group leader is NULL");
+                else
+                    group_leader_->UpdateReqVote(reqvote);
+                zframe_destroy(&req_frame);
+            } else if (zframe_streq (first_frame, RSPVOTE)) {
+                //group_leader_->Update(RSPVOTE, sub_socket);
+            } else if (zframe_streq (first_frame, AUTHORITY)) {
+                auto auth_frame = zframe_recv(sub_socket);
+                auto auth_data  = zframe_data(auth_frame);
+                gr::Authority auth((char*)auth_data);
+                uint32_t* last_digits_ = (uint32_t*)(auth_data+24);
+                logger_->debug("Auth, term: {}, ldrid: {}, addr: {}", auth.term(), auth.ldrid().strdata(), auth.ldraddress_zmq());
+
+                if (group_leader_ == nullptr)
+                    logger_->error("Group leader is NULL");
+                else
+                    group_leader_->UpdateAuthority(auth);
+                zframe_destroy(&auth_frame);
+            }
+            else {
+                // The second frame as string. Doesn't own the data. The data is destroyed when the frame is destroyed.
+                char* frame_content = (char*)zframe_data(first_frame);
+                //logger_->debug("Unhandled messagetype in groups: {}", frame_content);
+            }
+            zframe_destroy(&first_frame);
+        }
+
+        void Group::FetchNextMessage(zsock_t* in_socket) {
+            // If heartbeat timeout, send heartbeat.
+            Heartbeat();
+
             // No incoming message, update the leader
-            if (!has_inmsg) {
+            if (in_socket == nullptr) {
                 if (group_conf_->has_leader()) {
                     group_leader_->Update();
                 }
                 return;
             }
+            auto now = GetPythonNow();
+            auto sub_socket  = const_cast<zsock_t*>(group_subport_->port_socket());
+            auto qry_socket  = const_cast<zsock_t*>(group_qryport_->port_socket());
+            auto ans_socket  = const_cast<zsock_t*>(group_ansport_->port_socket());
+
+            if (in_socket == sub_socket) {
+                ProcessOnSub();
+            } else if (in_socket == qry_socket) {
+                logger_->debug("Message on QRY");
+            } else if (in_socket == ans_socket) {
+                logger_->debug("Message on ANS");
+            }
+
+            //logger_->debug("Group first frame content: {}", (char*)zframe_data(first_frame));
+
+
+            return;
 
             zmsg_t* msg = zmsg_recv(const_cast<zsock_t*>(group_subport()->port_socket()));
             zframe_t* firstFrame;
@@ -617,30 +682,22 @@ namespace riaps{
                 }
                 else if (internal.hasGroupHeartBeat()) {
                     auto groupHeartBeat = internal.getGroupHeartBeat();
-                    auto it = known_nodes_.find(groupHeartBeat.getSourceComponentId());
+//                    auto it = known_nodes_.find(groupHeartBeat.getSourceComponentId());
+//
+//                    // New node, set the timeout
+//                    if (it == known_nodes_.end()) {
+//                        known_nodes_[groupHeartBeat.getSourceComponentId().cStr()] =
+//                                Timeout<std::chrono::milliseconds>(timeout_distribution_(random_generator_));
+//                    } else
+//                        it->second.Reset(timeout_distribution_(random_generator_));
 
-                    // New node, set the timeout
-                    if (it == known_nodes_.end()) {
-                        known_nodes_[groupHeartBeat.getSourceComponentId().cStr()] =
-                                Timeout<std::chrono::milliseconds>(timeout_distribution_(random_generator_));
-                    } else
-                        it->second.Reset(timeout_distribution_(random_generator_));
-
-                    if (groupHeartBeat.getHeartBeatType() == riaps::distrcoord::HeartBeatType::PING) {
-                        //m_logger->debug("<<PING<<");
-                        SendPong();
-                        return;
-                    } else if (groupHeartBeat.getHeartBeatType() == riaps::distrcoord::HeartBeatType::PONG) {
-                        //logger_->debug("<<PONG<<");
-                        return;
-                    }
                 } else if (internal.hasLeaderElection()){
                     auto msgLeader = internal.getLeaderElection();
-                    group_leader_->Update(msgLeader);
+                    //group_leader_->Update(msgLeader);
                     return;
                 } else if (internal.hasMessageToLeader()){
                     auto msgLeader = internal.getMessageToLeader();
-                    if (leader_id() != parent_component()->ComponentUuid()) return;
+                    //if (leader_id() != parent_component()->ComponentUuid()) return;
 
                     zframe_t* leaderMsgFrame = zmsg_pop(msg);
                     if (!leaderMsgFrame) return;
@@ -656,7 +713,8 @@ namespace riaps{
                    // m_logger->debug("DC message arrived from {}", msgDistCoord.getSourceComponentId().cStr());
 
 //                        // The current component is the leader
-                    if (leader_id() == parent_component_id()) {
+                    //if (leader_id() == parent_component_id())
+                    {
                         //m_logger->debug("DC message arrived and this component is the leader");
 
 //                            // Propose arrived to the leader. Leader forwards it to every groupmember.
@@ -691,7 +749,8 @@ namespace riaps{
                         }
                     }
 //                        // The current component is not a leader
-                    else {
+                    //else
+                        {
                         //m_logger->debug("DC message arrived and this component is not the leader");
 //                            // propose by the leader, must vote on something
                         if (msgCons.hasProposeToClients()) {

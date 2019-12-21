@@ -1,5 +1,7 @@
 #include <componentmodel/ports/r_subscriberport.h>
 #include <framework/rfw_network_interfaces.h>
+#include <componentmodel/r_discoverdapi.h>
+
 
 using namespace std;
 using namespace riaps::discovery;

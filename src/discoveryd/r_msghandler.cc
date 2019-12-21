@@ -501,6 +501,9 @@ namespace riaps{
                                    client.getInstanceName(),
                                    client.getPortName());
 
+            logger_->debug("Search key: {}", lookupkey.first);
+            logger_->debug("Client details: {}", lookupkey.second);
+
             // This client is interested in this kind of messages. Register it.
             auto current_client = make_unique<ClientDetails>();
             current_client->app_name = path.getAppName();

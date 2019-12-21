@@ -6,7 +6,7 @@
 #define RIAPS_CORE_R_GPUBPORT_H
 
 
-#include <groups/r_group.h>
+#include <groups/r_groupservice.h>
 #include <componentmodel/r_configuration.h>
 #include <componentmodel/ports/r_pubportbase.h>
 

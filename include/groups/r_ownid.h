@@ -11,15 +11,19 @@
 
 namespace riaps {
     namespace groups {
-
-
-
         class OwnId {
         public:
             OwnId() = default;
+            void data(const std::vector<uint8_t> & actorid, uint64_t group_address);
             void data(char* data, size_t size);
-            std::vector<char>& data();
+            const std::vector<char>& data() const;
             std::string strdata() const;
+            bool operator==(const OwnId& other) const {
+                return strdata() == other.strdata();
+            }
+            bool operator!=(const OwnId& other) const {
+                return strdata() != other.strdata();
+            }
             ~OwnId() = default;
         private:
             std::vector<char> data_;
@@ -35,7 +39,7 @@ namespace riaps {
         struct OwnIdComparator {
             bool operator()(const OwnId& obj1, const OwnId& obj2) const
             {
-                if (obj1.strdata() == obj2.strdata())
+                if (obj1 == obj2)
                     return true;
                 return false;
             }

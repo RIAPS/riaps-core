@@ -10,13 +10,17 @@
 #include <componentmodel/r_configuration.h>
 #include <componentmodel/ports/r_pubportgroup.h>
 #include <componentmodel/ports/r_subportgroup.h>
+#include <componentmodel/ports/r_queryport.h>
+#include <componentmodel/r_messagebuilder.h>
+#include <groups/r_groupid.h>
 #include <groups/r_grouplead.h>
+#include <groups/r_ownid.h>
 #include <messaging/disco.capnp.h>
 #include <messaging/distcoord.capnp.h>
 #include <utils/r_timeout.h>
+#include <utils/r_utils.h>
 
 #include <spdlog_setup/conf.h>
-#include <msgpack.hpp>
 #include <czmq.h>
 
 #include <string>
@@ -25,10 +29,15 @@
 #include <random>
 #include <chrono>
 #include <set>
+#include <unordered_map>
 
 namespace spd = spdlog;
 
 namespace riaps {
+
+//    namespace ports {
+//        class GroupPublisherPort;
+//    }
 
     /**
      * RIAPS Distributed Coordination API
@@ -36,50 +45,6 @@ namespace riaps {
     namespace groups {
 
         class GroupLead;
-
-        /**
-         * Uniquely identifies a group instance.
-         */
-        struct GroupId {
-            /**
-             * The group type, comes from the model file.
-             */
-            std::string group_type_id;
-
-            /**
-             * Name of the group, can be dynamic.
-             */
-            std::string group_name;
-
-            bool operator<(const GroupId& other) const;
-            bool operator==(const GroupId& other) const;
-
-            ///\cond
-            MSGPACK_DEFINE(group_name, group_type_id);
-            ///\endcond
-        };
-
-        /**
-         * Description of one port in the group.
-         */
-        struct GroupService {
-            std::string message_type;
-            // std::string address;
-            std::string host;
-            int port;
-            MSGPACK_DEFINE(message_type, host, port);
-        };
-
-        /**
-         * All the details of the group in one structure.
-         */
-        struct GroupDetails {
-            std::string               app_name;
-            std::string               component_id;
-            GroupId                   group_id;
-            std::vector<GroupService> group_services;
-            MSGPACK_DEFINE(app_name, component_id, group_id, group_services);
-        };
 
         /**
          * Encapsulates a RIAPS Group.
@@ -114,11 +79,7 @@ namespace riaps {
             bool SendInternalMessage(capnp::MallocMessageBuilder& message);
 
             //ports::GroupSubscriberPort* FetchNextMessage(std::shared_ptr<capnp::FlatArrayMessageReader>& messageReader);
-            void FetchNextMessage(bool has_inmsg);
-
-            bool SendPingWithPeriod();
-            bool SendPing();
-            bool SendPong();
+            void FetchNextMessage(zsock_t* in_socket);
 
             bool SendMessageToLeader(capnp::MallocMessageBuilder& message);
             bool SendLeaderMessage(capnp::MallocMessageBuilder& message);
@@ -142,34 +103,27 @@ namespace riaps {
              */
             uint16_t GetMemberCount();
 
-            std::string leader_id() const;
+            std::optional<OwnId> leader_id() const;
 
-            const riaps::ports::GroupPublisherPort* group_pubport();
-            const riaps::ports::GroupSubscriberPort* group_subport();
+            std::shared_ptr<riaps::ports::GroupPublisherPort> group_pubport();
+            std::shared_ptr<riaps::ports::GroupSubscriberPort> group_subport();
+            std::shared_ptr<riaps::ports::QueryPort> group_qryport();
+            std::shared_ptr<riaps::ports::AnswerPort> group_ansport();
 
-            ~Group();
-        private:
             /**
-             * Delete records from the _knownNodes cache, it the Timer is exceeded
-             * @return Number of deleted records.
+             * Adjusted to python
              */
-            uint32_t DeleteTimeoutNodes();
-            bool SendHeartBeat(riaps::distrcoord::HeartBeatType type);
+            double GetPythonNow();
+            double GetPythonTime(timespec& now);
+            void Heartbeat();
 
-            GroupId     group_id_;
-            const GroupConf* group_conf_;
+            riaps::utils::Timeout<std::chrono::milliseconds> last_heartbeat_;
 
-            /**
-             * Always store the communication ports in shart_ptr
-             */
-            std::shared_ptr<riaps::ports::GroupPublisherPort>    group_pubport_;
-            std::shared_ptr<riaps::ports::GroupSubscriberPort>   group_subport_;
+            OwnId own_id_;
 
-            //std::map<const zsock_t*, std::shared_ptr<riaps::ports::PortBase>> group_ports_;
+            const groups::GroupId& group_id() const;
 
             /**
-             *
-             *
              * List of ComponentID-s where the current group got PING/PONG messages from. Timestamped.
              *
              * @note The parent component is excluded from the list.
@@ -177,14 +131,39 @@ namespace riaps {
              *  key   - component id (uuid, generated runtime, when the component starts
              *  value - timestamp of the last message from the given component
              */
-            std::unordered_map<std::string, riaps::utils::Timeout<std::chrono::milliseconds>> known_nodes_;
+            std::unordered_map<OwnId, riaps::utils::Timeout<std::chrono::milliseconds>,
+                               OwnIdHasher,
+                               OwnIdComparator> known_nodes_;
 
-            //zpoller_t* group_poller_;
+            template<class T>
+            riaps::ports::PortError Send(MessageBuilder<T>& message);
+
+            template<class T>
+            std::tuple<MessageReader<T>, riaps::ports::PortError> Recv();
+
+            /**
+             * End adjusted
+             */
+            ~Group();
+        private:
+            /**
+             * Delete records from the _knownNodes cache, it the Timer is exceeded
+             * @return Number of deleted records.
+             */
+            uint32_t DeleteTimeoutNodes();
+
+            GroupId     group_id_;
+            const GroupConf* group_conf_;
+
+            /**
+             * Always store the communication ports in shared_ptr
+             */
+            std::shared_ptr<riaps::ports::GroupPublisherPort>    group_pubport_;
+            std::shared_ptr<riaps::ports::GroupSubscriberPort>   group_subport_;
+            std::shared_ptr<riaps::ports::QueryPort>             group_qryport_;
+            std::shared_ptr<riaps::ports::AnswerPort>            group_ansport_;
 
             std::shared_ptr<spd::logger> logger_;
-
-            riaps::utils::Timeout<std::chrono::milliseconds> ping_timeout_;
-
 
             std::random_device random_device_;
             std::mt19937         random_generator_;
@@ -193,8 +172,27 @@ namespace riaps {
             ComponentBase* parent_component_;
 
             std::unique_ptr<riaps::groups::GroupLead> group_leader_;
+
+            void ProcessOnSub();
         };
 
+        template<class T>
+        std::tuple<MessageReader<T>, riaps::ports::PortError> Group::Recv() {
+            auto [bytes, error] = group_subport_->Recv();
+            MessageReader<T> reader(bytes);
+            return std::make_tuple(reader, error);
+        };
+
+        template<class T>
+        riaps::ports::PortError Group::Send(MessageBuilder<T> &message) {
+            capnp::MallocMessageBuilder& builder = message.capnp_builder();
+            zframe_t* message_frame;
+            message_frame << builder;
+            zmsg_t* group_message = zmsg_new();
+            zmsg_addstr(group_message, GROUP_MSG);
+            zmsg_add(group_message, message_frame);
+            return this->group_pubport_->Send(&group_message);
+        }
     }
 }
 

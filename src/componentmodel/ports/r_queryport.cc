@@ -59,7 +59,7 @@ namespace riaps {
             }
 
             connected_ = true;
-            logger()->info("Queryport connected to: {}", ans_endpoint);
+            logger()->debug("Queryport connected to: {}", ans_endpoint);
             return true;
         }
 
@@ -115,6 +115,8 @@ namespace riaps {
         QueryPort::~QueryPort() noexcept {
             zuuid_destroy(&socketid_);
         }
+
+
 
 
     }

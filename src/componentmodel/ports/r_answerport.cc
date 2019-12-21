@@ -20,7 +20,8 @@ namespace riaps{
             }
         }
 
-        void AnswerPort::Init() {
+        // TODO: Move it to PortBase, refactor the others.
+        void AnswerPort::InitSecurity() {
             // The port is NOT local AND encrypted
             if (has_security()) {
                 if (port_certificate_ != nullptr) {
@@ -31,7 +32,9 @@ namespace riaps{
                     return;
                 }
             }
+        }
 
+        void AnswerPort::Init() {
             string end_point = fmt::format("tcp://{}:!", host_);
             port_ = zsock_bind(port_socket_, "%s", end_point.c_str());
 
@@ -40,7 +43,9 @@ namespace riaps{
             }
 
             logger()->info("Answerport is created on: {}:{}", host_, port_);
+        }
 
+        void AnswerPort::RegisterPort() {
             if (!Disco::RegisterService(
                     parent_component()->actor()->application_name(),
                     parent_component()->actor()->actor_name(),
@@ -86,7 +91,6 @@ namespace riaps{
         AnswerPort::~AnswerPort() noexcept {
 
         }
-
     }
 }
 

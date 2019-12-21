@@ -32,7 +32,7 @@ include_directories(include)
 #        COMMENT "=== Generating capnp ==="
 #)
 
-pybind11_add_module(globalestimator src/GlobalEstimator.cc
+add_library(globalestimator src/GlobalEstimator.cc
         src/base/GlobalEstimatorBase.cc
         include/messages/distributedestimator.capnp.c++
         include/base/GlobalEstimatorBase.h
@@ -41,7 +41,7 @@ pybind11_add_module(globalestimator src/GlobalEstimator.cc
 target_link_libraries(globalestimator PRIVATE czmq riaps dl capnp kj)
 set_target_properties(globalestimator PROPERTIES PREFIX lib SUFFIX .so)
 
-pybind11_add_module(localestimator src/LocalEstimator.cc
+add_library(localestimator src/LocalEstimator.cc
         src/base/LocalEstimatorBase.cc
         include/messages/distributedestimator.capnp.c++
         include/base/LocalEstimatorBase.h
@@ -50,7 +50,7 @@ pybind11_add_module(localestimator src/LocalEstimator.cc
 target_link_libraries(localestimator PRIVATE czmq riaps dl capnp kj)
 set_target_properties(localestimator PROPERTIES PREFIX lib SUFFIX .so)
 
-pybind11_add_module(sensor src/Sensor.cc
+add_library(sensor src/Sensor.cc
         src/base/SensorBase.cc
         include/messages/distributedestimator.capnp.c++
         include/base/SensorBase.h

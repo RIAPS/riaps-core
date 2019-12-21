@@ -15,12 +15,27 @@ namespace riaps {
             }
         }
 
-        std::vector<char> & OwnId::data() {
+        void OwnId::data(const vector<uint8_t> & actorid, uint64_t group_address) {
+            char ownid[16];
+            for (int i = 0; i<8; i++) {
+                ownid[i] = actorid[i];
+            }
+
+            for (int i = 8; i<16; i++) {
+                ownid[i] = group_address%255;
+                group_address = group_address/255;
+            }
+
+            data(ownid, 16);
+        }
+
+        const std::vector<char> & OwnId::data() const {
             return data_;
         }
 
         std::string OwnId::strdata() const {
             return strdata_;
         }
+
     }
 }

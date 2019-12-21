@@ -3,8 +3,6 @@
 
 #include <componentmodel/r_componentbase.h>
 #include <componentmodel/r_configuration.h>
-#include <componentmodel/ports/r_senderport.h>
-#include <componentmodel/r_riapsmessage.h>
 
 #include <czmq.h>
 #include <zuuid.h>
@@ -16,6 +14,11 @@ namespace riaps {
     class ComponentBase;
 
     namespace ports {
+        class QueryPort;
+        class GroupQueryPort;
+
+
+
         class QueryPort : public PortBase {
         public:
 
@@ -24,7 +27,7 @@ namespace riaps {
              * @param component The parent component.
              */
             QueryPort(const ComponentPortQry &config, const ComponentBase *component);
-            virtual void Init();
+            void Init();
 
             /**
              * Connects to a server.
@@ -34,25 +37,9 @@ namespace riaps {
             bool Connect(const std::string& ans_endpoint);
             void Disconnect(const std::string& ans_endpoint);
 
-            template<class R, class T>
-            bool RecvQuery(std::shared_ptr<riaps::RiapsMessage<R, T>>& message,
-                           std::shared_ptr<riaps::MessageParams>& params){
-                /**
-                 * |RequestId|Message|Timestamp|
-                */
-
-                char* cRequestId = nullptr;
-                zframe_t *bodyFrame = nullptr, *timestampFrame = nullptr;
-                if (zsock_recv(port_socket_, "sff", &cRequestId, &bodyFrame, &timestampFrame)==0){
-                    std::string socketId = zuuid_str(socketid_);
-                    params.reset(new riaps::MessageParams(socketId, &cRequestId, &timestampFrame));
-                    message.reset(new RiapsMessage<R, T>(&bodyFrame));
-                } else {
-                    logger()->error("Wrong incoming message format on port: {}", port_name());
-                }
-
-                return false;
-            };
+//            template<class R, class T>
+//            bool RecvQuery(std::shared_ptr<riaps::RiapsMessage<R, T>>& message,
+//                           std::shared_ptr<riaps::MessageParams>& params);
 
             /**
              * Converts the passed capnp message to bytes and sends the bytearray.
@@ -84,6 +71,26 @@ namespace riaps {
             capnp::FlatArrayMessageReader capnp_reader_;
             zuuid_t* socketid_;
         };
+
+//        template<class R, class T>
+//        bool QueryPort::RecvQuery(std::shared_ptr<riaps::RiapsMessage<R, T>>& message,
+//                       std::shared_ptr<riaps::MessageParams>& params){
+//            /**
+//             * |RequestId|Message|Timestamp|
+//            */
+//
+//            char* cRequestId = nullptr;
+//            zframe_t *bodyFrame = nullptr, *timestampFrame = nullptr;
+//            if (zsock_recv(port_socket_, "sff", &cRequestId, &bodyFrame, &timestampFrame)==0){
+//                std::string socketId = zuuid_str(socketid_);
+//                params.reset(new riaps::MessageParams(socketId, &cRequestId, &timestampFrame));
+//                message.reset(new RiapsMessage<R, T>(&bodyFrame));
+//            } else {
+//                logger()->error("Wrong incoming message format on port: {}", port_name());
+//            }
+//
+//            return false;
+//        };
     }
 }
 
