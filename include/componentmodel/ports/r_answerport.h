@@ -59,6 +59,9 @@ namespace riaps {
              */
             PortError SendAnswer(capnp::MallocMessageBuilder& builder, std::shared_ptr<MessageParams> params);
 
+            std::string host() const;
+            int port() const;
+
             ~AnswerPort() noexcept ;
         protected:
             std::shared_ptr<zactor_t> auth_;

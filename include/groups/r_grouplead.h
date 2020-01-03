@@ -70,9 +70,11 @@ namespace riaps{
              * Incoming message arrived, lets update the state
              * @param internalMessage
              */
-            void Update(const char* command, zsock_t* socket);
+            //void Update(const char* command, zsock_t* socket);
             void UpdateReqVote(const riaps::groups::data::ReqVote& reqvote);
+            void UpdateRspVote(const riaps::groups::data::RspVote& rspvote);
             void UpdateAuthority(const riaps::groups::data::Authority& authority);
+            void SendAuthority();
             ~GroupLead();
 
             struct ProposeData {
@@ -108,7 +110,6 @@ namespace riaps{
             uint32_t election_term_;
             uint32_t number_of_nodes_in_vote_;
 
-            std::string answer_address_;
             std::string leader_address_;
             std::shared_ptr<riaps::ports::QueryPort>  group_qryport_;
             std::shared_ptr<riaps::ports::AnswerPort> group_ansport_;
@@ -117,7 +118,6 @@ namespace riaps{
             std::unordered_map<OwnId, steady_clock::time_point, OwnIdHasher, OwnIdComparator> votes_;
 
             riaps::groups::Group* group_;
-
 
             // Send functions
             void SendRequestForVote();

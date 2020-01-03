@@ -553,9 +553,8 @@ namespace riaps{
         }
 
         void Group::Heartbeat() {
-
             if (last_heartbeat_.IsTimeout()) {
-                logger_->debug("{}", __FUNCTION__);
+                //logger_->debug("{}", __FUNCTION__);
                 zmsg_t* msg_heartbeat = zmsg_new();
                 zmsg_addstr(msg_heartbeat, HEARTBEAT);
                 zmsg_addmem(msg_heartbeat, own_id_.data().data(), 16);
@@ -593,7 +592,17 @@ namespace riaps{
                     group_leader_->UpdateReqVote(reqvote);
                 zframe_destroy(&req_frame);
             } else if (zframe_streq (first_frame, RSPVOTE)) {
-                //group_leader_->Update(RSPVOTE, sub_socket);
+                auto rsp_frame = zframe_recv(sub_socket);
+                auto rsp_data  = zframe_data(rsp_frame);
+                gr::RspVote rspvote((char*)rsp_data);
+
+                logger_->debug("RSPVOTE term: {} vote for: {}", rspvote.term(), rspvote.vote_for().strdata());
+
+                if (group_leader_ == nullptr)
+                    logger_->error("Group leader is NULL");
+                else
+                    group_leader_->UpdateRspVote(rspvote);
+                zframe_destroy(&rsp_frame);
             } else if (zframe_streq (first_frame, AUTHORITY)) {
                 auto auth_frame = zframe_recv(sub_socket);
                 auto auth_data  = zframe_data(auth_frame);

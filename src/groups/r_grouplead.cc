@@ -11,6 +11,7 @@ using namespace riaps::groups;
 using namespace std::chrono;
 using namespace std;
 
+namespace gr = riaps::groups::data;
 
 GroupLead::GroupLead(Group* group, std::unordered_map<OwnId, riaps::utils::Timeout<std::chrono::milliseconds>,
         OwnIdHasher,
@@ -56,6 +57,7 @@ void GroupLead::Update() {
      * If the node is FOLLOWER and the wait time is not expired, then do nothing
      */
     if (current_state_ == GroupLead::NodeState::FOLLOWER && !election_timeout_.IsTimeout()){
+        logger_->debug("FOLLOWER, !timeout");
         return;
     }
 
@@ -64,13 +66,13 @@ void GroupLead::Update() {
      * FOLLOWER --> CANDIDATE
      */
     else if (current_state_ == GroupLead::NodeState::FOLLOWER && election_timeout_.IsTimeout()) {
+
         ChangeLeader(nullopt);
         /**
          * Step into the next state and send REQUEST_VOTE message to everybody in the group
          * The number of nodes are saved since the MAJORITY of votes is needed
          */
         current_state_ = GroupLead::NodeState::CANDIDATE;
-
 
         /**
          * Note: +1 is added becuase the current node is not included in the GroupMemberCount();
@@ -91,12 +93,14 @@ void GroupLead::Update() {
 
         // TODO: What to do when only one node is in the group??? This is not trivial. RAFT doesn't work with one node.
         // But RIAPS should?
+        logger_->debug("FOLLOWER, timeout => Candidate (id: {}, term: {})", GetOwnId().strdata(), election_term_);
         SendRequestForVote();
 
         /**
          * Waiting for responses until the MAX election timeout.
          */
         election_timeout_.Reset(std::chrono::milliseconds(MAX_ELECTION_TIMEOUT));
+
     }
 
     /**
@@ -104,8 +108,9 @@ void GroupLead::Update() {
      * It means that nobody responded to the vote request.
      */
     else if (current_state_ == GroupLead::CANDIDATE && !election_timeout_.IsTimeout()){
-
+        logger_->debug("CANDIDATE, !timeout");
     } else if (current_state_ == GroupLead::CANDIDATE && election_timeout_.IsTimeout()){
+        logger_->debug("CANDIDATE, timeout => FOLLOWER");
         // Vote is still in progress, but the timeout has expired.
         // Be a follower again, maybe better luck next time.
 
@@ -121,7 +126,7 @@ void GroupLead::Update() {
      * no reason to implement the reply)
      */
     else if (current_state_ == GroupLead::LEADER && appentry_timeout_.IsTimeout()) {
-        //SendAppendEntry();
+        SendAuthority();
         appentry_timeout_.Reset();
         leaderid_ = GetOwnId();
     }
@@ -165,106 +170,102 @@ void GroupLead::UpdateReqVote(const riaps::groups::data::ReqVote & reqvote) {
     else if (current_state_ == GroupLead::NodeState::CANDIDATE || current_state_ == GroupLead::NodeState::LEADER){
         logger_->debug("{} {}", __FUNCTION__, "Candidate || Leader");
         // This is tricky. Looks like somebody else also started a vote.
-        // Selfish, behavior but understandable the candidate doesn't vote for another candidate.
-        // If higher term arrived switch state back to follower
-        // TODO: And vote?
         if (reqvote.term() > election_term_){
             current_state_ = GroupLead::NodeState::FOLLOWER;
             election_term_ = reqvote.term();
-
-            if (current_state_ == GroupLead::NodeState::LEADER){
-                ChangeLeader(nullopt);
-            }
-
             election_timeout_.Reset(GenerateElectionTimeo());
-            // TODO: ->> UNCOMMENT SendVote(src_compid);
+            SendVote(election_term_, reqvote.ownid(), true);
+            logger_->debug("Vote: YES");
+        } else {
+            SendVote(election_term_, reqvote.ownid(), false);
+            logger_->debug("Vote: NO");
         }
     }
 }
 
-void GroupLead::Update(const char* command, zsock_t* socket) {
-    auto now = steady_clock::now();
-
-    //else if (internalMessage.hasRequestForVoteReq() && _currentState == GroupLead::NodeState::LEADER){
-        /**
-         * Do nothing. This guy is already a leader.
-         */
-    //}
-
-    /**
-     * RequestForVote response arrived
-     */
-//    if (streq(command, RSPVOTE) && current_state_ == CANDIDATE) {
-//        // term; candId; bool; ownId
-//        auto term_frame    = zframe_recv(socket);
-//        auto candid_frame  = zframe_recv(socket);
-//        auto bool_frame    = zframe_recv(socket);
-//        auto ownid_frame   = zframe_recv(socket);
+//void GroupLead::Update(const char* command, zsock_t* socket) {
+//    auto now = steady_clock::now();
 //
-//        auto elect_term = atoi((char*)zframe_data(term_frame));
-//        auto voted_to    = std::string((char*)zframe_data(candid_frame));
-//        auto vote_from  = std::string((char*)zframe_data(ownid_frame));
-//
-////        std::string votedTo  = theVote.getVoteForId();
-////        std::string voteFrom = theVote.getSourceComponentId();
-////        auto        elecTerm = theVote.getElectionTerm();
-//        //(*known_nodes_)[voteFrom] = zclock_mono();
-//
+//    //else if (internalMessage.hasRequestForVoteReq() && _currentState == GroupLead::NodeState::LEADER){
 //        /**
-//         * Accept the vote only if the vote is for the current term and the From is not the current node
+//         * Do nothing. This guy is already a leader.
 //         */
-//        if (GetOwnId() != vote_from && elect_term == election_term_ && voted_to == GetOwnId()) {
-//            votes_[vote_from] = steady_clock::now();
+//    //}
 //
-//            bool has_majority = false;
-//            if (number_of_nodes_in_vote_ % 2 == 0){
-//                uint32_t majority = (number_of_nodes_in_vote_ / 2) + 1;
-//                auto number_of_votes = GetNumberOfVotes();
-//                if (majority <= number_of_votes)
-//                    has_majority = true;
-//                else
-//                    logger_->debug("No majority ({}): {}/{}", majority, number_of_nodes_in_vote_, number_of_votes);
-//            } else if (number_of_nodes_in_vote_ % 2 == 1){
-//                uint32_t majority = ceil(number_of_nodes_in_vote_ / 2.0);
-//                auto number_of_votes = GetNumberOfVotes();
-//                if (majority <= number_of_votes)
-//                    has_majority = true;
-//                else
-//                    logger_->debug("No majority ({}): {}/{}", majority, number_of_nodes_in_vote_, number_of_votes);
-//            }
-//
-//            /**
-//             * MAJORITY ACHIEVED, send append entry, switch state
-//             */
-//            if (has_majority){
-//                current_state_ = GroupLead::LEADER;
-//                SendAppendEntry();
-//                ChangeLeader(GetOwnId());
-//            }
-//        }
-//    }
-//    else if (internalMessage.hasAppendEntry() && current_state_ == GroupLead::FOLLOWER){
-//        auto msgAppendEntry = internalMessage.getAppendEntry();
-//        //(*known_nodes_)[msgAppendEntry.getSourceComponentId().cStr()] = zclock_mono();
-//        //m_logger->debug("Append entry from: {0}", msgAppendEntry.getSourceComponentId().cStr());
-//        m_electionTimeout.Reset(GenerateElectionTimeo());
-//        election_term_ = msgAppendEntry.getElectionTerm();
-//        ChangeLeader(msgAppendEntry.getSourceComponentId().cStr());
-//    } else if (internalMessage.hasAppendEntry() && current_state_ == GroupLead::LEADER){
-//        /**
-//         * Something went wrong, cannot be two leader, the leader with less election term will be a follower
-//         */
-//        auto msgAppendEntry = internalMessage.getAppendEntry();
-//        auto electTerm = msgAppendEntry.getElectionTerm();
-//
-//        if (electTerm > election_term_){
-//            current_state_ = GroupLead::NodeState::FOLLOWER;
-//            election_term_ = electTerm;
-//            ChangeLeader(msgAppendEntry.getSourceComponentId());
-//            m_electionTimeout.Reset(GenerateElectionTimeo());
-//        }
-//    }
-}
+//    /**
+//     * RequestForVote response arrived
+//     */
+////    if (streq(command, RSPVOTE) && current_state_ == CANDIDATE) {
+////        // term; candId; bool; ownId
+////        auto term_frame    = zframe_recv(socket);
+////        auto candid_frame  = zframe_recv(socket);
+////        auto bool_frame    = zframe_recv(socket);
+////        auto ownid_frame   = zframe_recv(socket);
+////
+////        auto elect_term = atoi((char*)zframe_data(term_frame));
+////        auto voted_to    = std::string((char*)zframe_data(candid_frame));
+////        auto vote_from  = std::string((char*)zframe_data(ownid_frame));
+////
+//////        std::string votedTo  = theVote.getVoteForId();
+//////        std::string voteFrom = theVote.getSourceComponentId();
+//////        auto        elecTerm = theVote.getElectionTerm();
+////        //(*known_nodes_)[voteFrom] = zclock_mono();
+////
+////        /**
+////         * Accept the vote only if the vote is for the current term and the From is not the current node
+////         */
+////        if (GetOwnId() != vote_from && elect_term == election_term_ && voted_to == GetOwnId()) {
+////            votes_[vote_from] = steady_clock::now();
+////
+////            bool has_majority = false;
+////            if (number_of_nodes_in_vote_ % 2 == 0){
+////                uint32_t majority = (number_of_nodes_in_vote_ / 2) + 1;
+////                auto number_of_votes = GetNumberOfVotes();
+////                if (majority <= number_of_votes)
+////                    has_majority = true;
+////                else
+////                    logger_->debug("No majority ({}): {}/{}", majority, number_of_nodes_in_vote_, number_of_votes);
+////            } else if (number_of_nodes_in_vote_ % 2 == 1){
+////                uint32_t majority = ceil(number_of_nodes_in_vote_ / 2.0);
+////                auto number_of_votes = GetNumberOfVotes();
+////                if (majority <= number_of_votes)
+////                    has_majority = true;
+////                else
+////                    logger_->debug("No majority ({}): {}/{}", majority, number_of_nodes_in_vote_, number_of_votes);
+////            }
+////
+////            /**
+////             * MAJORITY ACHIEVED, send append entry, switch state
+////             */
+////            if (has_majority){
+////                current_state_ = GroupLead::LEADER;
+////                SendAppendEntry();
+////                ChangeLeader(GetOwnId());
+////            }
+////        }
+////    }
+////    else if (internalMessage.hasAppendEntry() && current_state_ == GroupLead::FOLLOWER){
+////        auto msgAppendEntry = internalMessage.getAppendEntry();
+////        //(*known_nodes_)[msgAppendEntry.getSourceComponentId().cStr()] = zclock_mono();
+////        //m_logger->debug("Append entry from: {0}", msgAppendEntry.getSourceComponentId().cStr());
+////        m_electionTimeout.Reset(GenerateElectionTimeo());
+////        election_term_ = msgAppendEntry.getElectionTerm();
+////        ChangeLeader(msgAppendEntry.getSourceComponentId().cStr());
+////    } else if (internalMessage.hasAppendEntry() && current_state_ == GroupLead::LEADER){
+////        /**
+////         * Something went wrong, cannot be two leader, the leader with less election term will be a follower
+////         */
+////        auto msgAppendEntry = internalMessage.getAppendEntry();
+////        auto electTerm = msgAppendEntry.getElectionTerm();
+////
+////        if (electTerm > election_term_){
+////            current_state_ = GroupLead::NodeState::FOLLOWER;
+////            election_term_ = electTerm;
+////            ChangeLeader(msgAppendEntry.getSourceComponentId());
+////            m_electionTimeout.Reset(GenerateElectionTimeo());
+////        }
+////    }
+//}
 
 // TODO: check timestamps
 uint32_t GroupLead::GetNumberOfVotes() {
@@ -286,21 +287,23 @@ void GroupLead::SetOnLeaderChanged(std::function<void(const std::string &)> hand
 void GroupLead::SendRequestForVote() {
     zmsg_t* rfv_message = zmsg_new();
     zmsg_addstr(rfv_message, REQVOTE);
-    vector<uint8_t> rsp_bytes(20, 0);
-    uint32_t term = election_term_;
-    for (int i = 3; i>=0; i--) {
-        rsp_bytes[i] = term%255;
-        term = term/255;
-    }
-    for (int i=4;i<20;i++){
-        rsp_bytes[i] = group_->own_id_.data()[i-4];
-    }
+    //vector<uint8_t> rsp_bytes(20, 0);
+//    uint32_t term = election_term_;
+//    for (int i = 3; i>=0; i--) {
+//        rsp_bytes[i] = term%255;
+//        term = term/255;
+//    }
+//    for (int i=4;i<20;i++){
+//        rsp_bytes[i] = group_->own_id_.data()[i-4];
+//    }
+//
+//    if (logger_->level() == spdlog::level::debug) {
+//        logger_->debug("Request for vote: {}", group_->own_id_.strdata());
+//    }
+    riaps::groups::data::ReqVote reqvote(group_->own_id_, election_term_);
+    vector<uint8_t> reqbytes = reqvote.to_bytes();
 
-    if (logger_->level() == spdlog::level::debug) {
-        logger_->debug("Request for vote: {}", group_->own_id_.strdata());
-    }
-
-    zmsg_addmem(rfv_message, rsp_bytes.data(), 20);
+    zmsg_addmem(rfv_message, reqbytes.data(), reqbytes.size());
     group_->SendMessage(&rfv_message);
 //    capnp::MallocMessageBuilder requestForVoteBuilder;
 //    auto msgInternals  = requestForVoteBuilder.initRoot<riaps::distrcoord::GroupInternals>();
@@ -310,6 +313,15 @@ void GroupLead::SendRequestForVote() {
 //    msgReqForVote.setElectionTerm(election_term_);
 //
 //    group_->SendInternalMessage(requestForVoteBuilder);
+}
+
+void GroupLead::SendAuthority() {
+    zmsg_t* auth_message = zmsg_new();
+    zmsg_addstr(auth_message, RSPVOTE);
+    gr::Authority authority(election_term_, group_->own_id_, group_ansport_->host(), group_ansport_->port());
+    auto auth_bytes = authority.to_bytes();
+    zmsg_addmem(auth_message, auth_bytes.data(), auth_bytes.size());
+    group_->SendMessage(&auth_message);
 }
 
 void GroupLead::OnActionProposeFromClient(riaps::distrcoord::Consensus::ProposeToLeader::Reader &headerMessage,
@@ -387,7 +399,7 @@ void GroupLead::UpdateAuthority(const riaps::groups::data::Authority &authority)
             leader_address_ = "";
             leaderid_ = nullopt;
         }
-        else if (!leaderid_ || leaderid_ && leaderid_ != authority.ldrid()) {
+        else if (!leaderid_ || (leaderid_ && leaderid_ != authority.ldrid())) {
             if (leaderid_) {
                 group_qryport_->Disconnect(leader_address_);
                 logger_->debug("New leader: {} -> {}", leaderid_->strdata(), authority.ldrid().strdata());
@@ -547,19 +559,21 @@ void GroupLead::SendVote(uint32_t term, const OwnId &vote_for, bool vote) {
 
     zmsg_addstr(vote_message, RSPVOTE);
     vector<uint8_t> rsp_bytes(40, 0);
-    for (int i = 3; i>=0; i--) {
-        rsp_bytes[i] = term%255;
-        term = term/255;
-    }
+//    for (int i = 3; i>=0; i--) {
+//        rsp_bytes[i] = term%255;
+//        term = term/255;
+//    }
+//
+//    for (int i=4;i<20;i++){
+//        rsp_bytes[i] = vote_for.data()[i-4];
+//    }
+//
+//    rsp_bytes[23] = vote;
+//    for (int i=24;i<40;i++) {
+//        rsp_bytes[i] = group_->own_id_.data()[i-24];
+//    }
 
-    for (int i=4;i<20;i++){
-        rsp_bytes[i] = vote_for.data()[i-4];
-    }
-
-    rsp_bytes[23] = vote;
-    for (int i=24;i<40;i++) {
-        rsp_bytes[i] = group_->own_id_.data()[i-24];
-    }
+    gr::RspVote(term, vote_for, group_->own_id_, vote);
 
     if (logger_->level() == spdlog::level::debug) {
         string s = "";
