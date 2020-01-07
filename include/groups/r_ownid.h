@@ -9,11 +9,15 @@
 #include <string>
 #include <functional>
 
+#include <spdlog/logger.h>
+
 namespace riaps {
     namespace groups {
         class OwnId {
         public:
             OwnId() = default;
+            //OwnId(const OwnId& rhs);
+            //OwnId operator=(const OwnId& rhs);
             void data(const std::vector<uint8_t> & actorid, uint64_t group_address);
             void data(char* data, size_t size);
             const std::vector<char>& data() const;

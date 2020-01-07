@@ -18,9 +18,9 @@
 #include <set>
 #include <unordered_map>
 
-constexpr auto MIN_ELECTION_TIMEOUT = 150;
-constexpr auto MAX_ELECTION_TIMEOUT = 500;
-constexpr auto APPENDENTRY_TIMEOUT  = 75;
+//constexpr auto MIN_ELECTION_TIMEOUT = 150;
+//constexpr auto MAX_ELECTION_TIMEOUT = 500;
+//constexpr auto APPENDENTRY_TIMEOUT  = 75;
 
 using namespace std::chrono;
 using namespace riaps::utils;
@@ -121,7 +121,6 @@ namespace riaps{
 
             // Send functions
             void SendRequestForVote();
-            void SendAppendEntry();
             //void SendVote(const std::string& vote_for);
             void SendVote(uint32_t term, const OwnId &vote_for, bool vote);
             void Announce(const std::string& proposeId, riaps::distrcoord::Consensus::VoteResults result);

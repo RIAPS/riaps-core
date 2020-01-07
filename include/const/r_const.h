@@ -45,13 +45,13 @@ constexpr uint16_t GROUP_ELECTION_MIN     = 1500; // Minimum leader election tim
 constexpr uint16_t GROUP_ELECTION_MAX     = 2000; // Maximum leader election timeout
 constexpr uint16_t GROUP_PEERTIMEOUT      = 3000; // Peer is declared lost after this timeout
 constexpr uint16_t GROUP_CONSENSUSTIMEOUT = 1500; // Deadline for consensus vote
+constexpr uint16_t AUTHORITY_TIMEOUT      = 750;  // Leader heartbeat period
 
 // Message frames
 constexpr auto HEARTBEAT = "tic";
 constexpr auto REQVOTE   = "req"; //{ term ; ownId }
 constexpr auto RSPVOTE   = "vot"; //{ term; candId; bool; ownId }
 constexpr auto AUTHORITY = "ldr"; //{ term; ldrId; ldrHost; ldrPort }
-constexpr auto NOLEADER  = 0;
 
 constexpr auto GROUP_MSG = "msg";
 

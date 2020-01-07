@@ -5,7 +5,10 @@
 #ifndef RIAPS_CORE_R_GROUPDATA_H
 #define RIAPS_CORE_R_GROUPDATA_H
 
+#include <spdlog_setup/conf.h>
 #include "r_ownid.h"
+
+namespace spd = spdlog;
 
 namespace riaps {
     namespace groups {
@@ -33,7 +36,9 @@ namespace riaps {
                 std::vector<uint8_t> ultob(uint32_t number, size_t len) const;
                 void ultob(uint32_t number, size_t len, std::vector<uint8_t>& result, int start_idx) const;
 
-            private:
+                std::shared_ptr<spd::logger> logger_;
+
+            protected:
                 uint32_t term_;
             };
 

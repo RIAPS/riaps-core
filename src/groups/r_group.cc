@@ -282,6 +282,7 @@ namespace riaps{
         }
 
         bool Group::SendMessage(zmsg_t** message){
+            logger_->debug("{}", __FUNCTION__);
             group_pubport()->Send(message);
         }
 

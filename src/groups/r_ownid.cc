@@ -3,12 +3,27 @@
 //
 #include <groups/r_ownid.h>
 
-using namespace std;
 
+
+using namespace std;
+namespace spd = spdlog;
 namespace riaps {
     namespace groups {
+//        OwnId::OwnId(const riaps::groups::OwnId &rhs) {
+//            this->data_ = rhs.data_;
+//            this->strdata_ = rhs.strdata_;
+//        }
+//
+//        OwnId OwnId::operator=(const OwnId &rhs) {
+//            OwnId tmp;
+//            tmp.data_ = rhs.data_;
+//            tmp.strdata_ = rhs.strdata_;
+//            return tmp;
+//        }
+
         void OwnId::data(char* data, size_t size) {
-            data_.reserve(size);
+            //data_.reserve(size);
+            data_ = vector<char>(size, 0);
             for (int i=0; i<size; i++) {
                 data_[i] = data[i];
                 strdata_+=to_string(data_[i]);
@@ -29,7 +44,7 @@ namespace riaps {
             data(ownid, 16);
         }
 
-        const std::vector<char> & OwnId::data() const {
+        const std::vector<char>& OwnId::data() const {
             return data_;
         }
 
