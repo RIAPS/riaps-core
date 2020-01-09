@@ -26,11 +26,39 @@ namespace groupapp {
         void GroupieCpp::OnClock() {
             // riaps:keep_onclock:begin
             auto msg = RecvClock();
+
+            constexpr auto gr_type = "The Group";
+            constexpr auto gr_name = "g_1";
+
             component_logger()->info("{}", __FUNCTION__);
-            MessageBuilder<messages::Msg> builder;
-            builder->setValue("Kukucs");
+
             riaps::groups::GroupId id {"TheGroup", "g_1"};
-            this->getGroupById(id)->Send(builder);
+            auto group = this->getGroupById(id);
+
+
+            if (group) {
+                // Message to all members
+                MessageBuilder<messages::Msg> builder;
+                builder->setValue("Kukucs");
+//                if (group->Send(builder)) {
+//                    component_logger()->error("Couldn't send group message");
+//                }
+
+                // Message to leader
+                if (group->HasLeader()) {
+                    MessageBuilder<messages::Msg> builder_to_leader;
+                    builder_to_leader->setValue(fmt::format("to leader from {}", "Sanyi"));
+                    if (group->SendToLeader(builder_to_leader)) {
+                        component_logger()->error("Couldn't send message to leader");
+                    } else {
+                        component_logger()->info("Message to leader was sent");
+                    }
+                } else {
+                    component_logger()->warn("No leader yet.");
+                }
+            } else {
+                component_logger()->error("No group with id: {} {}", gr_type, gr_name);
+            }
             // riaps:keep_onclock:end
         }
 
@@ -40,6 +68,18 @@ namespace groupapp {
             auto [msg, error] = group->Recv<messages::Msg>();
             if (!error)
                 component_logger()->info(msg->getValue().cStr());
+            else
+                component_logger()->error(
+                        "Couldn't read groupmessage in group {}::{}",
+                        group->group_id().group_type_id,
+                        group->group_id().group_name);
+        }
+
+        void GroupieCpp::HandleMessageFromLeader(riaps::groups::Group *group) {
+            component_logger()->info("{}", __FUNCTION__);
+            auto [msg, error] = group->Recv<messages::Msg>();
+            if (!error)
+                component_logger()->info("{}", msg->getValue().cStr());
             else
                 component_logger()->error(
                         "Couldn't read groupmessage in group {}::{}",

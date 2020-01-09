@@ -15,6 +15,8 @@ namespace riaps {
                 : PortBase(PortTypes::Query,
                            (ComponentPortConfig*)(&config),
                            component),
+                  SenderPort(this),
+                  RecvPort(this),
                   capnp_reader_(capnp::FlatArrayMessageReader(nullptr)) {
             port_socket_ = zsock_new(ZMQ_DEALER);
             socketid_ = zuuid_new();
@@ -33,16 +35,16 @@ namespace riaps {
             const string host = (current_config->is_local) ? "127.0.0.1" : riaps::framework::Network::GetIPAddress();
 
             auto results =
-                    Disco::SubscribeToService(
-                            parent_component()->actor()->application_name(),
-                            parent_component()->component_config().component_name,
-                            parent_component()->actor()->actor_name(),
-                            host,
-                            riaps::discovery::Kind::QRY,
-                            (current_config->is_local ? riaps::discovery::Scope::LOCAL
-                                                      : riaps::discovery::Scope::GLOBAL),
-                            current_config->port_name, // Subscriber name
-                            current_config->message_type);
+                Disco::SubscribeToService(
+                        parent_component()->actor()->application_name(),
+                        parent_component()->component_config().component_name,
+                        parent_component()->actor()->actor_name(),
+                        host,
+                        riaps::discovery::Kind::QRY,
+                        (current_config->is_local ? riaps::discovery::Scope::LOCAL
+                                                  : riaps::discovery::Scope::GLOBAL),
+                        current_config->port_name, // Subscriber name
+                        current_config->message_type);
 
             for (auto result : results) {
                 string endpoint = fmt::format("tcp://{0}:{1}", result.host_name, result.port);
@@ -74,43 +76,43 @@ namespace riaps {
             return (ComponentPortQry*) config();
         }
 
-        PortError QueryPort::SendQuery(capnp::MallocMessageBuilder &message,std::string& requestId, bool addTimestamp) const {
-//            if (port_socket_ == nullptr || !m_isConnected){
-//                return false;
+//        PortError QueryPort::SendQuery(capnp::MallocMessageBuilder &message, std::string& requestId, bool addTimestamp) const {
+////            if (port_socket_ == nullptr || !m_isConnected){
+////                return false;
+////            }
+//
+//            zframe_t* userFrame;
+//            userFrame << message;
+//
+//            zframe_t* tsFrame = nullptr;
+//            if (addTimestamp){
+//                int64_t ztimeStamp = zclock_time();
+//                tsFrame = zframe_new(&ztimeStamp, sizeof(ztimeStamp));
+//            } else{
+//                tsFrame = zframe_new_empty();
 //            }
-
-            zframe_t* userFrame;
-            userFrame << message;
-
-            zframe_t* tsFrame = nullptr;
-            if (addTimestamp){
-                int64_t ztimeStamp = zclock_time();
-                tsFrame = zframe_new(&ztimeStamp, sizeof(ztimeStamp));
-            } else{
-                tsFrame = zframe_new_empty();
-            }
-            // Generate uniqueId
-            std::string msgId;
-            {
-                auto id = zuuid_new();
-                msgId.assign(zuuid_str(id));
-                zuuid_destroy(&id);
-            }
-
-            int rc = zsock_send(const_cast<zsock_t*>(port_socket()),
-                                "sff",
-                                msgId.c_str() ,
-                                userFrame,
-                                tsFrame
-                                );
-
-            zframe_destroy(&userFrame);
-            zframe_destroy(&tsFrame);
-            if (rc == 0) {
-                requestId = msgId;
-            }
-            return PortError(rc);
-        }
+//            // Generate uniqueId
+//            std::string msgId;
+//            {
+//                auto id = zuuid_new();
+//                msgId.assign(zuuid_str(id));
+//                zuuid_destroy(&id);
+//            }
+//
+//            int rc = zsock_send(const_cast<zsock_t*>(port_socket()),
+//                                "sff",
+//                                msgId.c_str() ,
+//                                userFrame,
+//                                tsFrame
+//                                );
+//
+//            zframe_destroy(&userFrame);
+//            zframe_destroy(&tsFrame);
+//            if (rc == 0) {
+//                requestId = msgId;
+//            }
+//            return PortError(rc);
+//        }
 
         QueryPort::~QueryPort() noexcept {
             zuuid_destroy(&socketid_);

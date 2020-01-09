@@ -67,6 +67,7 @@ namespace riaps {
              * @return true if the ports were succesfully created and registered False otherwise.
              */
             bool InitGroup();
+            bool HasLeader();
 
             /// OBSOLOTE
             //void ConnectToNewServices(riaps::discovery::GroupUpdate::Reader& msgGroupUpdate);
@@ -81,8 +82,11 @@ namespace riaps {
             //ports::GroupSubscriberPort* FetchNextMessage(std::shared_ptr<capnp::FlatArrayMessageReader>& messageReader);
             void FetchNextMessage(zsock_t* in_socket);
 
-            bool SendMessageToLeader(capnp::MallocMessageBuilder& message);
-            bool SendLeaderMessage(capnp::MallocMessageBuilder& message);
+//            bool SendMessageToLeader(capnp::MallocMessageBuilder& message);
+//            bool SendLeaderMessage(capnp::MallocMessageBuilder& message);
+
+            template<class T>
+            riaps::ports::PortError SendToLeader(MessageBuilder<T>& message);
 
             bool ProposeValueToLeader(capnp::MallocMessageBuilder &message, const std::string &proposeId);
             bool SendVote(const std::string& propose_id, bool accept);
@@ -124,7 +128,7 @@ namespace riaps {
             const groups::GroupId& group_id() const;
 
             /**
-             * List of ComponentID-s where the current group got PING/PONG messages from. Timestamped.
+             * List of ComponentID-s where the current group got HEARTBEAT messages from. Timestamped.
              *
              * @note The parent component is excluded from the list.
              *
@@ -174,13 +178,25 @@ namespace riaps {
             std::unique_ptr<riaps::groups::GroupLead> group_leader_;
 
             void ProcessOnSub();
+            void ProcessOnAns();
+            void ProcessOnQry();
+
+            bool pending_mfl_ = false;
         };
 
         template<class T>
         std::tuple<MessageReader<T>, riaps::ports::PortError> Group::Recv() {
-            auto [bytes, error] = group_subport_->Recv();
-            MessageReader<T> reader(bytes);
-            return std::make_tuple(reader, error);
+            // if there is a message from the QRY port
+            if (pending_mfl_) {
+                auto[bytes, error] = group_qryport_->Recv();
+                MessageReader<T> reader(bytes);
+                return std::make_tuple(reader, error);
+            } else {
+                // The message is on the SUB port
+                auto[bytes, error] = group_subport_->Recv();
+                MessageReader<T> reader(bytes);
+                return std::make_tuple(reader, error);
+            }
         };
 
         template<class T>
@@ -192,6 +208,17 @@ namespace riaps {
             zmsg_addstr(group_message, GROUP_MSG);
             zmsg_add(group_message, message_frame);
             return this->group_pubport_->Send(&group_message);
+        }
+
+        template<class T>
+        riaps::ports::PortError Group::SendToLeader(MessageBuilder<T> &message) {
+            capnp::MallocMessageBuilder& builder = message.capnp_builder();
+            zframe_t* message_frame;
+            message_frame << builder;
+            zmsg_t* leader_message = zmsg_new();
+            zmsg_addstr(leader_message, GROUP_MTL);
+            zmsg_add(leader_message, message_frame);
+            return this->group_qryport_->Send(&leader_message);
         }
     }
 }

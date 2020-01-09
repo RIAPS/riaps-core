@@ -243,6 +243,9 @@ namespace riaps {
          */
         virtual void HandleGroupMessage(groups::Group* group);
 
+        virtual void HandleMessageFromLeader(groups::Group* group);
+
+
         /** @}*/
 
         virtual ~ComponentBase() = default;
@@ -271,16 +274,7 @@ namespace riaps {
                                     capnp::FlatArrayMessageReader& capnpreader,
                                     riaps::ports::PortBase* port);
 
-        /**
-         * Sends a message to the leader of the given group.
-         * @param group_id Group instance id.
-         * @param message The message to be sent.
-         * @return True if the message was sent successfully.
-         */
-        bool SendMessageToLeader(const riaps::groups::GroupId& group_id,
-                                 capnp::MallocMessageBuilder& message);
-        bool SendLeaderMessage(const riaps::groups::GroupId& group_id,
-                               capnp::MallocMessageBuilder& message);
+
 
 
 

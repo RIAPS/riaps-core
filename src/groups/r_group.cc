@@ -126,26 +126,26 @@ namespace riaps{
             return group_ansport_;
         }
 
-        bool Group::SendMessageToLeader(capnp::MallocMessageBuilder &message) {
-            //if (leader_id() == "") return false;
-
-            zframe_t* frame;
-            frame << message;
-
-            capnp::MallocMessageBuilder builder;
-            auto msgGroupInternals = builder.initRoot<riaps::distrcoord::GroupInternals>();
-            auto msgHeader = msgGroupInternals.initMessageToLeader();
-            msgHeader.setSourceComponentId(parent_component()->ComponentUuid());
-
-            zframe_t* header;
-            header << builder;
-
-            zmsg_t* zmsg = zmsg_new();
-            zmsg_add(zmsg, header);
-            zmsg_add(zmsg, frame);
-
-            return SendMessage(&zmsg);
-        }
+//        bool Group::SendMessageToLeader(capnp::MallocMessageBuilder &message) {
+//            //if (leader_id() == "") return false;
+//
+//            zframe_t* frame;
+//            frame << message;
+//
+//            capnp::MallocMessageBuilder builder;
+//            auto msgGroupInternals = builder.initRoot<riaps::distrcoord::GroupInternals>();
+//            auto msgHeader = msgGroupInternals.initMessageToLeader();
+//            msgHeader.setSourceComponentId(parent_component()->ComponentUuid());
+//
+//            zframe_t* header;
+//            header << builder;
+//
+//            zmsg_t* zmsg = zmsg_new();
+//            zmsg_add(zmsg, header);
+//            zmsg_add(zmsg, frame);
+//
+//            return SendMessage(&zmsg);
+//        }
 
         bool Group::ProposeValueToLeader(capnp::MallocMessageBuilder &message, const std::string &proposeId) {
             bool hasActiveLeader = false; //leader_id() != "";
@@ -227,25 +227,25 @@ namespace riaps{
             return rc;
         }
 
-        bool Group::SendLeaderMessage(capnp::MallocMessageBuilder &message) {
-            return false;
-            //if (leader_id()!= parent_component_id()) return false;
-            capnp::MallocMessageBuilder builder;
-            auto intMessage = builder.initRoot<riaps::distrcoord::GroupInternals>();
-            auto grpMessage = intMessage.initGroupMessage();
-            grpMessage.setSourceComponentId(parent_component_id());
-
-            zframe_t* header;
-            header << builder;
-
-            zmsg_t* zmsg = zmsg_new();
-            zmsg_add(zmsg, header);
-
-            zframe_t* body;
-            body << message;
-            zmsg_add(zmsg, body);
-            return SendMessage(&zmsg);
-        }
+//        bool Group::SendLeaderMessage(capnp::MallocMessageBuilder &message) {
+//            return false;
+//            //if (leader_id()!= parent_component_id()) return false;
+//            capnp::MallocMessageBuilder builder;
+//            auto intMessage = builder.initRoot<riaps::distrcoord::GroupInternals>();
+//            auto grpMessage = intMessage.initGroupMessage();
+//            grpMessage.setSourceComponentId(parent_component_id());
+//
+//            zframe_t* header;
+//            header << builder;
+//
+//            zmsg_t* zmsg = zmsg_new();
+//            zmsg_add(zmsg, header);
+//
+//            zframe_t* body;
+//            body << message;
+//            zmsg_add(zmsg, body);
+//            return SendMessage(&zmsg);
+//        }
 
         std::shared_ptr<riaps::ports::GroupPublisherPort> Group::group_pubport() {
             return group_pubport_;
@@ -253,6 +253,12 @@ namespace riaps{
 
         std::shared_ptr<riaps::ports::GroupSubscriberPort> Group::group_subport() {
             return group_subport_;
+        }
+
+        bool Group::HasLeader() {
+            if (group_conf_->has_leader() && group_leader_!= nullptr) {
+                return leader_id().has_value();
+            }
         }
 
         bool Group::SendMessage(capnp::MallocMessageBuilder& message, const std::string& portName){
@@ -564,6 +570,26 @@ namespace riaps{
             }
         }
 
+        void Group::ProcessOnAns() {
+            auto ans_socket  = const_cast<zsock_t*>(group_ansport_->port_socket());
+            auto first_frame = zframe_recv(ans_socket);
+            logger_->error("Unknown message type on group QRY port");
+            zframe_destroy(&first_frame);
+        }
+
+        void Group::ProcessOnQry() {
+            auto qry_socket  = const_cast<zsock_t*>(group_qryport_->port_socket());
+            auto first_frame = zframe_recv(qry_socket);
+            if (zframe_streq (first_frame, GROUP_MFL)){
+                pending_mfl_ = true;
+                parent_component_->HandleMessageFromLeader(this);
+                pending_mfl_ = false;
+            } else {
+                logger_->error("Unknown message type on group QRY port");
+            }
+            zframe_destroy(&first_frame);
+        }
+
         void Group::ProcessOnSub() {
             auto sub_socket  = const_cast<zsock_t*>(group_subport_->port_socket());
             auto first_frame = zframe_recv(sub_socket);
@@ -575,7 +601,7 @@ namespace riaps{
                 auto second_size = zframe_size(second_frame);
                 auto second_data = zframe_data(second_frame);
                 OwnId ownid;
-                ownid.data((char*)second_data, second_size);
+                ownid.data(second_data, second_size);
                 known_nodes_[ownid] = Timeout<std::chrono::milliseconds>(GROUP_PEERTIMEOUT);
                 zframe_destroy(&second_frame);
             } else if (zframe_streq (first_frame, GROUP_MSG)) {
@@ -583,9 +609,9 @@ namespace riaps{
             } else if (zframe_streq (first_frame, REQVOTE)) {
                 auto req_frame = zframe_recv(sub_socket);
                 auto req_data  = zframe_data(req_frame);
-                gr::ReqVote reqvote((char*)req_data);
+                gr::ReqVote reqvote(req_data);
 
-                logger_->debug("REQVOTE, string term: {} node: {}", reqvote.term(), reqvote.ownid().strdata());
+                //logger_->debug("REQVOTE, string term: {} node: {}", reqvote.term(), reqvote.ownid().strdata());
 
                 if (group_leader_ == nullptr)
                     logger_->error("Group leader is NULL");
@@ -595,9 +621,9 @@ namespace riaps{
             } else if (zframe_streq (first_frame, RSPVOTE)) {
                 auto rsp_frame = zframe_recv(sub_socket);
                 auto rsp_data  = zframe_data(rsp_frame);
-                gr::RspVote rspvote((char*)rsp_data);
+                gr::RspVote rspvote(rsp_data);
 
-                logger_->debug("RSPVOTE term: {} vote for: {}", rspvote.term(), rspvote.vote_for().strdata());
+                //logger_->debug("RSPVOTE term: {} vote for: {}", rspvote.term(), rspvote.vote_for().strdata());
 
                 if (group_leader_ == nullptr)
                     logger_->error("Group leader is NULL");
@@ -607,8 +633,7 @@ namespace riaps{
             } else if (zframe_streq (first_frame, AUTHORITY)) {
                 auto auth_frame = zframe_recv(sub_socket);
                 auto auth_data  = zframe_data(auth_frame);
-                gr::Authority auth((char*)auth_data);
-                uint32_t* last_digits_ = (uint32_t*)(auth_data+24);
+                gr::Authority auth(auth_data);
                 logger_->debug("Auth, term: {}, ldrid: {}, addr: {}", auth.term(), auth.ldrid().strdata(), auth.ldraddress_zmq());
 
                 if (group_leader_ == nullptr)
@@ -624,6 +649,8 @@ namespace riaps{
             }
             zframe_destroy(&first_frame);
         }
+
+
 
         void Group::FetchNextMessage(zsock_t* in_socket) {
             // If heartbeat timeout, send heartbeat.
@@ -644,9 +671,9 @@ namespace riaps{
             if (in_socket == sub_socket) {
                 ProcessOnSub();
             } else if (in_socket == qry_socket) {
-                logger_->debug("Message on QRY");
+                ProcessOnQry();
             } else if (in_socket == ans_socket) {
-                logger_->debug("Message on ANS");
+                ProcessOnAns();
             }
 
             //logger_->debug("Group first frame content: {}", (char*)zframe_data(first_frame));

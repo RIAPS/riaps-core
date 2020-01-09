@@ -1,7 +1,7 @@
 
 app GroupApp {
 	// Message test
-	on all GroupActorA(gs='1',tl='m'), GroupActorB(gs='1',tl='m');
+	on all GroupActorA(gs='1',tl='ml'), GroupActorB(gs='1',tl='ml');
 	// Leader message test
 	// on all GroupActorA(gs='1',tl='l'), GroupActorB(gs='1',tl='l'), GroupActorC(gs='1',tl='l');	
 	

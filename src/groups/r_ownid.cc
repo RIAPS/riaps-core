@@ -21,9 +21,9 @@ namespace riaps {
 //            return tmp;
 //        }
 
-        void OwnId::data(char* data, size_t size) {
+        void OwnId::data(uint8_t* data, size_t size) {
             //data_.reserve(size);
-            data_ = vector<char>(size, 0);
+            data_ = vector<uint8_t>(size, 0);
             for (int i=0; i<size; i++) {
                 data_[i] = data[i];
                 strdata_+=to_string(data_[i]);
@@ -31,20 +31,20 @@ namespace riaps {
         }
 
         void OwnId::data(const vector<uint8_t> & actorid, uint64_t group_address) {
-            char ownid[16];
+            uint8_t ownid[16];
             for (int i = 0; i<8; i++) {
                 ownid[i] = actorid[i];
             }
 
             for (int i = 8; i<16; i++) {
-                ownid[i] = group_address%255;
-                group_address = group_address/255;
+                ownid[i] = group_address%256;
+                group_address = group_address/256;
             }
 
             data(ownid, 16);
         }
 
-        const std::vector<char>& OwnId::data() const {
+        const std::vector<uint8_t>& OwnId::data() const {
             return data_;
         }
 

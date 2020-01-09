@@ -53,6 +53,8 @@ constexpr auto REQVOTE   = "req"; //{ term ; ownId }
 constexpr auto RSPVOTE   = "vot"; //{ term; candId; bool; ownId }
 constexpr auto AUTHORITY = "ldr"; //{ term; ldrId; ldrHost; ldrPort }
 
-constexpr auto GROUP_MSG = "msg";
+constexpr auto GROUP_MSG = "msg"; // Group message
+constexpr auto GROUP_MTL = "mtl"; // Message to leader
+constexpr auto GROUP_MFL = "mfl"; // Message from leader
 
 #endif //RIAPS_CORE_R_CONST_H

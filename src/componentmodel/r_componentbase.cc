@@ -618,14 +618,6 @@ namespace riaps{
         return insidePort->Send(message);
     }
 
-    bool ComponentBase::SendLeaderMessage(const riaps::groups::GroupId &group_id,
-                                          capnp::MallocMessageBuilder &message) {
-        auto group = getGroupById(group_id);
-        if (group == nullptr) return false;
-        if (!IsLeader(group)) return false;
-        return group->SendLeaderMessage(message);
-    }
-
 
 
     const ports::SubscriberPort* ComponentBase::InitSubscriberPort(const ComponentPortSub& config) {
@@ -702,23 +694,15 @@ namespace riaps{
         return answer_port->SendAnswer(message, params);
     }
 
-    riaps::ports::PortError ComponentBase::SendMessageOnPort(capnp::MallocMessageBuilder &message, const std::string &port_name,
-                                          std::string &requestId) {
-        auto query_port = GetPortAs<riaps::ports::QueryPort>(port_name);
-        if (!query_port)
-            riaps_logger_->error("{} Unable to convert port: {}", __func__, port_name);
-        return query_port->SendQuery(message, requestId);
-    }
+    // Send on query
+//    riaps::ports::PortError ComponentBase::SendMessageOnPort(capnp::MallocMessageBuilder &message, const std::string &port_name,
+//                                          std::string &requestId) {
+//        auto query_port = GetPortAs<riaps::ports::QueryPort>(port_name);
+//        if (!query_port)
+//            riaps_logger_->error("{} Unable to convert port: {}", __func__, port_name);
+//        return query_port->SendQuery(message, requestId);
+//    }
 
-    bool ComponentBase::SendMessageToLeader(const riaps::groups::GroupId &group_id,
-                                            capnp::MallocMessageBuilder &message) {
-        auto group = getGroupById(group_id);
-        if (group == nullptr){
-            return false;
-        }
-
-        return group->SendMessageToLeader(message);
-    }
 
     void ComponentBase::OnMessageFromLeader(const riaps::groups::GroupId &groupId,
                                             capnp::FlatArrayMessageReader &message) {
@@ -1050,6 +1034,10 @@ namespace riaps{
     }
 
     void ComponentBase::HandleGroupMessage(riaps::groups::Group *group) {
+        component_logger()->warn("No implementation of {} in {}", __FUNCTION__, component_name());
+    }
+
+    void ComponentBase::HandleMessageFromLeader(riaps::groups::Group *group) {
         component_logger()->warn("No implementation of {} in {}", __FUNCTION__, component_name());
     }
 

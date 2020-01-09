@@ -19,7 +19,7 @@ namespace riaps {
 
 
 
-        class QueryPort : public PortBase {
+        class QueryPort : public PortBase, public SenderPort, public RecvPort {
         public:
 
             /**
@@ -62,7 +62,7 @@ namespace riaps {
              *
              */
 
-            PortError SendQuery(capnp::MallocMessageBuilder& message, std::string& requestId, bool addTimestamp = false) const;
+            //PortError SendQuery(capnp::MallocMessageBuilder& message, std::string& requestId, bool addTimestamp = false) const;
             virtual const ComponentPortQry* GetConfig() const;
 
             ~QueryPort() noexcept ;

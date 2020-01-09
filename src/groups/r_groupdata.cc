@@ -14,7 +14,7 @@ namespace riaps {
              * Common functions for leader election datatypes.
              */
 
-            GroupDataBase::GroupDataBase(char* data) {
+            GroupDataBase::GroupDataBase(uint8_t* data) {
                 term_= btoul(data, 4);
             }
 
@@ -26,10 +26,10 @@ namespace riaps {
                 return term_;
             }
 
-            uint32_t GroupDataBase::btoul(char *bytes, size_t len) {
+            uint32_t GroupDataBase::btoul(uint8_t *bytes, size_t len) {
                 uint32_t result = 0;
                 for (auto i = 0; i <len; i++) {
-                    result += bytes[i]*pow(255, len-1-i);
+                    result += bytes[i]*pow(256, len-1-i);
                 }
                 return result;
             }
@@ -39,8 +39,8 @@ namespace riaps {
 
                 int idx = len-1;
                 for (int i = 0; i<len; i++) {
-                    result[idx--] = number%255;
-                    number = number/255;
+                    result[idx--] = number%256;
+                    number = number/256;
                 }
 
                 return result;
@@ -59,7 +59,7 @@ namespace riaps {
              * Leader election
              */
 
-            Authority::Authority(char* data) : GroupDataBase(data) {
+            Authority::Authority(uint8_t* data) : GroupDataBase(data) {
                 ldrid_.data(data + 4, 16);
 
                 // Host, binary representation
@@ -69,11 +69,7 @@ namespace riaps {
                     ldrhost_ += (i == 23) ? "" : ".";
                 }
 
-                uint8_t data_idx = 24;
-                ldrport_=0;
-                for (auto i = 0; i <4; i++) {
-                    ldrport_ += data[data_idx++]*pow(255, 3-i);
-                }
+                ldrport_ = btoul(data+24,4);
             }
 
             Authority::Authority(uint32_t term, riaps::groups::OwnId leader, std::string host, int port) :
@@ -139,7 +135,7 @@ namespace riaps {
              * Leader election
              */
 
-            ReqVote::ReqVote(char *data) : GroupDataBase(data) {
+            ReqVote::ReqVote(uint8_t *data) : GroupDataBase(data) {
                 ownid_.data(data + 4, 16);
             }
 
@@ -185,7 +181,7 @@ namespace riaps {
                 return rsp_bytes;
             }
 
-            RspVote::RspVote(char *data) : GroupDataBase(data) {
+            RspVote::RspVote(uint8_t *data) : GroupDataBase(data) {
                 vote_for_.data(data+4, 16);
                 vote_ = data[23];
                 voted_by_.data(data+24, 16);

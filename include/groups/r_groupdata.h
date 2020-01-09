@@ -16,7 +16,7 @@ namespace riaps {
 
             class GroupDataBase {
             public:
-                GroupDataBase(char *data);
+                GroupDataBase(uint8_t *data);
                 GroupDataBase(uint32_t term);
                 const uint32_t term() const;
                 virtual std::vector<uint8_t> to_bytes() const = 0;
@@ -25,7 +25,7 @@ namespace riaps {
                  * Bytes to unsigned long (uint32_t)
                  * @return
                  */
-                uint32_t btoul(char* bytes, size_t len);
+                uint32_t btoul(uint8_t* bytes, size_t len);
 
                 /**
                  * Unsigned long into bytes
@@ -44,7 +44,7 @@ namespace riaps {
 
             class ReqVote : public GroupDataBase{
             public:
-                ReqVote(char *data);
+                ReqVote(uint8_t *data);
                 ReqVote(const OwnId &ownid, uint32_t term);
                 const OwnId &ownid() const;
                 virtual std::vector<uint8_t> to_bytes() const;
@@ -54,7 +54,7 @@ namespace riaps {
 
             class RspVote : public GroupDataBase {
             public:
-                RspVote(char *data);
+                RspVote(uint8_t *data);
                 RspVote(uint32_t term, const OwnId& vote_for, const OwnId& vote_by, bool vote);
                 const OwnId &vote_for() const;
                 const OwnId &voted_by() const;
@@ -68,7 +68,7 @@ namespace riaps {
 
             class Authority : public GroupDataBase {
             public:
-                Authority(char* data);
+                Authority(uint8_t* data);
                 Authority(uint32_t term, OwnId leader, std::string host, int port);
                 const OwnId &ldrid() const;
                 const std::string& ldrhost() const;

@@ -19,8 +19,8 @@ namespace riaps {
             //OwnId(const OwnId& rhs);
             //OwnId operator=(const OwnId& rhs);
             void data(const std::vector<uint8_t> & actorid, uint64_t group_address);
-            void data(char* data, size_t size);
-            const std::vector<char>& data() const;
+            void data(uint8_t* data, size_t size);
+            const std::vector<uint8_t>& data() const;
             std::string strdata() const;
             bool operator==(const OwnId& other) const {
                 return strdata() == other.strdata();
@@ -30,7 +30,7 @@ namespace riaps {
             }
             ~OwnId() = default;
         private:
-            std::vector<char> data_;
+            std::vector<uint8_t> data_;
             std::string strdata_;
         };
 
