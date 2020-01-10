@@ -3,10 +3,10 @@
 
 #include <GroupieCpp.h>
 // riaps:keep_header:begin
-#define MESSAGE_TO_MEMBERS
+//#define MESSAGE_TO_MEMBERS
 //#define SEND_TO_LEADER
 //#define REQUEST_VOTE
-//#define REQUEST_ACTION_VOTE
+#define REQUEST_ACTION_VOTE
 // riaps:keep_header:end
 
 namespace groupapp {
@@ -75,8 +75,10 @@ namespace groupapp {
 
 #ifdef REQUEST_ACTION_VOTE
                     // RequestVote for Action
+                    MessageBuilder<messages::Msg> builder_action;
+                    builder_action->setValue("Some action");
                     auto when = group->GetPythonNow() + 2.0;
-                    auto rfcid = group->RequestActionVote("some action",when);
+                    auto rfcid = group->RequestActionVote(builder_action,when);
                     if (rfcid.has_value())
                         component_logger()->info("... request for consensus sent: {}", rfcid.value());
                     else

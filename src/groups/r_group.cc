@@ -590,9 +590,10 @@ namespace riaps{
                     auto rfvid = rfv.getRfvId();
                     auto subject = rfv.getSubject();
 
+                    auto topic = rfv.getTopic();
+                    group_read_buffer_ = make_unique<MessageReaderArray>(topic.begin(), topic.size());
+
                     if (subject == riaps::groups::poll::Subject::VALUE) {
-                        auto topic = rfv.getTopic();
-                        group_read_buffer_ = make_unique<MessageReaderArray>(topic.begin(), topic.size());
                         pending_handle_vote_request_ = true;
                         parent_component_->HandleVoteRequest(this, rfvid);
                         pending_handle_vote_request_ = false;
@@ -629,40 +630,7 @@ namespace riaps{
             zframe_destroy(&first_frame);
         }
 
-        std::optional<std::string> Group::RequestActionVote(const std::string &action, const double when, riaps::groups::poll::Voting kind, double timeout) {
-            capnp::MallocMessageBuilder msg_builder;
-            auto msg = msg_builder.initRoot<riaps::groups::poll::GroupVote>();
-            auto rfv = msg.initRfv();
-            rfv.setKind(kind);
-            auto uid = zuuid_new();
-            std::string uid_str = zuuid_str(uid);
-            rfv.setRfvId(uid_str);
-            rfv.setStarted(this->GetPythonNow());
-            rfv.setSubject(riaps::groups::poll::Subject::ACTION);
-            rfv.setTimeout(timeout/1000.0);
-            rfv.setRelease(when);
 
-            kj::StringPtr sptr(action);
-            rfv.initTopic(action.size());
-            rfv.setTopic(sptr.asBytes());
-
-            zframe_t* message_frame;
-            message_frame << msg_builder;
-            zmsg_t* vote_message = zmsg_new();
-            zmsg_addstr(vote_message, GROUP_RFV);
-            zmsg_add(vote_message, message_frame);
-
-            auto rc = group_qryport_->Send(&vote_message);
-
-            zuuid_destroy(&uid);
-
-            // Error
-            if (rc) {
-                return std::nullopt;
-            }
-
-            return uid_str;
-        }
 
         void Group::SendVote(const std::string &rfvid, bool vote) {
             capnp::MallocMessageBuilder msg_builder;

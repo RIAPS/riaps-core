@@ -152,7 +152,8 @@ namespace riaps {
                                                    riaps::groups::poll::Voting kind = riaps::groups::poll::Voting::MAJORITY,
                                                    double timeout = 0.0);
 
-            std::optional<std::string> RequestActionVote(const std::string& action,
+            template<class T>
+            std::optional<std::string> RequestActionVote(MessageBuilder<T>& action_builder,
                                                          const double when,        // Python representation of time
                                                          riaps::groups::poll::Voting kind = riaps::groups::poll::Voting::CONSENSUS,
                                                          double timeout = 0.0);
@@ -213,7 +214,7 @@ namespace riaps {
                 MessageReader<T> reader(bytes);
                 return std::make_tuple(reader, error);
             } else if (pending_handle_vote_request_){
-                // Pending message in the buffer
+                // Pending message in the buffer not on the ZMQ socket
                 MessageReader<T> reader(group_read_buffer_);
                 return std::make_tuple(reader, riaps::ports::PortError(true));
             } else {
@@ -277,6 +278,47 @@ namespace riaps {
 
             rfv.initTopic(topic_bytes.size());
             rfv.setTopic(topic_bytes);
+
+            zframe_t* message_frame;
+            message_frame << msg_builder;
+            zmsg_t* vote_message = zmsg_new();
+            zmsg_addstr(vote_message, GROUP_RFV);
+            zmsg_add(vote_message, message_frame);
+
+            auto rc = group_qryport_->Send(&vote_message);
+
+            zuuid_destroy(&uid);
+
+            // Error
+            if (rc) {
+                return std::nullopt;
+            }
+
+            return uid_str;
+        }
+
+        template<class T>
+        std::optional<std::string> Group::RequestActionVote(MessageBuilder<T> &action_builder,
+                                                            const double when,
+                                                            riaps::groups::poll::Voting kind,
+                                                            double timeout) {
+            capnp::MallocMessageBuilder msg_builder;
+            auto msg = msg_builder.initRoot<riaps::groups::poll::GroupVote>();
+            auto rfv = msg.initRfv();
+            rfv.setKind(kind);
+            auto uid = zuuid_new();
+            std::string uid_str = zuuid_str(uid);
+            rfv.setRfvId(uid_str);
+            rfv.setStarted(this->GetPythonNow());
+            rfv.setSubject(riaps::groups::poll::Subject::VALUE);
+            rfv.setTimeout(timeout/1000.0);
+            rfv.setRelease(when);
+
+            auto action_serialized = capnp::messageToFlatArray(action_builder.capnp_builder());
+            auto action_bytes = action_serialized.asBytes();
+
+            rfv.initTopic(action_bytes.size());
+            rfv.setTopic(action_bytes);
 
             zframe_t* message_frame;
             message_frame << msg_builder;
