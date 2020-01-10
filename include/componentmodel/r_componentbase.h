@@ -248,6 +248,8 @@ namespace riaps {
 
         virtual void HandleVoteRequest(riaps::groups::Group *group, std::string rfvid);
 
+        virtual void HandleActionVoteRequest(riaps::groups::Group *group, std::string rfvid, double when);
+
         virtual void HandleVoteResult(riaps::groups::Group *group, std::string rfvid, bool vote);
 
 

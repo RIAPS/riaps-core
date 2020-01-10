@@ -147,11 +147,15 @@ namespace riaps {
             template<class T>
             riaps::ports::PortError SendToMember(MessageBuilder<T>& message, const std::string& identity);
 
-            // TODO: New template param to pass different units, not just millisecs
             template<class T>
             std::optional<std::string> RequestVote(MessageBuilder<T>& topic_builder,
                                                    riaps::groups::poll::Voting kind = riaps::groups::poll::Voting::MAJORITY,
                                                    double timeout = 0.0);
+
+            std::optional<std::string> RequestActionVote(const std::string& action,
+                                                         const double when,        // Python representation of time
+                                                         riaps::groups::poll::Voting kind = riaps::groups::poll::Voting::CONSENSUS,
+                                                         double timeout = 0.0);
 
             template<class T>
             std::tuple<MessageReader<T>, riaps::ports::PortError> Recv();

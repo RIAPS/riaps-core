@@ -992,6 +992,10 @@ namespace riaps{
         component_logger()->warn("No implementation of {} in {}", __FUNCTION__, component_name());
     }
 
+    void ComponentBase::HandleActionVoteRequest(riaps::groups::Group *group, std::string rfvid, double when) {
+        component_logger()->warn("No implementation of {} in {}", __FUNCTION__, component_name());
+    }
+
     void ComponentBase::HandleActivate() {
 
     }

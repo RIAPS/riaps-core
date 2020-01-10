@@ -28,6 +28,7 @@ namespace groupapp {
             virtual void HandleMessageToLeader(riaps::groups::Group* group, std::string identity) override;
             virtual void HandleVoteRequest(riaps::groups::Group *group, std::string rfvid) override;
             virtual void HandleVoteResult(riaps::groups::Group *group, std::string rfvid, bool vote) override;
+            virtual void HandleActionVoteRequest(riaps::groups::Group *group, std::string rfvid, double when) override;
             virtual void HandleActivate() override;
 
             virtual ~GroupieCpp();

@@ -35,10 +35,14 @@ class Groupie(Component):
                 msg = groupapp_capnp.Msg.new_message()
                 msg.value = "%s in %s @ %d" % (self.name, g.getGroupId(), now)
                 msgBytes = msg.to_bytes()
-                g.send(msgBytes)
+                #g.send(msgBytes)
             if 'l' in self.tl:
                 if g.hasLeader():
-                    g.sendToLeader_pyobj("to leader from %s" % self.name)
+                    msg = groupapp_capnp.Msg.new_message()
+                    msg.value = f"to leader from {self.name}"
+                    msgBytes = msg.to_bytes()
+                    #g.sendToLeader(msgBytes)
+                    #g.sendToLeader_pyobj("to leader from %s" % self.name)
                 else:
                     self.logger.info("no leader yet")
             if 'v' in self.tl:
@@ -73,11 +77,14 @@ class Groupie(Component):
         
     def handleMessageToLeader(self,group):
         assert (group in self.groups)
-        msg = group.recv_pyobj()
+        msgbytes = group.recv()
+        msg = groupapp_capnp.Msg.from_bytes(msgbytes)
         identity = group.identity
-        self.logger.info('handleMessageToLeader() %s:%s of %s = # %s #' % (self.name,str(identity),group.getGroupId(),str(msg)))
-        rsp = "to member from leader of %s = %s" % (group.getGroupId(),msg[::-1])
-        group.sendToMember_pyobj(msg,identity)
+        self.logger.info('handleMessageToLeader() %s:%s of %s = # %s #' % (self.name,str(identity),group.getGroupId(),str(msg.value)))
+        msg = groupapp_capnp.Msg.new_message()
+        msg.value = f"to member from leader of {group.getGroupId()}"
+        msgBytes = msg.to_bytes()
+        group.sendToMember(msgBytes,identity)
         
     def handleMessageFromLeader(self,group):
         assert (group in self.groups)
@@ -87,8 +94,10 @@ class Groupie(Component):
         
     def handleVoteRequest(self,group,rfcId):
         assert (group in self.groups)
-        msg = group.recv_pyobj()
-        vote = random.uniform(0,1) > 0.51        
+        msgbytes = group.recv()
+        msg = groupapp_capnp.Msg.from_bytes(msgbytes)
+        # msg = group.recv_pyobj()
+        vote = random.uniform(0,1) > 0.51
         self.logger.info('handleVoteRequest[%s] = %s -->  %s' % (str(rfcId),str(msg), str(vote)))
         group.sendVote(rfcId,vote)
             

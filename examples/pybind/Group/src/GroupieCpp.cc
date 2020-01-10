@@ -3,7 +3,10 @@
 
 #include <GroupieCpp.h>
 // riaps:keep_header:begin
-
+#define MESSAGE_TO_MEMBERS
+//#define SEND_TO_LEADER
+//#define REQUEST_VOTE
+//#define REQUEST_ACTION_VOTE
 // riaps:keep_header:end
 
 namespace groupapp {
@@ -37,24 +40,30 @@ namespace groupapp {
 
 
             if (group) {
+
+#ifdef MESSAGE_TO_MEMBERS
                 // Message to all members
                 MessageBuilder<messages::Msg> builder;
                 builder->setValue("Kukucs");
-//                if (group->Send(builder)) {
-//                    component_logger()->error("Couldn't send group message");
-//                }
+                if (group->Send(builder)) {
+                    component_logger()->error("Couldn't send group message");
+                }
+#endif
 
 
                 if (group->HasLeader()) {
+#ifdef SEND_TO_LEADER
                     // Message to leader
-//                    MessageBuilder<messages::Msg> builder_to_leader;
-//                    builder_to_leader->setValue(fmt::format("to leader from {}", "Sanyi"));
-//                    if (group->SendToLeader(builder_to_leader)) {
-//                        component_logger()->error("Couldn't send message to leader");
-//                    } else {
-//                        component_logger()->info("Message to leader was sent");
-//                    }
+                    MessageBuilder<messages::Msg> builder_to_leader;
+                    builder_to_leader->setValue(fmt::format("to leader from {}", "Sanyi"));
+                    if (group->SendToLeader(builder_to_leader)) {
+                        component_logger()->error("Couldn't send message to leader");
+                    } else {
+                        component_logger()->info("Message to leader was sent");
+                    }
+#endif
 
+#ifdef REQUEST_VOTE
                     // Request vote
                     MessageBuilder<messages::Msg> builder_vote;
                     builder_vote->setValue("Some topic");
@@ -62,9 +71,21 @@ namespace groupapp {
                     if (rfcid.has_value()) {
                         component_logger()->info("Vote requested");
                     }
+#endif
+
+#ifdef REQUEST_ACTION_VOTE
+                    // RequestVote for Action
+                    auto when = group->GetPythonNow() + 2.0;
+                    auto rfcid = group->RequestActionVote("some action",when);
+                    if (rfcid.has_value())
+                        component_logger()->info("... request for consensus sent: {}", rfcid.value());
+                    else
+                        component_logger()->error("... request for consensus failed");
+#endif
                 } else {
                     component_logger()->warn("No leader yet.");
                 }
+
             } else {
                 component_logger()->error("No group with id: {} {}", gr_type, gr_name);
             }
@@ -138,6 +159,19 @@ namespace groupapp {
             else
                 component_logger()->error("Couldn't join g_1");
         }
+
+        void GroupieCpp::HandleActionVoteRequest(riaps::groups::Group *group, std::string rfvid, double when) {
+            component_logger()->info("{}", __FUNCTION__);
+            auto [msg, error] = group->Recv<messages::Msg>();
+            if (!error) {
+                timespec ts;
+                clock_gettime(CLOCK_REALTIME, &ts);
+                bool vote = ts.tv_nsec % 2 == 0;
+                component_logger()->info("{}[{}] = {} @ {} -->  {}", __FUNCTION__, rfvid, msg->getValue().cStr(), when, vote);
+                group->SendVote(rfvid, vote);
+            }
+        }
+
         // riaps:keep_impl:end
 
         // riaps:keep_destruct:begin
