@@ -197,23 +197,7 @@ namespace riaps{
                         zstr_free(&portname);
                     }
                 }
-                // Forward group update messages
-                // Note: Obsolote,
-                // Todo: Remove
-                else if(streq(command, CMD_UPDATE_GROUP)){
-                    zframe_t* capnp_msgbody = zmsg_pop(msg);
-                    size_t    size = zframe_size(capnp_msgbody);
-                    unsigned char* data = zframe_data(capnp_msgbody);
 
-                    auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
-
-                    capnp::FlatArrayMessageReader reader(capnp_data);
-                    auto msgDiscoUpd  = reader.getRoot<riaps::discovery::DiscoUpd>();
-                    auto msgGroupUpd  = msgDiscoUpd.getGroupUpdate();
-                    comp->UpdateGroup(msgGroupUpd);
-
-                    zframe_destroy(&capnp_msgbody);
-                }
 
                 zstr_free(&command);
                 zmsg_destroy(&msg);
@@ -685,14 +669,14 @@ namespace riaps{
         return sender_port->Send(message);
     }
 
-    riaps::ports::PortError ComponentBase::SendMessageOnPort(capnp::MallocMessageBuilder &message, const std::string &port_name,
-                                          std::shared_ptr<riaps::MessageParams> params) {
-
-        auto answer_port = GetPortAs<riaps::ports::AnswerPort>(port_name);
-        if (!answer_port)
-            riaps_logger_->error("{} Unable to convert port: {}", __func__, port_name);
-        return answer_port->SendAnswer(message, params);
-    }
+//    riaps::ports::PortError ComponentBase::SendMessageOnPort(capnp::MallocMessageBuilder &message, const std::string &port_name,
+//                                          std::shared_ptr<riaps::MessageParams> params) {
+//
+//        auto answer_port = GetPortAs<riaps::ports::AnswerPort>(port_name);
+//        if (!answer_port)
+//            riaps_logger_->error("{} Unable to convert port: {}", __func__, port_name);
+//        return answer_port->SendAnswer(message, params);
+//    }
 
     // Send on query
 //    riaps::ports::PortError ComponentBase::SendMessageOnPort(capnp::MallocMessageBuilder &message, const std::string &port_name,
@@ -982,62 +966,29 @@ namespace riaps{
         return component_config().component_name;
     }
 
-    string ComponentBase::SendPropose(const riaps::groups::GroupId &groupId, capnp::MallocMessageBuilder &message) {
-        auto group = getGroupById(groupId);
-        if (group == nullptr) return "";
 
-        auto uuid = unique_ptr<zuuid_t, function<void(zuuid_t*)>>(zuuid_new(), [](zuuid_t* u){zuuid_destroy(&u);});
-        string strUuid = zuuid_str(uuid.get());
 
-        if (group->ProposeValueToLeader(message, strUuid)){
-            return strUuid;
-        }
-        return "";
-    }
 
-    string ComponentBase::ProposeAction(const riaps::groups::GroupId &group_id,
-                                        const std::string &action_id,
-                                        const timespec &abs_time) {
-        auto group = getGroupById(group_id);
-        if (group == nullptr) return "";
 
-        auto uuid = unique_ptr<zuuid_t, function<void(zuuid_t*)>>(zuuid_new(), [](zuuid_t* u){zuuid_destroy(&u);});
-        string strUuid = zuuid_str(uuid.get());
 
-        if (group->ProposeActionToLeader(strUuid, action_id, abs_time)){
-            return strUuid;
-        }
-        return "";
-    }
-
-    bool ComponentBase::SendVote(const riaps::groups::GroupId &groupId, const std::string &proposeId, bool accept) {
-        auto group = getGroupById(groupId);
-        if (group == nullptr) return false;
-
-        return group->SendVote(proposeId, accept);
-    }
-
-    /**
-     * OBSOLOTE
-     * TODO: Remove
-     * @param msg_group_update
-     */
-    void ComponentBase::UpdateGroup(riaps::discovery::GroupUpdate::Reader &msg_group_update) {
-        // First, find the affected groups
-        riaps::groups::GroupId gid;
-        gid.group_name    = msg_group_update.getGroupId().getGroupName().cStr();
-        gid.group_type_id = msg_group_update.getGroupId().getGroupType().cStr();
-
-        if (groups_.find(gid) == groups_.end()) return;
-
-        //groups_[gid]->ConnectToNewServices(msg_group_update);
-    }
 
     void ComponentBase::HandleGroupMessage(riaps::groups::Group *group) {
         component_logger()->warn("No implementation of {} in {}", __FUNCTION__, component_name());
     }
 
     void ComponentBase::HandleMessageFromLeader(riaps::groups::Group *group) {
+        component_logger()->warn("No implementation of {} in {}", __FUNCTION__, component_name());
+    }
+
+    void ComponentBase::HandleMessageToLeader(riaps::groups::Group *group, std::string identity) {
+        component_logger()->warn("No implementation of {} in {}", __FUNCTION__, component_name());
+    }
+
+    void ComponentBase::HandleVoteRequest(riaps::groups::Group *group, std::string rfvid) {
+        component_logger()->warn("No implementation of {} in {}", __FUNCTION__, component_name());
+    }
+
+    void ComponentBase::HandleVoteResult(riaps::groups::Group *group, std::string rfvid, bool vote) {
         component_logger()->warn("No implementation of {} in {}", __FUNCTION__, component_name());
     }
 

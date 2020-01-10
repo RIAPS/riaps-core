@@ -5,6 +5,8 @@
 #ifndef RIAPS_CORE_R_GROUP_H_H
 #define RIAPS_CORE_R_GROUP_H_H
 
+#include <capnp/message.h>
+#include <capnp/serialize.h>
 #include <const/r_const.h>
 #include <componentmodel/r_componentbase.h>
 #include <componentmodel/r_configuration.h>
@@ -16,7 +18,7 @@
 #include <groups/r_grouplead.h>
 #include <groups/r_ownid.h>
 #include <messaging/disco.capnp.h>
-#include <messaging/distcoord.capnp.h>
+#include <messaging/dc.capnp.h>
 #include <utils/r_timeout.h>
 #include <utils/r_utils.h>
 
@@ -74,7 +76,7 @@ namespace riaps {
 
             void ConnectToNewServices(const std::string& address);
 
-            bool SendMessage(capnp::MallocMessageBuilder& message, const std::string& portName);
+            //bool SendMessage(capnp::MallocMessageBuilder& message, const std::string& portName);
             bool SendMessage(zmsg_t** message);
 
             bool SendInternalMessage(capnp::MallocMessageBuilder& message);
@@ -88,17 +90,17 @@ namespace riaps {
             template<class T>
             riaps::ports::PortError SendToLeader(MessageBuilder<T>& message);
 
-            bool ProposeValueToLeader(capnp::MallocMessageBuilder &message, const std::string &proposeId);
-            bool SendVote(const std::string& propose_id, bool accept);
-
-            bool ProposeActionToLeader(const std::string& proposeId,
-                                       const std::string &actionId,
-                                       const timespec &absTime);
+//            bool ProposeValueToLeader(capnp::MallocMessageBuilder &message, const std::string &proposeId);
+//            bool SendVote(const std::string& propose_id, bool accept);
+//
+//            bool ProposeActionToLeader(const std::string& proposeId,
+//                                       const std::string &actionId,
+//                                       const timespec &absTime);
 
             const ComponentBase* parent_component() const;
             const std::string parent_component_id() const;
 
-            std::shared_ptr<std::set<std::string>> GetKnownComponents();
+            std::shared_ptr<std::unordered_set<OwnId, OwnIdHasher>> GetKnownMembers();
 
             /**
              * Counts the records in _knownNodes map
@@ -143,7 +145,18 @@ namespace riaps {
             riaps::ports::PortError Send(MessageBuilder<T>& message);
 
             template<class T>
+            riaps::ports::PortError SendToMember(MessageBuilder<T>& message, const std::string& identity);
+
+            // TODO: New template param to pass different units, not just millisecs
+            template<class T>
+            std::optional<std::string> RequestVote(MessageBuilder<T>& topic_builder,
+                                                   riaps::groups::poll::Voting kind = riaps::groups::poll::Voting::MAJORITY,
+                                                   double timeout = 0.0);
+
+            template<class T>
             std::tuple<MessageReader<T>, riaps::ports::PortError> Recv();
+
+            void SendVote(const std::string& rfvid, bool vote);
 
             /**
              * End adjusted
@@ -158,6 +171,8 @@ namespace riaps {
 
             GroupId     group_id_;
             const GroupConf* group_conf_;
+
+            std::unique_ptr<MessageReaderArray> group_read_buffer_;
 
             /**
              * Always store the communication ports in shared_ptr
@@ -182,6 +197,8 @@ namespace riaps {
             void ProcessOnQry();
 
             bool pending_mfl_ = false;
+            bool pending_mtl_ = false;
+            bool pending_handle_vote_request_ = false;
         };
 
         template<class T>
@@ -191,6 +208,10 @@ namespace riaps {
                 auto[bytes, error] = group_qryport_->Recv();
                 MessageReader<T> reader(bytes);
                 return std::make_tuple(reader, error);
+            } else if (pending_handle_vote_request_){
+                // Pending message in the buffer
+                MessageReader<T> reader(group_read_buffer_);
+                return std::make_tuple(reader, riaps::ports::PortError(true));
             } else {
                 // The message is on the SUB port
                 auto[bytes, error] = group_subport_->Recv();
@@ -211,6 +232,18 @@ namespace riaps {
         }
 
         template<class T>
+        riaps::ports::PortError Group::SendToMember(MessageBuilder<T> &message, const std::string& identity) {
+            capnp::MallocMessageBuilder& builder = message.capnp_builder();
+            zframe_t* message_frame;
+            message_frame << builder;
+            zmsg_t* group_message = zmsg_new();
+            zmsg_addstr(group_message, identity.c_str());
+            zmsg_addstr(group_message, GROUP_MFL);
+            zmsg_add(group_message, message_frame);
+            return this->group_ansport_->Send(&group_message);
+        }
+
+        template<class T>
         riaps::ports::PortError Group::SendToLeader(MessageBuilder<T> &message) {
             capnp::MallocMessageBuilder& builder = message.capnp_builder();
             zframe_t* message_frame;
@@ -219,6 +252,44 @@ namespace riaps {
             zmsg_addstr(leader_message, GROUP_MTL);
             zmsg_add(leader_message, message_frame);
             return this->group_qryport_->Send(&leader_message);
+        }
+
+        template<class T>
+        std::optional<std::string> Group::RequestVote(MessageBuilder<T> &topic_builder, riaps::groups::poll::Voting kind,
+                                                      double timeout) {
+            capnp::MallocMessageBuilder msg_builder;
+            auto msg = msg_builder.initRoot<riaps::groups::poll::GroupVote>();
+            auto rfv = msg.initRfv();
+            rfv.setKind(kind);
+            auto uid = zuuid_new();
+            std::string uid_str = zuuid_str(uid);
+            rfv.setRfvId(uid_str);
+            rfv.setStarted(this->GetPythonNow());
+            rfv.setSubject(riaps::groups::poll::Subject::VALUE);
+            rfv.setTimeout(timeout/1000.0);
+
+            auto topic_serialized = capnp::messageToFlatArray(topic_builder.capnp_builder());
+            auto topic_bytes = topic_serialized.asBytes();
+
+            rfv.initTopic(topic_bytes.size());
+            rfv.setTopic(topic_bytes);
+
+            zframe_t* message_frame;
+            message_frame << msg_builder;
+            zmsg_t* vote_message = zmsg_new();
+            zmsg_addstr(vote_message, GROUP_RFV);
+            zmsg_add(vote_message, message_frame);
+
+            auto rc = group_qryport_->Send(&vote_message);
+
+            zuuid_destroy(&uid);
+
+            // Error
+            if (rc) {
+                return std::nullopt;
+            }
+
+            return uid_str;
         }
     }
 }

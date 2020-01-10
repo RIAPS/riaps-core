@@ -12,8 +12,17 @@ MessageReaderArray::MessageReaderArray(zframe_t *msg_frame) : frame_(msg_frame){
     capnp_data_ = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data_), frame_size_ / sizeof(capnp::word));
 }
 
+MessageReaderArray::MessageReaderArray(const unsigned char *data, size_t size) :
+    frame_(nullptr) {
+    data_ = (byte*)data;
+    frame_size_ = size;
+    capnp_data_ = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data_), frame_size_ / sizeof(capnp::word));
+}
+
 
 
 MessageReaderArray::~MessageReaderArray() {
-    zframe_destroy(&frame_);
+    if (frame_!=nullptr) {
+        zframe_destroy(&frame_);
+    }
 }

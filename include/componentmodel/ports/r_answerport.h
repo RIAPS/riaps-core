@@ -57,7 +57,7 @@ namespace riaps {
              * @param params Parameters for the answer port (id in the first ZMQ frame)
              * @return PortError
              */
-            PortError SendAnswer(capnp::MallocMessageBuilder& builder, std::shared_ptr<MessageParams> params);
+            //PortError SendAnswer(capnp::MallocMessageBuilder& builder, const std::string& identity);
 
             std::string host() const;
             int port() const;

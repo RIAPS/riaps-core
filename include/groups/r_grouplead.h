@@ -5,7 +5,7 @@
 #ifndef RIAPS_CORE_R_GROUPLEAD_H
 #define RIAPS_CORE_R_GROUPLEAD_H
 
-#include <messaging/distcoord.capnp.h>
+#include <messaging/dc.capnp.h>
 #include <groups/r_group.h>
 #include <groups/r_groupdata.h>
 #include <groups/r_ownid.h>
@@ -54,15 +54,6 @@ namespace riaps{
              * Maintain the state when no incoming message.
              */
             void Update();
-
-            void OnProposeFromClient(riaps::distrcoord::Consensus::ProposeToLeader::Reader& headerMessage,
-                                     zframe_t** messageFrame);
-
-            void OnActionProposeFromClient(riaps::distrcoord::Consensus::ProposeToLeader::Reader& headerMessage,
-                                           riaps::distrcoord::Consensus::TimeSyncCoordA::Reader&  tscaMessage);
-
-            void OnVote(riaps::distrcoord::Consensus::Vote::Reader& message,
-                        const std::string& sourceComponentId);
 
             std::optional<OwnId> GetLeaderId();
 
@@ -123,7 +114,6 @@ namespace riaps{
             void SendRequestForVote();
             //void SendVote(const std::string& vote_for);
             void SendVote(uint32_t term, const OwnId &vote_for, bool vote);
-            void Announce(const std::string& proposeId, riaps::distrcoord::Consensus::VoteResults result);
             uint32_t GetNumberOfVotes();
 
             std::shared_ptr<spd::logger> logger_;

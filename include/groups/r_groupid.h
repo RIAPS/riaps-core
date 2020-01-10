@@ -6,7 +6,7 @@
 #define RIAPS_CORE_R_GROUPID_H
 
 #include <string>
-
+#include <spdlog/spdlog.h>
 #include <msgpack.hpp>
 
 
@@ -28,6 +28,10 @@ namespace riaps {
 
             bool operator<(const GroupId& other) const;
             bool operator==(const GroupId& other) const;
+
+            std::string fullname(const std::string separator = ":") const {
+                return fmt::format("{}{}{}", group_type_id, separator, group_name);
+            }
 
             ///\cond
             MSGPACK_DEFINE(group_name, group_type_id);

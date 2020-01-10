@@ -44,14 +44,23 @@ namespace groupapp {
 //                    component_logger()->error("Couldn't send group message");
 //                }
 
-                // Message to leader
+
                 if (group->HasLeader()) {
-                    MessageBuilder<messages::Msg> builder_to_leader;
-                    builder_to_leader->setValue(fmt::format("to leader from {}", "Sanyi"));
-                    if (group->SendToLeader(builder_to_leader)) {
-                        component_logger()->error("Couldn't send message to leader");
-                    } else {
-                        component_logger()->info("Message to leader was sent");
+                    // Message to leader
+//                    MessageBuilder<messages::Msg> builder_to_leader;
+//                    builder_to_leader->setValue(fmt::format("to leader from {}", "Sanyi"));
+//                    if (group->SendToLeader(builder_to_leader)) {
+//                        component_logger()->error("Couldn't send message to leader");
+//                    } else {
+//                        component_logger()->info("Message to leader was sent");
+//                    }
+
+                    // Request vote
+                    MessageBuilder<messages::Msg> builder_vote;
+                    builder_vote->setValue("Some topic");
+                    auto rfcid = group->RequestVote(builder_vote);
+                    if (rfcid.has_value()) {
+                        component_logger()->info("Vote requested");
                     }
                 } else {
                     component_logger()->warn("No leader yet.");
@@ -85,6 +94,42 @@ namespace groupapp {
                         "Couldn't read groupmessage in group {}::{}",
                         group->group_id().group_type_id,
                         group->group_id().group_name);
+        }
+
+        void GroupieCpp::HandleMessageToLeader(riaps::groups::Group *group, std::string identity) {
+            component_logger()->info("{}", __FUNCTION__);
+            auto [msg, error] = group->Recv<messages::Msg>();
+            if (!error) {
+                component_logger()->info("{} {}:{} of {} = # {} #", __FUNCTION__,
+                                                                    component_name(),
+                                                                    identity,
+                                                                    group->group_id().fullname(),
+                                                                    msg->getValue().cStr());
+
+                MessageBuilder<messages::Msg> builder;
+                builder->setValue(fmt::format("to member from leader of ", group->group_id().fullname()));
+                if (group->SendToMember(builder, identity)) {
+                    component_logger()->error("Error during SendToMember in {}", __FUNCTION__);
+                };
+            } else {
+                component_logger()->error("Error in {}", __FUNCTION__);
+            }
+        }
+
+        void GroupieCpp::HandleVoteRequest(riaps::groups::Group *group, std::string rfvid) {
+            component_logger()->info("{}", __FUNCTION__);
+            auto [msg, error] = group->Recv<messages::Msg>();
+            if (!error) {
+                timespec ts;
+                clock_gettime(CLOCK_REALTIME, &ts);
+                bool vote = ts.tv_nsec % 2 == 0;
+                component_logger()->info("{}[{}] = {} --> {}", __FUNCTION__, rfvid, msg->getValue().cStr(), vote);
+                group->SendVote(rfvid, vote);
+            }
+        }
+
+        void GroupieCpp::HandleVoteResult(riaps::groups::Group *group, std::string rfvid, bool vote) {
+            component_logger()->info("{}[{}] = {}", __FUNCTION__, rfvid, vote);
         }
 
         void GroupieCpp::HandleActivate() {

@@ -38,6 +38,10 @@ constexpr auto INTERNAL_SUB_NAME = "$SUB#";
 constexpr auto INTERNAL_PUB_NAME = "$PUB#";
 constexpr auto INTERNAL_ANS_NAME = "$ANS#";
 constexpr auto INTERNAL_QRY_NAME = "$QRY#";
+constexpr auto INTERNAL_ANS_REQ_TYPE = "group-mtl";
+constexpr auto INTERNAL_ANS_REP_TYPE = "group-mfl";
+constexpr auto INTERNAL_QRY_REQ_TYPE = "group-mtl";
+constexpr auto INTERNAL_QRY_REP_TYPE = "group-mfl";
 
 // Group coordination: default timing values (in msec)
 constexpr uint16_t GROUP_HEARTBEAT        = 1000; // Group heartbeat period
@@ -56,5 +60,9 @@ constexpr auto AUTHORITY = "ldr"; //{ term; ldrId; ldrHost; ldrPort }
 constexpr auto GROUP_MSG = "msg"; // Group message
 constexpr auto GROUP_MTL = "mtl"; // Message to leader
 constexpr auto GROUP_MFL = "mfl"; // Message from leader
+constexpr auto GROUP_RFV = "rfv"; // Request for vote
+constexpr auto GROUP_RCM = "rcm"; // Request consensus from member (by leader)
+constexpr auto GROUP_RTC = "rtc"; // Reply to consensus request
+constexpr auto GROUP_ANN = "ann"; // Announce
 
 #endif //RIAPS_CORE_R_CONST_H

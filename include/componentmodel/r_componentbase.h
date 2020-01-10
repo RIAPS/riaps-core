@@ -205,9 +205,9 @@ namespace riaps {
          *
          * @return
          */
-        riaps::ports::PortError SendMessageOnPort(capnp::MallocMessageBuilder& message,
-                                                  const std::string& port_name,
-                                                  std::shared_ptr<riaps::MessageParams> params);
+//        riaps::ports::PortError SendMessageOnPort(capnp::MallocMessageBuilder& message,
+//                                                  const std::string& port_name,
+//                                                  std::shared_ptr<riaps::MessageParams> params);
 
         /**
          * Sends a message on query port
@@ -217,7 +217,6 @@ namespace riaps {
                                                   const std::string&           port_name,
                                                   std::string&                 request_id);
 
-        void UpdateGroup(riaps::discovery::GroupUpdate::Reader& msg_group_update);
         ///@}
 
         /**
@@ -244,6 +243,12 @@ namespace riaps {
         virtual void HandleGroupMessage(groups::Group* group);
 
         virtual void HandleMessageFromLeader(groups::Group* group);
+
+        virtual void HandleMessageToLeader(groups::Group* group, std::string identity);
+
+        virtual void HandleVoteRequest(riaps::groups::Group *group, std::string rfvid);
+
+        virtual void HandleVoteResult(riaps::groups::Group *group, std::string rfvid, bool vote);
 
 
         /** @}*/
@@ -533,10 +538,10 @@ namespace riaps {
          * @param abs_time The proposed timepoint, when the action should be executed.
          * @return The generated proposeId. The leader announces the results by this id.
          */
-        std::string ProposeAction(const riaps::groups::GroupId& group_id  ,
-                                  const std::string&            action_id ,
-                                  const timespec&               abs_time
-        );
+//        std::string ProposeAction(const riaps::groups::GroupId& group_id  ,
+//                                  const std::string&            action_id ,
+//                                  const timespec&               abs_time
+//        );
         ///@}
 
         uint64_t ScheduleAbsTimer(const timespec &t, uint64_t wakeupOffset = 0 /*nanosec*/);

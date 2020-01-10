@@ -22,6 +22,7 @@ public:
      * @param msg_frame ZMQ frame, which holds the message.
      */
     MessageReaderArray(zframe_t* msg_frame);
+    MessageReaderArray(const unsigned char* data, size_t size);
     MessageReaderArray( const MessageReaderArray& )            = delete; // non construction-copyable
     MessageReaderArray& operator=( const MessageReaderArray& ) = delete; // non copyable
 

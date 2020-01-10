@@ -23,7 +23,7 @@ GroupLead::GroupLead(Group* group, std::unordered_map<OwnId, riaps::utils::Timeo
     /**
      * Initialize random generators
      */
-    rnd_generator_        = std::mt19937(m_rd());
+    rnd_generator_     = std::mt19937(m_rd());
     election_distr_    = std::uniform_int_distribution<int>(GROUP_ELECTION_MIN, GROUP_ELECTION_MAX);
     election_timeout_  = Timeout<std::chrono::milliseconds>(GenerateElectionTimeo());
     appentry_timeout_  = Timeout<std::chrono::milliseconds>(AUTHORITY_TIMEOUT);
@@ -138,7 +138,8 @@ void GroupLead::Update() {
         // TODO: Do it periodically and not in every cycle?
         for (auto it = m_proposeData.begin(); it!=m_proposeData.end();){
             if (it->second->proposeDeadline.IsTimeout()){
-                Announce(it->first, riaps::distrcoord::Consensus::VoteResults::REJECTED);
+                //TODO: REFRESH THIS
+                //Announce(it->first, riaps::distrcoord::Consensus::VoteResults::REJECTED);
                 it = m_proposeData.erase(it);
             } else {
                 it++;
@@ -304,61 +305,61 @@ void GroupLead::SendAuthority() {
     group_->SendMessage(&auth_message);
 }
 
-void GroupLead::OnActionProposeFromClient(riaps::distrcoord::Consensus::ProposeToLeader::Reader &headerMessage,
-                                          riaps::distrcoord::Consensus::TimeSyncCoordA::Reader  &tscaMessage) {
-    if (GetLeaderId() != GetOwnId()) {
-        //m_logger->debug("OnProposeFromClient() returns, leader_id() != GetOwnId()");
-        return;
-    }
-
-    std::string actionId = tscaMessage.getActionId();
-
-    /**
-     * If the same action is being voted, and not timed out -> new vote is not started
-     */
-    if (m_actionData.find(actionId)!=m_actionData.end()){
-        if (!m_actionData[actionId]->proposeDeadline.IsTimeout()) {
-            logger_->debug("The previous voting process has not finished for action {},"
-                           "new propose is not accepted until the previous vote is in progress", actionId);
-            return;
-        }
-    }
-
-    auto pd = std::shared_ptr<ProposeData>(new ProposeData(group_->GetKnownComponents(), Timeout<std::chrono::milliseconds>(std::chrono::milliseconds(1000))));
-    pd->isAction = true;
-    pd->actionId = tscaMessage.getActionId();
-    std::string proposeId = headerMessage.getProposeId();
-    m_proposeData[proposeId] = pd;
-    m_actionData [tscaMessage.getActionId().cStr()] = pd;
-
-    capnp::MallocMessageBuilder builder;
-    auto msgInternal = builder.initRoot<riaps::distrcoord::GroupInternals>();
-    auto msgConsensus = msgInternal.initConsensus();
-    auto msgPropose = msgConsensus.initProposeToClients();
-    //msgConsensus.setSourceComponentId(GetOwnId());
-    msgConsensus.setVoteType(riaps::distrcoord::Consensus::VoteType::ACTION);
-    msgPropose.setProposeId(proposeId);
-    //msgPropose.setLeaderId(GetLeaderId());
-    auto msgTsynca = msgConsensus.initTsyncCoordA();
-    msgTsynca.setActionId(actionId);
-    auto msgTime = msgTsynca.initTime();
-    msgTime.setTvSec(tscaMessage.getTime().getTvSec());
-    msgTime.setTvNsec(tscaMessage.getTime().getTvNsec());
-
-
-
-    zmsg_t* msg = zmsg_new();
-    zframe_t* header;
-    header << builder;
-    zmsg_add(msg, header);
-
-
-//    if (group_->SendMessage(&msg))
-//        logger_->debug("GroupLead::OnActionProposeFromClient() - Message sent, proposeId: {} leader_id: {} sourceId: {} actionId: {}", proposeId, leaderid_,
-//                       GetOwnId(), actionId);
-//    else
-//        logger_->error("OnActionProposeFromClient() failed to send");
-}
+//void GroupLead::OnActionProposeFromClient(riaps::distrcoord::Consensus::ProposeToLeader::Reader &headerMessage,
+//                                          riaps::distrcoord::Consensus::TimeSyncCoordA::Reader  &tscaMessage) {
+//    if (GetLeaderId() != GetOwnId()) {
+//        //m_logger->debug("OnProposeFromClient() returns, leader_id() != GetOwnId()");
+//        return;
+//    }
+//
+//    std::string actionId = tscaMessage.getActionId();
+//
+//    /**
+//     * If the same action is being voted, and not timed out -> new vote is not started
+//     */
+//    if (m_actionData.find(actionId)!=m_actionData.end()){
+//        if (!m_actionData[actionId]->proposeDeadline.IsTimeout()) {
+//            logger_->debug("The previous voting process has not finished for action {},"
+//                           "new propose is not accepted until the previous vote is in progress", actionId);
+//            return;
+//        }
+//    }
+//
+////    auto pd = std::shared_ptr<ProposeData>(new ProposeData(group_->GetKnownMembers(), Timeout<std::chrono::milliseconds>(std::chrono::milliseconds(1000))));
+////    pd->isAction = true;
+////    pd->actionId = tscaMessage.getActionId();
+////    std::string proposeId = headerMessage.getProposeId();
+////    m_proposeData[proposeId] = pd;
+////    m_actionData [tscaMessage.getActionId().cStr()] = pd;
+////
+////    capnp::MallocMessageBuilder builder;
+////    auto msgInternal = builder.initRoot<riaps::distrcoord::GroupInternals>();
+////    auto msgConsensus = msgInternal.initConsensus();
+////    auto msgPropose = msgConsensus.initProposeToClients();
+////    //msgConsensus.setSourceComponentId(GetOwnId());
+////    msgConsensus.setVoteType(riaps::distrcoord::Consensus::VoteType::ACTION);
+////    msgPropose.setProposeId(proposeId);
+////    //msgPropose.setLeaderId(GetLeaderId());
+////    auto msgTsynca = msgConsensus.initTsyncCoordA();
+////    msgTsynca.setActionId(actionId);
+////    auto msgTime = msgTsynca.initTime();
+////    msgTime.setTvSec(tscaMessage.getTime().getTvSec());
+////    msgTime.setTvNsec(tscaMessage.getTime().getTvNsec());
+////
+////
+////
+////    zmsg_t* msg = zmsg_new();
+////    zframe_t* header;
+////    header << builder;
+////    zmsg_add(msg, header);
+//
+//
+////    if (group_->SendMessage(&msg))
+////        logger_->debug("GroupLead::OnActionProposeFromClient() - Message sent, proposeId: {} leader_id: {} sourceId: {} actionId: {}", proposeId, leaderid_,
+////                       GetOwnId(), actionId);
+////    else
+////        logger_->error("OnActionProposeFromClient() failed to send");
+//}
 
 void GroupLead::UpdateAuthority(const riaps::groups::data::Authority &authority) {
     // Authority arrived while this node is a candidate or a follower.
@@ -430,132 +431,132 @@ void GroupLead::UpdateRspVote(const riaps::groups::data::RspVote &rspvote) {
         }
     }
 }
-
-void GroupLead::OnProposeFromClient(riaps::distrcoord::Consensus::ProposeToLeader::Reader& headerMessage,
-                                  zframe_t** messageFrame) {
-
-    //m_logger->debug("OnProposeFromClient()");
-    if (GetLeaderId() != GetOwnId()) {
-        //m_logger->debug("OnProposeFromClient() returns, leader_id() != GetOwnId()");
-        return;
-    }
-    //m_logger->debug("OnProposeFromClient() continues");
-
-
-    auto pd = std::shared_ptr<ProposeData>(new ProposeData(group_->GetKnownComponents(), Timeout<std::chrono::milliseconds>(std::chrono::milliseconds(1000))));
-
-    // TODO: Add known node ids
-    //pd.nodesInVote =
-    std::string proposeId = headerMessage.getProposeId();
-    m_proposeData[proposeId] = std::move(pd);
-
-    // Send propose to clients
-//    capnp::MallocMessageBuilder builder;
-//    auto msgInternal = builder.initRoot<riaps::distrcoord::GroupInternals>();
-//    auto msgConsensus = msgInternal.initConsensus();
-//    auto msgPropose = msgConsensus.initProposeToClients();
-//    msgConsensus.setSourceComponentId(GetOwnId());
-//    msgConsensus.setVoteType(riaps::distrcoord::Consensus::VoteType::VALUE);
-//    msgPropose.setProposeId(proposeId);
-//    msgPropose.setLeaderId(GetLeaderId());
 //
-//    zmsg_t* msg = zmsg_new();
-//    zframe_t* header;
-//    header << builder;
-//    zmsg_add(msg, header);
-//    zmsg_add(msg, *messageFrame);
-//    if (group_->SendMessage(&msg))
-//        logger_->debug("GroupLead::OnProposeFromClient() - Message sent, proposeId: {} leader_id: {} sourceId: {}", proposeId, leaderid_,
-//                       GetOwnId());
+//void GroupLead::OnProposeFromClient(riaps::distrcoord::Consensus::ProposeToLeader::Reader& headerMessage,
+//                                  zframe_t** messageFrame) {
+//
+//    //m_logger->debug("OnProposeFromClient()");
+//    if (GetLeaderId() != GetOwnId()) {
+//        //m_logger->debug("OnProposeFromClient() returns, leader_id() != GetOwnId()");
+//        return;
+//    }
+//    //m_logger->debug("OnProposeFromClient() continues");
+//
+//
+////    auto pd = std::shared_ptr<ProposeData>(new ProposeData(group_->GetKnownMembers(), Timeout<std::chrono::milliseconds>(std::chrono::milliseconds(1000))));
+////
+////    // TODO: Add known node ids
+////    //pd.nodesInVote =
+////    std::string proposeId = headerMessage.getProposeId();
+////    m_proposeData[proposeId] = std::move(pd);
+//
+//    // Send propose to clients
+////    capnp::MallocMessageBuilder builder;
+////    auto msgInternal = builder.initRoot<riaps::distrcoord::GroupInternals>();
+////    auto msgConsensus = msgInternal.initConsensus();
+////    auto msgPropose = msgConsensus.initProposeToClients();
+////    msgConsensus.setSourceComponentId(GetOwnId());
+////    msgConsensus.setVoteType(riaps::distrcoord::Consensus::VoteType::VALUE);
+////    msgPropose.setProposeId(proposeId);
+////    msgPropose.setLeaderId(GetLeaderId());
+////
+////    zmsg_t* msg = zmsg_new();
+////    zframe_t* header;
+////    header << builder;
+////    zmsg_add(msg, header);
+////    zmsg_add(msg, *messageFrame);
+////    if (group_->SendMessage(&msg))
+////        logger_->debug("GroupLead::OnProposeFromClient() - Message sent, proposeId: {} leader_id: {} sourceId: {}", proposeId, leaderid_,
+////                       GetOwnId());
+////    else
+////        logger_->error("OnProposeFromClient() failed to send");
+////    *messageFrame = nullptr;
+//}
+
+//void GroupLead::OnVote(riaps::distrcoord::Consensus::Vote::Reader &message, const std::string& sourceComponentId) {
+//    std::string proposeId    = message.getProposeId();
+//
+//    // May the leader changed
+//    //if (voteLeaderId != leader_id()) return;
+//
+//    // Shouldn't be true, but anyway just and an extra check
+//    //if (voteLeaderId != GetOwnId()) return;
+//
+//    // If this proposeId is not registerd
+//    // Maybe the leader changed, or just already timed out and ereased.
+//    if (m_proposeData.find(proposeId) == m_proposeData.end()){
+//        logger_->debug("Propose Id was not found in the queue: {}", proposeId);
+//        return;
+//    }
+//    if (m_proposeData[proposeId]->proposeDeadline.IsTimeout()) {
+//        logger_->debug("Propose timeout, removed from the queue: {}", proposeId);
+//
+//        // If it is an action, remove the action from the action queue
+//        if (m_proposeData[proposeId]->isAction &&
+//            m_actionData.find(m_proposeData[proposeId]->actionId) != m_proposeData.end()) {
+//            m_actionData.erase(m_proposeData[proposeId]->actionId);
+//        }
+//
+//        m_proposeData.erase(proposeId);
+//
+//        // No chance to accept
+//        Announce(proposeId, riaps::distrcoord::Consensus::VoteResults::REJECTED);
+//        return;
+//    }
+//
+//    ProposeData* currentItem = m_proposeData[proposeId].get();
+//    auto nodesInVote         = currentItem->nodesInVote.get();
+//    auto nodesVoted          = currentItem->nodesVoted.get();
+//
+//    // This node is not allowed to vote, was not in the group when the process started
+//    if (nodesInVote->find(sourceComponentId) == nodesInVote->end()) {
+//        return;
+//    }
+//
+//    nodesVoted->insert(sourceComponentId);
+//
+//    if (message.getVoteResult() == riaps::distrcoord::Consensus::VoteResults::ACCEPTED)
+//        currentItem->accepted++;
 //    else
-//        logger_->error("OnProposeFromClient() failed to send");
-//    *messageFrame = nullptr;
-}
-
-void GroupLead::OnVote(riaps::distrcoord::Consensus::Vote::Reader &message, const std::string& sourceComponentId) {
-    std::string proposeId    = message.getProposeId();
-
-    // May the leader changed
-    //if (voteLeaderId != leader_id()) return;
-
-    // Shouldn't be true, but anyway just and an extra check
-    //if (voteLeaderId != GetOwnId()) return;
-
-    // If this proposeId is not registerd
-    // Maybe the leader changed, or just already timed out and ereased.
-    if (m_proposeData.find(proposeId) == m_proposeData.end()){
-        logger_->debug("Propose Id was not found in the queue: {}", proposeId);
-        return;
-    }
-    if (m_proposeData[proposeId]->proposeDeadline.IsTimeout()) {
-        logger_->debug("Propose timeout, removed from the queue: {}", proposeId);
-
-        // If it is an action, remove the action from the action queue
-        if (m_proposeData[proposeId]->isAction &&
-            m_actionData.find(m_proposeData[proposeId]->actionId) != m_proposeData.end()) {
-            m_actionData.erase(m_proposeData[proposeId]->actionId);
-        }
-
-        m_proposeData.erase(proposeId);
-
-        // No chance to accept
-        Announce(proposeId, riaps::distrcoord::Consensus::VoteResults::REJECTED);
-        return;
-    }
-
-    ProposeData* currentItem = m_proposeData[proposeId].get();
-    auto nodesInVote         = currentItem->nodesInVote.get();
-    auto nodesVoted          = currentItem->nodesVoted.get();
-
-    // This node is not allowed to vote, was not in the group when the process started
-    if (nodesInVote->find(sourceComponentId) == nodesInVote->end()) {
-        return;
-    }
-
-    nodesVoted->insert(sourceComponentId);
-
-    if (message.getVoteResult() == riaps::distrcoord::Consensus::VoteResults::ACCEPTED)
-        currentItem->accepted++;
-    else
-        currentItem->rejected++;
-
-
-    auto accepted  = currentItem->accepted;
-    auto rejected  = currentItem->rejected;
-    auto groupSize = nodesInVote->size();
-    auto majority  = (groupSize%2==0)?(groupSize/2)+1:ceil(((double)groupSize)/2.0);
-
-    // Majority, announce
-    if (accepted >= majority) {
-        Announce(proposeId, riaps::distrcoord::Consensus::VoteResults::ACCEPTED);
-        if (m_proposeData[proposeId]->isAction &&
-            m_actionData.find(m_proposeData[proposeId]->actionId) != m_proposeData.end()) {
-            m_actionData.erase(m_proposeData[proposeId]->actionId);
-        }
-        m_proposeData.erase(proposeId);
-        logger_->debug("Majority in VOTE => ANNOUNCE, {}/{}", groupSize, accepted);
-    } else if(rejected>=majority){
-        if (m_proposeData[proposeId]->isAction &&
-            m_actionData.find(m_proposeData[proposeId]->actionId) != m_proposeData.end()) {
-            m_actionData.erase(m_proposeData[proposeId]->actionId);
-        }
-        Announce(proposeId, riaps::distrcoord::Consensus::VoteResults::REJECTED);
-        m_proposeData.erase(proposeId);
-        logger_->debug("No majority in VOTE => ANNOUNCE, {}/{}", groupSize, accepted);
-    } else {
-        logger_->debug("No majority in VOTE, waiting for more vote {}/{}", groupSize, accepted);
-    }
-}
-
-void GroupLead::Announce(const std::string& proposeId, riaps::distrcoord::Consensus::VoteResults result) {
-    capnp::MallocMessageBuilder builder;
-    auto msgInt       = builder.initRoot<riaps::distrcoord::GroupInternals>();
-    auto msgConsensus = msgInt.initConsensus();
-    auto msgAnnounce  = msgConsensus.initAnnounce();
-    msgAnnounce.setProposeId(proposeId);
-    msgAnnounce.setVoteResult(result);
-    group_->SendInternalMessage(builder);
-}
+//        currentItem->rejected++;
+//
+//
+//    auto accepted  = currentItem->accepted;
+//    auto rejected  = currentItem->rejected;
+//    auto groupSize = nodesInVote->size();
+//    auto majority  = (groupSize%2==0)?(groupSize/2)+1:ceil(((double)groupSize)/2.0);
+//
+//    // Majority, announce
+//    if (accepted >= majority) {
+//        Announce(proposeId, riaps::distrcoord::Consensus::VoteResults::ACCEPTED);
+//        if (m_proposeData[proposeId]->isAction &&
+//            m_actionData.find(m_proposeData[proposeId]->actionId) != m_proposeData.end()) {
+//            m_actionData.erase(m_proposeData[proposeId]->actionId);
+//        }
+//        m_proposeData.erase(proposeId);
+//        logger_->debug("Majority in VOTE => ANNOUNCE, {}/{}", groupSize, accepted);
+//    } else if(rejected>=majority){
+//        if (m_proposeData[proposeId]->isAction &&
+//            m_actionData.find(m_proposeData[proposeId]->actionId) != m_proposeData.end()) {
+//            m_actionData.erase(m_proposeData[proposeId]->actionId);
+//        }
+//        Announce(proposeId, riaps::distrcoord::Consensus::VoteResults::REJECTED);
+//        m_proposeData.erase(proposeId);
+//        logger_->debug("No majority in VOTE => ANNOUNCE, {}/{}", groupSize, accepted);
+//    } else {
+//        logger_->debug("No majority in VOTE, waiting for more vote {}/{}", groupSize, accepted);
+//    }
+//}
+//
+//void GroupLead::Announce(const std::string& proposeId, riaps::distrcoord::Consensus::VoteResults result) {
+//    capnp::MallocMessageBuilder builder;
+//    auto msgInt       = builder.initRoot<riaps::distrcoord::GroupInternals>();
+//    auto msgConsensus = msgInt.initConsensus();
+//    auto msgAnnounce  = msgConsensus.initAnnounce();
+//    msgAnnounce.setProposeId(proposeId);
+//    msgAnnounce.setVoteResult(result);
+//    group_->SendInternalMessage(builder);
+//}
 
 void GroupLead::SendVote(uint32_t term, const OwnId &vote_for, bool vote) {
     zmsg_t* vote_message = zmsg_new();

@@ -97,7 +97,7 @@ endif()
 # libriaps sources
 list (APPEND riapslib_SOURCE
         include/messaging/disco.capnp.c++
-        include/messaging/distcoord.capnp.c++
+        include/messaging/dc.capnp.c++
         src/componentmodel/ports/r_queryport.cc
         #src/componentmodel/ports/r_queryportgroup.cc
         src/componentmodel/ports/r_answerport.cc
@@ -138,9 +138,7 @@ list (APPEND riapslib_SOURCE
 # libriaps headers
 list (APPEND riapslib_HEADERS
         include/componentmodel/ports/r_queryport.h
-        #include/componentmodel/ports/r_queryportgroup.h
         include/componentmodel/ports/r_answerport.h
-        #include/componentmodel/ports/r_answerportgroup.h
         include/componentmodel/ports/r_insideport.h
         include/componentmodel/ports/r_periodictimer.h
         include/componentmodel/ports/r_portbase.h
@@ -174,7 +172,7 @@ list (APPEND riapslib_HEADERS
         include/groups/r_ownid.h
         include/groups/r_groupdata.h
         include/messaging/disco.capnp.h
-        include/messaging/distcoord.capnp.h
+        include/messaging/dc.capnp.h
         include/utils/r_expirable.h
         include/utils/r_expirablelist.h
         include/utils/r_timeout.h
