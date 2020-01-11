@@ -29,7 +29,8 @@ namespace weathermonitor {
 							const std::string &type_name,
 							const py::dict    args,
 							const std::string &application_name,
-							const std::string &actor_name);
+							const std::string &actor_name,
+							const py::list groups);
     		
     		virtual void OnTempupdate ()=0;
             virtual std::tuple<MessageReader<messages::TempData>, riaps::ports::PortError> RecvTempupdate() final;

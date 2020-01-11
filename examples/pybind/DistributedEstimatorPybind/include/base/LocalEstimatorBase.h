@@ -35,7 +35,8 @@ namespace distributedestimator {
                                const std::string &type_name,
                                const py::dict args,
                                const std::string &application_name,
-                               const std::string &actor_name);
+                               const std::string &actor_name       ,
+		                          const py::list     groups);
 
             virtual void OnReady()=0;
             virtual void OnQuery() = 0;

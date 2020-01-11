@@ -15,9 +15,10 @@ namespace distributedestimator {
                                        const std::string &type_name,
                                        const py::dict args,
                                        const std::string &application_name,
-                                       const std::string &actor_name)
+                                       const std::string &actor_name,
+				                       const py::list groups)
                 : LocalEstimatorBase(parent_actor, actor_spec, type_spec, name, type_name, args, application_name,
-                                      actor_name) {
+                                      actor_name,groups) {
             //set_debug_level(spd::level::debug);
         }
 
@@ -86,10 +87,11 @@ create_component_py(const py::object *parent_actor,
                     const std::string &type_name,
                     const py::dict args,
                     const std::string &application_name,
-                    const std::string &actor_name) {
+                    const std::string &actor_name,
+                    const py::list groups) {
     auto ptr = new distributedestimator::components::LocalEstimator(parent_actor, actor_spec, type_spec, name, type_name, args,
                                                                      application_name,
-                                                                     actor_name);
+                                                                     actor_name,groups);
     return std::move(std::unique_ptr<distributedestimator::components::LocalEstimator>(ptr));
 }
 

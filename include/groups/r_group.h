@@ -205,7 +205,9 @@ namespace riaps {
             bool pending_mtl_ = false;
             bool pending_handle_vote_request_ = false;
         };
+    }
 
+    namespace groups {
         template<class T>
         std::tuple<MessageReader<T>, riaps::ports::PortError> Group::Recv() {
             // if there is a message from the QRY port

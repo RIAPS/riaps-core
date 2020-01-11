@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(riaps_core VERSION 1.1.17)
+project(riaps_core VERSION 1.1.18)
 option(arch "amd64/armhf" "amd64")
 option(BUILD_TESTS  "Build tests" ON)
 set(CMAKE_SYSTEM_NAME Linux)
@@ -11,7 +11,8 @@ set(PYBIND11_CPP_STANDARD -std=c++14)
 
 #Set the platform
 if (${arch} STREQUAL "armhf")
- set(TOOLCHAIN_PREFIX /usr/bin/arm-linux-gnueabihf)
+ set(TOOLCHAIN_NAME arm-linux-gnueabihf)	
+ set(TOOLCHAIN_PREFIX /usr/bin/${TOOLCHAIN_NAME})
  set(CMAKE_C_COMPILER ${TOOLCHAIN_PREFIX}-gcc)
  set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}-g++-7)
  set(CMAKE_FIND_ROOT_PATH ${TOOLCHAIN_PREFIX})
@@ -24,10 +25,11 @@ endif()
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+# Set the installation prefix
 if (${arch} STREQUAL "armhf")
- set(prefix /opt/riaps/armhf)
+ set(prefix /usr/arm-linux-gnueabihf)
 else()
- set(prefix /opt/riaps/amd64)
+ set(prefix /usr/local)
 endif()
 set(CMAKE_INSTALL_PREFIX ${prefix})
 
@@ -86,8 +88,8 @@ if (BUILD_TESTS)
     #add_subdirectory(tests/DC/leaderwiththree)
     # add_subdirectory(tests/TimedTest)
     # add_subdirectory(examples/EchoIO)
-    # add_subdirectory(examples/pybind/WeatherMonitor)
-    # add_subdirectory(examples/pybind/DistributedEstimatorPybind)
+    add_subdirectory(examples/pybind/WeatherMonitor)
+    add_subdirectory(examples/pybind/DistributedEstimatorPybind)
     # add_subdirectory(tests/PeriodicTimerSync)
     # add_subdirectory(tests/DistributedVoltage)
     add_subdirectory(examples/pybind/Group)
@@ -230,7 +232,7 @@ install(TARGETS rdiscoveryd DESTINATION bin)
 
 SET(MAJOR_VERSION "1")
 SET(MINOR_VERSION "1")
-SET(PATCH_VERSION "16")
+SET(PATCH_VERSION "18")
 
 
 IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
