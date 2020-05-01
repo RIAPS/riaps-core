@@ -1,0 +1,13 @@
+
+app GroupApp {
+	// Message test
+	on all GroupActorA(gs='1',tl='ml'), GroupActorB(gs='1',tl='ml');
+	// Leader message test
+	// on all GroupActorA(gs='1',tl='l'), GroupActorB(gs='1',tl='l'), GroupActorC(gs='1',tl='l');	
+	
+	// Vote test (topic)
+	// on all GroupActorA(gs='1',tl='v'), GroupActorB(gs='1',tl='v'), GroupActorC(gs='1',tl='v');
+
+	// Vote test (action)
+	// on all GroupActorA(gs='1',tl='t'), GroupActorB(gs='1',tl='t'), GroupActorC(gs='1',tl='t');
+}

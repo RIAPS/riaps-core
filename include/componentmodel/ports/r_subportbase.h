@@ -5,9 +5,14 @@
 #ifndef RIAPS_CORE_R_SUBPORTBASE_H
 #define RIAPS_CORE_R_SUBPORTBASE_H
 
+//#include <componentmodel/r_componentbase.h>
+#include <componentmodel/r_configuration.h>
 #include <componentmodel/ports/r_portbase.h>
+//
 
 #include <string>
+#include <memory>
+
 #include "r_recvport.h"
 
 namespace riaps{
@@ -32,6 +37,8 @@ namespace riaps{
              * @return False if the connection couldn't be made.
              */
             bool ConnectToPublihser(const std::string& endpoint);
+
+            virtual void Init() = 0;
 
             ~SubscriberPortBase() override;
 

@@ -15,9 +15,10 @@ namespace distributedestimator {
                                        const std::string &type_name,
                                        const py::dict args,
                                        const std::string &application_name,
-                                       const std::string &actor_name)
+                                       const std::string &actor_name,
+				                       const py::list groups)
                 : LocalEstimatorBase(parent_actor, actor_spec, type_spec, name, type_name, args, application_name,
-                                      actor_name) {
+                                      actor_name,groups) {
             //set_debug_level(spd::level::debug);
         }
 
@@ -86,16 +87,18 @@ create_component_py(const py::object *parent_actor,
                     const std::string &type_name,
                     const py::dict args,
                     const std::string &application_name,
-                    const std::string &actor_name) {
+                    const std::string &actor_name,
+                    const py::list groups) {
     auto ptr = new distributedestimator::components::LocalEstimator(parent_actor, actor_spec, type_spec, name, type_name, args,
                                                                      application_name,
-                                                                     actor_name);
+                                                                     actor_name,groups);
     return std::move(std::unique_ptr<distributedestimator::components::LocalEstimator>(ptr));
 }
 
+
 PYBIND11_MODULE(liblocalestimator, m) {
     py::class_<distributedestimator::components::LocalEstimator> testClass(m, "LocalEstimator");
-    testClass.def(py::init<const py::object*, const py::dict, const py::dict, const std::string&, const std::string&, const py::dict, const std::string&, const std::string&>());
+    testClass.def(py::init<const py::object*, const py::dict, const py::dict, const std::string&, const std::string&, const py::dict, const std::string&, const std::string&, const py::list>());
 
     testClass.def("setup"                 , &distributedestimator::components::LocalEstimator::Setup);
     testClass.def("activate"              , &distributedestimator::components::LocalEstimator::Activate);

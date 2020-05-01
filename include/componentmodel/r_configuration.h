@@ -128,13 +128,31 @@ struct groupt_ports {
 /**
  * Grouptype configuration
  */
-struct GroupTypeConf {
-    std::string   group_type_id;
-    groupt_ports  group_type_ports;
-    bool          has_leader;
-    bool          has_consensus;
-};
+//struct GroupTypeConf {
+//    std::string   group_type_id;
+//    bool          has_leader;
+//};
 
+class GroupConf {
+public:
+    GroupConf() = default;
+    GroupConf(const std::string& tname, const std::string& tkind, const std::string& tmessage, const bool ttimed) :
+        name_(tname), kind_(tkind), message_(tmessage), timed_(ttimed) {};
+
+    const std::string& name() const { return name_; }
+    const std::string& kind() const { return kind_; }
+    const std::string& message() const { return message_; }
+    const bool timed() const { return timed_; }
+    bool has_leader() const {
+        return kind_ != "default";
+    };
+
+private:
+    std::string name_;
+    std::string kind_;
+    std::string message_;
+    bool timed_;
+};
 
 struct ComponentConf {
     std::string               component_name;

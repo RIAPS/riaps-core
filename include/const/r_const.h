@@ -36,14 +36,33 @@ constexpr auto CURVE_KEY    = "riaps-app.cert";
 //** Groups **
 constexpr auto INTERNAL_SUB_NAME = "$SUB#";
 constexpr auto INTERNAL_PUB_NAME = "$PUB#";
-constexpr auto INTERNAL_MESSAGETYPE = "InternalGroupMessage";
+constexpr auto INTERNAL_ANS_NAME = "$ANS#";
+constexpr auto INTERNAL_QRY_NAME = "$QRY#";
+constexpr auto INTERNAL_ANS_REQ_TYPE = "group-mtl";
+constexpr auto INTERNAL_ANS_REP_TYPE = "group-mfl";
+constexpr auto INTERNAL_QRY_REQ_TYPE = "group-mtl";
+constexpr auto INTERNAL_QRY_REP_TYPE = "group-mfl";
 
-/**
- * Actor argument index
- */
-constexpr auto ARG_IDX_APP   = 1;
-constexpr auto ARG_IDX_MODEL = 2;
-constexpr auto ARG_IDX_ACTOR = 3;
-constexpr auto ARG_IDX_DEVICE = ARG_IDX_ACTOR;
+// Group coordination: default timing values (in msec)
+constexpr uint16_t GROUP_HEARTBEAT        = 1000; // Group heartbeat period
+constexpr uint16_t GROUP_ELECTION_MIN     = 1500; // Minimum leader election timeout
+constexpr uint16_t GROUP_ELECTION_MAX     = 2000; // Maximum leader election timeout
+constexpr uint16_t GROUP_PEERTIMEOUT      = 3000; // Peer is declared lost after this timeout
+constexpr uint16_t GROUP_CONSENSUSTIMEOUT = 1500; // Deadline for consensus vote
+constexpr uint16_t AUTHORITY_TIMEOUT      = 750;  // Leader heartbeat period
+
+// Message frames
+constexpr auto HEARTBEAT = "tic";
+constexpr auto REQVOTE   = "req"; //{ term ; ownId }
+constexpr auto RSPVOTE   = "vot"; //{ term; candId; bool; ownId }
+constexpr auto AUTHORITY = "ldr"; //{ term; ldrId; ldrHost; ldrPort }
+
+constexpr auto GROUP_MSG = "msg"; // Group message
+constexpr auto GROUP_MTL = "mtl"; // Message to leader
+constexpr auto GROUP_MFL = "mfl"; // Message from leader
+constexpr auto GROUP_RFV = "rfv"; // Request for vote
+constexpr auto GROUP_RCM = "rcm"; // Request consensus from member (by leader)
+constexpr auto GROUP_RTC = "rtc"; // Reply to consensus request
+constexpr auto GROUP_ANN = "ann"; // Announce
 
 #endif //RIAPS_CORE_R_CONST_H

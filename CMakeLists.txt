@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(riaps_core VERSION 1.1.17)
+project(riaps_core VERSION 1.1.18)
 option(arch "amd64/armhf" "amd64")
 option(BUILD_TESTS  "Build tests" ON)
 set(CMAKE_SYSTEM_NAME Linux)
@@ -11,7 +11,8 @@ set(PYBIND11_CPP_STANDARD -std=c++14)
 
 #Set the platform
 if (${arch} STREQUAL "armhf")
- set(TOOLCHAIN_PREFIX /usr/bin/arm-linux-gnueabihf)
+ set(TOOLCHAIN_NAME arm-linux-gnueabihf)	
+ set(TOOLCHAIN_PREFIX /usr/bin/${TOOLCHAIN_NAME})
  set(CMAKE_C_COMPILER ${TOOLCHAIN_PREFIX}-gcc)
  set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}-g++-7)
  set(CMAKE_FIND_ROOT_PATH ${TOOLCHAIN_PREFIX})
@@ -24,6 +25,7 @@ endif()
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+# Set the installation prefix
 if (${arch} STREQUAL "armhf")
  set(prefix /usr/arm-linux-gnueabihf)
 else()
@@ -41,8 +43,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/bin)
 
 include_directories(include)
-include_directories(/usr/local/include/python3.6/pybind11/include)
-include_directories(/usr/include/python3.5m/)
+include_directories(/usr/include/python3.6/)
+include_directories(/usr/local/include/python3.6/)
 
 # Process Cap'n Proto messages
 add_custom_command(
@@ -86,19 +88,22 @@ if (BUILD_TESTS)
     #add_subdirectory(tests/DC/leaderwiththree)
     # add_subdirectory(tests/TimedTest)
     # add_subdirectory(examples/EchoIO)
-    # add_subdirectory(examples/pybind/WeatherMonitor)
-    # add_subdirectory(examples/pybind/DistributedEstimatorPybind)
+    add_subdirectory(examples/pybind/WeatherMonitor)
+    add_subdirectory(examples/pybind/DistributedEstimatorPybind)
     # add_subdirectory(tests/PeriodicTimerSync)
     # add_subdirectory(tests/DistributedVoltage)
+    add_subdirectory(examples/pybind/Group)
 endif()
 
 
 # libriaps sources
 list (APPEND riapslib_SOURCE
         include/messaging/disco.capnp.c++
-        include/messaging/distcoord.capnp.c++
+        include/messaging/dc.capnp.c++
         src/componentmodel/ports/r_queryport.cc
+        #src/componentmodel/ports/r_queryportgroup.cc
         src/componentmodel/ports/r_answerport.cc
+        #src/componentmodel/ports/r_answerportgroup.cc
         src/componentmodel/ports/r_insideport.cc
         src/componentmodel/ports/r_periodictimer.cc
         src/componentmodel/ports/r_portbase.cc
@@ -126,6 +131,9 @@ list (APPEND riapslib_SOURCE
         src/framework/rfw_security.cc
         src/groups/r_group.cc
         src/groups/r_grouplead.cc
+        src/groups/r_groupid.cc
+        src/groups/r_ownid.cc
+        src/groups/r_groupdata.cc
         src/utils/r_utils.cc
         )
 
@@ -160,9 +168,13 @@ list (APPEND riapslib_HEADERS
         include/componentmodel/r_riapsmessage.h
         include/const/r_const.h
         include/groups/r_group.h
+        include/groups/r_groupid.h
         include/groups/r_grouplead.h
+        include/groups/r_groupservice.h
+        include/groups/r_ownid.h
+        include/groups/r_groupdata.h
         include/messaging/disco.capnp.h
-        include/messaging/distcoord.capnp.h
+        include/messaging/dc.capnp.h
         include/utils/r_expirable.h
         include/utils/r_expirablelist.h
         include/utils/r_timeout.h
@@ -220,7 +232,7 @@ install(TARGETS rdiscoveryd DESTINATION bin)
 
 SET(MAJOR_VERSION "1")
 SET(MINOR_VERSION "1")
-SET(PATCH_VERSION "16")
+SET(PATCH_VERSION "18")
 
 
 IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")

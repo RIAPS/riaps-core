@@ -3,8 +3,6 @@
 
 #include <componentmodel/r_componentbase.h>
 #include <componentmodel/r_configuration.h>
-#include <componentmodel/ports/r_senderport.h>
-#include <componentmodel/r_riapsmessage.h>
 
 #include <czmq.h>
 #include <zuuid.h>
@@ -16,7 +14,12 @@ namespace riaps {
     class ComponentBase;
 
     namespace ports {
-        class QueryPort : public PortBase {
+        class QueryPort;
+        class GroupQueryPort;
+
+
+
+        class QueryPort : public PortBase, public SenderPort, public RecvPort {
         public:
 
             /**
@@ -24,35 +27,19 @@ namespace riaps {
              * @param component The parent component.
              */
             QueryPort(const ComponentPortQry &config, const ComponentBase *component);
-            virtual void Init();
+            void Init();
 
             /**
              * Connects to a server.
              * @param ans_endpoint The address of the server. (Answer type port)
              * @return False, if the request port couldn't connect. True otherwise.
              */
-            bool ConnectToResponse(const std::string& ans_endpoint);
+            bool Connect(const std::string& ans_endpoint);
+            void Disconnect(const std::string& ans_endpoint);
 
-
-            template<class R, class T>
-            bool RecvQuery(std::shared_ptr<riaps::RiapsMessage<R, T>>& message,
-                           std::shared_ptr<riaps::MessageParams>& params){
-                /**
-                 * |RequestId|Message|Timestamp|
-                */
-
-                char* cRequestId = nullptr;
-                zframe_t *bodyFrame = nullptr, *timestampFrame = nullptr;
-                if (zsock_recv(port_socket_, "sff", &cRequestId, &bodyFrame, &timestampFrame)==0){
-                    std::string socketId = zuuid_str(m_socketId);
-                    params.reset(new riaps::MessageParams(socketId, &cRequestId, &timestampFrame));
-                    message.reset(new RiapsMessage<R, T>(&bodyFrame));
-                } else {
-                    logger()->error("Wrong incoming message format on port: {}", port_name());
-                }
-
-                return false;
-            };
+//            template<class R, class T>
+//            bool RecvQuery(std::shared_ptr<riaps::RiapsMessage<R, T>>& message,
+//                           std::shared_ptr<riaps::MessageParams>& params);
 
             /**
              * Converts the passed capnp message to bytes and sends the bytearray.
@@ -75,23 +62,35 @@ namespace riaps {
              *
              */
 
-            PortError SendQuery(capnp::MallocMessageBuilder& message, std::string& requestId, bool addTimestamp = false) const;
-
-            //virtual QueryPort* AsQueryPort() ;
-
+            //PortError SendQuery(capnp::MallocMessageBuilder& message, std::string& requestId, bool addTimestamp = false) const;
             virtual const ComponentPortQry* GetConfig() const;
 
             ~QueryPort() noexcept ;
         protected:
-            bool m_isConnected;
-
-            capnp::FlatArrayMessageReader m_capnpReader;
-
-
-
-            zuuid_t* m_socketId;
-
+            bool connected_;
+            capnp::FlatArrayMessageReader capnp_reader_;
+            zuuid_t* socketid_;
         };
+
+//        template<class R, class T>
+//        bool QueryPort::RecvQuery(std::shared_ptr<riaps::RiapsMessage<R, T>>& message,
+//                       std::shared_ptr<riaps::MessageParams>& params){
+//            /**
+//             * |RequestId|Message|Timestamp|
+//            */
+//
+//            char* cRequestId = nullptr;
+//            zframe_t *bodyFrame = nullptr, *timestampFrame = nullptr;
+//            if (zsock_recv(port_socket_, "sff", &cRequestId, &bodyFrame, &timestampFrame)==0){
+//                std::string socketId = zuuid_str(socketid_);
+//                params.reset(new riaps::MessageParams(socketId, &cRequestId, &timestampFrame));
+//                message.reset(new RiapsMessage<R, T>(&bodyFrame));
+//            } else {
+//                logger()->error("Wrong incoming message format on port: {}", port_name());
+//            }
+//
+//            return false;
+//        };
     }
 }
 
