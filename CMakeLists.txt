@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(riaps_core VERSION 1.1.18)
-option(arch "amd64/armhf" "amd64")
+option(arch "amd64/armhf/arm64" "amd64")
 option(BUILD_TESTS  "Build tests" ON)
 set(CMAKE_SYSTEM_NAME Linux)
 
@@ -11,15 +11,21 @@ set(PYBIND11_CPP_STANDARD -std=c++14)
 
 #Set the platform
 if (${arch} STREQUAL "armhf")
- set(TOOLCHAIN_NAME arm-linux-gnueabihf)	
+ set(TOOLCHAIN_NAME arm-linux-gnueabihf)
  set(TOOLCHAIN_PREFIX /usr/bin/${TOOLCHAIN_NAME})
  set(CMAKE_C_COMPILER ${TOOLCHAIN_PREFIX}-gcc)
- set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}-g++-7)
+ set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}-g++-9)
+ set(CMAKE_FIND_ROOT_PATH ${TOOLCHAIN_PREFIX})
+ set (CMAKE_C_FLAGS "-std=c99")
+elseif(${arch} STREQUAL "arm64")
+ set(TOOLCHAIN_PREFIX /usr/bin/aarch64-linux-gnu)
+ set(CMAKE_C_COMPILER ${TOOLCHAIN_PREFIX}-gcc)
+ set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}-g++-9)
  set(CMAKE_FIND_ROOT_PATH ${TOOLCHAIN_PREFIX})
  set (CMAKE_C_FLAGS "-std=c99")
 else()
- set(CMAKE_C_COMPILER gcc-7)
- set(CMAKE_CXX_COMPILER g++-7)
+ set(CMAKE_C_COMPILER gcc-9)
+ set(CMAKE_CXX_COMPILER g++-9)
  set (CMAKE_C_FLAGS "-std=c99")
 endif()
 
@@ -28,6 +34,8 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # Set the installation prefix
 if (${arch} STREQUAL "armhf")
  set(prefix /usr/arm-linux-gnueabihf)
+elseif(${arch} STREQUAL "arm64")
+ set(prefix /usr/aarch64-linux-gnu)
 else()
  set(prefix /usr/local)
 endif()
@@ -43,8 +51,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/bin)
 
 include_directories(include)
-include_directories(/usr/include/python3.6/)
-include_directories(/usr/local/include/python3.6/)
+include_directories(/usr/include/python3.8/)
+include_directories(/usr/local/include/python3.8/)
 
 # Process Cap'n Proto messages
 add_custom_command(
@@ -232,7 +240,7 @@ install(TARGETS rdiscoveryd DESTINATION bin)
 
 SET(MAJOR_VERSION "1")
 SET(MINOR_VERSION "1")
-SET(PATCH_VERSION "18")
+SET(PATCH_VERSION "18rc1")
 
 
 IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")

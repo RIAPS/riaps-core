@@ -15,6 +15,7 @@ pipeline {
         sh 'bash package.sh'
         sh 'mv package/riaps-core-amd64.deb .'
         sh 'mv package/riaps-core-armhf.deb .'
+        sh 'mv package/riaps-core-arm64.deb .'
       }
     }
     stage('Deploy') {
@@ -27,7 +28,7 @@ pipeline {
           script {
             def user = 'riaps'
             def repo = 'riaps-core'
-            def files = ['riaps-core-amd64.deb','riaps-core-armhf.deb']
+            def files = ['riaps-core-amd64.deb','riaps-core-armhf.deb','riaps-core-arm64.deb']
             // Create release on GitHub, if it doesn't already exist
             sh "${env.WORKSPACE}/go/bin/github-release release --user ${user} --repo ${repo} --tag ${env.TAG_NAME} --name ${env.TAG_NAME} --pre-release || true"
             // Iterate over artifacts and upload them

@@ -24,3 +24,13 @@ cp DEBIAN/postrm package/riaps-core-armhf/DEBIAN/postrm
 cp -r armhf-opt/usr/arm-linux-gnueabihf/* package/riaps-core-armhf/usr/local/.
 sed s/@version@/$coreversion/g -i package/riaps-core-armhf/DEBIAN/control
 fakeroot dpkg-deb --build package/riaps-core-armhf/
+
+#ARMHF
+mkdir -p package/riaps-core-arm64/DEBIAN
+mkdir -p package/riaps-core-arm64/usr/local/
+cp DEBIAN/riaps-core-arm64.control package/riaps-core-arm64/DEBIAN/control
+cp DEBIAN/postinst package/riaps-core-arm64/DEBIAN/postinst
+cp DEBIAN/postrm package/riaps-core-arm64/DEBIAN/postrm
+cp -r arm64-opt/usr/aarch64-linux-gnu/* package/riaps-core-arm64/usr/local/.
+sed s/@version@/$coreversion/g -i package/riaps-core-arm64/DEBIAN/control
+fakeroot dpkg-deb --build package/riaps-core-arm64/
