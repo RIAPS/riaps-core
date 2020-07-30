@@ -14,7 +14,7 @@ if (${arch} STREQUAL "armhf")
  set(TOOLCHAIN_NAME arm-linux-gnueabihf)
  set(TOOLCHAIN_PREFIX /usr/bin/${TOOLCHAIN_NAME})
  set(CMAKE_C_COMPILER ${TOOLCHAIN_PREFIX}-gcc)
- set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}-g++-9)
+ set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}-g++-7)
  set(CMAKE_FIND_ROOT_PATH ${TOOLCHAIN_PREFIX})
  set (CMAKE_C_FLAGS "-std=c99")
 elseif(${arch} STREQUAL "arm64")
@@ -51,8 +51,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/bin)
 
 include_directories(include)
-include_directories(/usr/include/python3.8/)
-include_directories(/usr/local/include/python3.8/)
+include_directories(/usr/include/python3.6/)
+include_directories(/usr/local/include/python3.6/pybind11)
 
 # Process Cap'n Proto messages
 add_custom_command(
