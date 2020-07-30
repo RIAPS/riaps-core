@@ -52,7 +52,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/bin)
 
 include_directories(include)
 include_directories(/usr/include/python3.6/)
-include_directories(/usr/local/include/python3.6/pybind11)
+include_directories(/usr/local/include/python3.6/)
 
 # Process Cap'n Proto messages
 add_custom_command(
