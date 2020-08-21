@@ -18,7 +18,7 @@ make VERBOSE=1 -j2
 make DESTDIR=../armhf-opt/ install
 popd
 
-echo "doing the armhf build"
+echo "doing the arm64 build"
 rm -rf build-arm64
 mkdir build-arm64
 pushd  build-arm64
