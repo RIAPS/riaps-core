@@ -1,8 +1,0 @@
-#   ****  Generated on 2020-01-10 13:47:35.403230 by pyzmq  ****
-#   ZeroMQ CURVE **Secret** Certificate
-#   DO NOT PROVIDE THIS FILE TO OTHER USERS nor change its permissions.
-
-metadata
-curve
-    public-key = "Kk)Cu/lGa7Th&H260AU@b[<+%d4XK6>{JO#K.(E-"
-    secret-key = "WX}d^LGF>-O:O4mcwJ09kCZVMAwz3MnVHW}A*sQJ"

@@ -1,9 +1,0 @@
-!!python/object:riaps.utils.appdesc.AppDescriptor
-home: /home/istvan/work/riaps-core/bin
-host: '3232235879'
-hosts:
-- 192.168.1.100
-mac: 001c4214efd2
-network: {}
-sha: 001c4214efd2
-url: file:////home/istvan/work/riaps-core/bin
