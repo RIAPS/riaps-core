@@ -5,7 +5,7 @@ rm -rf build-amd64
 mkdir build-amd64
 pushd  build-amd64
 cmake -Darch=amd64 ..
-make VEBOSE=1 -j2
+make VERBOSE=1 -j2
 make DESTDIR=../amd64-opt/ install
 popd
 
