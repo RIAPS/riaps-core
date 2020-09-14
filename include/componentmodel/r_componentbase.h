@@ -285,7 +285,6 @@ namespace riaps {
 
 
 
-
         /**
          * Gives a snapshot about the members of a group, considering a timeout.
          * @param groupId Group instance id.
