@@ -10,9 +10,10 @@ namespace weathermonitor {
 							   const std::string &type_name,
 							   const py::dict args,
 							   const std::string &application_name,
-							   const std::string &actor_name) :
+							   const std::string &actor_name,
+		                       const py::list groups) :
                 TempSensorBase(parent_actor, actor_spec, type_spec, name, type_name, args, application_name,
-							   actor_name) {
+							   actor_name,groups) {
 			
 			this->temperature = 65;
         }
@@ -41,16 +42,17 @@ create_component_py(const py::object *parent_actor,
 					const std::string &type_name,
 					const py::dict args,
 					const std::string &application_name,
-					const std::string &actor_name) {
+					const std::string &actor_name,
+                    const py::list groups) {
 	auto ptr = new weathermonitor::components::TempSensor(parent_actor, actor_spec, type_spec, name, type_name, args,
 																	 application_name,
-																	 actor_name);
+																	 actor_name,groups);
 	return std::move(std::unique_ptr<weathermonitor::components::TempSensor>(ptr));
 }
 
 PYBIND11_MODULE(libtempsensor, m) {
 py::class_<weathermonitor::components::TempSensor> testClass(m, "TempSensor");
-testClass.def(py::init<const py::object*, const py::dict, const py::dict, const std::string&, const std::string&, const py::dict, const std::string&, const std::string&>());
+testClass.def(py::init<const py::object*, const py::dict, const py::dict, const std::string&, const std::string&, const py::dict, const std::string&, const std::string&, const py::list>());
 
 testClass.def("setup"                 , &weathermonitor::components::TempSensor::Setup);
 testClass.def("activate"              , &weathermonitor::components::TempSensor::Activate);

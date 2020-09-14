@@ -21,23 +21,29 @@ namespace riaps{
         //assert(timerport);
 
 
-        zsock_t* timerportOneShot = zsock_new_pull(comp->getOneShotTimerChannel().c_str());
-        assert(timerportOneShot);
+        zsock_t* timerport_oneshot = zsock_new_pull(comp->getOneShotTimerChannel().c_str());
+        assert(timerport_oneshot);
 
-        zpoller_t* poller = zpoller_new(pipe, NULL);
-        assert(poller);
+        zsock_t* group_port = zsock_new_pull(fmt::format("inproc://group_{}", comp->ComponentUuid()).c_str());
+        assert(group_port);
+
+        comp->component_poller_ = zpoller_new(pipe, NULL);
+        assert(comp->component_poller_);
 
         // Ignore interrupts zactor owner has to destroy the zactor
-        zpoller_set_nonstop(poller, true);
+        zpoller_set_nonstop(comp->component_poller_, true);
         zsock_signal (pipe, 0);
 
         //int rc = zpoller_add(poller, timerport);
         //assert(rc==0);
 
-        int rc = zpoller_add(poller, timerportOneShot);
+        int rc = zpoller_add(comp->component_poller_, timerport_oneshot);
         assert(rc==0);
 
-        rc = zpoller_add(poller, pycontrol);
+        rc = zpoller_add(comp->component_poller_, pycontrol);
+        assert(rc==0);
+
+        rc = zpoller_add(comp->component_poller_, group_port);
         assert(rc==0);
 
         bool terminated = false;
@@ -46,8 +52,7 @@ namespace riaps{
         auto compbase_logger = comp->riaps_logger_;
         compbase_logger->info("Component started");
 
-        // Register ZMQ Socket - riapsPort pairs. For the quick retrieve.
-        std::unordered_map<const zsock_t*, const ports::PortBase*>   portSockets;
+
 
         // ZMQ Socket - Inside port pairs
         //std::map<const zsock_t*, const ports::InsidePort*> insidePorts;
@@ -55,7 +60,7 @@ namespace riaps{
         // TODO: If leader election is enabled use dynamic timeout in the poller
         zsys_handler_reset();
         while (!terminated) {
-            void *which = zpoller_wait(poller, 10);
+            void *which = zpoller_wait(comp->component_poller_, 10);
             if (firstrun) {
                 firstrun = false;
 
@@ -65,8 +70,8 @@ namespace riaps{
                 for (auto& insconf : comp_conf.component_ports.inss) {
                     const ports::InsidePort* newPort = comp->InitInsidePort(insconf);
                     const zsock_t* zmqSocket = newPort->port_socket();
-                    portSockets[zmqSocket] = newPort;
-                    zpoller_add(poller, (void*) newPort->port_socket());
+                    comp->port_sockets_[zmqSocket] = newPort;
+                    zpoller_add(comp->component_poller_, (void*) newPort->port_socket());
                 }
 
                 // Add and start timers
@@ -74,8 +79,8 @@ namespace riaps{
                     compbase_logger->debug("Register timer: {}", timconf.port_name);
                     auto newPort = comp->InitTimerPort(timconf);
                     auto zmq_socket = newPort->port_socket();
-                    portSockets[zmq_socket] = newPort;
-                    zpoller_add(poller, (void*)zmq_socket);
+                    comp->port_sockets_[zmq_socket] = newPort;
+                    zpoller_add(comp->component_poller_, (void*)zmq_socket);
 
                     // Start only if the timer is periodic, sporadic timers must be started explicitly
                     if (!const_cast<riaps::ports::PeriodicTimer*>(newPort)->has_delay())
@@ -87,7 +92,7 @@ namespace riaps{
                     compbase_logger->debug("Register pub: {}", pubconf.port_name);
                     const ports::PublisherPort* newPort = comp->InitPublisherPort(pubconf);
                     const zsock_t* zmqSocket = newPort->port_socket();
-                    portSockets[zmqSocket] = newPort;
+                    comp->port_sockets_[zmqSocket] = newPort;
                 }
 
                 // Add and start response ports
@@ -95,16 +100,16 @@ namespace riaps{
                     compbase_logger->debug("Register REP: {}", repconf.port_name);
                     const ports::ResponsePort* newPort = comp->InitResponsePort(repconf);
                     const zsock_t* zmqSocket = newPort->port_socket();
-                    portSockets[zmqSocket] = newPort;
-                    zpoller_add(poller, (void*) newPort->port_socket());
+                    comp->port_sockets_[zmqSocket] = newPort;
+                    zpoller_add(comp->component_poller_, (void*) newPort->port_socket());
                 }
 
                 // Add and start answer ports
                 for (auto& ansconf : comp_conf.component_ports.anss) {
                     const ports::AnswerPort* newPort = comp->InitAnswerPort(ansconf);
                     const zsock_t* zmqSocket = newPort->port_socket();
-                    portSockets[zmqSocket] = newPort;
-                    zpoller_add(poller, (void*) newPort->port_socket());
+                    comp->port_sockets_[zmqSocket] = newPort;
+                    zpoller_add(comp->component_poller_, (void*) newPort->port_socket());
                 }
 
                 // Add RequestPorts
@@ -113,25 +118,26 @@ namespace riaps{
                 for (auto& reqconf : comp_conf.component_ports.reqs) {
                     const ports::RequestPort* newPort = comp->InitRequestPort(reqconf);
                     const zsock_t* zmqSocket = newPort->port_socket();
-                    portSockets[zmqSocket] = newPort;
-                    zpoller_add(poller, (void*) newPort->port_socket());
+                    comp->port_sockets_[zmqSocket] = newPort;
+                    zpoller_add(comp->component_poller_, (void*) newPort->port_socket());
                 }
 
                 // Add query ports
                 for (auto& qryconf : comp_conf.component_ports.qrys) {
                     const ports::QueryPort* newPort = comp->InitQueryPort(qryconf);
                     const zsock_t* zmqSocket = newPort->port_socket();
-                    portSockets[zmqSocket] = newPort;
-                    zpoller_add(poller, (void*) newPort->port_socket());
+                    comp->port_sockets_[zmqSocket] = newPort;
+                    zpoller_add(comp->component_poller_, (void*) newPort->port_socket());
                 }
 
                 // Add and start subscribers
                 for (auto& subconf : comp_conf.component_ports.subs) {
                     const ports::SubscriberPort* newPort = comp->InitSubscriberPort(subconf);
                     const zsock_t* zmqSocket = newPort->port_socket();
-                    portSockets[zmqSocket] = newPort;
-                    zpoller_add(poller, (void*) newPort->port_socket());
+                    comp->port_sockets_[zmqSocket] = newPort;
+                    zpoller_add(comp->component_poller_, (void*) newPort->port_socket());
                 }
+                comp->HandleActivate();
             }
 
             if (which == pipe) {
@@ -147,7 +153,7 @@ namespace riaps{
                     compbase_logger->debug("$TERM arrived");
                     terminated = true;
                 }
-                // New endpoint arrived, notifiy the component and join
+                // New endpoint arrived, notify the component and join
                 else if(streq(command, CMD_UPDATE_PORT)){
                     char* portname = zmsg_popstr(msg);
                     if (portname){
@@ -157,7 +163,9 @@ namespace riaps{
                             if (port){
                                 auto port_tobe_updated = comp->GetPortByName(portname);
 
+                                // Component port
                                 if (port_tobe_updated != nullptr) {
+                                    //compbase_logger->debug("Might be component port");
                                     if (port_tobe_updated->port_type() == ports::PortTypes::Subscriber){
                                         // note: we assume that the publisher uses tcp://
                                         const string new_pub_endpoint = fmt::format("tcp://{}:{}", host, port);
@@ -167,7 +175,18 @@ namespace riaps{
                                         ((ports::RequestPort*)port_tobe_updated)->ConnectToResponse(new_rep_endpoint);
                                     } else if (port_tobe_updated->port_type() == ports::PortTypes::Query){
                                         const string new_ans_endpoint = fmt::format("tcp://{}:{}", host, port);
-                                        ((ports::QueryPort*)port_tobe_updated)->ConnectToResponse(new_ans_endpoint);
+                                        ((ports::QueryPort *) port_tobe_updated)->Connect(new_ans_endpoint);
+                                    }
+                                }
+                                // Might be Group port
+                                else {
+                                    //compbase_logger->debug("Might be group port");
+                                    const string new_group_endpoint = fmt::format("tcp://{}:{}", host, port);
+                                    compbase_logger->debug("Endpoint to connect to: {}", new_group_endpoint);
+                                    for (auto& group : comp->groups_) {
+                                        compbase_logger->debug("In loop, (line {}), {}", __LINE__, group.second->group_id().group_name);
+                                        auto& group_ptr = group.second;
+                                        group_ptr->ConnectToNewServices(new_group_endpoint);
                                     }
                                 }
 
@@ -178,21 +197,7 @@ namespace riaps{
                         zstr_free(&portname);
                     }
                 }
-                // Forward group update messages
-                else if(streq(command, CMD_UPDATE_GROUP)){
-                    zframe_t* capnp_msgbody = zmsg_pop(msg);
-                    size_t    size = zframe_size(capnp_msgbody);
-                    unsigned char* data = zframe_data(capnp_msgbody);
 
-                    auto capnp_data = kj::arrayPtr(reinterpret_cast<const capnp::word*>(data), size / sizeof(capnp::word));
-
-                    capnp::FlatArrayMessageReader reader(capnp_data);
-                    auto msgDiscoUpd  = reader.getRoot<riaps::discovery::DiscoUpd>();
-                    auto msgGroupUpd  = msgDiscoUpd.getGroupUpdate();
-                    comp->UpdateGroup(msgGroupUpd);
-
-                    zframe_destroy(&capnp_msgbody);
-                }
 
                 zstr_free(&command);
                 zmsg_destroy(&msg);
@@ -201,13 +206,13 @@ namespace riaps{
             // Messages from the periodic timers
 //            else if (which == timerport) {
 //                compbase_logger->debug("message on timerport");
-//                ports::PortBase *riapsPort = const_cast<ports::PortBase *>(portSockets[static_cast<zsock_t *>(which)]);
+//                ports::PortBase *riapsPort = const_cast<ports::PortBase *>(port_sockets[static_cast<zsock_t *>(which)]);
 //                if (!terminated) {
 //                    comp->DispatchMessage(riapsPort);
 //                }
 //            }
             // Message from one shot timer
-            else if ((which == timerportOneShot) && !terminated){
+            else if ((which == timerport_oneshot) && !terminated){
 
                 zmsg_t* msg = zmsg_recv(which);
                 zframe_t* idframe = zmsg_pop(msg);
@@ -224,74 +229,74 @@ namespace riaps{
                 zframe_destroy(&idframe);
             }
 
-            // TODO: ROUTER-DEALER may not compatible with the python version. Make it compatible.
-            else if(which){
-                compbase_logger->debug("Message on other ports");
-                    ports::PortBase *riapsPort = const_cast<ports::PortBase *>(portSockets[static_cast<zsock_t *>(which)]);
+            // Component socket and NOT group socket
+            else if(which && comp->port_sockets_.find(static_cast<zsock_t *>(which)) != comp->port_sockets_.end()) {
+                ports::PortBase *riaps_port = const_cast<ports::PortBase *>(comp->port_sockets_[static_cast<zsock_t *>(which)]);
+                //compbase_logger->debug("Message on other ports: {}", riaps_port->port_name());
 
-                    // If the port is async, the frames are different
-                    if (riapsPort->AsAnswerPort() != nullptr || riapsPort->AsQueryPort() != nullptr) {
-                        char     *originId, *messageId;
-                        zframe_t *body, *timestamp;
+                // If the port is async, the frames are different
+                if (riaps_port->AsAnswerPort() != nullptr || riaps_port->AsQueryPort() != nullptr) {
+                    char     *originId, *messageId;
+                    zframe_t *body, *timestamp;
 
-                        std::shared_ptr <riaps::MessageParams> params = nullptr;
-                        capnp::FlatArrayMessageReader *capnpReader = nullptr;
+                    std::shared_ptr <riaps::MessageParams> params = nullptr;
+                    capnp::FlatArrayMessageReader *capnpReader = nullptr;
 
-                        /**
-                         * The query port doesn't have SocketId in the first frame, while answer port has it,
-                         * thus different pattern is used for recv()
-                         *  If the port is answerport: |String  |String   |Frame  |Frame    |
-                         *                             |SocketId|RequestId|Message|Timestamp|
-                         *
-                         *  If the port is queryport:  |String   |Frame  |Frame    |
-                         *                             |RequestId|Message|Timestamp|
-                         */
-                        if (riapsPort->AsAnswerPort()) {
+                    /**
+                     * The query port doesn't have SocketId in the first frame, while answer port has it,
+                     * thus different pattern is used for recv()
+                     *  If the port is answerport: |String  |String   |Frame  |Frame    |
+                     *                             |SocketId|RequestId|Message|Timestamp|
+                     *
+                     *  If the port is queryport:  |String   |Frame  |Frame    |
+                     *                             |RequestId|Message|Timestamp|
+                     */
+                    if (riaps_port->AsAnswerPort()) {
 
-                            if (zsock_recv(which, "ssff", &originId, &messageId, &body, &timestamp) == 0) {
-                                // Takes the ownership, deletes originId, messageId and timestamp
-                                params = make_shared<riaps::MessageParams>(&originId, &messageId, &timestamp);
-                            } else {
-                                compbase_logger->error("AnswerPort ({}) frames are incorrect.", riapsPort->port_name());
-                            }
-                        } else if (riapsPort->AsQueryPort()){
-                            if (zsock_recv(which, "sff", &messageId, &body, &timestamp) == 0) {
-                                params = make_shared<riaps::MessageParams>(&messageId, &timestamp);
-                            } else {
-                                compbase_logger->error("QueryPort ({}) frames are incorrect.", riapsPort->port_name());
-                            }
+                        if (zsock_recv(which, "ssff", &originId, &messageId, &body, &timestamp) == 0) {
+                            // Takes the ownership, deletes originId, messageId and timestamp
+                            params = make_shared<riaps::MessageParams>(&originId, &messageId, &timestamp);
+                        } else {
+                            compbase_logger->error("AnswerPort ({}) frames are incorrect.", riaps_port->port_name());
                         }
+                    } else if (riaps_port->AsQueryPort()){
+                        if (zsock_recv(which, "sff", &messageId, &body, &timestamp) == 0) {
+                            params = make_shared<riaps::MessageParams>(&messageId, &timestamp);
+                        } else {
+                            compbase_logger->error("QueryPort ({}) frames are incorrect.", riaps_port->port_name());
+                        }
+                    }
 
-                        /**
-                         * Convert to capnp buffer only if the recv() was successful
-                         */
-                         // TODO: refactor this part to the new dispatch
+                    /**
+                     * Convert to capnp buffer only if the recv() was successful
+                     */
+                     // TODO: refactor this part to the new dispatch
 //                        if (body!=nullptr && !terminated) {
 //                            (*body) >> capnpReader;
 //                            comp->DispatchMessage(capnpReader, riapsPort, params);
 //                        }
 
-                        //if (capnpReader != nullptr)
-                        //    delete capnpReader;
+                    //if (capnpReader != nullptr)
+                    //    delete capnpReader;
 
-                        zframe_destroy(&body);
-                    } else if(riapsPort->AsInsidePort() != nullptr){
-                        zmsg_t* msg = zmsg_recv(which);
-                        auto insidePort = riapsPort->AsInsidePort();
-                        if (!terminated && msg) {
-                            comp->DispatchInsideMessage(msg, insidePort);
+                    zframe_destroy(&body);
+                } else if(riaps_port->AsInsidePort() != nullptr){
+                    zmsg_t* msg = zmsg_recv(which);
+                    auto insidePort = riaps_port->AsInsidePort();
+                    if (!terminated && msg) {
+                        comp->DispatchInsideMessage(msg, insidePort);
 
-                        }
-                        if (msg){
-                            zmsg_destroy(&msg);
-                        }
+                    }
+                    if (msg){
+                        zmsg_destroy(&msg);
+                    }
+                } else {
+
+                    if (riaps_port->GetPortAs<riaps::ports::RecvPort>() != nullptr || riaps_port->AsTimerPort() != nullptr) {
+                        if (!terminated)
+                            comp->DispatchMessage(riaps_port);
                     } else {
-
-                        if (riapsPort->GetPortAs<riaps::ports::RecvPort>()!= nullptr || riapsPort->AsTimerPort()!=nullptr) {
-                            if (!terminated)
-                                comp->DispatchMessage(riapsPort);
-                        } else {
-                            compbase_logger->error("Else not handled, port: {}", riapsPort->port_name());
+                        compbase_logger->error("Else not handled, port: {}", riaps_port->port_name());
 //                            // Note: this is the old style, timestamps are not read
 //                            zmsg_t* msg = zmsg_recv(which);
 //                            zframe_t* bodyFrame = zmsg_pop(msg);
@@ -310,8 +315,28 @@ namespace riaps{
 //
 //                            zframe_destroy(&bodyFrame);
 //                            zmsg_destroy(&msg);
-                        }
                     }
+                }
+            }
+
+            // Message arrived on group socket
+            else if(which && comp->group_sockets_.find(static_cast<zsock_t *>(which)) != comp->group_sockets_.end()){
+                //compbase_logger->debug("Message on group socket");
+
+                auto which_socket = static_cast<zsock_t *>(which);
+                auto group = comp->group_sockets_[which_socket];
+                group->FetchNextMessage(which_socket);
+
+//                // Read just the first frame
+//
+//
+//
+//                    auto group = comp->group_sockets_[which_socket];
+//                    group->Heartbeat();
+//                } else {
+//
+//                }
+//                zframe_destroy(&first_frame);
             }
             else{
                 // just poll timeout
@@ -319,20 +344,18 @@ namespace riaps{
 
             // Process group messages
             if (!comp->groups_.empty()){
-
                 // Handle all group messages
                 for (auto& grp : comp->groups_){
-                    grp.second->SendPingWithPeriod();
-                    grp.second->FetchNextMessage();
+                    grp.second->FetchNextMessage(nullptr);
                 }
             }
         }
-        zpoller_destroy(&poller);
-        zsock_destroy(&timerportOneShot);
+        zpoller_destroy(&comp->component_poller_);
+        zsock_destroy(&timerport_oneshot);
         //zsock_destroy(&timerport);
     };
 
-    shared_ptr<spd::logger> ComponentBase::component_logger() {
+    shared_ptr<spd::logger> ComponentBase::component_logger() const {
         return component_logger_;
     }
 
@@ -426,8 +449,9 @@ namespace riaps{
         riaps_logger_->error("Scheduled timer is fired, but no handler is implemented. Implement OnSchedulerTimer() in component {}", component_config().component_name);
     }
     
-    void ComponentBase::set_config(ComponentConf &c_conf) {
+    void ComponentBase::set_config(ComponentConf &c_conf, const std::vector<GroupConf> &group_conf) {
         component_config_ = c_conf;
+        actor_->AddGroupTypes(group_conf);
         component_logger_name_ = fmt::format("{}.{}", this->actor()->actor_name(), this->component_name());
         auto logger_name = fmt::format("::{}", component_config_.component_name);
         riaps_logger_ = spd::get(logger_name);
@@ -473,7 +497,8 @@ namespace riaps{
         return component_logger_name_;
     }
 
-    ComponentBase::ComponentBase(const std::string &application_name, const std::string &actor_name) {
+    ComponentBase::ComponentBase(const std::string &application_name,
+                                 const std::string &actor_name) {
         has_security_ = riaps::framework::Security::HasSecurity();
         actor_ = std::make_shared<PyActor>(application_name, actor_name);
         component_uuid_ = zuuid_new();
@@ -549,6 +574,16 @@ namespace riaps{
         zmsg_send(&msg_portupdate, component_zactor_);
     }
 
+    std::vector<riaps::groups::Group*> ComponentBase::GetGroups() {
+        std::vector<riaps::groups::Group*> results;
+
+        for (auto& group : groups_) {
+            results.push_back(group.second.get());
+        }
+
+        return results;
+    }
+
     std::shared_ptr<PyActor> ComponentBase::actor() const{
         return actor_;
     }
@@ -565,14 +600,6 @@ namespace riaps{
         if (port == nullptr) return false;
         auto insidePort = port->AsInsidePort();
         return insidePort->Send(message);
-    }
-
-    bool ComponentBase::SendLeaderMessage(const riaps::groups::GroupId &group_id,
-                                          capnp::MallocMessageBuilder &message) {
-        auto group = getGroupById(group_id);
-        if (group == nullptr) return false;
-        if (!IsLeader(group)) return false;
-        return group->SendLeaderMessage(message);
     }
 
 
@@ -603,6 +630,9 @@ namespace riaps{
     const ports::AnswerPort* ComponentBase::InitAnswerPort(const ComponentPortAns & config) {
         auto result = new ports::AnswerPort(config, this);
         std::unique_ptr<ports::PortBase> newport(result);
+        newport->AsAnswerPort()->InitSecurity();
+        newport->AsAnswerPort()->Init();
+        newport->AsAnswerPort()->RegisterPort();
         ports_[config.port_name] = std::move(newport);
         return result;
     }
@@ -639,51 +669,24 @@ namespace riaps{
         return sender_port->Send(message);
     }
 
-    riaps::ports::PortError ComponentBase::SendMessageOnPort(capnp::MallocMessageBuilder &message, const std::string &port_name,
-                                          std::shared_ptr<riaps::MessageParams> params) {
+//    riaps::ports::PortError ComponentBase::SendMessageOnPort(capnp::MallocMessageBuilder &message, const std::string &port_name,
+//                                          std::shared_ptr<riaps::MessageParams> params) {
+//
+//        auto answer_port = GetPortAs<riaps::ports::AnswerPort>(port_name);
+//        if (!answer_port)
+//            riaps_logger_->error("{} Unable to convert port: {}", __func__, port_name);
+//        return answer_port->SendAnswer(message, params);
+//    }
 
-        auto answer_port = GetPortAs<riaps::ports::AnswerPort>(port_name);
-        if (!answer_port)
-            riaps_logger_->error("{} Unable to convert port: {}", __func__, port_name);
-        return answer_port->SendAnswer(message, params);
-    }
+    // Send on query
+//    riaps::ports::PortError ComponentBase::SendMessageOnPort(capnp::MallocMessageBuilder &message, const std::string &port_name,
+//                                          std::string &requestId) {
+//        auto query_port = GetPortAs<riaps::ports::QueryPort>(port_name);
+//        if (!query_port)
+//            riaps_logger_->error("{} Unable to convert port: {}", __func__, port_name);
+//        return query_port->SendQuery(message, requestId);
+//    }
 
-    riaps::ports::PortError ComponentBase::SendMessageOnPort(capnp::MallocMessageBuilder &message, const std::string &port_name,
-                                          std::string &requestId) {
-        auto query_port = GetPortAs<riaps::ports::QueryPort>(port_name);
-        if (!query_port)
-            riaps_logger_->error("{} Unable to convert port: {}", __func__, port_name);
-        return query_port->SendQuery(message, requestId);
-    }
-
-    bool ComponentBase::SendGroupMessage(const riaps::groups::GroupId &group_id,
-                                         capnp::MallocMessageBuilder &message,
-                                         const std::string& port_name) {
-        // Search the group
-        if (groups_.find(group_id)==groups_.end()) return false;
-
-        riaps::groups::Group* group = groups_[group_id].get();
-
-        return group->SendMessage(message, port_name);
-
-    }
-
-    bool ComponentBase::SendGroupMessage(const riaps::groups::GroupId&& group_id,
-                                         capnp::MallocMessageBuilder &message,
-                                         const std::string& port_name) {
-        return SendGroupMessage(group_id, message, port_name);
-
-    }
-
-    bool ComponentBase::SendMessageToLeader(const riaps::groups::GroupId &group_id,
-                                            capnp::MallocMessageBuilder &message) {
-        auto group = getGroupById(group_id);
-        if (group == nullptr){
-            return false;
-        }
-
-        return group->SendMessageToLeader(message);
-    }
 
     void ComponentBase::OnMessageFromLeader(const riaps::groups::GroupId &groupId,
                                             capnp::FlatArrayMessageReader &message) {
@@ -724,8 +727,8 @@ namespace riaps{
     string ComponentBase::GetLeaderId(const riaps::groups::GroupId &groupId) {
         if (groups_.find(groupId)==groups_.end())
             return "";
-
-        return groups_[groupId]->leader_id();
+        return "";
+        //return groups_[groupId]->leader_id();
     }
 
     bool ComponentBase::JoinGroup(riaps::groups::GroupId &&groupId) {
@@ -738,20 +741,42 @@ namespace riaps{
         auto new_group = make_unique<riaps::groups::Group>(groupId, this);
 
         if (new_group->InitGroup()) {
+            auto sub_socket = const_cast<zsock_t*>(new_group->group_subport()->port_socket());
+            auto ans_socket = const_cast<zsock_t*>(new_group->group_qryport()->port_socket());
+            auto qry_socket = const_cast<zsock_t*>(new_group->group_ansport()->port_socket());
+            zpoller_add(component_poller_, sub_socket);
+            zpoller_add(component_poller_, qry_socket);
+            zpoller_add(component_poller_, ans_socket);
             groups_[groupId] = std::move(new_group);
+            group_sockets_[sub_socket] = groups_[groupId].get();
+            group_sockets_[ans_socket] = groups_[groupId].get();
+            group_sockets_[qry_socket] = groups_[groupId].get();
+
             return true;
+        } else {
+            component_logger()->error("InitGroup failed in {}", __FUNCTION__);
         }
 
         return false;
     }
 
     bool ComponentBase::LeaveGroup(riaps::groups::GroupId &&groupId) {
-        return JoinGroup(groupId);
+        return LeaveGroup(groupId);
     }
 
     bool ComponentBase::LeaveGroup(riaps::groups::GroupId &groupId) {
         if (groups_.find(groupId) == groups_.end())
             return false;
+        auto& group = groups_[groupId];
+        auto sub_socket = const_cast<zsock_t*>(group->group_subport()->port_socket());
+        auto ans_socket = const_cast<zsock_t*>(group->group_qryport()->port_socket());
+        auto qry_socket = const_cast<zsock_t*>(group->group_ansport()->port_socket());
+        zpoller_remove(component_poller_, sub_socket);
+        zpoller_remove(component_poller_, ans_socket);
+        zpoller_remove(component_poller_, qry_socket);
+        group_sockets_.erase(sub_socket);
+        group_sockets_.erase(ans_socket);
+        group_sockets_.erase(qry_socket);
         groups_.erase(groupId);
         return true;
     }
@@ -775,7 +800,7 @@ namespace riaps{
     }
 
     bool ComponentBase::IsLeader(const riaps::groups::Group* group) {
-        return ComponentUuid() == group->leader_id();
+        return true; //ComponentUuid() == group->leader_id();
     }
 
     bool ComponentBase::IsLeader(const riaps::groups::GroupId &groupId) {
@@ -787,7 +812,8 @@ namespace riaps{
     bool ComponentBase::IsLeaderAvailable(const riaps::groups::GroupId &groupId) {
         if (groups_.find(groupId) == groups_.end())
             return false;
-        return !groups_[groupId]->leader_id().empty();
+        return true;
+        //return !groups_[groupId]->leader_id().empty();
     }
 
     std::vector<riaps::groups::GroupId> ComponentBase::GetGroupMembershipsByType(const std::string &groupType) {
@@ -940,49 +966,37 @@ namespace riaps{
         return component_config().component_name;
     }
 
-    string ComponentBase::SendPropose(const riaps::groups::GroupId &groupId, capnp::MallocMessageBuilder &message) {
-        auto group = getGroupById(groupId);
-        if (group == nullptr) return "";
 
-        auto uuid = unique_ptr<zuuid_t, function<void(zuuid_t*)>>(zuuid_new(), [](zuuid_t* u){zuuid_destroy(&u);});
-        string strUuid = zuuid_str(uuid.get());
 
-        if (group->ProposeValueToLeader(message, strUuid)){
-            return strUuid;
-        }
-        return "";
+
+
+
+
+    void ComponentBase::HandleGroupMessage(riaps::groups::Group *group) {
+        component_logger()->warn("No implementation of {} in {}", __FUNCTION__, component_name());
     }
 
-    string ComponentBase::ProposeAction(const riaps::groups::GroupId &group_id,
-                                        const std::string &action_id,
-                                        const timespec &abs_time) {
-        auto group = getGroupById(group_id);
-        if (group == nullptr) return "";
-
-        auto uuid = unique_ptr<zuuid_t, function<void(zuuid_t*)>>(zuuid_new(), [](zuuid_t* u){zuuid_destroy(&u);});
-        string strUuid = zuuid_str(uuid.get());
-
-        if (group->ProposeActionToLeader(strUuid, action_id, abs_time)){
-            return strUuid;
-        }
-        return "";
+    void ComponentBase::HandleMessageFromLeader(riaps::groups::Group *group) {
+        component_logger()->warn("No implementation of {} in {}", __FUNCTION__, component_name());
     }
 
-    bool ComponentBase::SendVote(const riaps::groups::GroupId &groupId, const std::string &proposeId, bool accept) {
-        auto group = getGroupById(groupId);
-        if (group == nullptr) return false;
-
-        return group->SendVote(proposeId, accept);
+    void ComponentBase::HandleMessageToLeader(riaps::groups::Group *group, std::string identity) {
+        component_logger()->warn("No implementation of {} in {}", __FUNCTION__, component_name());
     }
 
-    void ComponentBase::UpdateGroup(riaps::discovery::GroupUpdate::Reader &msg_group_update) {
-        // First, find the affected groups
-        riaps::groups::GroupId gid;
-        gid.group_name    = msg_group_update.getGroupId().getGroupName().cStr();
-        gid.group_type_id = msg_group_update.getGroupId().getGroupType().cStr();
+    void ComponentBase::HandleVoteRequest(riaps::groups::Group *group, std::string rfvid) {
+        component_logger()->warn("No implementation of {} in {}", __FUNCTION__, component_name());
+    }
 
-        if (groups_.find(gid) == groups_.end()) return;
+    void ComponentBase::HandleVoteResult(riaps::groups::Group *group, std::string rfvid, bool vote) {
+        component_logger()->warn("No implementation of {} in {}", __FUNCTION__, component_name());
+    }
 
-        groups_[gid]->ConnectToNewServices(msg_group_update);
+    void ComponentBase::HandleActionVoteRequest(riaps::groups::Group *group, std::string rfvid, double when) {
+        component_logger()->warn("No implementation of {} in {}", __FUNCTION__, component_name());
+    }
+
+    void ComponentBase::HandleActivate() {
+
     }
 }

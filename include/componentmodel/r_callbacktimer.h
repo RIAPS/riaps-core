@@ -5,7 +5,7 @@
 #ifndef RIAPS_FW_R_TIMER_H
 #define RIAPS_FW_R_TIMER_H
 
-#include <componentmodel/r_portbase.h>
+#include <componentmodel/ports/r_portbase.h>
 
 #include <czmq.h>
 #include <thread>

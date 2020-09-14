@@ -32,6 +32,21 @@ namespace riaps {
             AnswerPort(const ComponentPortAns &config, const ComponentBase* parent);
 
             /**
+             * Loads and applies the CURVE keys.
+             */
+            void InitSecurity();
+
+            /**
+             * Registers the port in the discovery service
+             */
+            void RegisterPort();
+
+            /**
+             * Binds the socket to local address.
+             */
+            void Init();
+
+            /**
              * @return Config parameters of the port.
              */
             virtual const ComponentPortAns* GetConfig() const;
@@ -42,7 +57,10 @@ namespace riaps {
              * @param params Parameters for the answer port (id in the first ZMQ frame)
              * @return PortError
              */
-            PortError SendAnswer(capnp::MallocMessageBuilder& builder, std::shared_ptr<MessageParams> params);
+            //PortError SendAnswer(capnp::MallocMessageBuilder& builder, const std::string& identity);
+
+            std::string host() const;
+            int port() const;
 
             ~AnswerPort() noexcept ;
         protected:
@@ -51,6 +69,7 @@ namespace riaps {
             std::string               host_;
             std::string               endpoint_;
         };
+
     }
 }
 

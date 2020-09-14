@@ -3,10 +3,13 @@
 3rdparty
 amd64-opt/
 armhf-opt/
+arm64-opt/
 armhf/
+arm64/
 bin
 build-amd64
 build-armhf
+build-arm64
 build*
 cmake_install.cmake
 cmake-build-debug

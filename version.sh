@@ -1,1 +1,1 @@
-export coreversion="1.1.17"
+export coreversion="1.1.18"

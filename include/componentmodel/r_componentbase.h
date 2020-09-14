@@ -17,8 +17,11 @@ The component framework provides a base class (ComponentBase) for your component
 #include <componentmodel/r_configuration.h>
 #include <componentmodel/r_oneshottimer.h>
 #include <componentmodel/r_messageparams.h>
+#include <componentmodel/r_messagebuilder.h>
+#include <groups/r_groupid.h>
 #include <groups/r_group.h>
 #include <messaging/disco.capnp.h>
+#include <utils/r_utils.h>
 
 #include <msgpack.hpp>
 #include <capnp/message.h>
@@ -53,7 +56,6 @@ namespace riaps {
 
     namespace groups{
         class Group;
-        struct GroupId;
     }
 
 
@@ -72,7 +74,8 @@ namespace riaps {
         friend riaps::groups::Group;
     public:
 
-        ComponentBase(const std::string &application_name, const std::string &actor_name);
+        ComponentBase(const std::string &application_name,
+                      const std::string &actor_name);
 
         /** @name API for the Python actor
          */
@@ -97,6 +100,7 @@ namespace riaps {
          */
         virtual void HandlePortUpdate(const std::string &port_name, const std::string &host, int port) final;
         virtual void HandleReinstate() final;
+        virtual void HandleActivate();
         ///@}
 
         /**
@@ -119,7 +123,7 @@ namespace riaps {
         /**
          * @return The component logger instance.
          */
-        std::shared_ptr<spd::logger> component_logger();
+        std::shared_ptr<spd::logger> component_logger() const;
 
         /**
          * @return The component unique ID.
@@ -201,9 +205,9 @@ namespace riaps {
          *
          * @return
          */
-        riaps::ports::PortError SendMessageOnPort(capnp::MallocMessageBuilder& message,
-                                                  const std::string& port_name,
-                                                  std::shared_ptr<riaps::MessageParams> params);
+//        riaps::ports::PortError SendMessageOnPort(capnp::MallocMessageBuilder& message,
+//                                                  const std::string& port_name,
+//                                                  std::shared_ptr<riaps::MessageParams> params);
 
         /**
          * Sends a message on query port
@@ -213,7 +217,6 @@ namespace riaps {
                                                   const std::string&           port_name,
                                                   std::string&                 request_id);
 
-        void UpdateGroup(riaps::discovery::GroupUpdate::Reader& msg_group_update);
         ///@}
 
         /**
@@ -225,23 +228,31 @@ namespace riaps {
          * Sends a message to every members in the given group.
          * @param group_id Group instance id.
          * @param message The message to be sent in capnp buffer.
-         * @param port_name Depricated. Only one port is used now. Kept for compatibility.
          * @return True if the send was successful. False otehrwise.
          */
-        bool SendGroupMessage(const riaps::groups::GroupId& group_id,
-                              capnp::MallocMessageBuilder& message,
-                              const std::string& port_name="");
+//        template<class T>
+//        bool SendGroupMessage(
+//                const riaps::groups::GroupId& group_id,
+//                MessageBuilder<T>& message);
 
         /**
-         * Sends a message to every members in the given group.
-         * @param group_id Group instance id.
-         * @param message The message to be sent.
-         * @param port_name Depricated. Only one port is used now. Kept for compatibility.
-         * @return True if the send was successful. False otehrwise.
+         * Handler for group messages.
+         * Implementation must immediately call recv on the group to obtain message.
+         * @param group The group where the message arrived.
          */
-        bool SendGroupMessage(const riaps::groups::GroupId&& group_id,
-                              capnp::MallocMessageBuilder& message,
-                              const std::string& port_name="");
+        virtual void HandleGroupMessage(groups::Group* group);
+
+        virtual void HandleMessageFromLeader(groups::Group* group);
+
+        virtual void HandleMessageToLeader(groups::Group* group, std::string identity);
+
+        virtual void HandleVoteRequest(riaps::groups::Group *group, std::string rfvid);
+
+        virtual void HandleActionVoteRequest(riaps::groups::Group *group, std::string rfvid, double when);
+
+        virtual void HandleVoteResult(riaps::groups::Group *group, std::string rfvid, bool vote);
+
+
         /** @}*/
 
         virtual ~ComponentBase() = default;
@@ -270,16 +281,6 @@ namespace riaps {
                                     capnp::FlatArrayMessageReader& capnpreader,
                                     riaps::ports::PortBase* port);
 
-        /**
-         * Sends a message to the leader of the given group.
-         * @param group_id Group instance id.
-         * @param message The message to be sent.
-         * @return True if the message was sent successfully.
-         */
-        bool SendMessageToLeader(const riaps::groups::GroupId& group_id,
-                                 capnp::MallocMessageBuilder& message);
-        bool SendLeaderMessage(const riaps::groups::GroupId& group_id,
-                               capnp::MallocMessageBuilder& message);
 
 
 
@@ -294,6 +295,8 @@ namespace riaps {
                                      int64_t timeout = 1000 * 15 /*15 sec in msec*/);
 
         std::string GetLeaderId(const riaps::groups::GroupId& groupId);
+
+        std::vector<riaps::groups::Group*> GetGroups();
 
         /**
          * Does a valid leader available in the group?
@@ -536,10 +539,10 @@ namespace riaps {
          * @param abs_time The proposed timepoint, when the action should be executed.
          * @return The generated proposeId. The leader announces the results by this id.
          */
-        std::string ProposeAction(const riaps::groups::GroupId& group_id  ,
-                                  const std::string&            action_id ,
-                                  const timespec&               abs_time
-        );
+//        std::string ProposeAction(const riaps::groups::GroupId& group_id  ,
+//                                  const std::string&            action_id ,
+//                                  const timespec&               abs_time
+//        );
         ///@}
 
         uint64_t ScheduleAbsTimer(const timespec &t, uint64_t wakeupOffset = 0 /*nanosec*/);
@@ -566,7 +569,14 @@ namespace riaps {
          * Saves the component configuration and sets up the loggers with the appropriate names.
          * @param c_conf The component definition from the model file.
          */
-        void set_config(ComponentConf& c_conf);
+        void set_config(ComponentConf& c_conf, const std::vector<GroupConf> &group_conf);
+
+        /**
+         * Returns the group instance based on its id.
+         * @param group_id Group instance id.
+         * @return Pointer to the group instance.
+         */
+        riaps::groups::Group* getGroupById(const riaps::groups::GroupId &group_id);
 
 
 
@@ -663,15 +673,15 @@ namespace riaps {
         /**
          * Pointers to the group instances.
          */
-        std::map<riaps::groups::GroupId,
-                 std::unique_ptr<riaps::groups::Group>> groups_;
+        std::map<riaps::groups::GroupId, std::unique_ptr<riaps::groups::Group>> groups_;
 
-        /**
-         * Returns the group instance based on its id.
-         * @param group_id Group instance id.
-         * @return Pointer to the group instance.
-         */
-        riaps::groups::Group* getGroupById(const riaps::groups::GroupId &group_id);
+        // Maintaining ZMQ Socket - riaps port pairs. For the quick retrieve.
+        std::unordered_map<const zsock_t*, const ports::PortBase*>   port_sockets_;
+
+        // Maintaining ZMQ Socket - group port pairs. For the quick retrieve.
+        std::unordered_map<const zsock_t*, groups::Group*> group_sockets_;
+
+
 
         uint64_t timer_counter_;
 
@@ -689,6 +699,11 @@ namespace riaps {
          * The component thread.
          */
         zactor_t* component_zactor_;
+
+        /**
+         * Poller, runs in the component thread.
+         */
+        zpoller_t* component_poller_;
 
         /**
          * This setting is coming from the riaps.conf file.
