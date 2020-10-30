@@ -55,7 +55,7 @@ private:
     static void ParseLocals(const py::dict& py_actor) {
         auto json_locals = py_actor[J_LOCALS];
         for (auto it = json_locals.begin(); it!=json_locals.end(); it++){
-            locals_.insert((*it).cast<py::dict>()["type"].cast<std::string>());
+            locals_.insert(it->cast<py::dict>()["type"].cast<std::string>());
         }
     }
 
