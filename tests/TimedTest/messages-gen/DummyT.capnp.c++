@@ -55,14 +55,11 @@ const ::capnp::_::RawSchema s_dc4700d5546d44ae = {
 
 
 // DummyT
-#ifndef _MSC_VER
 constexpr uint16_t DummyT::_capnpPrivate::dataWordSize;
 constexpr uint16_t DummyT::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind DummyT::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* DummyT::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* DummyT::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 

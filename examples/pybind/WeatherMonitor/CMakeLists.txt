@@ -10,6 +10,8 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 #        COMMENT "=== Generating capnp ==="
 #)
 
+include_directories(/usr/local/lib/python3.8/dist-packages/pybind11/include/)
+
 add_library(tempsensor src/TempSensor.cc
         src/base/TempSensorBase.cc
         include/messages/TempData.capnp.c++

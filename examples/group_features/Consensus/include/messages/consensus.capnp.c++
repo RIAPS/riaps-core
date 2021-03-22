@@ -5,24 +5,23 @@
 
 namespace capnp {
 namespace schemas {
-static const ::capnp::_::AlignedData<34> b_8ed23af8032106ff = {
+static const ::capnp::_::AlignedData<33> b_8ed23af8032106ff = {
   {   0,   0,   0,   0,   5,   0,   6,   0,
     255,   6,  33,   3, 248,  58, 210, 142,
-     22,   0,   0,   0,   1,   0,   0,   0,
+     16,   0,   0,   0,   1,   0,   0,   0,
      28, 202,  25,  16, 161,  51, 182, 191,
       1,   0,   7,   0,   0,   0,   0,   0,
       0,   0,   0,   0,   0,   0,   0,   0,
-     21,   0,   0,   0,  18,   1,   0,   0,
-     37,   0,   0,   0,   7,   0,   0,   0,
+     21,   0,   0,   0, 226,   0,   0,   0,
+     33,   0,   0,   0,   7,   0,   0,   0,
       0,   0,   0,   0,   0,   0,   0,   0,
-     33,   0,   0,   0,  63,   0,   0,   0,
+     29,   0,   0,   0,  63,   0,   0,   0,
       0,   0,   0,   0,   0,   0,   0,   0,
       0,   0,   0,   0,   0,   0,   0,   0,
-     99,  97, 112, 110, 112,  47,  99, 111,
-    110, 115, 101, 110, 115, 117, 115,  46,
-     99,  97, 112, 110, 112,  58,  65, 103,
-    114, 101, 101,  79, 110,  84, 104, 105,
-    115,   0,   0,   0,   0,   0,   0,   0,
+     99, 111, 110, 115, 101, 110, 115, 117,
+    115,  46,  99,  97, 112, 110, 112,  58,
+     65, 103, 114, 101, 101,  79, 110,  84,
+    104, 105, 115,   0,   0,   0,   0,   0,
       0,   0,   0,   0,   1,   0,   1,   0,
       4,   0,   0,   0,   3,   0,   4,   0,
       0,   0,   0,   0,   0,   0,   0,   0,
@@ -46,7 +45,7 @@ static const ::capnp::_::AlignedData<34> b_8ed23af8032106ff = {
 static const uint16_t m_8ed23af8032106ff[] = {0};
 static const uint16_t i_8ed23af8032106ff[] = {0};
 const ::capnp::_::RawSchema s_8ed23af8032106ff = {
-  0x8ed23af8032106ff, b_8ed23af8032106ff.words, 34, nullptr, m_8ed23af8032106ff,
+  0x8ed23af8032106ff, b_8ed23af8032106ff.words, 33, nullptr, m_8ed23af8032106ff,
   0, 1, i_8ed23af8032106ff, nullptr, nullptr, { &s_8ed23af8032106ff, nullptr, nullptr, 0, 0, nullptr }
 };
 #endif  // !CAPNP_LITE
@@ -59,14 +58,11 @@ namespace dc {
 namespace messages {
 
 // AgreeOnThis
-#ifndef _MSC_VER
 constexpr uint16_t AgreeOnThis::_capnpPrivate::dataWordSize;
 constexpr uint16_t AgreeOnThis::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind AgreeOnThis::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* AgreeOnThis::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* AgreeOnThis::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 

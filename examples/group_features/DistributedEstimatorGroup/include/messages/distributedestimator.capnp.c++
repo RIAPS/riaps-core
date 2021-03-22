@@ -213,47 +213,35 @@ namespace distributedestimator {
 namespace messages {
 
 // SensorReady
-#ifndef _MSC_VER
 constexpr uint16_t SensorReady::_capnpPrivate::dataWordSize;
 constexpr uint16_t SensorReady::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind SensorReady::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* SensorReady::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* SensorReady::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 // SensorValue
-#ifndef _MSC_VER
 constexpr uint16_t SensorValue::_capnpPrivate::dataWordSize;
 constexpr uint16_t SensorValue::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind SensorValue::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* SensorValue::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* SensorValue::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 // SensorQuery
-#ifndef _MSC_VER
 constexpr uint16_t SensorQuery::_capnpPrivate::dataWordSize;
 constexpr uint16_t SensorQuery::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind SensorQuery::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* SensorQuery::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* SensorQuery::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 // Estimate
-#ifndef _MSC_VER
 constexpr uint16_t Estimate::_capnpPrivate::dataWordSize;
 constexpr uint16_t Estimate::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind Estimate::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* Estimate::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* Estimate::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 

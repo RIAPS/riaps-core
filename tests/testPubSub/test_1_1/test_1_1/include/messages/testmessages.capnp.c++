@@ -58,14 +58,11 @@ namespace testing {
 namespace messages {
 
 // SensorValue
-#ifndef _MSC_VER
 constexpr uint16_t SensorValue::_capnpPrivate::dataWordSize;
 constexpr uint16_t SensorValue::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind SensorValue::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* SensorValue::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* SensorValue::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 

@@ -54,14 +54,11 @@ const ::capnp::_::RawSchema s_9daacee446424237 = {
 
 
 // Msg
-#ifndef _MSC_VER
 constexpr uint16_t Msg::_capnpPrivate::dataWordSize;
 constexpr uint16_t Msg::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind Msg::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* Msg::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* Msg::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 

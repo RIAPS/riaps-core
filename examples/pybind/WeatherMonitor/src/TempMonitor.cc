@@ -1,7 +1,7 @@
 #include <TempMonitor.h>
 
 namespace weathermonitor {
-    namespace components {		
+    namespace components {
 
         TempMonitor::TempMonitor(const py::object *parent_actor,
                                  const py::dict actor_spec, // Actor json config
@@ -19,7 +19,7 @@ namespace weathermonitor {
 		void TempMonitor::OnTempupdate() {
             auto [message, error] = RecvTempupdate();
             if (!error)
-                component_logger()->info("{}: {}", __func__, message->getTempature());
+                component_logger()->info("{}: {}", __func__, message->getTemperature());
 		    else
 		        component_logger()->warn("Recv() indicates error in: {}, errorcode: {}", __func__, error.error_code());
         }

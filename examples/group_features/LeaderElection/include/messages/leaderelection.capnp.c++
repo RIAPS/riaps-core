@@ -59,14 +59,11 @@ namespace leaderelection {
 namespace messages {
 
 // LeaderMessage
-#ifndef _MSC_VER
 constexpr uint16_t LeaderMessage::_capnpPrivate::dataWordSize;
 constexpr uint16_t LeaderMessage::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind LeaderMessage::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* LeaderMessage::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* LeaderMessage::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 

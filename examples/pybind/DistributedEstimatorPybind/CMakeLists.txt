@@ -10,6 +10,8 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 #        COMMENT "=== Generating capnp ==="
 #)
 
+include_directories(/usr/local/lib/python3.8/dist-packages/pybind11/include/)
+
 add_library(globalestimator src/GlobalEstimator.cc
         src/base/GlobalEstimatorBase.cc
         include/messages/distributedestimator.capnp.c++

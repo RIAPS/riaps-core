@@ -149,36 +149,27 @@ namespace gpiotoggleexample {
 namespace messages {
 
 // DataValue
-#ifndef _MSC_VER
 constexpr uint16_t DataValue::_capnpPrivate::dataWordSize;
 constexpr uint16_t DataValue::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind DataValue::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* DataValue::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* DataValue::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 // ReadRequest
-#ifndef _MSC_VER
 constexpr uint16_t ReadRequest::_capnpPrivate::dataWordSize;
 constexpr uint16_t ReadRequest::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind ReadRequest::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* ReadRequest::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* ReadRequest::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 // WriteRequest
-#ifndef _MSC_VER
 constexpr uint16_t WriteRequest::_capnpPrivate::dataWordSize;
 constexpr uint16_t WriteRequest::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind WriteRequest::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* WriteRequest::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* WriteRequest::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 

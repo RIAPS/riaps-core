@@ -4,6 +4,7 @@ include_directories(include)
 
 # riaps:keep_cmake:end
 
+include_directories(/usr/local/lib/python3.8/dist-packages/pybind11/include/)
 
 add_custom_command(
         OUTPUT  "${CMAKE_SOURCE_DIR}/include/messages/groupapp.capnp.c++"
@@ -24,7 +25,3 @@ add_library(groupiecpp SHARED
 target_link_libraries(groupiecpp PRIVATE czmq riaps dl capnp kj)
 set_target_properties(groupiecpp PROPERTIES PREFIX lib SUFFIX .so)
 # riaps:keep_groupiecpp:end
-
-
-
-

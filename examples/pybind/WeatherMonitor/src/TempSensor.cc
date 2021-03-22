@@ -1,7 +1,7 @@
 #include <TempSensor.h>
 
 namespace weathermonitor {
-    namespace components {		
+    namespace components {
 
         TempSensor::TempSensor(const py::object *parent_actor,
 							   const py::dict actor_spec, // Actor json config
@@ -14,7 +14,7 @@ namespace weathermonitor {
 		                       const py::list groups) :
                 TempSensorBase(parent_actor, actor_spec, type_spec, name, type_name, args, application_name,
 							   actor_name,groups) {
-			
+
 			this->temperature = 65;
         }
 
@@ -24,8 +24,8 @@ namespace weathermonitor {
 
 			this->temperature += 1;
 			MessageBuilder<messages::TempData> builder;
-			builder->setTempature(this->temperature);
-			
+			builder->setTemperature(this->temperature);
+
 			if (!SendReady(builder)){
 				component_logger()->error("{}: Unable to publish temperature!", __func__);
             }

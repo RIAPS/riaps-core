@@ -100,25 +100,19 @@ namespace echoio {
 namespace messages {
 
 // EchoReq
-#ifndef _MSC_VER
 constexpr uint16_t EchoReq::_capnpPrivate::dataWordSize;
 constexpr uint16_t EchoReq::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind EchoReq::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* EchoReq::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* EchoReq::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 // EchoRep
-#ifndef _MSC_VER
 constexpr uint16_t EchoRep::_capnpPrivate::dataWordSize;
 constexpr uint16_t EchoRep::_capnpPrivate::pointerCount;
-#endif
 #if !CAPNP_LITE
 constexpr ::capnp::Kind EchoRep::_capnpPrivate::kind;
 constexpr ::capnp::_::RawSchema const* EchoRep::_capnpPrivate::schema;
-constexpr ::capnp::_::RawBrandedSchema const* EchoRep::_capnpPrivate::brand;
 #endif  // !CAPNP_LITE
 
 
